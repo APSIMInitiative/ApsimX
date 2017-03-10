@@ -317,21 +317,21 @@ namespace Models.Soils
         [Units("mm H2O")]
         [Display(Format = "N0")]
         public double[] PsiBub { get; set; }
-        /// <summary>Relative Water content above which soil is hydrophillic</summary>
-        [Units("0-1")]
-        [Display(Format = "N2")]
-        [Description("Rupper")]
-        public double[] MaxRepellentWC { get; set; }
-        /// <summary>Relative water content at which soil reaches maximum hydrophobicity</summary>
-        [Units("0-1")]
-        [Display(Format = "N2")]
-        [Description("Rlower")]
-        public double[] MinRepellentWC { get; set; }
         /// <summary>Minimum repelancy Factor, when soil becomes dry</summary>
         [Units("0-1")]
         [Display(Format = "N2")]
         [Description("RFacMin")]
         public double[] MinRepellancyFactor { get; set; }
+        /// <summary>Relative water content at which soil reaches maximum hydrophobicity</summary>
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        [Description("Rlower")]
+        public double[] LowerRepellentWC { get; set; }
+        /// <summary>Relative Water content above which soil is hydrophillic</summary>
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        [Description("Rupper")]
+        public double[] UpperRepellentWC { get; set; }
         /// <summary>Gets or sets the bd.</summary>
         /// <value>The bd.</value>
         [Summary]
@@ -415,9 +415,9 @@ namespace Models.Soils
         /// <summary>Mapped from parameter set onto Layer structure</summary>
         public double[] MappedPsiBub { get; set; }
         /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedMinHydrophilicRWC { get; set; }
+        public double[] MappedUpperRepellentWC { get; set; }
         /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedMaxHydrophobicRWC { get; set; }
+        public double[] MappedLowerRepellentWC { get; set; }
         /// <summary>Mapped from parameter set onto Layer structure</summary>
         public double[] MappedMinRepellancyFactor { get; set; }
         /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
@@ -636,8 +636,8 @@ namespace Models.Soils
             MappedCFlow = Soil.Map(CFlow, ParamThickness, Thickness);
             MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness);
             MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness);
-            MappedMinHydrophilicRWC = Soil.Map(MaxRepellentWC, ParamThickness, Thickness);
-            MappedMaxHydrophobicRWC = Soil.Map(MaxRepellentWC, ParamThickness, Thickness);
+            MappedUpperRepellentWC = Soil.Map(UpperRepellentWC, ParamThickness, Thickness);
+            MappedLowerRepellentWC = Soil.Map(LowerRepellentWC, ParamThickness, Thickness);
             MappedMinRepellancyFactor = Soil.Map(MinRepellancyFactor, ParamThickness, Thickness);
 
             Pores = new Pore[ProfileLayers][];
@@ -1130,6 +1130,7 @@ namespace Models.Soils
         /// <summary>
         /// This is the Irrigation ariving at the soil surface, less what has been intercepted by residue
         /// </summary>
+        [XmlIgnore]
         private double Irrigation {get;set; }
         private double IrrigationDuration { get; set; }
         /// <summary>
@@ -1368,11 +1369,19 @@ namespace Models.Soils
         {
             for (int l = 0; l < ProfileLayers; l++)
             {
-                double[] X = { MappedMaxHydrophobicRWC[l], MappedMinHydrophilicRWC[l] };
+                double MatrixWaterContent = 0;
+                double MatrixWaterCapacity = 0;
+                for (int c = PoreCompartments - 2; c >= 0 && Pores[l][c].TensionFactor!=1; c--) //Excluding pore compartment 9 because it is below LL15
+                {
+                    MatrixWaterContent += Pores[l][c].WaterDepth;
+                    MatrixWaterCapacity += Pores[l][c].VolumeDepth;
+                }
+                double MatrixRelativeWaterContent = MatrixWaterContent / MatrixWaterCapacity;
+
+                double[] X = { MappedLowerRepellentWC[l], MappedUpperRepellentWC[l] };
                 double[] Y = { MappedMinRepellancyFactor[l],1.0};
-                double dX = SW[l] / MappedSAT[l];
                 bool DidInterpolate;
-                double Factor = MathUtilities.LinearInterpReal(dX, X, Y, out DidInterpolate);
+                double Factor = MathUtilities.LinearInterpReal(MatrixRelativeWaterContent, X, Y, out DidInterpolate);
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     Pores[l][c].RepelancyFactor = Factor;

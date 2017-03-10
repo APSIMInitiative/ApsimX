@@ -742,30 +742,6 @@
                 <double>-10</double>
                 <double>-10</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -778,6 +754,30 @@
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1.2</double>
                 <double>1.2</double>
@@ -1146,30 +1146,6 @@
                 <double>-10</double>
                 <double>-10</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -1182,6 +1158,30 @@
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1.2</double>
                 <double>1.2</double>
@@ -3017,18 +3017,18 @@ namespace Models
                 <double>-20</double>
                 <double>-70</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1.2</double>
@@ -3471,18 +3471,18 @@ namespace Models
                 <double>-20</double>
                 <double>-70</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1.2</double>
@@ -4819,26 +4819,6 @@ namespace Models
                 <double>-20</double>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -4849,6 +4829,26 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1</double>
@@ -4965,26 +4965,6 @@ namespace Models
                 <double>-20</double>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -4995,6 +4975,26 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1</double>
@@ -5111,26 +5111,6 @@ namespace Models
                 <double>-20</double>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -5141,6 +5121,26 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1</double>
@@ -5434,26 +5434,6 @@ namespace Models
                 <double>-70</double>
                 <double>-70</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -5464,6 +5444,26 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1</double>
@@ -5954,26 +5954,6 @@ namespace Models
                 <double>-70</double>
                 <double>-70</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -5984,6 +5964,26 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1</double>
@@ -7116,15 +7116,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -7185,15 +7185,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -7254,15 +7254,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -8364,15 +8364,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -8433,15 +8433,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -8502,15 +8502,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -10146,20 +10146,20 @@ namespace Models
                 <double>6E-11</double>
               </CFlow>
               <XFlow>
-                <double>3.3</double>
+                <double>3.5</double>
               </XFlow>
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.2</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>0.01</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -10215,20 +10215,20 @@ namespace Models
                 <double>6E-11</double>
               </CFlow>
               <XFlow>
-                <double>3.3</double>
+                <double>3.5</double>
               </XFlow>
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>1</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
-                <double>0.5</double>
+                <double>0.1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -10284,20 +10284,20 @@ namespace Models
                 <double>6E-11</double>
               </CFlow>
               <XFlow>
-                <double>3.3</double>
+                <double>3.5</double>
               </XFlow>
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>1</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -11599,15 +11599,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -11668,15 +11668,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -11737,15 +11737,15 @@ namespace Models
               <PsiBub>
                 <double>-10</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -11806,15 +11806,15 @@ namespace Models
               <PsiBub>
                 <double>-10</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -12089,26 +12089,6 @@ namespace Models
                 <double>-70</double>
                 <double>-70</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -12119,6 +12099,26 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1</double>
@@ -12595,26 +12595,6 @@ namespace Models
                 <double>-70</double>
                 <double>-70</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -12625,6 +12605,26 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1</double>
@@ -13324,15 +13324,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -13748,15 +13748,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -14559,15 +14559,15 @@ namespace Models
               <PsiBub>
                 <double>-10</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>0.01</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -14988,15 +14988,15 @@ namespace Models
               <PsiBub>
                 <double>-10</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>0.01</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -15249,15 +15249,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -15318,15 +15318,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -15387,15 +15387,15 @@ namespace Models
               <PsiBub>
                 <double>-20</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
               </BD>
@@ -16829,24 +16829,6 @@ namespace Models
                 <double>-70</double>
                 <double>-70</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -16856,6 +16838,24 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1.2</double>
@@ -17307,24 +17307,6 @@ namespace Models
                 <double>-70</double>
                 <double>-70</double>
               </PsiBub>
-              <MaxRepellentWC>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.8</double>
-              </MaxRepellentWC>
-              <MinRepellentWC>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-                <double>0.2</double>
-              </MinRepellentWC>
               <MinRepellancyFactor>
                 <double>1</double>
                 <double>1</double>
@@ -17334,6 +17316,24 @@ namespace Models
                 <double>1</double>
                 <double>1</double>
               </MinRepellancyFactor>
+              <LowerRepellentWC>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </LowerRepellentWC>
+              <UpperRepellentWC>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.8</double>
+              </UpperRepellentWC>
               <BD>
                 <double>1</double>
                 <double>1.2</double>
