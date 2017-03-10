@@ -192,21 +192,26 @@ namespace Models.WholeFarm.Activities
 			{
 				// calculate labour limit
 				double labourLimit = 1.0;
-				if (LabourShortfallLimitsFeeding)
-				{
-					ResourceRequest labourRequest = ResourceRequestList.Where(a => a.ResourceName == "Labour").FirstOrDefault();
-					if (labourRequest != null)
-					{
-						labourLimit = Math.Min(1.0,labourRequest.Required / labourRequest.Provided);
-					}
-				}
+
+				// can't limit food here by labour as it has already been taken from stores.
+
+				//if (LabourShortfallLimitsFeeding)
+				//{
+				//	ResourceRequest labourRequest = ResourceRequestList.Where(a => a.ResourceName == "Labour").FirstOrDefault();
+				//	if (labourRequest != null)
+				//	{
+				//		labourLimit = Math.Min(1.0, labourRequest.Provided / labourRequest.Required);
+				//	}
+				//}
 
 				// calculate feed limit
 				double feedLimit = 0.0;
 				ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceName == "AnimalFoodStore").FirstOrDefault();
+				AnimalFoodResourceRequestDetails details = new AnimalFoodResourceRequestDetails();
 				if (feedRequest != null)
 				{
-					feedLimit = Math.Min(1.0,feedRequest.Required / feedRequest.Provided);
+					details = feedRequest.AdditionalDetails as AnimalFoodResourceRequestDetails;
+					feedLimit = Math.Min(1.0, feedRequest.Provided / feedRequest.Required);
 				}
 
 				// feed animals
@@ -217,24 +222,36 @@ namespace Models.WholeFarm.Activities
 				{
 					foreach (Ruminant ind in herd.Filter(child as RuminantFilterGroup))
 					{
-						double feedRequired = 0;
+//						double feedRequired = 0;
 						switch (FeedStyle)
 						{
 							case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * 30.4; // * ind.Number;
-								ind.Intake += feedRequired * feedLimit * labourLimit;
+								details.Supplied = (child as RuminantFilterGroup).MonthlyValues[month] * 30.4;
+								details.Supplied *= feedLimit * labourLimit;
+								ind.AddIntake(details);
+//								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * 30.4; // * ind.Number;
+//								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
 							case RuminantFeedActivityTypes.ProportionOfWeight:
-								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
-								ind.Intake += feedRequired * feedLimit * labourLimit;
+								details.Supplied = (child as RuminantFilterGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
+								details.Supplied *= feedLimit * labourLimit;
+								ind.AddIntake(details);
+//								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
+//								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
 							case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
-								ind.Intake += feedRequired * feedLimit * labourLimit;
+								details.Supplied = (child as RuminantFilterGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
+								details.Supplied *= feedLimit * labourLimit;
+								ind.AddIntake(details);
+//								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
+//								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
 							case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake) ; // * ind.Number;
-								ind.Intake += feedRequired * feedLimit * labourLimit;
+								details.Supplied = (child as RuminantFilterGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
+								details.Supplied *= feedLimit * labourLimit;
+								ind.AddIntake(details);
+//								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake) ; // * ind.Number;
+//								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
 							default:
 								break;

@@ -118,7 +118,7 @@ namespace Models.WholeFarm.Resources
 			// limit by available
 			removeRequest.Amount = Math.Min(removeRequest.Amount, amount);
 			// add to intake and update %N and %DMD values
-			removeRequest.Requestor.AddIntake(removeRequest);
+//			removeRequest.Requestor.AddIntake(removeRequest);
 			// Remove from resource
 			Remove(removeRequest.Amount, removeRequest.FeedActivity.Name, removeRequest.Requestor.BreedParams.Name);
 		}
