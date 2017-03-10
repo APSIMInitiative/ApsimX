@@ -167,23 +167,21 @@ namespace Models.WholeFarm.Resources
 		/// <param name="Request">Resource request class with details.</param>
 		public void Remove(ResourceRequest Request)
 		{
-			double amountRemoved = Request.Required;
-			if (amountRemoved > 0)
-			{
-				amountRemoved = Math.Round(amountRemoved, 2, MidpointRounding.ToEven);
-				amount -= amountRemoved;
+			if (Request.Required == 0) return;
+			double amountRemoved = Math.Round(Request.Required, 2, MidpointRounding.ToEven); 
+			// avoid taking too much
+			amountRemoved = Math.Min(this.amount, amountRemoved);
+			this.amount -= amountRemoved;
 
-				Request.Provided = amountRemoved;
-				ResourceTransaction details = new ResourceTransaction();
-				details.ResourceType = this.Name;
-				details.Debit = amountRemoved * -1;
-				details.Activity = Request.ActivityName;
-				details.Reason = Request.Reason;
-				LastTransaction = details;
-				TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-				OnTransactionOccurred(te);
-			}
-			return;
+			Request.Provided = amountRemoved;
+			ResourceTransaction details = new ResourceTransaction();
+			details.ResourceType = this.Name;
+			details.Debit = amountRemoved * -1;
+			details.Activity = Request.ActivityName;
+			details.Reason = Request.Reason;
+			LastTransaction = details;
+			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+			OnTransactionOccurred(te);
 		}
 
 		/// <summary>

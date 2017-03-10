@@ -58,7 +58,7 @@ namespace Models.WholeFarm
 
 			if(Clock.StartDate.Day != 1)
 			{
-				string error = String.Format("WholeFarm must commence on the first day of a month. Invalid start date"+Clock.StartDate.ToShortDateString());
+				string error = String.Format("WholeFarm must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString());
 				Summary.WriteWarning(this, error);
 			}
 		}

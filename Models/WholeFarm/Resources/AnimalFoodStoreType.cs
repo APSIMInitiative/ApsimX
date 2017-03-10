@@ -127,28 +127,17 @@ namespace Models.WholeFarm.Resources
 		/// <param name="Request">Resource request class with details.</param>
 		public void Remove(ResourceRequest Request)
 		{
+			if (Request.Required == 0) return;
 			double amountRemoved = Request.Required;
 			// avoid taking too much
 			amountRemoved = Math.Min(this.amount, amountRemoved);
+			this.amount -= amountRemoved;
 
 			AnimalFoodResourceRequestDetails additionalDetails = new AnimalFoodResourceRequestDetails();
 			additionalDetails.DMD = this.DMD;
 			additionalDetails.PercentN = this.Nitrogen;
 			Request.AdditionalDetails = additionalDetails;
 
-			if (this.amount - amountRemoved < 0)
-			{
-				string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
-					+ "Current Amount: " + this.amount + Environment.NewLine
-					+ "Tried to Remove: " + amountRemoved;
-				Summary.WriteWarning(this, message);
-				amountRemoved = this.amount;
-				this.amount = 0;
-			}
-			else
-			{
-				this.amount = this.amount - amountRemoved;
-			}
 			Request.Provided = amountRemoved;
 			ResourceTransaction details = new ResourceTransaction();
 			details.ResourceType = this.Name;
