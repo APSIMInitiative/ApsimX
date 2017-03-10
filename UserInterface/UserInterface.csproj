@@ -765,11 +765,11 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\TreeViewImages\EvapoTranspiration.bmp" />
-    <EmbeddedResource Include="Resources\TreeViewImages\LayerStructure.bmp" />
-    <EmbeddedResource Include="Resources\TreeViewImages\MRSpline.bmp" />
-    <EmbeddedResource Include="Resources\TreeViewImages\OutputLayers.bmp" />
-    <EmbeddedResource Include="Resources\TreeViewImages\Weirdo.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Evapotranspiration.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LayerStructure.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MRSpline.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OutputLayers.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WEIRDO.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifestageReproductionProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifestageProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Lifecycle.png" />
