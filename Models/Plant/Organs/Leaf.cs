@@ -553,6 +553,23 @@ namespace Models.PMF.Organs
         }
 
         //General Leaf State variables
+        /// <summary>Returns the area of the largest leaf.</summary>
+        /// <value>The area of the largest leaf</value>
+        [Units("mm2")]
+        public double AreaLargestLeaf
+        {
+            get
+            {
+                double LLA = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    LLA = Math.Max(LLA, L.MaxArea);
+                }
+
+                return LLA;
+            }
+        }
+
 
         /// <summary>Gets the live n conc.</summary>
         [Units("g/g")]
