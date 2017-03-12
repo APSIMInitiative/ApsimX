@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 	/// <summary>
 	/// Object for an individual male Ruminant.

@@ -5,7 +5,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
     /// <summary>
     /// This stores the initialisation parameters for a person who can do labour 
@@ -16,7 +16,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
-    public class LabourType : Model, IResourceWithTransactionType
+    public class LabourType : WFModel, IResourceWithTransactionType, IResourceType
 	{
         /// <summary>
         /// Get the Clock.
@@ -60,10 +60,16 @@ namespace Models.WholeFarm
         [XmlIgnore]
         public double Age { get; set; }
 
-        /// <summary>
-        /// Available Labour (in days) in the current month. 
-        /// </summary>
-        [XmlIgnore]
+		/// <summary>
+		/// Number of individuals
+		/// </summary>
+		[Description("Number of individuals")]
+		public int Individuals { get; set; }
+
+		/// <summary>
+		/// Available Labour (in days) in the current month. 
+		/// </summary>
+		[XmlIgnore]
         public double AvailableDays { get { return availableDays; } }
         private double availableDays;
 
@@ -82,6 +88,7 @@ namespace Models.WholeFarm
 		public void Initialise()
 		{
 			this.Age = this.InitialAge;
+			Individuals = Math.Max(Individuals, 1);
 			ResetAvailabilityEachMonth();
 		}
 
@@ -107,7 +114,7 @@ namespace Models.WholeFarm
 				throw new Exception("Invalid entry");
 			}
 			int currentmonth = Clock.Today.Month;
-			this.availableDays = Math.Min(30.4, this.MaxLabourSupply[currentmonth - 1]);
+			this.availableDays = Math.Min(30.4, this.MaxLabourSupply[currentmonth - 1])*Individuals;
 		}
 
 		#region Transactions
@@ -122,7 +129,7 @@ namespace Models.WholeFarm
 		{
 			this.availableDays = this.availableDays + AddAmount;
 			ResourceTransaction details = new ResourceTransaction();
-			details.Debit = AddAmount;
+			details.Credit = AddAmount;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			details.ResourceType = this.Name;
@@ -137,7 +144,7 @@ namespace Models.WholeFarm
 		/// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
 		/// <param name="ActivityName">Name of activity requesting resource</param>
 		/// <param name="UserName">Name of individual requesting resource</param>
-		public void Remove(double RemoveAmount, string ActivityName, string UserName)
+		public double Remove(double RemoveAmount, string ActivityName, string UserName)
 		{
 			double amountRemoved = RemoveAmount;
 			if (this.availableDays - RemoveAmount < 0)
@@ -155,12 +162,13 @@ namespace Models.WholeFarm
 			}
 			ResourceTransaction details = new ResourceTransaction();
 			details.ResourceType = this.Name;
-			details.Credit = amountRemoved;
+			details.Debit = amountRemoved * -1;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			LastTransaction = details;
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 			OnTransactionOccurred(te);
+			return amountRemoved;
 		}
 
 		/// <summary>
@@ -187,13 +195,37 @@ namespace Models.WholeFarm
 				TransactionOccurred(this, e);
 		}
 
+		#endregion
+
+		#region IResourceType
+
+		/// <summary>
+		/// Remove labour using a request object
+		/// </summary>
+		/// <param name="RemoveRequest"></param>
+		public void Remove(object RemoveRequest)
+		{
+			throw new NotImplementedException();
+		}
+
 		/// <summary>
 		/// Last transaction received
 		/// </summary>
 		[XmlIgnore]
 		public ResourceTransaction LastTransaction { get; set; }
 
+		/// <summary>
+		/// Current amount of labour required.
+		/// </summary>
+		public double Amount
+		{
+			get
+			{
+				return this.availableDays;
+			}
+		}
+
 		#endregion
 
-    }
+	}
 }

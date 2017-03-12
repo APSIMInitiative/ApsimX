@@ -145,7 +145,7 @@ namespace Models.PMF.Phen
             double MaxVernalisationRequirement = 50; //maximum vernalisation requirement is 50 days
             VernEff = VernalisationEffect(VernSens, CumulativeVD, DeltaCumulativeVD, MaxVernalisationRequirement);
 
-            PhotopEff = PhotoperiodEffect(Photoperiod.Value, PhotopSens);
+            PhotopEff = PhotoperiodEffect(Photoperiod.Value(), PhotopSens);
 
             CumulativeVD += DeltaCumulativeVD;
         }

@@ -85,7 +85,7 @@ namespace Models.PMF.Phen
             {
                 if (ThermalTime == null)
                     return 0;
-                return ThermalTime.Value;
+                return ThermalTime.Value();
             }
         }
         
@@ -105,10 +105,10 @@ namespace Models.PMF.Phen
         virtual public double DoTimeStep(double PropOfDayToUse)
         {
             // Calculate the TT for today and Accumulate.      
-            _TTForToday = ThermalTime.Value * PropOfDayToUse;
+            _TTForToday = ThermalTime.Value() * PropOfDayToUse;
             if (Stress != null)
             {
-                _TTForToday *= Stress.Value;
+                _TTForToday *= Stress.Value();
             }
             TTinPhase += _TTForToday;
 
@@ -121,7 +121,7 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         virtual public double AddTT(double PropOfDayToUse)
         {
-            TTinPhase += ThermalTime.Value * PropOfDayToUse;
+            TTinPhase += ThermalTime.Value() * PropOfDayToUse;
             return 0;
         }
         /// <summary>Adds the specified DLT_TT.</summary>

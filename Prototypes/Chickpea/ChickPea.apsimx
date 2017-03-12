@@ -28,15 +28,15 @@ The model consists of:
       <VariableNames>
         <string>[Clock].Today</string>
         <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-        <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-        <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+        <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+        <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
         <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
         <string>[Chickpea].AboveGround.Wt</string>
-        <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-        <string>[Chickpea].Grain.NumberFunction.Value</string>
-        <string>[Chickpea].Shell.PodNumber.Value</string>
+        <string>[Chickpea].Phenology.FinalNodeNo.Value()</string>
+        <string>[Chickpea].Grain.NumberFunction.Value()</string>
+        <string>[Chickpea].Shell.PodNumber.Value()</string>
         <string>[Chickpea].Grain.Size</string>
-        <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+        <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
       </VariableNames>
       <EventNames>
         <string>[Chickpea].Harvesting</string>
@@ -73,8 +73,8 @@ The model consists of:
         <string>[Chickpea].Leaf.SpecificArea</string>
         <string>[Chickpea].Shell.Live.Wt</string>
         <string>[Chickpea].Grain.Live.Wt</string>
-        <string>[Chickpea].Grain.NumberFunction.Value</string>
-        <string>[Chickpea].Shell.PodNumber.Value</string>
+        <string>[Chickpea].Grain.NumberFunction.Value()</string>
+        <string>[Chickpea].Shell.PodNumber.Value()</string>
         <string>[Chickpea].Nodule.NFixed</string>
         <string>[Chickpea].Nodule.Live.Wt</string>
         <string>[Chickpea].Arbitrator.DM.NutrientLimitation</string>
@@ -147,7 +147,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -158,11 +158,11 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
           <Name>Vegetative</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>500</Value>
+            <FixedValue>500</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Stress</Name>
@@ -172,7 +172,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
             <Name>PhotoperiodEffect</Name>
             <VariableReference>
               <Name>Photoperiod</Name>
-              <VariableName>[Phenology].Photoperiod.Value</VariableName>
+              <VariableName>[Phenology].Photoperiod.Value()</VariableName>
             </VariableReference>
             <OptimumPhotoperiod>21</OptimumPhotoperiod>
             <CriticalPhotoperiod>9</CriticalPhotoperiod>
@@ -189,17 +189,17 @@ The duration of the grain filling phase has been taken from the model of Roberts
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
             <Constant>
               <Name>NumberOfFloweringNodes</Name>
-              <Value>5</Value>
+              <FixedValue>5</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].NodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].NodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Start>StartFlowering</Start>
@@ -214,11 +214,11 @@ The duration of the grain filling phase has been taken from the model of Roberts
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>690</Value>
+            <FixedValue>690</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EndFlowering</Start>
           <End>EndGrainFill</End>
@@ -232,11 +232,11 @@ The duration of the Maturing phase has been taken from the model of Robertson et
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>60</Value>
+            <FixedValue>60</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EndGrainFill</Start>
           <End>Maturity</End>
@@ -245,11 +245,11 @@ The duration of the Maturing phase has been taken from the model of Robertson et
           <Name>Ripening</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Maturity</Start>
           <End>HarvestRipe</End>
@@ -258,7 +258,7 @@ The duration of the Maturing phase has been taken from the model of Robertson et
           <Name>ReadyForHarvesting</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>HarvestRipe</Start>
           <End>Unused</End>
@@ -272,7 +272,7 @@ A function is used to provide flowering date as days after sowing(DAS).]]></Memo
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -290,7 +290,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -308,7 +308,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -323,19 +323,19 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Structure</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>HeightModel</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MainStemFinalNodeNumber</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>Height</Name>
@@ -881,7 +881,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </MultiplyFunction>
         <Constant>
           <Name>BranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>MainStemNodeAppearanceRate</Name>
@@ -889,7 +889,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Emergence</End>
@@ -898,7 +898,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>CanopyDevelopment</Name>
             <VariableReference>
               <Name>NodeAppearanceRate</Name>
-              <VariableName>[Structure].NodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].NodeAppearanceRate.Value()</VariableName>
             </VariableReference>
             <Start>Emergence</Start>
             <End>EndFlowering</End>
@@ -907,7 +907,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Reproductive</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>EndFlowering</Start>
             <End>Maturity</End>
@@ -944,11 +944,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Grain</Name>
         <Constant>
           <Name>WaterContent</Name>
-          <Value>0.12</Value>
+          <FixedValue>0.12</FixedValue>
         </Constant>
         <Constant>
           <Name>NConc</Name>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <VariableReference>
           <Name>AboveGroundWt</Name>
@@ -1004,7 +1004,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Vegetative</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>EndFlowering</End>
@@ -1017,16 +1017,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>IncrementPerDegreeDay</Name>
                 <Constant>
                   <Name>PotentialHarvestIndex</Name>
-                  <Value>0.5</Value>
+                  <FixedValue>0.5</FixedValue>
                 </Constant>
                 <VariableReference>
                   <Name>GrainFillingDuration</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
               </DivideFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
             </MultiplyFunction>
             <Start>EndFlowering</Start>
@@ -1036,7 +1036,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Ripening</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>EndGrainFill</Start>
             <End>HarvestRipe</End>
@@ -1118,7 +1118,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </LinearInterpolationFunction>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value>6</Value>
+          <FixedValue>6</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -1127,11 +1127,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
@@ -1139,7 +1139,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>3</Value>
+              <FixedValue>3</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Emergence</End>
@@ -1148,7 +1148,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>early</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>15</Value>
+              <FixedValue>15</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>StartFlowering</End>
@@ -1157,7 +1157,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>late</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>17</Value>
+              <FixedValue>17</FixedValue>
             </Constant>
             <Start>StartFlowering</Start>
             <End>Maturity</End>
@@ -1169,7 +1169,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Early</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0.2</Value>
+              <FixedValue>0.2</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>StartFlowering</End>
@@ -1178,7 +1178,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Middle</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0.1</Value>
+              <FixedValue>0.1</FixedValue>
             </Constant>
             <Start>StartFlowering</Start>
             <End>EndFlowering</End>
@@ -1187,7 +1187,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Late</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>EndFlowering</Start>
             <End>Maturity</End>
@@ -1195,11 +1195,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1288,12 +1288,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.2</Value>
+          <FixedValue>0.2</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
@@ -1312,11 +1312,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -1324,15 +1324,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.007</Value>
+          <FixedValue>0.007</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
@@ -1341,7 +1341,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1356,41 +1356,41 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>OrganPopulation</Name>
-            <VariableName>[Shell].PodNumber.Value</VariableName>
+            <VariableName>[Shell].PodNumber.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>ExpansionStress</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <AddFunction>
             <Name>GrowthDuration</Name>
             <VariableReference>
               <Name>FloweringGrowthPeriod</Name>
-              <VariableName>[Phenology].Flowering.Target.Value</VariableName>
+              <VariableName>[Phenology].Flowering.Target.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>PostFloweringGrowthPeriod</Name>
-              <Value>60</Value>
+              <FixedValue>60</FixedValue>
             </Constant>
           </AddFunction>
           <Constant>
             <Name>StartStage</Name>
-            <Value>4</Value>
+            <FixedValue>4</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumOrganWt</Name>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
           </Constant>
         </PopulationBasedDemandFunction>
         <MultiplyFunction>
           <Name>PodNumber</Name>
           <Constant>
             <Name>PodsPerNode</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>StemPopulation</Name>
@@ -1398,7 +1398,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </VariableReference>
           <VariableReference>
             <Name>FloweringNodes</Name>
-            <VariableName>[Phenology].Flowering.Target.NumberOfFloweringNodes.Value</VariableName>
+            <VariableName>[Phenology].Flowering.Target.NumberOfFloweringNodes.Value()</VariableName>
           </VariableReference>
         </MultiplyFunction>
         <BiomassRemoval>
@@ -1434,27 +1434,27 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.7</Value>
+          <FixedValue>0.7</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -1512,13 +1512,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </LeafCohort>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LeafCohortParameters>
           <Name>LeafCohortParameters</Name>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -1573,42 +1573,42 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
             <Name>GrowthDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>4</Value>
+              <FixedValue>4</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <MultiplyFunction>
             <Name>LagDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>20</Value>
+              <FixedValue>20</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <MultiplyFunction>
             <Name>SenescenceDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>2</Value>
+              <FixedValue>2</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>46</Value>
+            <FixedValue>46</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMax</Name>
@@ -1638,7 +1638,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <MemoText><![CDATA[
 ]]></MemoText>
             </Memo>
-            <Value>0.7</Value>
+            <FixedValue>0.7</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMin</Name>
@@ -1727,7 +1727,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.02</Value>
+            <FixedValue>0.02</FixedValue>
           </Constant>
           <Constant>
             <Name>CriticalNConc</Name>
@@ -1735,7 +1735,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumNConc</Name>
@@ -1743,7 +1743,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.08</Value>
+            <FixedValue>0.08</FixedValue>
           </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
@@ -1751,7 +1751,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.3</Value>
+            <FixedValue>0.3</FixedValue>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
@@ -1759,7 +1759,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.1</Value>
+            <FixedValue>0.1</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
@@ -1767,7 +1767,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ShadeInducedSenescenceRate</Name>
@@ -1790,31 +1790,31 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
           </LinearInterpolationFunction>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0.08</Value>
+            <FixedValue>0.08</FixedValue>
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>DroughtInducedSenAcceleration</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>CellDivisionStress</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
         </LeafCohortParameters>
@@ -1839,7 +1839,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.25</Value>
+            <FixedValue>1.25</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -2071,17 +2071,17 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
@@ -2123,7 +2123,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0.7</Value>
+          <FixedValue>0.7</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
@@ -2132,7 +2132,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -2173,7 +2173,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
@@ -2181,7 +2181,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
@@ -2189,7 +2189,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -2198,7 +2198,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -2207,7 +2207,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0.007</Value>
+          <FixedValue>0.007</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -2285,7 +2285,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <Name>GrainFilling</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>EndFlowering</Start>
               <End>EndGrainFill</End>
@@ -2294,32 +2294,32 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -2341,7 +2341,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -2351,7 +2351,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <Name>Early</Name>
               <Constant>
                 <Name>Function</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>Emergence</Start>
               <End>StartFlowering</End>
@@ -2360,7 +2360,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <Name>Middle</Name>
               <Constant>
                 <Name>Function</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>StartFlowering</Start>
               <End>EndFlowering</End>
@@ -2369,7 +2369,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <Name>Late</Name>
               <Constant>
                 <Name>Function</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>EndFlowering</Start>
               <End>Maturity</End>
@@ -2386,7 +2386,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -2394,7 +2394,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -2403,11 +2403,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -2451,22 +2451,22 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>FixationRate</Name>
-          <Value>10000</Value>
+          <FixedValue>10000</FixedValue>
           <Units>g/m^2/d</Units>
         </Constant>
         <MultiplyFunction>
@@ -2486,7 +2486,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <MinimumFunction>
             <Name>MinimumFunction</Name>
@@ -2550,12 +2550,12 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </MultiplyFunction>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </Nodule>
@@ -2647,14 +2647,14 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <Name>Hashem</Name>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
-        <Command>[Phenology].Vegetative.Target.Value = 550</Command>
+        <Command>[Phenology].Vegetative.Target.FixedValue = 550</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
       </Cultivar>
       <Cultivar>
         <Name>Ayaz</Name>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
-        <Command>[Phenology].Vegetative.Target.Value = 550</Command>
+        <Command>[Phenology].Vegetative.Target.FixedValue = 550</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
       </Cultivar>
       <CropType>Chickpea</CropType>
@@ -2697,7 +2697,7 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
             <RSR>1.3594685825791775</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Chickpea.Shell.PodNumber.Value</Name>
+            <Name>Chickpea.Shell.PodNumber.Value()</Name>
             <n>197</n>
             <Slope>0.10067802847417431</Slope>
             <Intercept>199.27719834457537</Intercept>
@@ -3002,8 +3002,8 @@ Simulation results for the combined datasets from the various growing regions ar
         <Line>None</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Chickpea.Grain.NumberFunction.Value</XFieldName>
-        <YFieldName>Predicted.Chickpea.Grain.NumberFunction.Value</YFieldName>
+        <XFieldName>Observed.Chickpea.Grain.NumberFunction.Value()</XFieldName>
+        <YFieldName>Predicted.Chickpea.Grain.NumberFunction.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3096,8 +3096,8 @@ Simulation results for the combined datasets from the various growing regions ar
         <Line>None</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Chickpea.Shell.PodNumber.Value</XFieldName>
-        <YFieldName>Predicted.Chickpea.Shell.PodNumber.Value</YFieldName>
+        <XFieldName>Observed.Chickpea.Shell.PodNumber.Value()</XFieldName>
+        <YFieldName>Predicted.Chickpea.Shell.PodNumber.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3853,8 +3853,8 @@ A selection of data from Kenya has been included from the work of Keating et al 
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
                 <string>[Chickpea].AboveGround.Wt</string>
               </VariableNames>
@@ -4842,8 +4842,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -5772,7 +5772,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Grain.NumberFunction.Value</YFieldName>
+            <YFieldName>Chickpea.Grain.NumberFunction.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5793,7 +5793,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ObservedTimeseriesData</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Grain.NumberFunction.Value</YFieldName>
+            <YFieldName>Grain.NumberFunction.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5836,7 +5836,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Shell.PodNumber.Value</YFieldName>
+            <YFieldName>Chickpea.Shell.PodNumber.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5857,7 +5857,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ObservedTimeseriesData</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Shell.PodNumber.Value</YFieldName>
+            <YFieldName>Shell.PodNumber.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7169,8 +7169,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -8425,8 +8425,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -9219,8 +9219,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -10020,8 +10020,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -10787,8 +10787,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -11203,8 +11203,8 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -12274,8 +12274,8 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -13398,8 +13398,8 @@ The data presented for the trials done in Emerald and Biloela were obtained from
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -14046,8 +14046,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -14603,10 +14603,10 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -16119,10 +16119,10 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -17599,10 +17599,10 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -19054,10 +19054,10 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -20472,10 +20472,10 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -21434,10 +21434,10 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -22457,8 +22457,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -23459,8 +23459,8 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -24550,8 +24550,8 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -25501,8 +25501,8 @@ Several minimal datasets are available with only flowering dates for a ranges of
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -26227,8 +26227,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -26946,8 +26946,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -27665,8 +27665,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -28574,8 +28574,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -29338,8 +29338,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -30038,8 +30038,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -30844,8 +30844,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -31650,8 +31650,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -32456,8 +32456,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -33241,8 +33241,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -34554,11 +34554,11 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value()</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -36450,11 +36450,11 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value()</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -37586,11 +37586,11 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value()</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -38610,7 +38610,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
-          <XFieldName>Chickpea.Phenology.FinalNodeNo.Value</XFieldName>
+          <XFieldName>Chickpea.Phenology.FinalNodeNo.Value()</XFieldName>
           <YFieldName>FloweringDAS</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -38657,8 +38657,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.Chickpea.Phenology.FinalNodeNo.Value</XFieldName>
-          <YFieldName>Predicted.Chickpea.Phenology.FinalNodeNo.Value</YFieldName>
+          <XFieldName>Observed.Chickpea.Phenology.FinalNodeNo.Value()</XFieldName>
+          <YFieldName>Predicted.Chickpea.Phenology.FinalNodeNo.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -38966,11 +38966,11 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value()</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>

@@ -55,12 +55,12 @@ namespace Models.PMF.Functions.DemandFunctions
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if ((Phenology.Stage >= StartStage.Value) && (AccumulatedThermalTime < GrowthDuration.Value))
+            if ((Phenology.Stage >= StartStage.Value()) && (AccumulatedThermalTime < GrowthDuration.Value()))
             {
-                ThermalTimeToday = Math.Min(ThermalTime.Value, GrowthDuration.Value - AccumulatedThermalTime);
+                ThermalTimeToday = Math.Min(ThermalTime.Value(), GrowthDuration.Value() - AccumulatedThermalTime);
                 AccumulatedThermalTime += ThermalTimeToday;
             }
-            else if (Phenology.Stage < StartStage.Value)
+            else if (Phenology.Stage < StartStage.Value())
             {
                 AccumulatedThermalTime = 0.0;
             }
@@ -69,21 +69,18 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            double Value = 0.0;
+            if ((Phenology.Stage >= StartStage.Value(arrayIndex)) && (AccumulatedThermalTime < GrowthDuration.Value(arrayIndex)))
             {
-                double Value = 0.0;
-                if ((Phenology.Stage >= StartStage.Value) && (AccumulatedThermalTime < GrowthDuration.Value))
-                {
-                    double Rate = MaximumOrganWt.Value / GrowthDuration.Value;
-                    Value = Rate * ThermalTimeToday * OrganPopulation.Value;
-                }
-
-                return Value * ExpansionStress.Value;
+                double Rate = MaximumOrganWt.Value(arrayIndex) / GrowthDuration.Value(arrayIndex);
+                Value = Rate * ThermalTimeToday * OrganPopulation.Value(arrayIndex);
             }
-        }
 
+            return Value * ExpansionStress.Value(arrayIndex);
+        }
+        
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {

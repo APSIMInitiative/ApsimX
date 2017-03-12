@@ -48,7 +48,7 @@ namespace Models.PMF.Phen
                 double LeftOverValue = TTinPhase - Target;
                 if (_TTForToday > 0.0)
                 {
-                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value;
+                    double PropOfValueUnused = LeftOverValue / ThermalTime.Value();
                     PropOfDayUnused = PropOfValueUnused * PropOfDayToUse;
                 }
                 else
@@ -69,7 +69,7 @@ namespace Models.PMF.Phen
             {
                 if (Target == null)
                     throw new Exception("Cannot find target for phase: " + Name);
-                retVAL = Target.Value;
+                retVAL = Target.Value();
             }
             return retVAL;
         }
@@ -78,10 +78,10 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public override double AddTT(double PropOfDayToUse)
         {
-            TTinPhase += ThermalTime.Value * PropOfDayToUse;
+            TTinPhase += ThermalTime.Value() * PropOfDayToUse;
             double AmountUnusedTT = TTinPhase - CalcTarget();
             if (AmountUnusedTT > 0)
-                return AmountUnusedTT / ThermalTime.Value;
+                return AmountUnusedTT / ThermalTime.Value();
             return 0;
         }
         /// <summary>
@@ -112,7 +112,7 @@ namespace Models.PMF.Phen
         {
             base.WriteSummary(writer);
             if (Target != null)
-                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value));
+                writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

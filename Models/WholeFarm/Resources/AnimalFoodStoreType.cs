@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 
     /// <summary>
@@ -16,7 +16,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
-    public class AnimalFoodStoreType : Model, IResourceType, IFeedType, IFeedPurchaseType, IResourceWithTransactionType
+    public class AnimalFoodStoreType : WFModel, IResourceType, IFeedType, IFeedPurchaseType, IResourceWithTransactionType
     {
         [Link]
         ISummary Summary = null;
@@ -79,7 +79,7 @@ namespace Models.WholeFarm
         /// Amount currently available (kg dry)
         /// </summary>
         [XmlIgnore]
-        public double Amount { get {return amount;} }
+        public double Amount { get {return amount;} set { return; } }
 		private double amount;
 
 		/// <summary>
@@ -112,7 +112,7 @@ namespace Models.WholeFarm
             this.amount = this.amount + AddAmount;
 
 			ResourceTransaction details = new ResourceTransaction();
-			details.Debit = AddAmount;
+			details.Credit = AddAmount;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			details.ResourceType = this.Name;
@@ -127,7 +127,7 @@ namespace Models.WholeFarm
 		/// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
 		/// <param name="ActivityName">Name of activity requesting resource</param>
 		/// <param name="UserName">Name of individual requesting resource</param>
-		public void Remove(double RemoveAmount, string ActivityName, string UserName)
+		public double Remove(double RemoveAmount, string ActivityName, string UserName)
         {
 			double amountRemoved = RemoveAmount;
             if (this.amount - RemoveAmount < 0)
@@ -146,12 +146,14 @@ namespace Models.WholeFarm
 
 			ResourceTransaction details = new ResourceTransaction();
 			details.ResourceType = this.Name;
-			details.Credit = amountRemoved;
+			details.Debit = amountRemoved*-1;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			LastTransaction = details;
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 			OnTransactionOccurred(te);
+
+			return amountRemoved;
 		}
 
 		/// <summary>

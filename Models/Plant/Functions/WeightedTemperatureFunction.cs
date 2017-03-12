@@ -32,14 +32,10 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        [Units("0-1")]
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                double Tav = MaximumTemperatureWeighting * MetData.MaxT + (1 - MaximumTemperatureWeighting) * MetData.MinT;
-                return XYPairs.ValueIndexed(Tav);
-            }
+            double Tav = MaximumTemperatureWeighting * MetData.MaxT + (1 - MaximumTemperatureWeighting) * MetData.MinT;
+            return XYPairs.ValueIndexed(Tav);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

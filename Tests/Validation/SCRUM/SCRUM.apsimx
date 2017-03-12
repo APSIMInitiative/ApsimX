@@ -1199,25 +1199,25 @@ namespace Models
           <string>[SCRUM].Stover.CoverDead</string>
           <string>[SCRUM].Stover.LAI</string>
           <string>[SCRUM].Stover.Height</string>
-          <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
           <string>[SCRUM].Product.LiveFWt</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
-          <string>[SCRUM].ExpectedYield.Value</string>
-          <string>[SCRUM].DryYield.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-          <string>[SCRUM].Ymax.Value</string>
+          <string>[SCRUM].ExpectedYield.Value()</string>
+          <string>[SCRUM].DryYield.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+          <string>[SCRUM].Ymax.Value()</string>
           <string>[SCRUM].Total.N</string>
           <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
           <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
           <string>[SCRUM].Phenology.AccumulatedEmergedTT</string>
           <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
           <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-          <string>[SCRUM].Phenology.ThermalTime.Value</string>
+          <string>[SCRUM].Phenology.ThermalTime.Value()</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
@@ -1751,7 +1751,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCRUM.DryYield.Value</YFieldName>
+        <YFieldName>SCRUM.DryYield.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1772,7 +1772,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1793,7 +1793,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1814,7 +1814,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCRUM.Ymax.Value</YFieldName>
+        <YFieldName>SCRUM.Ymax.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3386,25 +3386,25 @@ namespace Models
           <string>[SCRUM].Stover.CoverDead</string>
           <string>[SCRUM].Stover.LAI</string>
           <string>[SCRUM].Stover.Height</string>
-          <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
           <string>[SCRUM].Product.LiveFWt</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
-          <string>[SCRUM].ExpectedYield.Value</string>
-          <string>[SCRUM].DryYield.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-          <string>[SCRUM].Ymax.Value</string>
+          <string>[SCRUM].ExpectedYield.Value()</string>
+          <string>[SCRUM].DryYield.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+          <string>[SCRUM].Ymax.Value()</string>
           <string>[SCRUM].Total.N</string>
           <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
           <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
-          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value()</string>
           <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
           <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-          <string>[SCRUM].Phenology.ThermalTime.Value</string>
+          <string>[SCRUM].Phenology.ThermalTime.Value()</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
@@ -5355,25 +5355,25 @@ namespace Models
             <string>[SCRUM].Stover.CoverGreen</string>
             <string>[SCRUM].Stover.LAI</string>
             <string>[SCRUM].Stover.Height</string>
-            <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+            <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
             <string>[SCRUM].Product.LiveFWt</string>
             <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
             <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
             <string>[SCRUM].Stover.Fw</string>
             <string>[SCRUM].Stover.Fn</string>
             <string>[SCRUM].Total.Wt</string>
-            <string>[SCRUM].ExpectedYield.Value</string>
-            <string>[SCRUM].DryYield.Value</string>
-            <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-            <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-            <string>[SCRUM].Ymax.Value</string>
+            <string>[SCRUM].ExpectedYield.Value()</string>
+            <string>[SCRUM].DryYield.Value()</string>
+            <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+            <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+            <string>[SCRUM].Ymax.Value()</string>
             <string>[SCRUM].Total.N</string>
             <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
             <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
             <string>[SCRUM].Phenology.AccumulatedEmergedTT</string>
             <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
             <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-            <string>[SCRUM].Phenology.ThermalTime.Value</string>
+            <string>[SCRUM].Phenology.ThermalTime.Value()</string>
             <string>[SCRUM].Phenology.CurrentPhaseName</string>
             <string>[SCRUM].Phenology.Stage</string>
           </VariableNames>
@@ -6331,7 +6331,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCRUM.DryYield.Value</YFieldName>
+          <YFieldName>SCRUM.DryYield.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6352,7 +6352,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+          <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6373,7 +6373,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+          <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6394,7 +6394,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCRUM.Ymax.Value</YFieldName>
+          <YFieldName>SCRUM.Ymax.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8235,7 +8235,7 @@ namespace Models
         <Manager>
           <Name>SetSCRUMYield</Name>
           <Script>
-            <OverRidePath>SCRUM.Product.ExpectedYield.Value</OverRidePath>
+            <OverRidePath>SCRUM.Product.ExpectedYield.FixedValue</OverRidePath>
             <OverRideInterger>1800</OverRideInterger>
             <ChangeDate>2012-10-23</ChangeDate>
           </Script>
@@ -8280,7 +8280,7 @@ namespace Models
         <Manager>
           <Name>SetSCRUMCoverMax</Name>
           <Script>
-            <OverRidePath>SCRUM.Stover.CoverFunction.Expanding.SigCoverFunction.Ymax.Value</OverRidePath>
+            <OverRidePath>SCRUM.Stover.CoverFunction.Expanding.SigCoverFunction.Ymax.FixedValue</OverRidePath>
             <OverRideDouble>0.9</OverRideDouble>
             <ChangeDate>2012-10-23</ChangeDate>
           </Script>
@@ -8390,12 +8390,12 @@ namespace Models
             <string>[SCRUM].Arbitrator.DM.Allocated</string>
             <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
             <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-            <string>[SCRUM].Stover.MaximumNConc.Value</string>
-            <string>[SCRUM].Stover.MinimumNConc.Value</string>
+            <string>[SCRUM].Stover.MaximumNConc.Value()</string>
+            <string>[SCRUM].Stover.MinimumNConc.Value()</string>
             <string>[SCRUM].Stover.Live.NConc</string>
             <string>[SCRUM].Stover.Live.NConc</string>
             <string>[SCRUM].Product.Live.NConc</string>
-            <string>[SCRUM].Stover.FRGRFunction.Value</string>
+            <string>[SCRUM].Stover.FRGRFunction.Value()</string>
             <string>[SCRUM].Stover.Fw</string>
             <string>[SCRUM].Arbitrator.FN</string>
           </VariableNames>
@@ -8525,7 +8525,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.CohortParameters.GrowthDuration.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.CohortParameters.GrowthDuration.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8546,7 +8546,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.CohortParameters.LagDuration.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.CohortParameters.LagDuration.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8567,7 +8567,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.CohortParameters.SenescenceDuration.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.CohortParameters.SenescenceDuration.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8588,7 +8588,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Structure.MainStoverNodeAppearanceRate.Value</YFieldName>
+            <YFieldName>SCRUM.Structure.MainStoverNodeAppearanceRate.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8672,7 +8672,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.DMDemandFunction.PotentialDMAccumulation.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.DMDemandFunction.PotentialDMAccumulation.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8693,7 +8693,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.DMDemandFunction.HightLimitedDMAccumulation.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.DMDemandFunction.HightLimitedDMAccumulation.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9240,7 +9240,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>SCRUM.Structure.MainStoverNodeNo</XFieldName>
-            <YFieldName>SCRUM.Structure.MainStoverNodeAppearanceRate.Value</YFieldName>
+            <YFieldName>SCRUM.Structure.MainStoverNodeAppearanceRate.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9958,7 +9958,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.MaximumNConc.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.MaximumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9979,7 +9979,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.MinimumNConc.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.MinimumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -11340,7 +11340,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.FRGRFunction.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.FRGRFunction.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12372,9 +12372,9 @@ namespace Models
 			{
 				SCRUM.Sow(cultivar: Crop1, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[0][Treatment]);
-				zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);
+				zone.Set("[SCRUM].Product.ExpectedYield.FixedValue", ResetValue);
 				ResetValue = 0.025;
-				zone.Set("[SCRUM].Product.MaximumNConc.Value", ResetValue);
+				zone.Set("[SCRUM].Product.MaximumNConc.FixedValue", ResetValue);
 			}
 			else if (Clock.Today.Date == HarvestDate1)
 			{
@@ -12385,9 +12385,9 @@ namespace Models
 			{
 				SCRUM.Sow(cultivar: Crop2, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[1][Treatment]);
-				zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);
+				zone.Set("[SCRUM].Product.ExpectedYield.FixedValue", ResetValue);
 				ResetValue = CropNConc;
-				zone.Set("[SCRUM].Product.MaximumNConc.Value", ResetValue);
+				zone.Set("[SCRUM].Product.MaximumNConc.FixedValue", ResetValue);
 			}
 			else if (Clock.Today.Date == HarvestDate2)
 			{
@@ -12400,9 +12400,9 @@ namespace Models
 				SurfOM.Incorporate(1, 10);
 				SCRUM.Sow(cultivar: Crop3, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[2][Treatment]);
-				zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);
+				zone.Set("[SCRUM].Product.ExpectedYield.FixedValue", ResetValue);
 				ResetValue = 0.025;
-				zone.Set("[SCRUM].Product.MaximumNConc.Value", ResetValue);
+				zone.Set("[SCRUM].Product.MaximumNConc.FixedValue", ResetValue);
 		
 			}
 			else if (Clock.Today.Date == HarvestDate3)
@@ -12712,25 +12712,25 @@ namespace Models
             <string>[SCRUM].Stover.CoverDead</string>
             <string>[SCRUM].Stover.LAI</string>
             <string>[SCRUM].Stover.Height</string>
-            <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+            <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
             <string>[SCRUM].Product.LiveFWt</string>
             <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
             <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
             <string>[SCRUM].Stover.Fw</string>
             <string>[SCRUM].Stover.Fn</string>
             <string>[SCRUM].Total.Wt</string>
-            <string>[SCRUM].ExpectedYield.Value</string>
-            <string>[SCRUM].DryYield.Value</string>
-            <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-            <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-            <string>[SCRUM].Ymax.Value</string>
+            <string>[SCRUM].ExpectedYield.Value()</string>
+            <string>[SCRUM].DryYield.Value()</string>
+            <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+            <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+            <string>[SCRUM].Ymax.Value()</string>
             <string>[SCRUM].Total.N</string>
             <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
             <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
-            <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
+            <string>[SCRUM].Phenology.AccumulatedThermalTime.Value()</string>
             <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
             <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-            <string>[SCRUM].Phenology.ThermalTime.Value</string>
+            <string>[SCRUM].Phenology.ThermalTime.Value()</string>
             <string>[SCRUM].Phenology.CurrentPhaseName</string>
             <string>[SCRUM].Phenology.Stage</string>
             <string>[AutomaticIrrigation].Script.Top_Refull</string>

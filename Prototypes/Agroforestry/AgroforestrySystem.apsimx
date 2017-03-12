@@ -9787,8 +9787,8 @@ NOTE: Germination failure was an important factor in determining yield impacts o
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -10219,10 +10219,10 @@ NOTE: Germination failure was an important factor in determining yield impacts o
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -10255,8 +10255,8 @@ NOTE: Germination failure was an important factor in determining yield impacts o
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -10739,10 +10739,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -10775,8 +10775,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -11259,10 +11259,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -11295,8 +11295,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -11779,10 +11779,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -11815,8 +11815,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -12299,10 +12299,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -12335,8 +12335,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -12819,10 +12819,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -12855,8 +12855,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -13339,10 +13339,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -13375,8 +13375,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -13859,10 +13859,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -13895,8 +13895,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -13920,13 +13920,13 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Maize].Rachis.CobNumber.Value</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Maize].Rachis.CobNumber.Value()</string>
               <string>[Maize].Rachis.Live.Wt</string>
-              <string>[Maize].Rachis.CobSize.Value</string>
+              <string>[Maize].Rachis.CobSize.Value()</string>
               <string>[SurfaceOrganicMatter].Wt</string>
             </VariableNames>
             <EventNames>
@@ -15141,8 +15141,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -15569,10 +15569,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -15604,8 +15604,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -16084,10 +16084,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -16119,8 +16119,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -16599,10 +16599,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -16634,8 +16634,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -17114,10 +17114,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -17149,8 +17149,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -17629,10 +17629,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -17664,8 +17664,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -18144,10 +18144,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -18179,8 +18179,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -18659,10 +18659,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -18694,8 +18694,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>
@@ -19174,10 +19174,10 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
               <string>[Maize].Grain.Size as GrainSize</string>
               <string>[Maize].Population</string>
-              <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
+              <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Maize].Harvesting</string>
@@ -19209,8 +19209,8 @@ namespace Models
               <string>[TreeProxy].WaterStress</string>
               <string>[Soil].SoilWater.SW[1] as SurfaceSW</string>
               <string>[Maize].Leaf.Fw</string>
-              <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-              <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+              <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Root.Depth</string>
               <string>[Maize].Grain.Live.Wt as GrainWt</string>

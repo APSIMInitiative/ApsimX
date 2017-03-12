@@ -36,45 +36,40 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// or
         /// Unknown photosynthetic pathway in RUECO2Function
         /// </exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            if (PhotosyntheticPathway == "C3")
             {
 
-                if (PhotosyntheticPathway == "C3")
-                {
-
-                    double temp = (MetData.MaxT + MetData.MinT) / 2.0; // Average temperature
+                double temp = (MetData.MaxT + MetData.MinT) / 2.0; // Average temperature
 
 
-                    if (temp >= 50.0)
-                        throw new Exception("Average daily temperature too high for RUE CO2 Function");
+                if (temp >= 50.0)
+                    throw new Exception("Average daily temperature too high for RUE CO2 Function");
 
-                    if (MetData.CO2 < 350)
-                        throw new Exception("CO2 concentration too low for RUE CO2 Function");
-                    else if (MetData.CO2 == 350)
-                        return 1.0;
-                    else
-                    {
-                        double CP;      //co2 compensation point (ppm)
-                        double first;
-                        double second;
-
-                        CP = (163.0 - temp) / (5.0 - 0.1 * temp);
-
-                        first = (MetData.CO2 - CP) * (350.0 + 2.0 * CP);
-                        second = (MetData.CO2 + 2.0 * CP) * (350.0 - CP);
-                        return first / second;
-                    }
-                }
-                else if (PhotosyntheticPathway == "C4")
-                {
-                    return 0.000143 * MetData.CO2 + 0.95; //Mark Howden, personal communication
-                }
+                if (MetData.CO2 < 350)
+                    throw new Exception("CO2 concentration too low for RUE CO2 Function");
+                else if (MetData.CO2 == 350)
+                    return 1.0;
                 else
-                    throw new Exception("Unknown photosynthetic pathway in RUECO2Function");
-            }
+                {
+                    double CP;      //co2 compensation point (ppm)
+                    double first;
+                    double second;
 
+                    CP = (163.0 - temp) / (5.0 - 0.1 * temp);
+
+                    first = (MetData.CO2 - CP) * (350.0 + 2.0 * CP);
+                    second = (MetData.CO2 + 2.0 * CP) * (350.0 - CP);
+                    return first / second;
+                }
+            }
+            else if (PhotosyntheticPathway == "C4")
+            {
+                return 0.000143 * MetData.CO2 + 0.95; //Mark Howden, personal communication
+            }
+            else
+                throw new Exception("Unknown photosynthetic pathway in RUECO2Function");
         }
     }
 }

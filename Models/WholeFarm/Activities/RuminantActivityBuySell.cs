@@ -1,11 +1,12 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>Ruminant sales activity</summary>
 	/// <summary>This activity undertakes the sale and transport of any individuals f;agged for sale.</summary>
@@ -14,11 +15,10 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-	public class RuminantActivityBuySell : Model
+	public class RuminantActivityBuySell : WFModel
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 		[Link]
 		ISummary Summary = null;
 

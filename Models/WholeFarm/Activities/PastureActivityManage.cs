@@ -1,11 +1,12 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>Pasture management activity</summary>
 	/// <summary>This activity provides a pasture based on land unit, area and pasture type</summary>
@@ -15,11 +16,10 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-	public class PastureActivityManage: Model
+	public class PastureActivityManage: WFActivityBase
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 		[Link]
 		Clock Clock = null;
 
@@ -81,7 +81,7 @@ namespace Models.WholeFarm
 		/// Feed type
 		/// </summary>
 		[XmlIgnore]
-		public GrazeFoodStoreType FeedType { get; set; }
+		public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
 
 		/// <summary>
 		/// Feed at start of month before grazing after updating
@@ -116,24 +116,11 @@ namespace Models.WholeFarm
 			LandConditionIndex = LandConditionIndexAtStart;
 
 			// locate Pasture Type resource
-			FeedType = Resources.GetResourceItem("GrazeFoodStore", FeedTypeName) as GrazeFoodStoreType;
+			bool resourceAvailable = false;
+			LinkedNativeFoodType = Resources.GetResourceItem("GrazeFoodStore", FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
 
 			// TODO: Set up pasture pools to start run
 
-		}
-
-		/// <summary>An event handler to allow us to reset request list at start of the month</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFRequestResources")]
-		private void OnWFRequestResources(object sender, EventArgs e)
-		{
-			if (Area < AreaRequested)
-			{
-				//TODO: Request land
-
-				Area = AreaRequested;
-			}
 		}
 
 		/// <summary>An event handler to allow us to get next supply of pasture</summary>
@@ -152,14 +139,14 @@ namespace Models.WholeFarm
 			if (Clock.Today.Month >= 11 ^ Clock.Today.Month <= 3)
 			{
 				newPasture.Set(500 * Area);
-				newPasture.DMD = this.FeedType.DMD;
-				newPasture.DryMatter = this.FeedType.DryMatter;
-				newPasture.Nitrogen = this.FeedType.Nitrogen;
-				this.FeedType.Add(newPasture);
+				newPasture.DMD = this.LinkedNativeFoodType.DMD;
+				newPasture.DryMatter = this.LinkedNativeFoodType.DryMatter;
+				newPasture.Nitrogen = this.LinkedNativeFoodType.Nitrogen;
+				this.LinkedNativeFoodType.Add(newPasture);
 			}
 
 			// store total pasture at start of month
-			PastureAtStartOfMonth = this.FeedType.Amount;
+			PastureAtStartOfMonth = this.LinkedNativeFoodType.Amount;
 		}
 
 		/// <summary>
@@ -177,21 +164,57 @@ namespace Models.WholeFarm
 			// consumption needs to be calculated before decay and againg.
 
 			// decay N and DMD of pools and age by 1 month
-			foreach (var pool in FeedType.Pools)
+			foreach (var pool in LinkedNativeFoodType.Pools)
 			{
-				pool.Nitrogen = Math.Min(pool.Nitrogen * (1 - FeedType.DecayNitrogen), FeedType.MinimumNitrogen);
-				pool.DMD = Math.Min(pool.DMD * (1 - FeedType.DecayDMD), FeedType.MinimumDMD);
+				pool.Nitrogen = Math.Min(pool.Nitrogen * (1 - LinkedNativeFoodType.DecayNitrogen), LinkedNativeFoodType.MinimumNitrogen);
+				pool.DMD = Math.Min(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
 
-				double detach = FeedType.CarryoverDetachRate;
+				double detach = LinkedNativeFoodType.CarryoverDetachRate;
 				if (pool.Age<12)
 				{
-					detach = FeedType.DetachRate;
+					detach = LinkedNativeFoodType.DetachRate;
 					pool.Age++;
 				}
 				pool.Set(pool.Amount * detach);
 			}
 			// remove all pools with less than 100g of food
-			FeedType.Pools.RemoveAll(a => a.Amount < 0.1);
+			LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.1);
+		}
+
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns>A list of resource requests</returns>
+		public override List<ResourceRequest> DetermineResourcesNeeded()
+		{
+			if(Area==0 & AreaRequested>0)
+			{
+				ResourceRequestList = new List<ResourceRequest>();
+				ResourceRequestList.Add(new ResourceRequest()
+				{
+					AllowTransmutation = false,
+					Required = AreaRequested*((UnitsOfArea == UnitsOfAreaTypes.Hectares)?1:100),
+					ResourceName = "Land",
+					ResourceTypeName = LandTypeNameToUse,
+					Requestor = this.Name,
+					FilterSortDetails = null
+				}
+				);
+				return ResourceRequestList;
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform activity if it can occur as soon as resources are available.
+		/// </summary>
+		public override void PerformActivity()
+		{
+			if(ResourceRequestList.Count() > 0)
+			{
+				Area = ResourceRequestList.FirstOrDefault().Available;
+			}
+			return;
 		}
 	}
 

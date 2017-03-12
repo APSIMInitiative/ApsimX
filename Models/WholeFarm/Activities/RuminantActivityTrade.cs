@@ -1,10 +1,11 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>Ruminant herd management activity</summary>
 	/// <summary>This activity will maintain a breeding herd at the desired levels of age/breeders etc</summary>
@@ -13,11 +14,10 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-	public class RuminantActivityTrade : Model
+	public class RuminantActivityTrade : WFModel
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 //		[Link]
 //		Clock Clock = null;
 

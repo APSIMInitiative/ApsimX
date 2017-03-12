@@ -1,10 +1,13 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Groupings;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>
 	/// Off farm labour activities
@@ -12,75 +15,94 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-	public class LabourActivityOffFarm: Model
+	public class LabourActivityOffFarm: WFActivityBase
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
+
 		/// <summary>
 		/// Get the Clock.
 		/// </summary>
 		[Link]
 		Clock Clock = null;
 
-		/// <summary>An event handler to utilise all off farm labour and receive payment</summary>
+		/// <summary>
+		/// Amount provided from resource or arbitrator
+		/// </summary>
+		[XmlIgnore]
+		public double AmountProvided { get; set; }
+
+		/// <summary>
+		/// Daily labour rate
+		/// </summary>
+		[Description("Daily labour rate")]
+		public double DailyRate { get; set; }
+
+		/// <summary>
+		/// Days worked
+		/// </summary>
+		[Description("Days work available each month")]
+		public double[] DaysWorkAvailableEachMonth { get; set; }
+
+		/// <summary>
+		/// Bank account name to pay to
+		/// </summary>
+		[Description("Bank account name to pay to")]
+		public string BankAccountName { get; set; }
+
+		private FinanceType bankType { get; set; }
+
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFRequestResources")]
-		private void OnWFRequestResources(object sender, EventArgs e)
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			List<LabourOffFarmFilterGroup> taskList = this.Children.Where(a => a.GetType() == typeof(LabourOffFarmFilterGroup)).Cast<LabourOffFarmFilterGroup>().ToList();
-			if (taskList.Count > 0)
-			{
-				int month = Clock.Today.Month - 1;
-				foreach (var item in taskList)
-				{
-					// get family types based on filter
-
-					// request labour for x individuals
-					
-					// request labour
-					LabourRequest request = new LabourRequest();
-					request.Activity = this;
-					request.Amount = item.DailyRate * item.DaysWorkAvailableEachMonth[month];
-					request.Requestor = item;
-					item.AmountProvided = request.Amount;
-					// labour.Remove(request);
-				}
-			}
+			// locate FeedType resource
+			bool resourceAvailable = false;
+			bankType = Resources.GetResourceItem("Finances", BankAccountName, out resourceAvailable) as FinanceType;
 		}
 
-		/// <summary>An event handler to utilise all off farm labour and receive payment</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFResourcesAllocated")]
-		private void OnWFResourcesAllocated(object sender, EventArgs e)
+
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
-			List<LabourOffFarmFilterGroup> taskList = this.Children.Where(a => a.GetType() == typeof(LabourOffFarmFilterGroup)).Cast<LabourOffFarmFilterGroup>().ToList();
-			if (taskList.Count > 0)
+			ResourceRequestList = new List<ResourceRequest>();
+
+			// zero based month index for array
+			int month = Clock.Today.Month - 1;
+
+			if (DaysWorkAvailableEachMonth[month] > 0)
 			{
-				Finance Accounts = Resources.FinanceResource() as Finance;
-				FinanceType bankAccount = Accounts.GetFirst() as FinanceType;
-
-				if (bankAccount != null)
+				ResourceRequestList.Add(new ResourceRequest()
 				{
-					// search through arbitrators requests and make payments.
-
-					// otherwise we need to know who had payments made for work.
-
-
-
-					int month = Clock.Today.Month - 1;
-					foreach (var item in taskList)
-					{
-						// days provided from labour set in item.AmountProvided
-
-						// receive payment for labour
-						bankAccount.Add(item.AmountProvided, this.Name, item.Name);
-					}
+					AllowTransmutation = false,
+					Required = DaysWorkAvailableEachMonth[month],
+					ResourceName = "Labour",
+					ResourceTypeName = "",
+					Requestor = this.Name,
+					FilterSortDetails = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>()
 				}
+				);
 			}
+			else
+			{
+				return null;
+			}
+			return ResourceRequestList;
 		}
 
+		/// <summary>
+		/// Method used to perform activity if it can occur as soon as resources are available.
+		/// </summary>
+		public override void PerformActivity()
+		{
+			// days provided from labour set in the only request ins the resourceResquestList
+			// receive payment for labour
+			bankType.Add(ResourceRequestList.FirstOrDefault().Available*DailyRate, this.Name, this.Name);
+		}
 	}
 }

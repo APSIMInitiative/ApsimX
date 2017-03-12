@@ -565,7 +565,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+                return Math.Min(Math.Min(TempStress.Value(), NStress.Photo),
                                 Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
             }
         }
@@ -847,7 +847,7 @@ namespace Models.PMF.OldPlant
                 ext_n_demand += Organ.NDemand;
 
             //nh  use zero growth value here so that estimated n fix is always <= actual;
-            double n_fix_pot = NFixRate.Value * AboveGroundLive.Wt * SWStress.Fixation;
+            double n_fix_pot = NFixRate.Value() * AboveGroundLive.Wt * SWStress.Fixation;
 
             if (NSupplyPreference == "active")
             {

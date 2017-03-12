@@ -1,11 +1,12 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>Ruminant breeding activity</summary>
 	/// <summary>This activity provides all functionality for ruminant breeding up until natural weaning</summary>
@@ -15,12 +16,10 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-
-	public class RuminantActivityBreed : Model
+	public class RuminantActivityBreed : WFActivityBase
 	{
 		[Link]
-		private Resources Resources = null;
+		private ResourcesHolder Resources = null;
 		[Link]
 		ISummary Summary = null;
 
@@ -31,10 +30,9 @@ namespace Models.WholeFarm
 		public string HerdName { get; set; }
 
 		/// <summary>
-		/// Determines if matings are controlled
+		/// The location of controlled mating settings
 		/// </summary>
-		[Description("Controlled matings")]
-		public bool ControlledMatings { get; set; }
+		private ControlledMatingSettings ControlledMatings { get; set; }
 
 		/// <summary>
 		/// Maximum conception rate for uncontrolled matings
@@ -127,6 +125,9 @@ namespace Models.WholeFarm
 				breedFemales[0].NumberOfBirths = Convert.ToInt32((breedFemales[0].Age - breedFemales[0].BreedParams.MinimumAge1stMating) / ((IPIcurrent + IPIminsize) / 2)) - 1;
 				female.AgeAtLastBirth = breedFemales[0].Age - 12;
 			}
+
+			// check for controlled mating settings
+			ControlledMatings = this.Children.Where(a => a.GetType() == typeof(ControlledMatingSettings)).Cast<ControlledMatingSettings>().FirstOrDefault();
 		}
 
 		/// <summary>An event handler to perform herd breeding </summary>
@@ -165,9 +166,6 @@ namespace Models.WholeFarm
 							// This is currently only performed at time of birth rather than monthly during pregnancy
 							// and so does not reflect changes in female intake etc after dead of foetus.
 
-							// this now occurs monthly at the ned of this breeding method.
-							//if (randomGenerator.RandNo > female.BreedParams.PrenatalMortality)
-							//{
 							object newCalf = null;
 							bool isMale = (WholeFarm.RandomGenerator.NextDouble() > 0.5);
 							if (isMale)
@@ -196,36 +194,56 @@ namespace Models.WholeFarm
 
 							// add to sucklings
 							female.SucklingOffspring.Add(newCalfRuminant);
-
-							//}
 						}
 						female.UpdateBirthDetails();
 					}
 				}
 
-				// Conception
-				// check if males and females of breeding condition are together
-				if (location.GroupBy(a => a.Gender).Count() == 2)
+				// uncontrolled conception
+				if(ControlledMatings == null)
 				{
-					// servicing rate
-					int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
-					int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
-					double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
-					double maleLimiter = Math.Max(1.0, matingsPossible/ femaleCount);
+					// check if males and females of breeding condition are together
+					if (location.GroupBy(a => a.Gender).Count() == 2)
+					{
+						// servicing rate
+						int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
+						int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
+						double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
+						double maleLimiter = Math.Max(1.0, matingsPossible / femaleCount);
 
+						foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+						{
+							//TODO: ensure enough time since last calf
+							if (!female.IsPregnant & !female.IsLactating)
+							{
+								// calculate conception
+								double conceptionRate = ConceptionRate(female) * maleLimiter;
+								conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
+								if (WholeFarm.RandomGenerator.NextDouble() <= conceptionRate)
+								{
+									female.UpdateConceptionDetails(WholeFarm.RandomGenerator.NextDouble() > female.BreedParams.TwinRate, conceptionRate);
+								}
+							}
+						}
+					}
+				}
+				// controlled conception
+				else if(ControlledMatings!=null && ControlledMatings.IsDueDate())
+				{
 					foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
 					{
 						//TODO: ensure enough time since last calf
 						if (!female.IsPregnant & !female.IsLactating)
 						{
 							// calculate conception
-							double conceptionRate = ConceptionRate(female) * maleLimiter;
+							double conceptionRate = ConceptionRate(female);
 							if (WholeFarm.RandomGenerator.NextDouble() <= conceptionRate)
 							{
 								female.UpdateConceptionDetails(WholeFarm.RandomGenerator.NextDouble() > female.BreedParams.TwinRate, conceptionRate);
 							}
 						}
 					}
+
 				}
 
 				// determine all foetus and newborn mortality.
@@ -243,7 +261,9 @@ namespace Models.WholeFarm
 						}
 					}
 				}
-
+			}
+			if (ControlledMatings != null && ControlledMatings.IsDueDate())
+			{
 
 			}
 		}
@@ -290,5 +310,46 @@ namespace Models.WholeFarm
 			return rate;
 		}
 
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns>List of required resource requests</returns>
+		public override List<ResourceRequest> DetermineResourcesNeeded()
+		{
+			ResourceRequestList = null;
+			if(ControlledMatings!=null)
+			{
+				ResourceRequestList = new List<ResourceRequest>();
+				RuminantHerd ruminantHerd = Resources.RuminantHerd();
+				List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
+				int breeders = (from ind in herd
+							   where
+							   (ind.Gender == Sex.Female &
+							   ind.Age >= ind.BreedParams.MinimumAge1stMating &
+							   ind.Weight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
+							   )
+							   select ind).Count();
+
+				ResourceRequestList.Add(new ResourceRequest()
+				{
+					AllowTransmutation = false,
+					Required = Math.Ceiling(breeders/ControlledMatings.LabourBreedersUnit)*ControlledMatings.LabourRequired,
+					ResourceName = "Labour",
+					ResourceTypeName = this.HerdName,
+					Requestor = this.Name,
+					FilterSortDetails = ControlledMatings.LabourFilterList
+				}
+				);
+			}
+			return ResourceRequestList;
+		}
+
+		/// <summary>
+		/// Method used to perform activity if it can occur as soon as resources are available.
+		/// </summary>
+		public override void PerformActivity()
+		{
+			return;
+		}
 	}
 }

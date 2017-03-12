@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
     ///<summary>
     /// Parent model of Labour Person models.
@@ -15,7 +15,7 @@ namespace Models.WholeFarm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Resources))]
+    [ValidParent(ParentType = typeof(ResourcesHolder))]
     public class Labour: ResourceBaseWithTransactions
 	{
         /// <summary>
@@ -29,16 +29,6 @@ namespace Models.WholeFarm
 		/// </summary>
 		[Description("Allow individuals to age")]
 		public bool AllowAging { get; set; }
-
-		///// <summary>
-		///// Returns the family member with the given name.
-		///// </summary>
-		///// <param name="Name"></param>
-		///// <returns></returns>
-		//public LabourFamilyType GetByName(string Name)
-		//{
-		//	return Items.Find(x => x.Name == Name);
-		//}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -61,11 +51,11 @@ namespace Models.WholeFarm
 
 		#region Transactions
 
-		// Must be included away from base class so that APSIM Event.Subscriber can find them 
+			// Must be included away from base class so that APSIM Event.Subscriber can find them 
 
-		/// <summary>
-		/// Override base event
-		/// </summary>
+			/// <summary>
+			/// Override base event
+			/// </summary>
 		protected new void OnTransactionOccurred(EventArgs e)
 		{
 			EventHandler invoker = TransactionOccurred;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Activities
 {
 	/// <summary>Ruminant predictive stocking activity</summary>
 	/// <summary>This activity ensure the total herd size is acceptible to graze the dry season pasture</summary>
@@ -14,8 +14,7 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(Activities))]
-	public class RuminantActivityPredictiveStocking: Model
+	public class RuminantActivityPredictiveStocking: WFModel
 	{
 		[Link]
 		Clock Clock = null;

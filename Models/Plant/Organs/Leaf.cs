@@ -66,7 +66,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Plant != null && Plant.IsAlive)
-                    return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)), 0.999999999);
+                    return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value() * LAI / MaxCover)), 0.999999999);
                 return 0;
             }
         }
@@ -374,7 +374,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the dead cohort no.</summary>
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.MainStemFinalNodeNumber.Value); } }
+        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.MainStemFinalNodeNumber.Value()); } }
 
         /// <summary>Gets the plant appeared green leaf no.</summary>
         [Units("/plant")]
@@ -587,9 +587,9 @@ namespace Models.PMF.Organs
                     return 1;
 
                 double f;
-                double functionalNConc = (CohortParameters.CriticalNConc.Value -
-                                          CohortParameters.MinimumNConc.Value*CohortParameters.StructuralFraction.Value)*
-                                         (1/(1 - CohortParameters.StructuralFraction.Value));
+                double functionalNConc = (CohortParameters.CriticalNConc.Value() -
+                                          CohortParameters.MinimumNConc.Value() * CohortParameters.StructuralFraction.Value()) *
+                                         (1/(1 - CohortParameters.StructuralFraction.Value()));
                     if (functionalNConc <= 0)
                         f = 1;
                     else
@@ -629,11 +629,11 @@ namespace Models.PMF.Organs
             double NonStructuralDemand = 0.0;
             double MetabolicDemand = 0.0;
 
-            DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
+            DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
             if (DMDemandFunction != null)
             {
-                StructuralDemand = DMDemandFunction.Value * StructuralFraction.Value;
-                NonStructuralDemand = DMDemandFunction.Value * (1 - StructuralFraction.Value);
+                StructuralDemand = DMDemandFunction.Value() * StructuralFraction.Value();
+                NonStructuralDemand = DMDemandFunction.Value() * (1 - StructuralFraction.Value());
             }
             else
             {
@@ -658,15 +658,15 @@ namespace Models.PMF.Organs
                 if (MicroClimatePresent == false)
                     throw new Exception(Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
 
-                if (FrostFraction.Value > 0)
+                if (FrostFraction.Value() > 0)
                     foreach (LeafCohort l in Leaves)
-                        l.DoFrost(FrostFraction.Value);
+                        l.DoFrost(FrostFraction.Value());
 
                 bool nextExpandingLeaf = false;
                 foreach (LeafCohort L in Leaves)
                 {
                     CurrentRank = L.Rank;
-                    L.DoPotentialGrowth(ThermalTime.Value, CohortParameters);
+                    L.DoPotentialGrowth(ThermalTime.Value(), CohortParameters);
                     if ((L.IsFullyExpanded == false) && (nextExpandingLeaf == false))
                     {
                         nextExpandingLeaf = true;
@@ -678,7 +678,7 @@ namespace Models.PMF.Organs
                         FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
                     }
                 }
-                FRGR = FRGRFunction.Value;
+                FRGR = FRGRFunction.Value();
         }
 
         /// <summary>Clears this instance.</summary>
@@ -779,7 +779,7 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 foreach (LeafCohort L in Leaves)
-                    L.DoActualGrowth(ThermalTime.Value, CohortParameters);
+                    L.DoActualGrowth(ThermalTime.Value(), CohortParameters);
 
                 Structure.UpdateHeight();
 
@@ -811,7 +811,7 @@ namespace Models.PMF.Organs
             double LAIabove = 0;
             for (int i = Leaves.Count - 1; i > cohortno - 1; i--)
                 LAIabove += Leaves[i].LiveArea/MM2ToM2;
-            return 1 - Math.Exp(-ExtinctionCoeff.Value*LAIabove);
+            return 1 - Math.Exp(-ExtinctionCoeff.Value() * LAIabove);
         }
 
         /// <summary>
@@ -873,7 +873,7 @@ namespace Models.PMF.Organs
                 Reallocation += L.LeafStartDMReallocationSupply;
             }
 
-            return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = Retranslocation, Reallocation = Reallocation };
+            return new BiomassSupplyType { Fixation = Photosynthesis.Value(), Retranslocation = Retranslocation, Reallocation = Reallocation };
         }
 
         /// <summary>Sets the dm potential allocation.</summary>
@@ -1276,7 +1276,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return CohortParameters.CriticalNConc.Value;
+                return CohortParameters.CriticalNConc.Value();
             }
         }
         #endregion

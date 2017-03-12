@@ -524,12 +524,9 @@ namespace Models.PMF.Functions.SupplyFunctions
 
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return GrossPhotosynthesis;
-            }
+            return GrossPhotosynthesis;
         }
     }
 }

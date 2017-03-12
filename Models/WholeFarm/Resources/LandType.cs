@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
 
     /// <summary>
@@ -16,7 +16,7 @@ namespace Models.WholeFarm
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Land))]
-    public class LandType : Model, IResourceType, IResourceWithTransactionType
+    public class LandType : WFModel, IResourceType, IResourceWithTransactionType
 	{
         [Link]
         ISummary Summary = null;
@@ -69,15 +69,26 @@ namespace Models.WholeFarm
 		/// </summary>
 		public void Initialise()
 		{
-			this.areaAvailable = this.LandArea;
+			Add(this.LandArea, this.Name, "Initialise");
+//			this.areaAvailable = this.LandArea;
 		}
 
+		/// <summary>
+		/// Resource available
+		/// </summary>
+		public double Amount
+		{
+			get
+			{
+				return AreaAvailable;
+			}
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 			Initialise();
 		}
@@ -107,7 +118,7 @@ namespace Models.WholeFarm
 				this.areaAvailable = this.areaAvailable + AddAmount;
 			}
 			ResourceTransaction details = new ResourceTransaction();
-			details.Debit = amountAdded;
+			details.Credit = amountAdded;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			details.ResourceType = this.Name;
@@ -122,13 +133,13 @@ namespace Models.WholeFarm
 		/// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
 		/// <param name="ActivityName">Name of activity requesting resource</param>
 		/// <param name="UserName">Name of individual requesting resource</param>
-		public void Remove(double RemoveAmount, string ActivityName, string UserName)
+		public double Remove(double RemoveAmount, string ActivityName, string UserName)
 		{
 			double amountRemoved = RemoveAmount;
 			if (this.areaAvailable - RemoveAmount < 0)
 			{
 				amountRemoved = this.areaAvailable;
-				string message = "Tried to remove more available land to " + this.Name + " than exists." + Environment.NewLine
+				string message = "Tried to remove more available land from " + this.Name + " than exists." + Environment.NewLine
 					+ "Current Amount: " + this.areaAvailable + Environment.NewLine
 					+ "Tried to Remove: " + RemoveAmount;
 				Summary.WriteWarning(this, message);
@@ -140,12 +151,13 @@ namespace Models.WholeFarm
 			}
 			ResourceTransaction details = new ResourceTransaction();
 			details.ResourceType = this.Name;
-			details.Credit = amountRemoved;
+			details.Debit = amountRemoved * -1;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			LastTransaction = details;
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 			OnTransactionOccurred(te);
+			return amountRemoved;
 		}
 
 		/// <summary>
@@ -205,8 +217,9 @@ namespace Models.WholeFarm
 		[XmlIgnore]
 		public ResourceTransaction LastTransaction { get; set; }
 
+
 		#endregion
 
-    }
+	}
 
 }

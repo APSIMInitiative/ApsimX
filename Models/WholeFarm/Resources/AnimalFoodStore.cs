@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
 
-namespace Models.WholeFarm
+namespace Models.WholeFarm.Resources
 {
     ///<summary>
     /// Store for all the food designated for animals to eat (eg. Forages and Supplements)
@@ -15,7 +15,7 @@ namespace Models.WholeFarm
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(Resources))]
+    [ValidParent(ParentType = typeof(ResourcesHolder))]
     public class AnimalFoodStore: ResourceBaseWithTransactions
     {
         /// <summary>
