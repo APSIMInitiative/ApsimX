@@ -427,7 +427,7 @@ namespace Models
         /// <summary>
         /// Gets the daily Photothermal Quotient (ptq).
         /// </summary>
-        public double ptq
+        public double PhotothermalQuotient
         {
             get
             {
