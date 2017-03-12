@@ -425,6 +425,19 @@ namespace Models
         }
 
         /// <summary>
+        /// Gets the daily Photothermal Quotient (ptq).
+        /// </summary>
+        public double ptq
+        {
+            get
+            {
+                return this.MetData.Radn / ((this.MetData.Maxt + this.MetData.Mint) / 2);
+            }
+        }
+        
+
+
+        /// <summary>
         /// Gets the duration of the day in hours.
         /// </summary>
         public double CalculateDayLength(double Twilight)
