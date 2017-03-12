@@ -797,8 +797,10 @@ namespace Models.PMF.Organs
             {
                 //Accelerate thermal time accumulation if crop is water stressed.
                 double thermalTime;
-                if (IsFullyExpanded)
-                    thermalTime = tt*leafCohortParameters.DroughtInducedSenAcceleration.Value();
+                if (IsFullyExpanded && IsNotSenescing)
+                    thermalTime = tt*leafCohortParameters.DroughtInducedLagAcceleration.Value();
+                else if (IsSenescing)
+                    thermalTime = tt * leafCohortParameters.DroughtInducedSenAcceleration.Value();
                 else thermalTime = tt;
 
                 //Leaf area growth parameters
@@ -878,8 +880,10 @@ namespace Models.PMF.Organs
 
             //Acellerate thermal time accumulation if crop is water stressed.
             double thermalTime;
-            if ((leafCohortParameters.DroughtInducedSenAcceleration != null) && IsFullyExpanded)
-                thermalTime = tt*leafCohortParameters.DroughtInducedSenAcceleration.Value();
+            if (IsFullyExpanded && IsNotSenescing)
+                thermalTime = tt * leafCohortParameters.DroughtInducedLagAcceleration.Value();
+            else if (IsSenescing)
+                thermalTime = tt * leafCohortParameters.DroughtInducedSenAcceleration.Value();
             else thermalTime = tt;
 
             //Growing leaf area after DM allocated

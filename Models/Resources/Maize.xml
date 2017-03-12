@@ -1184,6 +1184,35 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
         <Units>g/g</Units>
       </Constant>
       <AddFunction>
+        <Name>DroughtInducedSLagAcceleration</Name>
+        <Constant>
+          <Name>One</Name>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <MultiplyFunction>
+          <Name>Stress</Name>
+          <Constant>
+            <Name>StressResponseCoefficient</Name>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>StressFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0.5</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
+      </AddFunction>
+	  <AddFunction>
         <Name>DroughtInducedSenAcceleration</Name>
         <Constant>
           <Name>One</Name>
