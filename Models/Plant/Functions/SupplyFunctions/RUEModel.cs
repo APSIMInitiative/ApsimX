@@ -89,22 +89,19 @@ namespace Models.PMF.Functions.SupplyFunctions
         {
             get
             {
-                double RueReductionFactor = Math.Min(FT.Value, Math.Min(FN.Value, FVPD.Value)) * FW.Value * FCO2.Value;
-                return RUE.Value * RueReductionFactor;
+                double RueReductionFactor = Math.Min(FT.Value(), Math.Min(FN.Value(), FVPD.Value())) * FW.Value() * FCO2.Value();
+                return RUE.Value() * RueReductionFactor;
             }
         }
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                if (Double.IsNaN(RadnInt.Value))
-                    throw new Exception("NaN Radiation interception value supplied to RUE model");
-                if (RadnInt.Value < 0)
-                    throw new Exception("Negative Radiation interception value supplied to RUE model");
-                return RadnInt.Value * RueAct;
-            }
+            if (Double.IsNaN(RadnInt.Value(arrayIndex)))
+                throw new Exception("NaN Radiation interception value supplied to RUE model");
+            if (RadnInt.Value(arrayIndex) < 0)
+                throw new Exception("Negative Radiation interception value supplied to RUE model");
+            return RadnInt.Value(arrayIndex) * RueAct;
         }
         #endregion
     }

@@ -48,7 +48,7 @@ namespace Models.PMF.Phen
                 First = false;
             }
 
-            if ((Leaf.DeadCohortNo >= Structure.MainStemFinalNodeNumber.Value) || (Leaf.CohortsInitialised == false))
+            if ((Leaf.DeadCohortNo >= Structure.MainStemFinalNodeNumber.Value()) || (Leaf.CohortsInitialised == false))
                 return 0.00001;
             else
                 return 0;
@@ -61,7 +61,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double F = (Leaf.DeadCohortNo - DeadNodeNoAtStart) / (Structure.MainStemFinalNodeNumber.Value - DeadNodeNoAtStart);
+                double F = (Leaf.DeadCohortNo - DeadNodeNoAtStart) / (Structure.MainStemFinalNodeNumber.Value() - DeadNodeNoAtStart);
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return F;

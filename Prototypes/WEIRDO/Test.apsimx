@@ -1388,9 +1388,9 @@ namespace Models
 			{
 				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object LeafPartFrac = 0.8;
-				zone.Set("Slurp.Leaf.DMDemandFunction.PartitionFraction.Value", LeafPartFrac);
+				zone.Set("Slurp.Leaf.DMDemandFunction.PartitionFraction.FixedValue", LeafPartFrac);
 				object RootPartFrac = 0.2;
-				zone.Set("Slurp.Root.PartitionFraction.Value", RootPartFrac);
+				zone.Set("Slurp.Root.PartitionFraction.FixedValue", RootPartFrac);
 			}
 			//Potato.Sow(... Contains the following arguements:
 			//Population  double  Optional  Seeds sowing/m2.  Default is zero
@@ -1508,9 +1508,9 @@ namespace Models
 				}
 				//Summary.WriteMessage(this, "LAI " + leaflai);
 				object LAIResetValue = leaflai;
-				zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);  
+				zone.Set("Slurp.Leaf.LAIFunction.FixedValue", LAIResetValue);  
 				object HeightResetValue = CoverRead * MaximumHeight;
-				zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);  
+				zone.Set("Slurp.Leaf.HeightFunction.FixedValue", HeightResetValue);  
 			}
 		}
 	}
@@ -5264,9 +5264,9 @@ namespace Models
 			{
 				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object LeafPartFrac = 0.2;
-				zone.Set("Slurp.Leaf.DMDemandFunction.PartitionFraction.Value", LeafPartFrac);
+				zone.Set("Slurp.Leaf.DMDemandFunction.PartitionFraction.FixedValue", LeafPartFrac);
 				object RootPartFrac = 0.8;
-				zone.Set("Slurp.Root.PartitionFraction.Value", RootPartFrac);
+				zone.Set("Slurp.Root.PartitionFraction.FixedValue", RootPartFrac);
 			}
 			//Potato.Sow(... Contains the following arguements:
 			//Population  double  Optional  Seeds sowing/m2.  Default is zero

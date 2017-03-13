@@ -41,7 +41,7 @@ namespace Models.PMF.OldPlant
         [Link]
         IFunction SWFactorRootDepth = null;
         /// <summary>The sw factor root length</summary>
-        [Link] IFunctionArray SWFactorRootLength = null;
+        [Link] IFunction SWFactorRootLength = null;
         /// <summary>The root depth rate</summary>
         [Link]
         IFunction RootDepthRate = null;
@@ -51,7 +51,7 @@ namespace Models.PMF.OldPlant
         Population1 Population = null;
 
         /// <summary>The relative root rate</summary>
-        [Link] IFunctionArray RelativeRootRate = null;
+        [Link] IFunction RelativeRootRate = null;
         /// <summary>The dm senescence fraction</summary>
         [Link]
         IFunction DMSenescenceFraction = null;
@@ -366,8 +366,8 @@ namespace Models.PMF.OldPlant
             //  the layer with root front
             int layer = FindLayerNo(RootDepth);
 
-            dltRootDepth = RootDepthRate.Value * RootAdvanceFactorTemp.Value *
-                            Math.Min(RootAdvanceFactorWaterStress.Value, SWFactorRootDepth.Value) *
+            dltRootDepth = RootDepthRate.Value() * RootAdvanceFactorTemp.Value() *
+                            Math.Min(RootAdvanceFactorWaterStress.Value(), SWFactorRootDepth.Value()) *
                             xf[layer];
 
             // prevent roots partially entering layers where xf == 0
@@ -421,15 +421,15 @@ namespace Models.PMF.OldPlant
         /// <param name="Delta">The delta.</param>
         public override void GiveDmGreen(double Delta)
         {
-            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value);
+            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value();
+            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value());
             Util.Debug("Root.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("Root.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
         /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
         {
-            double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
+            double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value(), 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -971,15 +971,12 @@ namespace Models.PMF.OldPlant
 
             double[] rlv_factor = new double[Soil.Thickness.Length];    // relative rooting factor for all layers
 
-            double[] relativeRootRate = RelativeRootRate.Values;
-            double[] sWFactorRootLength = SWFactorRootLength.Values;
-
             double rlv_factor_tot = 0.0;
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
-                double branching_factor = relativeRootRate[layer];
+                double branching_factor = RelativeRootRate.Value(layer);
 
-                rlv_factor[layer] = sWFactorRootLength[layer] *
+                rlv_factor[layer] = SWFactorRootLength.Value(layer) *
                                     branching_factor *                                   // branching factor
                                     xf[layer] *                                          // growth factor
                                     MathUtilities.Divide(Soil.Thickness[layer], RootDepth, 0.0);   // space weighting factor

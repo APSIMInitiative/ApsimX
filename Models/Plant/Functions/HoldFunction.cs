@@ -36,7 +36,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            _Value = ValueToHold.Value;
+            _Value = ValueToHold.Value();
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -50,17 +50,14 @@ namespace Models.PMF.Functions
                 //Do nothing, hold value constant
             }
             else
-                _Value = ValueToHold.Value;
+                _Value = ValueToHold.Value();
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return _Value;
-            }
+            return _Value;
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

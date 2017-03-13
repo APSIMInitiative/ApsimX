@@ -31,15 +31,12 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                double PhotoperiodToday = MathUtilities.DayLength(Clock.Today.DayOfYear, Twilight, MetData.Latitude);
-                double PhotoperiodYesterday = MathUtilities.DayLength(Clock.Today.DayOfYear - 1, Twilight, MetData.Latitude);
-                double PhotoperiodDelta = PhotoperiodToday - PhotoperiodYesterday;
-                return PhotoperiodDelta;
-            }
+            double PhotoperiodToday = MathUtilities.DayLength(Clock.Today.DayOfYear, Twilight, MetData.Latitude);
+            double PhotoperiodYesterday = MathUtilities.DayLength(Clock.Today.DayOfYear - 1, Twilight, MetData.Latitude);
+            double PhotoperiodDelta = PhotoperiodToday - PhotoperiodYesterday;
+            return PhotoperiodDelta;
         }
 
     }

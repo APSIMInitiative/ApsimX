@@ -9971,9 +9971,9 @@ namespace Models
 			if (Clock.Today.Date == SowingDate)
 			{
 				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-				zone.Set("Slurp.Leaf.HeightFunction.Value", 400);
-				zone.Set("Slurp.Leaf.LAIFunction.Value", 7);
-				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
+				zone.Set("Slurp.Leaf.HeightFunction.FixedValue", 400);
+				zone.Set("Slurp.Leaf.LAIFunction.FixedValue", 7);
+				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.FixedValue", 0.6);
 			}
 		}
 	}
@@ -10515,9 +10515,9 @@ namespace Models
 			if (Clock.Today.Date == SowingDate)
 			{
 				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-				zone.Set("Slurp.Leaf.HeightFunction.Value", 1200);
-				zone.Set("Slurp.Leaf.LAIFunction.Value", 7);
-				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
+				zone.Set("Slurp.Leaf.HeightFunction.FixedValue", 1200);
+				zone.Set("Slurp.Leaf.LAIFunction.FixedValue", 7);
+				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.FixedValue", 0.6);
 			}
 		}
 	}
@@ -11059,9 +11059,9 @@ namespace Models
 			if (Clock.Today.Date == SowingDate)
 			{
 				Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-				zone.Set("Slurp.Leaf.HeightFunction.Value", 2400);
-				zone.Set("Slurp.Leaf.LAIFunction.Value", 7);
-				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
+				zone.Set("Slurp.Leaf.HeightFunction.FixedValue", 2400);
+				zone.Set("Slurp.Leaf.LAIFunction.FixedValue", 7);
+				zone.Set("Slurp.Leaf.ExtinctionCoefficientFunction.FixedValue", 0.6);
 			}
 		}
 	}
@@ -11619,9 +11619,9 @@ namespace Models
 			if (Clock.Today.Date == SowingDate)
 			{
 				Slurp1.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-				zone.Set("Slurp1.Leaf.HeightFunction.Value", 1200);
-				zone.Set("Slurp1.Leaf.LAIFunction.Value", 7);
-				zone.Set("Slurp1.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
+				zone.Set("Slurp1.Leaf.HeightFunction.FixedValue", 1200);
+				zone.Set("Slurp1.Leaf.LAIFunction.FixedValue", 7);
+				zone.Set("Slurp1.Leaf.ExtinctionCoefficientFunction.FixedValue", 0.6);
 			}
 		}
 	}
@@ -11670,9 +11670,9 @@ namespace Models
 			if (Clock.Today.Date == SowingDate)
 			{
 				Slurp2.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);
-				zone.Set("Slurp2.Leaf.HeightFunction.Value", 1500);
-				zone.Set("Slurp2.Leaf.LAIFunction.Value", 7);
-				zone.Set("Slurp2.Leaf.ExtinctionCoefficientFunction.Value", 0.6);
+				zone.Set("Slurp2.Leaf.HeightFunction.FixedValue", 1500);
+				zone.Set("Slurp2.Leaf.LAIFunction.FixedValue", 7);
+				zone.Set("Slurp2.Leaf.ExtinctionCoefficientFunction.FixedValue", 0.6);
 			}
 		}
 	}
