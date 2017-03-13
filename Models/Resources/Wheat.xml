@@ -1992,5 +1992,18 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 380</Command>
         <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 520.0</Command>
       </Cultivar>
-    </Plant15>
+    <Cultivar>
+      <Name>PendletonTall</Name>
+      <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+      <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+      <Command>[Grain].GrainsPerGramStem = 15</Command>
+    </Cultivar>
+    <Cultivar>
+      <Name>PendletonDwarf</Name>
+      <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
+      <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
+      <Command>[Grain].GrainsPerGramStem = 20</Command>
+    </Cultivar>
+
+  </Plant15>
   
