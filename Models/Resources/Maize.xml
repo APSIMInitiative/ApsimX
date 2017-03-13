@@ -1184,7 +1184,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
         <Units>g/g</Units>
       </Constant>
       <AddFunction>
-        <Name>DroughtInducedSLagAcceleration</Name>
+        <Name>DroughtInducedLagAcceleration</Name>
         <Constant>
           <Name>One</Name>
           <FixedValue>1</FixedValue>
