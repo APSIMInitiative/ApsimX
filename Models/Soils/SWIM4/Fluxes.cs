@@ -7,13 +7,15 @@ using APSIM.Shared.Utilities;
 
 namespace Models.Soils.SWIM4
 {
-    // Calculates flux tables given soil properties and path lengths.
-    // Static; there should not be more than one of these per simulation.
+    /// <summary>
+    /// Calculates flux tables given soil properties and path lengths.
+    /// Static; there should not be more than one of these per simulation.
+    /// </summary>
     public static class Fluxes
     {
         /// <summary>Store a list of flux tables and their associated soil names and layers.</summary>
         public static Dictionary<string, FluxTable> FluxTables {get;set;}
-
+        /// <summary></summary>
         public static FluxTable ft;
         static int mx = 100; // max no. of phi values
         static int i, j, ni, ns, nt, nu, nit, nfu, nphif, ip, nfs, ii, ie;
@@ -39,6 +41,7 @@ namespace Models.Soils.SWIM4
 
         static StringBuilder diags = new StringBuilder();
 
+        /// <summary></summary>
         public static void FluxTable(double dz, SoilProps props)
         {
             // Generates a flux table for use by other programs.
@@ -496,7 +499,9 @@ namespace Models.Soils.SWIM4
             }
             nsel = b;
         }
-        // Return quadratic interpolation coeffs co.
+        /// <summary>
+        /// Return quadratic interpolation coeffs co.
+        /// </summary>
         public static double[] Quadco(double[] x, double[] y)
         {
             double[] co = new double[4];
@@ -511,8 +516,9 @@ namespace Models.Soils.SWIM4
             co[3] = s * s * c2;
             return co;
         }
-
-        // Return v(1:n-1) corresponding to u(1:n-1) using quadratic interpolation.
+        /// <summary>
+        /// Return v(1:n-1) corresponding to u(1:n-1) using quadratic interpolation.
+        /// </summary>
         public static double[] Quadinterp(double[] x, double[] y, int n, double[] u)
         {
             double[] v = new double[100 + 1];
@@ -534,6 +540,7 @@ namespace Models.Soils.SWIM4
             return v;
         }
 
+        /// <summary></summary>
         public static FluxTable ReadFluxTable(string key)
         {
             return FluxTables[key];
@@ -553,25 +560,32 @@ namespace Models.Soils.SWIM4
             hpK = sethpK;
         }
     }
-    
+
     //  sid - soil ident
     //  nfu, nft - no. of fluxes unsat and total
     //  dz - path length
     //  phif(1:nft) - phi values
+    /// <summary></summary>
     [Serializable]
     public struct FluxEnd
     {
+        /// <summary></summary>
         public int sid, nfu, nft;
+        /// <summary></summary>
         public double[] phif;
+        /// <summary></summary>
         public double dz;
     }
 
     //  fend(2) - flux end data
     //  qf(1:fend(1)%nft,1:fend(2)%nft) - flux table
+    /// <summary></summary>
     [Serializable]
     public struct FluxTable
     {
+        /// <summary></summary>
         public FluxEnd[] fend;
+        /// <summary></summary>
         public double[,] ftable;
     }
 }
