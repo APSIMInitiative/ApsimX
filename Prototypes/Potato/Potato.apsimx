@@ -957,6 +957,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <Constant>
             <Name>DroughtInducedSenAcceleration</Name>
             <FixedValue>1</FixedValue>
           </Constant>

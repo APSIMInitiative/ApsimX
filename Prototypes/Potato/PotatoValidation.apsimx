@@ -278,6 +278,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <GenericOrgan>
         <Name>Tuber</Name>
@@ -936,6 +937,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>CellDivisionStress</Name>
             <FixedValue>1</FixedValue>
             <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <FixedValue>1</FixedValue>
           </Constant>
         </LeafCohortParameters>
         <RUEModel>
@@ -26494,6 +26499,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Emerged>false</Emerged>
             <CohortToInitialise>0</CohortToInitialise>
             <TipToAppear>0</TipToAppear>
+            <ApexNum>0</ApexNum>
           </Structure>
           <GenericOrgan>
             <Name>Tuber</Name>
@@ -31977,6 +31983,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Emerged>false</Emerged>
             <CohortToInitialise>0</CohortToInitialise>
             <TipToAppear>0</TipToAppear>
+            <ApexNum>0</ApexNum>
           </Structure>
           <GenericOrgan>
             <Name>Tuber</Name>

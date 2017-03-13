@@ -630,6 +630,10 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Units>g/g</Units>
           </Constant>
           <Constant>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <Constant>
             <Name>DroughtInducedSenAcceleration</Name>
             <FixedValue>1</FixedValue>
           </Constant>
