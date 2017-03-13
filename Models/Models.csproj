@@ -286,6 +286,17 @@
     <Compile Include="Soils\SoilWaterBackend\SoilWaterRunoff.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
+    <Compile Include="Soils\SWIM4\Extensions.cs" />
+    <Compile Include="Soils\SWIM4\Flow.cs" />
+    <Compile Include="Soils\SWIM4\Fluxes.cs" />
+    <Compile Include="Soils\SWIM4\ISink.cs" />
+    <Compile Include="Soils\SWIM4\MVG.cs" />
+    <Compile Include="Soils\SWIM4\SinkDripperDrain.cs" />
+    <Compile Include="Soils\SWIM4\SoilData.cs" />
+    <Compile Include="Soils\SWIM4\SoilTables.cs" />
+    <Compile Include="Soils\SWIM4\SolProps.cs" />
+    <Compile Include="Soils\SWIM4\SWIM4.cs" />
+    <Compile Include="Soils\SWIM4\TwoFluxes.cs" />
     <Compile Include="Soils\Variables.cs" />
     <Compile Include="Stock\animgrp.cs" />
     <Compile Include="Stock\animprm.cs" />
