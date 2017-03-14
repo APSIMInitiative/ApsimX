@@ -14,6 +14,8 @@ namespace Models.WholeFarm
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	public class SummariseRuminantHerd:Model
 	{
 		[Link]

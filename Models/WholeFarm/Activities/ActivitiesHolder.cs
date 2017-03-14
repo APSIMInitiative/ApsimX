@@ -14,6 +14,7 @@ namespace Models.WholeFarm.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+	[ValidParent(ParentType = typeof(WholeFarm))]
 	public class ActivitiesHolder: WFModel
 	{
 		/// <summary>

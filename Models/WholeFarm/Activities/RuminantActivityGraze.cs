@@ -17,6 +17,7 @@ namespace Models.WholeFarm.Activities
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	public class RuminantActivityGraze : WFActivityBase
 	{
 		[Link]

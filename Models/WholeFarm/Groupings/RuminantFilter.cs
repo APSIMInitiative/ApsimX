@@ -13,6 +13,8 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+	[ValidParent(ParentType = typeof(RuminantFilterGroup))]
+	[ValidParent(ParentType = typeof(RuminantMusterGroup))]
 	public class RuminantFilter: WFModel
 	{
 		/// <summary>

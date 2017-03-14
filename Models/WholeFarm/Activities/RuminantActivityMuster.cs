@@ -12,6 +12,8 @@ namespace Models.WholeFarm.Activities
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+	[ValidParent(ParentType = typeof(WFActivityBase))]
+	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	public class RuminantActivityMuster: WFModel
 	{
 

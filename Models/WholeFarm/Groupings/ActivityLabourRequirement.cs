@@ -11,6 +11,7 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+	[ValidParent(ParentType = typeof(ActivityLabourRequirementGroup))]
 	public class ActivityLabourRequirement: WFModel
 	{
 
