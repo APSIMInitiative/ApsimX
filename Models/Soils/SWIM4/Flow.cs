@@ -6,6 +6,9 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace Models.Soils.SWIM4
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class Flow
     {
         /*
@@ -66,14 +69,23 @@ namespace Models.Soils.SWIM4
          ! nless    - no. of step size reductions.         
          */
 
+        /// <summary></summary>
         public static double dSfac = 1.25, h0min = -0.02, Smax = 1.001, dh0max = 0.0;
+        /// <summary></summary>
         public static string botbc = "free drainage"; // bottom boundary conditions
+                                                      /// <summary></summary>
         public static double h0max = 1.0e10, qprecmax = 1.0e10, hbot = 0.0, Sbot = 1.0; // boundary parameters
+                                                                                        /// <summary></summary>
         public static double dSmax = 0.05, dSmaxr = 0.5, dtmax = 1.0e10, dtmin = 0.0, dsmmax = 1.0; // solution parameters
+        /// <summary></summary>
         public static int nwsteps = 10;
+        /// <summary></summary>
         public static bool debug = false;
+        /// <summary></summary>
         public static int nless;
+        /// <summary></summary>
         public static SoilData sd;
+        /// <summary></summary>
         public static ISink sink;
 
         /// <summary>

@@ -7,14 +7,17 @@ using APSIM.Shared.Utilities;
 
 namespace Models.Soils.SWIM4
 {
-    // Calculates flux tables given soil properties and path lengths.
-    // Static; there should not be more than one of these per simulation.
+    /// <summary>
+    /// Calculates flux tables given soil properties and path lengths.
+    /// Static; there should not be more than one of these per simulation.
+    /// </summary>
     public static class Fluxes
     {
         /// <summary>Store a list of flux tables and their associated soil names and layers.</summary>
         public static Dictionary<string, FluxTable> FluxTables {get;set;}
-
+        /// <summary></summary>
         public static FluxTable ft;
+
         static int mx = 100; // max no. of phi values
         static int i, j, ni, ns, nt, nu, nit, nfu, nphif, ip, nfs, ii, ie;
         static int[] iphif = new int[mx+1];
@@ -39,6 +42,11 @@ namespace Models.Soils.SWIM4
 
         static StringBuilder diags = new StringBuilder();
 
+        /// <summary>
+        /// Generate a flux table from given soil properties
+        /// </summary>
+        /// <param name="dz"></param>
+        /// <param name="props"></param>
         public static void FluxTable(double dz, SoilProps props)
         {
             // Generates a flux table for use by other programs.
