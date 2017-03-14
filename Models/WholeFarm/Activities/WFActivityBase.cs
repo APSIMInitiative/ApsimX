@@ -138,6 +138,13 @@ namespace Models.WholeFarm.Activities
 				}
 			}
 
+			// report any resource defecits here
+			foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
+			{
+				ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = item };
+				OnShortfallOccurred(rre);
+			}
+
 			// remove activity resources 
 			// check if deficit and performWithPartial
 			if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) | PerformWithPartialResources)
@@ -177,6 +184,21 @@ namespace Models.WholeFarm.Activities
 		/// Method to perform activity tasks if expected as soon as resources are available
 		/// </summary>
 		public abstract void PerformActivity();
+
+		/// <summary>
+		/// Resource shortfall occured event handler
+		/// </summary>
+		public virtual event EventHandler ResourceShortfallOccurred;
+
+		/// <summary>
+		/// Shortfall occurred 
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnShortfallOccurred(EventArgs e)
+		{
+			if (ResourceShortfallOccurred != null)
+				ResourceShortfallOccurred(this, e);
+		}
 	}
 
 }

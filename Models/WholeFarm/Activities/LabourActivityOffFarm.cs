@@ -104,5 +104,20 @@ namespace Models.WholeFarm.Activities
 			// receive payment for labour
 			bankType.Add(ResourceRequestList.FirstOrDefault().Available*DailyRate, this.Name, this.Name);
 		}
+
+		/// <summary>
+		/// res sh
+		/// </summary>
+		public override event EventHandler ResourceShortfallOccurred;
+
+		/// <summary>
+		/// Shortfall occurred 
+		/// </summary>
+		/// <param name="e"></param>
+		protected override void OnShortfallOccurred(EventArgs e)
+		{
+			if (ResourceShortfallOccurred != null)
+				ResourceShortfallOccurred(this, e);
+		}
 	}
 }

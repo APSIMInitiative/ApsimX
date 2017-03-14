@@ -484,5 +484,6 @@ namespace Models.WholeFarm.Activities
 			died.Select(a => { a.SaleFlag = Common.HerdChangeReason.Died; return a; }).ToList();
 			ruminantHerd.RemoveRuminant(died);
 		}
+
 	}
 }

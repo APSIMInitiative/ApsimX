@@ -124,5 +124,20 @@ namespace Models.WholeFarm.Activities
 				}
 			}
 		}
+
+		/// <summary>
+		/// res sh
+		/// </summary>
+		public override event EventHandler ResourceShortfallOccurred;
+
+		/// <summary>
+		/// Shortfall occurred 
+		/// </summary>
+		/// <param name="e"></param>
+		protected override void OnShortfallOccurred(EventArgs e)
+		{
+			if (ResourceShortfallOccurred != null)
+				ResourceShortfallOccurred(this, e);
+		}
 	}
 }

@@ -45,6 +45,10 @@ namespace Models.WholeFarm.Resources
             }
         }
 
+
+
+
+
 		#region Transactions
 
 		// Must be included away from base class so that APSIM Event.Subscriber can find them 

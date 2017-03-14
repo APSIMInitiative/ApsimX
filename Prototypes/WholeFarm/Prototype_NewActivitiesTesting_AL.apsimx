@@ -996,6 +996,22 @@
             <string>[Resources].Labour.TransactionOccurred</string>
           </EventNames>
         </Report>
+        <Report>
+          <Name>ResourceShortfallLedger</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceName as Resource</string>
+            <string>[Activities].LastShortfallResourceRequest.ActivityName as Activity</string>
+            <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
+            <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ResourceShortfallOccurred</string>
+          </EventNames>
+        </Report>
       </Folder>
       <Area>1</Area>
       <Slope>0</Slope>

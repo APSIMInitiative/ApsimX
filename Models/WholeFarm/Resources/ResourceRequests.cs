@@ -9,6 +9,7 @@ namespace Models.WholeFarm.Resources
 	///<summary>
 	/// Resource request for Resource from a ResourceType
 	///</summary> 
+	[Serializable]
 	public class ResourceRequest
 	{
 		///<summary>
@@ -84,4 +85,17 @@ namespace Models.WholeFarm.Resources
 		///</summary> 
 		public double PercentN { get; set; }
 	}
+
+	/// <summary>
+	/// Class for reporting transaction details in OnTransactionEvents
+	/// </summary>
+	[Serializable]
+	public class ResourceRequestEventArgs : EventArgs
+	{
+		/// <summary>
+		/// Resource request details
+		/// </summary>
+		public ResourceRequest Request { get; set; }
+	}
+
 }

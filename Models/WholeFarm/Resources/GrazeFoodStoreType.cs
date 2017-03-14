@@ -83,6 +83,14 @@ namespace Models.WholeFarm.Resources
 		[Description("Carryover detachment rate")]
 		public double CarryoverDetachRate { get; set; }
 
+		private double biomassAvailable;
+		private double biomassConsumed;
+
+		/// <summary>
+		/// Percent utilisation
+		/// </summary>
+		public double PercentUtilisation { get { return ((biomassAvailable>0)?0:biomassConsumed / biomassAvailable * 100); } }
+
 		/// <summary>
 		/// Amount (kg)
 		/// </summary>
@@ -110,6 +118,16 @@ namespace Models.WholeFarm.Resources
             Initialise();
         }
 
+		/// <summary>Data stores to clear at start of month</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("StartOfMonth")]
+		private void OnStartOfMonth(object sender, EventArgs e)
+		{
+			biomassAvailable = this.Amount;
+			biomassConsumed = 0;
+		}
+
 		/// <summary>
 		/// Add new pasture pool to the list of pools
 		/// </summary>
@@ -117,6 +135,9 @@ namespace Models.WholeFarm.Resources
 		public void Add(GrazeFoodStorePool newpool)
 		{
 			Pools.Insert(0, newpool);
+
+			// calculate biomass available
+			biomassAvailable = this.Amount;
 		}
 
 		/// <summary>
@@ -158,6 +179,9 @@ namespace Models.WholeFarm.Resources
 			//	feedRequest.Amount = amountToTake * (pool.Amount/totalAvailable);
 			//	pool.Remove(feedRequest);
 			//}
+
+			//if graze activity
+			biomassConsumed += 0;
 		}
 
 		/// <summary>

@@ -22,8 +22,8 @@ namespace Models.WholeFarm.Groupings
 		Clock Clock = null;
 		[Link]
 		private ResourcesHolder Resources = null;
-		[Link]
-		private Activities.ActivitiesHolder Activities =  null;
+		//[Link]
+		//private Activities.ActivitiesHolder Activities =  null;
 		[Link]
 		ISummary Summary = null;
 
