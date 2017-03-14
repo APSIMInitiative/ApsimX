@@ -6,13 +6,13 @@ namespace Models.Soils.Nutrient
     using System;
 
     /// <summary>
-    /// Encapsulates a flow between pools.
+    /// Encapsulates a carbon flow between pools.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
-    public class Flow : Model
+    public class CFlow : Model
     {
         private NutrientPool source = null;
         private NutrientPool destination = null;

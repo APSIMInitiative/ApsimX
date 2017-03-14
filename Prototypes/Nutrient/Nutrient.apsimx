@@ -65,11 +65,16 @@
               <string>[Soil].Nutrient.NH4</string>
               <string>[Soil].SoilNitrogen.NO3</string>
               <string>[Soil].Nutrient.NO3</string>
+              <string>[Soil].SoilNitrogen.urea</string>
+              <string>[Soil].Nutrient.Urea</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <Fertiliser>
+            <Name>Fertiliser</Name>
+          </Fertiliser>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -227,9 +232,9 @@
               <Texture />
               <MunsellColour />
               <PH>
-                <double>3</double>
-                <double>3</double>
-                <double>3</double>
+                <double>7</double>
+                <double>7</double>
+                <double>7</double>
               </PH>
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
@@ -320,6 +325,10 @@
                   <XProperty>[SoilWaterScale]</XProperty>
                 </LinearInterpolationFunction>
               </MinimumFunction>
+              <ExpressionFunction>
+                <Name>ppm2kgha</Name>
+                <Expression>([Soil].BD*[Soil].Thickness)/100</Expression>
+              </ExpressionFunction>
               <NutrientPool>
                 <Name>Inert</Name>
                 <ExpressionFunction>
@@ -357,7 +366,7 @@
                   <Expression>[Humic].C / [Soil].SoilOrganicMatter.SoilCN</Expression>
                 </ExpressionFunction>
               </NutrientPool>
-              <Flow>
+              <CFlow>
                 <Name>HumicToBiomass</Name>
                 <MultiplyFunction>
                   <Name>Rate</Name>
@@ -380,8 +389,8 @@
                 </Constant>
                 <sourceName>Humic</sourceName>
                 <destinationName>Biomass</destinationName>
-              </Flow>
-              <Flow>
+              </CFlow>
+              <CFlow>
                 <Name>BiomassToHumic</Name>
                 <MultiplyFunction>
                   <Name>Rate</Name>
@@ -404,8 +413,8 @@
                 </Constant>
                 <sourceName>Biomass</sourceName>
                 <destinationName>Humic</destinationName>
-              </Flow>
-              <Flow>
+              </CFlow>
+              <CFlow>
                 <Name>BiomassToBiomass</Name>
                 <MultiplyFunction>
                   <Name>Rate</Name>
@@ -428,7 +437,135 @@
                 </Constant>
                 <sourceName>Biomass</sourceName>
                 <destinationName>Biomass</destinationName>
-              </Flow>
+              </CFlow>
+              <NFlow>
+                <Name>Nitrification</Name>
+                <Constant>
+                  <Name>NLoss</Name>
+                  <FixedValue>0</FixedValue>
+                </Constant>
+                <MultiplyFunction>
+                  <Name>Rate</Name>
+                  <ExpressionFunction>
+                    <Name>MichaelisMenton</Name>
+                    <Expression>40/([Soil].Nutrient.NH4ppm+90)</Expression>
+                  </ExpressionFunction>
+                  <VariableReference>
+                    <Name>ppm2kgha</Name>
+                    <VariableName>[ppm2kgha]</VariableName>
+                  </VariableReference>
+                  <MinimumFunction>
+                    <Name>PNI</Name>
+                    <LinearInterpolationFunction>
+                      <Name>WF</Name>
+                      <SoilWaterScale>
+                        <Name>SoilWaterScale</Name>
+                      </SoilWaterScale>
+                      <XYPairs>
+                        <Name>XYPairs</Name>
+                        <X>
+                          <double>0</double>
+                          <double>0.25</double>
+                          <double>1</double>
+                          <double>2</double>
+                        </X>
+                        <Y>
+                          <double>0</double>
+                          <double>1</double>
+                          <double>1</double>
+                          <double>0</double>
+                        </Y>
+                      </XYPairs>
+                      <XProperty>[SoilWaterScale]</XProperty>
+                    </LinearInterpolationFunction>
+                    <VariableReference>
+                      <Name>TF</Name>
+                      <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+                    </VariableReference>
+                    <LinearInterpolationFunction>
+                      <Name>pHF</Name>
+                      <XYPairs>
+                        <Name>XYPairs</Name>
+                        <X>
+                          <double>4.5</double>
+                          <double>6</double>
+                          <double>8</double>
+                          <double>9</double>
+                        </X>
+                        <Y>
+                          <double>0</double>
+                          <double>1</double>
+                          <double>1</double>
+                          <double>0</double>
+                        </Y>
+                      </XYPairs>
+                      <XProperty>[Soil].PH</XProperty>
+                    </LinearInterpolationFunction>
+                  </MinimumFunction>
+                </MultiplyFunction>
+                <sourceName>NH4</sourceName>
+                <destinationName>NO3</destinationName>
+              </NFlow>
+              <NFlow>
+                <Name>Hydrolysis</Name>
+                <Constant>
+                  <Name>NLoss</Name>
+                  <FixedValue>0</FixedValue>
+                </Constant>
+                <MultiplyFunction>
+                  <Name>Rate</Name>
+                  <BoundFunction>
+                    <Name>PotentialRate</Name>
+                    <Constant>
+                      <Name>Upper</Name>
+                      <FixedValue>1</FixedValue>
+                    </Constant>
+                    <Constant>
+                      <Name>Lower</Name>
+                      <FixedValue>0.25</FixedValue>
+                    </Constant>
+                    <ExpressionFunction>
+                      <Name>Rate</Name>
+                      <Expression> -1.12 + 1.31 * [Soil].OC + 0.203 * [Soil].PH - 0.155 * [Soil].OC * [Soil].PH</Expression>
+                    </ExpressionFunction>
+                  </BoundFunction>
+                  <MinimumFunction>
+                    <Name>PNI</Name>
+                    <BoundFunction>
+                      <Name>WF</Name>
+                      <Constant>
+                        <Name>Upper</Name>
+                        <FixedValue>1</FixedValue>
+                      </Constant>
+                      <Constant>
+                        <Name>Lower</Name>
+                        <FixedValue>0</FixedValue>
+                      </Constant>
+                      <ExpressionFunction>
+                        <Name>Wfactor</Name>
+                        <Expression>[WaterFactorForMineralisation]+0.2</Expression>
+                      </ExpressionFunction>
+                    </BoundFunction>
+                    <BoundFunction>
+                      <Name>TF</Name>
+                      <Constant>
+                        <Name>Upper</Name>
+                        <FixedValue>1</FixedValue>
+                      </Constant>
+                      <Constant>
+                        <Name>Lower</Name>
+                        <FixedValue>0</FixedValue>
+                      </Constant>
+                      <ExpressionFunction>
+                        <Name>Tfactor</Name>
+                        <Expression>([Soil].SoilNitrogen.st/40)+0.2</Expression>
+                      </ExpressionFunction>
+                    </BoundFunction>
+                  </MinimumFunction>
+                </MultiplyFunction>
+                <sourceName>Urea</sourceName>
+                <destinationName>NH4</destinationName>
+              </NFlow>
             </Nutrient>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
@@ -483,6 +620,13 @@
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
+          <Operations>
+            <Name>Operations</Name>
+            <Operation>
+              <Date>2000-07-01</Date>
+              <Action> [Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN);</Action>
+            </Operation>
+          </Operations>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -1142,6 +1286,346 @@
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Soil.Nutrient.NH4(3)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SoilN NO3</Name>
+        <Series>
+          <Name>SoilN Layer1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilNitrogen.NO3(1)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>SoilN Layer2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilNitrogen.NO3(2)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>SoilN Layer3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilNitrogen.NO3(3)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Nutrient NO3</Name>
+        <Series>
+          <Name>SoilN Layer1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.Nutrient.NO3(1)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>SoilN Layer2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.Nutrient.NO3(2)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>SoilN Layer3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.Nutrient.NO3(3)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SoilN Urea</Name>
+        <Series>
+          <Name>SoilN Layer1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilNitrogen.urea(1)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>SoilN Layer2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilNitrogen.urea(2)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>SoilN Layer3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilNitrogen.urea(3)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Nutrient Urea</Name>
+        <Series>
+          <Name>SoilN Layer1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.Nutrient.Urea(1)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>SoilN Layer2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.Nutrient.Urea(2)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>SoilN Layer3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.Nutrient.Urea(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
