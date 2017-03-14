@@ -58,6 +58,9 @@
               <string>[Soil].Nutrient.Biomass.C</string>
               <string>[Soil].Nutrient.Humic.N</string>
               <string>[Soil].Nutrient.Humic.C</string>
+              <string>[Soil].SoilNitrogen.st</string>
+              <string>[Soil].SoilWater.SW</string>
+              <string>[Soil].Nutrient.HumicToBiomass.Rate.TemperatureFactor.Value()</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -78,24 +81,24 @@
                 <double>1</double>
               </BD>
               <AirDry>
-                <double>0.130250054518252</double>
-                <double>0.198689390775399</double>
-                <double>0.28</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
               </AirDry>
               <LL15>
-                <double>0.260500109036505</double>
-                <double>0.248361738469248</double>
-                <double>0.28</double>
+                <double>0.25</double>
+                <double>0.25</double>
+                <double>0.25</double>
               </LL15>
               <DUL>
-                <double>0.52100021807301</double>
-                <double>0.496723476938497</double>
-                <double>0.488437607673005</double>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.5</double>
               </DUL>
               <SAT>
-                <double>0.588654817693846</double>
-                <double>0.565676863836273</double>
-                <double>0.557192986686577</double>
+                <double>0.55</double>
+                <double>0.55</double>
+                <double>0.55</double>
               </SAT>
               <KS>
                 <double>20</double>
@@ -204,9 +207,9 @@
                 <double>0</double>
               </FBiom>
               <FInert>
-                <double>0.4</double>
-                <double>0.6</double>
-                <double>0.8</double>
+                <double>0</double>
+                <double>0</double>
+                <double>0</double>
               </FInert>
               <OCUnits>Total</OCUnits>
             </SoilOrganicMatter>
@@ -258,6 +261,61 @@
             </Sample>
             <Nutrient>
               <Name>Nutrient</Name>
+              <MinimumFunction>
+                <Name>TemperatureFactorForMineralisation</Name>
+                <ExpressionFunction>
+                  <Name>TF</Name>
+                  <Constant>
+                    <Name>Topt</Name>
+                    <FixedValue>32</FixedValue>
+                  </Constant>
+                  <MaximumFunction>
+                    <Name>AbsT</Name>
+                    <Constant>
+                      <Name>Zero</Name>
+                      <FixedValue>0</FixedValue>
+                    </Constant>
+                    <VariableReference>
+                      <Name>VariableReference</Name>
+                      <VariableName>[Soil].SoilNitrogen.st</VariableName>
+                    </VariableReference>
+                  </MaximumFunction>
+                  <Expression>([AbsT]^2)/([Topt]^2)</Expression>
+                </ExpressionFunction>
+                <Constant>
+                  <Name>One</Name>
+                  <FixedValue>1</FixedValue>
+                </Constant>
+              </MinimumFunction>
+              <MinimumFunction>
+                <Name>WaterFactorForMineralisation</Name>
+                <Constant>
+                  <Name>One</Name>
+                  <FixedValue>1</FixedValue>
+                </Constant>
+                <LinearInterpolationFunction>
+                  <Name>WF</Name>
+                  <SoilWaterScale>
+                    <Name>SoilWaterScale</Name>
+                  </SoilWaterScale>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <X>
+                      <double>0</double>
+                      <double>0.5</double>
+                      <double>1</double>
+                      <double>2</double>
+                    </X>
+                    <Y>
+                      <double>0</double>
+                      <double>1</double>
+                      <double>1</double>
+                      <double>0.5</double>
+                    </Y>
+                  </XYPairs>
+                  <XProperty>[SoilWaterScale]</XProperty>
+                </LinearInterpolationFunction>
+              </MinimumFunction>
               <NutrientPool>
                 <Name>Inert</Name>
                 <ExpressionFunction>
@@ -299,6 +357,14 @@
                     <Name>PotentialRate</Name>
                     <FixedValue>0.00015</FixedValue>
                   </Constant>
+                  <VariableReference>
+                    <Name>TF</Name>
+                    <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>WF</Name>
+                    <VariableName>[WaterFactorForMineralisation]</VariableName>
+                  </VariableReference>
                 </MultiplyFunction>
                 <Constant>
                   <Name>CO2Efficiency</Name>
@@ -315,6 +381,14 @@
                     <Name>PotentialRate</Name>
                     <FixedValue>0.00324</FixedValue>
                   </Constant>
+                  <VariableReference>
+                    <Name>TF</Name>
+                    <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>WF</Name>
+                    <VariableName>[WaterFactorForMineralisation]</VariableName>
+                  </VariableReference>
                 </MultiplyFunction>
                 <Constant>
                   <Name>CO2Efficiency</Name>
@@ -331,6 +405,14 @@
                     <Name>PotentialRate</Name>
                     <FixedValue>0.00486</FixedValue>
                   </Constant>
+                  <VariableReference>
+                    <Name>TF</Name>
+                    <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+                  </VariableReference>
+                  <VariableReference>
+                    <Name>WF</Name>
+                    <VariableName>[WaterFactorForMineralisation]</VariableName>
+                  </VariableReference>
                 </MultiplyFunction>
                 <Constant>
                   <Name>CO2Efficiency</Name>
@@ -882,6 +964,91 @@
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Soil.Nutrient.Biomass.C(3)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SoilWater</Name>
+        <Series>
+          <Name>Layer1</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Layer2</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-1663232</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Layer3</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-11094807</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
