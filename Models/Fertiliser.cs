@@ -148,22 +148,22 @@ namespace Models
 
                 NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
                 NitrogenChanges.Sender = Apsim.FullPath(this);
-               
+                NitrogenChanges.DeltaNO3 = new double[Soil.Thickness.Length];
+                NitrogenChanges.DeltaNH4 = new double[Soil.Thickness.Length];
+                NitrogenChanges.DeltaUrea = new double[Soil.Thickness.Length];
+
                 if (fertiliserType.FractionNO3 != 0)
                 {
-                    NitrogenChanges.DeltaNO3 = new double[Soil.Thickness.Length];
                     NitrogenChanges.DeltaNO3[layer] = Amount * fertiliserType.FractionNO3;
                     NitrogenApplied += Amount * fertiliserType.FractionNO3;
                 }
                 if (fertiliserType.FractionNH4 != 0)
                 {
-                    NitrogenChanges.DeltaNH4 = new double[Soil.Thickness.Length];
                     NitrogenChanges.DeltaNH4[layer] = Amount * fertiliserType.FractionNH4;
                     NitrogenApplied += Amount * fertiliserType.FractionNH4;
                 }
                 if (fertiliserType.FractionUrea != 0)
                 {
-                    NitrogenChanges.DeltaUrea = new double[Soil.Thickness.Length];
                     NitrogenChanges.DeltaUrea[layer] = Amount * fertiliserType.FractionUrea;
                     NitrogenApplied += Amount * fertiliserType.FractionUrea;
                 }

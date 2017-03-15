@@ -4,24 +4,28 @@ namespace Models.Soils.Nutrient
     using Core;
     using Models.PMF.Functions;
     using System;
+    using System.Reflection;
 
     /// <summary>
-    /// Encapsulates a flow between pools.
+    /// Encapsulates a nitrogen flow between mineral N pools.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
-    public class Flow : Model
+    public class NFlow : Model
     {
-        private NutrientPool source = null;
-        private NutrientPool destination = null;
+        private PropertyInfo sourceProperty;
+        private PropertyInfo destinationProperty;
 
         [Link]
         private IFunction rate = null;
 
         [Link]
-        private IFunction CO2Efficiency = null;
+        private IFunction NLoss = null;
+
+        [Link]
+        private Nutrient nutrient = null;
 
         /// <summary>
         /// Name of source pool
@@ -41,13 +45,8 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            source = Apsim.Find(this, sourceName) as NutrientPool;
-            if (source == null)
-                throw new Exception("Cannot find source pool with name: " + sourceName);
-
-            destination = Apsim.Find(this, destinationName) as NutrientPool;
-            if (destination == null)
-                throw new Exception("Cannot find destination pool with name: " + destinationName);
+            sourceProperty = nutrient.GetType().GetProperty(sourceName);
+            destinationProperty = nutrient.GetType().GetProperty(destinationName);
         }
 
         /// <summary>
@@ -58,15 +57,21 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
-            for (int i= 0; i < source.C.Length; i++)
+
+            double[] source = (double[])sourceProperty.GetValue(nutrient);
+
+            double[] destination = (double[])destinationProperty.GetValue(nutrient);
+
+            for (int i= 0; i < nutrient.NO3.Length; i++)
             {
-                double carbonFlow = rate.Value(i) * source.C[i];
-                double nitrogenFlow = carbonFlow * source.CNRatio;
-                source.C[i] -= carbonFlow;
-                destination.C[i] += carbonFlow*CO2Efficiency.Value(i);
-                source.N[i] -= nitrogenFlow;
-                destination.N[i] += nitrogenFlow;
+                double nitrogenFlow = rate.Value(i) * source[i];
+                double nitrogenFlowToDestination = nitrogenFlow * (1-NLoss.Value(i));
+
+                source[i] -= nitrogenFlow;
+                destination[i] += nitrogenFlowToDestination;
             }
+            sourceProperty.SetValue(nutrient, source);
+            destinationProperty.SetValue(nutrient, destination);
         }
 
 

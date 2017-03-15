@@ -78,8 +78,10 @@ namespace Models.PMF.Functions
             double XValue;
             if (v is Array)
                 XValue = (double)(v as Array).GetValue(arrayIndex);
+            else if (v is IFunction)
+                XValue = (v as IFunction).Value(arrayIndex);
             else
-                XValue = (double) v;
+                XValue = (double)v;
             return XYPairs.ValueIndexed(XValue);
         }
 
