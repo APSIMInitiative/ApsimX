@@ -174,8 +174,8 @@ namespace Models.Soils
                 else
                 {
                     SoilCrop soilCrop = this.Soil.Crop(this.RelativeTo) as SoilCrop;
-                    ll = soilCrop.LL;
-                    xf = soilCrop.XF;
+                    ll = soilCrop.LLMapped;
+                    xf = soilCrop.XFMapped;
                 }
 
                 // Get the soil water values for each layer.
@@ -226,9 +226,9 @@ namespace Models.Soils
             SoilCrop soilCrop = Apsim.Find(Soil, CropName) as SoilCrop;
             if (soilCrop != null)
                 return Soil.CalcPAWC(Soil.Thickness,
-                                     soilCrop.LL,
+                                     soilCrop.LLMapped,
                                      Soil.DUL,
-                                     soilCrop.XF);
+                                     soilCrop.XFMapped);
             else
                 return new double[0];
         }

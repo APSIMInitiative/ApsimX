@@ -43,7 +43,7 @@ namespace Models.Soils
             get
             {
                 if (Soil != null)
-                    return Soil.ToDepthStrings(Soil.Thickness);
+                    return Soil.ToDepthStrings(Soil.SoilWater.Thickness);
                 else
                     return new string[0];
             }
@@ -56,6 +56,16 @@ namespace Models.Soils
         [Description("LL")]
         [Units("mm/mm")]
         public double[] LL { get; set; }
+        /// <summary>LL for the crop mapped onto Soil LayerStructure thickness</summary>
+        /// <returns></returns>
+        public double[] LLMapped
+        {
+            get
+            {
+                Soil parentSoil = Soil;
+                return Soil.Map(LL, parentSoil.SoilWater.Thickness, Soil.Thickness);
+            }
+        }
 
         /// <summary>
         /// Gets the plant available water by layer
@@ -70,7 +80,7 @@ namespace Models.Soils
             {
                 Soil parentSoil = Soil;
                 if (parentSoil != null)
-                    return MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, this.LL, parentSoil.DUL, this.XF), parentSoil.Thickness);
+                    return MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, this.LLMapped, parentSoil.DUL, this.XFMapped), parentSoil.Thickness);
                 else
                     return new double[0];
             }
@@ -84,6 +94,16 @@ namespace Models.Soils
         [Display(Format = "N2")]
         [Units("/day")]
         public double[] KL { get; set; }
+        /// <summary>kl for the crop mapped onto Soil LayerStructure thickness</summary>
+        /// <returns></returns>
+        public double[] KLMapped
+        {
+            get
+            {
+                Soil parentSoil = Soil;
+                return Soil.Map(KL, parentSoil.SoilWater.Thickness, Soil.Thickness);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the exploration factor
@@ -93,7 +113,16 @@ namespace Models.Soils
         [Display(Format = "N1")]
         [Units("0-1")]
         public double[] XF { get; set; }
-
+        /// <summary>XF for the crop mapped onto Soil LayerStructure thickness</summary>
+       /// <returns></returns>
+        public double[] XFMapped
+        {
+            get
+            {
+                Soil parentSoil = Soil;
+                return Soil.Map(XF, parentSoil.SoilWater.Thickness, Soil.Thickness);
+            }
+        }
         /// <summary>
         /// Gets or sets the metadata for crop lower limit
         /// </summary>

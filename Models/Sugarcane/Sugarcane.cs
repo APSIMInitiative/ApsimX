@@ -13291,9 +13291,9 @@ namespace Models
             ISoilCrop ISugarcane = Soil.Crop("Sugarcane");
             SoilCrop Sugarcane = (SoilCrop)ISugarcane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
 
-            xf = Sugarcane.XF;
-            ll = Sugarcane.LL;
-            kl = Sugarcane.KL;
+            xf = Sugarcane.XFMapped;
+            ll = Sugarcane.LLMapped;
+            kl = Sugarcane.KLMapped;
 
 
             //work out what ll_dep is

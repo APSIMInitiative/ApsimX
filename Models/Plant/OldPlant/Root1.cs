@@ -1097,9 +1097,9 @@ namespace Models.PMF.OldPlant
             RootLengthSenesced = new double[Soil.Thickness.Length];
 
             SoilCrop soilCrop = Soil.Crop(Plant.Name) as SoilCrop;
-            ll = soilCrop.LL;
-            kl = soilCrop.KL;
-            xf = soilCrop.XF;
+            ll = soilCrop.LLMapped;
+            kl = soilCrop.KLMapped;
+            xf = soilCrop.XFMapped;
             DULmm = MathUtilities.Multiply(Soil.DUL, Soil.Thickness);
 
             ll_dep = MathUtilities.Multiply(ll, Soil.Thickness);

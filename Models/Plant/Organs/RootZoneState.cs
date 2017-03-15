@@ -148,7 +148,7 @@ namespace Models.PMF.Organs
 
             SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
             if (soil.Weirdo == null)
-                Depth = Depth + root.RootFrontVelocity.Value() * crop.XF[RootLayer];
+                Depth = Depth + root.RootFrontVelocity.Value() * crop.XFMapped[RootLayer];
             else
                 Depth = Depth + root.RootFrontVelocity.Value();
 
@@ -159,7 +159,7 @@ namespace Models.PMF.Organs
             {
                 if (soil.Weirdo == null)
                 {
-                    if (crop.XF[i] > 0)
+                    if (crop.XFMapped[i] > 0)
                         MaxDepth += soil.Thickness[i];
                 }
                 else

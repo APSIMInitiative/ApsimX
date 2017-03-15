@@ -1183,8 +1183,8 @@ namespace Models.Soils
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
             if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
-                return SoilCrop.LL;
-            double[] Values = Map(SoilCrop.LL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));
+                return SoilCrop.LLMapped;
+            double[] Values = Map(SoilCrop.LL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LLMapped));
             if (Values == null) return null;
             double[] AirDry = AirDryMapped(ToThickness);
             double[] DUL = DULMapped(ToThickness);
@@ -1206,8 +1206,8 @@ namespace Models.Soils
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
             if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
-                return SoilCrop.XF;
-            return Map(SoilCrop.XF, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
+                return SoilCrop.XFMapped;
+            return Map(SoilCrop.XF, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XFMapped));
         }
 
         /// <summary>different methods for mapping soil variables </summary>
@@ -1652,8 +1652,8 @@ namespace Models.Soils
                 if (soilCrop != null)
                 {
                     double[] LL = this.LLMapped(Crop, waterNode.Thickness);
-                    double[] KL = soilCrop.KL;
-                    double[] XF = soilCrop.XF;
+                    double[] KL = soilCrop.KLMapped;
+                    double[] XF = soilCrop.XFMapped;
 
                     if (!MathUtilities.ValuesInArray(LL) ||
                         !MathUtilities.ValuesInArray(KL) ||
