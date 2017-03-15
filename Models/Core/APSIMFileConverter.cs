@@ -190,6 +190,10 @@ namespace Models.Core
         {
             foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "Zone"))
                 XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
+            foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "RectangularZone"))
+                XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
+            foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "CircularZone"))
+                XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
         }
     }
 }
