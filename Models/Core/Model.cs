@@ -55,6 +55,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.OilPalm.OilPalm))]
         [XmlElement(typeof(Models.Soils.Soil))]
         [XmlElement(typeof(Models.SurfaceOM.SurfaceOrganicMatter))]
+        [XmlElement(typeof(Models.SoluteManager))]
         [XmlElement(typeof(Models.AgPasture.Sward))]
         [XmlElement(typeof(Models.AgPasture.PastureSpecies))]
         [XmlElement(typeof(Clock))]

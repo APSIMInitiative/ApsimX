@@ -1,5 +1,6 @@
 ﻿namespace Models.Soils.Nutrient
 {
+    using Interfaces;
     using Models.Core;
     using System;
     using System.Collections.Generic;
@@ -9,22 +10,17 @@
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Nutrient : Model
+    public class Nutrient : Model, ISolute
     {
         [Link]
         Soil soil = null;
-        ///// <summary>Pools</summary>
-        //[Link]
-        //private List<Pool> pools = null;
-
-        ///// <summary>List of flows</summary>
-        //[Link]
-        //private List<Flow> flows = null;
 
         /// <summary>Nitrate (ppm)</summary>
+        [Solute]
         public double[] NO3 { get; set; }
 
         /// <summary>Ammonia (ppm)</summary>
+        [Solute]
         public double[] NH4 { get; set; }
 
         /// <summary>Performs the initial checks and setup</summary>

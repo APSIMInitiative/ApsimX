@@ -1210,6 +1210,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         [Description("Soil urea nitrogen amount")]
         [XmlIgnore]
+        [Solute]
         public double[] urea
         {
             get
@@ -1224,15 +1225,31 @@ namespace Models.Soils
                 }
                 return null;
             }
-            set  // should this be private?
+            set  
             {
-                double sumOld = MathUtilities.Sum(urea);
-
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].urea = value;
-
-                SendExternalMassFlowN(MathUtilities.Sum(urea) - sumOld);
+                if (hasValues(value, EPSILON))
+                {
+                    double[] delta = MathUtilities.Subtract(value, urea);
+                    // 3.1- send incoming dlt to be partitioned amongst patches
+                    double[][] newDelta = partitionDelta(delta, "urea", NPartitionApproach.ToLower());
+                    // 3.2- send dlt's to each patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_urea = newDelta[k];
+                }
             }
+        }
+
+        /// <summary>
+        /// Add an amount of Urea to top layer.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void AddureaToTopLayer(double amount)
+        {
+            // values will passed to patches as they come
+            double[] delta = new double[Soil.Thickness.Length];
+            delta[0] = amount;
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].dlt_urea = delta;
         }
 
         /// <summary>
@@ -1285,6 +1302,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         [Description("Soil ammonium nitrogen amount")]
         [XmlIgnore]
+        [Solute]
         public double[] NH4
         {
             get
@@ -1299,15 +1317,31 @@ namespace Models.Soils
                 }
                 return null;
             }
-            set  // should this be private?
+            set  
             {
-                double sumOld = MathUtilities.Sum(NH4);
-
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].nh4 = value;
-
-                SendExternalMassFlowN(MathUtilities.Sum(NH4) - sumOld);
+                if (hasValues(value, EPSILON))
+                {
+                    double[] delta = MathUtilities.Subtract(value, NH4);
+                    // 3.1- send incoming dlt to be partitioned amongst patches
+                    double[][] newDelta = partitionDelta(delta, "NH4", NPartitionApproach.ToLower());
+                    // 3.2- send dlt's to each patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_nh4 = newDelta[k];
+                }
             }
+        }
+
+        /// <summary>
+        /// Add an amount of NH4 to top layer.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void AddNH4ToTopLayer(double amount)
+        {
+            // values will passed to patches as they come
+            double[] delta = new double[Soil.Thickness.Length];
+            delta[0] = amount;
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].dlt_nh4 = delta;
         }
 
         /// <summary>
@@ -1360,6 +1394,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         [Description("Soil nitrate nitrogen amount")]
         [XmlIgnore]
+        [Solute]
         public double[] NO3
         {
             get
@@ -1374,14 +1409,31 @@ namespace Models.Soils
                 }
                 return null;
             }
-            set  // should this be private? or not exist at all?
+            set
             {
-                double sumOld = MathUtilities.Sum(NO3);
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].no3 = value;
-
-                SendExternalMassFlowN(MathUtilities.Sum(NO3) - sumOld);
+                if (hasValues(value, EPSILON))
+                {
+                    double[] delta = MathUtilities.Subtract(value, NO3);
+                    // 3.1- send incoming dlt to be partitioned amongst patches
+                    double[][] newDelta = partitionDelta(delta, "NO3", NPartitionApproach.ToLower());
+                    // 3.2- send dlt's to each patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_no3 = newDelta[k];
+                }
             }
+        }
+
+        /// <summary>
+        /// Add an amount of NO3 to top layer.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void AddNO3ToTopLayer(double amount)
+        {
+            // values will passed to patches as they come
+            double[] delta = new double[Soil.Thickness.Length];
+            delta[0] = amount;
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].dlt_no3 = delta;
         }
 
         #endregion

@@ -51,6 +51,9 @@ namespace Models.AgPasture
         [Link(IsOptional = true)]
         private SoilArbitrator soilArbitrator = null;
 
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Invoked for incorporating soil FOM.</summary>
@@ -73,13 +76,6 @@ namespace Models.AgPasture
 
         /// <summary>Occurs when plant takes up water.</summary>
         public event WaterChangedDelegate WaterChanged;
-
-        /// <summary>Invoked for changing soil nitrogen due to uptake.</summary>
-        /// <param name="Data">The data about changes in the soil N for each soil layer</param>
-        public delegate void NitrogenChangedDelegate(NitrogenChangedType Data);
-
-        /// <summary>Occurs when the plant takes up soil N.</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
 
         #endregion  --------------------------------------------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------
 
@@ -5254,20 +5250,8 @@ namespace Models.AgPasture
         {
             if ((mySoilNH4Uptake.Sum() + mySoilNO3Uptake.Sum()) > Epsilon)
             {
-                NitrogenChangedType nitrogenTakenUp = new NitrogenChangedType();
-                nitrogenTakenUp.Sender = Name;
-                nitrogenTakenUp.SenderType = "Plant";
-                nitrogenTakenUp.DeltaNO3 = new double[nLayers];
-                nitrogenTakenUp.DeltaNH4 = new double[nLayers];
-
-                for (int layer = 0; layer <= roots.BottomLayer; layer++)
-                {
-                    nitrogenTakenUp.DeltaNH4[layer] = -mySoilNH4Uptake[layer];
-                    nitrogenTakenUp.DeltaNO3[layer] = -mySoilNO3Uptake[layer];
-                }
-
-                if (NitrogenChanged != null)
-                    NitrogenChanged.Invoke(nitrogenTakenUp);
+                solutes.Subtract("NO3", mySoilNO3Uptake);
+                solutes.Subtract("NH4", mySoilNH4Uptake);
             }
         }
 
