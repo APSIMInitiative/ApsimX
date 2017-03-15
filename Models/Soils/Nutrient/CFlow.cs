@@ -12,7 +12,7 @@ namespace Models.Soils.Nutrient
     [ValidParent(ParentType = typeof(Nutrient))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
-    public class CFlow : Model
+    public class CarbonFlow : Model
     {
         private NutrientPool source = null;
         private NutrientPool destination = null;

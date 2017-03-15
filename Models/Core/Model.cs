@@ -106,7 +106,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.Sample))]
         [XmlElement(typeof(Soils.Nutrient.Nutrient))]
         [XmlElement(typeof(Soils.Nutrient.NutrientPool))]
-        [XmlElement(typeof(Soils.Nutrient.CFlow))]
+        [XmlElement(typeof(Soils.Nutrient.CarbonFlow))]
         [XmlElement(typeof(Soils.Nutrient.NFlow))]
         [XmlElement(typeof(WaterModel.CNReductionForCover))]
         [XmlElement(typeof(WaterModel.CNReductionForTillage))]

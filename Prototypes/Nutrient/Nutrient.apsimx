@@ -366,7 +366,7 @@
                   <Expression>[Humic].C / [Soil].SoilOrganicMatter.SoilCN</Expression>
                 </ExpressionFunction>
               </NutrientPool>
-              <CFlow>
+              <CarbonFlow>
                 <Name>HumicToBiomass</Name>
                 <MultiplyFunction>
                   <Name>Rate</Name>
@@ -389,8 +389,8 @@
                 </Constant>
                 <sourceName>Humic</sourceName>
                 <destinationName>Biomass</destinationName>
-              </CFlow>
-              <CFlow>
+              </CarbonFlow>
+              <CarbonFlow>
                 <Name>BiomassToHumic</Name>
                 <MultiplyFunction>
                   <Name>Rate</Name>
@@ -413,8 +413,8 @@
                 </Constant>
                 <sourceName>Biomass</sourceName>
                 <destinationName>Humic</destinationName>
-              </CFlow>
-              <CFlow>
+              </CarbonFlow>
+              <CarbonFlow>
                 <Name>BiomassToBiomass</Name>
                 <MultiplyFunction>
                   <Name>Rate</Name>
@@ -437,7 +437,7 @@
                 </Constant>
                 <sourceName>Biomass</sourceName>
                 <destinationName>Biomass</destinationName>
-              </CFlow>
+              </CarbonFlow>
               <NFlow>
                 <Name>Nitrification</Name>
                 <Constant>
