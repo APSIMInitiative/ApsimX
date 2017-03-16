@@ -4,7 +4,7 @@
     using PMF.Functions;
     using System;
     using System.Collections.Generic;
-
+    using APSIM.Shared.Utilities;
     /// <summary>
     /// Carbon / nitrogen pool
     /// </summary>
@@ -16,16 +16,13 @@
         Soil soil = null;
 
         [Link]
-        SoilOrganicMatter soilOrganicMatter = null;
-
-        [Link]
         IFunction InitialiseCarbon = null;
 
         [Link]
         IFunction InitialiseNitrogen = null;
 
         /// <summary>Initial carbon/nitrogen ratio</summary>
-        public double CNRatio { get { return soilOrganicMatter.SoilCN; } }
+        public double[] CNRatio { get { return MathUtilities.Divide(C, N); } }
 
         /// <summary>Amount of carbon (kg/ha)</summary>
         public double[] C { get; set; }

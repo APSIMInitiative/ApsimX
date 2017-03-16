@@ -190,6 +190,8 @@
     <Compile Include="Plant\Arbitrator\RelativeAllocationSinglePass.cs" />
     <Compile Include="Plant\Arbitrator\RelativeAllocation.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
+    <Compile Include="Plant\Functions\Bound.cs" />
+    <Compile Include="Plant\Functions\SoilWaterScale.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\BerryFillingRateFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\TEWaterDemandFunction.cs" />
     <Compile Include="Plant\Functions\MovingAverage.cs" />
@@ -263,7 +265,8 @@
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
     <Compile Include="Report\ReportTable.cs" />
-    <Compile Include="Soils\Nutrient\Flow.cs" />
+    <Compile Include="Soils\Nutrient\NFlow.cs" />
+    <Compile Include="Soils\Nutrient\CFlow.cs" />
     <Compile Include="Soils\Nutrient\NutrientPool.cs" />
     <Compile Include="Soils\Nutrient\Nutrient.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
