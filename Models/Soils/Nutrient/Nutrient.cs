@@ -1,5 +1,6 @@
 ﻿namespace Models.Soils.Nutrient
 {
+    using Interfaces;
     using Models.Core;
     using System;
     using APSIM.Shared.Utilities;
@@ -9,22 +10,17 @@
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Nutrient : Model
+    public class Nutrient : Model, ISolute
     {
         [Link]
         Soil soil = null;
-        ///// <summary>Pools</summary>
-        //[Link]
-        //private List<Pool> pools = null;
-
-        ///// <summary>List of flows</summary>
-        //[Link]
-        //private List<Flow> flows = null;
 
         /// <summary>Nitrate (kg/ha)</summary>
+        [Solute]
         public double[] NO3 { get; set; }
 
         /// <summary>Ammonia (kg/ha)</summary>
+        [Solute]
         public double[] NH4 { get; set; }
 
         /// <summary>NO3 (ppm)</summary>
@@ -35,6 +31,7 @@
 
 
         /// <summary>Urea (kg/ha)</summary>
+		[Solute]
         public double[] Urea { get; set; }
 
         /// <summary>
@@ -70,14 +67,5 @@
 
         }
 
-        /// <summary>Gets the changes in mineral N made by other modules</summary>
-        /// <param name="NitrogenChanges">The nitrogen changes.</param>
-        [EventSubscribe("NitrogenChanged")]
-        private void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
-        {
-            NO3 = MathUtilities.Add(NO3, NitrogenChanges.DeltaNO3);
-            NH4 = MathUtilities.Add(NH4, NitrogenChanges.DeltaNH4);
-            Urea = MathUtilities.Add(Urea, NitrogenChanges.DeltaUrea);
-        }
     }
 }

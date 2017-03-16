@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="4">
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
@@ -185,7 +185,6 @@ However we have to report daily because we have observation data during the crop
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -218,6 +217,7 @@ However we have to report daily because we have observation data during the crop
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -3683,6 +3683,9 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -4057,8 +4060,6 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -4211,7 +4212,6 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -4246,6 +4246,7 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -6909,6 +6910,9 @@ nb. irrigation amounts and depths are in (mm)
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -7283,8 +7287,6 @@ nb. irrigation amounts and depths are in (mm)
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -7437,7 +7439,6 @@ nb. irrigation amounts and depths are in (mm)
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -7472,6 +7473,7 @@ nb. irrigation amounts and depths are in (mm)
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -10150,6 +10152,9 @@ They are missing the word "tillage". This means these tillage events won't occur
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -10524,8 +10529,6 @@ They are missing the word "tillage". This means these tillage events won't occur
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -10669,7 +10672,6 @@ They are missing the word "tillage". This means these tillage events won't occur
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -10702,6 +10704,7 @@ They are missing the word "tillage". This means these tillage events won't occur
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -13339,6 +13342,9 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -13713,8 +13719,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -13858,7 +13862,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -13891,6 +13894,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -16524,6 +16528,9 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -16898,8 +16905,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -17079,7 +17084,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -17120,6 +17124,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
               <double>0.8</double>
               <double>0.8</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -19725,6 +19730,9 @@ However Automatic Irrigations are not possible in ApsimX yet.
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -20099,8 +20107,6 @@ However Automatic Irrigations are not possible in ApsimX yet.
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -20247,7 +20253,6 @@ However Automatic Irrigations are not possible in ApsimX yet.
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -20282,6 +20287,7 @@ However Automatic Irrigations are not possible in ApsimX yet.
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -22927,6 +22933,9 @@ All operation irrigations are Overhead, high pressure gun
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -23301,8 +23310,6 @@ All operation irrigations are Overhead, high pressure gun
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>8b Bundaberg 1992_94 CP51_21 1R_340N and 2R_0N</Name>
@@ -23446,7 +23453,6 @@ All operation irrigations are Overhead, high pressure gun
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -23481,6 +23487,7 @@ All operation irrigations are Overhead, high pressure gun
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -26130,6 +26137,9 @@ All operation irrigations are Overhead, high pressure gun
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -26504,8 +26514,6 @@ All operation irrigations are Overhead, high pressure gun
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>8c Bundaberg 1992_94 CP51_21 1R_340N and 2R_170N</Name>
@@ -26649,7 +26657,6 @@ All operation irrigations are Overhead, high pressure gun
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>2</SummerCona>
@@ -26684,6 +26691,7 @@ All operation irrigations are Overhead, high pressure gun
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -29337,6 +29345,9 @@ All operation irrigations are Overhead, high pressure gun
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -29711,8 +29722,6 @@ All operation irrigations are Overhead, high pressure gun
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -29850,7 +29859,6 @@ All operation irrigations are Overhead, high pressure gun
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3</SummerCona>
@@ -29883,6 +29891,7 @@ All operation irrigations are Overhead, high pressure gun
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -32580,6 +32589,9 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -32954,8 +32966,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>9b Bambaroo 1995_96 Q124 P Supplementary Irrigated</Name>
@@ -33090,7 +33100,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3</SummerCona>
@@ -33123,6 +33132,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -35788,6 +35798,9 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -36162,8 +36175,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>9c Bambaroo 1995_96 Q124 P Rainfed</Name>
@@ -36298,7 +36309,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3</SummerCona>
@@ -36331,6 +36341,7 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
               <double>0.3</double>
               <double>0.3</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -38903,6 +38914,9 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -39277,8 +39291,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -39461,7 +39473,6 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -39502,6 +39513,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
               <double>0.6</double>
               <double>0.6</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -42114,11 +42126,12 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>10b La Mercy 1994_95 NCo376 1R Irrigation Treatment 1</Name>
@@ -42289,7 +42302,6 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -42330,6 +42342,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
               <double>0.6</double>
               <double>0.6</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -45038,11 +45051,12 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>10c La Mercy 1994_95 NCo376 1R Irrigation Treatment 2</Name>
@@ -45213,7 +45227,6 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -45254,6 +45267,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
               <double>0.6</double>
               <double>0.6</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -47946,11 +47960,12 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>10d La Mercy 1994_95 NCo376 1R Irrigation Treatment 3</Name>
@@ -48121,7 +48136,6 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -48162,6 +48176,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
               <double>0.6</double>
               <double>0.6</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -50862,11 +50877,12 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>10e La Mercy 1994_95 NCo376 1R Irrigation Treatment 4</Name>
@@ -51037,7 +51053,6 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -51078,6 +51093,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
               <double>0.6</double>
               <double>0.6</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -53730,11 +53746,12 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -53878,7 +53895,6 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -53911,6 +53927,7 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -56762,6 +56779,9 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -57136,8 +57156,6 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -57317,7 +57335,6 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -57358,6 +57375,7 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
               <double>0.8</double>
               <double>0.8</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -59963,6 +59981,9 @@ However Automatic Irrigations are not possible in ApsimX yet.
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -60337,8 +60358,6 @@ However Automatic Irrigations are not possible in ApsimX yet.
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -60482,7 +60501,6 @@ However Automatic Irrigations are not possible in ApsimX yet.
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -60515,6 +60533,7 @@ However Automatic Irrigations are not possible in ApsimX yet.
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -63454,6 +63473,9 @@ Likewise fertiliser applications are subsurface fertigations except the followin
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -63828,8 +63850,6 @@ Likewise fertiliser applications are subsurface fertigations except the followin
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -63973,7 +63993,6 @@ Likewise fertiliser applications are subsurface fertigations except the followin
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -64006,6 +64025,7 @@ Likewise fertiliser applications are subsurface fertigations except the followin
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -66805,6 +66825,9 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -67179,8 +67202,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -67333,7 +67354,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -67368,6 +67388,7 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -70084,6 +70105,9 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -70458,8 +70482,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -70612,7 +70634,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -70647,6 +70668,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -73398,6 +73420,9 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -73772,8 +73797,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>16b Ingham 1992_94 Q117 P_107N and 1R_55N</Name>
@@ -73923,7 +73946,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -73958,6 +73980,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -76717,6 +76740,9 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -77091,8 +77117,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>16c Ingham 1992_94 Q117 P_268N and 1R_774N</Name>
@@ -77242,7 +77266,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>4</SummerU>
             <SummerCona>3</SummerCona>
@@ -77277,6 +77300,7 @@ All operation irrigations are subsurface trickle irrigation except for the follo
               <double>0.4</double>
               <double>0.4</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -80102,6 +80126,9 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -80476,8 +80503,6 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
         <DisabledSeries />
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <Folder>
@@ -80660,7 +80685,6 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -80701,6 +80725,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
               <double>0.6</double>
               <double>0.6</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -83491,11 +83516,12 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>19b Simunye 1994_95 NCo376 1R Irrigation Treatment 2</Name>
@@ -83666,7 +83692,6 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -83707,6 +83732,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
               <double>0.6</double>
               <double>0.6</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -86397,11 +86423,12 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>19c Simunye 1994_95 NCo376 1R Irrigation Treatment 3</Name>
@@ -86572,7 +86599,6 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -86613,6 +86639,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
               <double>0.6</double>
               <double>0.6</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -89371,11 +89398,12 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Simulation>
       <Name>19d Simunye 1994_95 NCo376 1R Irrigation Treatment 4</Name>
@@ -89546,7 +89574,6 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
-            <residueinterception>0</residueinterception>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>3</SummerCona>
@@ -89587,6 +89614,7 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
               <double>0.6</double>
               <double>0.6</double>
             </SWCON>
+            <residueinterception>0</residueinterception>
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
@@ -92325,11 +92353,12 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
   </Folder>
   <DataStore>
@@ -92347,86 +92376,86 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RegrStats>
             <Name>biomass</Name>
             <n>189</n>
-            <Slope>0.98554692281759937</Slope>
-            <Intercept>16.922091823179017</Intercept>
-            <SEslope>0.027567141167368078</SEslope>
-            <SEintercept>116.74018966788347</SEintercept>
-            <R2>0.87236528081320663</R2>
-            <RMSE>949.826142443625</RMSE>
-            <NSE>0.85751613182482322</NSE>
-            <ME>-32.306388881017888</ME>
-            <MAE>663.4511611843609</MAE>
-            <RSR>0.37647043081068</RSR>
+            <Slope>0.97829376330572815</Slope>
+            <Intercept>29.856899605098533</Intercept>
+            <SEslope>0.026917586551168843</SEslope>
+            <SEintercept>113.9894826346671</SEintercept>
+            <R2>0.87598556905685143</R2>
+            <RMSE>928.88397487767952</RMSE>
+            <NSE>0.863729954619953</NSE>
+            <ME>-44.07649470112375</ME>
+            <MAE>651.81100245420225</MAE>
+            <RSR>0.36816985190117824</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cab_N</Name>
             <n>158</n>
-            <Slope>0.30295359860786064</Slope>
-            <Intercept>0.26507555013132478</Intercept>
-            <SEslope>0.034941035469020339</SEslope>
-            <SEintercept>0.087524885746787892</SEintercept>
-            <R2>0.3251902114480073</R2>
-            <RMSE>1.6208237401573384</RMSE>
-            <NSE>-0.63320851507560283</NSE>
-            <ME>-1.2406329087681969</ME>
-            <MAE>1.2717721472826746</MAE>
-            <RSR>1.2739198374787795</RSR>
+            <Slope>0.29488006717648413</Slope>
+            <Intercept>0.27618628604386497</Intercept>
+            <SEslope>0.035215683687928878</SEslope>
+            <SEintercept>0.088212860606658353</SEintercept>
+            <R2>0.31008934262623178</R2>
+            <RMSE>1.6327456031222751</RMSE>
+            <NSE>-0.65732279233776381</NSE>
+            <ME>-1.2469620226922475</ME>
+            <MAE>1.2781012612067255</MAE>
+            <RSR>1.2832900714866193</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_dmc</Name>
             <n>188</n>
-            <Slope>-0.51962820736296911</Slope>
-            <Intercept>0.45137111578036937</Intercept>
-            <SEslope>0.10718208984622132</SEslope>
-            <SEintercept>0.023514955757161126</SEintercept>
-            <R2>0.11218860906482275</R2>
-            <RMSE>0.28699389742026465</RMSE>
-            <NSE>-5.6144764724937968</NSE>
-            <ME>0.1643230472685685</ME>
-            <MAE>0.16489313663915406</MAE>
-            <RSR>2.5650132722857029</RSR>
+            <Slope>-0.51951727533192937</Slope>
+            <Intercept>0.45137371215437233</Intercept>
+            <SEslope>0.1071817463605854</SEslope>
+            <SEintercept>0.023514880398959551</SEintercept>
+            <R2>0.1121467228490538</R2>
+            <RMSE>0.28699977155627643</RMSE>
+            <NSE>-5.6147472429347483</NSE>
+            <ME>0.16434659799515045</ME>
+            <MAE>0.164916687365736</MAE>
+            <RSR>2.5650657724850756</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_N</Name>
             <n>168</n>
-            <Slope>0.93104099881964508</Slope>
-            <Intercept>1.2891680545747786</Intercept>
-            <SEslope>0.047771500440714106</SEslope>
-            <SEintercept>0.51217095070310759</SEintercept>
-            <R2>0.69588116281663381</R2>
-            <RMSE>4.4985393031083127</RMSE>
-            <NSE>0.6057696800679595</NSE>
-            <ME>0.73916665846392982</ME>
-            <MAE>3.1811904586212982</MAE>
-            <RSR>0.62600615882339838</RSR>
+            <Slope>0.889662794518304</Slope>
+            <Intercept>1.4782983959230975</Intercept>
+            <SEslope>0.046350905387043888</SEslope>
+            <SEintercept>0.4969403736333049</SEintercept>
+            <R2>0.68937855127699965</R2>
+            <RMSE>4.3920251629356564</RMSE>
+            <NSE>0.62421743774987071</NSE>
+            <ME>0.59827380132107244</ME>
+            <MAE>3.1347023724658154</MAE>
+            <RSR>0.61118390136222889</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_wt</Name>
             <n>196</n>
-            <Slope>1.0516139690054707</Slope>
-            <Intercept>6.3292926848203024</Intercept>
-            <SEslope>0.030961526373129041</SEslope>
-            <SEintercept>98.109628494424769</SEintercept>
-            <R2>0.85604397736573368</R2>
-            <RMSE>891.497414558483</RMSE>
-            <NSE>0.8071420137747598</NSE>
-            <ME>131.91189094854772</ME>
-            <MAE>605.531275963297</MAE>
-            <RSR>0.43803426453619421</RSR>
+            <Slope>1.0439602401995261</Slope>
+            <Intercept>15.472186874806539</Intercept>
+            <SEslope>0.030240155651205657</SEslope>
+            <SEintercept>95.823778220709542</SEintercept>
+            <R2>0.86000768670653593</R2>
+            <RMSE>868.35823562025939</RMSE>
+            <NSE>0.8170235039466105</NSE>
+            <ME>122.43240115262945</ME>
+            <MAE>596.18954126941946</MAE>
+            <RSR>0.42666490657434758</RSR>
           </RegrStats>
           <RegrStats>
             <Name>canefw</Name>
             <n>188</n>
-            <Slope>0.86704052321992076</Slope>
-            <Intercept>-5.46610516300224</Intercept>
-            <SEslope>0.032356424476718118</SEslope>
-            <SEintercept>4.0250591818913453</SEintercept>
-            <R2>0.7942603171698045</R2>
-            <RMSE>38.350453029636512</RMSE>
-            <NSE>0.71928538929597807</NSE>
-            <ME>-18.917643718093238</ME>
-            <MAE>28.820783883309186</MAE>
-            <RSR>0.52841408751198926</RSR>
+            <Slope>0.86023373203775511</Slope>
+            <Intercept>-5.0903851651209067</Intercept>
+            <SEslope>0.031784503762218613</SEslope>
+            <SEintercept>3.9539136594660693</SEintercept>
+            <R2>0.79749384860351258</R2>
+            <RMSE>38.16637669514413</RMSE>
+            <NSE>0.72197369680940626</NSE>
+            <ME>-19.230568232365055</ME>
+            <MAE>28.628968815916068</MAE>
+            <RSR>0.52587778035941979</RSR>
           </RegrStats>
           <RegrStats>
             <Name>das</Name>
@@ -92445,100 +92474,100 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RegrStats>
             <Name>green_biomass</Name>
             <n>182</n>
-            <Slope>1.0165143960803174</Slope>
-            <Intercept>-47.200035230066533</Intercept>
-            <SEslope>0.031086758078470153</SEslope>
-            <SEintercept>116.37180125906846</SEintercept>
-            <R2>0.85591267955982486</R2>
-            <RMSE>905.49042443200324</RMSE>
-            <NSE>0.82577554815837051</NSE>
-            <ME>3.1820388651409357</ME>
-            <MAE>649.85466409829928</MAE>
-            <RSR>0.41625373828196244</RSR>
+            <Slope>1.0071985460680208</Slope>
+            <Intercept>-30.615089836317111</Intercept>
+            <SEslope>0.03030081175793976</SEslope>
+            <SEintercept>113.42964856555864</SEintercept>
+            <R2>0.85991091099991712</R2>
+            <RMSE>882.08167904049185</RMSE>
+            <NSE>0.83466721310336967</NSE>
+            <ME>-8.6537853106831673</ME>
+            <MAE>638.19389486753</MAE>
+            <RSR>0.40549274344999664</RSR>
           </RegrStats>
           <RegrStats>
             <Name>green_biomass_n</Name>
             <n>166</n>
-            <Slope>0.81990753509219327</Slope>
-            <Intercept>1.5808145494498493</Intercept>
-            <SEslope>0.045463840308506392</SEslope>
-            <SEintercept>0.86153027123113834</SEintercept>
-            <R2>0.66478289849261807</R2>
-            <RMSE>6.2264212818694329</RMSE>
-            <NSE>0.61111343463925138</NSE>
-            <ME>-1.3197590285683263</ME>
-            <MAE>4.6520482213884939</MAE>
-            <RSR>0.62172652766949965</RSR>
+            <Slope>0.79063548024656538</Slope>
+            <Intercept>1.9048010904044119</Intercept>
+            <SEslope>0.044974470617609383</SEslope>
+            <SEintercept>0.85225681787414342</SEintercept>
+            <R2>0.65330929084941269</R2>
+            <RMSE>6.292235717428416</RMSE>
+            <NSE>0.60284877757250432</NSE>
+            <ME>-1.4672289080863989</ME>
+            <MAE>4.6910843475827253</MAE>
+            <RSR>0.62829829315696584</RSR>
           </RegrStats>
           <RegrStats>
             <Name>lai</Name>
             <n>185</n>
-            <Slope>0.77310928108791177</Slope>
-            <Intercept>0.76590572262016288</Intercept>
-            <SEslope>0.044154954681692907</SEslope>
-            <SEintercept>0.20713615801961952</SEintercept>
-            <R2>0.62619893887511657</R2>
-            <RMSE>1.2936103720128778</RMSE>
-            <NSE>0.58206198478185978</NSE>
-            <ME>-0.1967793338453063</ME>
-            <MAE>0.97851381469031085</MAE>
-            <RSR>0.644731642477361</RSR>
+            <Slope>0.77031071520782135</Slope>
+            <Intercept>0.77107972461851659</Intercept>
+            <SEslope>0.044063262485778763</SEslope>
+            <SEintercept>0.20670601899402311</SEintercept>
+            <R2>0.62547410789265112</R2>
+            <RMSE>1.2943333293545911</RMSE>
+            <NSE>0.58159470994490359</NSE>
+            <ME>-0.20347949560832329</ME>
+            <MAE>0.979447981121949</MAE>
+            <RSR>0.64509196231125243</RSR>
           </RegrStats>
           <RegrStats>
             <Name>leaf_N</Name>
             <n>170</n>
-            <Slope>0.83932150052465582</Slope>
-            <Intercept>0.0094658830880254285</Intercept>
-            <SEslope>0.054528712505472789</SEslope>
-            <SEintercept>0.35722956752125962</SEintercept>
-            <R2>0.58510573764081075</R2>
-            <RMSE>2.1714401606721463</RMSE>
-            <NSE>0.3502799320430322</NSE>
-            <ME>-0.95005886388000416</ME>
-            <MAE>1.66817648524572</MAE>
-            <RSR>0.803677911357703</RSR>
+            <Slope>0.84031455710371783</Slope>
+            <Intercept>0.0047121118214956681</Intercept>
+            <SEslope>0.054309481216372205</SEslope>
+            <SEintercept>0.35579333521365347</SEintercept>
+            <R2>0.58763350796654623</R2>
+            <RMSE>2.1636816435281405</RMSE>
+            <NSE>0.3549145141216743</NSE>
+            <ME>-0.94888239329176871</ME>
+            <MAE>1.6652353087751308</MAE>
+            <RSR>0.80080638444830032</RSR>
           </RegrStats>
           <RegrStats>
             <Name>scmst</Name>
             <n>143</n>
-            <Slope>0.946298156591177</Slope>
-            <Intercept>-0.011839640424072317</Intercept>
-            <SEslope>0.044884654124416654</SEslope>
-            <SEintercept>0.016853960396453125</SEintercept>
-            <R2>0.75917532857464864</R2>
-            <RMSE>0.10561760017918458</RMSE>
-            <NSE>0.68921758260332577</NSE>
-            <ME>-0.029249552770942537</ME>
-            <MAE>0.071050330395832126</MAE>
-            <RSR>0.55552597939116732</RSR>
+            <Slope>0.94580717501213074</Slope>
+            <Intercept>-0.011917566964840642</Intercept>
+            <SEslope>0.044858733605640529</SEslope>
+            <SEintercept>0.016844227372874568</SEintercept>
+            <R2>0.75919678443660144</R2>
+            <RMSE>0.10563679497922746</RMSE>
+            <NSE>0.68910460998472622</NSE>
+            <ME>-0.029486653479905679</ME>
+            <MAE>0.07117005632147913</MAE>
+            <RSR>0.55562693993254442</RSR>
           </RegrStats>
           <RegrStats>
             <Name>scmstf</Name>
             <n>143</n>
-            <Slope>0.99597002721099648</Slope>
-            <Intercept>0.010714732147726905</Intercept>
-            <SEslope>0.047933958637447274</SEslope>
-            <SEintercept>0.00486330872131612</SEintercept>
-            <R2>0.75380801105383932</R2>
-            <RMSE>0.034144122264440392</RMSE>
-            <NSE>0.6430431266751282</NSE>
-            <ME>0.010376890791893063</ME>
-            <MAE>0.023472001431591803</MAE>
-            <RSR>0.59536599786476641</RSR>
+            <Slope>0.99563869237338876</Slope>
+            <Intercept>0.010679212792293197</Intercept>
+            <SEslope>0.047905528844168571</SEslope>
+            <SEintercept>0.0048604242764355441</SEintercept>
+            <R2>0.75390470421673361</R2>
+            <RMSE>0.034106682691529722</RMSE>
+            <NSE>0.64382551526257448</NSE>
+            <ME>0.010313594918692845</ME>
+            <MAE>0.023411564514009036</MAE>
+            <RSR>0.5947131695825526</RSR>
           </RegrStats>
           <RegrStats>
             <Name>sucrose_wt</Name>
             <n>152</n>
-            <Slope>1.0899111994732302</Slope>
-            <Intercept>-111.02038761932522</Intercept>
-            <SEslope>0.04871503528139521</SEslope>
-            <SEintercept>78.477616557158669</SEintercept>
-            <R2>0.76942943331018721</R2>
-            <RMSE>604.00008968977272</RMSE>
-            <NSE>0.63593671899047044</NSE>
-            <ME>2.4638131794165696</ME>
-            <MAE>394.32144674602358</MAE>
-            <RSR>0.60138849992745391</RSR>
+            <Slope>1.0820453306773969</Slope>
+            <Intercept>-108.10960649824392</Intercept>
+            <SEslope>0.047386604832495814</SEslope>
+            <SEintercept>76.337577967647562</SEintercept>
+            <R2>0.7765897121192683</R2>
+            <RMSE>586.75901193707637</RMSE>
+            <NSE>0.65642432400409034</NSE>
+            <ME>-4.5535552416360368</ME>
+            <MAE>388.709078324971</MAE>
+            <RSR>0.58422196955135386</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>

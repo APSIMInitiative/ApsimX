@@ -120,6 +120,9 @@ namespace Models.PMF.OilPalm
         [Link]
         ISummary Summary = null;
 
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
 
 
         /// <summary>The soil crop</summary>
@@ -556,14 +559,6 @@ namespace Models.PMF.OilPalm
         [XmlIgnore]
         [Units("g/m^2")]
         public double UnderstoryDltDM{get;set;}
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
-        /// <summary>Occurs when [nitrogen changed].</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
 
         /// <summary>Daily understory nitrogen fixation</summary>
         /// <value>The understory n fixation.</value>
@@ -1238,12 +1233,6 @@ namespace Models.PMF.OilPalm
         /// <exception cref="System.Exception">Error in N Allocation</exception>
         private void DoNBalance()
         {
-            NitrogenChangedType NUptakeType = new NitrogenChangedType();
-            NUptakeType.Sender = Name;
-            NUptakeType.SenderType = "Plant";
-            NUptakeType.DeltaNO3 = new double[Soil.Thickness.Length];
-            NUptakeType.DeltaNH4 = new double[Soil.Thickness.Length];
-
             double StartN = PlantN;
 
             double StemNDemand = StemGrowth * StemNConcentration.Value() / 100.0 * 10.0;  // factor of 10 to convert g/m2 to kg/ha
@@ -1267,13 +1256,8 @@ namespace Models.PMF.OilPalm
             double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
 
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
-            {
                 NUptake[j] = PotNUptake[j] * Fr;
-                NUptakeType.DeltaNO3[j] = -NUptake[j];
-            }
-
-            if (NitrogenChanged != null)
-                NitrogenChanged.Invoke(NUptakeType);
+            solutes.Subtract("NO3", NUptake);
 
             Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NUptake) / BunchNDemand));
             double DeltaBunchN = BunchNDemand * Fr;

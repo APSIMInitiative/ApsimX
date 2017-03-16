@@ -523,6 +523,9 @@ namespace Models
         [Link]
         private ISummary Summary = null;
 
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
 
         #endregion
 
@@ -14186,11 +14189,6 @@ namespace Models
         //these Delegates are declared in Models.PMF Namespace.
 
         /// <summary>
-        /// Occurs when [nitrogen changed].
-        /// </summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
-
-        /// <summary>
         /// Occurs when [water changed].
         /// </summary>
         public event WaterChangedDelegate WaterChanged;
@@ -14274,12 +14272,8 @@ namespace Models
                     }
 
 
-                NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
-                NitrogenChanges.Sender = "Sugarcane";
-                NitrogenChanges.DeltaNO3 = l_dlt_NO3;
-                NitrogenChanges.DeltaNH4 = l_dlt_NH4;
-
-                NitrogenChanged.Invoke(NitrogenChanges);  //trigger/invoke the Nitrogen Changed Event
+                solutes.Add("NO3", l_dlt_NO3);
+                solutes.Add("NH4", l_dlt_NH4);
 
 
 
@@ -14305,13 +14299,9 @@ namespace Models
                     }
 
 
-                NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
-                NitrogenChanges.Sender = "Sugarcane";
-                NitrogenChanges.DeltaNO3 = l_dlt_NO3;
-                NitrogenChanges.DeltaNH4 = l_dlt_NH4;
-
-                NitrogenChanged.Invoke(NitrogenChanges);  //trigger/invoke the Nitrogen Changed Event
-                }
+                solutes.Add("NO3", l_dlt_NO3);
+                solutes.Add("NH4", l_dlt_NH4);
+            }
             else
                 {
                 //! assume that the module that calculated uptake has also updated these pools.

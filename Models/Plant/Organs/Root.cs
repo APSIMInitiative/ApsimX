@@ -56,6 +56,7 @@ namespace Models.PMF.Organs
         /// <summary>The arbitrator</summary>
         [Link]
         OrganArbitrator Arbitrator = null;
+
         #endregion
 
         #region Parameters
@@ -341,14 +342,10 @@ namespace Models.PMF.Organs
                 ZoneState zone = Zones.Find(z => z.Name == thisZone.Zone.Name);
                 if (zone != null)
                 {
+                    zone.solutes.Subtract("NO3", thisZone.NO3N);
+                    zone.solutes.Subtract("NH4", thisZone.NH4N);
 
-                    // Send the delta water back to SoilN that we're going to uptake.
-                    NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-                    NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(thisZone.NO3N, -1.0);
-                    NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(thisZone.NH4N, -1.0);
-
-                    zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
-                    zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+                    zone.NitUptake = MathUtilities.Multiply_Value(MathUtilities.Add(thisZone.NO3N, thisZone.NH4N), -1);
                 }
             }
         }
