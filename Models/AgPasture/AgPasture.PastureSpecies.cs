@@ -2875,7 +2875,7 @@ namespace Models.AgPasture
             get
             {
                 SoilCrop soilInfo = (SoilCrop)mySoil.Crop(Name);
-                return soilInfo.LLMapped;
+                return soilInfo.LL;
             }
         }
 
@@ -3942,7 +3942,7 @@ namespace Models.AgPasture
             SoilCrop soilCrop = this.mySoil.Crop(Name) as SoilCrop;
 
             myRootProperties.RootDepth = roots.Depth;
-            myRootProperties.KL = soilCrop.KLMapped;
+            myRootProperties.KL = soilCrop.KL;
             myRootProperties.MinNO3ConcForUptake = new double[nLayers];
             myRootProperties.MinNH4ConcForUptake = new double[nLayers];
             myRootProperties.KNH4 = KNH4; //TODO: check these coefficients
@@ -3952,7 +3952,7 @@ namespace Models.AgPasture
             myRootProperties.RootExplorationByLayer = new double[nLayers];
             for (int layer = 0; layer < nLayers; layer++)
             {
-                myRootProperties.LowerLimitDep[layer] = soilCrop.LLMapped[layer] * mySoil.Thickness[layer];
+                myRootProperties.LowerLimitDep[layer] = soilCrop.LL[layer] * mySoil.Thickness[layer];
                 myRootProperties.MinNH4ConcForUptake[layer] = 0.0;
                 myRootProperties.MinNO3ConcForUptake[layer] = 0.0;
                 myRootProperties.UptakePreferenceByLayer[layer] = 1.0;
@@ -4674,8 +4674,8 @@ namespace Models.AgPasture
             SoilCrop soilCropData = (SoilCrop)mySoil.Crop(Name);
             for (int layer = 0; layer <= roots.BottomLayer; layer++)
             {
-                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LLMapped[layer] * mySoil.Thickness[layer]));
-                result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KLMapped[layer];
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * mySoil.Thickness[layer]));
+                result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer];
             }
 
             return result;
@@ -4709,10 +4709,10 @@ namespace Models.AgPasture
                 }
 
                 // Total available water
-                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LLMapped[layer] * mySoil.Thickness[layer]));
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * mySoil.Thickness[layer]));
 
                 // Actual plant available water
-                result[layer] *= FractionLayerWithRoots(layer) * Math.Min(1.0, soilCropData.KLMapped[layer] * swFac * rldFac);
+                result[layer] *= FractionLayerWithRoots(layer) * Math.Min(1.0, soilCropData.KL[layer] * swFac * rldFac);
             }
 
             return result;
@@ -4748,7 +4748,7 @@ namespace Models.AgPasture
                 }
 
                 // Total available water
-                result[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LLMapped[layer]) * mySoil.Thickness[layer];
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LL[layer]) * mySoil.Thickness[layer];
 
                 // Actual plant available water
                 result[layer] *= FractionLayerWithRoots(layer) * Math.Min(1.0, rldFac * condFac * swFac);
@@ -6378,7 +6378,7 @@ namespace Models.AgPasture
                 else if (depthBottom <= depthFirstStage)
                 {
                     // totally in the first stage
-                    result[layer] = mySoil.Thickness[layer] * soilCropData.XFMapped[layer];
+                    result[layer] = mySoil.Thickness[layer] * soilCropData.XF[layer];
                 }
                 else
                 {
@@ -6393,7 +6393,7 @@ namespace Models.AgPasture
                         result[layer] += depthFirstStage - depthTop;
                     }
 
-                    result[layer] *= soilCropData.XFMapped[layer];
+                    result[layer] *= soilCropData.XF[layer];
                 }
 
                 depthTop += mySoil.Thickness[layer];

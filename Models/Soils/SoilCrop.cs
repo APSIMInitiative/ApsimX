@@ -56,16 +56,7 @@ namespace Models.Soils
         [Description("LL")]
         [Units("mm/mm")]
         public double[] LL { get; set; }
-        /// <summary>LL for the crop mapped onto Soil LayerStructure thickness</summary>
-        /// <returns></returns>
-        public double[] LLMapped
-        {
-            get
-            {
-                return Soil.Map(LL, Soil.WaterNodeThickness, Soil.Thickness);
-            }
-        }
-
+        
         /// <summary>
         /// Gets the plant available water by layer
         /// </summary>
@@ -79,7 +70,7 @@ namespace Models.Soils
             {
                 Soil parentSoil = Soil;
                 if (parentSoil != null)
-                    return MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, this.LLMapped, parentSoil.DUL, this.XFMapped), parentSoil.Thickness);
+                    return MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, parentSoil.LL(this.Name), parentSoil.DUL, parentSoil.XF(this.Name)), parentSoil.Thickness);
                 else
                     return new double[0];
             }
@@ -93,15 +84,6 @@ namespace Models.Soils
         [Display(Format = "N2")]
         [Units("/day")]
         public double[] KL { get; set; }
-        /// <summary>kl for the crop mapped onto Soil LayerStructure thickness</summary>
-        /// <returns></returns>
-        public double[] KLMapped
-        {
-            get
-            {
-                return Soil.Map(KL, Soil.WaterNodeThickness, Soil.Thickness);
-            }
-        }
 
         /// <summary>
         /// Gets or sets the exploration factor
@@ -111,15 +93,7 @@ namespace Models.Soils
         [Display(Format = "N1")]
         [Units("0-1")]
         public double[] XF { get; set; }
-        /// <summary>XF for the crop mapped onto Soil LayerStructure thickness</summary>
-       /// <returns></returns>
-        public double[] XFMapped
-        {
-            get
-            {
-                return Soil.Map(XF, Soil.WaterNodeThickness, Soil.Thickness);
-            }
-        }
+
         /// <summary>
         /// Gets or sets the metadata for crop lower limit
         /// </summary>
