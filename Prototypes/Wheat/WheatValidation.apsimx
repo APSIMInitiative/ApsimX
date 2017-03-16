@@ -57255,7 +57255,7 @@ namespace Models
                 <Water>
                   <Name>Water</Name>
                   <SoilCrop>
-                    <Name>Wheatsoil</Name>
+                    <Name>WheatSoil</Name>
                     <LL>
                       <double>0.11</double>
                       <double>0.13</double>
@@ -57953,7 +57953,7 @@ namespace Models
                 <Water>
                   <Name>Water</Name>
                   <SoilCrop>
-                    <Name>Wheatsoil</Name>
+                    <Name>WheatSoil</Name>
                     <LL>
                       <double>0.11</double>
                       <double>0.13</double>
