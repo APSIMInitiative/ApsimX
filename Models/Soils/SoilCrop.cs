@@ -43,7 +43,7 @@ namespace Models.Soils
             get
             {
                 if (Soil != null)
-                    return Soil.ToDepthStrings(Soil.SoilWater.Thickness);
+                    return Soil.ToDepthStrings(Soil.WaterNodeThickness);
                 else
                     return new string[0];
             }
@@ -62,8 +62,7 @@ namespace Models.Soils
         {
             get
             {
-                Soil parentSoil = Soil;
-                return Soil.Map(LL, parentSoil.SoilWater.Thickness, Soil.Thickness);
+                return Soil.Map(LL, Soil.WaterNodeThickness, Soil.Thickness);
             }
         }
 
@@ -100,8 +99,7 @@ namespace Models.Soils
         {
             get
             {
-                Soil parentSoil = Soil;
-                return Soil.Map(KL, parentSoil.SoilWater.Thickness, Soil.Thickness);
+                return Soil.Map(KL, Soil.WaterNodeThickness, Soil.Thickness);
             }
         }
 
@@ -119,8 +117,7 @@ namespace Models.Soils
         {
             get
             {
-                Soil parentSoil = Soil;
-                return Soil.Map(XF, parentSoil.SoilWater.Thickness, Soil.Thickness);
+                return Soil.Map(XF, Soil.WaterNodeThickness, Soil.Thickness);
             }
         }
         /// <summary>

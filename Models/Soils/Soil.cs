@@ -161,6 +161,15 @@ namespace Models.Soils
             }
 
         #region Water
+        /// <summary>The layering used to parameterise the water node</summary>
+        public double[] WaterNodeThickness
+        {
+            get
+            {
+                return waterNode.Thickness;
+            }
+        }
+
 
         /// <summary>Return the soil layer thicknesses (mm)</summary>
         public double[] Thickness 
