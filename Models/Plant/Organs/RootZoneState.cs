@@ -11,6 +11,9 @@ namespace Models.PMF.Organs
         /// <summary>The soil in this zone</summary>
         public Soil soil = null;
 
+        /// <summary>The solute manager in this zone</summary>
+        public SoluteManager solutes = null;
+
         /// <summary>The parent plant</summary>
         private Plant plant = null;
 
@@ -77,6 +80,9 @@ namespace Models.PMF.Organs
             Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
+            solutes = Apsim.Child(zone, typeof(SoluteManager)) as SoluteManager;
+            if (solutes == null)
+                throw new Exception("Cannot find solute manager in zone");
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }

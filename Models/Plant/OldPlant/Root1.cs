@@ -67,6 +67,10 @@ namespace Models.PMF.OldPlant
         [Link]
         Soil Soil = null;
 
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
+
         /// <summary>Gets or sets the n concentration critical.</summary>
         /// <value>The n concentration critical.</value>
         public double NConcentrationCritical { get; set; }
@@ -190,9 +194,6 @@ namespace Models.PMF.OldPlant
         /// <summary>Occurs when [water changed].</summary>
         public event WaterChangedDelegate WaterChanged;
 
-
-        /// <summary>Occurs when [nitrogen changed].</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
         #endregion
 
         #region Private variables
@@ -1430,14 +1431,8 @@ namespace Models.PMF.OldPlant
         /// <summary>Update the water and N balance.</summary>
         private void UpdateWaterAndNBalance()
         {
-            NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-            NitrogenUptake.Sender = "Plant";
-            NitrogenUptake.SenderType = "Plant";
-            NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(dlt_no3gsm, Conversions.gm2kg / Conversions.sm2ha);
-            NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(dlt_nh4gsm, Conversions.gm2kg / Conversions.sm2ha);
-            Util.Debug("Root.NitrogenUptake.DeltaNO3=%f", MathUtilities.Sum(NitrogenUptake.DeltaNO3));
-            Util.Debug("Root.NitrogenUptake.DeltaNH4=%f", MathUtilities.Sum(NitrogenUptake.DeltaNH4));
-            NitrogenChanged.Invoke(NitrogenUptake);
+            solutes.Add("NO3", MathUtilities.Multiply_Value(dlt_no3gsm, Conversions.gm2kg / Conversions.sm2ha));
+            solutes.Add("NH4", MathUtilities.Multiply_Value(dlt_nh4gsm, Conversions.gm2kg / Conversions.sm2ha));
 
             // Send back delta water and nitrogen back to APSIM.
             if (!SwimIsPresent)

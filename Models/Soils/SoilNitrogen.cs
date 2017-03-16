@@ -7,6 +7,7 @@ using System.Linq;
 using Models.Core;
 using Models.SurfaceOM;
 using APSIM.Shared.Utilities;
+using Models.Interfaces;
 
 namespace Models.Soils
 {
@@ -140,28 +141,6 @@ namespace Models.Soils
     /// <summary>
     /// 
     /// </summary>
-    public class NitrogenChangedType
-    {
-        /// <summary>The sender</summary>
-        public string Sender = "";
-        /// <summary>The sender type</summary>
-        public string SenderType = "";
-        /// <summary>The delta n o3</summary>
-        public double[] DeltaNO3;
-        /// <summary>The delta n h4</summary>
-        public double[] DeltaNH4;
-        /// <summary>The delta urea</summary>
-        public double[] DeltaUrea;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void NitrogenChangedDelegate(NitrogenChangedType Data);
-
-    /// <summary>
-    /// 
-    /// </summary>
     public class MergeSoilCNPatchType
     {
         /// <summary>The sender</summary>
@@ -220,7 +199,7 @@ namespace Models.Soils
     /// </summary>
     [Serializable]
     [ValidParent(ParentType=typeof(Soil))]
-    public partial class SoilNitrogen : Model
+    public partial class SoilNitrogen : Model, ISolute
     {
         /// <summary>The surface organic matter</summary>
         [Link]
@@ -699,74 +678,6 @@ namespace Models.Soils
 
             foreach (soilCNPatch aPatch in Patch)
                 aPatch.OnIncorpFOMPool(inFOMPoolData);
-        }
-
-        /// <summary>Gets the changes in mineral N made by other modules</summary>
-        /// <param name="NitrogenChanges">The nitrogen changes.</param>
-        public void SetNitrogenChanged(NitrogenChangedType NitrogenChanges)
-        {
-            OnNitrogenChanged(NitrogenChanges);
-        }
-
-        /// <summary>Gets the changes in mineral N made by other modules</summary>
-        /// <param name="NitrogenChanges">The nitrogen changes.</param>
-        [EventSubscribe("NitrogenChanged")]
-        private void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
-        {
-            // Note:
-            //     Send deltas to each patch, if delta comes from soil or plant then the values are modified (partioned)
-            //      based on N content. If sender is any other module then values are passed to patches as they come
-
-            string module = NitrogenChanges.SenderType.ToLower();
-            if ((Patch.Count > 1) && (module == "WaterModule".ToLower()) || (module == "Plant".ToLower()))
-            {
-                // values supplied by a module from which a different treatment for each patch is required,
-                //  they will be partitioned according to the N content in each patch, following:
-                //  - If module is Plant (uptake): partition is based on the relative concentration, at each layer, of all patches
-                //  - If module is WaterModule (leaching):
-                //        . if is removal (negative): partition is equal to a plant uptake
-                //        . if is incoming leaching: partition is based on relative concentration on the layer and above
-
-                // 1- consider urea:
-                if (hasValues(NitrogenChanges.DeltaUrea, EPSILON))
-                {
-                    // 1.1-send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaUrea, "urea", NPartitionApproach.ToLower());
-                    // 1.2- send dlt's to each patch
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].dlt_urea = newDelta[k];
-                }
-
-                // 2- consider nh4:
-                if (hasValues(NitrogenChanges.DeltaNH4, EPSILON))
-                {
-                    // 2.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNH4, "NH4", NPartitionApproach.ToLower());
-                    // 2.2- send dlt's to each patch
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].dlt_nh4 = newDelta[k];
-                }
-
-                // 3- consider no3:
-                if (hasValues(NitrogenChanges.DeltaNO3, EPSILON))
-                {
-                    // 3.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNO3, "NO3", NPartitionApproach.ToLower());
-                    // 3.2- send dlt's to each patch
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].dlt_no3 = newDelta[k];
-                }
-            }
-            else
-            {
-                // values will passed to patches as they come
-                for (int k = 0; k < Patch.Count; k++)
-                {
-                    Patch[k].dlt_urea = NitrogenChanges.DeltaUrea;
-                    Patch[k].dlt_nh4 = NitrogenChanges.DeltaNH4;
-                    Patch[k].dlt_no3 = NitrogenChanges.DeltaNO3;
-                }
-            }
         }
 
         /// <summary>Get the information about urine being added</summary>

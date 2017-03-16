@@ -371,6 +371,10 @@ namespace Models.Soils
         [Link]
         ISummary Summary = null;
 
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
+
         #endregion
 
         #region Module Constants (Default Values) (NOT specified in GUI)
@@ -1984,28 +1988,13 @@ namespace Models.Soils
         #region Send Nitrogen Changed Event
 
         /// <summary>
-        /// Occurs when [nitrogen changed].
-        /// </summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
-
-        /// <summary>
         /// Sends the nitrogen changed event.
         /// </summary>
         private void SendNitrogenChangedEvent()
             {
-
-            NitrogenChangedType NitrogenDeltas = new NitrogenChangedType();
-            NitrogenDeltas.Sender = "SoilWater";
-            NitrogenDeltas.SenderType = "WaterModule";
-
-            NitrogenDeltas.DeltaUrea = SoilObject.GetDeltaArrayForASolute("urea");
-            NitrogenDeltas.DeltaNH4 = SoilObject.GetDeltaArrayForASolute("NH4");
-            NitrogenDeltas.DeltaNO3 = SoilObject.GetDeltaArrayForASolute("NO3");
-
-            if (NitrogenChanged != null)
-                NitrogenChanged.Invoke(NitrogenDeltas);
-
-
+            solutes.Add("Urea", SoilObject.GetDeltaArrayForASolute("urea"));
+            solutes.Add("NH4", SoilObject.GetDeltaArrayForASolute("NH4"));
+            solutes.Add("NO3", SoilObject.GetDeltaArrayForASolute("NO3"));
             }
 
         #endregion
