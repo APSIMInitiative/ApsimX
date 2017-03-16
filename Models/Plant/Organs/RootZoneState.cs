@@ -11,6 +11,9 @@ namespace Models.PMF.Organs
         /// <summary>The soil in this zone</summary>
         public Soil soil = null;
 
+        /// <summary>The solute manager in this zone</summary>
+        public SoluteManager solutes = null;
+
         /// <summary>The parent plant</summary>
         private Plant plant = null;
 
@@ -77,6 +80,9 @@ namespace Models.PMF.Organs
             Zone zone = Apsim.Parent(soil, typeof(Zone)) as Zone;
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
+            solutes = Apsim.Child(zone, typeof(SoluteManager)) as SoluteManager;
+            if (solutes == null)
+                throw new Exception("Cannot find solute manager in zone");
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }
@@ -147,16 +153,26 @@ namespace Models.PMF.Organs
             int RootLayer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
 
             SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
-            Depth = Depth + root.RootFrontVelocity.Value * crop.XF[RootLayer];
+            if (soil.Weirdo == null)
+                Depth = Depth + root.RootFrontVelocity.Value() * crop.XF[RootLayer];
+            else
+                Depth = Depth + root.RootFrontVelocity.Value();
+
 
             // Limit root depth for impeded layers
             double MaxDepth = 0;
             for (int i = 0; i < soil.Thickness.Length; i++)
-                if (crop.XF[i] > 0)
+            {
+                if (soil.Weirdo == null)
+                {
+                    if (crop.XF[i] > 0)
+                        MaxDepth += soil.Thickness[i];
+                }
+                else
                     MaxDepth += soil.Thickness[i];
-
+            }
             // Limit root depth for the crop specific maximum depth
-            MaxDepth = Math.Min(root.MaximumRootDepth.Value, MaxDepth);
+            MaxDepth = Math.Min(root.MaximumRootDepth.Value(), MaxDepth);
 
             Depth = Math.Min(Depth, MaxDepth);
 

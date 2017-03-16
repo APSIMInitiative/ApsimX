@@ -78,9 +78,10 @@ namespace Models.PMF
         /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;
-        /// <summary>Occurs when [nitrogen changed].</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
 
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
 
         /// <summary>
         /// Is the plant alive?
@@ -257,22 +258,11 @@ namespace Models.PMF
         /// </summary>
         public void SetNUptake(List<ZoneWaterAndN> info)
         {
-            NitrogenChangedType NUptakeType = new NitrogenChangedType();
-            NUptakeType.Sender = Name;
-            NUptakeType.SenderType = "Plant";
-            NUptakeType.DeltaNO3 = new double[Soil.Thickness.Length];
-            NUptakeType.DeltaNH4 = new double[Soil.Thickness.Length];
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;
 
-            for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
-            {
-                    NUptakeType.DeltaNO3[j] = -NO3Uptake[j];
-                    NUptakeType.DeltaNH4[j] = -NH4Uptake[j];
-            }
-            
-            if (NitrogenChanged != null)
-                NitrogenChanged.Invoke(NUptakeType);
+            solutes.Subtract("NO3", NO3Uptake);
+            solutes.Subtract("NH4", NH4Uptake);
         }
 
 

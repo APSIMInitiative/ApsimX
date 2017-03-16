@@ -595,7 +595,7 @@ namespace UserInterface.Presenters
             PopulateContextMenu(e.NewNodePath);
 
             Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);
-            CommandHistory.Add(selectCommand);
+            CommandHistory.Add(selectCommand, false);
         }
 
         /// <summary>A node has begun to be dragged.</summary>

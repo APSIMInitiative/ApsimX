@@ -39,7 +39,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            _Value = PreEventValue.Value;
+            _Value = PreEventValue.Value();
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -58,22 +58,19 @@ namespace Models.PMF.Functions
         /// <summary>Called when [re set event].</summary>
         public void OnReSetEvent()
         {
-            _Value = PreEventValue.Value;
+            _Value = PreEventValue.Value();
         }
 
         /// <summary>Called when [set event].</summary>
         public void OnSetEvent()
         {
-            _Value = PostEventValue.Value;
+            _Value = PostEventValue.Value();
         }
 
         /// <summary>Gets the value.</summary>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return _Value;
-            }
+            return _Value;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

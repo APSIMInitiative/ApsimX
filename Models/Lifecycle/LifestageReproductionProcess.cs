@@ -55,8 +55,8 @@ namespace Models.Lifecycle
                 if (FecundityFunc != null && ProgenyFunc != null)
                 {
                     if (cohortItem.Fecundity < 0)
-                        cohortItem.Fecundity = FecundityFunc.Value;
-                    double progenyrate = ProgenyFunc.Value;
+                        cohortItem.Fecundity = FecundityFunc.Value();
+                    double progenyrate = ProgenyFunc.Value();
 
                     if (cohortItem.Fecundity > 0)
                     {

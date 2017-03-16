@@ -36,22 +36,19 @@ namespace Models.PMF.Functions
         /// or
         /// Phase end name not set: + Name
         /// </exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                if (Start == "")
-                    throw new Exception("Phase start name not set:" + Name);
-                if (End == "")
-                    throw new Exception("Phase end name not set:" + Name);
+            if (Start == "")
+                throw new Exception("Phase start name not set:" + Name);
+            if (End == "")
+                throw new Exception("Phase end name not set:" + Name);
 
-                if (Phenology.Between(Start, End))
-                {
-                    return 1.0;
-                }
-                else
-                    return 0.0;
+            if (Phenology.Between(Start, End))
+            {
+                return 1.0;
             }
+            else
+                return 0.0;
         }
     }
 }

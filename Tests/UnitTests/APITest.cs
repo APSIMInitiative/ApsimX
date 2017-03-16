@@ -114,7 +114,7 @@ namespace UnitTests
             Assert.AreEqual(this.simulation.Children[4].Name, "Field2");
 
             Zone zone = this.simulation.Children[3] as Zone;
-            Assert.AreEqual(zone.Children.Count, 1);
+            Assert.AreEqual(zone.Children.Count, 2);
             Assert.AreEqual(zone.Children[0].Name, "Field1Report");
         }
         
@@ -217,7 +217,7 @@ namespace UnitTests
         public void ChildrenRecursivelyTest()
         {
             List<IModel> allChildren = Apsim.ChildrenRecursively(simulation);
-            Assert.AreEqual(allChildren.Count, 20);
+            Assert.AreEqual(allChildren.Count, 23);
 
             List<IModel> childZones = Apsim.ChildrenRecursively(simulation, typeof(Zone));
             Assert.AreEqual(childZones.Count, 3);

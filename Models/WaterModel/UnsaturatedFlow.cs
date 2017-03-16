@@ -31,7 +31,7 @@ namespace Models.WaterModel
     ///    Flow = Diffusivity x Volumetric Soil Water Gradient
     /// </summary>
     [Serializable]
-    public class UnsaturatedFlowModel : Model, IFunctionArray
+    public class UnsaturatedFlowModel : Model
     {
         /// <summary>The water movement model.</summary>
         [Link]

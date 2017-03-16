@@ -394,7 +394,7 @@ namespace Models.PMF.Phen
         {
             if (PlantIsAlive)
             {
-                if(ThermalTime.Value <0)
+                if(ThermalTime.Value() < 0)
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
                 // If this is the first time through here then setup some variables.
                 if (Phases == null || Phases.Count == 0)
@@ -479,6 +479,9 @@ namespace Models.PMF.Phen
                 //double TTRewound;
                 double OldPhaseINdex = IndexOfPhase(CurrentPhase.Name);
                 CurrentPhaseIndex = IndexOfPhase(value.Name);
+                bool HarvestCall = false;
+                if (CurrentPhaseIndex == Phases.Count - 1)
+                    HarvestCall = true;
                 PhaseIndexOffset = 0;
                 if (CurrentPhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
@@ -488,7 +491,7 @@ namespace Models.PMF.Phen
 
                 // If the new phase is a rewind or going ahead more that one phase(comming from a GoToPhase or PhaseSet Function), then reinitialise 
                 // all phases that are being wound back over.
-                if ((CurrentPhaseIndex < OldPhaseINdex)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
+                if (((CurrentPhaseIndex <= OldPhaseINdex)&&HarvestCall==false)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
                 {
                     foreach (Phase P in Phases)
                     {
@@ -721,7 +724,7 @@ namespace Models.PMF.Phen
                 FractionBiomassRemoved = removeBiomPheno; // The RewindDueToBiomassRemoved function will use this.
 
                 double ttCritical = TTInAboveGroundPhase;
-                double removeFractPheno = RewindDueToBiomassRemoved.Value;
+                double removeFractPheno = RewindDueToBiomassRemoved.Value();
                 double removeTTPheno = ttCritical * removeFractPheno;
 
                 string msg;
@@ -792,7 +795,7 @@ namespace Models.PMF.Phen
                 double TTInPhase = 0.0;
                 for (CurrentPhaseIndex = 0; CurrentPhaseIndex < Phases.Count; CurrentPhaseIndex++)
                 {
-                    if (AboveGroundPeriod.Value == 1)
+                    if (AboveGroundPeriod.Value() == 1)
                         TTInPhase += Phases[CurrentPhaseIndex].TTinPhase;
                 }
                 CurrentPhaseIndex = SavedCurrentPhaseIndex;

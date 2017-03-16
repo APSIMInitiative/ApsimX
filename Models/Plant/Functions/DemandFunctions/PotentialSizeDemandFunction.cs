@@ -42,20 +42,17 @@ namespace Models.PMF.Functions.DemandFunctions
         [Units("oCd")]
         public double AccumulatedThermalTime //FIXME.  This is not used in Code, check is needed
         {
-            get { return AccumThermalTime.Value; }
+            get { return AccumThermalTime.Value(); }
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
                 if (Phenology.Between(StartStageName, EndStageName))
-                    return PotentialGrowthIncrement.Value * OrganNumber.Value * ThermalTime.Value;
-                else
-                    return 0;
-            }
+                return PotentialGrowthIncrement.Value(arrayIndex) * OrganNumber.Value(arrayIndex) * ThermalTime.Value(arrayIndex);
+            else
+                return 0;
         }
 
     }
