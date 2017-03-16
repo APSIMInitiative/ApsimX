@@ -2004,8 +2004,10 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
       <Name>PendletonDwarf</Name>
       <Command>[Phenology].Vernalisation.VernSens = 5.0</Command>
       <Command>[Phenology].Vernalisation.PhotopSens = 5.0</Command>
-      <Command>[Grain].GrainsPerGramStem = 25</Command>
+      <Command>[Grain].GrainsPerGramStem = 27</Command>
       <Command>[Grain].MaxGrainSize = 0.045</Command>
+      <Command>[Grain].PotentialGrainFillingRate = 0.0028</Command>
+      <Command>[Grain].PotentialGrainFillingRate = 0.001</Command>
       <Command>[Phenology].StartGrainFillToEndGrainFill.Target.FixedValue = 600</Command>
     </Cultivar>
 
