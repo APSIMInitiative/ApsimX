@@ -158,7 +158,7 @@ namespace Models.Soils
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
-            }
+         }
 
         #region Water
         /// <summary>The layering used to parameterise the water node</summary>
@@ -1231,10 +1231,17 @@ namespace Models.Soils
 
         internal double[] XFMapped(string CropName, double[] ToThickness)
         {
-            SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-            if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
-                return SoilCrop.XF;
-            return Map(SoilCrop.XF, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
+            if (Weirdo != null)
+            {
+                return Weirdo.MappedXF;
+            }
+            else
+            {
+                SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
+                if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
+                    return SoilCrop.XF;
+                return Map(SoilCrop.XF, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
+            }
         }
         /// <summary>
         /// The potential water extraction rate constant for each layer
