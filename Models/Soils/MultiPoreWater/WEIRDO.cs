@@ -854,6 +854,14 @@ namespace Models.Soils
                 {
                     SubHourly.Irrigation[Subh] = IrrigationRate;
                 }
+                if (Met.RainfallHours >= 1 && Rain > 0) //Rainfall won't be filled in loop below so do here
+                {
+                    double RainfallRate = Rain / 10;
+                    for (int Subh = 0; Subh < 10; Subh++)
+                    {
+                        SubHourly.Rainfall[Subh] = RainfallRate;
+                    }
+                }
                 if (Math.Abs(MathUtilities.Sum(SubHourly.Irrigation) - Irrig) > FloatingPointTolerance)
                     throw new Exception(this + " Sub hourly irrigation partition has gone wrong.  Check you are specifying a Duration > 0 in the irrigation method call");
             }
@@ -861,9 +869,17 @@ namespace Models.Soils
             {
                 int RainSubHours = (int)(Met.RainfallHours * 10);
                 double RainRate = Rain / RainSubHours;
-                for (int h = 0; h < RainSubHours; h++)
+                for (int Subh = 0; Subh < RainSubHours; Subh++)
                 {
-                    Hourly.Rainfall[h] = RainRate;
+                    Hourly.Rainfall[Subh] = RainRate;
+                }
+                if (IrrigationDuration >= 1.0 && Irrig > 0) //Irrigation not set in first loop so set here
+                {
+                    double IrrigationRate = Irrig / 10;
+                    for (int Subh = 0; Subh < RainSubHours; Subh++)
+                    {
+                        SubHourly.Irrigation[Subh] = IrrigationRate;
+                    }
                 }
                 if (Math.Abs(MathUtilities.Sum(SubHourly.Rainfall) - Rain) > FloatingPointTolerance)
                     throw new Exception(this + " Subhourly rainfall partition has gone wrong");
