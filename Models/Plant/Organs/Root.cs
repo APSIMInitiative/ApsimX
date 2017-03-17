@@ -845,7 +845,6 @@ namespace Models.PMF.Organs
             if (myZone == null)
                 return null;
 
-            SoilCrop crop = myZone.soil.Crop(Plant.Name) as SoilCrop;
             double[] supply = new double[myZone.soil.Thickness.Length];
             double[] layerMidPoints = Soil.ToMidPoints(myZone.soil.Thickness);
             for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
@@ -854,8 +853,8 @@ namespace Models.PMF.Organs
                 {
                     if (myZone.soil.Weirdo == null)
                     {
-                        supply[layer] = Math.Max(0.0, crop.KL[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
-                            (zone.Water[layer] - crop.LL[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
+                        supply[layer] = Math.Max(0.0, myZone.soil.KL(Plant.Name)[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
+                            (zone.Water[layer] - myZone.soil.LL(Plant.Name)[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
                     }
                     else supply[layer] = 0; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
                 }

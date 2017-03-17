@@ -152,9 +152,10 @@ namespace Models.PMF.Organs
             // Do Root Front Advance
             int RootLayer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
 
-            SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
+            //SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
+            double[] xf = soil.XF(plant.Name);
             if (soil.Weirdo == null)
-                Depth = Depth + root.RootFrontVelocity.Value() * crop.XF[RootLayer];
+                Depth = Depth + root.RootFrontVelocity.Value() * xf[RootLayer];
             else
                 Depth = Depth + root.RootFrontVelocity.Value();
 
@@ -165,7 +166,7 @@ namespace Models.PMF.Organs
             {
                 if (soil.Weirdo == null)
                 {
-                    if (crop.XF[i] > 0)
+                    if (xf[i] > 0)
                         MaxDepth += soil.Thickness[i];
                 }
                 else

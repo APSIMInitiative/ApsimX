@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="4">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -5667,6 +5667,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -7731,6 +7734,9 @@ namespace Models
                 <string>[Clock].DoReport</string>
               </EventNames>
             </Report>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -9945,6 +9951,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -10835,6 +10844,9 @@ namespace Models
                 <string>[Clock].DoReport</string>
               </EventNames>
             </Report>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -11919,6 +11931,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -13224,6 +13239,9 @@ namespace Models
                 <Action>[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
             </Operations>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -13755,6 +13773,9 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -14883,6 +14904,9 @@ namespace Models
                   <Action>[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N);</Action>
                 </Operation>
               </Operations>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -15592,6 +15616,9 @@ namespace Models
                   <Action>[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N);</Action>
                 </Operation>
               </Operations>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -16301,6 +16328,9 @@ namespace Models
                   <Action>[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N);</Action>
                 </Operation>
               </Operations>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -17297,6 +17327,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -18322,6 +18355,9 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -19700,6 +19736,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -21894,6 +21933,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -22778,7 +22820,7 @@ namespace Models
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
-                  <Name>Wheatsoil</Name>
+                  <Name>WheatSoil</Name>
                   <LL>
                     <double>0.17</double>
                     <double>0.17</double>
@@ -23095,6 +23137,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -23848,7 +23893,7 @@ namespace Models
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
-                  <Name>Wheatsoil</Name>
+                  <Name>WheatSoil</Name>
                   <LL>
                     <double>0.17</double>
                     <double>0.17</double>
@@ -24165,6 +24210,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -24331,7 +24379,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -24379,7 +24427,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -24427,7 +24475,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -24474,7 +24522,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -26469,6 +26517,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -30067,6 +30118,9 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -34102,6 +34156,9 @@ namespace Models
                 <string>[Clock].DoReport</string>
               </EventNames>
             </Report>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -37459,6 +37516,9 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -39969,6 +40029,9 @@ namespace Models
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
             </Soil>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -42220,6 +42283,9 @@ namespace Models
                   <string />
                 </EventNames>
               </Report>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -42795,6 +42861,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -43340,6 +43409,9 @@ namespace Models
                   <string />
                 </EventNames>
               </Report>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -44225,6 +44297,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -44759,6 +44834,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -45396,6 +45474,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -45930,6 +46011,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -46464,6 +46548,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -46998,6 +47085,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -47532,6 +47622,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -48066,6 +48159,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -48600,6 +48696,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -49134,6 +49233,9 @@ namespace Models
 }
 				]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -51079,6 +51181,9 @@ namespace Models
                 <string />
               </EventNames>
             </Report>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -54133,7 +54238,7 @@ namespace Models
                 <Water>
                   <Name>Water</Name>
                   <SoilCrop>
-                    <Name>Wheatsoil</Name>
+                    <Name>WheatSoil</Name>
                     <LL>
                       <double>0.11</double>
                       <double>0.13</double>
@@ -54489,6 +54594,9 @@ namespace Models
 }
 	   ]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -56123,6 +56231,9 @@ namespace Models
 }
 	   ]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -57144,7 +57255,7 @@ namespace Models
                 <Water>
                   <Name>Water</Name>
                   <SoilCrop>
-                    <Name>Wheatsoil</Name>
+                    <Name>WheatSoil</Name>
                     <LL>
                       <double>0.11</double>
                       <double>0.13</double>
@@ -57500,6 +57611,9 @@ namespace Models
 }
 	   ]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -57839,7 +57953,7 @@ namespace Models
                 <Water>
                   <Name>Water</Name>
                   <SoilCrop>
-                    <Name>Wheatsoil</Name>
+                    <Name>WheatSoil</Name>
                     <LL>
                       <double>0.11</double>
                       <double>0.13</double>
@@ -58195,6 +58309,9 @@ namespace Models
 }
 	   ]]></Code>
               </Manager>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -59129,6 +59246,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -61216,6 +61336,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -62387,6 +62510,9 @@ namespace Models
                 <Action>[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
             </Operations>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -63135,6 +63261,9 @@ namespace Models
                 <Action>[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
             </Operations>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -63844,6 +63973,9 @@ namespace Models
                 <Action>[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
             </Operations>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -64553,6 +64685,9 @@ namespace Models
                 <Action>[Fertiliser].Apply(Amount: 200, Type: Fertiliser.Types.NO3N);</Action>
               </Operation>
             </Operations>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -65347,6 +65482,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -65985,6 +66123,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -66623,6 +66764,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -67981,6 +68125,9 @@ namespace Models
                   <string />
                 </EventNames>
               </Report>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -69735,6 +69882,9 @@ namespace Models
                   <string />
                 </EventNames>
               </Report>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+              </SoluteManager>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
@@ -71177,6 +71327,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -71833,6 +71986,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -72489,6 +72645,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -73543,6 +73702,9 @@ namespace Models
 }
 	   ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -74308,6 +74470,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
