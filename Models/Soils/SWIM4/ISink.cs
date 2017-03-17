@@ -8,7 +8,7 @@ namespace Models.Soils.SWIM4
     /// <summary>
     /// 
     /// </summary>
-    public interface ISoil
+    public interface ISink
     {
         /// <summary></summary>
         int nex { get; set; }

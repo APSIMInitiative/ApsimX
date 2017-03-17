@@ -15,7 +15,9 @@ namespace Models.Soils.SWIM4
     /// </summary>
     public class SinkDripperDrain : ISink
     {
+        /// <summary></summary>
         public int nex { get; set; }
+        /// <summary></summary>
         public bool drip;
 
         int idrip;
@@ -25,13 +27,15 @@ namespace Models.Soils.SWIM4
         double dcond;
         double driprate;
         double[] dripsol;
+        /// <summary></summary>
 
+        /// <summary></summary>
         public SinkDripperDrain()
         {
             nex = 1;
         }
 
-        //Set sink parameters.
+        /// <summary>Set sink parameters</summary>
         public void SetSinks(int n, int ns, int idrip, int idrn, double driprate, double[] dripsol, double dcond)
         {
             this.n = n;

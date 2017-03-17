@@ -652,6 +652,10 @@ namespace Models.Soils.SWIM4
             //finalise solute transport if required
         }
 
+        /// <summary>
+        /// Test harness only, not for general use.
+        /// </summary>
+        /// <returns></returns>
         public static List<object> TestSolute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win,
                                    double[] cin, int n, int ns, int nex, double[] dx, int[] jt, double dsmmax,
                                    double[,] sm, double[] sdrn, int[] nssteps, double[,] c, double[,,] sex, bool extraction, SolProps solProps)
@@ -909,6 +913,10 @@ namespace Models.Soils.SWIM4
             }
         }
 
+        /// <summary>
+        /// Test harness only, not for general use.
+        /// </summary>
+        /// <returns></returns>
         public static List<double[]> TestTri(int ns, int n, double[] aa, double[] bb, double[] cc, double[] dd, double[] ee, double[] dy)
         {
             List<double[]> res = new List<double[]>();
