@@ -289,9 +289,9 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of structural DM demanded.</summary>
         public double DemandedDMStructural()
         {
-            if (DMConversionEfficiency.Value > 0.0)
+            if (DMConversionEfficiency.Value() > 0.0)
             {
-                double demandedDM = DMDemandFunction.Value * StructuralFraction.Value / DMConversionEfficiency.Value;
+                double demandedDM = DMDemandFunction.Value() * StructuralFraction.Value() / DMConversionEfficiency.Value();
                 return demandedDM;
             }
             else
@@ -304,11 +304,11 @@ namespace Models.PMF.Organs
         /// <remarks>Assumes that StructuralFraction is always greater than zero</remarks>
         public double DemandedDMNonStructural()
         {
-            if (DMConversionEfficiency.Value > 0.0)
+            if (DMConversionEfficiency.Value() > 0.0)
             {
-                double theoreticalMaximumDM = (StartLive.StructuralWt + StructuralDMDemand) / StructuralFraction.Value;
+                double theoreticalMaximumDM = (StartLive.StructuralWt + StructuralDMDemand) / StructuralFraction.Value();
                 double baseAllocated = StartLive.StructuralWt + StartLive.NonStructuralWt + StructuralDMDemand;
-                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency.Value;
+                double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency.Value();
                 return demandedDM;
             }
             else
@@ -354,7 +354,7 @@ namespace Models.PMF.Organs
         {
             if (DMRetranslocationFactor != null)
             {
-                double availableDM = Math.Max(0.0, StartLive.NonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value;
+                double availableDM = Math.Max(0.0, StartLive.NonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
@@ -371,7 +371,7 @@ namespace Models.PMF.Organs
         {
             if (DMReallocationFactor != null)
             {
-                double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value * DMReallocationFactor.Value;
+                double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value() * DMReallocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
 
@@ -406,14 +406,14 @@ namespace Models.PMF.Organs
         /// </remarks>
         private void DoNDemandCalculations()
         {
-            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value;
-            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value : CriticalNConc.Value;
+            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value();
+            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value() : CriticalNConc.Value();
 
-            double NDeficit = Math.Max(0.0, MaximumNConc.Value * (Live.Wt + PotentialDMAllocation) - Live.N);
+            double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N);
             NDeficit *= NitrogenSwitch;
 
-            StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value);
-            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (criticalN - MinimumNConc.Value));
+            StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value());
+            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (criticalN - MinimumNConc.Value()));
             NonStructuralNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
         }
 
@@ -440,8 +440,8 @@ namespace Models.PMF.Organs
         {
             if (NRetranslocationFactor != null)
             {
-                double labileN = Math.Max(0.0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value);
-                double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value;
+                double labileN = Math.Max(0.0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value());
+                double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
 
@@ -456,7 +456,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the N amount available for reallocation.</summary>
         public double AvailableNReallocation()
         {
-            double availableN = StartLive.NonStructuralN * SenescenceRate.Value * NReallocationFactor.Value;
+            double availableN = StartLive.NonStructuralN * SenescenceRate.Value() * NReallocationFactor.Value();
             if (availableN < -BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
@@ -475,25 +475,25 @@ namespace Models.PMF.Organs
             {
                 // get DM lost by respiration (growth respiration)
                 GrowthRespiration = 0.0;
-                GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency.Value)
-                                  + value.NonStructural * (1.0 - DMConversionEfficiency.Value)
-                                  + value.Metabolic * (1.0 - DMConversionEfficiency.Value);
+                GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency.Value())
+                                  + value.NonStructural * (1.0 - DMConversionEfficiency.Value())
+                                  + value.Metabolic * (1.0 - DMConversionEfficiency.Value());
 
                 // allocate structural DM
-                Allocated.StructuralWt = Math.Min(value.Structural * DMConversionEfficiency.Value, StructuralDMDemand);
+                Allocated.StructuralWt = Math.Min(value.Structural * DMConversionEfficiency.Value(), StructuralDMDemand);
                 Live.StructuralWt += Allocated.StructuralWt;
                 
                 // allocate non structural DM
-                if ((value.NonStructural * DMConversionEfficiency.Value - DMDemand.NonStructural) > BiomassToleranceValue)
+                if ((value.NonStructural * DMConversionEfficiency.Value() - DMDemand.NonStructural) > BiomassToleranceValue)
                     throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
                 if (DMDemand.NonStructural > 0.0)
                 {
-                    Allocated.NonStructuralWt = value.NonStructural * DMConversionEfficiency.Value;
+                    Allocated.NonStructuralWt = value.NonStructural * DMConversionEfficiency.Value();
                     Live.NonStructuralWt += Allocated.NonStructuralWt;
                 }
 
                 // allocate metabolic DM
-                Allocated.MetabolicWt = value.Metabolic * DMConversionEfficiency.Value;
+                Allocated.MetabolicWt = value.Metabolic * DMConversionEfficiency.Value();
 
                 // Retranslocation
                 if (value.Retranslocation - StartLive.NonStructuralWt > BiomassToleranceValue)
@@ -531,10 +531,10 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the maximum N concentration.</summary>
-        public double MaxNconc { get { return MaximumNConc.Value; } }
+        public double MaxNconc { get { return MaximumNConc.Value(); } }
 
         /// <summary>Gets the minimum N concentration.</summary>
-        public double MinNconc { get { return MinimumNConc.Value; } }
+        public double MinNconc { get { return MinimumNConc.Value(); } }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         public double Wt { get { return Live.Wt + Dead.Wt; } }
@@ -599,10 +599,10 @@ namespace Models.PMF.Organs
         protected void OnPlantEmerging(object sender, EventArgs e)
         {
             //Initialise biomass and nitrogen
-            Live.StructuralWt = InitialWtFunction.Value;
+            Live.StructuralWt = InitialWtFunction.Value();
             Live.NonStructuralWt = 0.0;
-            Live.StructuralN = Live.StructuralWt * MinimumNConc.Value;
-            Live.NonStructuralN = (InitialWtFunction.Value * MaximumNConc.Value) - Live.StructuralN;
+            Live.StructuralN = Live.StructuralWt * MinimumNConc.Value();
+            Live.NonStructuralN = (InitialWtFunction.Value() * MaximumNConc.Value()) - Live.StructuralN;
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -645,7 +645,7 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 // Do senescence
-                double senescedFrac = SenescenceRate.Value;
+                double senescedFrac = SenescenceRate.Value();
                 if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
                     senescedFrac = 1.0;  // remaining amount too small, senesce all
                 Biomass Loss = Live * senescedFrac;
@@ -654,7 +654,7 @@ namespace Models.PMF.Organs
                 Senesced.Add(Loss);
 
                 // Do detachment
-                double detachedFrac = DetachmentRateFunction.Value;
+                double detachedFrac = DetachmentRateFunction.Value();
                 if (Dead.Wt * (1.0 - detachedFrac) < BiomassToleranceValue)
                     detachedFrac = 1.0;  // remaining amount too small, detach all
                 Biomass detaching = Dead * detachedFrac;
@@ -666,10 +666,10 @@ namespace Models.PMF.Organs
                 }
 
                 // Do maintenance respiration
-                MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value;
-                Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value);
-                MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value;
-                Live.NonStructuralWt *= (1 - MaintenanceRespirationFunction.Value);
+                MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
+                Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
+                MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value();
+                Live.NonStructuralWt *= (1 - MaintenanceRespirationFunction.Value());
             }
         }
 

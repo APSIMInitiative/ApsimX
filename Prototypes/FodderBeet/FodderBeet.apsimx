@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -26,12 +26,12 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
 
 ]]></MemoText>
         </Memo>
-    <RelativeAllocation>
-      <Name>NArbitrator</Name>
-    </RelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -100,13 +100,13 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
             <Name>DroughtPhenologyAcelleration</Name>
             <Constant>
               <Name>One</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>Stress</Name>
               <Constant>
                 <Name>StressResponseCoefficient</Name>
-                <Value>2</Value>
+                <FixedValue>2</FixedValue>
               </Constant>
               <LinearInterpolationFunction>
                 <Name>StressFactor</Name>
@@ -135,7 +135,7 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
           <Name>Germinating</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Memo>
             <Name>Memo</Name>
@@ -150,12 +150,12 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
           <Name>Emerging</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>400</Value>
+            <FixedValue>400</FixedValue>
             <Units>oCd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Memo>
             <Name>Memo</Name>
@@ -168,7 +168,7 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
           <Name>Vegetative</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
@@ -185,11 +185,11 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Phenology].Photoperiod.Value</XProperty>
+              <XProperty>[Phenology].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
             <Constant>
               <Name>MaxThermalTimeToBolt</Name>
-              <Value>3200</Value>
+              <FixedValue>3200</FixedValue>
               <Units>oCd</Units>
             </Constant>
             <Memo>
@@ -206,11 +206,11 @@ In the FRNL trial it ranged from 2200 oCd (Sepember sowing date) to 3200 oCd (Oc
           <Name>Bolt</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>Target</Name>
-            <Value>1800</Value>
+            <FixedValue>1800</FixedValue>
           </Constant>
           <Start>InitRepro</Start>
           <End>StartBolt</End>
@@ -219,11 +219,11 @@ In the FRNL trial it ranged from 2200 oCd (Sepember sowing date) to 3200 oCd (Oc
           <Name>Maturity</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>15000</Value>
+            <FixedValue>15000</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Bolting</Start>
           <End>Maturity</End>
@@ -232,7 +232,7 @@ In the FRNL trial it ranged from 2200 oCd (Sepember sowing date) to 3200 oCd (Oc
           <Name>AccumulatedThermalTime</Name>
           <VariableReference>
             <Name>VariableReference</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <StartStageName>PreEmerge</StartStageName>
           <EndStageName>Maturity</EndStageName>
@@ -248,7 +248,7 @@ In the FRNL trial it ranged from 2200 oCd (Sepember sowing date) to 3200 oCd (Oc
         <Name>Structure</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LinearInterpolationFunction>
           <Name>HeightModel</Name>
@@ -275,11 +275,11 @@ In the FRNL trial it ranged from 2200 oCd (Sepember sowing date) to 3200 oCd (Oc
             <Name>NodeInitiationRateFunction</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>PrimordiaPerMainstemNode</Name>
-              <Value>2</Value>
+              <FixedValue>2</FixedValue>
             </Constant>
           </DivideFunction>
           <Memo>
@@ -319,25 +319,26 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </PhaseLookupValue>
         <Constant>
           <Name>MainStemFinalNodeNumber</Name>
-          <Value>80</Value>
+          <FixedValue>80</FixedValue>
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>BranchingRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>BranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <Leaf>
         <Name>Leaf</Name>
@@ -384,21 +385,21 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </ArrayBiomass>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.6</Value>
+            <FixedValue>1.6</FixedValue>
           </Constant>
           <Constant>
             <Name>FN</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>FVPD</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -468,7 +469,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
           <Name>ExtinctionCoeff</Name>
           <Constant>
             <Name>PotentialExtinctionCoeff</Name>
-            <Value>0.75</Value>
+            <FixedValue>0.75</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>WaterStress</Name>
@@ -490,7 +491,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
           <Name>CohortParameters</Name>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -582,7 +583,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
                 <MemoText><![CDATA[Assumed shape as maize data (Teixeira et al 2011). 
 ]]></MemoText>
               </Memo>
-              <XProperty>[Phenology].Photoperiod.Value</XProperty>
+              <XProperty>[Phenology].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>LagDurationBase</Name>
@@ -633,32 +634,32 @@ Needs test and imperovement to isolate soil temperature effects of different the
               </XYPairs>
               <Constant>
                 <Name>BaseValue</Name>
-                <Value>600</Value>
+                <FixedValue>600</FixedValue>
                 <Units>oCd</Units>
               </Constant>
-              <XProperty>[Phenology].Photoperiod.Value</XProperty>
+              <XProperty>[Phenology].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
             <Constant>
               <Name>BaseValue</Name>
-              <Value>600</Value>
+              <FixedValue>600</FixedValue>
               <Units>oCd</Units>
             </Constant>
           </MultiplyFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>StructuralFraction</Name>
-            <Value>0.5</Value>
+            <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
             <Name>SpecificLeafAreaMin</Name>
-            <Value>14000</Value>
+            <FixedValue>14000</FixedValue>
           </Constant>
           <Constant>
             <Name>SpecificLeafAreaMax</Name>
@@ -666,7 +667,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>18000</Value>
+            <FixedValue>18000</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ExpansionStress</Name>
@@ -685,35 +686,35 @@ Needs test and imperovement to isolate soil temperature effects of different the
           </LinearInterpolationFunction>
           <Constant>
             <Name>MinimumNConc</Name>
-            <Value>0.025</Value>
+            <FixedValue>0.025</FixedValue>
           </Constant>
           <Constant>
             <Name>CriticalNConc</Name>
-            <Value>0.025</Value>
+            <FixedValue>0.025</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumNConc</Name>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
           </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
-            <Value>0.95</Value>
+            <FixedValue>0.95</FixedValue>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
-            <Value>0.95</Value>
+            <FixedValue>0.95</FixedValue>
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
-            <Value>0.95</Value>
+            <FixedValue>0.95</FixedValue>
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0.2</Value>
+            <FixedValue>0.2</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ShadeInducedSenescenceRate</Name>
@@ -736,41 +737,45 @@ Needs test and imperovement to isolate soil temperature effects of different the
           </LinearInterpolationFunction>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>DroughtInducedSenAcceleration</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>CellDivisionStress</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <FixedValue>1</FixedValue>
           </Constant>
         </LeafCohortParameters>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
@@ -807,11 +812,11 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -852,15 +857,15 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </LinearInterpolationFunction>
         <Constant>
           <Name>SoilWaterEffect</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>PartitionFraction</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
@@ -868,7 +873,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
             <Name>PhaseLookupValue</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>10</Value>
+              <FixedValue>10</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Maturity</End>
@@ -876,11 +881,11 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -916,7 +921,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </CompositeBiomass>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
@@ -996,12 +1001,12 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>5</Value>
+          <FixedValue>5</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -1043,24 +1048,24 @@ Needs test and imperovement to isolate soil temperature effects of different the
         <Name>StorageRoot</Name>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.95</Value>
+          <FixedValue>0.95</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.03</Value>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1069,11 +1074,11 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </PhaseBasedSwitch>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
@@ -1083,7 +1088,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </Biomass>
         <Constant>
           <Name>DMSinkCapacity</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -1115,22 +1120,22 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <BiomassRemoval>
@@ -1169,15 +1174,15 @@ Needs test and imperovement to isolate soil temperature effects of different the
         <Name>Petiole</Name>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.95</Value>
+          <FixedValue>0.95</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.04</Value>
+          <FixedValue>0.04</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1186,11 +1191,11 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </PhaseBasedSwitch>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
@@ -1232,30 +1237,30 @@ Needs test and imperovement to isolate soil temperature effects of different the
         </VariableReference>
         <Constant>
           <Name>DMReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0.94</Value>
+          <FixedValue>0.94</FixedValue>
         </Constant>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <BiomassRemoval>
@@ -1460,7 +1465,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
             <RSR>0.61620164625700424</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>FodderBeet.Leaf.Photosynthesis.RadnInt.Value</Name>
+            <Name>FodderBeet.Leaf.Photosynthesis.RadnInt.Value()</Name>
             <n>64</n>
             <Slope>1.1708478341264903</Slope>
             <Intercept>1.1871981903626097</Intercept>
@@ -1516,7 +1521,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
             <RSR>1.3252395718546504</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>FodderBeet.Phenology.AccumulatedThermalTime.Value</Name>
+            <Name>FodderBeet.Phenology.AccumulatedThermalTime.Value()</Name>
             <n>34</n>
             <Slope>0.99441035009855161</Slope>
             <Intercept>-106.53486278391415</Intercept>
@@ -2098,7 +2103,6 @@ Needs test and imperovement to isolate soil temperature effects of different the
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <Plant>
         <Name>FodderBeet</Name>
@@ -2597,8 +2601,8 @@ namespace Models
           <string>[FodderBeet].Leaf.Fn</string>
           <string>[FodderBeet].Phenology.CurrentPhaseName</string>
           <string>[FodderBeet].Phenology.Stage</string>
-          <string>[FodderBeet].Phenology.ThermalTime.Value</string>
-          <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[FodderBeet].Phenology.ThermalTime.Value()</string>
+          <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value()</string>
           <string>[FodderBeet].Leaf.Live.Wt</string>
           <string>[FodderBeet].Petiole.Live.Wt</string>
           <string>[FodderBeet].StorageRoot.Live.Wt</string>
@@ -2608,10 +2612,10 @@ namespace Models
           <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
           <string>[FodderBeet].Leaf.PlantsenescedLeafNo</string>
           <string>[FodderBeet].Leaf.CoverGreen</string>
-          <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
+          <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value()</string>
           <string>[FodderBeet].AboveGround.Wt</string>
-          <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value</string>
-          <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value</string>
+          <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value()</string>
+          <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value()</string>
           <string>[ExtraVariables].Script.AccumPlantN</string>
           <string>[FodderBeet].Leaf.Live.N</string>
           <string>[FodderBeet].Root.Live.N</string>
@@ -4137,7 +4141,6 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <Plant>
         <Name>FodderBeet</Name>
@@ -4636,8 +4639,8 @@ namespace Models
           <string>[FodderBeet].Leaf.Fn</string>
           <string>[FodderBeet].Phenology.CurrentPhaseName</string>
           <string>[FodderBeet].Phenology.Stage</string>
-          <string>[FodderBeet].Phenology.ThermalTime.Value</string>
-          <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[FodderBeet].Phenology.ThermalTime.Value()</string>
+          <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value()</string>
           <string>[FodderBeet].Leaf.Live.Wt</string>
           <string>[FodderBeet].Petiole.Live.Wt</string>
           <string>[FodderBeet].StorageRoot.Live.Wt</string>
@@ -4647,10 +4650,10 @@ namespace Models
           <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
           <string>[FodderBeet].Leaf.PlantsenescedLeafNo</string>
           <string>[FodderBeet].Leaf.CoverGreen</string>
-          <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
+          <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value()</string>
           <string>[FodderBeet].AboveGround.Wt</string>
-          <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value</string>
-          <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value</string>
+          <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value()</string>
+          <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value()</string>
           <string>[FodderBeet].Root.NUptake</string>
           <string>[ExtraVariables].Script.AccumPlantN</string>
           <string>[FodderBeet].Leaf.Live.N</string>
@@ -6635,7 +6638,6 @@ namespace Models
         <Country>New Zealand</Country>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
         <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
         <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
       </Soil>
@@ -7100,8 +7102,8 @@ namespace Models
           <string>[FodderBeet].Leaf.Fn</string>
           <string>[FodderBeet].Phenology.CurrentPhaseName</string>
           <string>[FodderBeet].Phenology.Stage</string>
-          <string>[FodderBeet].Phenology.ThermalTime.Value</string>
-          <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[FodderBeet].Phenology.ThermalTime.Value()</string>
+          <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value()</string>
           <string>[FodderBeet].Leaf.Live.Wt</string>
           <string>[FodderBeet].Petiole.Live.Wt</string>
           <string>[FodderBeet].StorageRoot.Live.Wt</string>
@@ -7111,10 +7113,10 @@ namespace Models
           <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
           <string>[FodderBeet].Leaf.PlantsenescedLeafNo</string>
           <string>[FodderBeet].Leaf.CoverGreen</string>
-          <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
+          <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value()</string>
           <string>[FodderBeet].AboveGround.Wt</string>
-          <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value</string>
-          <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value</string>
+          <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value()</string>
+          <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value()</string>
           <string>[ExtraVariables].Script.AccumPlantN</string>
           <string>[FodderBeet].Leaf.Live.N</string>
           <string>[FodderBeet].Root.Live.N</string>
@@ -8680,7 +8682,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Plant>
           <Name>FodderBeet</Name>
@@ -9164,8 +9165,8 @@ namespace Models
             <string>[FodderBeet].Leaf.Fn</string>
             <string>[FodderBeet].Phenology.CurrentPhaseName</string>
             <string>[FodderBeet].Phenology.Stage</string>
-            <string>[FodderBeet].Phenology.ThermalTime.Value</string>
-            <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value</string>
+            <string>[FodderBeet].Phenology.ThermalTime.Value()</string>
+            <string>[FodderBeet].Phenology.AccumulatedThermalTime.Value()</string>
             <string>[FodderBeet].Leaf.Live.Wt</string>
             <string>[FodderBeet].Petiole.Live.Wt</string>
             <string>[FodderBeet].StorageRoot.Live.Wt</string>
@@ -9175,11 +9176,11 @@ namespace Models
             <string>[FodderBeet].Leaf.PlantAppearedGreenLeafNo</string>
             <string>[FodderBeet].Leaf.PlantsenescedLeafNo</string>
             <string>[FodderBeet].Leaf.CoverGreen</string>
-            <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value</string>
-            <string>[Phenology].Photoperiod.Value</string>
+            <string>[FodderBeet].Leaf.CohortParameters.MaxArea.Value()</string>
+            <string>[Phenology].Photoperiod.Value()</string>
             <string>[FodderBeet].AboveGround.Wt</string>
-            <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value</string>
-            <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value</string>
+            <string>[FodderBeet].Leaf.Photosynthesis.RadnInt.Value()</string>
+            <string>[FodderBeet].Leaf.Photosynthesis.RUEact.Value()</string>
             <string>[ExtraVariables].Script.AccumPlantN</string>
             <string>[ExtraVariables].Script.AccumFert</string>
             <string>[ExtraVariables].Script.SoilNitrogenContent</string>
@@ -9225,7 +9226,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Phenology.AccumulatedThermalTime.Value</YFieldName>
+          <YFieldName>FodderBeet.Phenology.AccumulatedThermalTime.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -9246,7 +9247,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Phenology.AccumulatedThermalTime.Value</YFieldName>
+          <YFieldName>FodderBeet.Phenology.AccumulatedThermalTime.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -9330,7 +9331,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>BoltObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Phenology.StageCode.Value</YFieldName>
+          <YFieldName>Phenology.StageCode.Value()</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10479,7 +10480,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Leaf.Photosynthesis.RUEact.Value</YFieldName>
+          <YFieldName>FodderBeet.Leaf.Photosynthesis.RUEact.Value()</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10501,7 +10502,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Phenology.Photoperiod.Value</YFieldName>
+          <YFieldName>Phenology.Photoperiod.Value()</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10551,7 +10552,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Leaf.Photosynthesis.RadnInt.Value</YFieldName>
+          <YFieldName>FodderBeet.Leaf.Photosynthesis.RadnInt.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10573,7 +10574,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>FRNLObserved</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FodderBeet.Leaf.Photosynthesis.RadnInt.Value</YFieldName>
+          <YFieldName>FodderBeet.Leaf.Photosynthesis.RadnInt.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

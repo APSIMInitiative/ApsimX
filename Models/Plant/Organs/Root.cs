@@ -56,6 +56,7 @@ namespace Models.PMF.Organs
         /// <summary>The arbitrator</summary>
         [Link]
         OrganArbitrator Arbitrator = null;
+
         #endregion
 
         #region Parameters
@@ -225,7 +226,7 @@ namespace Models.PMF.Organs
             {
                 double[] value = new double[PlantZone.soil.Thickness.Length];
                 for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-                    value[i] = PlantZone.LayerLive[i].Wt * SpecificRootLength.Value * 1000 / 1000000 / PlantZone.soil.Thickness[i];
+                    value[i] = PlantZone.LayerLive[i].Wt * SpecificRootLength.Value() * 1000 / 1000000 / PlantZone.soil.Thickness[i];
                 return value;
             }
         }
@@ -313,7 +314,7 @@ namespace Models.PMF.Organs
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     if (soil.Crop(Plant.Name) == null)
                         throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
-                    ZoneState newZone = new ZoneState(Plant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaximumNConc.Value);
+                    ZoneState newZone = new ZoneState(Plant, this, soil, ZoneRootDepths[i], ZoneInitialDM[i], Plant.Population, MaximumNConc.Value());
                     Zones.Add(newZone);
                 }
             }
@@ -341,14 +342,10 @@ namespace Models.PMF.Organs
                 ZoneState zone = Zones.Find(z => z.Name == thisZone.Zone.Name);
                 if (zone != null)
                 {
+                    zone.solutes.Subtract("NO3", thisZone.NO3N);
+                    zone.solutes.Subtract("NH4", thisZone.NH4N);
 
-                    // Send the delta water back to SoilN that we're going to uptake.
-                    NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-                    NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(thisZone.NO3N, -1.0);
-                    NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(thisZone.NH4N, -1.0);
-
-                    zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
-                    zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+                    zone.NitUptake = MathUtilities.Multiply_Value(MathUtilities.Add(thisZone.NO3N, thisZone.NH4N), -1);
                 }
             }
         }
@@ -385,10 +382,10 @@ namespace Models.PMF.Organs
             Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            if (soil.Crop(Plant.Name) == null && soil.WEIRDO == null)
+            if (soil.Crop(Plant.Name) == null && soil.Weirdo == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + Plant.Name);
 
-            PlantZone = new ZoneState(Plant, this, soil, 0, InitialDM.Value, Plant.Population, MaximumNConc.Value);
+            PlantZone = new ZoneState(Plant, this, soil, 0, InitialDM.Value(), Plant.Population, MaximumNConc.Value());
             Zones = new List<ZoneState>();
             base.OnSimulationCommencing(sender, e);
         }
@@ -401,7 +398,7 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == Plant)
             {
-                PlantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value, Plant.Population, MaximumNConc.Value);
+                PlantZone.Initialise(Plant.SowingData.Depth, InitialDM.Value(), Plant.Population, MaximumNConc.Value());
                 InitialiseZones();
             }
         }
@@ -452,7 +449,7 @@ namespace Models.PMF.Organs
                 foreach(ZoneState Z in Zones)
                     Z.GrowRootDepth();
                 // Do Root Senescence
-                DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value });
+                DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value() });
             }
         }
 
@@ -496,9 +493,9 @@ namespace Models.PMF.Organs
         {
             if (DMConversionEfficiency > 0.0)
             {
-                double demandedDM = Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value;
+                double demandedDM = Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value();
                 if (StructuralFraction != null)
-                    demandedDM *= StructuralFraction.Value / DMConversionEfficiency;
+                    demandedDM *= StructuralFraction.Value() / DMConversionEfficiency;
                 else
                     demandedDM /= DMConversionEfficiency;
 
@@ -522,7 +519,7 @@ namespace Models.PMF.Organs
                         rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
                     }
 
-                double theoreticalMaximumDM = (rootLiveStructuralWt + StructuralDMDemand) / StructuralFraction.Value;
+                double theoreticalMaximumDM = (rootLiveStructuralWt + StructuralDMDemand) / StructuralFraction.Value();
                 double baseAllocated = rootLiveStructuralWt + rootLiveNonStructuralWt + StructuralDMDemand;
                 double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency;
                 return demandedDM;
@@ -555,7 +552,7 @@ namespace Models.PMF.Organs
                     for (int i = 0; i < Z.LayerLive.Length; i++)
                         rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
 
-                double availableDM = Math.Max(0.0, rootLiveNonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value;
+                double availableDM = Math.Max(0.0, rootLiveNonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
@@ -577,7 +574,7 @@ namespace Models.PMF.Organs
                     for (int i = 0; i < Z.LayerLive.Length; i++)
                         rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
 
-                double availableDM = rootLiveNonStructuralWt*SenescenceRate.Value*DMReallocationFactor.Value;
+                double availableDM = rootLiveNonStructuralWt*SenescenceRate.Value() * DMReallocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
                 return availableDM;
@@ -665,8 +662,8 @@ namespace Models.PMF.Organs
         /// </remarks>
         private void DoNDemandCalculations()
         {
-            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value;
-            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value : CriticalNConc.Value;
+            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value();
+            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value() : CriticalNConc.Value();
 
             StructuralNDemand = 0.0;
             MetabolicNDemand = 0.0;
@@ -680,8 +677,8 @@ namespace Models.PMF.Organs
                 double NDeficit = 0.0;
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                 {
-                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinimumNConc.Value * NitrogenSwitch;
-                    NDeficit = Math.Max(0.0, MaximumNConc.Value * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
+                    Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinimumNConc.Value() * NitrogenSwitch;
+                    NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
                     Z.NonStructuralNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
 
                     StructuralNDemand += Z.StructuralNDemand[i];
@@ -716,9 +713,9 @@ namespace Models.PMF.Organs
                 double labileN = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        labileN += Math.Max(0.0, Z.LayerLive[i].NonStructuralN - Z.LayerLive[i].NonStructuralWt * MinimumNConc.Value);
+                        labileN += Math.Max(0.0, Z.LayerLive[i].NonStructuralN - Z.LayerLive[i].NonStructuralWt * MinimumNConc.Value());
 
-                double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value;
+                double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
 
@@ -740,7 +737,7 @@ namespace Models.PMF.Organs
                     for (int i = 0; i < Z.LayerLive.Length; i++)
                         rootLiveNonStructuralN += Z.LayerLive[i].NonStructuralN;
 
-                double availableN = rootLiveNonStructuralN * SenescenceRate.Value * NReallocationFactor.Value;
+                double availableN = rootLiveNonStructuralN * SenescenceRate.Value() * NReallocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N reallocation value computed for " + Name);
 
@@ -776,12 +773,12 @@ namespace Models.PMF.Organs
 
                         double kno3 = KNO3.ValueForX(LengthDensity[layer]);
                         double NO3ppm = zone.NO3N[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
-                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF, (MaxDailyNUptake.Value - NO3Uptake));
+                        NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF, (MaxDailyNUptake.Value() - NO3Uptake));
                         NO3Uptake += NO3Supply[layer];
 
                         double knh4 = KNH4.ValueForX(LengthDensity[layer]);
                         double NH4ppm = zone.NH4N[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
-                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF, (MaxDailyNUptake.Value - NH4Uptake));
+                        NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF, (MaxDailyNUptake.Value() - NH4Uptake));
                         NH4Uptake += NH4Supply[layer];
                     }
                 }
@@ -838,7 +835,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
-        public override double MinNconc { get { return MinimumNConc.Value; } }
+        public override double MinNconc { get { return MinimumNConc.Value(); } }
 
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
@@ -848,17 +845,16 @@ namespace Models.PMF.Organs
             if (myZone == null)
                 return null;
 
-            SoilCrop crop = myZone.soil.Crop(Plant.Name) as SoilCrop;
             double[] supply = new double[myZone.soil.Thickness.Length];
             double[] layerMidPoints = Soil.ToMidPoints(myZone.soil.Thickness);
             for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
             {
                 if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
                 {
-                    if (myZone.soil.WEIRDO == null)
+                    if (myZone.soil.Weirdo == null)
                     {
-                        supply[layer] = Math.Max(0.0, crop.KL[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
-                            (zone.Water[layer] - crop.LL[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
+                        supply[layer] = Math.Max(0.0, myZone.soil.KL(Plant.Name)[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
+                            (zone.Water[layer] - myZone.soil.LL(Plant.Name)[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
                     }
                     else supply[layer] = 0; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
                 }

@@ -61,20 +61,17 @@ namespace Models.PMF.Functions
         private void EndOfDay(object sender, EventArgs e)
         {
             AccumulatedValues.RemoveAt(0);
-            AccumulatedValues.Add(ChildFunction.Value);
+            AccumulatedValues.Add(ChildFunction.Value());
         }
 
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                if (NumberOfDays == 0)
-                    throw new ApsimXException(this, "Number of days for moving average cannot be zero in function " + this.Name);
-                return MathUtilities.Sum(AccumulatedValues)/NumberOfDays;
-            }
+            if (NumberOfDays == 0)
+                throw new ApsimXException(this, "Number of days for moving average cannot be zero in function " + this.Name);
+            return MathUtilities.Sum(AccumulatedValues)/NumberOfDays;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

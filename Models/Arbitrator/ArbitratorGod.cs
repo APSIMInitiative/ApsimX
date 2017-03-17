@@ -29,6 +29,11 @@ namespace Models.ArbitratorGod
         [Link]
         Simulation Simulation = null;
 
+
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
+
         //[Link]
         //Zone mypaddock;
 
@@ -77,17 +82,6 @@ namespace Models.ArbitratorGod
 
         // soil water evaporation stuff
         //public double ArbitEOS { get; set; }  //
-
-        /// <summary>
-        /// The NitrogenChangedDelegate is for the Arbitrator to set the change in nitrate and ammonium in SoilNitrogen
-        /// Eventually this should be changes to a set rather than an event
-        /// </summary>
-        /// <param name="Data"></param>
-        public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
-        /// <summary>
-        /// To publish the nitrogen change event
-        /// </summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
 
         //class CanopyProps
         //{
@@ -807,11 +801,8 @@ namespace Models.ArbitratorGod
                 double[] dummyArray2 = new double[Soil.Thickness.Length];  // have to create a new array for each plant to avoid the .NET pointer thing - will have to re-think this with when zones come in
 
                 // move this inside the zone loop - needs to get zeroed for each seperate zone
-                NitrogenChangedType NUptakeType = new NitrogenChangedType();
-                NUptakeType.Sender = Name;
-                NUptakeType.SenderType = "Plant";
-                NUptakeType.DeltaNO3 = new double[Soil.Thickness.Length];
-                NUptakeType.DeltaNH4 = new double[Soil.Thickness.Length];
+                double[] DeltaNO3 = new double[Soil.Thickness.Length];
+                double[] DeltaNH4 = new double[Soil.Thickness.Length];
 
                 for (int p = 0; p < maxPlants; p++)
                 {
@@ -824,12 +815,12 @@ namespace Models.ArbitratorGod
                                 dummyArray1[l] += uptake[p, l, z, b, f];       // add the forms together to give the total nitrogen uptake
                                 if (f == 0)
                                 {
-                                    NUptakeType.DeltaNO3[l] += -1.0 * uptake[p, l, z, b, f];
+                                    DeltaNO3[l] += -1.0 * uptake[p, l, z, b, f];
                                     dummyArray2[l] += uptake[p, l, z, b, f];   // nitrate only uptake so can do the proportion before sending to the plant
                                 }
                                 else
                                 {
-                                    NUptakeType.DeltaNH4[l] += -1.0 * uptake[p, l, z, b, f];
+                                    DeltaNH4[l] += -1.0 * uptake[p, l, z, b, f];
                                 }
                             }
                         }
@@ -843,8 +834,9 @@ namespace Models.ArbitratorGod
                     plants[p].uptakeNitrogenPropNO3 = dummyArray2;
                 }
                 // and finally set the changed soil resources
-                if (NitrogenChanged != null)
-                    NitrogenChanged.Invoke(NUptakeType);
+                solutes.Add("NO3", DeltaNO3);
+                solutes.Add("NH4", DeltaNH4);
+
             }
 
         }

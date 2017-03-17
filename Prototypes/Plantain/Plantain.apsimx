@@ -140,7 +140,7 @@ The number of days required for full vernalisation is quite variable in chicory 
           </AirTemperatureFunction>
           <Constant>
             <Name>DaysToStabilise</Name>
-            <Value>10</Value>
+            <FixedValue>10</FixedValue>
             <Units>days</Units>
           </Constant>
           <StartStage>Emergence</StartStage>
@@ -165,7 +165,7 @@ The number of days required for full vernalisation is quite variable in chicory 
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -180,7 +180,7 @@ The number of days required for full vernalisation is quite variable in chicory 
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>10</Value>
+            <FixedValue>10</FixedValue>
             <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <VariableReference>
@@ -199,7 +199,7 @@ The number of days required for full vernalisation is quite variable in chicory 
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>30</Value>
+            <FixedValue>30</FixedValue>
             <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -219,7 +219,7 @@ The number of days required for full vernalisation is quite variable in chicory 
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Phenology].Photoperiod.Value</XProperty>
+            <XProperty>[Phenology].Photoperiod.Value()</XProperty>
           </LinearInterpolationFunction>
           <Start>Vernalised</Start>
           <End>Bolting</End>
@@ -232,12 +232,12 @@ The number of days required for full vernalisation is quite variable in chicory 
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>800</Value>
+            <FixedValue>800</FixedValue>
             <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Bolting</Start>
           <End>Flowering</End>
@@ -252,12 +252,12 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>800</Value>
+            <FixedValue>800</FixedValue>
             <Units>&lt;sup&gt;o&lt;/sup&gt;Cd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Flowering</Start>
           <End>Ripening</End>
@@ -295,7 +295,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
-            <Value>0.005</Value>
+            <FixedValue>0.005</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
@@ -305,24 +305,24 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </MultiplyFunction>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>2</Value>
+            <FixedValue>2</FixedValue>
             <Units>g/MJ</Units>
           </Constant>
           <RUECO2Function>
@@ -416,13 +416,13 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>Photosynthesis</Name>
-            <VariableName>[Leaf].Photosynthesis.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>PotentialPhotosynthesis</Name>
             <VariableReference>
               <Name>PotentialRUE</Name>
-              <VariableName>[Leaf].Photosynthesis.RUE.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.RUE.Value()</VariableName>
             </VariableReference>
             <MaximumFunction>
               <Name>Radiation</Name>
@@ -432,7 +432,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
               </VariableReference>
               <Constant>
                 <Name>MinRadn</Name>
-                <Value>1E-05</Value>
+                <FixedValue>1E-05</FixedValue>
               </Constant>
             </MaximumFunction>
           </MultiplyFunction>
@@ -454,11 +454,11 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                   <Name>Numerator</Name>
                   <VariableReference>
                     <Name>TargetSR1</Name>
-                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSR2</Name>
-                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
                   </VariableReference>
                 </MultiplyFunction>
                 <AddFunction>
@@ -467,16 +467,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                     <Name>TargetSRs</Name>
                     <VariableReference>
                       <Name>TargetSR1</Name>
-                      <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
                     </VariableReference>
                     <VariableReference>
                       <Name>TargetSR2</Name>
-                      <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
                     </VariableReference>
                   </MultiplyFunction>
                   <VariableReference>
                     <Name>CurrentSR</Name>
-                    <VariableName>[ShootRootRatio].Value</VariableName>
+                    <VariableName>[ShootRootRatio].Value()</VariableName>
                   </VariableReference>
                 </AddFunction>
               </DivideFunction>
@@ -491,15 +491,15 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                   <Name>Numerator</Name>
                   <VariableReference>
                     <Name>TargetSR1</Name>
-                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSR2</Name>
-                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>CurrentSL</Name>
-                    <VariableName>[StemsLeafRatio].Value</VariableName>
+                    <VariableName>[StemsLeafRatio].Value()</VariableName>
                   </VariableReference>
                 </MultiplyFunction>
                 <MultiplyFunction>
@@ -510,16 +510,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetSRs</Name>
                       <VariableReference>
                         <Name>TargetSR1</Name>
-                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetSR2</Name>
-                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentSR</Name>
-                      <VariableName>[ShootRootRatio].Value</VariableName>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                   <AddFunction>
@@ -528,16 +528,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetSLs</Name>
                       <VariableReference>
                         <Name>TargetSL1</Name>
-                        <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetSL2</Name>
-                        <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentSL</Name>
-                      <VariableName>[StemsLeafRatio].Value</VariableName>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                 </MultiplyFunction>
@@ -549,19 +549,19 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <MultiplyFunction>
           <Name>LAIFunction</Name>
           <Constant>
             <Name>SpecificLeafArea</Name>
-            <Value>0.03</Value>
+            <FixedValue>0.03</FixedValue>
             <Units>m^2/g</Units>
           </Constant>
           <VariableReference>
@@ -573,7 +573,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Name>LaiDeadFunction</Name>
           <VariableReference>
             <Name>SpecificLeafArea</Name>
-            <VariableName>[Leaf].LAIFunction.SpecificLeafArea.Value</VariableName>
+            <VariableName>[Leaf].LAIFunction.SpecificLeafArea.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>DeadLeafWeight</Name>
@@ -582,7 +582,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </MultiplyFunction>
         <Constant>
           <Name>ExtinctionCoefficientFunction</Name>
-          <Value>0.6</Value>
+          <FixedValue>0.6</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -606,7 +606,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Name>SenescenceRate</Name>
           <Constant>
             <Name>ReferenceRate</Name>
-            <Value>0.005</Value>
+            <FixedValue>0.005</FixedValue>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -694,7 +694,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Name>DetachmentRateFunction</Name>
           <Constant>
             <Name>ReferenceRate</Name>
-            <Value>0.1</Value>
+            <FixedValue>0.1</FixedValue>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -717,17 +717,17 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </MultiplyFunction>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Biomass>
@@ -792,12 +792,12 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </Memo>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -854,19 +854,19 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                   <Name>Numerator</Name>
                   <VariableReference>
                     <Name>TargetSR1</Name>
-                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSR2</Name>
-                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSL1</Name>
-                    <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSL2</Name>
-                    <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                   </VariableReference>
                 </MultiplyFunction>
                 <MultiplyFunction>
@@ -877,16 +877,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetSRs</Name>
                       <VariableReference>
                         <Name>TargetSR1</Name>
-                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetSR2</Name>
-                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentSR</Name>
-                      <VariableName>[ShootRootRatio].Value</VariableName>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                   <AddFunction>
@@ -895,16 +895,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetSLs</Name>
                       <VariableReference>
                         <Name>TargetSL1</Name>
-                        <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetSL2</Name>
-                        <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentSL</Name>
-                      <VariableName>[StemsLeafRatio].Value</VariableName>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                 </MultiplyFunction>
@@ -920,23 +920,23 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                   <Name>Numerator</Name>
                   <VariableReference>
                     <Name>TargetSR1</Name>
-                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSR2</Name>
-                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSL1</Name>
-                    <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSL2</Name>
-                    <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>CurrentFS</Name>
-                    <VariableName>[FlowerStemRatio].Value</VariableName>
+                    <VariableName>[FlowerStemRatio].Value()</VariableName>
                   </VariableReference>
                 </MultiplyFunction>
                 <MultiplyFunction>
@@ -947,16 +947,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetSRs</Name>
                       <VariableReference>
                         <Name>TargetSR1</Name>
-                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetSR2</Name>
-                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentSR</Name>
-                      <VariableName>[ShootRootRatio].Value</VariableName>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                   <AddFunction>
@@ -965,16 +965,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetSLs</Name>
                       <VariableReference>
                         <Name>TargetSL1</Name>
-                        <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetSL2</Name>
-                        <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentSL</Name>
-                      <VariableName>[StemsLeafRatio].Value</VariableName>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                   <AddFunction>
@@ -983,16 +983,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetFSs</Name>
                       <VariableReference>
                         <Name>TargetFS1</Name>
-                        <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetFS2</Name>
-                        <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentFS</Name>
-                      <VariableName>[FlowerStemRatio].Value</VariableName>
+                      <VariableName>[FlowerStemRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                 </MultiplyFunction>
@@ -1004,19 +1004,19 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
             <Name>ReferenceRate</Name>
-            <Value>0.1</Value>
+            <FixedValue>0.1</FixedValue>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -1085,7 +1085,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Name>DetachmentRateFunction</Name>
           <Constant>
             <Name>ReferenceRate</Name>
-            <Value>0.1</Value>
+            <FixedValue>0.1</FixedValue>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -1110,17 +1110,17 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </MultiplyFunction>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Biomass>
@@ -1169,22 +1169,22 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </Memo>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.075</Value>
+          <FixedValue>0.075</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PartitionFractionDemandFunction>
@@ -1199,27 +1199,27 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                   <Name>Numerator</Name>
                   <VariableReference>
                     <Name>TargetSR1</Name>
-                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSR2</Name>
-                    <VariableName>[TargetShootRootRatio].Value</VariableName>
+                    <VariableName>[TargetShootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSL1</Name>
-                    <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetSL2</Name>
-                    <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                    <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetFS1</Name>
-                    <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetFS2</Name>
-                    <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                    <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
                   </VariableReference>
                 </MultiplyFunction>
                 <MultiplyFunction>
@@ -1230,16 +1230,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetSRs</Name>
                       <VariableReference>
                         <Name>TargetSR1</Name>
-                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetSR2</Name>
-                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentSR</Name>
-                      <VariableName>[ShootRootRatio].Value</VariableName>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                   <AddFunction>
@@ -1248,16 +1248,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetSLs</Name>
                       <VariableReference>
                         <Name>TargetSL1</Name>
-                        <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetSL2</Name>
-                        <VariableName>[TargetStemsLeafRatio].Value</VariableName>
+                        <VariableName>[TargetStemsLeafRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentSL</Name>
-                      <VariableName>[StemsLeafRatio].Value</VariableName>
+                      <VariableName>[StemsLeafRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                   <AddFunction>
@@ -1266,16 +1266,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetFSs</Name>
                       <VariableReference>
                         <Name>TargetFS1</Name>
-                        <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetFS2</Name>
-                        <VariableName>[TargetFlowerStemRatio].Value</VariableName>
+                        <VariableName>[TargetFlowerStemRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentFS</Name>
-                      <VariableName>[FlowerStemRatio].Value</VariableName>
+                      <VariableName>[FlowerStemRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                 </MultiplyFunction>
@@ -1287,19 +1287,19 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
             <Name>ReferenceRate</Name>
-            <Value>0.25</Value>
+            <FixedValue>0.25</FixedValue>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -1364,7 +1364,7 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           <Name>DetachmentRateFunction</Name>
           <Constant>
             <Name>ReferenceRate</Name>
-            <Value>0.25</Value>
+            <FixedValue>0.25</FixedValue>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -1387,17 +1387,17 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </MultiplyFunction>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Biomass>
@@ -1447,22 +1447,22 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </Memo>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.015</Value>
+          <FixedValue>0.015</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PartitionFractionDemandFunction>
@@ -1477,15 +1477,15 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                   <Name>Numerator</Name>
                   <VariableReference>
                     <Name>CurrentSR</Name>
-                    <VariableName>[ShootRootRatio].Value</VariableName>
+                    <VariableName>[ShootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetTR1</Name>
-                    <VariableName>[TargetTaprootRootRatio].Value</VariableName>
+                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>TargetTR2</Name>
-                    <VariableName>[TargetTaprootRootRatio].Value</VariableName>
+                    <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
                   </VariableReference>
                 </MultiplyFunction>
                 <MultiplyFunction>
@@ -1496,16 +1496,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetSRs</Name>
                       <VariableReference>
                         <Name>TargetSR1</Name>
-                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetSR2</Name>
-                        <VariableName>[TargetShootRootRatio].Value</VariableName>
+                        <VariableName>[TargetShootRootRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentSR</Name>
-                      <VariableName>[ShootRootRatio].Value</VariableName>
+                      <VariableName>[ShootRootRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                   <AddFunction>
@@ -1514,16 +1514,16 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
                       <Name>TargetTRs</Name>
                       <VariableReference>
                         <Name>TargetTR1</Name>
-                        <VariableName>[TargetTaprootRootRatio].Value</VariableName>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>TargetTR2</Name>
-                        <VariableName>[TargetTaprootRootRatio].Value</VariableName>
+                        <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                     <VariableReference>
                       <Name>CurrentTR</Name>
-                      <VariableName>[TaprootRootRatio].Value</VariableName>
+                      <VariableName>[TaprootRootRatio].Value()</VariableName>
                     </VariableReference>
                   </AddFunction>
                 </MultiplyFunction>
@@ -1535,19 +1535,19 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
             <Name>ReferenceRate</Name>
-            <Value>0.001</Value>
+            <FixedValue>0.001</FixedValue>
             <Units>/day</Units>
           </Constant>
           <WeightedTemperatureFunction>
@@ -1588,28 +1588,28 @@ Data from the USA and New Zealand suggest that the reporductive phase last for t
           </LinearInterpolationFunction>
           <Constant>
             <Name>SoilAerationFactor</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
         </MultiplyFunction>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Biomass>
@@ -1660,22 +1660,22 @@ The root organ demands and is partitioned N and DM and its depth increases throu
         </Memo>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.017</Value>
+          <FixedValue>0.017</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -1693,11 +1693,11 @@ The root organ demands and is partitioned N and DM and its depth increases throu
                 <Name>Numerator</Name>
                 <VariableReference>
                   <Name>CurrentSR</Name>
-                  <VariableName>[ShootRootRatio].Value</VariableName>
+                  <VariableName>[ShootRootRatio].Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>CurrentTR</Name>
-                  <VariableName>[TaprootRootRatio].Value</VariableName>
+                  <VariableName>[TaprootRootRatio].Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
               <MultiplyFunction>
@@ -1708,16 +1708,16 @@ The root organ demands and is partitioned N and DM and its depth increases throu
                     <Name>TargetSRs</Name>
                     <VariableReference>
                       <Name>TargetSR1</Name>
-                      <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
                     </VariableReference>
                     <VariableReference>
                       <Name>TargetSR2</Name>
-                      <VariableName>[TargetShootRootRatio].Value</VariableName>
+                      <VariableName>[TargetShootRootRatio].Value()</VariableName>
                     </VariableReference>
                   </MultiplyFunction>
                   <VariableReference>
                     <Name>CurrentSR</Name>
-                    <VariableName>[ShootRootRatio].Value</VariableName>
+                    <VariableName>[ShootRootRatio].Value()</VariableName>
                   </VariableReference>
                 </AddFunction>
                 <AddFunction>
@@ -1726,16 +1726,16 @@ The root organ demands and is partitioned N and DM and its depth increases throu
                     <Name>TargetTRs</Name>
                     <VariableReference>
                       <Name>TargetTR1</Name>
-                      <VariableName>[TargetTaprootRootRatio].Value</VariableName>
+                      <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
                     </VariableReference>
                     <VariableReference>
                       <Name>TargetTR2</Name>
-                      <VariableName>[TargetTaprootRootRatio].Value</VariableName>
+                      <VariableName>[TargetTaprootRootRatio].Value()</VariableName>
                     </VariableReference>
                   </MultiplyFunction>
                   <VariableReference>
                     <Name>CurrentTR</Name>
-                    <VariableName>[TaprootRootRatio].Value</VariableName>
+                    <VariableName>[TaprootRootRatio].Value()</VariableName>
                   </VariableReference>
                 </AddFunction>
               </MultiplyFunction>
@@ -1746,7 +1746,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
         </PhaseLookup>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1500</Value>
+          <FixedValue>1500</FixedValue>
           <Units>mm</Units>
         </Constant>
         <PhaseLookup>
@@ -1755,7 +1755,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
             <Name>PreEmergence</Name>
             <Constant>
               <Name>ReferenceVelocity</Name>
-              <Value>5</Value>
+              <FixedValue>5</FixedValue>
               <Units>mm/day</Units>
             </Constant>
             <Start>Germination</Start>
@@ -1765,7 +1765,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
             <Name>Vegetative</Name>
             <Constant>
               <Name>ReferenceVelocity</Name>
-              <Value>10</Value>
+              <FixedValue>10</FixedValue>
               <Units>mm/day</Units>
             </Constant>
             <Start>Emergence</Start>
@@ -1775,7 +1775,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
             <Name>Reproductive</Name>
             <Constant>
               <Name>ReferenceVelocity</Name>
-              <Value>5</Value>
+              <FixedValue>5</FixedValue>
               <Units>mm/day</Units>
             </Constant>
             <Start>Bolting</Start>
@@ -1790,7 +1790,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
 No effect of temperature on root growth is currently captured in the model.
 ]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>SoilWaterEffect</Name>
@@ -1800,18 +1800,18 @@ No effect of temperature on root growth is currently captured in the model.
 No effect of soil water content on root growth is currently captured in the model.
 ]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
           <Constant>
             <Name>ReferenceRate</Name>
-            <Value>0.005</Value>
+            <FixedValue>0.005</FixedValue>
             <Units>/day</Units>
           </Constant>
           <WeightedTemperatureFunction>
@@ -1852,22 +1852,22 @@ No effect of soil water content on root growth is currently captured in the mode
           </LinearInterpolationFunction>
           <Constant>
             <Name>SoilAerationFactor</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
         </MultiplyFunction>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/day</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -1917,7 +1917,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </LinearInterpolationFunction>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value>10</Value>
+          <FixedValue>10</FixedValue>
           <Units>kgN/ha</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -2076,7 +2076,7 @@ No effect of soil water content on root growth is currently captured in the mode
           <Name>Vegetative</Name>
           <Constant>
             <Name>TargetSR</Name>
-            <Value>1.5</Value>
+            <FixedValue>1.5</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Start>Emergence</Start>
@@ -2088,7 +2088,7 @@ No effect of soil water content on root growth is currently captured in the mode
             <Name>TargetSR</Name>
             <VariableReference>
               <Name>MinTargetSR</Name>
-              <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value</VariableName>
+              <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value()</VariableName>
             </VariableReference>
             <MultiplyFunction>
               <Name>DeltaTarget</Name>
@@ -2096,12 +2096,12 @@ No effect of soil water content on root growth is currently captured in the mode
                 <Name>MaximumIncrease</Name>
                 <Constant>
                   <Name>MaximumSR</Name>
-                  <Value>4</Value>
+                  <FixedValue>4</FixedValue>
                   <Units>g/g</Units>
                 </Constant>
                 <VariableReference>
                   <Name>MinTargetSR</Name>
-                  <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value</VariableName>
+                  <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value()</VariableName>
                 </VariableReference>
               </SubtractFunction>
               <LinearInterpolationFunction>
@@ -2173,7 +2173,7 @@ No effect of soil water content on root growth is currently captured in the mode
             <Name>TargetSR</Name>
             <VariableReference>
               <Name>MinTargetSR</Name>
-              <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value</VariableName>
+              <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value()</VariableName>
             </VariableReference>
             <MultiplyFunction>
               <Name>PlusTarget</Name>
@@ -2181,11 +2181,11 @@ No effect of soil water content on root growth is currently captured in the mode
                 <Name>DeltaTarget</Name>
                 <VariableReference>
                   <Name>MaxTargetSR</Name>
-                  <VariableName>[TargetShootRootRatio].InductiveElongation.TargetSR.Value</VariableName>
+                  <VariableName>[TargetShootRootRatio].InductiveElongation.TargetSR.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>MinTargetSR</Name>
-                  <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value</VariableName>
+                  <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value()</VariableName>
                 </VariableReference>
               </SubtractFunction>
               <LinearInterpolationFunction>
@@ -2227,23 +2227,23 @@ No effect of soil water content on root growth is currently captured in the mode
             <Name>AdjustedSR</Name>
             <VariableReference>
               <Name>TargetSR</Name>
-              <VariableName>[TargetShootRootRatio].Value</VariableName>
+              <VariableName>[TargetShootRootRatio].Value()</VariableName>
             </VariableReference>
             <DivideFunction>
               <Name>SRfactor</Name>
               <VariableReference>
                 <Name>TargetSR</Name>
-                <VariableName>[TargetShootRootRatio].Value</VariableName>
+                <VariableName>[TargetShootRootRatio].Value()</VariableName>
               </VariableReference>
               <MaximumFunction>
                 <Name>CurrentSRx</Name>
                 <VariableReference>
                   <Name>CurrentSR</Name>
-                  <VariableName>[ShootRootRatio].Value</VariableName>
+                  <VariableName>[ShootRootRatio].Value()</VariableName>
                 </VariableReference>
                 <Constant>
                   <Name>MinCurrentSR</Name>
-                  <Value>1E-09</Value>
+                  <FixedValue>1E-09</FixedValue>
                   <Units>g/g</Units>
                 </Constant>
               </MaximumFunction>
@@ -2287,12 +2287,12 @@ No effect of soil water content on root growth is currently captured in the mode
             <Name>TargetSL</Name>
             <Constant>
               <Name>MaximumSL</Name>
-              <Value>1.5</Value>
+              <FixedValue>1.5</FixedValue>
               <Units>g/g</Units>
             </Constant>
             <VariableReference>
               <Name>VernalisationEffect</Name>
-              <VariableName>[TargetShootRootRatio].InductiveElongation.TargetSR.DeltaTarget.VernalisationEffect.Value</VariableName>
+              <VariableName>[TargetShootRootRatio].InductiveElongation.TargetSR.DeltaTarget.VernalisationEffect.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>StageEffect</Name>
@@ -2353,7 +2353,7 @@ No effect of soil water content on root growth is currently captured in the mode
             <Name>TargetSL</Name>
             <Constant>
               <Name>MaximumFS</Name>
-              <Value>0.1</Value>
+              <FixedValue>0.1</FixedValue>
               <Units>g/g</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -2411,7 +2411,7 @@ No effect of soil water content on root growth is currently captured in the mode
             <Name>TargetTR</Name>
             <Constant>
               <Name>MaximumTR</Name>
-              <Value>2</Value>
+              <FixedValue>2</FixedValue>
               <Units>g/g</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -2437,7 +2437,7 @@ No effect of soil water content on root growth is currently captured in the mode
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[PerPlantBelowGroundWt].Value</XProperty>
+              <XProperty>[PerPlantBelowGroundWt].Value()</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
           <Start>Emergence</Start>
@@ -3155,15 +3155,15 @@ namespace Models
         <string>[Defoliate].Script.DefoliatedDM as HarvestedWt</string>
         <string>[Defoliate].Script.DaysAfterCut</string>
         <string />
-        <string>[Plantain].Phenology.ThermalTime.Value</string>
-        <string>[Plantain].Phenology.Photoperiod.Value</string>
+        <string>[Plantain].Phenology.ThermalTime.Value()</string>
+        <string>[Plantain].Phenology.Photoperiod.Value()</string>
         <string>[Plantain].Phenology.Vernalisation.TodaysVernalisation</string>
         <string>[Plantain].Phenology.Vernalisation.DaysVernalised</string>
         <string>[Plantain].Population</string>
         <string>[Plantain].Phenology.CurrentPhaseName</string>
         <string>[Plantain].Phenology.Stage</string>
         <string>[Plantain].Root.LengthDensity</string>
-        <string>[Plantain].Leaf.ExtinctionCoefficientFunction.Value</string>
+        <string>[Plantain].Leaf.ExtinctionCoefficientFunction.Value()</string>
         <string />
         <string>([Plantain].Leaf.Live.Wt / ([Plantain].AboveGroundLive.Wt + 0.000001)) as Plantain.LeafFraction</string>
         <string>([Plantain].Stem.Live.Wt / ([Plantain].AboveGroundLive.Wt + 0.000001)) as Plantain.StemFraction</string>
@@ -3211,20 +3211,20 @@ namespace Models
         <string>[ExtraVariables].Script.Root_NDemand</string>
         <string>[ExtraVariables].Script.Taproot_NDemand</string>
         <string />
-        <string>[Plantain].ShootRootRatio.Value</string>
-        <string>[Plantain].TargetShootRootRatio.Value</string>
-        <string>[Plantain].AdjustedShootRootRatio.Value</string>
-        <string>[Plantain].Leaf.DMDemandFunction.PartitionFraction.Value</string>
-        <string>[Plantain].Stem.DMDemandFunction.PartitionFraction.Value</string>
-        <string>[Plantain].Inflorescence.DMDemandFunction.PartitionFraction.Value</string>
-        <string>[Plantain].Taproot.DMDemandFunction.PartitionFraction.Value</string>
-        <string>[Plantain].Root.PartitionFraction.Value</string>
-        <string>[Plantain].StemsLeafRatio.Value</string>
-        <string>[Plantain].FlowerStemRatio.Value</string>
-        <string>[Plantain].TaprootRootRatio.Value</string>
-        <string>[Plantain].TargetStemsLeafRatio.Value</string>
-        <string>[Plantain].TargetFlowerStemRatio.Value</string>
-        <string>[Plantain].TargetTaprootRootRatio.Value</string>
+        <string>[Plantain].ShootRootRatio.Value()</string>
+        <string>[Plantain].TargetShootRootRatio.Value()</string>
+        <string>[Plantain].AdjustedShootRootRatio.Value()</string>
+        <string>[Plantain].Leaf.DMDemandFunction.PartitionFraction.Value()</string>
+        <string>[Plantain].Stem.DMDemandFunction.PartitionFraction.Value()</string>
+        <string>[Plantain].Inflorescence.DMDemandFunction.PartitionFraction.Value()</string>
+        <string>[Plantain].Taproot.DMDemandFunction.PartitionFraction.Value()</string>
+        <string>[Plantain].Root.PartitionFraction.Value()</string>
+        <string>[Plantain].StemsLeafRatio.Value()</string>
+        <string>[Plantain].FlowerStemRatio.Value()</string>
+        <string>[Plantain].TaprootRootRatio.Value()</string>
+        <string>[Plantain].TargetStemsLeafRatio.Value()</string>
+        <string>[Plantain].TargetFlowerStemRatio.Value()</string>
+        <string>[Plantain].TargetTaprootRootRatio.Value()</string>
         <string />
         <string>[Plantain].Total.Wt</string>
         <string>[Plantain].Total.N</string>
@@ -3248,7 +3248,7 @@ namespace Models
         <string>[Plantain].Leaf.LAI</string>
         <string>[Plantain].Leaf.LAIDead</string>
         <string>[Plantain].Leaf.Height</string>
-        <string>[Plantain].Leaf.PotentialBiomass.Value</string>
+        <string>[Plantain].Leaf.PotentialBiomass.Value()</string>
         <string>[Plantain].Leaf.Transpiration</string>
         <string>[Plantain].Leaf.Fw</string>
         <string>[Plantain].Leaf.Fn</string>
@@ -3322,11 +3322,11 @@ namespace Models
         <string>[Plantain].Root.Live.StructuralNConc</string>
         <string>[Plantain].Root.Live.NonStructuralNConc</string>
         <string />
-        <string>[Plantain].Leaf.DMDemandFunction.PartitionFraction.Value</string>
-        <string>[Plantain].Stem.DMDemandFunction.PartitionFraction.Value</string>
-        <string>[Plantain].Inflorescence.DMDemandFunction.PartitionFraction.Value</string>
-        <string>[Plantain].Root.PartitionFraction.Value</string>
-        <string>[Plantain].Taproot.DMDemandFunction.PartitionFraction.Value</string>
+        <string>[Plantain].Leaf.DMDemandFunction.PartitionFraction.Value()</string>
+        <string>[Plantain].Stem.DMDemandFunction.PartitionFraction.Value()</string>
+        <string>[Plantain].Inflorescence.DMDemandFunction.PartitionFraction.Value()</string>
+        <string>[Plantain].Root.PartitionFraction.Value()</string>
+        <string>[Plantain].Taproot.DMDemandFunction.PartitionFraction.Value()</string>
         <string />
         <string>[Plantain].Leaf.Allocated.Wt</string>
         <string>[Plantain].Stem.Allocated.Wt</string>
@@ -7817,7 +7817,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.DMDemandFunction.PartitionFraction.Value</YFieldName>
+                <YFieldName>Plantain.Leaf.DMDemandFunction.PartitionFraction.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -7838,7 +7838,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.DMDemandFunction.PartitionFraction.Value</YFieldName>
+                <YFieldName>Plantain.Stem.DMDemandFunction.PartitionFraction.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -7859,7 +7859,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.DMDemandFunction.PartitionFraction.Value</YFieldName>
+                <YFieldName>Plantain.Inflorescence.DMDemandFunction.PartitionFraction.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -7902,7 +7902,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.PartitionFraction.Value</YFieldName>
+                <YFieldName>Plantain.Root.PartitionFraction.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -7923,7 +7923,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.DMDemandFunction.PartitionFraction.Value</YFieldName>
+                <YFieldName>Plantain.Taproot.DMDemandFunction.PartitionFraction.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -7966,7 +7966,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.TargetShootRootRatio.Value</YFieldName>
+                <YFieldName>Plantain.TargetShootRootRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -7987,7 +7987,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.ShootRootRatio.Value</YFieldName>
+                <YFieldName>Plantain.ShootRootRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8030,7 +8030,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.TargetStemsLeafRatio.Value</YFieldName>
+                <YFieldName>Plantain.TargetStemsLeafRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8051,7 +8051,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.StemsLeafRatio.Value</YFieldName>
+                <YFieldName>Plantain.StemsLeafRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8094,7 +8094,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.TargetFlowerStemRatio.Value</YFieldName>
+                <YFieldName>Plantain.TargetFlowerStemRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8115,7 +8115,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.FlowerStemRatio.Value</YFieldName>
+                <YFieldName>Plantain.FlowerStemRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8158,7 +8158,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.TargetTaprootRootRatio.Value</YFieldName>
+                <YFieldName>Plantain.TargetTaprootRootRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8179,7 +8179,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.TaprootRootRatio.Value</YFieldName>
+                <YFieldName>Plantain.TaprootRootRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14527,7 +14527,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.DMDemandFunction.PartitionFraction.Value</YFieldName>
+                <YFieldName>Plantain.Leaf.DMDemandFunction.PartitionFraction.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14548,7 +14548,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.DMDemandFunction.PartitionFraction.Value</YFieldName>
+                <YFieldName>Plantain.Stem.DMDemandFunction.PartitionFraction.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14569,7 +14569,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.DMDemandFunction.PartitionFraction.Value</YFieldName>
+                <YFieldName>Plantain.Inflorescence.DMDemandFunction.PartitionFraction.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14612,7 +14612,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.PartitionFraction.Value</YFieldName>
+                <YFieldName>Plantain.Root.PartitionFraction.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14633,7 +14633,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.DMDemandFunction.PartitionFraction.Value</YFieldName>
+                <YFieldName>Plantain.Taproot.DMDemandFunction.PartitionFraction.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14676,7 +14676,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.TargetShootRootRatio.Value</YFieldName>
+                <YFieldName>Plantain.TargetShootRootRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14697,7 +14697,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.ShootRootRatio.Value</YFieldName>
+                <YFieldName>Plantain.ShootRootRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14740,7 +14740,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.TargetStemsLeafRatio.Value</YFieldName>
+                <YFieldName>Plantain.TargetStemsLeafRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14761,7 +14761,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.StemsLeafRatio.Value</YFieldName>
+                <YFieldName>Plantain.StemsLeafRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14804,7 +14804,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.TargetFlowerStemRatio.Value</YFieldName>
+                <YFieldName>Plantain.TargetFlowerStemRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14825,7 +14825,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.FlowerStemRatio.Value</YFieldName>
+                <YFieldName>Plantain.FlowerStemRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14868,7 +14868,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.TargetTaprootRootRatio.Value</YFieldName>
+                <YFieldName>Plantain.TargetTaprootRootRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -14889,7 +14889,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.TaprootRootRatio.Value</YFieldName>
+                <YFieldName>Plantain.TaprootRootRatio.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>

@@ -32,18 +32,15 @@ namespace Models.PMF.Functions.DemandFunctions
             {
                 double SVPmax = MetUtilities.svp(MetData.MaxT) * 0.1;
                 double SVPmin = MetUtilities.svp(MetData.MinT) * 0.1;
-                return Math.Max(SVPFrac.Value * (SVPmax - SVPmin), 0.01);
+                return Math.Max(SVPFrac.Value() * (SVPmax - SVPmin), 0.01);
             }
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return Photosynthesis.Value / (TranspirationEfficiencyCoefficient.Value / VPD / 0.001);
-            }
+            return Photosynthesis.Value(arrayIndex) / (TranspirationEfficiencyCoefficient.Value(arrayIndex) / VPD / 0.001);
         }
 
     }

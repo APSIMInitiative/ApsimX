@@ -35,7 +35,7 @@ namespace Models.Soils
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
         /// </summary>
-        public MultiPoreWater WEIRDO;
+        public WEIRDO Weirdo;
         /// <summary>A reference to the layer structure node or null if not present.</summary>
         private LayerStructure structure;
 
@@ -153,14 +153,23 @@ namespace Models.Soils
         private void FindChildren()
         {
             waterNode = Apsim.Child(this, typeof(Water)) as Water;
-            WEIRDO = Apsim.Child(this, typeof(MultiPoreWater)) as MultiPoreWater;
+            Weirdo = Apsim.Child(this, typeof(WEIRDO)) as WEIRDO;
             structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
-            }
+         }
 
         #region Water
+        /// <summary>The layering used to parameterise the water node</summary>
+        public double[] WaterNodeThickness
+        {
+            get
+            {
+                return waterNode.Thickness;
+            }
+        }
+
 
         /// <summary>Return the soil layer thicknesses (mm)</summary>
         public double[] Thickness 
@@ -188,14 +197,14 @@ namespace Models.Soils
         }
 
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
-        internal double[] BD
+        public double[] BD
         {
             get
             {
                 if (waterNode != null)
                     return Map(waterNode.BD, waterNode.Thickness, Thickness, MapType.Concentration, waterNode.BD.Last());
-                else if (WEIRDO != null)
-                    return Map(WEIRDO.BD, WEIRDO.ParamThickness, Thickness, MapType.Concentration, WEIRDO.BD.Last());
+                else if (Weirdo != null)
+                    return Map(Weirdo.BD, Weirdo.ParamThickness, Thickness, MapType.Concentration, Weirdo.BD.Last());
                 else
                     throw new Exception("Whoops, No soil models to provide a BD value");
             }
@@ -209,7 +218,7 @@ namespace Models.Soils
                 if(waterNode !=null)
                 return SWMapped(SWAtWaterThickness, waterNode.Thickness, Thickness);
                 else 
-                    return SWMapped(WEIRDO.InitialSoilWater, WEIRDO.Thickness, Thickness);
+                    return SWMapped(Weirdo.InitialSoilWater, Weirdo.Thickness, Thickness); //Fix me.  This call seems redundant, move if test up a function
             }
         }
 
@@ -246,7 +255,7 @@ namespace Models.Soils
                             if (waterNode != null)
                             return SWMapped(Sample.SWVolumetric, Sample.Thickness, waterNode.Thickness);
                             else
-                                return Map(Sample.SWVolumetric, Sample.Thickness, WEIRDO.Thickness);
+                                return Map(Sample.SWVolumetric, Sample.Thickness, Weirdo.Thickness);
                         }
                     }
                 }
@@ -265,7 +274,7 @@ namespace Models.Soils
                 if(waterNode != null)
                 return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
-                    return Map(WEIRDO.LL15, WEIRDO.ParamThickness, Thickness, MapType.Concentration);
+                    return Map(Weirdo.LL15, Weirdo.ParamThickness, Thickness, MapType.Concentration);
             }
         }
 
@@ -277,7 +286,7 @@ namespace Models.Soils
                 if(waterNode !=null)
                 return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
-                    return Map(WEIRDO.DUL, WEIRDO.ParamThickness, Thickness, MapType.Concentration);
+                    return Map(Weirdo.DUL, Weirdo.ParamThickness, Thickness, MapType.Concentration);
             }
         }
 
@@ -289,7 +298,7 @@ namespace Models.Soils
                 if(waterNode != null)
                 return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration);
                 else
-                    return Map(WEIRDO.SAT, WEIRDO.ParamThickness, Thickness, MapType.Concentration);
+                    return Map(Weirdo.SAT, Weirdo.ParamThickness, Thickness, MapType.Concentration);
             }
         }
 
@@ -1104,7 +1113,7 @@ namespace Models.Soils
             if(waterNode != null)
             return Map(waterNode.BD, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.BD.Last());
             else
-                return Map(WEIRDO.BD, WEIRDO.ParamThickness, ToThickness, MapType.Concentration, WEIRDO.BD.Last());
+                return Map(Weirdo.BD, Weirdo.ParamThickness, ToThickness, MapType.Concentration, Weirdo.BD.Last());
         }
 
         /// <summary>AirDry - mapped to the specified layer structure. Units: mm/mm</summary>
@@ -1174,7 +1183,15 @@ namespace Models.Soils
 
             return Map(Values, Thicknesses, ToThickness, MapType.Concentration);
         }
-
+        /// <summary>
+        /// The lower limit to water extraction for each layer
+        /// </summary>
+        /// <param name="CropName"></param>
+        /// <returns></returns>
+        public double[] LL(string CropName)
+        {
+            return LLMapped(CropName, Thickness);
+        }
         /// <summary>Crop lower limit mapped. Units: mm/mm</summary>
         /// <param name="CropName">Name of the crop.</param>
         /// <param name="ToThickness">To thickness.</param>
@@ -1198,18 +1215,50 @@ namespace Models.Soils
             return Values;
         }
 
+        /// <summary>
+        /// The extension resistance to crop root growth from the soil
+        /// </summary>
+        /// <param name="CropName"></param>
+        /// <returns></returns>
+        public double[] XF(string CropName)
+        {
+            return XFMapped(CropName, Thickness);
+        }
         /// <summary>Crop XF mapped. Units: 0-1</summary>
         /// <param name="CropName">Name of the crop.</param>
         /// <param name="ToThickness">To thickness.</param>
         /// <returns></returns>
+
         internal double[] XFMapped(string CropName, double[] ToThickness)
+        {
+            if (Weirdo != null)
+            {
+                return Weirdo.MappedXF;
+            }
+            else
+            {
+                SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
+                if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
+                    return SoilCrop.XF;
+                return Map(SoilCrop.XF, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
+            }
+        }
+        /// <summary>
+        /// The potential water extraction rate constant for each layer
+        /// </summary>
+        /// <param name="CropName"></param>
+        /// <returns></returns>
+        public double[] KL(string CropName)
+        {
+            return KLMapped(CropName, Thickness);
+        }
+        internal double[] KLMapped (string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
             if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
-                return SoilCrop.XF;
-            return Map(SoilCrop.XF, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
+                return SoilCrop.KL;
+            return Map(SoilCrop.KL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.KL));
         }
-
         /// <summary>different methods for mapping soil variables </summary>
         public enum MapType
         {
@@ -1651,7 +1700,7 @@ namespace Models.Soils
                 SoilCrop soilCrop = this.Crop(Crop) as SoilCrop;
                 if (soilCrop != null)
                 {
-                    double[] LL = this.LLMapped(Crop, waterNode.Thickness);
+                    double[] LL = soilCrop.LL;
                     double[] KL = soilCrop.KL;
                     double[] XF = soilCrop.XF;
 

@@ -31,19 +31,19 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            if (!parsed)
             {
-                if (!parsed)
-                {
-                    Parse(fn, Expression);
-                    parsed = true;
-                }
-                FillVariableNames(fn, this);
-                Evaluate(fn);
-                return fn.Result;
+                Parse(fn, Expression);
+                parsed = true;
             }
+            FillVariableNames(fn, this, arrayIndex);
+            Evaluate(fn);
+            if (fn.Results != null && arrayIndex != -1)
+                return fn.Results[arrayIndex];
+            else
+                return fn.Result;
         }
 
         /// <summary>
@@ -66,8 +66,9 @@ namespace Models.PMF.Functions
         /// <summary>Fills the variable names.</summary>
         /// <param name="fn">The function.</param>
         /// <param name="RelativeTo">The relative to.</param>
+        /// <param name="arrayIndex">The array index</param>
         /// <exception cref="System.Exception">Cannot find variable:  + sym.m_name +  in function:  + RelativeTo.Name</exception>
-        private static void FillVariableNames(ExpressionEvaluator fn, Model RelativeTo)
+        private static void FillVariableNames(ExpressionEvaluator fn, Model RelativeTo, int arrayIndex)
         {
             ArrayList varUnfilled = fn.Variables;
             ArrayList varFilled = new ArrayList();
@@ -81,7 +82,17 @@ namespace Models.PMF.Functions
                 object sometypeofobject = Apsim.Get(RelativeTo, sym.m_name.Trim());
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " in function: " + RelativeTo.Name);
-                symFilled.m_value = Convert.ToDouble(sometypeofobject);
+                if (sometypeofobject is Array)
+                {
+                    Array arr = sometypeofobject as Array;
+                    symFilled.m_values = new double[arr.Length];
+                    for (int i = 0; i < arr.Length; i++)
+                        symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i));
+                }
+                else if (sometypeofobject is IFunction)
+                    symFilled.m_value = (sometypeofobject as IFunction).Value(arrayIndex);
+                else
+                    symFilled.m_value = Convert.ToDouble(sometypeofobject);
                 varFilled.Add(symFilled);
             }
             fn.Variables = varFilled;
@@ -122,7 +133,7 @@ namespace Models.PMF.Functions
         {
             ExpressionEvaluator fn = new ExpressionEvaluator();
             Parse(fn, Expression);
-            FillVariableNames(fn, RelativeTo);
+            FillVariableNames(fn, RelativeTo, -1);
             Evaluate(fn);
             if (fn.Results != null)
                 return fn.Results;

@@ -320,6 +320,10 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\SoluteManager.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Flow.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\NutrientPool.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Nutrient.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifestageReproductionProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LifestageProcess.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Lifecycle.png" />

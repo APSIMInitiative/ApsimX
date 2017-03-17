@@ -298,12 +298,12 @@ namespace Models.PMF
             //Reduce plant population in case of mortality
             if (Population > 0.0 && MortalityRate != null)
             {
-                double DeltaPopulation = Population * MortalityRate.Value;
+                double DeltaPopulation = Population * MortalityRate.Value();
                 Population -= DeltaPopulation;
                 if (Structure != null)
                 {
                     Structure.DeltaPlantPopulation = DeltaPopulation;
-                    Structure.ProportionPlantMortality = MortalityRate.Value;
+                    Structure.ProportionPlantMortality = MortalityRate.Value();
                 }
             }
         }

@@ -21,16 +21,12 @@ namespace Models.PMF.Functions
         [Link] Structure Structure = null;
 
         /// <summary>Gets the value.</summary>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                double LeafNo = Structure.LeafTipsAppeared;
+            double LeafNo = Structure.LeafTipsAppeared;
 
-                return AreaMax.Value * Math.Exp(Breadth.Value * Math.Pow(LeafNo - LargestLeafPosition.Value, 2.0)
-                                  + Skewness.Value * (Math.Pow(LeafNo - LargestLeafPosition.Value, 3.0)));
-
-            }
+            return AreaMax.Value(arrayIndex) * Math.Exp(Breadth.Value(arrayIndex) * Math.Pow(LeafNo - LargestLeafPosition.Value(arrayIndex), 2.0)
+                                + Skewness.Value(arrayIndex) * (Math.Pow(LeafNo - LargestLeafPosition.Value(arrayIndex), 3.0)));
         }
     }
 }

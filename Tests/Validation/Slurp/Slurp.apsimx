@@ -780,7 +780,7 @@ namespace Models
           <string>[Slurp].Leaf.CoverDead</string>
           <string>[Slurp].Leaf.LAI</string>
           <string>[Slurp].Leaf.Height</string>
-          <string>[Slurp].Leaf.PotentialBiomass.Value</string>
+          <string>[Slurp].Leaf.PotentialBiomass.Value()</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
@@ -803,7 +803,7 @@ namespace Models
       <Manager>
         <Name>ResetProduction</Name>
         <Script>
-          <OverRidePath>Slurp.Leaf.Photosynthesis.Value</OverRidePath>
+          <OverRidePath>Slurp.Leaf.Photosynthesis.FixedValue</OverRidePath>
           <OverRideInterger>2</OverRideInterger>
           <ChangeDate>1998-11-14</ChangeDate>
         </Script>
@@ -848,7 +848,7 @@ namespace Models
       <Manager>
         <Name>ResetLAI</Name>
         <Script>
-          <OverRidePath>Slurp.Leaf.LAIFunction.Value</OverRidePath>
+          <OverRidePath>Slurp.Leaf.LAIFunction.FixedValue</OverRidePath>
           <OverRideInterger>3</OverRideInterger>
           <ChangeDate>1999-01-01</ChangeDate>
         </Script>
@@ -3034,9 +3034,9 @@ namespace Models
 				Summary.WriteMessage(this, "Defoliation today reduced LAI to " + LAI);
 			}
 			object LeafLAI = LAI;
-			zone.Set("Slurp.Leaf.LAIFunction.Value", LeafLAI);
+			zone.Set("Slurp.Leaf.LAIFunction.FixedValue", LeafLAI);
 			object Height = MaximumHeight * (LAI / MaxLAI);
-			zone.Set("Slurp.Leaf.HeightFunction.Value", Height);  
+			zone.Set("Slurp.Leaf.HeightFunction.FixedValue", Height);  
 		}
 	}
 }
@@ -5996,9 +5996,9 @@ namespace Models
 				}
 				//Summary.WriteMessage(this, "LAI " + leaflai);
 				object LAIResetValue = leaflai;
-				zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);  
+				zone.Set("Slurp.Leaf.LAIFunction.FixedValue", LAIResetValue);  
 				object HeightResetValue = CoverRead * MaximumHeight;
-				zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);  
+				zone.Set("Slurp.Leaf.HeightFunction.FixedValue", HeightResetValue);  
 			}
 		}
 	}

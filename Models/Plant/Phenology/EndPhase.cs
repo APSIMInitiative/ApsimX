@@ -26,8 +26,8 @@ namespace Models.PMF.Phen
         /// <returns></returns>
         public override double DoTimeStep(double PropOfDayToUse)
         {
-            _CumulativeValue += ThermalTime.Value;
-            TTinPhase += ThermalTime.Value;
+            _CumulativeValue += ThermalTime.Value();
+            TTinPhase += ThermalTime.Value();
             return 0;
         }
 
