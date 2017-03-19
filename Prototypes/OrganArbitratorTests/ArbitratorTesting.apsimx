@@ -1762,6 +1762,37 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
           <AddFunction>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <Constant>
+              <Name>One</Name>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <MultiplyFunction>
+              <Name>Stress</Name>
+              <Constant>
+                <Name>StressResponseCoefficient</Name>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>StressFactor</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.25</double>
+                    <double>0.5</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>0.2</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+              </LinearInterpolationFunction>
+            </MultiplyFunction>
+          </AddFunction>
+          <AddFunction>
             <Name>DroughtInducedSenAcceleration</Name>
             <Constant>
               <Name>One</Name>
@@ -10349,8 +10380,8 @@ namespace Models
             <Manager>
               <Name>StateFactors</Name>
               <Script>
-                <NitFactor>0</NitFactor>
                 <IrrFactor>False</IrrFactor>
+                <NitFactor>0</NitFactor>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;

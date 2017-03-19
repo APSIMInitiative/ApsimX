@@ -20,8 +20,8 @@ namespace Models.Soils.Nutrient
         [Link]
         private IFunction rate = null;
 
-        //[Link]
-        //private IFunctionArray CO2Loss = null;
+        [Link]
+        private IFunction CO2Efficiency = null;
 
         /// <summary>
         /// Name of source pool
@@ -63,7 +63,7 @@ namespace Models.Soils.Nutrient
                 double carbonFlow = rate.Value(i) * source.C[i];
                 double nitrogenFlow = carbonFlow * source.CNRatio;
                 source.C[i] -= carbonFlow;
-                destination.C[i] += carbonFlow;
+                destination.C[i] += carbonFlow*CO2Efficiency.Value(i);
                 source.N[i] -= nitrogenFlow;
                 destination.N[i] += nitrogenFlow;
             }
