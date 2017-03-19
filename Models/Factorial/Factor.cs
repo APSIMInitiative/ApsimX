@@ -157,13 +157,22 @@ namespace Models.Factorial
             // factor value for each value.
 
             string path = specification;
-            string value = StringUtilities.SplitOffAfterDelimiter(ref path, "=");
+            string value = StringUtilities.SplitOffAfterDelimiter(ref path, "=").Trim();
 
             if (value == null)
                 throw new ApsimXException(this, "Cannot find any values on the specification line: " + Specifications[0]);
-            string[] valueStrings = value.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            foreach (string stringValue in valueStrings)
-                pairs.Add(new PathValuesPair() { path = path.Trim(), value = stringValue.Trim() });
+            if (value.StartsWith("{"))
+            {
+                string rawValue = value.Replace("{", "").Replace("}", "");
+                pairs.Add(new PathValuesPair() { path = path.Trim(), value = rawValue });
+            }
+            else
+            {
+                string[] valueStrings = value.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                foreach (string stringValue in valueStrings)
+                    pairs.Add(new PathValuesPair() { path = path.Trim(), value = stringValue.Trim() });
+            }
+
             return pairs;
         }
 

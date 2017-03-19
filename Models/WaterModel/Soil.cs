@@ -91,10 +91,9 @@ namespace Models.WaterModel
         [Link]
         SoilNitrogen soilNitrogen = null;
 
-        // --- Events --------------------------------------------------------------------
-
-        /// <summary>Invoked to tell soil nitrogen about the new NO3, NH4 values.</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
 
         // --- Settable properties -------------------------------------------------------
 
@@ -289,27 +288,12 @@ namespace Models.WaterModel
             MoveUp(NO3, NO3Up);
             MoveUp(NH4, NH4Up);
 
-            // Send NitrogenChanged event.
-            SendNitrogenChangedEvent(NO3, NH4);
+            // Set deltas
+            solutes.Add("NO3", MathUtilities.Subtract(soilNitrogen.NO3, NO3));
+            solutes.Add("NH4", MathUtilities.Subtract(soilNitrogen.NH4, NH4));
 
             ResidueInterception = 0;
             CanopyInterception = 0;
-        }
-
-        /// <summary>Send a nitrogen changed event.</summary>
-        /// <param name="NO3">The no3 values.</param>
-        /// <param name="NH4">The nh4 values.</param>
-        private void SendNitrogenChangedEvent(double[] NO3, double[] NH4)
-        {
-            NitrogenChangedType NitrogenDeltas = new NitrogenChangedType();
-            NitrogenDeltas.Sender = "Soil";
-            NitrogenDeltas.SenderType = "Soil";
-
-            NitrogenDeltas.DeltaNO3 = MathUtilities.Subtract(soilNitrogen.NO3, NO3);
-            NitrogenDeltas.DeltaNH4 = MathUtilities.Subtract(soilNitrogen.NH4, NH4);
-
-            if (NitrogenChanged != null)
-                NitrogenChanged.Invoke(NitrogenDeltas);
         }
 
         /// <summary>Move water down the profile</summary>

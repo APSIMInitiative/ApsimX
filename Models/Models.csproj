@@ -142,6 +142,7 @@
     <Compile Include="Core\APSIMFileWriter.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\Attributes\ScopedModelAttribute.cs" />
+    <Compile Include="Core\Attributes\SoluteAttribute.cs" />
     <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\Events.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
+    <Compile Include="Interfaces\ISolute.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Lifecycle\Cohort.cs" />
     <Compile Include="Lifecycle\Lifecycle.cs" />
@@ -188,6 +190,8 @@
     <Compile Include="Plant\Arbitrator\RelativeAllocationSinglePass.cs" />
     <Compile Include="Plant\Arbitrator\RelativeAllocation.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
+    <Compile Include="Plant\Functions\Bound.cs" />
+    <Compile Include="Plant\Functions\SoilWaterScale.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\BerryFillingRateFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\TEWaterDemandFunction.cs" />
     <Compile Include="Plant\Functions\MovingAverage.cs" />
@@ -261,7 +265,8 @@
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
     <Compile Include="Report\ReportTable.cs" />
-    <Compile Include="Soils\Nutrient\Flow.cs" />
+    <Compile Include="Soils\Nutrient\NFlow.cs" />
+    <Compile Include="Soils\Nutrient\CFlow.cs" />
     <Compile Include="Soils\Nutrient\NutrientPool.cs" />
     <Compile Include="Soils\Nutrient\Nutrient.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
@@ -287,6 +292,7 @@
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
     <Compile Include="Soils\Variables.cs" />
+    <Compile Include="SoluteManager.cs" />
     <Compile Include="Stock\animgrp.cs" />
     <Compile Include="Stock\animprm.cs" />
     <Compile Include="Stock\grazenv.cs" />
