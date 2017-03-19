@@ -150,7 +150,7 @@ namespace Models.Core
                 {
                     foreach (Simulation simulation in simulations)
                     {
-                        foreach (IModel match in Apsim.FindAll(simulation, replacement.GetType()))
+                        foreach (IModel match in Apsim.FindAll(simulation))
                         {
                             if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
                             {

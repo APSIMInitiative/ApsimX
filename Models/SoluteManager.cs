@@ -16,14 +16,22 @@
     public class SoluteManager : Model
     {
         /// <summary>List of all solutes</summary>
-        private List<Solute> solutes = new List<Solute>();
+        private List<Solute> solutes = null;
 
         /// <summary>List of all models that have solutes.</summary>
         [Link]
         private List<ISolute> soluteModels = null;
 
         /// <summary>Return a list of solute names.</summary>
-        public string[] SoluteNames {  get { return solutes.Select(solute => solute.Name).ToArray(); } }
+        public string[] SoluteNames
+        {
+            get
+            {
+                if (solutes == null)
+                    FindSolutes();
+                return solutes.Select(solute => solute.Name).ToArray();
+            }
+        }
         
         /// <summary>
         /// Return the value of a solute. Will throw if solute not found.
@@ -104,6 +112,14 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            if (solutes == null)
+                FindSolutes();
+        }
+
+        /// <summary>Find all solutes.</summary>
+        private void FindSolutes()
+        {
+            solutes = new List<Solute>();
             // Find all solutes.
             foreach (IModel soluteModel in soluteModels)
             {

@@ -217,7 +217,7 @@ namespace Models.Factorial
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
 
-                foreach (IModel newModel in Apsim.Children(this, modelToReplace.GetType()))
+                foreach (IModel newModel in Children)
                     pairs.Add(new PathValuesPair() { path = specification, value = newModel });
             }
             return pairs;
