@@ -25,10 +25,6 @@ namespace Models.Soils
         [Link]
         private Clock Clock = null;
 
-        /// <summary>Link to APSIM's metFile (weather data)</summary>
-        [Link]
-        private IWeather MetFile = null;
-
         /// <summary>The soil</summary>
         [Link]
         private Soil Soil = null;
@@ -36,7 +32,6 @@ namespace Models.Soils
         /// <summary>The soil organic matter</summary>
         [Link]
         private SoilOrganicMatter SoilOrganicMatter = null;
-
         #endregion
 
         #region Parameters and inputs provided by the user or APSIM
@@ -182,22 +177,6 @@ namespace Models.Soils
         {
             get { return SoilCNParameterSet; }
             set { SoilCNParameterSet = value.Trim(); }
-        }
-
-        /// <summary>Indicates whether simpleSoilTemp is allowed</summary>
-        /// <remarks>
-        /// When 'yes', soil temperature may be computed internally, if an external value is not supplied.
-        /// If 'no', a value for soil temperature must be supplied or an fatal error will occur.
-        /// </remarks>
-        private bool AllowsimpleSoilTemp = false;
-
-        /// <summary>Gets or sets the allow_simple soil temporary.</summary>
-        /// <value>The allow_simple soil temporary.</value>
-        [XmlIgnore]
-        public string allow_simpleSoilTemp
-        {
-            get { return (AllowsimpleSoilTemp) ? "yes" : "no"; }
-            set { AllowsimpleSoilTemp = value.ToLower().Contains("yes"); }
         }
 
         /// <summary>Indicates whether soil profile reduction is allowed (from erosion)</summary>
@@ -2961,24 +2940,6 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>Soil temperature (oC), values actually used in the model</summary>
-        private double[] Tsoil;
-
-        /// <summary>SoilN's simple soil temperature</summary>
-        /// <value>The st.</value>
-
-        [Units("oC")]
-        public double[] st
-        {
-            get
-            {
-                double[] Result = new double[0];
-                if (!use_external_st)
-                    Result = Tsoil;
-                return Result;
-            }
-        }
-
         /// <summary>Temperature factor for nitrification and mineralisation</summary>
         /// <value>The tf.</value>
 
@@ -3075,9 +3036,6 @@ namespace Models.Soils
         /// <summary>List of all existing patches (internal instances of C and N processes)</summary>
         List<soilCNPatch> Patch;
 
-        /// <summary>The internal soil temp module - to be avoided (deprecated)</summary>
-        private simpleSoilTemp simpleST;
-
         #endregion
 
         #region Decision auxiliary variables
@@ -3087,9 +3045,6 @@ namespace Models.Soils
 
         /// <summary>Marker for whether a reset is going on</summary>
         private bool inReset = false;
-
-        /// <summary>Marker for whether external soil temperature is supplied, otherwise use internal</summary>
-        private bool use_external_st = false;
 
         /// <summary>Marker for whether external ph is supplied, otherwise default is used</summary>
         private bool use_external_ph = false;

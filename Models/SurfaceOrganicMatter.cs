@@ -1718,7 +1718,8 @@
         [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
         private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs args)
         {
-            DecomposeSurfom(ActualSOMDecomp);
+            if (ActualSOMDecomp != null)
+                DecomposeSurfom(ActualSOMDecomp);
         }
 
         /// <summary>

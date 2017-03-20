@@ -26,11 +26,6 @@ namespace Models.PMF.Functions
         [Description("Depth")]
         public double Depth { get; set; }
 
-
-        /// <summary>The soil temporary source</summary>
-        string soilTempSource = "Unknown"; //Flag for the name of soil temperature array
-
-
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">
@@ -39,32 +34,7 @@ namespace Models.PMF.Functions
         {
             int Layer = LayerIndex(Depth, Soil.Thickness);
 
-            if (soilTempSource == "Unknown")
-            {
-                if (Soil.SoilNitrogen.ave_soil_temp != null)
-                {
-                    soilTempSource = "ave_soil_temp";
-                }
-                else if (Soil.SoilNitrogen.st != null)
-                {
-                    soilTempSource = "st";
-                }
-                else
-                {
-                    throw new Exception(Name + ": Soil temperature was not found ");
-
-                }
-            }
-
-            switch (soilTempSource)
-            {
-                case "ave_soil_temp":
-                    return Soil.SoilNitrogen.ave_soil_temp[Layer];
-                case "st":
-                    return Soil.SoilNitrogen.st[Layer];
-                default:
-                    throw new Exception(Name + ": Unknown soil temperature source: " + soilTempSource);
-            }
+            return Soil.Temperature[Layer];
         }
         /// <summary>Returns the soil layer index for a specified soil depth (mm)</summary>
         /// <param name="depth">Soil depth (mm)</param>
