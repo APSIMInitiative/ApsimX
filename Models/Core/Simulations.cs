@@ -286,6 +286,10 @@ namespace Models.Core
                 if (modelToDocument == null)
                     modelToDocument = Apsim.Get(simulation, "[" + modelNameToDocument + "]") as IModel;
 
+                // If the simulation has the same name as the model we want to document, dig a bit deeper
+                if (modelToDocument == simulation)
+                    modelToDocument = Apsim.ChildrenRecursivelyVisible(simulation).FirstOrDefault(m => m.Name.Equals(modelNameToDocument, StringComparison.OrdinalIgnoreCase));
+
                 // If still not found throw an error.
                 if (modelToDocument == null)
                     throw new ApsimXException(this, "Could not find a model of the name " + modelNameToDocument + ". Simulation file name must match the name of the node to document.");
