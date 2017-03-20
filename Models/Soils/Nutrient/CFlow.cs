@@ -71,7 +71,7 @@ namespace Models.Soils.Nutrient
                 source.N[i] -= nitrogenFlow;
                 destination.C[i] += carbonFlowToDestination;
                 destination.N[i] += nitrogenFlowToDestination;
-                if (nitrogenFlowToDestination < nitrogenFlow)
+                if (nitrogenFlowToDestination <= nitrogenFlow)
                     nutrient.NH4[i] += (nitrogenFlow - nitrogenFlowToDestination);
                 else
                     throw new NotImplementedException();

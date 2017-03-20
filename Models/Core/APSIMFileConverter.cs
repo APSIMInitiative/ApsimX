@@ -21,7 +21,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 4; } }
+        public static int LastestVersion { get { return 5; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -194,6 +194,14 @@ namespace Models.Core
                 XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
             foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "CircularZone"))
                 XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
+        }
+
+        /// <summary>Upgrades to version 5. Make sure all zones have a SoluteManager model.</summary>
+        /// <param name="node">The node to upgrade.</param>
+        private static void UpgradeToVersion5(XmlNode node)
+        {
+            foreach (XmlNode soilNode in XmlUtilities.FindAllRecursivelyByType(node, "Soil"))
+                XmlUtilities.EnsureNodeExists(soilNode, "CERESSoilTemperature");
         }
     }
 }
