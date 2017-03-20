@@ -124,10 +124,6 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            _latitude = weather.Latitude;
-            _tav = weather.Tav;
-            _amp = weather.Amp;
-
             ave_temp = (weather.MaxT + weather.MinT) * 0.5;
             clear();
         }
@@ -159,6 +155,9 @@ namespace Models.Soils
             _bd = soil.BD;
             _ll15_dep = soil.SoilWater.LL15mm;
             _sw_dep = soil.SoilWater.SWmm;
+            _latitude = weather.Latitude;
+            _tav = weather.Tav;
+            _amp = weather.Amp;
 
             st = new double[soil.Thickness.Length];
 
