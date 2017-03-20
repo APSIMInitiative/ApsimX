@@ -1744,14 +1744,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <Name>XYPairs</Name>
                   <X>
                     <double>0</double>
-                    <double>0.5</double>
+                    <double>0.7</double>
+                    <double>1</double>
                   </X>
                   <Y>
-                    <double>0.5</double>
                     <double>0</double>
+                    <double>0.7</double>
+                    <double>1</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+                <XProperty>[Root].WaterTension</XProperty>
               </LinearInterpolationFunction>
             </MultiplyFunction>
           </AddFunction>
@@ -49413,6 +49415,10 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(30);</Action>
                 </Operation>
                 <Operation>
+                  <Date>2015-10-30</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
+                </Operation>
+                <Operation>
                   <Date>2015-11-06</Date>
                   <Action>[Irrigation].Apply(12.2);</Action>
                 </Operation>
@@ -49422,7 +49428,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 </Operation>
                 <Operation>
                   <Date>2015-11-19</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
+                  <Action>[Irrigation].Apply(24);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-11-26</Date>
@@ -49437,12 +49443,12 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(40);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-12-17</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
-                </Operation>
-                <Operation>
                   <Date>2015-12-24</Date>
                   <Action>[Irrigation].Apply(35);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-12-31</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-01-07</Date>
@@ -49463,6 +49469,18 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <Operation>
                   <Date>2016-02-04</Date>
                   <Action>[Irrigation].Apply(40);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-12-17</Date>
+                  <Action>[Irrigation].Apply(40);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2016-01-14</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2016-01-21</Date>
+                  <Action>[Irrigation].Apply(20);</Action>
                 </Operation>
               </Operations>
               <Memo>
@@ -49516,6 +49534,18 @@ In Statefactors have donethe irrigations for
                   <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
                 <Operation>
+                  <Date>2015-10-29</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-03</Date>
+                  <Action>[Irrigation].Apply(16);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-19</Date>
+                  <Action>[Irrigation].Apply(20);</Action>
+                </Operation>
+                <Operation>
                   <Date>2015-12-24</Date>
                   <Action>[Irrigation].Apply(25);</Action>
                 </Operation>
@@ -49526,10 +49556,6 @@ In Statefactors have donethe irrigations for
                 <Operation>
                   <Date>2016-02-04</Date>
                   <Action>[Irrigation].Apply(40);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-03</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
               </Operations>
               <Memo>
@@ -49740,10 +49766,6 @@ namespace Models
               <Operation>
                 <Date>2015-12-10</Date>
                 <Action>[Irrigation].Apply(40);</Action>
-              </Operation>
-              <Operation>
-                <Date>2015-12-17</Date>
-                <Action>[Irrigation].Apply(39.7);</Action>
               </Operation>
               <Operation>
                 <Date>2015-12-24</Date>
@@ -50813,6 +50835,11 @@ namespace Models
 				ThisSoil.SAT[5] = 0.34;
 				ThisSoil.SAT[6] = 0.34;
 				double[] nSW = { 0.18, 0.18, 0.26, 0.26, 0.23, 0.28, 0.33 };
+				
+				ThisSoil.SoilWater.Reset();
+				
+				ThisSoil.SoilWater.SetWater_frac(nSW); 
+
 			}
 			if ((IrrFactor == true) && (NitFactor == 250))
 			{
@@ -50820,7 +50847,7 @@ namespace Models
 				{
 					throw new Exception("Soil layer exception");
 				}
-			 
+		 
 				ThisSoil.LL15[0] = 0.12;
 				ThisSoil.LL15[1] = 0.18;
 				ThisSoil.LL15[2] = 0.16;
@@ -50843,6 +50870,12 @@ namespace Models
 				ThisSoil.SAT[5] = 0.4;
 				ThisSoil.SAT[6] = 0.4;
 				double[] nSW = { 0.18, 0.18, 0.26, 0.26, 0.23, 0.28, 0.33 };
+				
+				ThisSoil.SoilWater.Reset();
+				
+				ThisSoil.SoilWater.SetWater_frac(nSW); 
+
+
 			}
 		}
 
@@ -50860,10 +50893,22 @@ namespace Models
 			{
 				if ((DateUtilities.CompareDates("17-Dec", Clock.Today) == 0))
 					Irrigation.Apply(39.7);
+				if ((DateUtilities.CompareDates("14-Jan", Clock.Today) == 0))
+					Irrigation.Apply(30);
 				if ((DateUtilities.CompareDates("21-Jan", Clock.Today) == 0))
 					Irrigation.Apply(20.1);
 			}
+
+			if ((IrrFactor == true) && (NitFactor == 50))
+			{
+				
+				if ((DateUtilities.CompareDates("14-Jan", Clock.Today) == 0))
+					Irrigation.Apply(30);
+			}
+
+
 			//fertigation event	
+/*	
 			if ((DateUtilities.CompareDates("19-Nov", Clock.Today) == 0))
 			{
 				if ((IrrFactor == true))
@@ -50871,17 +50916,17 @@ namespace Models
 				else
 				{
 					Irrigation.Apply(20);
-/*					if (NitFactor == 0)
+				if (NitFactor == 0)
 						Irrigation.Apply(20);
 					if (NitFactor == 50)
 						Irrigation.Apply(10);
 					if (NitFactor == 250)
-						Irrigation.Apply(20);*/
+						Irrigation.Apply(20);
 				}
 	    
 			}
 	
-			
+*/			
 		}
 	}
 		
@@ -51529,9 +51574,9 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>Wheat2015RainShelter</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
+              <YFieldName>Wheat.AboveGround.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -51574,7 +51619,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>TotalN_Kg</YFieldName>
+              <YFieldName>Wheat.AboveGroundLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -51593,9 +51638,9 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>Wheat2015RainShelter</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>BiomassTotal_Nup</YFieldName>
+              <YFieldName>Wheat.AboveGround.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -53267,9 +53312,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53335,9 +53380,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53403,9 +53448,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53471,9 +53516,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53539,9 +53584,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53607,9 +53652,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53673,11 +53718,10 @@ namespace Models
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
+                <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
-                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53892,7 +53936,7 @@ namespace Models
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries>
               <string>0Full</string>
-              <string>50Full</string>
+              <string>250Full</string>
               <string>0Nil</string>
               <string>50Nil</string>
               <string>250Nil</string>
@@ -75117,5 +75161,5 @@ namespace Models
   <Folder>
     <Name>Sensibility</Name>
   </Folder>
-  <ExplorerWidth>213</ExplorerWidth>
+  <ExplorerWidth>332</ExplorerWidth>
 </Simulations>
