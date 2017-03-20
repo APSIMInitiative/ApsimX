@@ -3316,38 +3316,38 @@ namespace Models
             <SEintercept>0.19039034150356315</SEintercept>
             <R2>0.814063933831588</R2>
             <RMSE>0.84409641517684708</RMSE>
-            <NSE>0.6900891439667588</NSE>
-            <ME>0.060696621806351728</ME>
-            <MAE>0.60274606454912238</MAE>
+            <NSE>0.69008914396675891</NSE>
+            <ME>0.060696621806351839</ME>
+            <MAE>0.60274606454912227</MAE>
             <RSR>0.5544287651066514</RSR>
           </RegrStats>
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>1333</n>
-            <Slope>0.83619573636348921</Slope>
-            <Intercept>70.475051681085347</Intercept>
-            <SEslope>0.014096777561245381</SEslope>
-            <SEintercept>5.7788196552299365</SEintercept>
-            <R2>0.72554726593871888</R2>
-            <RMSE>57.650258724889014</RMSE>
-            <NSE>0.70587570599361715</NSE>
-            <ME>5.6221726062153534</ME>
-            <MAE>39.308310668219583</MAE>
-            <RSR>0.54212880907011607</RSR>
+            <Slope>0.83567759517210949</Slope>
+            <Intercept>70.584085950266285</Intercept>
+            <SEslope>0.014095736232832563</SEslope>
+            <SEintercept>5.77839277404568</SEintercept>
+            <R2>0.72532977992170111</R2>
+            <RMSE>57.653798839499721</RMSE>
+            <NSE>0.70583958245478173</NSE>
+            <ME>5.526066012256333</ME>
+            <MAE>39.312557753584258</MAE>
+            <RSR>0.54216209943446692</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(1)</Name>
             <n>1306</n>
-            <Slope>0.00056647157184411528</Slope>
-            <Intercept>0.18195513963977825</Intercept>
-            <SEslope>0.00012155152911403955</SEslope>
-            <SEintercept>0.0023091184580532492</SEintercept>
-            <R2>0.016382643418945131</R2>
-            <RMSE>18.935580365223753</RMSE>
-            <NSE>-0.08066596900151235</NSE>
-            <ME>-5.2090034312359963</ME>
-            <MAE>5.25604793910795</MAE>
-            <RSR>1.039152783061466</RSR>
+            <Slope>0.00056648674418747591</Slope>
+            <Intercept>0.18195402242555517</Intercept>
+            <SEslope>0.00012155184547614267</SEslope>
+            <SEintercept>0.0023091244679946878</SEintercept>
+            <R2>0.016383422751105714</R2>
+            <RMSE>18.935580385223041</RMSE>
+            <NSE>-0.080665971284257232</NSE>
+            <ME>-5.2090044666103843</ME>
+            <MAE>5.2560476296367744</MAE>
+            <RSR>1.0391527841589932</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(10)</Name>
@@ -3366,86 +3366,86 @@ namespace Models
           <RegrStats>
             <Name>Soil.SoilWater.SW(2)</Name>
             <n>1329</n>
-            <Slope>0.00026909134649232854</Slope>
-            <Intercept>0.21062137743699738</Intercept>
-            <SEslope>7.9105140810590478E-05</SEslope>
-            <SEintercept>0.0018548379980381357</SEintercept>
-            <R2>0.0086446710180499986</R2>
-            <RMSE>23.381836200583624</RMSE>
-            <NSE>-0.0840341753288405</NSE>
-            <ME>-6.53055119941895</ME>
-            <MAE>6.5690280935478231</MAE>
-            <RSR>1.0407778335208997</RSR>
+            <Slope>0.00026970374013992384</Slope>
+            <Intercept>0.21057003156101684</Intercept>
+            <SEslope>7.9117277375090109E-05</SEslope>
+            <SEintercept>0.0018551225732347523</SEintercept>
+            <R2>0.008681079695027627</R2>
+            <RMSE>23.381836210362451</RMSE>
+            <NSE>-0.084034176235576963</NSE>
+            <ME>-6.5305984159324924</ME>
+            <MAE>6.5690386281997855</MAE>
+            <RSR>1.0407778339561771</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(3)</Name>
             <n>1329</n>
-            <Slope>0.00035920667057429476</Slope>
-            <Intercept>0.20128834219117087</Intercept>
-            <SEslope>6.7664233123254541E-05</SEslope>
-            <SEintercept>0.0019730687665605578</SEintercept>
-            <R2>0.020795667335777979</R2>
-            <RMSE>29.092156942076674</RMSE>
-            <NSE>-0.084786748201175266</NSE>
-            <ME>-8.1674059914664774</ME>
-            <MAE>8.1913433147316734</MAE>
-            <RSR>1.0411390422756994</RSR>
+            <Slope>0.00035981467037056171</Slope>
+            <Intercept>0.20122500340635047</Intercept>
+            <SEslope>6.76568713019246E-05</SEslope>
+            <SEintercept>0.0019728540980560815</SEintercept>
+            <R2>0.020869101188835448</R2>
+            <RMSE>29.092156977651825</RMSE>
+            <NSE>-0.084786750854224158</NSE>
+            <ME>-8.1674642402584912</ME>
+            <MAE>8.1913599450168526</MAE>
+            <RSR>1.0411390435488495</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(4)</Name>
             <n>1329</n>
-            <Slope>0.000417743168622895</Slope>
-            <Intercept>0.20420912709002356</Intercept>
-            <SEslope>6.0514382080841104E-05</SEslope>
-            <SEintercept>0.00193215402535101</SEintercept>
-            <R2>0.034666343225936425</R2>
-            <RMSE>31.8577030836448</RMSE>
-            <NSE>-0.08445788533102605</NSE>
-            <ME>-8.9341438282583248</ME>
-            <MAE>8.94692210056204</MAE>
-            <RSR>1.040981214975554</RSR>
+            <Slope>0.00041836213340136811</Slope>
+            <Intercept>0.20413825635050265</Intercept>
+            <SEslope>6.0491051957704849E-05</SEslope>
+            <SEintercept>0.0019314091215813668</SEintercept>
+            <R2>0.034791463304376991</R2>
+            <RMSE>31.857703141203693</RMSE>
+            <NSE>-0.084457889249713647</NSE>
+            <ME>-8.9342090403153485</ME>
+            <MAE>8.9469695450082884</MAE>
+            <RSR>1.0409812168563464</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(5)</Name>
             <n>1329</n>
-            <Slope>0.00049494708042505543</Slope>
-            <Intercept>0.21066570297993109</Intercept>
-            <SEslope>4.9716679834228154E-05</SEslope>
-            <SEintercept>0.0016453421889647435</SEintercept>
-            <R2>0.069496120699807151</R2>
-            <RMSE>33.018231761088323</RMSE>
-            <NSE>-0.084637397797958425</NSE>
-            <ME>-9.2770242007074479</ME>
-            <MAE>9.2952983872497654</MAE>
-            <RSR>1.0410673692540624</RSR>
+            <Slope>0.00049635355304570108</Slope>
+            <Intercept>0.21050022637982915</Intercept>
+            <SEslope>4.9627890513139626E-05</SEslope>
+            <SEintercept>0.0016424037623360226</SEintercept>
+            <R2>0.070096689860670636</R2>
+            <RMSE>33.018231531338877</RMSE>
+            <NSE>-0.084637382703580233</NSE>
+            <ME>-9.27717632652354</ME>
+            <MAE>9.295156011803277</MAE>
+            <RSR>1.0410673620100448</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(6)</Name>
             <n>1224</n>
-            <Slope>0.98554323961859114</Slope>
-            <Intercept>-0.0019952410983441193</Intercept>
-            <SEslope>0.0077454442987875162</SEslope>
-            <SEintercept>0.0019565092399288632</SEintercept>
-            <R2>0.92982029613036</R2>
-            <RMSE>0.018273973727186189</RMSE>
-            <NSE>0.91907848218483945</NSE>
-            <ME>-0.0055269753386794507</ME>
-            <MAE>0.011816025497460069</MAE>
-            <RSR>0.28435084924087062</RSR>
+            <Slope>0.98535864995685585</Slope>
+            <Intercept>-0.0019718587238197471</Intercept>
+            <SEslope>0.0077499620073454411</SEslope>
+            <SEintercept>0.00195765041894919</SEintercept>
+            <R2>0.92971968302838781</R2>
+            <RMSE>0.018290811196352463</RMSE>
+            <NSE>0.91892929282021607</NSE>
+            <ME>-0.0055486875504631517</ME>
+            <MAE>0.011837414122154399</MAE>
+            <RSR>0.28461284746457249</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(7)</Name>
             <n>1200</n>
-            <Slope>0.86547231763803911</Slope>
-            <Intercept>0.018339220358786906</Intercept>
-            <SEslope>0.0079239352516116482</SEslope>
-            <SEintercept>0.0022961101576677136</SEintercept>
-            <R2>0.90874162848441087</R2>
-            <RMSE>0.031671908812821448</RMSE>
-            <NSE>0.85410811635902528</NSE>
-            <ME>-0.01901258387257149</ME>
-            <MAE>0.022137335721058193</MAE>
-            <RSR>0.3817987782474872</RSR>
+            <Slope>0.86546439468670189</Slope>
+            <Intercept>0.018339627065468961</Intercept>
+            <SEslope>0.0079234097113413966</SEslope>
+            <SEintercept>0.002295957872431342</SEintercept>
+            <R2>0.9087511104248237</R2>
+            <RMSE>0.03167213364980126</RMSE>
+            <NSE>0.854106044996221</NSE>
+            <ME>-0.019014376984707961</ME>
+            <MAE>0.022137100850336756</MAE>
+            <RSR>0.38180148861409963</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(8)</Name>
@@ -3478,43 +3478,43 @@ namespace Models
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>429</n>
-            <Slope>0.832392426603274</Slope>
-            <Intercept>1.412611244622962</Intercept>
-            <SEslope>0.036477471306328363</SEslope>
-            <SEintercept>0.49943146920758758</SEintercept>
-            <R2>0.54944642751029216</R2>
-            <RMSE>5.4573714034695664</RMSE>
-            <NSE>0.39747310597723295</NSE>
-            <ME>-0.55652669600919291</ME>
-            <MAE>3.3050952699887879</MAE>
-            <RSR>0.775320838381317</RSR>
+            <Slope>0.83214481569336363</Slope>
+            <Intercept>1.4172485334437788</Intercept>
+            <SEslope>0.036471872657593551</SEslope>
+            <SEintercept>0.49935481528221748</SEintercept>
+            <R2>0.54937512120182408</R2>
+            <RMSE>5.4567817951258357</RMSE>
+            <NSE>0.39760329161683983</NSE>
+            <ME>-0.55479846450206316</ME>
+            <MAE>3.3038655920797138</MAE>
+            <RSR>0.77523707357925742</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>918</n>
-            <Slope>0.51809374371677275</Slope>
-            <Intercept>204.52804656391345</Intercept>
-            <SEslope>0.02564955875819188</SEslope>
-            <SEintercept>31.871169218670563</SEintercept>
-            <R2>0.30815549733850811</R2>
-            <RMSE>704.02296646086472</RMSE>
-            <NSE>-0.0046589241567955852</NSE>
-            <ME>-289.42249939887421</ME>
-            <MAE>381.25661409503016</MAE>
-            <RSR>1.0017806768236641</RSR>
+            <Slope>0.51799429176766909</Slope>
+            <Intercept>204.71146700851068</Intercept>
+            <SEslope>0.025648917873969657</SEslope>
+            <SEintercept>31.870372880234935</SEintercept>
+            <R2>0.30808429906761881</R2>
+            <RMSE>704.01251041637681</RMSE>
+            <NSE>-0.004629082288279962</NSE>
+            <ME>-289.34101650730975</ME>
+            <MAE>381.206295382481</MAE>
+            <RSR>1.0017657985259052</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.N</Name>
             <n>238</n>
-            <Slope>0.47814192022777718</Slope>
-            <Intercept>2.1446796039943048</Intercept>
+            <Slope>0.47814192022777741</Slope>
+            <Intercept>2.1446796039943035</Intercept>
             <SEslope>0.049426334631516113</SEslope>
             <SEintercept>0.44103083459869319</SEintercept>
-            <R2>0.283943588717277</R2>
+            <R2>0.28394358871727721</R2>
             <RMSE>5.348661482995082</RMSE>
             <NSE>0.0795979185962582</NSE>
-            <ME>-1.4910476151881478</ME>
-            <MAE>3.0380674828444461</MAE>
+            <ME>-1.4910476151881476</ME>
+            <MAE>3.0380674828444465</MAE>
             <RSR>0.95735826406188818</RSR>
           </RegrStats>
           <RegrStats>
@@ -3528,106 +3528,106 @@ namespace Models
             <RMSE>0.0083677800180594914</RMSE>
             <NSE>-7.0887463187755611</NSE>
             <ME>-0.0062886039805731845</ME>
-            <MAE>0.0064375585874162705</MAE>
+            <MAE>0.00643755858741627</MAE>
             <RSR>2.837659339058662</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.Wt</Name>
             <n>435</n>
-            <Slope>0.30273687615218003</Slope>
-            <Intercept>170.91716055158446</Intercept>
-            <SEslope>0.035560028719131824</SEslope>
-            <SEintercept>21.445322309893335</SEintercept>
-            <R2>0.14338514208344177</R2>
-            <RMSE>420.83488688872308</RMSE>
-            <NSE>-0.18934437337970023</NSE>
-            <ME>-152.2331025030353</ME>
-            <MAE>232.09579968025972</MAE>
-            <RSR>1.08931641334528</RSR>
+            <Slope>0.30283680341078179</Slope>
+            <Intercept>170.91116701803779</Intercept>
+            <SEslope>0.035555880171633213</SEslope>
+            <SEintercept>21.44282042951162</SEintercept>
+            <R2>0.14349490846043245</R2>
+            <RMSE>420.77304657486417</RMSE>
+            <NSE>-0.18899485850960218</NSE>
+            <ME>-152.19278422286482</ME>
+            <MAE>232.06138393476138</MAE>
+            <RSR>1.0891563418517045</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
             <n>88</n>
-            <Slope>-0.064842484222866245</Slope>
-            <Intercept>2.8712513665705854</Intercept>
-            <SEslope>0.10337908445066599</SEslope>
-            <SEintercept>1.1565395092652016</SEintercept>
-            <R2>0.0045537928591599108</R2>
-            <RMSE>10.017622001772818</RMSE>
-            <NSE>-5.4807928167348559</NSE>
-            <ME>-8.2802723656460433</ME>
-            <MAE>8.3963462713622938</MAE>
-            <RSR>2.5312343715700085</RSR>
+            <Slope>-0.065562846271508046</Slope>
+            <Intercept>2.8811638216981947</Intercept>
+            <SEslope>0.10336587694881716</SEslope>
+            <SEintercept>1.1563917521266272</SEintercept>
+            <R2>0.0046562453467963172</R2>
+            <RMSE>10.016669114025872</RMSE>
+            <NSE>-5.479559954413709</NSE>
+            <ME>-8.2779038755651317</ME>
+            <MAE>8.3939777812813823</MAE>
+            <RSR>2.5309935976401383</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>130</n>
-            <Slope>0.85025551431442314</Slope>
-            <Intercept>1923.5758066803755</Intercept>
-            <SEslope>0.030058159673033717</SEslope>
-            <SEintercept>500.35147536808279</SEintercept>
-            <R2>0.862092004303066</R2>
-            <RMSE>2380.5974009035722</RMSE>
-            <NSE>0.85827603449247114</NSE>
-            <ME>-382.22246056491844</ME>
-            <MAE>1786.5826270695832</MAE>
-            <RSR>0.3750117080271908</RSR>
+            <Slope>0.8502555143144217</Slope>
+            <Intercept>1923.5758066803974</Intercept>
+            <SEslope>0.030058159673033946</SEslope>
+            <SEintercept>500.35147536808654</SEintercept>
+            <R2>0.86209200430306376</R2>
+            <RMSE>2380.5974009035731</RMSE>
+            <NSE>0.85827603449247092</NSE>
+            <ME>-382.22246056491934</ME>
+            <MAE>1786.5826270695825</MAE>
+            <RSR>0.37501170802719092</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>480</n>
-            <Slope>0.23572235183258816</Slope>
-            <Intercept>34.6223188278299</Intercept>
-            <SEslope>0.026493079472716161</SEslope>
-            <SEintercept>11.409044705674678</SEintercept>
-            <R2>0.14208634146758792</R2>
-            <RMSE>357.40174296366962</RMSE>
-            <NSE>-0.27344997983751473</NSE>
-            <ME>-188.39211176604908</ME>
-            <MAE>205.60751392161308</MAE>
-            <RSR>1.1272963049022147</RSR>
+            <Slope>0.23572968751842691</Slope>
+            <Intercept>34.653049472550933</Intercept>
+            <SEslope>0.026494016316129746</SEslope>
+            <SEintercept>11.409448150219461</SEintercept>
+            <R2>0.14208530737526803</R2>
+            <RMSE>357.38617346076535</RMSE>
+            <NSE>-0.27333903157445705</NSE>
+            <ME>-188.35924058535369</ME>
+            <MAE>205.57688136989464</MAE>
+            <RSR>1.1272471964592967</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
             <n>568</n>
-            <Slope>0.9158903121890144</Slope>
-            <Intercept>0.12911833929845684</Intercept>
-            <SEslope>0.020307689398228225</SEslope>
-            <SEintercept>0.014013901376171686</SEintercept>
-            <R2>0.78231355755459087</R2>
-            <RMSE>0.16055015362217284</RMSE>
-            <NSE>0.689172867768698</NSE>
-            <ME>0.076371425552879027</ME>
-            <MAE>0.1113974180303237</MAE>
-            <RSR>0.55702773841586883</RSR>
+            <Slope>0.91502878536416221</Slope>
+            <Intercept>0.13002997862495092</Intercept>
+            <SEslope>0.020268937967285249</SEslope>
+            <SEintercept>0.013987159843899297</SEintercept>
+            <R2>0.78264339982347253</R2>
+            <RMSE>0.16053500409878016</RMSE>
+            <NSE>0.68923152433973622</NSE>
+            <ME>0.0767427837024637</ME>
+            <MAE>0.11139181318283389</MAE>
+            <RSR>0.55697517724066525</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.N</Name>
             <n>119</n>
-            <Slope>-0.0258369731028302</Slope>
-            <Intercept>1.1147421841511884</Intercept>
-            <SEslope>0.23241751527515206</SEslope>
-            <SEintercept>0.14233985770050056</SEintercept>
-            <R2>0.00010561213626825161</R2>
-            <RMSE>1.6951733637488875</RMSE>
-            <NSE>-8.6809867119582</NSE>
-            <ME>0.82779732949939677</ME>
-            <MAE>1.0865143723741166</MAE>
-            <RSR>3.0983275944363835</RSR>
+            <Slope>-0.025753123518386198</Slope>
+            <Intercept>1.1147479583494506</Intercept>
+            <SEslope>0.23241390775859247</SEslope>
+            <SEintercept>0.1423376483429436</SEintercept>
+            <R2>0.00010493108433085041</R2>
+            <RMSE>1.6951553985568006</RMSE>
+            <NSE>-8.6807815177662722</NSE>
+            <ME>0.82782655791840909</ME>
+            <MAE>1.0864851439551042</MAE>
+            <RSR>3.098294758827016</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.Wt</Name>
             <n>261</n>
-            <Slope>0.01770397647910292</Slope>
-            <Intercept>70.941371842353476</Intercept>
-            <SEslope>0.01085993034872635</SEslope>
-            <SEintercept>4.2597886934824105</SEintercept>
-            <R2>0.010156737664169357</R2>
-            <RMSE>381.04226218868149</RMSE>
-            <NSE>0.0021007522514207011</NSE>
-            <ME>-18.872013499853018</ME>
-            <MAE>108.17215817064623</MAE>
-            <RSR>0.99703353954782248</RSR>
+            <Slope>0.01775724128678954</Slope>
+            <Intercept>70.946989199029446</Intercept>
+            <SEslope>0.010858670327292532</SEslope>
+            <SEintercept>4.25929445227782</SEintercept>
+            <R2>0.010219667164068191</R2>
+            <RMSE>381.02041082819926</RMSE>
+            <NSE>0.0022152006111969547</NSE>
+            <ME>-18.861526030111975</ME>
+            <MAE>108.16167070090518</MAE>
+            <RSR>0.99697636337224449</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.DeadCohortNo</Name>
@@ -3660,44 +3660,44 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
             <n>685</n>
-            <Slope>0.80613396953597383</Slope>
-            <Intercept>0.87842169583619878</Intercept>
-            <SEslope>0.017255623163301308</SEslope>
-            <SEintercept>0.068338900718032725</SEintercept>
-            <R2>0.7616467206262163</R2>
-            <RMSE>1.1728573821337878</RMSE>
-            <NSE>0.74682491350892077</NSE>
-            <ME>0.25770903018577823</ME>
-            <MAE>0.86184255423605227</MAE>
-            <RSR>0.50279766091805644</RSR>
+            <Slope>0.80603387304593155</Slope>
+            <Intercept>0.87897725363572077</Intercept>
+            <SEslope>0.017253583630358383</SEslope>
+            <SEintercept>0.068330823383590589</SEintercept>
+            <R2>0.761644551562421</R2>
+            <RMSE>1.1728876298375253</RMSE>
+            <NSE>0.74681185469397016</NSE>
+            <ME>0.25794410296269016</ME>
+            <MAE>0.86189377141642254</MAE>
+            <RSR>0.50281062794620413</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
             <n>311</n>
-            <Slope>0.79794641308024239</Slope>
-            <Intercept>1.1009647120897768</Intercept>
-            <SEslope>0.02864420273504523</SEslope>
-            <SEintercept>0.12977685516479653</SEintercept>
-            <R2>0.71521312072281207</R2>
-            <RMSE>1.5684333136674256</RMSE>
-            <NSE>0.68709161341939251</NSE>
-            <ME>0.38189471795405222</ME>
-            <MAE>1.1233649133188148</MAE>
-            <RSR>0.55848209486907585</RSR>
+            <Slope>0.79776437729503047</Slope>
+            <Intercept>1.1023555923113064</Intercept>
+            <SEslope>0.02863014370041252</SEslope>
+            <SEintercept>0.12971315860049826</SEintercept>
+            <R2>0.71532015648984859</R2>
+            <RMSE>1.568175256384474</RMSE>
+            <NSE>0.68719457175943333</NSE>
+            <ME>0.38263776770149394</ME>
+            <MAE>1.1227879731544357</MAE>
+            <RSR>0.55839020675963369</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
             <n>496</n>
-            <Slope>0.771608343478588</Slope>
-            <Intercept>59.429981771907663</Intercept>
-            <SEslope>0.0210469421659756</SEslope>
-            <SEintercept>3.6287977283199719</SEintercept>
-            <R2>0.73123708496829076</R2>
-            <RMSE>62.754925050503147</RMSE>
-            <NSE>0.65792812768527753</NSE>
-            <ME>28.606391865050966</ME>
-            <MAE>46.9843748500006</MAE>
-            <RSR>0.58427922372939955</RSR>
+            <Slope>0.77150726694000882</Slope>
+            <Intercept>59.457668307998759</Intercept>
+            <SEslope>0.021040159393450622</SEslope>
+            <SEintercept>3.6276282800772655</SEintercept>
+            <R2>0.73131227735736259</R2>
+            <RMSE>62.752629535132634</RMSE>
+            <NSE>0.65795315255395792</NSE>
+            <ME>28.620437177019323</ME>
+            <MAE>46.982010004485417</MAE>
+            <RSR>0.58425785135204977</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
@@ -3709,7 +3709,7 @@ namespace Models
             <R2>0.062963336830173633</R2>
             <RMSE>15665.706633245138</RMSE>
             <NSE>-1.3199383081696006</NSE>
-            <ME>12053.936672877837</ME>
+            <ME>12053.936672877841</ME>
             <MAE>12719.440926996147</MAE>
             <RSR>1.5186742302016423</RSR>
           </RegrStats>
@@ -3744,44 +3744,44 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Spike.Wt</Name>
             <n>216</n>
-            <Slope>0.32027392338040506</Slope>
-            <Intercept>63.680857314105936</Intercept>
-            <SEslope>0.056745070212535081</SEslope>
-            <SEintercept>12.609852249692727</SEintercept>
-            <R2>0.12957065007038882</R2>
-            <RMSE>144.7567571407867</RMSE>
-            <NSE>-0.41749567213003824</NSE>
-            <ME>-62.753057314996262</ME>
-            <MAE>90.199349064440341</MAE>
-            <RSR>1.1878270884966691</RSR>
+            <Slope>0.31996070978581692</Slope>
+            <Intercept>63.747181561803529</Intercept>
+            <SEslope>0.056742778256365832</SEslope>
+            <SEintercept>12.609342932697457</SEintercept>
+            <R2>0.1293592082447883</R2>
+            <RMSE>144.77216502870817</RMSE>
+            <NSE>-0.41779744425083831</NSE>
+            <ME>-62.744993037367458</ME>
+            <MAE>90.227526790017009</MAE>
+            <RSR>1.1879535206371172</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.N</Name>
             <n>355</n>
-            <Slope>1.0824038056986571</Slope>
-            <Intercept>-0.099349664292256445</Intercept>
-            <SEslope>0.035852892210500635</SEslope>
-            <SEintercept>0.16049734586456743</SEintercept>
-            <R2>0.72082602357667724</R2>
-            <RMSE>1.787977446128832</RMSE>
-            <NSE>0.53362528268661413</NSE>
-            <ME>0.19986592283655175</ME>
-            <MAE>1.3075130711916196</MAE>
-            <RSR>0.68195380027925645</RSR>
+            <Slope>1.0821764904447986</Slope>
+            <Intercept>-0.097865610827632565</Intercept>
+            <SEslope>0.035851513875965864</SEslope>
+            <SEintercept>0.16049117567798263</SEintercept>
+            <R2>0.72075695950290686</R2>
+            <RMSE>1.7879126022482559</RMSE>
+            <NSE>0.53365910973310127</NSE>
+            <ME>0.20052457428763984</ME>
+            <MAE>1.3072642608011136</MAE>
+            <RSR>0.68192906812680154</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Wt</Name>
             <n>579</n>
-            <Slope>0.683768563613412</Slope>
-            <Intercept>42.994047980979246</Intercept>
-            <SEslope>0.023815179135224879</SEslope>
-            <SEintercept>15.870222022747839</SEintercept>
-            <R2>0.588253577162227</R2>
-            <RMSE>277.57611234651381</RMSE>
-            <NSE>0.44932362324338004</NSE>
-            <ME>-131.41007112657829</ME>
-            <MAE>183.15926503056551</MAE>
-            <RSR>0.741434619458438</RSR>
+            <Slope>0.68361553388764229</Slope>
+            <Intercept>43.154178284452883</Intercept>
+            <SEslope>0.023816744003996942</SEslope>
+            <SEintercept>15.871264837278359</SEintercept>
+            <R2>0.58811331261707633</R2>
+            <RMSE>277.57550749456271</RMSE>
+            <NSE>0.44932602314238579</NSE>
+            <ME>-131.3343379179195</ME>
+            <MAE>183.14807271546016</MAE>
+            <RSR>0.74143300383606914</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.HaunStage.Value()</Name>
@@ -3814,14 +3814,14 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
             <n>490</n>
-            <Slope>0.42091968546199582</Slope>
-            <Intercept>251.66129016299959</Intercept>
-            <SEslope>0.041068734304187671</SEslope>
-            <SEintercept>26.507459074302638</SEintercept>
-            <R2>0.17712836283561517</R2>
+            <Slope>0.42091968546199476</Slope>
+            <Intercept>251.66129016300027</Intercept>
+            <SEslope>0.041068734304187685</SEslope>
+            <SEintercept>26.507459074302645</SEintercept>
+            <R2>0.1771283628356144</R2>
             <RMSE>274.42279961858617</RMSE>
             <NSE>-0.31814193911682742</NSE>
-            <ME>-95.527513647939685</ME>
+            <ME>-95.527513647939628</ME>
             <MAE>200.66245511681342</MAE>
             <RSR>1.14693149469652</RSR>
           </RegrStats>
@@ -3841,58 +3841,58 @@ namespace Models
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>53</n>
-            <Slope>1.227929459032798</Slope>
-            <Intercept>-1.0994722116681981</Intercept>
-            <SEslope>0.06218395012545113</SEslope>
-            <SEintercept>0.86496153306180867</SEintercept>
-            <R2>0.88433622394448252</R2>
-            <RMSE>3.4719976888520083</RMSE>
-            <NSE>0.66447642005362051</NSE>
-            <ME>1.7614935132713108</ME>
-            <MAE>2.5392021922974</MAE>
-            <RSR>0.57375338461963388</RSR>
+            <Slope>1.2279294516920059</Slope>
+            <Intercept>-1.0994721539129291</Intercept>
+            <SEslope>0.062183950271214247</SEslope>
+            <SEintercept>0.86496153508933327</SEintercept>
+            <R2>0.8843362222419886</R2>
+            <RMSE>3.4719976588758792</RMSE>
+            <NSE>0.66447642584722921</NSE>
+            <ME>1.7614934788851107</ME>
+            <MAE>2.5392021579112005</MAE>
+            <RSR>0.57375337966602868</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>195</n>
             <Slope>0.99566150833711442</Slope>
             <Intercept>54.191567642037626</Intercept>
-            <SEslope>0.024102977690487914</SEslope>
-            <SEintercept>34.774421277942665</SEintercept>
-            <R2>0.8983892162817555</R2>
-            <RMSE>212.01673017525667</RMSE>
+            <SEslope>0.024102977690487828</SEslope>
+            <SEintercept>34.774421277942537</SEintercept>
+            <R2>0.89838921628175616</R2>
+            <RMSE>212.01673017525673</RMSE>
             <NSE>0.88165612244991831</NSE>
-            <ME>48.532080385279428</ME>
-            <MAE>155.23288589035226</MAE>
-            <RSR>0.34312823531492959</RSR>
+            <ME>48.532080385279372</ME>
+            <MAE>155.23288589035229</MAE>
+            <RSR>0.34312823531492964</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
             <n>121</n>
-            <Slope>1.0813929886414377</Slope>
-            <Intercept>-0.63442400045891567</Intercept>
-            <SEslope>0.046453134691125421</SEslope>
-            <SEintercept>0.45334159911499455</SEintercept>
-            <R2>0.81994858632180212</R2>
-            <RMSE>2.1001861373327997</RMSE>
-            <NSE>0.73613478230057172</NSE>
-            <ME>0.086831476025279186</ME>
-            <MAE>1.6789045073869264</MAE>
-            <RSR>0.51155108583690889</RSR>
+            <Slope>1.0813929964191191</Slope>
+            <Intercept>-0.63442400742838956</Intercept>
+            <SEslope>0.046453137425699113</SEslope>
+            <SEintercept>0.45334162580202048</SEintercept>
+            <R2>0.81994857106391628</R2>
+            <RMSE>2.1001862652498744</RMSE>
+            <NSE>0.73613475015783258</NSE>
+            <ME>0.086831537976921322</ME>
+            <MAE>1.678904569338562</MAE>
+            <RSR>0.51155111699420364</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Nconc</Name>
             <n>104</n>
-            <Slope>0.63133235749534888</Slope>
-            <Intercept>0.0078394934375581662</Intercept>
-            <SEslope>0.080297761560430433</SEslope>
-            <SEintercept>0.0018268457427744991</SEintercept>
-            <R2>0.37735469932514054</R2>
-            <RMSE>0.0035248902648160095</RMSE>
-            <NSE>0.19487353233765614</NSE>
-            <ME>-0.0004220427392912</ME>
-            <MAE>0.0025448161670509656</MAE>
-            <RSR>0.89296409054997539</RSR>
+            <Slope>0.6313323492794094</Slope>
+            <Intercept>0.0078394937265273</Intercept>
+            <SEslope>0.0802977624140189</SEslope>
+            <SEintercept>0.0018268457621943984</SEintercept>
+            <R2>0.37735468821446805</R2>
+            <RMSE>0.0035248902961300915</RMSE>
+            <NSE>0.19487351803264552</NSE>
+            <ME>-0.00042204263443445654</ME>
+            <MAE>0.0025448162719077126</MAE>
+            <RSR>0.892964098482804</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
@@ -3902,11 +3902,11 @@ namespace Models
             <SEslope>0.023873395206489206</SEslope>
             <SEintercept>352.220328300275</SEintercept>
             <R2>0.88188075669802624</R2>
-            <RMSE>2274.0196619617977</RMSE>
+            <RMSE>2274.0196619617986</RMSE>
             <NSE>0.88028364602646825</NSE>
-            <ME>-254.74632548104259</ME>
-            <MAE>1714.1284420502266</MAE>
-            <RSR>0.34504338517530792</RSR>
+            <ME>-254.74632548104307</ME>
+            <MAE>1714.1284420502263</MAE>
+            <RSR>0.34504338517530808</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
@@ -3918,23 +3918,23 @@ namespace Models
             <R2>0.32743332874883946</R2>
             <RMSE>2.1251552702838574</RMSE>
             <NSE>0.24929802804804757</NSE>
-            <ME>0.15506017240156148</ME>
-            <MAE>1.570263036753988</MAE>
+            <ME>0.15506017240156161</ME>
+            <MAE>1.5702630367539876</MAE>
             <RSR>0.862622088132938</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>217</n>
-            <Slope>1.0594809704718238</Slope>
-            <Intercept>-0.77849146358482812</Intercept>
-            <SEslope>0.031882477046578712</SEslope>
-            <SEintercept>17.025734305104191</SEintercept>
-            <R2>0.83703326400227307</R2>
-            <RMSE>114.81047647758166</RMSE>
-            <NSE>0.764186982459679</NSE>
-            <ME>27.702559719434138</ME>
-            <MAE>94.0513782755441</MAE>
-            <RSR>0.48448562580014237</RSR>
+            <Slope>1.0594809704718249</Slope>
+            <Intercept>-0.77849146358528287</Intercept>
+            <SEslope>0.031882477046578483</SEslope>
+            <SEintercept>17.025734305104073</SEintercept>
+            <R2>0.83703326400227529</R2>
+            <RMSE>114.81047647758173</RMSE>
+            <NSE>0.76418698245967864</NSE>
+            <ME>27.702559719434188</ME>
+            <MAE>94.051378275544138</MAE>
+            <RSR>0.48448562580014265</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CohortMaxSize(1)</Name>
@@ -4093,15 +4093,15 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Leaf.CohortMaxSize(3)</Name>
             <n>10</n>
-            <Slope>0.27310165820681231</Slope>
-            <Intercept>257.1189870396031</Intercept>
-            <SEslope>0.21729695092130491</SEslope>
-            <SEintercept>115.99570301451135</SEintercept>
-            <R2>0.16489025001072166</R2>
+            <Slope>0.27310165820680721</Slope>
+            <Intercept>257.11898703960594</Intercept>
+            <SEslope>0.21729695092130494</SEslope>
+            <SEintercept>115.99570301451136</SEintercept>
+            <R2>0.16489025001071644</R2>
             <RMSE>154.30280605137946</RMSE>
             <NSE>-1.607422715639212</NSE>
-            <ME>-124.64023851925082</ME>
-            <MAE>127.0323526227634</MAE>
+            <ME>-124.64023851925067</ME>
+            <MAE>127.03235262276348</MAE>
             <RSR>1.5318878692891624</RSR>
           </RegrStats>
           <RegrStats>
@@ -4177,16 +4177,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Leaf.CohortMaxSize(9)</Name>
             <n>10</n>
-            <Slope>0.66171060514830538</Slope>
-            <Intercept>572.63416696188324</Intercept>
-            <SEslope>0.29603531916797832</SEslope>
-            <SEintercept>458.13103808614</SEintercept>
-            <R2>0.38444052761407954</R2>
-            <RMSE>236.17623345220693</RMSE>
-            <NSE>0.13549076710324126</NSE>
-            <ME>56.212799185757945</ME>
-            <MAE>174.54841199426394</MAE>
-            <RSR>0.882076135946939</RSR>
+            <Slope>0.6617106051482996</Slope>
+            <Intercept>572.63416696189086</Intercept>
+            <SEslope>0.29603531916797626</SEslope>
+            <SEintercept>458.13103808613681</SEintercept>
+            <R2>0.38444052761407876</R2>
+            <RMSE>236.17623345220497</RMSE>
+            <NSE>0.13549076710325569</NSE>
+            <ME>56.21279918575695</ME>
+            <MAE>174.54841199426295</MAE>
+            <RSR>0.88207613594693168</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.FlagLeafDAS.Value()</Name>
@@ -4975,8 +4975,8 @@ namespace Models
             <Manager>
               <Name>ApplyFertiliser</Name>
               <Script>
-                <FertDayOfYear>186</FertDayOfYear>
                 <Amount>160</Amount>
+                <FertDayOfYear>186</FertDayOfYear>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -12268,8 +12268,8 @@ namespace Models
             <Manager>
               <Name>1</Name>
               <Script>
-                <SowDate>29-Apr</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>29-Apr</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12326,8 +12326,8 @@ namespace Models
             <Manager>
               <Name>2</Name>
               <Script>
-                <SowDate>20-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>20-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12384,8 +12384,8 @@ namespace Models
             <Manager>
               <Name>3</Name>
               <Script>
-                <SowDate>10-Jun</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>10-Jun</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12442,8 +12442,8 @@ namespace Models
             <Manager>
               <Name>4</Name>
               <Script>
-                <SowDate>4-Jul</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>4-Jul</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12500,8 +12500,8 @@ namespace Models
             <Manager>
               <Name>5</Name>
               <Script>
-                <SowDate>22-Jul</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>22-Jul</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12558,8 +12558,8 @@ namespace Models
             <Manager>
               <Name>6</Name>
               <Script>
-                <SowDate>15-Aug</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>15-Aug</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -13055,8 +13055,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -14726,8 +14726,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -15441,8 +15441,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -16156,8 +16156,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -33664,15 +33664,15 @@ Emergence was recorded as the 28th of May for the first planting.  The model was
               <Manager>
                 <Name>Fertilise</Name>
                 <Script>
-                  <FertDate1>05-Aug</FertDate1>
-                  <FertDate2>01-Oct</FertDate2>
-                  <FertDate3>20-Oct</FertDate3>
-                  <FertDate4>25-Nov</FertDate4>
+                  <SDSwitch>0</SDSwitch>
                   <Amount1>0</Amount1>
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
+                  <FertDate1>05-Aug</FertDate1>
+                  <FertDate2>01-Oct</FertDate2>
+                  <FertDate3>20-Oct</FertDate3>
+                  <FertDate4>25-Nov</FertDate4>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -36913,10 +36913,10 @@ Considerable canopy decay was observed during the winter for the early sown trea
                 <Name>Sowing</Name>
                 <Script>
                   <SowDate>24-Jul</SowDate>
+                  <Population>150</Population>
                   <CultivarName>Wakanui</CultivarName>
                   <SowingDepth>50</SowingDepth>
                   <RowSpacing>150</RowSpacing>
-                  <Population>150</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -39544,15 +39544,15 @@ namespace Models
               <Manager>
                 <Name>Fertilise</Name>
                 <Script>
-                  <FertDate1>05-Aug</FertDate1>
-                  <FertDate2>01-Oct</FertDate2>
-                  <FertDate3>20-Oct</FertDate3>
-                  <FertDate4>25-Nov</FertDate4>
+                  <SDSwitch>0</SDSwitch>
                   <Amount1>0</Amount1>
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
+                  <FertDate1>05-Aug</FertDate1>
+                  <FertDate2>01-Oct</FertDate2>
+                  <FertDate3>20-Oct</FertDate3>
+                  <FertDate4>25-Nov</FertDate4>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -50805,8 +50805,8 @@ namespace Models
             <Manager>
               <Name>StateFactors</Name>
               <Script>
-                <IrrFactor>False</IrrFactor>
                 <NitFactor>0</NitFactor>
+                <IrrFactor>False</IrrFactor>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -61342,8 +61342,8 @@ namespace Models
             <Manager>
               <Name>MouseActivity</Name>
               <Script>
-                <NibblingDate>2002-10-31</NibblingDate>
                 <ProportionNibbled>0.5</ProportionNibbled>
+                <NibblingDate>2002-10-31</NibblingDate>
               </Script>
               <Code><![CDATA[
 using System;
@@ -62433,8 +62433,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -63187,8 +63187,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -63902,8 +63902,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -64617,8 +64617,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
