@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="4">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -1061,6 +1061,9 @@
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -2979,9 +2982,7 @@ namespace Models
               <string>[InitialWater]</string>
             </Specifications>
           </Factor>
-          <Specifications>
-            <string>[SurfaceOrganicMatter]</string>
-          </Specifications>
+          <Specifications />
         </Factor>
       </Factors>
       <Simulation>
@@ -3457,6 +3458,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -5326,10 +5330,10 @@ namespace Models
           <Manager>
             <Name>SlurpSowingRule</Name>
             <Script>
-              <SowDate>
-              </SowDate>
               <CultivarName>Pasture</CultivarName>
               <InitialRootDepth>20</InitialRootDepth>
+              <SowDate>
+              </SowDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -5911,6 +5915,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -7869,6 +7876,9 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -9101,6 +9111,9 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -10751,6 +10764,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -12961,6 +12977,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -14125,6 +14144,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -15342,6 +15364,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -16244,6 +16269,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -17570,6 +17598,9 @@ namespace Models
             <LayerStructure>
               <Name>LayerStructure</Name>
             </LayerStructure>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>

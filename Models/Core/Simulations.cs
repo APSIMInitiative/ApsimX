@@ -152,7 +152,7 @@ namespace Models.Core
                     {
                         foreach (IModel match in Apsim.FindAll(simulation))
                         {
-                            if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
+                            if (!(match is Simulation) && match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
                             {
                                 // Do replacement.
                                 IModel newModel = Apsim.Clone(replacement);

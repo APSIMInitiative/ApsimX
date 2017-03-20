@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="4">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -5394,6 +5394,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -7510,6 +7513,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -9587,6 +9593,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Clay Loam</SoilType>
               <LocalName>Gatton</LocalName>
@@ -10656,6 +10665,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -11710,6 +11722,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Black Vertosol</SoilType>
               <Site>Lawes</Site>
@@ -12946,6 +12961,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -13653,6 +13671,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -13924,7 +13945,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -13972,7 +13993,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -14020,7 +14041,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -14067,7 +14088,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -14114,7 +14135,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -14161,7 +14182,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>3</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>3</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -14611,6 +14632,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>APS6Soil</SoilType>
                 <LocalName>APS6Site</LocalName>
@@ -15323,6 +15347,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>APS6Soil</SoilType>
                 <LocalName>APS6Site</LocalName>
@@ -16035,6 +16062,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>APS6Soil</SoilType>
                 <LocalName>APS6Site</LocalName>
@@ -17057,6 +17087,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>sand</SoilType>
               <LocalName>Merredin</LocalName>
@@ -17927,6 +17960,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>sand</SoilType>
               <LocalName>Merredin</LocalName>
@@ -19275,6 +19311,9 @@ namespace Models
                   <double>0.099999927332399569</double>
                 </oc>
               </SoilNitrogen>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>heavy
 </SoilType>
@@ -20503,6 +20542,9 @@ namespace Models
                   <double>0.10004261693966804</double>
                 </oc>
               </SoilNitrogen>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>sand</SoilType>
               <LocalName>WonganSite</LocalName>
@@ -20952,6 +20994,9 @@ namespace Models
                   <double>0.10004261693966804</double>
                 </oc>
               </SoilNitrogen>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>sand</SoilType>
               <LocalName>WonganSite</LocalName>
@@ -21597,6 +21642,9 @@ namespace Models
                   <double>0.10012193846548656</double>
                 </oc>
               </SoilNitrogen>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>unknown
 </SoilType>
@@ -22144,7 +22192,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -22239,7 +22287,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -22286,7 +22334,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -23075,6 +23123,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Site>Konya</Site>
               <NearestTown>Konya</NearestTown>
@@ -24148,6 +24199,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Site>Konya</Site>
               <NearestTown>Konya</NearestTown>
@@ -26315,6 +26369,9 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>LincolnSoil</SoilType>
               <LocalName>Lincoln</LocalName>
@@ -29453,9 +29510,7 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                 <string>[Sample]</string>
               </Specifications>
             </Factor>
-            <Specifications>
-              <string>[IrrigationEvents]</string>
-            </Specifications>
+            <Specifications />
           </Factor>
         </Factors>
         <Simulation>
@@ -29769,6 +29824,9 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>NZ_sedementary</SoilType>
               <Site>-</Site>
@@ -34000,6 +34058,9 @@ namespace Models
                 <FractionFull>1</FractionFull>
                 <DepthWetSoil>NaN</DepthWetSoil>
               </InitialWater>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>LincolnSoil</SoilType>
               <LocalName>Lincoln</LocalName>
@@ -37329,6 +37390,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>LincolnSoil</SoilType>
               <LocalName>Lincoln</LocalName>
@@ -40019,6 +40083,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType />
               <LocalName />
@@ -42127,6 +42194,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -42716,6 +42786,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -43253,6 +43326,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -44152,6 +44228,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -44689,6 +44768,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -45329,6 +45411,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -45866,6 +45951,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -46403,6 +46491,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -46940,6 +47031,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -47477,6 +47571,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -48014,6 +48111,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -48551,6 +48651,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -49088,6 +49191,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -49481,9 +49587,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <string>[Fert]</string>
               </Specifications>
             </Factor>
-            <Specifications>
-              <string>[StateFactors]</string>
-            </Specifications>
+            <Specifications />
           </Factor>
           <Factor>
             <Name>Irr</Name>
@@ -49647,10 +49751,7 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
                 <string>[StateFactors].Script.IrrFactor = false</string>
               </Specifications>
             </Factor>
-            <Specifications>
-              <string>[Irrig]</string>
-              <string>[StateFactors]</string>
-            </Specifications>
+            <Specifications />
           </Factor>
         </Factors>
         <Simulation>
@@ -50686,6 +50787,9 @@ namespace Models
                 <DisabledSeries />
                 <IncludeInDocumentation>false</IncludeInDocumentation>
               </Graph>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>NZ_sedementary</SoilType>
               <Site>-</Site>
@@ -54524,6 +54628,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>265</RecordNumber>
                 <ASCOrder>Kandasol</ASCOrder>
                 <ASCSubOrder>Red</ASCSubOrder>
@@ -56120,6 +56227,9 @@ namespace Models
                     <double>0.10004261693966804</double>
                   </oc>
                 </SoilNitrogen>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>unknown
 </SoilType>
@@ -57541,6 +57651,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>265</RecordNumber>
                 <ASCOrder>Kandasol</ASCOrder>
                 <ASCSubOrder>Red</ASCSubOrder>
@@ -58239,6 +58352,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>265</RecordNumber>
                 <ASCOrder>Kandasol</ASCOrder>
                 <ASCSubOrder>Red</ASCSubOrder>
@@ -59111,6 +59227,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -61090,6 +61209,9 @@ namespace Models
                   <double>0.10004261693966804</double>
                 </oc>
               </SoilNitrogen>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>unknown
 </SoilType>
@@ -62178,6 +62300,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -62929,6 +63054,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -63680,6 +63808,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -64392,6 +64523,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -64751,7 +64885,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -65418,6 +65552,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -66059,6 +66196,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -66700,6 +66840,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -67916,6 +68059,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <Latitude>0</Latitude>
                 <Longitude>0</Longitude>
@@ -69631,6 +69777,9 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
+                <CERESSoilTemperature>
+                  <Name>CERESSoilTemperature</Name>
+                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <Latitude>0</Latitude>
                 <Longitude>0</Longitude>
@@ -71263,6 +71412,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -71922,6 +72074,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -72581,6 +72736,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -73638,6 +73796,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>APS26Soil</SoilType>
             <LocalName>APS26Site</LocalName>
@@ -74406,6 +74567,9 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
