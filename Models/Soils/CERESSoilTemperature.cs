@@ -118,18 +118,8 @@ namespace Models.Soils
 
         #endregion
 
-        /// <summary>Performs the initial checks and setup</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            ave_temp = (weather.MaxT + weather.MinT) * 0.5;
-            clear();
-        }
-
         /// <summary>Clears this instance.</summary>
-        public void clear()
+        private void clear()
         {
             // need to initialise some values for surf_temp, repeat the value of ave_temp for the first day (RCichota: why not tav?)
             surf_temp = new double[MaxDaysInYear];
@@ -162,6 +152,9 @@ namespace Models.Soils
             st = new double[soil.Thickness.Length];
 
             ave_temp = (_maxt + _mint) * 0.5;
+
+            if (surf_temp == null)
+                clear();
 
             // Calculate "normal" soil temperature from the day of year assumed to have the warmest average soil temperature
             // The normal soil temperature varies as a cosine function of alx, with average tav and amplitude amp
