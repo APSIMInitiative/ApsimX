@@ -7,6 +7,14 @@
       <Name>Weather</Name>
       <FileName>Harwood.met</FileName>
     </Weather>
+    <FileAPSIM>
+      <Name>File APSIM</Name>
+      <FileName>forage.out</FileName>
+    </FileAPSIM> 
+    <FileGRASP>
+      <Name>File GRASP</Name>
+      <FileName>GRASP_FZHlCk_Blk_NABSAdb.CSV</FileName>
+    </FileGRASP>      
     <Clock>
       <Name>clock</Name>
       <StartDate>1993-09-21T00:00:00</StartDate>
