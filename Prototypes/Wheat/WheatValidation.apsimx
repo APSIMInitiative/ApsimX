@@ -1519,17 +1519,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>0.1</double>
-                  <double>1.1</double>
-                  <double>1.3</double>
+                  <double>0</double>
+                  <double>0.7</double>
+                  <double>1</double>
                 </X>
                 <Y>
                   <double>0</double>
-                  <double>1</double>
+                  <double>0.7</double>
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+              <XProperty>[Root].WaterTension</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>TemperatuerEffect</Name>
@@ -1654,42 +1654,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <End>FlagLeaf</End>
             </PhaseLookupValue>
           </PhaseLookup>
-          <AddFunction>
-            <Name>LagDurationX</Name>
-            <MultiplyFunction>
-              <Name>ShortestDuration</Name>
-              <Constant>
-                <Name>Multiplier</Name>
-                <FixedValue>2</FixedValue>
-              </Constant>
-              <VariableReference>
-                <Name>Phyllochron</Name>
-                <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
-              </VariableReference>
-            </MultiplyFunction>
-            <MultiplyFunction>
-              <Name>MultiplyFunction</Name>
-              <LinearInterpolationFunction>
-                <Name>AgeFactor</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <X>
-                    <double>3</double>
-                    <double>5</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>1</double>
-                  </Y>
-                </XYPairs>
-                <XProperty>[Phenology].Stage</XProperty>
-              </LinearInterpolationFunction>
-              <ExpressionFunction>
-                <Name>LongestDuration</Name>
-                <Expression>[Phenology].EarlyReproductive.Target.Value()+[Phenology].GrainDevelopment.Target.Value() + [Phenology].GrainFilling.Target.Value() +200</Expression>
-              </ExpressionFunction>
-            </MultiplyFunction>
-          </AddFunction>
           <MultiplyFunction>
             <Name>SenescenceDuration</Name>
             <Constant>
@@ -2071,6 +2035,24 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
         </Constant>
+        <MinimumFunction>
+          <Name>LeafStress</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <MaximumFunction>
+            <Name>SoilStress</Name>
+            <VariableReference>
+              <Name>Tension</Name>
+              <VariableName>[Root].WaterTension</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>Fw</Name>
+              <VariableName>[Leaft].Fw</VariableName>
+            </VariableReference>
+          </MaximumFunction>
+        </MinimumFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -2772,16 +2754,17 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8.5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>#HAve onlu set this value to aloow predicted to get past OBS</Command>
-            <Command>[Phenology].GrainDevelopment.Target.FixedValue = 480</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].GrainDevelopment.Target.FixedValue = 120</Command>
+            <Command>[Phenology].GrainFilling.Target.FixedValue = 545</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.08</Command>
             <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600</Command>
-            <Command>[Leaf].CohortParameters.SenescenceDuration.Multiplier.FixedValue = 4.2</Command>
-            <Command>[Leaf].CohortParameters.GrowthDuration.Multiplier.FixedValue = 1.8</Command>
-            <Command>[Leaf].CohortParameters.LagDuration.VegetativeGrowth.LagDuration.Multiplier.FixedValue = 1.5</Command>
+            <Command>[Leaf].CohortParameters.SenescenceDuration.Multiplier.FixedValue = 3</Command>
+            <Command>[Leaf].CohortParameters.GrowthDuration.Multiplier.FixedValue = 1.0</Command>
+            <Command>[Leaf].CohortParameters.LagDuration.VegetativeGrowth.LagDuration.Multiplier.FixedValue = 1</Command>
             <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.FixedValue = 50</Command>
-            <Command>[Grain].MaximumNConc.FixedValue = 0.02</Command>
+            <Command>[Grain].MaximumNConc.FixedValue = 0.03</Command>
+            <Command>[Grain].MinimumNConc.FixedValue = 0.012</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
@@ -6977,7 +6960,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -7759,7 +7742,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7780,7 +7763,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8170,7 +8153,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8191,7 +8174,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16744448</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -40701,7 +40684,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -40722,7 +40705,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -40764,7 +40747,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -40785,7 +40768,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -43627,7 +43610,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -43750,7 +43733,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -43791,7 +43774,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -43812,7 +43795,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -49596,7 +49579,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <Operations>
                 <Name>Full</Name>
                 <Operation>
-                  <Date>2015-09-10</Date>
+                  <Date>2015-09-15</Date>
                   <Action>[Irrigation].Apply(15);</Action>
                 </Operation>
                 <Operation>
@@ -49620,16 +49603,24 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(5);</Action>
                 </Operation>
                 <Operation>
+                  <Date>2015-10-09</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
+                </Operation>
+                <Operation>
                   <Date>2015-10-16</Date>
                   <Action>[Irrigation].Apply(15);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-10-22</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
+                  <Action>[Irrigation].Apply(15);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-10-29</Date>
                   <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-10-30</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-11-06</Date>
@@ -49638,6 +49629,10 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <Operation>
                   <Date>2015-11-12</Date>
                   <Action>[Irrigation].Apply(13);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-19</Date>
+                  <Action>[Irrigation].Apply(24);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-11-26</Date>
@@ -49652,12 +49647,12 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(40);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-12-17</Date>
-                  <Action>[Irrigation].Apply(39.7);</Action>
-                </Operation>
-                <Operation>
                   <Date>2015-12-24</Date>
                   <Action>[Irrigation].Apply(35);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-12-31</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-01-07</Date>
@@ -49665,11 +49660,11 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 </Operation>
                 <Operation>
                   <Date>2016-01-14</Date>
-                  <Action>[Irrigation].Apply(33);</Action>
+                  <Action>[Irrigation].Apply(0);</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-01-21</Date>
-                  <Action>[Irrigation].Apply(21);</Action>
+                  <Action>[Irrigation].Apply(0);</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-02-03</Date>
@@ -49680,10 +49675,30 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(40);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-11-03</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
+                  <Date>2015-12-17</Date>
+                  <Action>[Irrigation].Apply(0);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2016-01-14</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2016-01-21</Date>
+                  <Action>[Irrigation].Apply(20);</Action>
                 </Operation>
               </Operations>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[Have added an extra irrigation, on 22 Oct, 
+
+Data indcates water applied but no notes of it RFZ
+
+In Statefactors have donethe irrigations for
+  17/12  21/1 19/11 14/1
+
+
+]]></MemoText>
+              </Memo>
               <Specifications>
                 <string>[Irrig]</string>
                 <string>[Water]</string>
@@ -49723,6 +49738,18 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
                 <Operation>
+                  <Date>2015-10-29</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-03</Date>
+                  <Action>[Irrigation].Apply(16);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-19</Date>
+                  <Action>[Irrigation].Apply(20);</Action>
+                </Operation>
+                <Operation>
                   <Date>2015-12-24</Date>
                   <Action>[Irrigation].Apply(25);</Action>
                 </Operation>
@@ -49733,10 +49760,6 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <Operation>
                   <Date>2016-02-04</Date>
                   <Action>[Irrigation].Apply(40);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-03</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
               </Operations>
               <Memo>
@@ -49891,7 +49914,7 @@ namespace Models
               </Operation>
               <Operation>
                 <Date>2015-09-23</Date>
-                <Action>[Irrigation].Apply(2);</Action>
+                <Action>[Irrigation].Apply(2.5);</Action>
               </Operation>
               <Operation>
                 <Date>2015-09-26</Date>
@@ -49946,10 +49969,6 @@ namespace Models
                 <Action>[Irrigation].Apply(40);</Action>
               </Operation>
               <Operation>
-                <Date>2015-12-17</Date>
-                <Action>[Irrigation].Apply(39.7);</Action>
-              </Operation>
-              <Operation>
                 <Date>2015-12-24</Date>
                 <Action>[Irrigation].Apply(35);</Action>
               </Operation>
@@ -49959,7 +49978,7 @@ namespace Models
               </Operation>
               <Operation>
                 <Date>2016-01-14</Date>
-                <Action>[Irrigation].Apply(33);</Action>
+                <Action>[Irrigation].Apply(30);</Action>
               </Operation>
               <Operation>
                 <Date>2016-01-21</Date>
@@ -50063,8 +50082,10 @@ namespace Models
                 <string>[Soil].SoilWater.pond</string>
                 <string />
                 <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+                <string>[WheatExtraVariables].Script.SWPC</string>
+                <string />
                 <string>[Soil].NO3N</string>
-                <string>[Soil].SoilWater.SW</string>
+                <string>\\[Soil].SoilWater.SW</string>
                 <string>[Soil].SoilWater.SWmm</string>
                 <string>sum([Soil].NO3N) as ProfileNitrate</string>
                 <string />
@@ -50092,11 +50113,15 @@ namespace Models
                 <string>[Wheat].Stem.Live.N</string>
                 <string>[Wheat].Leaf.Live.N</string>
                 <string>[Wheat].Root.Live.N</string>
+                <string>[Wheat].Spike.Live.N</string>
+                <string />
                 <string>[Wheat].EarLive.N</string>
                 <string>[Wheat].Grain.Live.N*10 as Grain_Nup </string>
                 <string>[Wheat].Stem.Live.N*10 as Stem_Nup</string>
                 <string>[Wheat].Leaf.Live.N*10 as Leaf_Nup</string>
                 <string>[Wheat].Root.Live.N*10 as Root_N_kg </string>
+                <string>[Wheat].Spike.Live.N*10 as Spike_N_kg </string>
+                <string />
                 <string>[Wheat].Root.WaterSupply</string>
                 <string>[Wheat].Root.WaterUptake</string>
                 <string>[Wheat].Leaf.Transpiration</string>
@@ -50118,7 +50143,7 @@ namespace Models
                 <string>[Wheat].AboveGroundLive.Wt</string>
                 <string>[Wheat].Total.N</string>
                 <string>[Wheat].Total.Wt</string>
-                <string>[Wheat].Total.N*10 as TotalN_Kg</string>
+                <string>[Wheat].AboveGroundLive.N*10 as TotalN_Kg</string>
                 <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Phenology.Stage</string>
                 <string>[Wheat].Leaf.ExpandedCohortNo</string>
@@ -50165,7 +50190,11 @@ namespace Models
                 <string>[NitFactors].Script.NitFactor</string>
                 <string>[Wheat].WaterSupplyDemandRatio</string>
                 <string>[Wheat].Leaf.Fw</string>
-                <string>[Wheat].Leaf.Fn</string>
+                <string>[Wheat].Leaf.LeafStress.Value()</string>
+                <string>[Wheat].Root.WaterTension</string>
+                <string>[Structure].MainStemPopn</string>
+                <string>[Wheat].Structure.TotalStemPopn</string>
+                <string>[Wheat].Leaf.CohortParameters.ExpansionStress.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -50196,8 +50225,8 @@ namespace Models
                 <string>[Wheat].Total.N</string>
                 <string>[Wheat].Total.Wt</string>
                 <string>max of [Wheat].Leaf.LAI from [Wheat].Sowing to [Wheat].Harvesting as LAImax</string>
-                <string>[Wheat].Grain.NumberFunction.Value() as GPSM</string>
-                <string>[Wheat].Grain.Size.Value() as GrainSize</string>
+                <string>[Wheat].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Wheat].Grain.Size.Value as GrainSize</string>
                 <string>[Wheat].Population</string>
                 <string />
               </VariableNames>
@@ -50317,8 +50346,8 @@ namespace Models
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
-                <RootCN>40</RootCN>
-                <RootWt>1000</RootWt>
+                <RootCN>16</RootCN>
+                <RootWt>6000</RootWt>
                 <SoilCN>11</SoilCN>
                 <EnrACoeff>7.4</EnrACoeff>
                 <EnrBCoeff>0.2</EnrBCoeff>
@@ -50339,23 +50368,23 @@ namespace Models
                   <string>150-200</string>
                 </Depth>
                 <OC>
-                  <double>2.62509797633343</double>
-                  <double>1.24694031672971</double>
+                  <double>3</double>
+                  <double>1</double>
                   <double>0.316004293710514</double>
                   <double>0.207953620272232</double>
                   <double>0.200365542475381</double>
                   <double>0.2</double>
                 </OC>
                 <FBiom>
+                  <double>0.05</double>
                   <double>0.03</double>
-                  <double>0.02</double>
                   <double>0.0116634262048469</double>
                   <double>0.0102228802725968</double>
                   <double>0.0100221233748059</double>
                   <double>0.01</double>
                 </FBiom>
                 <FInert>
-                  <double>0.437120879838036</double>
+                  <double>0.3</double>
                   <double>0.656885264024723</double>
                   <double>0.849635116265262</double>
                   <double>0.944959741045969</double>
@@ -50380,22 +50409,22 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>7.9</double>
-                  <double>6.7</double>
-                  <double>0.3</double>
-                  <double>1.31</double>
-                  <double>2.6</double>
-                  <double>4.56</double>
-                  <double>0.1</double>
+                  <double>0.45</double>
+                  <double>0.45</double>
+                  <double>2</double>
+                  <double>2.8</double>
+                  <double>2.4</double>
+                  <double>3.1</double>
+                  <double>0.033333333333333333</double>
                 </NO3>
                 <NH4>
-                  <double>1.065</double>
-                  <double>1.155</double>
-                  <double>0.43</double>
-                  <double>1.09</double>
-                  <double>0.93</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
                   <double>0</double>
-                  <double>0</double>
+                  <double>0.19</double>
+                  <double>3.29</double>
+                  <double>0.42</double>
+                  <double>0.75</double>
                 </NH4>
                 <SW>
                   <double>0.18</double>
@@ -50406,8 +50435,8 @@ namespace Models
                   <double>0.28</double>
                   <double>0.29</double>
                 </SW>
-                <NO3Units>kgha</NO3Units>
-                <NH4Units>kgha</NH4Units>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
@@ -50419,8 +50448,8 @@ namespace Models
                   <LL>
                     <double>0.06</double>
                     <double>0.11</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
+                    <double>0.11</double>
+                    <double>0.17</double>
                     <double>0.16</double>
                     <double>0.2</double>
                     <double>0.2</double>
@@ -50429,8 +50458,8 @@ namespace Models
                     <double>0.06</double>
                     <double>0.06</double>
                     <double>0.05</double>
-                    <double>0.07</double>
-                    <double>0.015</double>
+                    <double>0.05</double>
+                    <double>0.03</double>
                     <double>0.01</double>
                     <double>0.001</double>
                   </KL>
@@ -50456,16 +50485,16 @@ namespace Models
                 <BD>
                   <double>1</double>
                   <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
+                  <double>1.2</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
                 </BD>
                 <AirDry>
                   <double>0.05</double>
-                  <double>0.12</double>
-                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.08</double>
                   <double>0.08</double>
                   <double>0.06</double>
                   <double>0.06</double>
@@ -50474,11 +50503,11 @@ namespace Models
                 <LL15>
                   <double>0.08</double>
                   <double>0.15</double>
-                  <double>0.17</double>
-                  <double>0.17</double>
-                  <double>0.25</double>
-                  <double>0.28</double>
-                  <double>0.26</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
                 </LL15>
                 <DUL>
                   <double>0.28</double>
@@ -50904,7 +50933,7 @@ namespace Models
 				ThisSoil.SAT[4] = 0.34;
 				ThisSoil.SAT[5] = 0.34;
 				ThisSoil.SAT[6] = 0.34;
-				double[] nSW = { 0.22, 0.25, 0.26, 0.3, 0.25, 0.29, 0.33 };
+				double[] nSW = { 0.22, 0.28, 0.26, 0.3, 0.25, 0.29, 0.33 };
 				
 				
 				ThisSoil.SoilWater.Reset();
@@ -50921,7 +50950,7 @@ namespace Models
 				ThisSoil.LL15[0] = 0.06;
 				ThisSoil.LL15[1] = 0.11;
 				ThisSoil.LL15[2] = 0.16;
-				ThisSoil.LL15[3] = 0.16;
+				ThisSoil.LL15[3] = 0.19;
 				ThisSoil.LL15[4] = 0.16;
 				ThisSoil.LL15[5] = 0.16;
 				ThisSoil.LL15[6] = 0.16;
@@ -50960,13 +50989,13 @@ namespace Models
 				ThisSoil.LL15[4] = 0.16;
 				ThisSoil.LL15[5] = 0.16;
 				ThisSoil.LL15[6] = 0.16;
-				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
-				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
+				ThisSoil.DUL[0] = 0.33;
+				ThisSoil.DUL[1] = 0.31;
+				ThisSoil.DUL[2] = 0.35;
+				ThisSoil.DUL[3] = 0.33;
+				ThisSoil.DUL[4] = 0.23;
+				ThisSoil.DUL[5] = 0.3;
+				ThisSoil.DUL[6] = 0.33;
 				ThisSoil.SAT[0] = 0.34;
 				ThisSoil.SAT[1] = 0.34;
 				ThisSoil.SAT[2] = 0.34;
@@ -50990,18 +51019,18 @@ namespace Models
 			 
 				ThisSoil.LL15[0] = 0.14;
 				ThisSoil.LL15[1] = 0.21;
-				ThisSoil.LL15[2] = 0.27;
-				ThisSoil.LL15[3] = 0.27;
-				ThisSoil.LL15[4] = 0.27;
-				ThisSoil.LL15[5] = 0.32;
-				ThisSoil.LL15[6] = 0.30;
-				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
-				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
+				ThisSoil.LL15[2] = 0.16;
+				ThisSoil.LL15[3] = 0.16;
+				ThisSoil.LL15[4] = 0.16;
+				ThisSoil.LL15[5] = 0.16;
+				ThisSoil.LL15[6] = 0.16;
+				ThisSoil.DUL[0] = 0.29;
+				ThisSoil.DUL[1] = 0.29;
+				ThisSoil.DUL[2] = 0.32;
+				ThisSoil.DUL[3] = 0.30;
+				ThisSoil.DUL[4] = 0.25;
+				ThisSoil.DUL[5] = 0.27;
+				ThisSoil.DUL[6] = 0.35;
 				ThisSoil.SAT[0] = 0.34;
 				ThisSoil.SAT[1] = 0.34;
 				ThisSoil.SAT[2] = 0.34;
@@ -51010,6 +51039,11 @@ namespace Models
 				ThisSoil.SAT[5] = 0.34;
 				ThisSoil.SAT[6] = 0.34;
 				double[] nSW = { 0.18, 0.18, 0.26, 0.26, 0.23, 0.28, 0.33 };
+				
+				ThisSoil.SoilWater.Reset();
+				
+				ThisSoil.SoilWater.SetWater_frac(nSW); 
+
 			}
 			if ((IrrFactor == true) && (NitFactor == 250))
 			{
@@ -51017,29 +51051,35 @@ namespace Models
 				{
 					throw new Exception("Soil layer exception");
 				}
-			 
+		 
 				ThisSoil.LL15[0] = 0.12;
 				ThisSoil.LL15[1] = 0.18;
-				ThisSoil.LL15[2] = 0.17;
-				ThisSoil.LL15[3] = 0.20;
-				ThisSoil.LL15[4] = 0.27;
-				ThisSoil.LL15[5] = 0.27;
-				ThisSoil.LL15[6] = 0.21;
+				ThisSoil.LL15[2] = 0.16;
+				ThisSoil.LL15[3] = 0.16;
+				ThisSoil.LL15[4] = 0.16;
+				ThisSoil.LL15[5] = 0.16;
+				ThisSoil.LL15[6] = 0.16;
 				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
+				ThisSoil.DUL[1] = 0.31;
+				ThisSoil.DUL[2] = 0.23;
+				ThisSoil.DUL[3] = 0.30;
 				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
-				ThisSoil.SAT[0] = 0.34;
-				ThisSoil.SAT[1] = 0.34;
-				ThisSoil.SAT[2] = 0.34;
-				ThisSoil.SAT[3] = 0.34;
-				ThisSoil.SAT[4] = 0.34;
-				ThisSoil.SAT[5] = 0.34;
-				ThisSoil.SAT[6] = 0.34;
+				ThisSoil.DUL[5] = 0.27;
+				ThisSoil.DUL[6] = 0.35;
+				ThisSoil.SAT[0] = 0.4;
+				ThisSoil.SAT[1] = 0.4;
+				ThisSoil.SAT[2] = 0.4;
+				ThisSoil.SAT[3] = 0.4;
+				ThisSoil.SAT[4] = 0.4;
+				ThisSoil.SAT[5] = 0.4;
+				ThisSoil.SAT[6] = 0.4;
 				double[] nSW = { 0.18, 0.18, 0.26, 0.26, 0.23, 0.28, 0.33 };
+				
+				ThisSoil.SoilWater.Reset();
+				
+				ThisSoil.SoilWater.SetWater_frac(nSW); 
+
+
 			}
 		}
 
@@ -51057,10 +51097,22 @@ namespace Models
 			{
 				if ((DateUtilities.CompareDates("17-Dec", Clock.Today) == 0))
 					Irrigation.Apply(39.7);
+				if ((DateUtilities.CompareDates("14-Jan", Clock.Today) == 0))
+					Irrigation.Apply(30);
 				if ((DateUtilities.CompareDates("21-Jan", Clock.Today) == 0))
 					Irrigation.Apply(20.1);
 			}
+
+			if ((IrrFactor == true) && (NitFactor == 50))
+			{
+				
+				if ((DateUtilities.CompareDates("14-Jan", Clock.Today) == 0))
+					Irrigation.Apply(30);
+			}
+
+
 			//fertigation event	
+/*	
 			if ((DateUtilities.CompareDates("19-Nov", Clock.Today) == 0))
 			{
 				if ((IrrFactor == true))
@@ -51068,17 +51120,17 @@ namespace Models
 				else
 				{
 					Irrigation.Apply(20);
-/*					if (NitFactor == 0)
+				if (NitFactor == 0)
 						Irrigation.Apply(20);
 					if (NitFactor == 50)
 						Irrigation.Apply(10);
 					if (NitFactor == 250)
-						Irrigation.Apply(20);*/
+						Irrigation.Apply(20);
 				}
 	    
 			}
 	
-			
+*/			
 		}
 	}
 		
@@ -51158,6 +51210,7 @@ namespace Models
 		[XmlIgnore] public double MineralN { get; set; }
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
+		[XmlIgnore] public double[] SWPC { get; set; }
 		
 		[XmlIgnore] public double LeafExpandedPosition { get; set; }
 		[XmlIgnore] public double LeafAppearedPosition { get; set; }
@@ -51225,6 +51278,13 @@ namespace Models
 			//Leaf number variable
 			ExpandedLeafNoYesterday = (double)zone.Get("Wheat.Leaf.ExpandedCohortNo");
 			AppearedLeafNoYesterday = (double)zone.Get("Wheat.Leaf.AppearedCohortNo");
+
+			SWPC = new double[layers];
+			
+			for (int i = 0; i < layers; i++)
+				SWPC[i] = Soil.SoilWater.SWmm[i] / Soil.SoilWater.DULmm[i];
+
+			
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -51242,6 +51302,7 @@ namespace Models
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
 			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
 			
+						
 			if ((double)zone.Get("Wheat.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
 			{
 				LeafExpandedPosition = (double)zone.Get("Wheat.Leaf.ExpandedCohortNo");
@@ -51263,28 +51324,6 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
-            <Report>
-              <Name>DailyReport</Name>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string />
-              </VariableNames>
-              <EventNames>
-                <string />
-              </EventNames>
-            </Report>
-            <Report>
-              <Name>HarvestReport</Name>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string />
-              </VariableNames>
-              <EventNames>
-                <string />
-              </EventNames>
-            </Report>
             <SoluteManager>
               <Name>SoluteManager</Name>
             </SoluteManager>
@@ -51314,7 +51353,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -51377,7 +51416,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -51447,14 +51486,14 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
-                <Filter>[Irr] = 'Full'</Filter>
+                <Filter />
               </Series>
               <Series>
                 <Name>Observed</Name>
@@ -51494,11 +51533,7 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries>
-                <string>0Nil</string>
-                <string>50Nil</string>
-                <string>250Nil</string>
-              </DisabledSeries>
+              <DisabledSeries />
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Graph>
           </Folder>
@@ -51519,9 +51554,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+                <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -51579,19 +51614,19 @@ namespace Models
                 <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+                <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
-                <Filter>[Nit] = 250</Filter>
+                <Filter />
               </Series>
               <Series>
                 <Name>Observed</Name>
@@ -51599,8 +51634,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -51631,7 +51666,12 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>0Full</string>
+                <string>50Full</string>
+                <string>0Nil</string>
+                <string>50Nil</string>
+              </DisabledSeries>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Graph>
             <Graph>
@@ -51642,21 +51682,21 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-11094807</ColourArgb>
-                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+                <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
-                <Filter>[Irr] = 'Full'</Filter>
+                <Filter />
               </Series>
               <Series>
                 <Name>Observed</Name>
@@ -51664,7 +51704,7 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>FilledCircle</Marker>
@@ -51696,7 +51736,11 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>0Nil</string>
+                <string>50Nil</string>
+                <string>250Nil</string>
+              </DisabledSeries>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Graph>
           </Folder>
@@ -51715,9 +51759,9 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+              <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -51780,9 +51824,9 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.AboveGround.N</YFieldName>
+              <YFieldName>Wheat.AboveGroundLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -51843,9 +51887,9 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Grain.Wt</YFieldName>
+              <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -51894,6 +51938,69 @@ namespace Models
           <Folder>
             <Name>OrganNConc</Name>
             <Graph>
+              <Name>Stem</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Stem.Live.NConc</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Stem.Nconc</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>N concentration (fractional)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>0.065</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
               <Name>Leaf</Name>
               <Series>
                 <Name>Predicted</Name>
@@ -51908,7 +52015,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.NConc</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -51957,69 +52064,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
             <Graph>
-              <Name>Stem</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Stem.NConc</YFieldName>
-                <ShowInLegend>false</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Stem.Nconc</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>N concentration (fractional)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>0</Minimum>
-                <Maximum>0.1</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopRight</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
               <Name>Grain</Name>
               <Series>
                 <Name>Predicted</Name>
@@ -52034,9 +52078,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Grain.NConc</YFieldName>
+                <YFieldName>Wheat.Grain.Live.NConc</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -52068,7 +52112,7 @@ namespace Models
                 <Title>N concentration (fractional)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>0</Minimum>
-                <Maximum>0.1</Maximum>
+                <Maximum>0.05</Maximum>
                 <Interval>NaN</Interval>
               </Axis>
               <Axis>
@@ -52078,7 +52122,70 @@ namespace Models
                 <Maximum>NaN</Maximum>
                 <Interval>NaN</Interval>
               </Axis>
-              <LegendPosition>TopRight</LegendPosition>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>DeadLeaf</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.Dead.NConc</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.Dead.Nconc</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>N concentration (fractional)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>0.08</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -52100,7 +52207,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.N</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -52163,9 +52270,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Grain.N</YFieldName>
+                <YFieldName>Wheat.Grain.Live.N</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -52226,9 +52333,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Stem.N</YFieldName>
+                <YFieldName>Wheat.Stem.Live.N</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -52274,11 +52381,8 @@ namespace Models
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
-          </Folder>
-          <Folder>
-            <Name>OrganBiomass</Name>
             <Graph>
-              <Name>LeafBiomass</Name>
+              <Name>Spike</Name>
               <Series>
                 <Name>Predicted</Name>
                 <Type>Scatter</Type>
@@ -52292,10 +52396,10 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
+                <YFieldName>Wheat.Spike.Live.N</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
@@ -52315,212 +52419,15 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
+                <YFieldName>Wheat.Spike.N</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Axis>
                 <Type>Left</Type>
-                <Title>Leaf Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>StemBiomass</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Stem.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Stem.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Stem Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>GrainBiomass</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <EventNamesOnGraph>
-                  <Name>EventNamesOnGraph</Name>
-                  <ColumnName>CurrentStageName</ColumnName>
-                </EventNamesOnGraph>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Grain.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Grain.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>Spike</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <EventNamesOnGraph>
-                  <Name>EventNamesOnGraph</Name>
-                  <ColumnName>CurrentStageName</ColumnName>
-                </EventNamesOnGraph>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Spike.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Spike.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain Biomass (g/m2)</Title>
+                <Title>Spike N (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
                 <Maximum>NaN</Maximum>
@@ -52880,7 +52787,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -52929,6 +52836,111 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
             <Graph>
+              <Name>LeafLigules</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Leaf Ligules (n)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>StartSenesced</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Senesced leaves (n)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
               <Name>FullySenesced</Name>
               <Series>
                 <Name>Predicted</Name>
@@ -52944,6 +52956,27 @@ namespace Models
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
                 <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -52988,7 +53021,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53051,7 +53084,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.CoverTotal</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53187,165 +53220,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
           </Folder>
-          <Folder>
-            <Name>Leaves</Name>
-            <Graph>
-              <Name>LeafTips</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>Senesced</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>WheatReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries>
-                <string>0Full</string>
-                <string>50Full</string>
-                <string>0Nil</string>
-                <string>50Nil</string>
-              </DisabledSeries>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>Stage</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <EventNamesOnGraph>
-                  <Name>EventNamesOnGraph</Name>
-                  <ColumnName>CurrentStageName</ColumnName>
-                </EventNamesOnGraph>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>WheatReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Phenology.Stage</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-          </Folder>
           <Graph>
             <Name>SoilNitrate</Name>
             <Series>
@@ -53364,6 +53238,27 @@ namespace Models
               <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>ProfileNitrate</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Obs</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>WheatSoilN</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>SoilN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -53439,9 +53334,9 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -53473,24 +53368,24 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
             <Graph>
-              <Name>WaterDemand</Name>
+              <Name>Tension</Name>
               <Series>
                 <Name>Series</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
                 <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.WaterSupplyDemandRatio</YFieldName>
-                <ShowInLegend>false</ShowInLegend>
+                <YFieldName>Wheat.Root.WaterTension</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
@@ -53509,8 +53404,54 @@ namespace Models
                 <Maximum>NaN</Maximum>
                 <Interval>NaN</Interval>
               </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
+              <LegendPosition>BottomLeft</LegendPosition>
               <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>ES</Name>
+              <Series>
+                <Name>Series</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.CohortParameters.ExpansionStress.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>BottomLeft</LegendPosition>
+              <DisabledSeries>
+                <string>0Full</string>
+                <string>50Full</string>
+                <string>0Nil</string>
+                <string>50Nil</string>
+              </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
           </Folder>
@@ -53552,7 +53493,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53578,9 +53519,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53620,7 +53561,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53646,7 +53587,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
+                <string>0Nil</string>
+                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53686,7 +53629,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53712,9 +53655,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53754,7 +53697,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53780,9 +53723,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53822,7 +53765,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53848,9 +53791,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53890,7 +53833,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53916,9 +53859,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53958,7 +53901,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53984,7 +53927,6 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
               </DisabledSeries>
@@ -53999,9 +53941,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -54049,7 +53991,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>WheatExtraVariables.Script.AccumFert</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -54091,7 +54033,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>ProfileWater</YFieldName>
               <ShowInLegend>true</ShowInLegend>
@@ -54137,6 +54079,144 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>WaterProfileFull</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>WheatReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Obs</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Water  content (mm)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopRight</LegendPosition>
+            <DisabledSeries>
+              <string>0Full</string>
+              <string>250Full</string>
+              <string>0Nil</string>
+              <string>50Nil</string>
+              <string>250Nil</string>
+            </DisabledSeries>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>WaterProfileNIl</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>WheatReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Obs</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Soil Nitrates kg/ha</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>550</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries>
+              <string>0Full</string>
+              <string>50Full</string>
+              <string>250Full</string>
+              <string>0Nil</string>
+              <string>50Nil</string>
+            </DisabledSeries>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
         </Folder>
@@ -75408,5 +75488,5 @@ namespace Models
   <Folder>
     <Name>Sensibility</Name>
   </Folder>
-  <ExplorerWidth>257</ExplorerWidth>
+  <ExplorerWidth>332</ExplorerWidth>
 </Simulations>
