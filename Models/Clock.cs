@@ -67,7 +67,8 @@ namespace Models
         public event EventHandler DoEnergyArbitration;                                //MicroClimate
         /// <summary>Occurs when [do soil water movement].</summary>
         public event EventHandler DoSoilWaterMovement;                                //Soil module
-        //DoSoilTemperature will be here
+        /// <summary>Occurs when [do soil temperature].</summary>
+        public event EventHandler DoSoilTemperature;
         //DoSoilNutrientDynamics will be here
         /// <summary>Occurs when [do soil organic matter].</summary>
         public event EventHandler DoSoilOrganicMatter;                                 //SurfaceOM
@@ -203,6 +204,9 @@ namespace Models
 
                 if (DoSoilWaterMovement != null)
                     DoSoilWaterMovement.Invoke(this, args);
+
+                if (DoSoilTemperature != null)
+                    DoSoilTemperature.Invoke(this, args);
 
                 if (DoSoilOrganicMatter != null)
                     DoSoilOrganicMatter.Invoke(this, args);

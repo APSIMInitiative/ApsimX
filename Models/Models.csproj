@@ -170,6 +170,7 @@
     <Compile Include="IClock.cs" />
     <Compile Include="IIrrigation.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
+    <Compile Include="Interfaces\ISoilTemperature.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
@@ -428,7 +429,7 @@
     <Compile Include="Soils\LayerStructure.cs" />
     <Compile Include="Soils\Phosphorus.cs" />
     <Compile Include="Soils\Sample.cs" />
-    <Compile Include="Soils\simpleSoilTemp.cs" />
+    <Compile Include="Soils\CERESSoilTemperature.cs" />
     <Compile Include="Soils\Soil.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
     <Compile Include="Soils\SoilNitrogen.cs" />

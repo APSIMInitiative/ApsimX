@@ -131,16 +131,6 @@ namespace Models.Soils
     /// <summary>
     /// 
     /// </summary>
-    public class NewSoluteType
-    {
-        /// <summary>The owner full path</summary>
-        public string OwnerFullPath;
-        /// <summary>The solutes</summary>
-        public string[] solutes;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
     public class MergeSoilCNPatchType
     {
         /// <summary>The sender</summary>
@@ -227,14 +217,6 @@ namespace Models.Soils
         /// <summary>Occurs when [external mass flow].</summary>
         public event ExternalMassFlowDelegate ExternalMassFlow;
 
-        /// <summary>
-        /// Event to communicate other modules that solutes have been added to the simulation (owned by SoilNitrogen)
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void NewSoluteDelegate(NewSoluteType Data);
-        /// <summary>Occurs when [new solute].</summary>
-        public event NewSoluteDelegate NewSolute;
-
         /// <summary>Event to comunicate other modules (SurfaceOM) that residues have been decomposed</summary>
         /// <param name="Data">The data.</param>
         public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
@@ -251,8 +233,6 @@ namespace Models.Soils
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Reset();
-            // notifify apsim about solutes
-            AdvertiseMySolutes();
         }
 
         /// <summary>Reset the state values to those set during the initialisation</summary>
@@ -280,8 +260,6 @@ namespace Models.Soils
             NH4ppm = Soil.InitialNH4N;
             ureappm = new double[Soil.Thickness.Length];
             num_residues = 0;
-            Tsoil = null;
-            simpleST = null;
 
             fbiom = Soil.FBiom;
             finert = Soil.FInert;
@@ -329,10 +307,6 @@ namespace Models.Soils
 
             SoilCNParameterSet = SoilCNParameterSet.Trim();
             NPartitionApproach = NPartitionApproach.Trim();
-
-            // check whether soil temperature is present. If not, check whether the basic params for simpleSoilTemp have been supplied
-            if (AllowsimpleSoilTemp)
-                use_external_st = (ave_soil_temp != null);
 
             // check whether ph is supplied, use a default if not - might be better to throw an exception?
             use_external_ph = (ph != null);
@@ -472,34 +446,9 @@ namespace Models.Soils
         {
             // Note: this doesn't clear the existing values
 
-            Array.Resize(ref Tsoil, nLayers);
             Array.Resize(ref urea_min, nLayers);
             Array.Resize(ref nh4_min, nLayers);
             Array.Resize(ref no3_min, nLayers);
-        }
-
-        /// <summary>Notify any interested module about this module's ownership of solute information.</summary>
-        private void AdvertiseMySolutes()
-        {
-
-            if (NewSolute != null)
-            {
-                string[] solute_names;
-                if (useOrganicSolutes)
-                {
-                    solute_names = new string[7] { "urea", "NH4", "NO3", "org_c_pool1", "org_c_pool2", "org_c_pool3", "org_n" };
-                }
-                else
-                { // don't publish the organic solutes
-                    solute_names = new string[3] { "urea", "NH4", "NO3" };
-                }
-
-                NewSoluteType SoluteData = new NewSoluteType();
-                SoluteData.OwnerFullPath = Apsim.FullPath(this);
-                SoluteData.solutes = solute_names;
-
-                NewSolute.Invoke(SoluteData);
-            }
         }
 
         /// <summary>Stores the total amounts of C an N</summary>
@@ -545,18 +494,6 @@ namespace Models.Soils
             num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
 
             sw_dep = Soil.Water;
-
-            // update soil temperature
-            if (use_external_st)
-                Tsoil = ave_soil_temp;
-            else
-            {
-                // initialise soil temperature
-                if (simpleST == null)
-                    simpleST = new simpleSoilTemp(MetFile.Latitude, MetFile.Tav, MetFile.Amp, MetFile.MinT, MetFile.MaxT);
-
-                Tsoil = simpleST.SoilTemperature(Clock.Today, MetFile.MinT, MetFile.MaxT, MetFile.Radn, salb, dlayer, bd, ll15_dep, sw_dep);
-            }
 
             // calculate C and N processes
             //    - Assesses potential decomposition of surface residues;

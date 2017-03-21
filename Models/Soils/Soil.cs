@@ -133,6 +133,9 @@ namespace Models.Soils
         /// <summary>Gets the soil nitrogen.</summary>
         [XmlIgnore] public SoilNitrogen SoilNitrogen { get; private set; }
 
+        /// <summary>Gets the soil nitrogen.</summary>
+        private ISoilTemperature temperatureModel;
+
         /// <summary>Called when [loaded].</summary>
         [EventSubscribe("Loaded")]
         private void OnLoaded()
@@ -158,7 +161,8 @@ namespace Models.Soils
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
-         }
+            temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
+            }
 
         #region Water
         /// <summary>The layering used to parameterise the water node</summary>
@@ -939,7 +943,7 @@ namespace Models.Soils
         public double[] NH4N { get { return SoilNitrogen.NH4; } }
 
         /// <summary>Gets the temperature of each layer</summary>
-        public double[] Temperature { get { return SoilNitrogen.st; } }
+        public double[] Temperature { get { return temperatureModel.Value; } }
 
         /// <summary>Ammonia (ppm).</summary>
         public double[] InitialNH4N

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -3396,6 +3396,9 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+        </CERESSoilTemperature>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>
@@ -3605,6 +3608,9 @@ namespace Models
 }
 				]]></Code>
       </Manager>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+      </SoluteManager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
