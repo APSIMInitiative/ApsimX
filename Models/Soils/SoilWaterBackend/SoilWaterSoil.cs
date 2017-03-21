@@ -502,7 +502,7 @@ namespace Models.Soils.SoilWaterBackend
             SoluteInLayer foundSolute;
             foundSolute = solutes.Find(delegate(SoluteInLayer sol)
             {
-                return sol.name == SoluteName;
+                return sol.name.Equals(SoluteName, StringComparison.InvariantCultureIgnoreCase);
             }
                                         );
             return foundSolute;

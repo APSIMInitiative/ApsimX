@@ -1650,30 +1650,18 @@ namespace Models.Soils
         /// Gets the todays solute amounts.
         /// </summary>
         private void GetTodaysSoluteAmounts()
-            {
-            //private void soilwat2_get_solute_variables()
-            //    {
-
-            string propName;
-            double[] value;
-      
+        {
             //for the number of solutes that was read in by OnNewSolute event handler)
             foreach (SoluteInLayer sol in SoilObject.GetAllSolutesInALayer())
-                {
-                if (sol.ownerName != "")
-                    propName = sol.ownerName + "." + sol.name;
-                else
-                    propName = sol.name;
-
-                object objValue = Apsim.Get(this, propName);  //Get the amount array for the solute by asking the System for it. 
-
+            {
+                object objValue = solutes.GetSolute(sol.name);
                 if (objValue != null)
-                    {
-                   value = objValue as double[];
-                   SoilObject.UpdateSoluteAmounts(sol.name, value);
-                    }
+                {
+                    double[] value = objValue as double[];
+                    SoilObject.UpdateSoluteAmounts(sol.name, value);
                 }
             }
+        }
 
         #endregion
 
@@ -1681,56 +1669,27 @@ namespace Models.Soils
 
         #region NewSolute Event Handler
 
-        //ToDo: Need to work out what the NewSolute event will be.
-
         /// <summary>
-        /// Called when [new solute].
+        /// Called to find all solutes.
         /// </summary>
-        /// <param name="NewSolutes">The new solutes.</param>
-        /// <exception cref="ApsimXException">No solute mobility information for  + name +  , please specify as mobile or immobile in the SoilWater ini file.</exception>
-        [EventSubscribe("NewSolute")]
-        private void OnNewSolute(NewSoluteType NewSolutes)
+        private void FindSolutes()
         {
-
-            //*     ===========================================================
-            //      subroutine soilwat2_on_new_solute ()
-            //*     ===========================================================
-
-            //"On New Solute" simply tells modules the name of a new solute, what module owns the new solute, and whether it is mobile or immobile.
-            //       It alerts you at any given point in a simulation when a new solute is added. 
-            //       It does NOT tell you the amount of the new solute in each of the layers. You have to ask the module owner for this separately.
-
-            int counter;
-            int numvals;             //! number of values returned
-
-            string name;
-            string ownerName;
-            bool isMobile, isImmobile;
-
-
-            //*- Implementation Section ----------------------------------
-            numvals = NewSolutes.solutes.Length;
-
-            for (counter = 0; counter < numvals; counter++)
+            foreach (string soluteName in solutes.SoluteNames)
             {
-                name = NewSolutes.solutes[counter];
-                ownerName = NewSolutes.OwnerFullPath;
-
-                isMobile = (PositionInCharArray(name, mobile_solutes) >= 0);
-                isImmobile = (PositionInCharArray(name, immobile_solutes) >= 0);
-
-                if ( !isMobile && !isImmobile)
-                    throw new ApsimXException(this, "No solute mobility information for " + name + " , please specify as mobile or immobile in the SoilWater ini file.");
+                bool isMobile = (PositionInCharArray(soluteName, mobile_solutes) >= 0);
+                bool isImmobile = (PositionInCharArray(soluteName, immobile_solutes) >= 0);
+                if (!isMobile && !isImmobile)
+                    throw new ApsimXException(this, "No solute mobility information for " + soluteName + " , please specify as mobile or immobile in the SoilWater ini file.");
 
                 //Add the solute to each layer of the Soil
                 foreach (Layer lyr in SoilObject)
+                {
+                    SoluteInLayer newSolute = new SoluteInLayer(soluteName, null, isMobile);
+                    if (lyr.GetASolute(soluteName) == null)
                     {
-                    SoluteInLayer newSolute = new SoluteInLayer(name, ownerName, isMobile);
-                    if (lyr.GetASolute(name) == null)
-                        {
                         lyr.AddSolute(newSolute);
-                        }
                     }
+                }
             }
         }
 
@@ -1843,6 +1802,7 @@ namespace Models.Soils
                 {
                 throw new ApsimXException(this, "SoilWater module has detected that the Soil has no layers.");
                 }
+            FindSolutes();
         }
 
         /// <summary>
