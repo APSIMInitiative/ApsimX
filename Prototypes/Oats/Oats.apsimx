@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -189,15 +189,17 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
         </PhotoperiodDeltaFunction>
         <PhaseLookup>
           <Name>PercievedPhotoPeriod</Name>
-          <PhaseLookup>
+          <PhaseLookupValue>
             <Name>ApexBelowGround</Name>
             <Constant>
               <Name>Photoperiod</Name>
               <FixedValue>0</FixedValue>
               <Units>h</Units>
             </Constant>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>Germination</Start>
+            <End>Emergence</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>ApexAboveGround</Name>
             <MultiplyFunction>
               <Name>MultiplyFunction</Name>
@@ -225,7 +227,9 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
                 <XProperty>[Phenology].PhotoperiodDeltaFunction.Value()</XProperty>
               </LinearInterpolationFunction>
             </MultiplyFunction>
-          </PhaseLookup>
+            <Start>Emergence</Start>
+            <End>HarvestRipe</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <Constant>
           <Name>VrnSensitivity</Name>
@@ -611,7 +615,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>BranchingRate</Name>
           <PhaseLookup>
             <Name>PotentialBranchingRate</Name>
-            <PhaseLookup>
+            <PhaseLookupValue>
               <Name>Vegetative</Name>
               <LinearInterpolationFunction>
                 <Name>PotentialBranchingRate</Name>
@@ -638,16 +642,20 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <double>20</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Structure].LeafTipsAppeared.value()</XProperty>
+                <XProperty>[Structure].LeafTipsAppeared</XProperty>
               </LinearInterpolationFunction>
-            </PhaseLookup>
-            <PhaseLookup>
+              <Start>Emergence</Start>
+              <End>TerminalSpikelet</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>Reproductive</Name>
               <Constant>
                 <Name>Zero</Name>
                 <FixedValue>0</FixedValue>
               </Constant>
-            </PhaseLookup>
+              <Start>TerminalSpikelet</Start>
+              <End>HarvestRipe</End>
+            </PhaseLookupValue>
           </PhaseLookup>
           <MinimumFunction>
             <Name>StressFactors</Name>
@@ -681,7 +689,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Arbitrator].FN.Value()</XProperty>
+              <XProperty>[Arbitrator].FN</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>Cover</Name>
@@ -698,7 +706,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>0</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Leaf].CoverTotal.Value()</XProperty>
+              <XProperty>[Leaf].CoverTotal</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>Growth</Name>
@@ -755,7 +763,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </MultiplyFunction>
         <PhaseLookup>
           <Name>BranchMortality</Name>
-          <PhaseLookup>
+          <PhaseLookupValue>
             <Name>MortalityPhase</Name>
             <MultiplyFunction>
               <Name>Mortality</Name>
@@ -781,7 +789,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
             </MultiplyFunction>
-          </PhaseLookup>
+            <Start>FlagLeaf</Start>
+            <End>Flowering</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <HeightFunction>
           <Name>HeightModel</Name>
@@ -804,7 +814,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>1200</double>
               </Y>
             </XYPairs>
-            <XProperty>[Phenology].Stage.value()</XProperty>
+            <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>WaterStress</Name>
@@ -849,7 +859,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
           </VariableReference>
           <NumberOfDays>300</NumberOfDays>
-          <InitialValue>0</InitialValue>
+          <InitialValue>80</InitialValue>
         </MovingAverageFunction>
         <DivideFunction>
           <Name>HaunStageTerminalSpikelet</Name>
@@ -882,7 +892,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </AddFunction>
         <PhaseLookup>
           <Name>ThermalTimeP</Name>
-          <PhaseLookup>
+          <PhaseLookupValue>
             <Name>SoilTemperature</Name>
             <SoilTemperatureFunction>
               <Name>SoilTemperatureFunction</Name>
@@ -902,8 +912,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <maxt_soil_surface>20</maxt_soil_surface>
               <mint_soil_surface>10</mint_soil_surface>
             </SoilTemperatureFunction>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>Sowing</Start>
+            <End>TerminalSpikelet</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>AirTemperature</Name>
             <AirTemperatureFunction>
               <Name>AirTemperatureFunction</Name>
@@ -921,7 +933,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 </Y>
               </XYPairs>
             </AirTemperatureFunction>
-          </PhaseLookup>
+            <Start>TerminalSpikelet</Start>
+            <End>HarvestRipe</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <MinimumFunction>
           <Name>MainStemFinalNodeNumber</Name>
@@ -1150,14 +1164,16 @@ N conc values are from Zhao et al 2009
           </Memo>
           <PhaseLookup>
             <Name>PartitionFraction</Name>
-            <PhaseLookup>
+            <PhaseLookupValue>
               <Name>InitialPhase</Name>
               <Constant>
                 <Name>Constant</Name>
                 <FixedValue>0.01</FixedValue>
               </Constant>
-            </PhaseLookup>
-            <PhaseLookup>
+              <Start>Flowering</Start>
+              <End>StartGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>LinearPhase</Name>
               <MultiplyFunction>
                 <Name>MultiplyFunction</Name>
@@ -1180,17 +1196,21 @@ N conc values are from Zhao et al 2009
                       <double>1</double>
                     </Y>
                   </XYPairs>
-                  <XProperty>[Leaf].Fw.Value()</XProperty>
+                  <XProperty>[Leaf].Fw</XProperty>
                 </LinearInterpolationFunction>
               </MultiplyFunction>
-            </PhaseLookup>
-            <PhaseLookup>
+              <Start>StartGrainFill</Start>
+              <End>EndGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>Ripening</Name>
               <Constant>
                 <Name>Constant</Name>
                 <FixedValue>0</FixedValue>
               </Constant>
-            </PhaseLookup>
+              <Start>EndGrainFill</Start>
+              <End>HarvestRipe</End>
+            </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
         <ExpressionFunction>
@@ -1225,7 +1245,7 @@ N conc values are from Zhao et al 2009
         </Constant>
         <PhaseLookup>
           <Name>NFillingRate</Name>
-          <PhaseLookup>
+          <PhaseLookupValue>
             <Name>GrainFilling</Name>
             <FillingRateFunction>
               <Name>FillingRateFunction</Name>
@@ -1261,7 +1281,9 @@ N conc values are from Zhao et al 2009
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
-          </PhaseLookup>
+            <Start>Flowering</Start>
+            <End>EndGrainFill</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
@@ -1376,27 +1398,33 @@ N conc values are from Zhao et al 2009
         </Constant>
         <PhaseLookup>
           <Name>PartitionFraction</Name>
-          <PhaseLookup>
+          <PhaseLookupValue>
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Value</Name>
               <FixedValue>0</FixedValue>
             </Constant>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>Germination</Start>
+            <End>Emergence</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>PreFlowering</Name>
             <Constant>
               <Name>Value</Name>
               <FixedValue>0.2</FixedValue>
             </Constant>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>Emergence</Start>
+            <End>Flowering</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>PostFlowering</Name>
             <Constant>
               <Name>Value</Name>
               <FixedValue>0</FixedValue>
             </Constant>
-          </PhaseLookup>
+            <Start>Flowering</Start>
+            <End>EndGrainFill</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -1408,20 +1436,24 @@ N conc values are from Zhao et al 2009
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
-          <PhaseLookup>
+          <PhaseLookupValue>
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Value</Name>
               <FixedValue>5</FixedValue>
             </Constant>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>Germination</Start>
+            <End>Emergence</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>PostEmergence</Name>
             <Constant>
               <Name>Value</Name>
               <FixedValue>20</FixedValue>
             </Constant>
-          </PhaseLookup>
+            <Start>Emergence</Start>
+            <End>Maturity</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1627,7 +1659,7 @@ N conc values are from Zhao et al 2009
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Oats].Leaf.Fn.Value()</XProperty>
+              <XProperty>[Oats].Leaf.Fn</XProperty>
             </LinearInterpolationFunction>
           </MinimumFunction>
           <MinimumFunction>
@@ -1725,7 +1757,7 @@ N conc values are from Zhao et al 2009
           </MultiplyFunction>
           <PhaseLookup>
             <Name>LagDurationP</Name>
-            <PhaseLookup>
+            <PhaseLookupValue>
               <Name>VegetativeGrowth</Name>
               <MultiplyFunction>
                 <Name>LagDuration</Name>
@@ -1773,8 +1805,10 @@ N conc values are from Zhao et al 2009
                   <FixedValue>1</FixedValue>
                 </Constant>
               </MultiplyFunction>
-            </PhaseLookup>
-            <PhaseLookup>
+              <Start>Emergence</Start>
+              <End>TerminalSpikelet</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>StemElongation</Name>
               <SubtractFunction>
                 <Name>LagDuration</Name>
@@ -1802,7 +1836,9 @@ N conc values are from Zhao et al 2009
                   <Expression>[Leaf].CohortParameters.SenescenceDuration.Value()</Expression>
                 </ExpressionFunction>
               </SubtractFunction>
-            </PhaseLookup>
+              <Start>TerminalSpikelet</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
           </PhaseLookup>
           <MultiplyFunction>
             <Name>LagDuration</Name>
@@ -2019,7 +2055,7 @@ N conc values are from Zhao et al 2009
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
           <AddFunction>
-            <Name>DroughtInducedSenAcceleration</Name>
+            <Name>DroughtInducedLagAcceleration</Name>
             <Constant>
               <Name>One</Name>
               <FixedValue>1</FixedValue>
@@ -2048,7 +2084,7 @@ N conc values are from Zhao et al 2009
             </MultiplyFunction>
           </AddFunction>
           <AddFunction>
-            <Name>DroughtInducedLagAcceleration</Name>
+            <Name>DroughtInducedSenAcceleration</Name>
             <Constant>
               <Name>One</Name>
               <FixedValue>1</FixedValue>
@@ -2157,20 +2193,24 @@ N conc values are from Zhao et al 2009
           </MultiplyFunction>
           <PhaseLookup>
             <Name>StructuralFraction</Name>
-            <PhaseLookup>
+            <PhaseLookupValue>
               <Name>VegetativeGrowth</Name>
               <Constant>
                 <Name>Constant</Name>
                 <FixedValue>0.5</FixedValue>
               </Constant>
-            </PhaseLookup>
-            <PhaseLookup>
+              <Start>Emergence</Start>
+              <End>StartGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>StemElongation</Name>
               <Constant>
                 <Name>Constant</Name>
                 <FixedValue>0</FixedValue>
               </Constant>
-            </PhaseLookup>
+              <Start>StartGrainFill</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
           </PhaseLookup>
         </LeafCohortParameters>
         <RUEModel>
@@ -2232,7 +2272,7 @@ N conc values are from Zhao et al 2009
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Leaf].Fn.Value()</XProperty>
+            <XProperty>[Leaf].Fn</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>FW</Name>
@@ -2491,20 +2531,24 @@ N conc values are from Zhao et al 2009
         </PhaseBasedSwitch>
         <PhaseLookup>
           <Name>DMRetranslocationFactor</Name>
-          <PhaseLookup>
+          <PhaseLookupValue>
             <Name>VegetativeGrowth</Name>
             <Constant>
               <Name>DMRetranslocationFactor</Name>
               <FixedValue>0</FixedValue>
             </Constant>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>Emergence</Start>
+            <End>StartGrainFill</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>ReproductiveGrowth</Name>
             <Constant>
               <Name>DMRetranslocationFactor</Name>
               <FixedValue>0.5</FixedValue>
             </Constant>
-          </PhaseLookup>
+            <Start>StartGrainFill</Start>
+            <End>EndGrainFill</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <Constant>
           <Name>InitialWtFunction</Name>
@@ -2544,34 +2588,42 @@ N conc values are from Zhao et al 2009
         </Biomass>
         <PhaseLookup>
           <Name>StructuralFraction</Name>
-          <PhaseLookup>
+          <PhaseLookupValue>
             <Name>VegetativeGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
               <FixedValue>0.7</FixedValue>
             </Constant>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>Sowing</Start>
+            <End>FlagLeaf</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>ReproductiveGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
               <FixedValue>0.7</FixedValue>
             </Constant>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>FlagLeaf</Start>
+            <End>Flowering</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>GrainFilling</Name>
             <Constant>
               <Name>Fraction</Name>
               <FixedValue>1</FixedValue>
             </Constant>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>Flowering</Start>
+            <End>EndGrainFill</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>EndStemGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
               <FixedValue>1</FixedValue>
             </Constant>
-          </PhaseLookup>
+            <Start>EndGrainFill</Start>
+            <End>Maturity</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -2625,37 +2677,45 @@ N conc values are from Zhao et al 2009
         </Constant>
         <PhaseLookup>
           <Name>NRetranslocationFactor</Name>
-          <PhaseLookup>
+          <PhaseLookupValue>
             <Name>VegetativeGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
               <FixedValue>0</FixedValue>
             </Constant>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>Sowing</Start>
+            <End>Flowering</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>ReproductiveGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
               <FixedValue>0.5</FixedValue>
             </Constant>
-          </PhaseLookup>
+            <Start>Flowering</Start>
+            <End>HarvestRipe</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <PhaseLookup>
           <Name>DMRetranslocationFactor</Name>
-          <PhaseLookup>
+          <PhaseLookupValue>
             <Name>VegetativeGrowth</Name>
             <Constant>
               <Name>DMRetranslocationFactor</Name>
               <FixedValue>0</FixedValue>
             </Constant>
-          </PhaseLookup>
-          <PhaseLookup>
+            <Start>Emergence</Start>
+            <End>StartGrainFill</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
             <Name>ReproductiveGrowth</Name>
             <Constant>
               <Name>DMRetranslocationFactor</Name>
               <FixedValue>0.5</FixedValue>
             </Constant>
-          </PhaseLookup>
+            <Start>StartGrainFill</Start>
+            <End>EndGrainFill</End>
+          </PhaseLookupValue>
         </PhaseLookup>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -2665,28 +2725,34 @@ N conc values are from Zhao et al 2009
               <Name>memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <PhaseLookup>
+            <PhaseLookupValue>
               <Name>PreStemElongation</Name>
               <Constant>
                 <Name>StemFraction</Name>
                 <FixedValue>0.4</FixedValue>
               </Constant>
-            </PhaseLookup>
-            <PhaseLookup>
+              <Start>Emergence</Start>
+              <End>TerminalSpikelet</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>StemElongation</Name>
               <Constant>
                 <Name>StemFraction</Name>
                 <FixedValue>0.6</FixedValue>
               </Constant>
-            </PhaseLookup>
-            <PhaseLookup>
+              <Start>TerminalSpikelet</Start>
+              <End>FlagLeaf</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>EarEmergence</Name>
               <Constant>
                 <Name>StemFraction</Name>
                 <FixedValue>0.4</FixedValue>
               </Constant>
-            </PhaseLookup>
-            <PhaseLookup>
+              <Start>FlagLeaf</Start>
+              <End>Flowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>PostEarEmergence</Name>
               <Constant>
                 <Name>StemFraction</Name>
@@ -2699,8 +2765,10 @@ N conc values are from Zhao et al 2009
                   <FixedValue>0</FixedValue>
                 </Constant>
               </SubtractFunction>
-            </PhaseLookup>
-            <PhaseLookup>
+              <Start>Flowering</Start>
+              <End>StartGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>BGF</Name>
               <Constant>
                 <Name>StemFraction</Name>
@@ -2713,8 +2781,10 @@ N conc values are from Zhao et al 2009
                   <FixedValue>0</FixedValue>
                 </Constant>
               </SubtractFunction>
-            </PhaseLookup>
-            <PhaseLookup>
+              <Start>StartGrainFill</Start>
+              <End>EndGrainFill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
               <Name>PostGrainFill</Name>
               <Constant>
                 <Name>One</Name>
@@ -2724,7 +2794,9 @@ N conc values are from Zhao et al 2009
                 <Name>VariableReference</Name>
                 <VariableName>[Grain].PartitionFraction.Value()</VariableName>
               </VariableReference>
-            </PhaseLookup>
+              <Start>EndGrainFill</Start>
+              <End>HarvestRipe</End>
+            </PhaseLookupValue>
           </PhaseLookup>
         </PartitionFractionDemandFunction>
         <BiomassRemoval>
@@ -2898,40 +2970,40 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Name>Cultivars</Name>
         <Cultivar>
           <Name>Drummond</Name>
-          <Command>[Phenology].MinimumLeafNumber.FixedValue =9</Command>
-          <Command>[Phenology].VrnSensitivity.FixedValue =7</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue =3</Command>
-          <Command>[Structure].BasePhyllochron.FixedValue =80</Command>
+          <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+          <Command>[Structure].BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Milton</Name>
-          <Command>[Phenology].MinimumLeafNumber.FixedValue =9</Command>
-          <Command>[Phenology].VrnSensitivity.FixedValue =7</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue =3</Command>
-          <Command>[Structure].BasePhyllochron.FixedValue =100</Command>
+          <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+          <Command>[Structure].BasePhyllochron.FixedValue = 100</Command>
         </Cultivar>
         <Cultivar>
           <Name>Hokunui</Name>
-          <Command>[Phenology].MinimumLeafNumber.FixedValue =9</Command>
-          <Command>[Phenology].VrnSensitivity.FixedValue =7</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue =3</Command>
-          <Command>[Structure].BasePhyllochron.FixedValue =82</Command>
-          <Command>[Structure].PPSlope.FixedValue =0.4</Command>
+          <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+          <Command>[Structure].BasePhyllochron.FixedValue = 82</Command>
+          <Command>[Structure].PPSlope.FixedValue = 0.4</Command>
         </Cultivar>
         <Cultivar>
           <Name>Stampede</Name>
-          <Command>[Phenology].MinimumLeafNumber.FixedValue =9</Command>
-          <Command>[Phenology].VrnSensitivity.FixedValue =7</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue =3</Command>
-          <Command>[Structure].BasePhyllochron.FixedValue =82</Command>
-          <Command>[Structure].PPSlope.FixedValue =0.4</Command>
+          <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+          <Command>[Structure].BasePhyllochron.FixedValue = 82</Command>
+          <Command>[Structure].PPSlope.FixedValue = 0.4</Command>
         </Cultivar>
         <Cultivar>
           <Name>Milton1</Name>
-          <Command>[Phenology].MinimumLeafNumber.FixedValue =15</Command>
-          <Command>[Phenology].VrnSensitivity.FixedValue =7</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue =3</Command>
-          <Command>[Structure].MaxLN.FixedValue =15</Command>
+          <Command>[Phenology].MinimumLeafNumber.FixedValue = 15</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+          <Command>[Structure].MaxLN.FixedValue = 15</Command>
         </Cultivar>
       </CultivarFolder>
       <CropType>Wheat</CropType>
@@ -2987,15 +3059,15 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].Leaf.Transpiration</string>
         <string>[Oats].Phenology.CurrentPhaseName</string>
         <string>[Oats].Phenology.CurrentStageName</string>
-        <string>[Oats].Phenology.DailyVernalisation.Value</string>
-        <string>[Oats].Phenology.MeanTemp.Value</string>
-        <string>[Oats].Phenology.Photoperiod.Value</string>
+        <string>[Oats].Phenology.DailyVernalisation.Value()</string>
+        <string>[Oats].Phenology.MeanTemp.Value()</string>
+        <string>[Oats].Phenology.Photoperiod.Value()</string>
         <string>[Oats].Phenology.Stage</string>
-        <string>[Oats].Phenology.ThermalTime.Value</string>
-        <string>[Oats].Phenology.ThermalTime.Value  </string>
-        <string>[Oats].Phenology.Vrn1.Value</string>
-        <string>[Oats].Phenology.Vrn2.Value</string>
-        <string>[Oats].Phenology.Vrn4.Value</string>
+        <string>[Oats].Phenology.ThermalTime.Value()</string>
+        <string>[Oats].Phenology.ThermalTime.Value()  </string>
+        <string>[Oats].Phenology.Vrn1.Value()</string>
+        <string>[Oats].Phenology.Vrn2.Value()</string>
+        <string>[Oats].Phenology.Vrn4.Value()</string>
         <string>[Oats].Phenology.Zadok.Stage</string>
         <string>[Oats].Root.Depth</string>
         <string>[Oats].Root.N</string>
@@ -3014,14 +3086,14 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].StemPlusSpike.Wt</string>
         <string>[Oats].StemPlusSpike.N</string>
         <string>[Oats].SowingData.Cultivar</string>
-        <string>[Oats].Structure.HaunStage.ValueTerminalSpikelet.Value</string>
-        <string>[Oats].Structure.HaunStage.Value</string>
+        <string>[Oats].Structure.HaunStage.Value()TerminalSpikelet.Value()</string>
+        <string>[Oats].Structure.HaunStage.Value()</string>
         <string>[Oats].Structure.Height</string>
         <string>[Oats].Structure.LeafTipsAppeared</string>
-        <string>[Oats].Structure.MainStemFinalNodeNumber.Value</string>
-        <string>[Oats].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value</string>
+        <string>[Oats].Structure.MainStemFinalNodeNumber.Value()</string>
+        <string>[Oats].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
         <string>[Oats].Structure.MainStemPopn</string>
-        <string>[Oats].Structure.MeanTillerGrowthRate.Value</string>
+        <string>[Oats].Structure.MeanTillerGrowthRate.Value()</string>
         <string>[Oats].Structure.TotalStemPopn</string>
         <string>[Oats].Total.N</string>
         <string>[Oats].Total.Wt</string>
@@ -3034,7 +3106,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].Phenology.PhotoPeriod</string>
         <string>[Oats].Phenology.PhotoPeriodDeltaFunction</string>
         <string>[Oats].Phenology.Stage</string>
-        <string>[Oats].Phenology.SoilTemperatureFunction.Value</string>
+        <string>[Oats].Phenology.SoilTemperatureFunction.Value()</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -4336,9 +4408,9 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Phenology].ThermalTime.Value</string>
+            <string>[Phenology].ThermalTime.Value()</string>
             <string>[Leaf].CohortSize</string>
-            <string>[Leaf].CohortParameters.MaxArea.Value</string>
+            <string>[Leaf].CohortParameters.MaxArea.Value()</string>
             <string>[0ats].Arbitrator.DMAllocated</string>
             <string>[0ats].Arbitrator.DMDemand</string>
             <string>[0ats].Arbitrator.DMNutrientLimitation</string>
@@ -4348,18 +4420,18 @@ namespace Models
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
-            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.LagDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FT.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FVPD.Value</string>
+            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
             <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
-            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
+            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
             <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-            <string>[0ats].Structure.MeanTillerGrowthRate.Value</string>
+            <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
             <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
           </VariableNames>
           <EventNames>
@@ -4739,6 +4811,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType>NZ_sedementary</SoilType>
           <LocalName />
@@ -4813,6 +4888,9 @@ namespace Models
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -8589,19 +8667,19 @@ namespace Models
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
-            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.LagDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.MaxArea.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FT.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FVPD.Value</string>
+            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.MaxArea.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
             <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
-            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
+            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
             <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-            <string>[0ats].Structure.MeanTillerGrowthRate.Value</string>
+            <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
             <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
           </VariableNames>
           <EventNames>
@@ -8970,6 +9048,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -8996,6 +9077,9 @@ namespace Models
             <string>[Clock].EndOfSimulation</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -9747,19 +9831,19 @@ namespace Models
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
-            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.LagDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.MaxArea.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FT.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FVPD.Value</string>
+            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.MaxArea.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
             <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
-            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
+            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
             <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-            <string>[0ats].Structure.MeanTillerGrowthRate.Value</string>
+            <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
             <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
           </VariableNames>
           <EventNames>
@@ -10128,6 +10212,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -10138,6 +10225,9 @@ namespace Models
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -10778,19 +10868,19 @@ namespace Models
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
-            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.LagDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.MaxArea.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FT.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FVPD.Value</string>
+            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.MaxArea.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
             <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
-            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
+            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
             <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-            <string>[0ats].Structure.MeanTillerGrowthRate.Value</string>
+            <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
             <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
           </VariableNames>
           <EventNames>
@@ -11159,6 +11249,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -11189,6 +11282,9 @@ namespace Models
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -11753,19 +11849,19 @@ namespace Models
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
-            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.LagDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.MaxArea.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FT.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FVPD.Value</string>
+            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.MaxArea.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
             <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
-            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
+            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
             <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-            <string>[0ats].Structure.MeanTillerGrowthRate.Value</string>
+            <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
             <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
           </VariableNames>
           <EventNames>
@@ -12134,6 +12230,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -12144,6 +12243,9 @@ namespace Models
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -12663,19 +12765,19 @@ namespace Models
             <string>[0ats].Arbitrator.FN</string>
             <string>[0ats].Arbitrator.NDemand</string>
             <string>[0ats].Leaf.CohortMaxSize</string>
-            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.LagDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.MaxArea.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FT.Value</string>
-            <string>[0ats].Leaf.Photosynthesis.FVPD.Value</string>
+            <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.MaxArea.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+            <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+            <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
             <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
-            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
+            <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+            <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
             <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-            <string>[0ats].Structure.MeanTillerGrowthRate.Value</string>
+            <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
             <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
           </VariableNames>
           <EventNames>
@@ -13044,6 +13146,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -13054,6 +13159,9 @@ namespace Models
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
