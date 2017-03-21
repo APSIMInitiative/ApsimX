@@ -13498,51 +13498,6 @@ This experiment is part of the ongoing Cultivar Prediction Trial at Plant & Food
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Graph>
   <Graph>
-    <Name>Leaf Weight</Name>
-    <Series>
-      <Name>Series</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16777216</ColourArgb>
-      <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>DailyObsPred</TableName>
-      <XFieldName>Observed.Oats.Leaf.Live.Wt</XFieldName>
-      <YFieldName>Predicted.Oats.Leaf.Live.Wt</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
-      <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
     <Name>Grain Weight</Name>
     <Series>
       <Name>Series</Name>
