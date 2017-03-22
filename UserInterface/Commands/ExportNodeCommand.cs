@@ -153,6 +153,7 @@ namespace UserInterface.Commands
                             IModel dataStore = Apsim.Child(modelToExport, "DataStore");
                             if (dataStore != null)
                             {
+                                tags.Add(new AutoDocumentation.NewPage());
                                 tags.Add(new AutoDocumentation.Heading("Statistics", headingLevel + 1));
                                 AddValidationTags(tags, dataStore, headingLevel + 2, workingDirectory);
                             }
@@ -654,21 +655,26 @@ namespace UserInterface.Commands
                 else if (tag is Map)
                 {
                     Form f = new Form();
-                    f.Width = 700; // 1100;
-                    f.Height = 500; // 600;
+                    f.FormBorderStyle = FormBorderStyle.None;
+                    f.Width = 650; // 1100;
+                    f.Height = 600; // 600;
                     MapPresenter mapPresenter = new MapPresenter();
                     MapView mapView = new MapView();
                     mapView.BackColor = System.Drawing.Color.White;
                     mapView.Parent = f;
                     (mapView as Control).Dock = DockStyle.Fill;
                     f.Show();
-
+                    (tag as Map).Zoom = 1.4;
                     mapPresenter.Attach(tag, mapView, ExplorerPresenter);
-
+                    
                     Application.DoEvents();
                     Thread.Sleep(2000);
                     Application.DoEvents();
+
                     string PNGFileName = mapPresenter.ExportToPDF(workingDirectory);
+                    var Image = new Bitmap(f.Width, f.Height);
+                    f.DrawToBitmap(Image, new Rectangle(0, 0, f.Width, f.Height));
+                    Image.Save(PNGFileName);
                     section.AddImage(PNGFileName);
                     mapPresenter.Detach();
 
