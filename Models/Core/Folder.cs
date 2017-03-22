@@ -30,7 +30,8 @@ namespace Models.Core
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             // add a heading.
-            tags.Add(new AutoDocumentation.NewPage());
+            if (!(tags.Last() is AutoDocumentation.Heading))
+                tags.Add(new AutoDocumentation.NewPage());
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write any memo children.
