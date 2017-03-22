@@ -38,7 +38,7 @@ namespace UserInterface.Commands
                                                   " class=\"tab7\"", " class=\"tab8\"", " class=\"tab9\""};
 
         // Setup a list of model types that we will recurse down through.
-        private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
+        private static Type[] modelTypesToRecurseDown = new Type[] {//typeof(Folder),
                                                                     typeof(Simulations),
                                                                     typeof(Simulation),
                                                                     typeof(Experiment),
@@ -142,7 +142,7 @@ namespace UserInterface.Commands
 
                 if (!ignoreChild)
                 {
-                    if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
+                    if (child.Name == "Validation" || Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
                         tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel));
                         string childFolderPath = Path.Combine(workingDirectory, child.Name);
@@ -158,7 +158,8 @@ namespace UserInterface.Commands
                             }
                         }
                     }
-                    else if (child.Name != "TitlePage" && child.Name != "Introduction" && (child is Memo || child is Graph || child is Map || child is Tests))
+                    else if (child.Name != "TitlePage" && child.Name != "Introduction" && 
+                             (child is Folder || child is Memo || child is Graph || child is Map || child is Tests))
                         child.Document(tags, headingLevel, 0);
                 }
             }
@@ -179,6 +180,9 @@ namespace UserInterface.Commands
 
             Document document = new Document();
             CreatePDFSyles(document);
+            document.DefaultPageSetup.LeftMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
+            document.DefaultPageSetup.TopMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
+            document.DefaultPageSetup.BottomMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
             Section section = document.AddSection();
 
             // write image files
@@ -465,7 +469,7 @@ namespace UserInterface.Commands
 
             // Export graph to bitmap file.
             Bitmap image = new Bitmap(400, 250);
-            graph.Export(image, false);
+            graph.Export(image, new Rectangle(0, 0, image.Width, image.Height), false);
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
             MigraDoc.DocumentObjectModel.Shapes.Image image1 = row.Cells[0].AddImage(PNGFileName);
 
@@ -485,6 +489,49 @@ namespace UserInterface.Commands
 
             // Add an empty paragraph for spacing.
             Paragraph spacing = section.AddParagraph();
+        }
+
+        /// <summary>Creates the graph page.</summary>
+        /// <param name="section">The section to write to.</param>
+        /// <param name="graphPage">The graph and table to convert to html.</param>
+        /// <param name="workingDirectory">The working directory.</param>
+        private void CreateGraphPage(Section section, GraphPage graphPage, string workingDirectory)
+        {
+            int numColumns = 2;
+            int numRows = 3;
+
+            // Export graph to bitmap file.
+            Bitmap image = new Bitmap(700, 850);
+
+            GraphPresenter graphPresenter = new GraphPresenter();
+            GraphView graphView = new GraphView();
+            graphView.BackColor = System.Drawing.Color.White;
+            graphView.FontSize = 10;
+            graphView.MarkerSize = 4;
+            graphView.Width = image.Width / numColumns;
+            graphView.Height = image.Height / numRows;
+
+            int col = 0;
+            int row = 0;
+            for (int i = 0; i < graphPage.graphs.Count; i++)
+            {
+                graphPresenter.Attach(graphPage.graphs[i], graphView, ExplorerPresenter);
+                Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height, 
+                                            graphView.Width, graphView.Height);
+                graphView.Export(image, r, false);
+                graphPresenter.Detach();
+                col++;
+                if (col >= numColumns)
+                {
+                    col = 0;
+                    row++;
+                }
+            }
+
+            string PNGFileName = Path.Combine(workingDirectory, graphPage.name + ".png");
+            image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
+            section.AddImage(PNGFileName);
+
         }
 
         /// <summary>Creates the table.</summary>
@@ -576,6 +623,14 @@ namespace UserInterface.Commands
                 {
                     CreateGraphPDF(section, tag as AutoDocumentation.GraphAndTable, workingDirectory);
                 }
+                else if (tag is GraphPage)
+                {
+                    CreateGraphPage(section, tag as GraphPage, workingDirectory);
+                }
+                else if (tag is AutoDocumentation.NewPage)
+                {
+                    section.AddPageBreak();
+                }
                 else if (tag is AutoDocumentation.Table)
                 {
                     CreateTable(section, tag as AutoDocumentation.Table, workingDirectory);
@@ -605,8 +660,8 @@ namespace UserInterface.Commands
                     MapView mapView = new MapView();
                     mapView.BackColor = System.Drawing.Color.White;
                     mapView.Parent = f;
-                    (mapView as Control).Dock = DockStyle.Fill; 
-                    f.Show(); 
+                    (mapView as Control).Dock = DockStyle.Fill;
+                    f.Show();
 
                     mapPresenter.Attach(tag, mapView, ExplorerPresenter);
 
