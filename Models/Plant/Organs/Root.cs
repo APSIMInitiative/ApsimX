@@ -367,32 +367,20 @@ namespace Models.PMF.Organs
             Zones.Clear();
         }
 
-        /// <summary>Gets the root zone Water tension .</summary>
-        [Units("%")]
-        public double WaterTension
+        /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
+        [Units("0-1")]
+        public double WaterTensionFactor
         {
             get
             {
-                if ((PlantZone == null) || (PlantZone.soil == null))
-                    return 1;
-                double[] value = new double[PlantZone.soil.Thickness.Length];
-                double d = this.Depth; //current root dpeth
-                double D = 0;
-                int i = 0;
-                double tot = 0;
-                for (i = 0; (i < PlantZone.soil.Thickness.Length) && (D < d); i++)
-                    if (i <= Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness))
-                    {
-                        D += PlantZone.soil.Thickness[i];
-                        value[i] = Math.Min(2 * ((PlantZone.soil.SoilWater.SWmm[i] - PlantZone.soil.SoilWater.LL15mm[i]) / (PlantZone.soil.SoilWater.DULmm[i] - PlantZone.soil.SoilWater.LL15mm[i])), 1);
-                        //value[i] = PlantZone.soil.SoilWater.SWmm[i] / PlantZone.soil.SoilWater.DULmm[i];
-                        tot += value[i];
-                    }
-                    else break;
+                double MeanWTF = 0;
+                
+                if (Live.Wt > 0)
+                   foreach (ZoneState Z in Zones)
+                       for (int i = 0; i < Z.LayerLive.Length; i++)
+                           MeanWTF += Z.LayerLive[i].Wt/ Live.Wt * MathUtilities.Bound(2 * Z.soil.PAW[i] / Z.soil.PAWC[i], 0, 1);
 
-                if (i == 0)
-                    return 1;
-                return tot / (double)i;
+                return MeanWTF;
             }
         }
 
