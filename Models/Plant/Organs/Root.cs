@@ -56,6 +56,7 @@ namespace Models.PMF.Organs
         /// <summary>The arbitrator</summary>
         [Link]
         OrganArbitrator Arbitrator = null;
+
         #endregion
 
         #region Parameters
@@ -341,14 +342,10 @@ namespace Models.PMF.Organs
                 ZoneState zone = Zones.Find(z => z.Name == thisZone.Zone.Name);
                 if (zone != null)
                 {
+                    zone.solutes.Subtract("NO3", thisZone.NO3N);
+                    zone.solutes.Subtract("NH4", thisZone.NH4N);
 
-                    // Send the delta water back to SoilN that we're going to uptake.
-                    NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-                    NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(thisZone.NO3N, -1.0);
-                    NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(thisZone.NH4N, -1.0);
-
-                    zone.NitUptake = MathUtilities.Add(NitrogenUptake.DeltaNO3, NitrogenUptake.DeltaNH4);
-                    zone.soil.SoilNitrogen.SetNitrogenChanged(NitrogenUptake);
+                    zone.NitUptake = MathUtilities.Multiply_Value(MathUtilities.Add(thisZone.NO3N, thisZone.NH4N), -1);
                 }
             }
         }
@@ -848,7 +845,6 @@ namespace Models.PMF.Organs
             if (myZone == null)
                 return null;
 
-            SoilCrop crop = myZone.soil.Crop(Plant.Name) as SoilCrop;
             double[] supply = new double[myZone.soil.Thickness.Length];
             double[] layerMidPoints = Soil.ToMidPoints(myZone.soil.Thickness);
             for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
@@ -857,8 +853,8 @@ namespace Models.PMF.Organs
                 {
                     if (myZone.soil.Weirdo == null)
                     {
-                        supply[layer] = Math.Max(0.0, crop.KL[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
-                            (zone.Water[layer] - crop.LL[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
+                        supply[layer] = Math.Max(0.0, myZone.soil.KL(Plant.Name)[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
+                            (zone.Water[layer] - myZone.soil.LL(Plant.Name)[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
                     }
                     else supply[layer] = 0; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
                 }

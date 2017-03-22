@@ -65,16 +65,16 @@ namespace Models.PMF
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
-        public double FDM { get { return MathUtilities.Divide(DM.TotalPlantSupply, DM.TotalPlantDemand, 0); } }
+        public double FDM { get { return DM == null ? 0 : MathUtilities.Divide(DM.TotalPlantSupply, DM.TotalPlantDemand, 0); } }
 
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
-        public double DeltaWt { get { return DM.End - DM.Start; } }
+        public double DeltaWt { get { return DM == null ? 0 : (DM.End - DM.Start); } }
 
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
-        public double FN { get { return MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
+        public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
 
         /// <summary>Gets the water supply.</summary>
         /// <value>The water supply.</value>

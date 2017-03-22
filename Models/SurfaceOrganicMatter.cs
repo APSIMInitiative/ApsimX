@@ -46,6 +46,11 @@
         /// </summary>
         [Link]
         private IWeather weather = null;
+
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
+
         #endregion
 
         // ====================================================================
@@ -1525,9 +1530,6 @@
         /// <summary>Occurs when [surface o m_removed].</summary>
         public event SurfaceOM_removedDelegate SurfaceOM_removed;
 
-        /// <summary>Occurs when [nitrogen changed].</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
-
         #endregion
 
         #region event handlers
@@ -1716,7 +1718,8 @@
         [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
         private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs args)
         {
-            DecomposeSurfom(ActualSOMDecomp);
+            if (ActualSOMDecomp != null)
+                DecomposeSurfom(ActualSOMDecomp);
         }
 
         /// <summary>
@@ -2231,16 +2234,8 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                NitrogenChangedType NitrogenChanges = new NitrogenChangedType();
-                NitrogenChanges.Sender = "SurfaceOrganicMatter";
-                NitrogenChanges.SenderType = "SurfaceOrganicMatter";
-                NitrogenChanges.DeltaNH4 = new double[dlayer.Length];
-                NitrogenChanges.DeltaNO3 = new double[dlayer.Length];
-                NitrogenChanges.DeltaUrea = new double[dlayer.Length];
-                NitrogenChanges.DeltaNH4[0] = nh4Incorp;
-                NitrogenChanges.DeltaNO3[0] = no3Incorp;
-
-                NitrogenChanged.Invoke(NitrogenChanges);
+                solutes.AddToTopLayer("NH4", nh4Incorp);
+                solutes.AddToTopLayer("NO3", no3Incorp);
 
                 if (phosphorusAware)
                 {

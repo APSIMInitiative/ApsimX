@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -26,12 +26,12 @@ The partitioning of biomass to fodder beet organs follows a "Relative Allocation
 
 ]]></MemoText>
         </Memo>
-    <RelativeAllocation>
-      <Name>NArbitrator</Name>
-    </RelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -338,6 +338,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <Leaf>
         <Name>Leaf</Name>
@@ -754,6 +755,10 @@ Needs test and imperovement to isolate soil temperature effects of different the
             <Name>CellDivisionStress</Name>
             <FixedValue>1</FixedValue>
             <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <FixedValue>1</FixedValue>
           </Constant>
         </LeafCohortParameters>
         <MinimumFunction>
@@ -2098,7 +2103,6 @@ Needs test and imperovement to isolate soil temperature effects of different the
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <Plant>
         <Name>FodderBeet</Name>
@@ -4137,7 +4141,6 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <Plant>
         <Name>FodderBeet</Name>
@@ -6635,7 +6638,6 @@ namespace Models
         <Country>New Zealand</Country>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
         <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
         <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
       </Soil>
@@ -8680,7 +8682,6 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Plant>
           <Name>FodderBeet</Name>

@@ -78,8 +78,10 @@ namespace Models.PMF.Functions
             double XValue;
             if (v is Array)
                 XValue = (double)(v as Array).GetValue(arrayIndex);
+            else if (v is IFunction)
+                XValue = (v as IFunction).Value(arrayIndex);
             else
-                XValue = (double) v;
+                XValue = (double)v;
             return XYPairs.ValueIndexed(XValue);
         }
 
@@ -112,7 +114,7 @@ namespace Models.PMF.Functions
                 if (xProperty != null && xProperty.UnitsLabel != string.Empty)
                     xName += " " + xProperty.UnitsLabel;
 
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value") + "</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value()") + "</i>", indent));
 
                 tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
             }

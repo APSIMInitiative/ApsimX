@@ -43,7 +43,7 @@ namespace Models.Soils
             get
             {
                 if (Soil != null)
-                    return Soil.ToDepthStrings(Soil.Thickness);
+                    return Soil.ToDepthStrings(Soil.WaterNodeThickness);
                 else
                     return new string[0];
             }
@@ -56,7 +56,7 @@ namespace Models.Soils
         [Description("LL")]
         [Units("mm/mm")]
         public double[] LL { get; set; }
-
+        
         /// <summary>
         /// Gets the plant available water by layer
         /// </summary>
@@ -70,7 +70,7 @@ namespace Models.Soils
             {
                 Soil parentSoil = Soil;
                 if (parentSoil != null)
-                    return MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, this.LL, parentSoil.DUL, this.XF), parentSoil.Thickness);
+                    return MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, parentSoil.LL(this.Name), parentSoil.DUL, parentSoil.XF(this.Name)), parentSoil.Thickness);
                 else
                     return new double[0];
             }

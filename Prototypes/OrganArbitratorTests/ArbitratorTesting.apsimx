@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -1762,6 +1762,37 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
           <AddFunction>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <Constant>
+              <Name>One</Name>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <MultiplyFunction>
+              <Name>Stress</Name>
+              <Constant>
+                <Name>StressResponseCoefficient</Name>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>StressFactor</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.25</double>
+                    <double>0.5</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>0.2</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+              </LinearInterpolationFunction>
+            </MultiplyFunction>
+          </AddFunction>
+          <AddFunction>
             <Name>DroughtInducedSenAcceleration</Name>
             <Constant>
               <Name>One</Name>
@@ -3389,6 +3420,9 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -6290,6 +6324,9 @@ namespace Models
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -9371,7 +9408,6 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               </Operations>
               <Specifications>
                 <string>[StateFactors].Script.NitFactor = 0</string>
-                <string>[Water]</string>
                 <string>[Fert]</string>
               </Specifications>
             </Factor>
@@ -9423,9 +9459,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <string>[Fert]</string>
               </Specifications>
             </Factor>
-            <Specifications>
-              <string>[StateFactors]</string>
-            </Specifications>
+            <Specifications />
           </Factor>
           <Factor>
             <Name>Irr</Name>
@@ -9520,7 +9554,6 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               </Operations>
               <Specifications>
                 <string>[Irrig]</string>
-                <string>[Water]</string>
                 <string>[StateFactors].Script.IrrFactor = true</string>
               </Specifications>
             </Factor>
@@ -9528,6 +9561,12 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <Name>Nil</Name>
               <Operations>
                 <Name>Nil</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <MemoText><![CDATA[Have added an extra irrigation, on 3 Nov, 
+
+Data indcates water applied but no notes of it RFZ]]></MemoText>
+                </Memo>
                 <Operation>
                   <Date>2015-09-10</Date>
                   <Action>[Irrigation].Apply(15);</Action>
@@ -9573,22 +9612,12 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
               </Operations>
-              <Memo>
-                <Name>Memo</Name>
-                <MemoText><![CDATA[Have added an extra irrigation, on 3 Nov, 
-
-Data indcates water applied but no notes of it RFZ]]></MemoText>
-              </Memo>
               <Specifications>
                 <string>[Irrig]</string>
-                <string>[Water]</string>
                 <string>[StateFactors].Script.IrrFactor = false</string>
               </Specifications>
             </Factor>
-            <Specifications>
-              <string>[Irrig]</string>
-              <string>[StateFactors]</string>
-            </Specifications>
+            <Specifications />
           </Factor>
         </Factors>
         <Simulation>
@@ -10334,6 +10363,9 @@ namespace Models
                   <double>0.34</double>
                 </SAT>
               </Water>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>NZ_sedementary</SoilType>
               <Site>-</Site>
@@ -10782,6 +10814,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>

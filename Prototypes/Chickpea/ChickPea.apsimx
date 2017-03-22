@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -103,12 +103,12 @@ The APSIM Chickpea model has been developed from the original APSIM Chickpea mod
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-    <RelativeAllocation>
-      <Name>NArbitrator</Name>
-    </RelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -939,6 +939,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <HIReproductiveOrgan>
         <Name>Grain</Name>
@@ -1807,6 +1808,10 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
             <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>DroughtInducedSenAcceleration</Name>
@@ -3844,7 +3849,6 @@ A selection of data from Kenya has been included from the work of Keating et al 
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -4833,7 +4837,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -7160,7 +7163,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -8416,7 +8418,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -9210,7 +9211,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -10011,7 +10011,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -10778,7 +10777,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -11553,7 +11551,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -12644,7 +12641,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -13389,7 +13385,6 @@ The data presented for the trials done in Emerald and Biloela were obtained from
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -14037,7 +14032,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -14982,7 +14976,6 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -16498,7 +16491,6 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -17999,7 +17991,6 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -19454,7 +19445,6 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -20975,7 +20965,6 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -21937,7 +21926,6 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -22786,7 +22774,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>NRateSchedule</Name>
@@ -23829,7 +23816,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -24920,7 +24906,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -25945,7 +25930,6 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -26671,7 +26655,6 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -27390,7 +27373,6 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -28109,7 +28091,6 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -28903,7 +28884,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -29667,7 +29647,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
@@ -30471,7 +30450,6 @@ namespace Models
               <Country>Lebanon</Country>
               <Latitude>33.675</Latitude>
               <Longitude>35.842</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -31277,7 +31255,6 @@ namespace Models
               <Country>Lebanon</Country>
               <Latitude>33.675</Latitude>
               <Longitude>35.842</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -32083,7 +32060,6 @@ namespace Models
               <Country>Lebanon</Country>
               <Latitude>33.675</Latitude>
               <Longitude>35.842</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -32868,7 +32844,6 @@ namespace Models
               <Country>Portugal</Country>
               <Latitude>38.083</Latitude>
               <Longitude>-7.583</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -33653,7 +33628,6 @@ namespace Models
               <Country>Portugal</Country>
               <Latitude>38.083</Latitude>
               <Longitude>-7.583</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -35339,7 +35313,6 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -37235,7 +37208,6 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -38209,7 +38181,6 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -39589,7 +39560,6 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>

@@ -206,7 +206,10 @@ namespace Models.PMF.Organs
             /// <summary>The shade induced senescence rate</summary>
             [Link]
             public IFunction ShadeInducedSenescenceRate = null;
-            /// <summary>The drought induced sen acceleration</summary>
+            /// <summary>The drought induced reduction of lag phase through acceleration of tt accumulation by the cohort during this phase</summary>
+            [Link]
+            public IFunction DroughtInducedLagAcceleration = null;
+            /// <summary>The drought induced reduction of senescence phase through acceleration of tt accumulation by the cohort during this phase</summary>
             [Link]
             public IFunction DroughtInducedSenAcceleration = null;
             /// <summary>The non structural fraction</summary>
@@ -553,6 +556,23 @@ namespace Models.PMF.Organs
         }
 
         //General Leaf State variables
+        /// <summary>Returns the area of the largest leaf.</summary>
+        /// <value>The area of the largest leaf</value>
+        [Units("mm2")]
+        public double AreaLargestLeaf
+        {
+            get
+            {
+                double LLA = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    LLA = Math.Max(LLA, L.MaxArea);
+                }
+
+                return LLA;
+            }
+        }
+
 
         /// <summary>Gets the live n conc.</summary>
         [Units("g/g")]

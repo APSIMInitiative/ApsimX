@@ -29,7 +29,12 @@ namespace Models.PMF.Functions
         public double Value(int arrayIndex = -1)
         {
             object o = Apsim.Get(this, VariableName.Trim());
-            return Convert.ToDouble(o);
+            if (o is IFunction)
+                return (o as IFunction).Value(arrayIndex);
+            else if (o is Array)
+                return Convert.ToDouble((o as Array).GetValue(arrayIndex));
+            else
+                return Convert.ToDouble(o);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -43,7 +48,7 @@ namespace Models.PMF.Functions
                 memo.Document(tags, -1, indent);
 
 
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + StringUtilities.RemoveTrailingString(VariableName,".Value") + "</i>", indent));
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + StringUtilities.RemoveTrailingString(VariableName,".Value()") + "</i>", indent));
         
         }
 

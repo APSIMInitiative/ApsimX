@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -24,12 +24,12 @@ The model consists of:
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-    <RelativeAllocation>
-      <Name>NArbitrator</Name>
-    </RelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -901,6 +901,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -1726,6 +1727,35 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </XYPairs>
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
+          <AddFunction>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <Constant>
+              <Name>One</Name>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <MultiplyFunction>
+              <Name>Stress</Name>
+              <Constant>
+                <Name>StressResponseCoefficient</Name>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>StressFactor</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.5</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+              </LinearInterpolationFunction>
+            </MultiplyFunction>
+          </AddFunction>
           <AddFunction>
             <Name>DroughtInducedSenAcceleration</Name>
             <Constant>
@@ -3366,6 +3396,9 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+        </CERESSoilTemperature>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>
@@ -3380,7 +3413,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <ApsoilNumber>900</ApsoilNumber>
         <Latitude>-27.581836</Latitude>
         <Longitude>151.320206</Longitude>
-        <Area>0</Area>
         <LocationAccuracy> +/- 20m</LocationAccuracy>
         <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
         <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
@@ -3576,6 +3608,9 @@ namespace Models
 }
 				]]></Code>
       </Manager>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+      </SoluteManager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
