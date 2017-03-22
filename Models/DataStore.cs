@@ -271,10 +271,11 @@ namespace Models
         }
 
         /// <summary>Delete all tables</summary>
-        public void DeleteAllTables()
+        /// <param name="cleanSlate">If true, all tables are deleted; otherwise Simulations and Messages tables are retained</param>
+        public void DeleteAllTables(bool cleanSlate = false)
         {
             foreach (string tableName in this.TableNames)
-                if (tableName != "Simulations" && tableName != "Messages")
+                if (cleanSlate || (tableName != "Simulations" && tableName != "Messages"))
                     DeleteTable(tableName);
         }
 
