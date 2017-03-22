@@ -480,6 +480,9 @@
     <Compile Include="WholeFarm\Activities\FinanceActivityPayOverhead.cs" />
     <Compile Include="WholeFarm\Activities\LabourActivityOffFarm.cs" />
     <Compile Include="WholeFarm\Activities\OtherAnimalsActivityGrow.cs" />
+    <Compile Include="WholeFarm\Activities\RuminantActivityGrazeAll.cs" />
+    <Compile Include="WholeFarm\Activities\RuminantActivityGrazePasture.cs" />
+    <Compile Include="WholeFarm\Activities\RuminantActivityGrazePastureBreed.cs" />
     <Compile Include="WholeFarm\FileAPSIM.cs" />
     <Compile Include="WholeFarm\Old\RuminantActivityFeed - Copy.cs" />
     <Compile Include="WholeFarm\Groupings\ActivityLabourRequirement.cs" />

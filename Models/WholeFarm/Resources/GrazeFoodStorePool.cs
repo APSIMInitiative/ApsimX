@@ -11,12 +11,9 @@ namespace Models.WholeFarm.Resources
 	/// A food pool of given age
 	/// </summary>
 	[Serializable]
-	public class GrazeFoodStorePool : WFModel, IFeedType
+	public class GrazeFoodStorePool : IFeedType
 	{
-		[Link]
-		ISummary Summary = null;
-
-		event EventHandler FodderChanged;
+//		event EventHandler FodderChanged;
 
 		/// <summary>
 		/// Dry Matter (%)
@@ -80,21 +77,11 @@ namespace Models.WholeFarm.Resources
 		/// <param name="UserName"></param>
 		public double Remove(double RemoveAmount, string ActivityName, string UserName)
 		{
-			if (this.amount - RemoveAmount < 0)
-			{
-				string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
-					+ "Current Amount: " + this.amount + Environment.NewLine
-					+ "Tried to Remove: " + RemoveAmount;
-				Summary.WriteWarning(this, message);
-				this.amount = 0;
-			}
-			else
-			{
-				this.amount = this.amount - RemoveAmount;
-			}
+			RemoveAmount = Math.Min(this.amount, RemoveAmount);
+			this.amount = this.amount - RemoveAmount;
 
-			if (FodderChanged != null)
-				FodderChanged.Invoke(this, new EventArgs());
+			//if (FodderChanged != null)
+			//	FodderChanged.Invoke(this, new EventArgs());
 
 			return RemoveAmount;
 		}

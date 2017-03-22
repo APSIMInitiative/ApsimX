@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
@@ -9,12 +9,14 @@
     </Weather>
     <FileAPSIM>
       <Name>File APSIM</Name>
+      <ErrorMessage />
       <FileName>forage.out</FileName>
-    </FileAPSIM> 
+    </FileAPSIM>
     <FileGRASP>
       <Name>File GRASP</Name>
+      <ErrorMessage />
       <FileName>GRASP_FZHlCk_Blk_NABSAdb.CSV</FileName>
-    </FileGRASP>      
+    </FileGRASP>
     <Clock>
       <Name>clock</Name>
       <StartDate>1993-09-21T00:00:00</StartDate>
@@ -154,7 +156,6 @@
           <GrazeFoodStoreType>
             <Name>Native Pasture</Name>
             <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
             <Nitrogen>0</Nitrogen>
             <StartingAmount>1000</StartingAmount>
             <DecayNitrogen>0.35</DecayNitrogen>
@@ -163,6 +164,9 @@
             <MinimumDMD>0.43</MinimumDMD>
             <DetachRate>0.03</DetachRate>
             <CarryoverDetachRate>0.12</CarryoverDetachRate>
+            <IntakeTropicalQualityCoefficient>0.16</IntakeTropicalQualityCoefficient>
+            <IntakeQualityCoefficient>1.7</IntakeQualityCoefficient>
+            <Area>0</Area>
           </GrazeFoodStoreType>
         </GrazeFoodStore>
         <Land>

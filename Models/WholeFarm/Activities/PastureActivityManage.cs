@@ -215,6 +215,7 @@ namespace Models.WholeFarm.Activities
 			if(ResourceRequestList.Count() > 0)
 			{
 				Area = ResourceRequestList.FirstOrDefault().Available;
+				LinkedNativeFoodType.Area = Area;
 			}
 			return;
 		}
