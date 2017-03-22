@@ -1449,17 +1449,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>0.1</double>
-                  <double>1.1</double>
-                  <double>1.3</double>
+                  <double>0</double>
+                  <double>0.7</double>
+                  <double>1</double>
                 </X>
                 <Y>
                   <double>0</double>
-                  <double>1</double>
+                  <double>0.7</double>
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+              <XProperty>[Root].WaterTension</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>TemperatuerEffect</Name>
@@ -1930,6 +1930,24 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
         </Constant>
+        <MinimumFunction>
+          <Name>LeafStress</Name>
+          <Constant>
+            <Name>One</Name>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <MaximumFunction>
+            <Name>SoilStress</Name>
+            <VariableReference>
+              <Name>Tension</Name>
+              <VariableName>[Root].WaterTension</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>Fw</Name>
+              <VariableName>[Leaft].Fw</VariableName>
+            </VariableReference>
+          </MaximumFunction>
+        </MinimumFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -2618,16 +2636,17 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8.5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>#HAve onlu set this value to aloow predicted to get past OBS</Command>
-            <Command>[Phenology].GrainDevelopment.Target.FixedValue = 480</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].GrainDevelopment.Target.FixedValue = 120</Command>
+            <Command>[Phenology].GrainFilling.Target.FixedValue = 545</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.08</Command>
             <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600</Command>
-            <Command>[Leaf].CohortParameters.SenescenceDuration.Multiplier.FixedValue = 4.2</Command>
-            <Command>[Leaf].CohortParameters.GrowthDuration.Multiplier.FixedValue = 1.8</Command>
-            <Command>[Leaf].CohortParameters.LagDuration.VegetativeGrowth.LagDuration.Multiplier.FixedValue = 1.5</Command>
+            <Command>[Leaf].CohortParameters.SenescenceDuration.Multiplier.FixedValue = 3</Command>
+            <Command>[Leaf].CohortParameters.GrowthDuration.Multiplier.FixedValue = 1.0</Command>
+            <Command>[Leaf].CohortParameters.LagDuration.VegetativeGrowth.LagDuration.Multiplier.FixedValue = 1</Command>
             <Command>[Grain].NumberFunction.ValueToHold.GrainsPerGramOfStem.FixedValue = 50</Command>
-            <Command>[Grain].MaximumNConc.FixedValue = 0.02</Command>
+            <Command>[Grain].MaximumNConc.FixedValue = 0.03</Command>
+            <Command>[Grain].MinimumNConc.FixedValue = 0.012</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
@@ -3156,324 +3175,324 @@ namespace Models
           <RegrStats>
             <Name>ET</Name>
             <n>123</n>
-            <Slope>1.1296885790988829</Slope>
-            <Intercept>-0.40234878963967624</Intercept>
-            <SEslope>0.0490815890733588</SEslope>
-            <SEintercept>0.19039034150356315</SEintercept>
-            <R2>0.814063933831588</R2>
-            <RMSE>0.84409641517684708</RMSE>
-            <NSE>0.69008914396675891</NSE>
-            <ME>0.060696621806351839</ME>
-            <MAE>0.60274606454912227</MAE>
-            <RSR>0.5544287651066514</RSR>
+            <Slope>1.1306131677734679</Slope>
+            <Intercept>-0.39756438210190614</Intercept>
+            <SEslope>0.048835751805082421</SEslope>
+            <SEintercept>0.18943672442748422</SEintercept>
+            <R2>0.81582521492430282</R2>
+            <RMSE>0.84107229683438867</RMSE>
+            <NSE>0.69230578234090623</NSE>
+            <ME>0.06878221859467995</ME>
+            <MAE>0.60534411823320022</MAE>
+            <RSR>0.55244243017144812</RSR>
           </RegrStats>
           <RegrStats>
             <Name>ProfileWater</Name>
-            <n>1333</n>
-            <Slope>0.83567759517210949</Slope>
-            <Intercept>70.584085950266285</Intercept>
-            <SEslope>0.014095736232832563</SEslope>
-            <SEintercept>5.77839277404568</SEintercept>
-            <R2>0.72532977992170111</R2>
-            <RMSE>57.653798839499721</RMSE>
-            <NSE>0.70583958245478173</NSE>
-            <ME>5.526066012256333</ME>
-            <MAE>39.312557753584258</MAE>
-            <RSR>0.54216209943446692</RSR>
+            <n>577</n>
+            <Slope>1.0010306011060122</Slope>
+            <Intercept>36.883515948781849</Intercept>
+            <SEslope>0.021069795708661642</SEslope>
+            <SEintercept>7.6427656413008425</SEintercept>
+            <R2>0.79697911106876229</R2>
+            <RMSE>74.865029860935124</RMSE>
+            <NSE>0.66084880389866507</NSE>
+            <ME>37.233087664433533</ME>
+            <MAE>51.901779457273463</MAE>
+            <RSR>0.58186202178802926</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(1)</Name>
-            <n>1306</n>
-            <Slope>0.00056648674418747591</Slope>
-            <Intercept>0.18195402242555517</Intercept>
-            <SEslope>0.00012155184547614267</SEslope>
-            <SEintercept>0.0023091244679946878</SEintercept>
-            <R2>0.016383422751105714</R2>
-            <RMSE>18.935580385223041</RMSE>
-            <NSE>-0.080665971284257232</NSE>
-            <ME>-5.2090044666103843</ME>
-            <MAE>5.2560476296367744</MAE>
-            <RSR>1.0391527841589932</RSR>
+            <n>550</n>
+            <Slope>0.00015149865084901888</Slope>
+            <Intercept>0.21004979600808857</Intercept>
+            <SEslope>0.00013349913791878038</SEslope>
+            <SEintercept>0.0039078988356581572</SEintercept>
+            <R2>0.002344556086517291</R2>
+            <RMSE>29.178869120367249</RMSE>
+            <NSE>-0.21865797966871892</NSE>
+            <ME>-12.368048803483694</ME>
+            <MAE>12.438046704014587</MAE>
+            <RSR>1.1029244026167446</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(10)</Name>
             <n>8</n>
-            <Slope>-0.40806963618541359</Slope>
-            <Intercept>0.61098333327400089</Intercept>
-            <SEslope>0.19950155561106217</SEslope>
-            <SEintercept>0.085486331006050714</SEintercept>
-            <R2>0.41083179110726009</R2>
-            <RMSE>0.011320254407940735</RMSE>
-            <NSE>-3.1133837276933995</NSE>
-            <ME>0.0076772869830682641</ME>
-            <MAE>0.0091454826255100083</MAE>
-            <RSR>1.8971586021552664</RSR>
+            <Slope>-0.40804710196345029</Slope>
+            <Intercept>0.61097311010602517</Intercept>
+            <SEslope>0.19944105078102842</SEslope>
+            <SEintercept>0.085460404712333918</SEintercept>
+            <R2>0.41095190257818648</R2>
+            <RMSE>0.011319582525876448</RMSE>
+            <NSE>-3.1128954653921346</NSE>
+            <ME>0.0076767189003308853</ME>
+            <MAE>0.00914491454277263</MAE>
+            <RSR>1.8970460016083208</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(2)</Name>
-            <n>1329</n>
-            <Slope>0.00026970374013992384</Slope>
-            <Intercept>0.21057003156101684</Intercept>
-            <SEslope>7.9117277375090109E-05</SEslope>
-            <SEintercept>0.0018551225732347523</SEintercept>
-            <R2>0.008681079695027627</R2>
-            <RMSE>23.381836210362451</RMSE>
-            <NSE>-0.084034176235576963</NSE>
-            <ME>-6.5305984159324924</ME>
-            <MAE>6.5690386281997855</MAE>
-            <RSR>1.0407778339561771</RSR>
+            <n>573</n>
+            <Slope>0.00013758270558222443</Slope>
+            <Intercept>0.22137164379475274</Intercept>
+            <SEslope>9.178530521462746E-05</SEslope>
+            <SEintercept>0.0032775610353293224</SEintercept>
+            <R2>0.00391958126296621</R2>
+            <RMSE>35.609326481581704</RMSE>
+            <NSE>-0.22114965273736953</NSE>
+            <ME>-15.16309048287296</ME>
+            <MAE>15.193455771763349</MAE>
+            <RSR>1.1040917088317217</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(3)</Name>
-            <n>1329</n>
-            <Slope>0.00035981467037056171</Slope>
-            <Intercept>0.20122500340635047</Intercept>
-            <SEslope>6.76568713019246E-05</SEslope>
-            <SEintercept>0.0019728540980560815</SEintercept>
-            <R2>0.020869101188835448</R2>
-            <RMSE>29.092156977651825</RMSE>
-            <NSE>-0.084786750854224158</NSE>
-            <ME>-8.1674642402584912</ME>
-            <MAE>8.1913599450168526</MAE>
-            <RSR>1.0411390435488495</RSR>
+            <n>573</n>
+            <Slope>0.00045636307400839235</Slope>
+            <Intercept>0.19092637830551223</Intercept>
+            <SEslope>8.479071512653261E-05</SEslope>
+            <SEintercept>0.0037653852735872032</SEintercept>
+            <R2>0.048283197810327416</R2>
+            <RMSE>44.305863758034995</RMSE>
+            <NSE>-0.22236767594807461</NSE>
+            <ME>-18.935700984386802</ME>
+            <MAE>18.959205300905129</MAE>
+            <RSR>1.1046422040763693</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(4)</Name>
-            <n>1329</n>
-            <Slope>0.00041836213340136811</Slope>
-            <Intercept>0.20413825635050265</Intercept>
-            <SEslope>6.0491051957704849E-05</SEslope>
-            <SEintercept>0.0019314091215813668</SEintercept>
-            <R2>0.034791463304376991</R2>
-            <RMSE>31.857703141203693</RMSE>
-            <NSE>-0.084457889249713647</NSE>
-            <ME>-8.9342090403153485</ME>
-            <MAE>8.9469695450082884</MAE>
-            <RSR>1.0409812168563464</RSR>
+            <n>573</n>
+            <Slope>0.00057899317417038946</Slope>
+            <Intercept>0.1856112154454064</Intercept>
+            <SEslope>8.1285363940240959E-05</SEslope>
+            <SEintercept>0.0039525120527605859</SEintercept>
+            <R2>0.081604794951166681</R2>
+            <RMSE>48.517640931227362</RMSE>
+            <NSE>-0.22069910151100092</NSE>
+            <ME>-20.683688889831245</ME>
+            <MAE>20.708535095750751</MAE>
+            <RSR>1.1038880090783203</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(5)</Name>
-            <n>1329</n>
-            <Slope>0.00049635355304570108</Slope>
-            <Intercept>0.21050022637982915</Intercept>
-            <SEslope>4.9627890513139626E-05</SEslope>
-            <SEintercept>0.0016424037623360226</SEintercept>
-            <R2>0.070096689860670636</R2>
-            <RMSE>33.018231531338877</RMSE>
-            <NSE>-0.084637382703580233</NSE>
-            <ME>-9.27717632652354</ME>
-            <MAE>9.295156011803277</MAE>
-            <RSR>1.0410673620100448</RSR>
+            <n>573</n>
+            <Slope>0.00067568270925982441</Slope>
+            <Intercept>0.18926957166594349</Intercept>
+            <SEslope>7.2062097839916984E-05</SEslope>
+            <SEintercept>0.0036319533711755485</SEintercept>
+            <R2>0.13342623667719189</R2>
+            <RMSE>50.285071525990546</RMSE>
+            <NSE>-0.22237798771435324</NSE>
+            <ME>-21.512677876734177</ME>
+            <MAE>21.528471445981509</MAE>
+            <RSR>1.1046468633897786</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(6)</Name>
-            <n>1224</n>
-            <Slope>0.98535864995685585</Slope>
-            <Intercept>-0.0019718587238197471</Intercept>
-            <SEslope>0.0077499620073454411</SEslope>
-            <SEintercept>0.00195765041894919</SEintercept>
-            <R2>0.92971968302838781</R2>
-            <RMSE>0.018290811196352463</RMSE>
-            <NSE>0.91892929282021607</NSE>
-            <ME>-0.0055486875504631517</ME>
-            <MAE>0.011837414122154399</MAE>
-            <RSR>0.28461284746457249</RSR>
+            <n>468</n>
+            <Slope>1.0139967094216156</Slope>
+            <Intercept>-0.0069925682424725188</Intercept>
+            <SEslope>0.014054976074733482</SEslope>
+            <SEintercept>0.0029345978452659446</SEintercept>
+            <R2>0.91782617798183419</R2>
+            <RMSE>0.024205231958212951</RMSE>
+            <NSE>0.90476596967023959</NSE>
+            <ME>-0.00428418193495695</ME>
+            <MAE>0.01676377267964602</MAE>
+            <RSR>0.30827023666251296</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(7)</Name>
-            <n>1200</n>
-            <Slope>0.86546439468670189</Slope>
-            <Intercept>0.018339627065468961</Intercept>
-            <SEslope>0.0079234097113413966</SEslope>
-            <SEintercept>0.002295957872431342</SEintercept>
-            <R2>0.9087511104248237</R2>
-            <RMSE>0.03167213364980126</RMSE>
-            <NSE>0.854106044996221</NSE>
-            <ME>-0.019014376984707961</ME>
-            <MAE>0.022137100850336756</MAE>
-            <RSR>0.38180148861409963</RSR>
+            <n>444</n>
+            <Slope>0.99611394534463849</Slope>
+            <Intercept>-0.0042366859107645649</Intercept>
+            <SEslope>0.010183816489506201</SEslope>
+            <SEintercept>0.002116933116595574</SEintercept>
+            <R2>0.9558417985140828</R2>
+            <RMSE>0.017690278630051424</RMSE>
+            <NSE>0.95019238653383642</NSE>
+            <ME>-0.00498345366097591</ME>
+            <MAE>0.011855996165435629</MAE>
+            <RSR>0.22292472755743156</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(8)</Name>
             <n>426</n>
-            <Slope>0.93607773370552561</Slope>
-            <Intercept>0.0041121157179216661</Intercept>
-            <SEslope>0.015613561135462873</SEslope>
-            <SEintercept>0.0029799626119328755</SEintercept>
-            <R2>0.89448395211047838</R2>
-            <RMSE>0.024048077416243149</RMSE>
-            <NSE>0.88184400329256185</NSE>
-            <ME>-0.0072387328405167694</ME>
-            <MAE>0.016559030420853264</MAE>
-            <RSR>0.34333458202287132</RSR>
+            <Slope>0.935852797747444</Slope>
+            <Intercept>0.00406449429950026</Intercept>
+            <SEslope>0.015598089949488875</SEslope>
+            <SEintercept>0.002977009822664317</SEintercept>
+            <R2>0.89462563946518758</R2>
+            <RMSE>0.024056689191515348</RMSE>
+            <NSE>0.88175936325538018</NSE>
+            <ME>-0.0073262967413243235</ME>
+            <MAE>0.016549853498284674</MAE>
+            <RSR>0.34345753240316068</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(9)</Name>
             <n>8</n>
-            <Slope>0.062754682228808562</Slope>
-            <Intercept>0.44364542035465293</Intercept>
-            <SEslope>0.043916062132082996</SEslope>
-            <SEintercept>0.020108809349477844</SEintercept>
-            <R2>0.25391246502030218</R2>
-            <RMSE>0.019147388903585298</RMSE>
-            <NSE>-1.1519720673473031</NSE>
-            <ME>0.014662770159519244</ME>
-            <MAE>0.017266250898038744</MAE>
-            <RSR>1.3722155657654123</RSR>
+            <Slope>0.06360393844317111</Slope>
+            <Intercept>0.4432458645857551</Intercept>
+            <SEslope>0.044160743882012306</SEslope>
+            <SEintercept>0.020220847142070147</SEintercept>
+            <R2>0.25691194019612273</R2>
+            <RMSE>0.019132576674650088</RMSE>
+            <NSE>-1.1486438669541608</NSE>
+            <ME>0.014651923914823992</ME>
+            <MAE>0.017255404653343492</MAE>
+            <RSR>1.3711540335005732</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
-            <n>429</n>
-            <Slope>0.83214481569336363</Slope>
-            <Intercept>1.4172485334437788</Intercept>
-            <SEslope>0.036471872657593551</SEslope>
-            <SEintercept>0.49935481528221748</SEintercept>
-            <R2>0.54937512120182408</R2>
-            <RMSE>5.4567817951258357</RMSE>
-            <NSE>0.39760329161683983</NSE>
-            <ME>-0.55479846450206316</ME>
-            <MAE>3.3038655920797138</MAE>
-            <RSR>0.77523707357925742</RSR>
+            <n>393</n>
+            <Slope>0.81752614483315444</Slope>
+            <Intercept>1.6668244633078793</Intercept>
+            <SEslope>0.039472485616660787</SEslope>
+            <SEintercept>0.55518573271294491</SEintercept>
+            <R2>0.52314606559510612</R2>
+            <RMSE>5.6558176488417109</RMSE>
+            <NSE>0.35120273993323936</NSE>
+            <ME>-0.55699203969327071</ME>
+            <MAE>3.4220306865894621</MAE>
+            <RSR>0.8044540859821393</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
-            <n>918</n>
-            <Slope>0.51799429176766909</Slope>
-            <Intercept>204.71146700851068</Intercept>
-            <SEslope>0.025648917873969657</SEslope>
-            <SEintercept>31.870372880234935</SEintercept>
-            <R2>0.30808429906761881</R2>
-            <RMSE>704.01251041637681</RMSE>
-            <NSE>-0.004629082288279962</NSE>
-            <ME>-289.34101650730975</ME>
-            <MAE>381.206295382481</MAE>
-            <RSR>1.0017657985259052</RSR>
+            <n>882</n>
+            <Slope>0.514994725759886</Slope>
+            <Intercept>209.13350888855007</Intercept>
+            <SEslope>0.026671353074675452</SEslope>
+            <SEintercept>33.659645355728827</SEintercept>
+            <R2>0.29759247668157895</R2>
+            <RMSE>717.81633031499712</RMSE>
+            <NSE>-0.042250314729381122</NSE>
+            <ME>-299.15312193154728</ME>
+            <MAE>393.16060263190542</MAE>
+            <RSR>1.0203277047253698</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.N</Name>
             <n>238</n>
-            <Slope>0.47814192022777741</Slope>
-            <Intercept>2.1446796039943035</Intercept>
-            <SEslope>0.049426334631516113</SEslope>
-            <SEintercept>0.44103083459869319</SEintercept>
-            <R2>0.28394358871727721</R2>
-            <RMSE>5.348661482995082</RMSE>
-            <NSE>0.0795979185962582</NSE>
-            <ME>-1.4910476151881476</ME>
-            <MAE>3.0380674828444465</MAE>
-            <RSR>0.95735826406188818</RSR>
+            <Slope>0.47735424628789425</Slope>
+            <Intercept>2.1223363823099488</Intercept>
+            <SEslope>0.049252433608432226</SEslope>
+            <SEintercept>0.43947911699875308</SEintercept>
+            <R2>0.28470700876390365</R2>
+            <RMSE>5.3471153492313084</RMSE>
+            <NSE>0.080129961634194058</NSE>
+            <ME>-1.5188784736344403</ME>
+            <MAE>3.0443516401867279</MAE>
+            <RSR>0.95708152119064838</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.Nconc</Name>
             <n>222</n>
-            <Slope>0.32342474427085721</Slope>
-            <Intercept>0.0052436517296929218</Intercept>
-            <SEslope>0.11798572422963326</SEslope>
-            <SEintercept>0.0020408120014809086</SEintercept>
-            <R2>0.033027742866522214</R2>
-            <RMSE>0.0083677800180594914</RMSE>
-            <NSE>-7.0887463187755611</NSE>
-            <ME>-0.0062886039805731845</ME>
-            <MAE>0.00643755858741627</MAE>
-            <RSR>2.837659339058662</RSR>
+            <Slope>0.32015947542389778</Slope>
+            <Intercept>0.0052746003933469045</Intercept>
+            <SEslope>0.11773585434426211</SEslope>
+            <SEintercept>0.00203648997469162</SEintercept>
+            <R2>0.032518842235894962</R2>
+            <RMSE>0.0083819616288914132</RMSE>
+            <NSE>-7.1161869680143734</NSE>
+            <ME>-0.0063133119714998244</ME>
+            <MAE>0.0064614630484917572</MAE>
+            <RSR>2.8424685692646721</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.Wt</Name>
-            <n>435</n>
-            <Slope>0.30283680341078179</Slope>
-            <Intercept>170.91116701803779</Intercept>
-            <SEslope>0.035555880171633213</SEslope>
-            <SEintercept>21.44282042951162</SEintercept>
-            <R2>0.14349490846043245</R2>
-            <RMSE>420.77304657486417</RMSE>
-            <NSE>-0.18899485850960218</NSE>
-            <ME>-152.19278422286482</ME>
-            <MAE>232.06138393476138</MAE>
-            <RSR>1.0891563418517045</RSR>
+            <n>399</n>
+            <Slope>0.30111328941187</Slope>
+            <Intercept>184.45914443134944</Intercept>
+            <SEslope>0.041591524981933713</SEslope>
+            <SEintercept>24.225704305484097</SEintercept>
+            <R2>0.11662810726555573</R2>
+            <RMSE>403.95579866339443</RMSE>
+            <NSE>-0.33937763778667107</NSE>
+            <ME>-141.43141086918433</ME>
+            <MAE>224.5394057135845</MAE>
+            <RSR>1.15586366047287</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
-            <n>88</n>
-            <Slope>-0.065562846271508046</Slope>
-            <Intercept>2.8811638216981947</Intercept>
-            <SEslope>0.10336587694881716</SEslope>
-            <SEintercept>1.1563917521266272</SEintercept>
-            <R2>0.0046562453467963172</R2>
-            <RMSE>10.016669114025872</RMSE>
-            <NSE>-5.479559954413709</NSE>
-            <ME>-8.2779038755651317</ME>
-            <MAE>8.3939777812813823</MAE>
-            <RSR>2.5309935976401383</RSR>
+            <n>76</n>
+            <Slope>-0.25893625241878637</Slope>
+            <Intercept>4.7828033711730429</Intercept>
+            <SEslope>0.10486082048977696</SEslope>
+            <SEintercept>1.19624853772511</SEintercept>
+            <R2>0.076127170545046585</R2>
+            <RMSE>10.532998245003702</RMSE>
+            <NSE>-6.8454629348188121</NSE>
+            <ME>-8.77638337524178</ME>
+            <MAE>8.9294942272251063</MAE>
+            <RSR>2.782486865981701</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>130</n>
-            <Slope>0.8502555143144217</Slope>
-            <Intercept>1923.5758066803974</Intercept>
-            <SEslope>0.030058159673033946</SEslope>
-            <SEintercept>500.35147536808654</SEintercept>
-            <R2>0.86209200430306376</R2>
-            <RMSE>2380.5974009035731</RMSE>
-            <NSE>0.85827603449247092</NSE>
-            <ME>-382.22246056491934</ME>
-            <MAE>1786.5826270695825</MAE>
-            <RSR>0.37501170802719092</RSR>
+            <Slope>0.84747013008620964</Slope>
+            <Intercept>2034.2676236435855</Intercept>
+            <SEslope>0.030573354317746992</SEslope>
+            <SEintercept>508.92746283331951</SEintercept>
+            <R2>0.85719963262971333</R2>
+            <RMSE>2411.1332060887071</RMSE>
+            <NSE>0.85461694395485932</NSE>
+            <ME>-314.4205977634486</ME>
+            <MAE>1795.1247748259527</MAE>
+            <RSR>0.37982196466870294</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
-            <n>480</n>
-            <Slope>0.23572968751842691</Slope>
-            <Intercept>34.653049472550933</Intercept>
-            <SEslope>0.026494016316129746</SEslope>
-            <SEintercept>11.409448150219461</SEintercept>
-            <R2>0.14208530737526803</R2>
-            <RMSE>357.38617346076535</RMSE>
-            <NSE>-0.27333903157445705</NSE>
-            <ME>-188.35924058535369</ME>
-            <MAE>205.57688136989464</MAE>
-            <RSR>1.1272471964592967</RSR>
+            <n>444</n>
+            <Slope>0.21706971568774966</Slope>
+            <Intercept>39.075644425608743</Intercept>
+            <SEslope>0.027453286205865065</SEslope>
+            <SEintercept>12.105818703027776</SEintercept>
+            <R2>0.12391747307608825</R2>
+            <RMSE>369.05218158188558</RMSE>
+            <NSE>-0.33210388673939839</NSE>
+            <ME>-198.65991545170922</ME>
+            <MAE>215.94029734839333</MAE>
+            <RSR>1.152867578154688</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
-            <n>568</n>
-            <Slope>0.91502878536416221</Slope>
-            <Intercept>0.13002997862495092</Intercept>
-            <SEslope>0.020268937967285249</SEslope>
-            <SEintercept>0.013987159843899297</SEintercept>
-            <R2>0.78264339982347253</R2>
-            <RMSE>0.16053500409878016</RMSE>
-            <NSE>0.68923152433973622</NSE>
-            <ME>0.0767427837024637</ME>
-            <MAE>0.11139181318283389</MAE>
-            <RSR>0.55697517724066525</RSR>
+            <n>427</n>
+            <Slope>0.86304879975310844</Slope>
+            <Intercept>0.19420866043311558</Intercept>
+            <SEslope>0.023185712424258268</SEslope>
+            <SEintercept>0.016943040685987856</SEintercept>
+            <R2>0.76526784758660937</R2>
+            <RMSE>0.18383338485189782</RMSE>
+            <NSE>0.63863601093093691</NSE>
+            <ME>0.10331588947565082</ME>
+            <MAE>0.12649399425432534</MAE>
+            <RSR>0.60043126449276163</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.N</Name>
-            <n>119</n>
-            <Slope>-0.025753123518386198</Slope>
-            <Intercept>1.1147479583494506</Intercept>
-            <SEslope>0.23241390775859247</SEslope>
-            <SEintercept>0.1423376483429436</SEintercept>
-            <R2>0.00010493108433085041</R2>
-            <RMSE>1.6951553985568006</RMSE>
-            <NSE>-8.6807815177662722</NSE>
-            <ME>0.82782655791840909</ME>
-            <MAE>1.0864851439551042</MAE>
-            <RSR>3.098294758827016</RSR>
+            <n>106</n>
+            <Slope>-0.18540420722354209</Slope>
+            <Intercept>1.2989085503528939</Intercept>
+            <SEslope>0.76237808429638942</SEslope>
+            <SEintercept>0.20121555743438679</SEintercept>
+            <R2>0.00056835295359625171</R2>
+            <RMSE>1.8752392545372927</RMSE>
+            <NSE>-92.163723708824762</NSE>
+            <ME>1.087141485322066</ME>
+            <MAE>1.1895869592082413</MAE>
+            <RSR>9.6064988760197068</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Dead.Wt</Name>
-            <n>261</n>
-            <Slope>0.01775724128678954</Slope>
-            <Intercept>70.946989199029446</Intercept>
-            <SEslope>0.010858670327292532</SEslope>
-            <SEintercept>4.25929445227782</SEintercept>
-            <R2>0.010219667164068191</R2>
-            <RMSE>381.02041082819926</RMSE>
-            <NSE>0.0022152006111969547</NSE>
-            <ME>-18.861526030111975</ME>
-            <MAE>108.16167070090518</MAE>
-            <RSR>0.99697636337224449</RSR>
+            <n>225</n>
+            <Slope>0.39249638056630326</Slope>
+            <Intercept>66.711358213461253</Intercept>
+            <SEslope>0.11017009181510404</SEslope>
+            <SEintercept>6.1029905571503251</SEintercept>
+            <R2>0.0538515618318145</R2>
+            <RMSE>85.174350585534043</RMSE>
+            <NSE>-3.2223319754774673</NSE>
+            <ME>44.385634417083438</ME>
+            <MAE>62.861858048083121</MAE>
+            <RSR>2.0502599970702393</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.DeadCohortNo</Name>
@@ -3505,129 +3524,129 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
-            <n>685</n>
-            <Slope>0.80603387304593155</Slope>
-            <Intercept>0.87897725363572077</Intercept>
-            <SEslope>0.017253583630358383</SEslope>
-            <SEintercept>0.068330823383590589</SEintercept>
-            <R2>0.761644551562421</R2>
-            <RMSE>1.1728876298375253</RMSE>
-            <NSE>0.74681185469397016</NSE>
-            <ME>0.25794410296269016</ME>
-            <MAE>0.86189377141642254</MAE>
-            <RSR>0.50281062794620413</RSR>
+            <n>655</n>
+            <Slope>0.83088780269882223</Slope>
+            <Intercept>0.97321036272964756</Intercept>
+            <SEslope>0.018550807041001552</SEslope>
+            <SEintercept>0.074885065766951642</SEintercept>
+            <R2>0.75443099406250735</R2>
+            <RMSE>1.2486604000784181</RMSE>
+            <NSE>0.71492231496751146</NSE>
+            <ME>0.41677800088377</ME>
+            <MAE>0.91356380364806977</MAE>
+            <RSR>0.533518933052585</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
-            <n>311</n>
-            <Slope>0.79776437729503047</Slope>
-            <Intercept>1.1023555923113064</Intercept>
-            <SEslope>0.02863014370041252</SEslope>
-            <SEintercept>0.12971315860049826</SEintercept>
-            <R2>0.71532015648984859</R2>
-            <RMSE>1.568175256384474</RMSE>
-            <NSE>0.68719457175943333</NSE>
-            <ME>0.38263776770149394</ME>
-            <MAE>1.1227879731544357</MAE>
-            <RSR>0.55839020675963369</RSR>
+            <n>281</n>
+            <Slope>0.78055352696072022</Slope>
+            <Intercept>1.3038743932199397</Intercept>
+            <SEslope>0.030282486154567002</SEslope>
+            <SEintercept>0.14013035337949156</SEintercept>
+            <R2>0.704257683209294</R2>
+            <RMSE>1.6502961310943929</RMSE>
+            <NSE>0.66473755528480938</NSE>
+            <ME>0.50387923028318937</ME>
+            <MAE>1.1703078996483556</MAE>
+            <RSR>0.577987318139185</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.Wt</Name>
-            <n>496</n>
-            <Slope>0.77150726694000882</Slope>
-            <Intercept>59.457668307998759</Intercept>
-            <SEslope>0.021040159393450622</SEslope>
-            <SEintercept>3.6276282800772655</SEintercept>
-            <R2>0.73131227735736259</R2>
-            <RMSE>62.752629535132634</RMSE>
-            <NSE>0.65795315255395792</NSE>
-            <ME>28.620437177019323</ME>
-            <MAE>46.982010004485417</MAE>
-            <RSR>0.58425785135204977</RSR>
+            <n>466</n>
+            <Slope>0.75222426939559661</Slope>
+            <Intercept>67.427436119714343</Intercept>
+            <SEslope>0.021219447794695853</SEslope>
+            <SEintercept>3.7448487600094991</SEintercept>
+            <R2>0.73033999508078651</R2>
+            <RMSE>65.541601434531046</RMSE>
+            <NSE>0.63775952905810507</NSE>
+            <ME>33.016779470913725</ME>
+            <MAE>49.756609111310233</MAE>
+            <RSR>0.601218039379638</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.SpecificArea</Name>
             <n>171</n>
-            <Slope>0.038656077247306929</Slope>
-            <Intercept>21477.005109732789</Intercept>
-            <SEslope>0.011471200007584007</SEslope>
-            <SEintercept>162.98131725716419</SEintercept>
-            <R2>0.062963336830173633</R2>
-            <RMSE>15665.706633245138</RMSE>
-            <NSE>-1.3199383081696006</NSE>
-            <ME>12053.936672877841</ME>
-            <MAE>12719.440926996147</MAE>
-            <RSR>1.5186742302016423</RSR>
+            <Slope>0.026170624289556091</Slope>
+            <Intercept>22671.177785957134</Intercept>
+            <SEslope>0.012224750508177354</SEslope>
+            <SEintercept>173.6876647295561</SEintercept>
+            <R2>0.026402254398997349</R2>
+            <RMSE>16591.468851633716</RMSE>
+            <NSE>-1.6022326978264427</NSE>
+            <ME>13125.727259923169</ME>
+            <MAE>13513.695554243102</MAE>
+            <RSR>1.6084200206262775</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
             <n>800</n>
-            <Slope>0.35105974249223881</Slope>
-            <Intercept>21.35270365594511</Intercept>
-            <SEslope>0.030091508882855451</SEslope>
-            <SEintercept>1.8282540742193632</SEintercept>
-            <R2>0.14570633203544248</R2>
-            <RMSE>32.670242975627708</RMSE>
-            <NSE>-0.38913263544118815</NSE>
-            <ME>-13.732082757627346</ME>
-            <MAE>17.040839300360766</MAE>
-            <RSR>1.1778778458086758</RSR>
+            <Slope>0.35133866733360458</Slope>
+            <Intercept>21.329517768113821</Intercept>
+            <SEslope>0.030094447556924069</SEslope>
+            <SEintercept>1.828432617703496</SEintercept>
+            <R2>0.14587982610101657</R2>
+            <RMSE>32.671054709156984</RMSE>
+            <NSE>-0.38920166581516069</NSE>
+            <ME>-13.74018864638064</ME>
+            <MAE>17.047359937827498</MAE>
+            <RSR>1.1779071116742998</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.N</Name>
             <n>68</n>
-            <Slope>-0.034014905040296584</Slope>
-            <Intercept>2.35007992908392</Intercept>
-            <SEslope>0.0099418116664736073</SEslope>
-            <SEintercept>0.12022507170973634</SEintercept>
-            <R2>0.15064442626925911</R2>
-            <RMSE>10.656438881686089</RMSE>
-            <NSE>-1.4602191510960076</NSE>
-            <ME>-7.99416446660232</ME>
-            <MAE>7.99416446660232</MAE>
-            <RSR>1.5569327081468669</RSR>
+            <Slope>-0.034027216488446713</Slope>
+            <Intercept>2.3482228744731359</Intercept>
+            <SEslope>0.0099411201213287382</SEslope>
+            <SEintercept>0.12021670894171967</SEintercept>
+            <R2>0.15075486537078797</R2>
+            <RMSE>10.657977634877334</RMSE>
+            <NSE>-1.4609296967915868</NSE>
+            <ME>-7.9961446844556354</ME>
+            <MAE>7.9961446844556354</MAE>
+            <RSR>1.5571575238850148</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.Wt</Name>
-            <n>216</n>
-            <Slope>0.31996070978581692</Slope>
-            <Intercept>63.747181561803529</Intercept>
-            <SEslope>0.056742778256365832</SEslope>
-            <SEintercept>12.609342932697457</SEintercept>
-            <R2>0.1293592082447883</R2>
-            <RMSE>144.77216502870817</RMSE>
-            <NSE>-0.41779744425083831</NSE>
-            <ME>-62.744993037367458</ME>
-            <MAE>90.227526790017009</MAE>
-            <RSR>1.1879535206371172</RSR>
+            <n>180</n>
+            <Slope>0.23900415425159055</Slope>
+            <Intercept>82.995160570721282</Intercept>
+            <SEslope>0.073602788191088883</SEslope>
+            <SEintercept>17.724180686249639</SEintercept>
+            <R2>0.055925348756830862</R2>
+            <RMSE>157.75999037390045</RMSE>
+            <NSE>-1.0829477636160756</NSE>
+            <ME>-80.291573369305837</ME>
+            <MAE>103.03653453337654</MAE>
+            <RSR>1.4392275121036235</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.N</Name>
-            <n>355</n>
-            <Slope>1.0821764904447986</Slope>
-            <Intercept>-0.097865610827632565</Intercept>
-            <SEslope>0.035851513875965864</SEslope>
-            <SEintercept>0.16049117567798263</SEintercept>
-            <R2>0.72075695950290686</R2>
-            <RMSE>1.7879126022482559</RMSE>
-            <NSE>0.53365910973310127</NSE>
-            <ME>0.20052457428763984</ME>
-            <MAE>1.3072642608011136</MAE>
-            <RSR>0.68192906812680154</RSR>
+            <n>325</n>
+            <Slope>1.0765369450143731</Slope>
+            <Intercept>-0.15851969099636598</Intercept>
+            <SEslope>0.037572201630137039</SEslope>
+            <SEintercept>0.17298364377236131</SEintercept>
+            <R2>0.71764867930807286</R2>
+            <RMSE>1.8006195776140144</RMSE>
+            <NSE>0.53575163909252943</NSE>
+            <ME>0.13002853500474965</ME>
+            <MAE>1.308563866688768</MAE>
+            <RSR>0.68030868318166471</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Stem.Wt</Name>
-            <n>579</n>
-            <Slope>0.68361553388764229</Slope>
-            <Intercept>43.154178284452883</Intercept>
-            <SEslope>0.023816744003996942</SEslope>
-            <SEintercept>15.871264837278359</SEintercept>
-            <R2>0.58811331261707633</R2>
-            <RMSE>277.57550749456271</RMSE>
-            <NSE>0.44932602314238579</NSE>
-            <ME>-131.3343379179195</ME>
-            <MAE>183.14807271546016</MAE>
-            <RSR>0.74143300383606914</RSR>
+            <n>549</n>
+            <Slope>0.68892268824118108</Slope>
+            <Intercept>36.88237085226308</Intercept>
+            <SEslope>0.02518605070666366</SEslope>
+            <SEintercept>17.175557860014667</SEintercept>
+            <R2>0.57767315731732882</R2>
+            <RMSE>285.71572344739667</RMSE>
+            <NSE>0.41434601534124027</NSE>
+            <ME>-140.63990575536781</ME>
+            <MAE>190.5154532239643</MAE>
+            <RSR>0.76458303647110915</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.HaunStage.Value()</Name>
@@ -3645,31 +3664,31 @@ namespace Models
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.LeafTipsAppeared</Name>
-            <n>461</n>
-            <Slope>0.97347698200888155</Slope>
-            <Intercept>0.55419262013942472</Intercept>
-            <SEslope>0.0084857215211902939</SEslope>
-            <SEintercept>0.083173017373952413</SEintercept>
-            <R2>0.96629842978714842</R2>
-            <RMSE>0.74779453518190786</RMSE>
-            <NSE>0.95905235746161943</NSE>
-            <ME>0.31341163883393613</ME>
-            <MAE>0.57929953830476921</MAE>
-            <RSR>0.20213564509698562</RSR>
+            <n>352</n>
+            <Slope>0.97242874301079119</Slope>
+            <Intercept>0.65273852905806606</Intercept>
+            <SEslope>0.0098353596808985616</SEslope>
+            <SEintercept>0.10170687429094837</SEintercept>
+            <R2>0.96543350612369749</R2>
+            <RMSE>0.83216657453354714</RMSE>
+            <NSE>0.95568552297168241</NSE>
+            <ME>0.38928065269159212</ME>
+            <MAE>0.67443497557810772</MAE>
+            <RSR>0.21021080759006897</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.TotalStemPopn</Name>
             <n>490</n>
-            <Slope>0.42091968546199476</Slope>
-            <Intercept>251.66129016300027</Intercept>
-            <SEslope>0.041068734304187685</SEslope>
-            <SEintercept>26.507459074302645</SEintercept>
-            <R2>0.1771283628356144</R2>
-            <RMSE>274.42279961858617</RMSE>
-            <NSE>-0.31814193911682742</NSE>
-            <ME>-95.527513647939628</ME>
-            <MAE>200.66245511681342</MAE>
-            <RSR>1.14693149469652</RSR>
+            <Slope>0.42296833310370807</Slope>
+            <Intercept>248.24560890377236</Intercept>
+            <SEslope>0.041177894801967839</SEslope>
+            <SEintercept>26.577915772724516</SEintercept>
+            <R2>0.17777082523863363</R2>
+            <RMSE>275.40074548133612</RMSE>
+            <NSE>-0.3275534629056216</NSE>
+            <ME>-97.7149239639158</ME>
+            <MAE>201.49913929490433</MAE>
+            <RSR>1.1510187531592095</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -3687,58 +3706,58 @@ namespace Models
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>53</n>
-            <Slope>1.2279294516920059</Slope>
-            <Intercept>-1.0994721539129291</Intercept>
-            <SEslope>0.062183950271214247</SEslope>
-            <SEintercept>0.86496153508933327</SEintercept>
-            <R2>0.8843362222419886</R2>
-            <RMSE>3.4719976588758792</RMSE>
-            <NSE>0.66447642584722921</NSE>
-            <ME>1.7614934788851107</ME>
-            <MAE>2.5392021579112005</MAE>
-            <RSR>0.57375337966602868</RSR>
+            <Slope>1.227929459032798</Slope>
+            <Intercept>-1.0994722116681981</Intercept>
+            <SEslope>0.06218395012545113</SEslope>
+            <SEintercept>0.86496153306180867</SEintercept>
+            <R2>0.88433622394448252</R2>
+            <RMSE>3.4719976888520083</RMSE>
+            <NSE>0.66447642005362051</NSE>
+            <ME>1.7614935132713108</ME>
+            <MAE>2.5392021922974</MAE>
+            <RSR>0.57375338461963388</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>195</n>
             <Slope>0.99566150833711442</Slope>
             <Intercept>54.191567642037626</Intercept>
-            <SEslope>0.024102977690487828</SEslope>
-            <SEintercept>34.774421277942537</SEintercept>
-            <R2>0.89838921628175616</R2>
-            <RMSE>212.01673017525673</RMSE>
+            <SEslope>0.024102977690487914</SEslope>
+            <SEintercept>34.774421277942665</SEintercept>
+            <R2>0.8983892162817555</R2>
+            <RMSE>212.01673017525667</RMSE>
             <NSE>0.88165612244991831</NSE>
-            <ME>48.532080385279372</ME>
-            <MAE>155.23288589035229</MAE>
-            <RSR>0.34312823531492964</RSR>
+            <ME>48.532080385279428</ME>
+            <MAE>155.23288589035226</MAE>
+            <RSR>0.34312823531492959</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
             <n>121</n>
-            <Slope>1.0813929964191191</Slope>
-            <Intercept>-0.63442400742838956</Intercept>
-            <SEslope>0.046453137425699113</SEslope>
-            <SEintercept>0.45334162580202048</SEintercept>
-            <R2>0.81994857106391628</R2>
-            <RMSE>2.1001862652498744</RMSE>
-            <NSE>0.73613475015783258</NSE>
-            <ME>0.086831537976921322</ME>
-            <MAE>1.678904569338562</MAE>
-            <RSR>0.51155111699420364</RSR>
+            <Slope>1.0813929886414377</Slope>
+            <Intercept>-0.63442400045891567</Intercept>
+            <SEslope>0.046453134691125421</SEslope>
+            <SEintercept>0.45334159911499455</SEintercept>
+            <R2>0.81994858632180212</R2>
+            <RMSE>2.1001861373327997</RMSE>
+            <NSE>0.73613478230057172</NSE>
+            <ME>0.086831476025279186</ME>
+            <MAE>1.6789045073869264</MAE>
+            <RSR>0.51155108583690889</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Nconc</Name>
             <n>104</n>
-            <Slope>0.6313323492794094</Slope>
-            <Intercept>0.0078394937265273</Intercept>
-            <SEslope>0.0802977624140189</SEslope>
-            <SEintercept>0.0018268457621943984</SEintercept>
-            <R2>0.37735468821446805</R2>
-            <RMSE>0.0035248902961300915</RMSE>
-            <NSE>0.19487351803264552</NSE>
-            <ME>-0.00042204263443445654</ME>
-            <MAE>0.0025448162719077126</MAE>
-            <RSR>0.892964098482804</RSR>
+            <Slope>0.63133235749534888</Slope>
+            <Intercept>0.0078394934375581662</Intercept>
+            <SEslope>0.080297761560430433</SEslope>
+            <SEintercept>0.0018268457427744991</SEintercept>
+            <R2>0.37735469932514054</R2>
+            <RMSE>0.0035248902648160095</RMSE>
+            <NSE>0.19487353233765614</NSE>
+            <ME>-0.0004220427392912</ME>
+            <MAE>0.0025448161670509656</MAE>
+            <RSR>0.89296409054997539</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
@@ -3748,11 +3767,11 @@ namespace Models
             <SEslope>0.023873395206489206</SEslope>
             <SEintercept>352.220328300275</SEintercept>
             <R2>0.88188075669802624</R2>
-            <RMSE>2274.0196619617986</RMSE>
+            <RMSE>2274.0196619617977</RMSE>
             <NSE>0.88028364602646825</NSE>
-            <ME>-254.74632548104307</ME>
-            <MAE>1714.1284420502263</MAE>
-            <RSR>0.34504338517530808</RSR>
+            <ME>-254.74632548104259</ME>
+            <MAE>1714.1284420502266</MAE>
+            <RSR>0.34504338517530792</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
@@ -3764,23 +3783,23 @@ namespace Models
             <R2>0.32743332874883946</R2>
             <RMSE>2.1251552702838574</RMSE>
             <NSE>0.24929802804804757</NSE>
-            <ME>0.15506017240156161</ME>
-            <MAE>1.5702630367539876</MAE>
+            <ME>0.15506017240156148</ME>
+            <MAE>1.570263036753988</MAE>
             <RSR>0.862622088132938</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>217</n>
-            <Slope>1.0594809704718249</Slope>
-            <Intercept>-0.77849146358528287</Intercept>
-            <SEslope>0.031882477046578483</SEslope>
-            <SEintercept>17.025734305104073</SEintercept>
-            <R2>0.83703326400227529</R2>
-            <RMSE>114.81047647758173</RMSE>
-            <NSE>0.76418698245967864</NSE>
-            <ME>27.702559719434188</ME>
-            <MAE>94.051378275544138</MAE>
-            <RSR>0.48448562580014265</RSR>
+            <Slope>1.0594809704718238</Slope>
+            <Intercept>-0.77849146358482812</Intercept>
+            <SEslope>0.031882477046578712</SEslope>
+            <SEintercept>17.025734305104191</SEintercept>
+            <R2>0.83703326400227307</R2>
+            <RMSE>114.81047647758166</RMSE>
+            <NSE>0.764186982459679</NSE>
+            <ME>27.702559719434138</ME>
+            <MAE>94.0513782755441</MAE>
+            <RSR>0.48448562580014237</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CohortMaxSize(1)</Name>
@@ -3939,15 +3958,15 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Leaf.CohortMaxSize(3)</Name>
             <n>10</n>
-            <Slope>0.27310165820680721</Slope>
-            <Intercept>257.11898703960594</Intercept>
-            <SEslope>0.21729695092130494</SEslope>
-            <SEintercept>115.99570301451136</SEintercept>
-            <R2>0.16489025001071644</R2>
+            <Slope>0.27310165820681231</Slope>
+            <Intercept>257.1189870396031</Intercept>
+            <SEslope>0.21729695092130491</SEslope>
+            <SEintercept>115.99570301451135</SEintercept>
+            <R2>0.16489025001072166</R2>
             <RMSE>154.30280605137946</RMSE>
             <NSE>-1.607422715639212</NSE>
-            <ME>-124.64023851925067</ME>
-            <MAE>127.03235262276348</MAE>
+            <ME>-124.64023851925082</ME>
+            <MAE>127.0323526227634</MAE>
             <RSR>1.5318878692891624</RSR>
           </RegrStats>
           <RegrStats>
@@ -4023,16 +4042,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Leaf.CohortMaxSize(9)</Name>
             <n>10</n>
-            <Slope>0.6617106051482996</Slope>
-            <Intercept>572.63416696189086</Intercept>
-            <SEslope>0.29603531916797626</SEslope>
-            <SEintercept>458.13103808613681</SEintercept>
-            <R2>0.38444052761407876</R2>
-            <RMSE>236.17623345220497</RMSE>
-            <NSE>0.13549076710325569</NSE>
-            <ME>56.21279918575695</ME>
-            <MAE>174.54841199426295</MAE>
-            <RSR>0.88207613594693168</RSR>
+            <Slope>0.66171060514830538</Slope>
+            <Intercept>572.63416696188324</Intercept>
+            <SEslope>0.29603531916797832</SEslope>
+            <SEintercept>458.13103808614</SEintercept>
+            <R2>0.38444052761407954</R2>
+            <RMSE>236.17623345220693</RMSE>
+            <NSE>0.13549076710324126</NSE>
+            <ME>56.212799185757945</ME>
+            <MAE>174.54841199426394</MAE>
+            <RSR>0.882076135946939</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Phenology.FlagLeafDAS.Value()</Name>
@@ -5240,9 +5259,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -6823,7 +6839,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16744448</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -7359,9 +7375,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -7797,7 +7810,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7839,7 +7852,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -9439,9 +9452,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Clay Loam</SoilType>
               <LocalName>Gatton</LocalName>
@@ -10511,9 +10521,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -11568,9 +11575,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Black Vertosol</SoilType>
               <Site>Lawes</Site>
@@ -12807,9 +12811,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -13517,9 +13518,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -14478,9 +14476,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>APS6Soil</SoilType>
                 <LocalName>APS6Site</LocalName>
@@ -15193,9 +15188,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>APS6Soil</SoilType>
                 <LocalName>APS6Site</LocalName>
@@ -15908,9 +15900,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>APS6Soil</SoilType>
                 <LocalName>APS6Site</LocalName>
@@ -16933,9 +16922,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>sand</SoilType>
               <LocalName>Merredin</LocalName>
@@ -17806,9 +17792,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>sand</SoilType>
               <LocalName>Merredin</LocalName>
@@ -19157,9 +19140,6 @@ namespace Models
                   <double>0.099999927332399569</double>
                 </oc>
               </SoilNitrogen>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>heavy
 </SoilType>
@@ -20388,9 +20368,6 @@ namespace Models
                   <double>0.10004261693966804</double>
                 </oc>
               </SoilNitrogen>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>sand</SoilType>
               <LocalName>WonganSite</LocalName>
@@ -20840,9 +20817,6 @@ namespace Models
                   <double>0.10004261693966804</double>
                 </oc>
               </SoilNitrogen>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>sand</SoilType>
               <LocalName>WonganSite</LocalName>
@@ -21488,9 +21462,6 @@ namespace Models
                   <double>0.10012193846548656</double>
                 </oc>
               </SoilNitrogen>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>unknown
 </SoilType>
@@ -22969,9 +22940,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Site>Konya</Site>
               <NearestTown>Konya</NearestTown>
@@ -24045,9 +24013,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Site>Konya</Site>
               <NearestTown>Konya</NearestTown>
@@ -26215,9 +26180,6 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>LincolnSoil</SoilType>
               <LocalName>Lincoln</LocalName>
@@ -29356,7 +29318,9 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                 <string>[Sample]</string>
               </Specifications>
             </Factor>
-            <Specifications />
+            <Specifications>
+              <string>[IrrigationEvents]</string>
+            </Specifications>
           </Factor>
         </Factors>
         <Simulation>
@@ -29670,9 +29634,6 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>NZ_sedementary</SoilType>
               <Site>-</Site>
@@ -33510,15 +33471,15 @@ Emergence was recorded as the 28th of May for the first planting.  The model was
               <Manager>
                 <Name>Fertilise</Name>
                 <Script>
-                  <SDSwitch>0</SDSwitch>
-                  <Amount1>0</Amount1>
-                  <Amount2>0</Amount2>
-                  <Amount3>0</Amount3>
-                  <Amount4>0</Amount4>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
                   <FertDate4>25-Nov</FertDate4>
+                  <Amount1>0</Amount1>
+                  <Amount2>0</Amount2>
+                  <Amount3>0</Amount3>
+                  <Amount4>0</Amount4>
+                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -33904,9 +33865,6 @@ namespace Models
                 <FractionFull>1</FractionFull>
                 <DepthWetSoil>NaN</DepthWetSoil>
               </InitialWater>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>LincolnSoil</SoilType>
               <LocalName>Lincoln</LocalName>
@@ -36759,10 +36717,10 @@ Considerable canopy decay was observed during the winter for the early sown trea
                 <Name>Sowing</Name>
                 <Script>
                   <SowDate>24-Jul</SowDate>
-                  <Population>150</Population>
                   <CultivarName>Wakanui</CultivarName>
                   <SowingDepth>50</SowingDepth>
                   <RowSpacing>150</RowSpacing>
+                  <Population>150</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -37236,9 +37194,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>LincolnSoil</SoilType>
               <LocalName>Lincoln</LocalName>
@@ -39390,15 +39345,15 @@ namespace Models
               <Manager>
                 <Name>Fertilise</Name>
                 <Script>
-                  <SDSwitch>0</SDSwitch>
-                  <Amount1>0</Amount1>
-                  <Amount2>0</Amount2>
-                  <Amount3>0</Amount3>
-                  <Amount4>0</Amount4>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
                   <FertDate4>25-Nov</FertDate4>
+                  <Amount1>0</Amount1>
+                  <Amount2>0</Amount2>
+                  <Amount3>0</Amount3>
+                  <Amount4>0</Amount4>
+                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -39929,9 +39884,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType />
               <LocalName />
@@ -40547,7 +40499,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -40568,7 +40520,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -40610,7 +40562,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -40631,7 +40583,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42040,9 +41992,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -42632,9 +42581,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -43172,9 +43118,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -43473,7 +43416,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -43596,7 +43539,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -43637,7 +43580,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -43658,7 +43601,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -44074,9 +44017,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -44614,9 +44554,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -45257,9 +45194,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -45797,9 +45731,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -46337,9 +46268,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -46877,9 +46805,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -47417,9 +47342,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -47957,9 +47879,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -48497,9 +48416,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -49037,9 +48953,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>LincolnSoil</SoilType>
                 <LocalName>Lincoln</LocalName>
@@ -49433,7 +49346,9 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <string>[Fert]</string>
               </Specifications>
             </Factor>
-            <Specifications />
+            <Specifications>
+              <string>[StateFactors]</string>
+            </Specifications>
           </Factor>
           <Factor>
             <Name>Irr</Name>
@@ -49442,7 +49357,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
               <Operations>
                 <Name>Full</Name>
                 <Operation>
-                  <Date>2015-09-10</Date>
+                  <Date>2015-09-15</Date>
                   <Action>[Irrigation].Apply(15);</Action>
                 </Operation>
                 <Operation>
@@ -49466,16 +49381,24 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(5);</Action>
                 </Operation>
                 <Operation>
+                  <Date>2015-10-09</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
+                </Operation>
+                <Operation>
                   <Date>2015-10-16</Date>
                   <Action>[Irrigation].Apply(15);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-10-22</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
+                  <Action>[Irrigation].Apply(15);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-10-29</Date>
                   <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-10-30</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-11-06</Date>
@@ -49484,6 +49407,10 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <Operation>
                   <Date>2015-11-12</Date>
                   <Action>[Irrigation].Apply(13);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-19</Date>
+                  <Action>[Irrigation].Apply(24);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-11-26</Date>
@@ -49498,12 +49425,12 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(40);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-12-17</Date>
-                  <Action>[Irrigation].Apply(39.7);</Action>
-                </Operation>
-                <Operation>
                   <Date>2015-12-24</Date>
                   <Action>[Irrigation].Apply(35);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-12-31</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-01-07</Date>
@@ -49511,11 +49438,11 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 </Operation>
                 <Operation>
                   <Date>2016-01-14</Date>
-                  <Action>[Irrigation].Apply(33);</Action>
+                  <Action>[Irrigation].Apply(0);</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-01-21</Date>
-                  <Action>[Irrigation].Apply(21);</Action>
+                  <Action>[Irrigation].Apply(0);</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-02-03</Date>
@@ -49526,10 +49453,30 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(40);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-11-03</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
+                  <Date>2015-12-17</Date>
+                  <Action>[Irrigation].Apply(0);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2016-01-14</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2016-01-21</Date>
+                  <Action>[Irrigation].Apply(20);</Action>
                 </Operation>
               </Operations>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[Have added an extra irrigation, on 22 Oct, 
+
+Data indcates water applied but no notes of it RFZ
+
+In Statefactors have donethe irrigations for
+  17/12  21/1 19/11 14/1
+
+
+]]></MemoText>
+              </Memo>
               <Specifications>
                 <string>[Irrig]</string>
                 <string>[Water]</string>
@@ -49569,6 +49516,18 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
                 <Operation>
+                  <Date>2015-10-29</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-03</Date>
+                  <Action>[Irrigation].Apply(16);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-19</Date>
+                  <Action>[Irrigation].Apply(20);</Action>
+                </Operation>
+                <Operation>
                   <Date>2015-12-24</Date>
                   <Action>[Irrigation].Apply(25);</Action>
                 </Operation>
@@ -49579,10 +49538,6 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <Operation>
                   <Date>2016-02-04</Date>
                   <Action>[Irrigation].Apply(40);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-03</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
               </Operations>
               <Memo>
@@ -49597,7 +49552,10 @@ Data indcates water applied but no notes of it RFZ]]></MemoText>
                 <string>[StateFactors].Script.IrrFactor = false</string>
               </Specifications>
             </Factor>
-            <Specifications />
+            <Specifications>
+              <string>[Irrig]</string>
+              <string>[StateFactors]</string>
+            </Specifications>
           </Factor>
         </Factors>
         <Simulation>
@@ -49737,7 +49695,7 @@ namespace Models
               </Operation>
               <Operation>
                 <Date>2015-09-23</Date>
-                <Action>[Irrigation].Apply(2);</Action>
+                <Action>[Irrigation].Apply(2.5);</Action>
               </Operation>
               <Operation>
                 <Date>2015-09-26</Date>
@@ -49792,10 +49750,6 @@ namespace Models
                 <Action>[Irrigation].Apply(40);</Action>
               </Operation>
               <Operation>
-                <Date>2015-12-17</Date>
-                <Action>[Irrigation].Apply(39.7);</Action>
-              </Operation>
-              <Operation>
                 <Date>2015-12-24</Date>
                 <Action>[Irrigation].Apply(35);</Action>
               </Operation>
@@ -49805,7 +49759,7 @@ namespace Models
               </Operation>
               <Operation>
                 <Date>2016-01-14</Date>
-                <Action>[Irrigation].Apply(33);</Action>
+                <Action>[Irrigation].Apply(30);</Action>
               </Operation>
               <Operation>
                 <Date>2016-01-21</Date>
@@ -49909,8 +49863,10 @@ namespace Models
                 <string>[Soil].SoilWater.pond</string>
                 <string />
                 <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+                <string>[WheatExtraVariables].Script.SWPC</string>
+                <string />
                 <string>[Soil].NO3N</string>
-                <string>[Soil].SoilWater.SW</string>
+                <string>\\[Soil].SoilWater.SW</string>
                 <string>[Soil].SoilWater.SWmm</string>
                 <string>sum([Soil].NO3N) as ProfileNitrate</string>
                 <string />
@@ -49938,11 +49894,15 @@ namespace Models
                 <string>[Wheat].Stem.Live.N</string>
                 <string>[Wheat].Leaf.Live.N</string>
                 <string>[Wheat].Root.Live.N</string>
+                <string>[Wheat].Spike.Live.N</string>
+                <string />
                 <string>[Wheat].EarLive.N</string>
                 <string>[Wheat].Grain.Live.N*10 as Grain_Nup </string>
                 <string>[Wheat].Stem.Live.N*10 as Stem_Nup</string>
                 <string>[Wheat].Leaf.Live.N*10 as Leaf_Nup</string>
                 <string>[Wheat].Root.Live.N*10 as Root_N_kg </string>
+                <string>[Wheat].Spike.Live.N*10 as Spike_N_kg </string>
+                <string />
                 <string>[Wheat].Root.WaterSupply</string>
                 <string>[Wheat].Root.WaterUptake</string>
                 <string>[Wheat].Leaf.Transpiration</string>
@@ -49964,7 +49924,7 @@ namespace Models
                 <string>[Wheat].AboveGroundLive.Wt</string>
                 <string>[Wheat].Total.N</string>
                 <string>[Wheat].Total.Wt</string>
-                <string>[Wheat].Total.N*10 as TotalN_Kg</string>
+                <string>[Wheat].AboveGroundLive.N*10 as TotalN_Kg</string>
                 <string>[Wheat].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Wheat].Phenology.Stage</string>
                 <string>[Wheat].Leaf.ExpandedCohortNo</string>
@@ -50011,7 +49971,11 @@ namespace Models
                 <string>[NitFactors].Script.NitFactor</string>
                 <string>[Wheat].WaterSupplyDemandRatio</string>
                 <string>[Wheat].Leaf.Fw</string>
-                <string>[Wheat].Leaf.Fn</string>
+                <string>[Wheat].Leaf.LeafStress.Value()</string>
+                <string>[Wheat].Root.WaterTension</string>
+                <string>[Structure].MainStemPopn</string>
+                <string>[Wheat].Structure.TotalStemPopn</string>
+                <string>[Wheat].Leaf.CohortParameters.ExpansionStress.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -50042,8 +50006,8 @@ namespace Models
                 <string>[Wheat].Total.N</string>
                 <string>[Wheat].Total.Wt</string>
                 <string>max of [Wheat].Leaf.LAI from [Wheat].Sowing to [Wheat].Harvesting as LAImax</string>
-                <string>[Wheat].Grain.NumberFunction.Value() as GPSM</string>
-                <string>[Wheat].Grain.Size.Value() as GrainSize</string>
+                <string>[Wheat].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Wheat].Grain.Size.Value as GrainSize</string>
                 <string>[Wheat].Population</string>
                 <string />
               </VariableNames>
@@ -50163,8 +50127,8 @@ namespace Models
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
-                <RootCN>40</RootCN>
-                <RootWt>1000</RootWt>
+                <RootCN>16</RootCN>
+                <RootWt>6000</RootWt>
                 <SoilCN>11</SoilCN>
                 <EnrACoeff>7.4</EnrACoeff>
                 <EnrBCoeff>0.2</EnrBCoeff>
@@ -50185,23 +50149,23 @@ namespace Models
                   <string>150-200</string>
                 </Depth>
                 <OC>
-                  <double>2.62509797633343</double>
-                  <double>1.24694031672971</double>
+                  <double>3</double>
+                  <double>1</double>
                   <double>0.316004293710514</double>
                   <double>0.207953620272232</double>
                   <double>0.200365542475381</double>
                   <double>0.2</double>
                 </OC>
                 <FBiom>
+                  <double>0.05</double>
                   <double>0.03</double>
-                  <double>0.02</double>
                   <double>0.0116634262048469</double>
                   <double>0.0102228802725968</double>
                   <double>0.0100221233748059</double>
                   <double>0.01</double>
                 </FBiom>
                 <FInert>
-                  <double>0.437120879838036</double>
+                  <double>0.3</double>
                   <double>0.656885264024723</double>
                   <double>0.849635116265262</double>
                   <double>0.944959741045969</double>
@@ -50226,22 +50190,22 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>7.9</double>
-                  <double>6.7</double>
-                  <double>0.3</double>
-                  <double>1.31</double>
-                  <double>2.6</double>
-                  <double>4.56</double>
-                  <double>0.1</double>
+                  <double>0.45</double>
+                  <double>0.45</double>
+                  <double>2</double>
+                  <double>2.8</double>
+                  <double>2.4</double>
+                  <double>3.1</double>
+                  <double>0.033333333333333333</double>
                 </NO3>
                 <NH4>
-                  <double>1.065</double>
-                  <double>1.155</double>
-                  <double>0.43</double>
-                  <double>1.09</double>
-                  <double>0.93</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
                   <double>0</double>
-                  <double>0</double>
+                  <double>0.19</double>
+                  <double>3.29</double>
+                  <double>0.42</double>
+                  <double>0.75</double>
                 </NH4>
                 <SW>
                   <double>0.18</double>
@@ -50252,8 +50216,8 @@ namespace Models
                   <double>0.28</double>
                   <double>0.29</double>
                 </SW>
-                <NO3Units>kgha</NO3Units>
-                <NH4Units>kgha</NH4Units>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
@@ -50265,8 +50229,8 @@ namespace Models
                   <LL>
                     <double>0.06</double>
                     <double>0.11</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
+                    <double>0.11</double>
+                    <double>0.17</double>
                     <double>0.16</double>
                     <double>0.2</double>
                     <double>0.2</double>
@@ -50275,8 +50239,8 @@ namespace Models
                     <double>0.06</double>
                     <double>0.06</double>
                     <double>0.05</double>
-                    <double>0.07</double>
-                    <double>0.015</double>
+                    <double>0.05</double>
+                    <double>0.03</double>
                     <double>0.01</double>
                     <double>0.001</double>
                   </KL>
@@ -50302,16 +50266,16 @@ namespace Models
                 <BD>
                   <double>1</double>
                   <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
+                  <double>1.2</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
+                  <double>1.4</double>
                 </BD>
                 <AirDry>
                   <double>0.05</double>
-                  <double>0.12</double>
-                  <double>0.1</double>
+                  <double>0.08</double>
+                  <double>0.08</double>
                   <double>0.08</double>
                   <double>0.06</double>
                   <double>0.06</double>
@@ -50320,11 +50284,11 @@ namespace Models
                 <LL15>
                   <double>0.08</double>
                   <double>0.15</double>
-                  <double>0.17</double>
-                  <double>0.17</double>
-                  <double>0.25</double>
-                  <double>0.28</double>
-                  <double>0.26</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
                 </LL15>
                 <DUL>
                   <double>0.28</double>
@@ -50633,9 +50597,6 @@ namespace Models
                 <DisabledSeries />
                 <IncludeInDocumentation>false</IncludeInDocumentation>
               </Graph>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>NZ_sedementary</SoilType>
               <Site>-</Site>
@@ -50651,8 +50612,8 @@ namespace Models
             <Manager>
               <Name>StateFactors</Name>
               <Script>
-                <NitFactor>0</NitFactor>
                 <IrrFactor>False</IrrFactor>
+                <NitFactor>0</NitFactor>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -50750,7 +50711,7 @@ namespace Models
 				ThisSoil.SAT[4] = 0.34;
 				ThisSoil.SAT[5] = 0.34;
 				ThisSoil.SAT[6] = 0.34;
-				double[] nSW = { 0.22, 0.25, 0.26, 0.3, 0.25, 0.29, 0.33 };
+				double[] nSW = { 0.22, 0.28, 0.26, 0.3, 0.25, 0.29, 0.33 };
 				
 				
 				ThisSoil.SoilWater.Reset();
@@ -50767,7 +50728,7 @@ namespace Models
 				ThisSoil.LL15[0] = 0.06;
 				ThisSoil.LL15[1] = 0.11;
 				ThisSoil.LL15[2] = 0.16;
-				ThisSoil.LL15[3] = 0.16;
+				ThisSoil.LL15[3] = 0.19;
 				ThisSoil.LL15[4] = 0.16;
 				ThisSoil.LL15[5] = 0.16;
 				ThisSoil.LL15[6] = 0.16;
@@ -50806,13 +50767,13 @@ namespace Models
 				ThisSoil.LL15[4] = 0.16;
 				ThisSoil.LL15[5] = 0.16;
 				ThisSoil.LL15[6] = 0.16;
-				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
-				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
+				ThisSoil.DUL[0] = 0.33;
+				ThisSoil.DUL[1] = 0.31;
+				ThisSoil.DUL[2] = 0.35;
+				ThisSoil.DUL[3] = 0.33;
+				ThisSoil.DUL[4] = 0.23;
+				ThisSoil.DUL[5] = 0.3;
+				ThisSoil.DUL[6] = 0.33;
 				ThisSoil.SAT[0] = 0.34;
 				ThisSoil.SAT[1] = 0.34;
 				ThisSoil.SAT[2] = 0.34;
@@ -50836,18 +50797,18 @@ namespace Models
 			 
 				ThisSoil.LL15[0] = 0.14;
 				ThisSoil.LL15[1] = 0.21;
-				ThisSoil.LL15[2] = 0.27;
-				ThisSoil.LL15[3] = 0.27;
-				ThisSoil.LL15[4] = 0.27;
-				ThisSoil.LL15[5] = 0.32;
-				ThisSoil.LL15[6] = 0.30;
-				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
-				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
+				ThisSoil.LL15[2] = 0.16;
+				ThisSoil.LL15[3] = 0.16;
+				ThisSoil.LL15[4] = 0.16;
+				ThisSoil.LL15[5] = 0.16;
+				ThisSoil.LL15[6] = 0.16;
+				ThisSoil.DUL[0] = 0.29;
+				ThisSoil.DUL[1] = 0.29;
+				ThisSoil.DUL[2] = 0.32;
+				ThisSoil.DUL[3] = 0.30;
+				ThisSoil.DUL[4] = 0.25;
+				ThisSoil.DUL[5] = 0.27;
+				ThisSoil.DUL[6] = 0.35;
 				ThisSoil.SAT[0] = 0.34;
 				ThisSoil.SAT[1] = 0.34;
 				ThisSoil.SAT[2] = 0.34;
@@ -50856,6 +50817,11 @@ namespace Models
 				ThisSoil.SAT[5] = 0.34;
 				ThisSoil.SAT[6] = 0.34;
 				double[] nSW = { 0.18, 0.18, 0.26, 0.26, 0.23, 0.28, 0.33 };
+				
+				ThisSoil.SoilWater.Reset();
+				
+				ThisSoil.SoilWater.SetWater_frac(nSW); 
+
 			}
 			if ((IrrFactor == true) && (NitFactor == 250))
 			{
@@ -50863,29 +50829,35 @@ namespace Models
 				{
 					throw new Exception("Soil layer exception");
 				}
-			 
+		 
 				ThisSoil.LL15[0] = 0.12;
 				ThisSoil.LL15[1] = 0.18;
-				ThisSoil.LL15[2] = 0.17;
-				ThisSoil.LL15[3] = 0.20;
-				ThisSoil.LL15[4] = 0.27;
-				ThisSoil.LL15[5] = 0.27;
-				ThisSoil.LL15[6] = 0.21;
+				ThisSoil.LL15[2] = 0.16;
+				ThisSoil.LL15[3] = 0.16;
+				ThisSoil.LL15[4] = 0.16;
+				ThisSoil.LL15[5] = 0.16;
+				ThisSoil.LL15[6] = 0.16;
 				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
+				ThisSoil.DUL[1] = 0.31;
+				ThisSoil.DUL[2] = 0.23;
+				ThisSoil.DUL[3] = 0.30;
 				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
-				ThisSoil.SAT[0] = 0.34;
-				ThisSoil.SAT[1] = 0.34;
-				ThisSoil.SAT[2] = 0.34;
-				ThisSoil.SAT[3] = 0.34;
-				ThisSoil.SAT[4] = 0.34;
-				ThisSoil.SAT[5] = 0.34;
-				ThisSoil.SAT[6] = 0.34;
+				ThisSoil.DUL[5] = 0.27;
+				ThisSoil.DUL[6] = 0.35;
+				ThisSoil.SAT[0] = 0.4;
+				ThisSoil.SAT[1] = 0.4;
+				ThisSoil.SAT[2] = 0.4;
+				ThisSoil.SAT[3] = 0.4;
+				ThisSoil.SAT[4] = 0.4;
+				ThisSoil.SAT[5] = 0.4;
+				ThisSoil.SAT[6] = 0.4;
 				double[] nSW = { 0.18, 0.18, 0.26, 0.26, 0.23, 0.28, 0.33 };
+				
+				ThisSoil.SoilWater.Reset();
+				
+				ThisSoil.SoilWater.SetWater_frac(nSW); 
+
+
 			}
 		}
 
@@ -50903,10 +50875,22 @@ namespace Models
 			{
 				if ((DateUtilities.CompareDates("17-Dec", Clock.Today) == 0))
 					Irrigation.Apply(39.7);
+				if ((DateUtilities.CompareDates("14-Jan", Clock.Today) == 0))
+					Irrigation.Apply(30);
 				if ((DateUtilities.CompareDates("21-Jan", Clock.Today) == 0))
 					Irrigation.Apply(20.1);
 			}
+
+			if ((IrrFactor == true) && (NitFactor == 50))
+			{
+				
+				if ((DateUtilities.CompareDates("14-Jan", Clock.Today) == 0))
+					Irrigation.Apply(30);
+			}
+
+
 			//fertigation event	
+/*	
 			if ((DateUtilities.CompareDates("19-Nov", Clock.Today) == 0))
 			{
 				if ((IrrFactor == true))
@@ -50914,17 +50898,17 @@ namespace Models
 				else
 				{
 					Irrigation.Apply(20);
-/*					if (NitFactor == 0)
+				if (NitFactor == 0)
 						Irrigation.Apply(20);
 					if (NitFactor == 50)
 						Irrigation.Apply(10);
 					if (NitFactor == 250)
-						Irrigation.Apply(20);*/
+						Irrigation.Apply(20);
 				}
 	    
 			}
 	
-			
+*/			
 		}
 	}
 		
@@ -51004,6 +50988,7 @@ namespace Models
 		[XmlIgnore] public double MineralN { get; set; }
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
+		[XmlIgnore] public double[] SWPC { get; set; }
 		
 		[XmlIgnore] public double LeafExpandedPosition { get; set; }
 		[XmlIgnore] public double LeafAppearedPosition { get; set; }
@@ -51071,6 +51056,13 @@ namespace Models
 			//Leaf number variable
 			ExpandedLeafNoYesterday = (double)zone.Get("Wheat.Leaf.ExpandedCohortNo");
 			AppearedLeafNoYesterday = (double)zone.Get("Wheat.Leaf.AppearedCohortNo");
+
+			SWPC = new double[layers];
+			
+			for (int i = 0; i < layers; i++)
+				SWPC[i] = Soil.SoilWater.SWmm[i] / Soil.SoilWater.DULmm[i];
+
+			
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -51088,6 +51080,7 @@ namespace Models
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
 			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
 			
+						
 			if ((double)zone.Get("Wheat.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
 			{
 				LeafExpandedPosition = (double)zone.Get("Wheat.Leaf.ExpandedCohortNo");
@@ -51109,28 +51102,6 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
-            <Report>
-              <Name>DailyReport</Name>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string />
-              </VariableNames>
-              <EventNames>
-                <string />
-              </EventNames>
-            </Report>
-            <Report>
-              <Name>HarvestReport</Name>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string />
-              </VariableNames>
-              <EventNames>
-                <string />
-              </EventNames>
-            </Report>
             <SoluteManager>
               <Name>SoluteManager</Name>
             </SoluteManager>
@@ -51160,7 +51131,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -51223,7 +51194,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -51293,14 +51264,14 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
-                <Filter>[Irr] = 'Full'</Filter>
+                <Filter />
               </Series>
               <Series>
                 <Name>Observed</Name>
@@ -51340,11 +51311,7 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries>
-                <string>0Nil</string>
-                <string>50Nil</string>
-                <string>250Nil</string>
-              </DisabledSeries>
+              <DisabledSeries />
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Graph>
           </Folder>
@@ -51365,9 +51332,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+                <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -51425,19 +51392,19 @@ namespace Models
                 <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+                <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
-                <Filter>[Nit] = 250</Filter>
+                <Filter />
               </Series>
               <Series>
                 <Name>Observed</Name>
@@ -51445,8 +51412,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -51477,7 +51444,12 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>0Full</string>
+                <string>50Full</string>
+                <string>0Nil</string>
+                <string>50Nil</string>
+              </DisabledSeries>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Graph>
             <Graph>
@@ -51488,21 +51460,21 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-11094807</ColourArgb>
-                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+                <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
-                <Filter>[Irr] = 'Full'</Filter>
+                <Filter />
               </Series>
               <Series>
                 <Name>Observed</Name>
@@ -51510,7 +51482,7 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>FilledCircle</Marker>
@@ -51542,7 +51514,11 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
+              <DisabledSeries>
+                <string>0Nil</string>
+                <string>50Nil</string>
+                <string>250Nil</string>
+              </DisabledSeries>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Graph>
           </Folder>
@@ -51561,9 +51537,9 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.AboveGround.Wt</YFieldName>
+              <YFieldName>Wheat.AboveGroundLive.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -51626,9 +51602,9 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.AboveGround.N</YFieldName>
+              <YFieldName>Wheat.AboveGroundLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -51689,9 +51665,9 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Grain.Wt</YFieldName>
+              <YFieldName>Wheat.Grain.Live.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -51740,6 +51716,69 @@ namespace Models
           <Folder>
             <Name>OrganNConc</Name>
             <Graph>
+              <Name>Stem</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Stem.Live.NConc</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Stem.Nconc</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>N concentration (fractional)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>0.065</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
               <Name>Leaf</Name>
               <Series>
                 <Name>Predicted</Name>
@@ -51754,7 +51793,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.NConc</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -51803,69 +51842,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
             <Graph>
-              <Name>Stem</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Stem.NConc</YFieldName>
-                <ShowInLegend>false</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Stem.Nconc</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>N concentration (fractional)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>0</Minimum>
-                <Maximum>0.1</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopRight</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
               <Name>Grain</Name>
               <Series>
                 <Name>Predicted</Name>
@@ -51880,9 +51856,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Grain.NConc</YFieldName>
+                <YFieldName>Wheat.Grain.Live.NConc</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -51914,7 +51890,7 @@ namespace Models
                 <Title>N concentration (fractional)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>0</Minimum>
-                <Maximum>0.1</Maximum>
+                <Maximum>0.05</Maximum>
                 <Interval>NaN</Interval>
               </Axis>
               <Axis>
@@ -51924,7 +51900,70 @@ namespace Models
                 <Maximum>NaN</Maximum>
                 <Interval>NaN</Interval>
               </Axis>
-              <LegendPosition>TopRight</LegendPosition>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>DeadLeaf</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.Dead.NConc</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.Dead.Nconc</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>N concentration (fractional)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>0</Minimum>
+                <Maximum>0.08</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -51946,7 +51985,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Live.N</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -52009,9 +52048,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Grain.N</YFieldName>
+                <YFieldName>Wheat.Grain.Live.N</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -52072,9 +52111,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Stem.N</YFieldName>
+                <YFieldName>Wheat.Stem.Live.N</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -52120,11 +52159,8 @@ namespace Models
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
-          </Folder>
-          <Folder>
-            <Name>OrganBiomass</Name>
             <Graph>
-              <Name>LeafBiomass</Name>
+              <Name>Spike</Name>
               <Series>
                 <Name>Predicted</Name>
                 <Type>Scatter</Type>
@@ -52138,10 +52174,10 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
+                <YFieldName>Wheat.Spike.Live.N</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
@@ -52161,212 +52197,15 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Leaf.Live.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
+                <YFieldName>Wheat.Spike.N</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Axis>
                 <Type>Left</Type>
-                <Title>Leaf Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>StemBiomass</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Stem.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Stem.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Stem Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>GrainBiomass</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <EventNamesOnGraph>
-                  <Name>EventNamesOnGraph</Name>
-                  <ColumnName>CurrentStageName</ColumnName>
-                </EventNamesOnGraph>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Grain.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Grain.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>Spike</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <EventNamesOnGraph>
-                  <Name>EventNamesOnGraph</Name>
-                  <ColumnName>CurrentStageName</ColumnName>
-                </EventNamesOnGraph>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Spike.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Spike.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain Biomass (g/m2)</Title>
+                <Title>Spike N (g/m2)</Title>
                 <Inverted>false</Inverted>
                 <Minimum>NaN</Minimum>
                 <Maximum>NaN</Maximum>
@@ -52726,7 +52565,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.AppearedCohortNo</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -52775,6 +52614,111 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
             <Graph>
+              <Name>LeafLigules</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.ExpandedCohortNo</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Leaf Ligules (n)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>StartSenesced</Name>
+              <Series>
+                <Name>Predicted</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
+                <ShowInLegend>false</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Senesced leaves (n)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
               <Name>FullySenesced</Name>
               <Series>
                 <Name>Predicted</Name>
@@ -52790,6 +52734,27 @@ namespace Models
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
                 <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Observed</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>FilledCircle</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.DeadCohortNo</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -52834,7 +52799,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.LAI</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -52897,7 +52862,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.CoverTotal</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53033,165 +52998,6 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
           </Folder>
-          <Folder>
-            <Name>Leaves</Name>
-            <Graph>
-              <Name>LeafTips</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>Observed</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Structure.LeafTipsAppeared</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>Senesced</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>WheatReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Leaf.SenescingCohortNo</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries>
-                <string>0Full</string>
-                <string>50Full</string>
-                <string>0Nil</string>
-                <string>50Nil</string>
-              </DisabledSeries>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </Graph>
-            <Graph>
-              <Name>Stage</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <EventNamesOnGraph>
-                  <Name>EventNamesOnGraph</Name>
-                  <ColumnName>CurrentStageName</ColumnName>
-                </EventNamesOnGraph>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>WheatReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Phenology.Stage</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Grain Biomass (g/m2)</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Bottom</Type>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Graph>
-          </Folder>
           <Graph>
             <Name>SoilNitrate</Name>
             <Series>
@@ -53210,6 +53016,27 @@ namespace Models
               <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>ProfileNitrate</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Obs</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>WheatSoilN</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>SoilN</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -53285,9 +53112,9 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -53319,24 +53146,24 @@ namespace Models
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
             <Graph>
-              <Name>WaterDemand</Name>
+              <Name>Tension</Name>
               <Series>
                 <Name>Series</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
                 <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.WaterSupplyDemandRatio</YFieldName>
-                <ShowInLegend>false</ShowInLegend>
+                <YFieldName>Wheat.Root.WaterTension</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
@@ -53355,8 +53182,54 @@ namespace Models
                 <Maximum>NaN</Maximum>
                 <Interval>NaN</Interval>
               </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
+              <LegendPosition>BottomLeft</LegendPosition>
               <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>ES</Name>
+              <Series>
+                <Name>Series</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>WheatReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>Wheat.Leaf.CohortParameters.ExpansionStress.Value()</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>BottomLeft</LegendPosition>
+              <DisabledSeries>
+                <string>0Full</string>
+                <string>50Full</string>
+                <string>0Nil</string>
+                <string>50Nil</string>
+              </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
           </Folder>
@@ -53398,7 +53271,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53424,9 +53297,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53466,7 +53339,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53492,7 +53365,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
+                <string>0Nil</string>
+                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53532,7 +53407,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53558,9 +53433,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53600,7 +53475,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(4)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53626,9 +53501,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53668,7 +53543,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(5)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53694,9 +53569,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53736,7 +53611,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(6)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53762,9 +53637,9 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -53804,7 +53679,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Soil.SoilWater.SW(7)</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53830,7 +53705,6 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
               </DisabledSeries>
@@ -53845,9 +53719,9 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -53895,7 +53769,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
+                <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>WheatExtraVariables.Script.AccumFert</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
@@ -53937,7 +53811,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>WheatReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>ProfileWater</YFieldName>
               <ShowInLegend>true</ShowInLegend>
@@ -53983,6 +53857,144 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>WaterProfileFull</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>WheatReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Obs</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Water  content (mm)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopRight</LegendPosition>
+            <DisabledSeries>
+              <string>0Full</string>
+              <string>250Full</string>
+              <string>0Nil</string>
+              <string>50Nil</string>
+              <string>250Nil</string>
+            </DisabledSeries>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
+          <Graph>
+            <Name>WaterProfileNIl</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>WheatReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Obs</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Soil Nitrates kg/ha</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>550</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries>
+              <string>0Full</string>
+              <string>50Full</string>
+              <string>250Full</string>
+              <string>0Nil</string>
+              <string>50Nil</string>
+            </DisabledSeries>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
         </Folder>
@@ -54474,9 +54486,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>265</RecordNumber>
                 <ASCOrder>Kandasol</ASCOrder>
                 <ASCSubOrder>Red</ASCSubOrder>
@@ -56073,9 +56082,6 @@ namespace Models
                     <double>0.10004261693966804</double>
                   </oc>
                 </SoilNitrogen>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <SoilType>unknown
 </SoilType>
@@ -57497,9 +57503,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>265</RecordNumber>
                 <ASCOrder>Kandasol</ASCOrder>
                 <ASCSubOrder>Red</ASCSubOrder>
@@ -58198,9 +58201,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>265</RecordNumber>
                 <ASCOrder>Kandasol</ASCOrder>
                 <ASCSubOrder>Red</ASCSubOrder>
@@ -59073,9 +59073,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -61055,9 +61052,6 @@ namespace Models
                   <double>0.10004261693966804</double>
                 </oc>
               </SoilNitrogen>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>unknown
 </SoilType>
@@ -62146,9 +62140,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -62900,9 +62891,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -63654,9 +63642,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -64369,9 +64354,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS6Soil</SoilType>
               <LocalName>APS6Site</LocalName>
@@ -65398,9 +65380,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -66042,9 +66021,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -66686,9 +66662,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -67905,9 +67878,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <Latitude>0</Latitude>
                 <Longitude>0</Longitude>
@@ -69623,9 +69593,6 @@ namespace Models
                   <OCUnits>Total</OCUnits>
                   <PHUnits>Water</PHUnits>
                 </Sample>
-                <CERESSoilTemperature>
-                  <Name>CERESSoilTemperature</Name>
-                </CERESSoilTemperature>
                 <RecordNumber>0</RecordNumber>
                 <Latitude>0</Latitude>
                 <Longitude>0</Longitude>
@@ -71258,9 +71225,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -71920,9 +71884,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -72582,9 +72543,6 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>APS26Soil</SoilType>
               <LocalName>APS26Site</LocalName>
@@ -73642,9 +73600,6 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>APS26Soil</SoilType>
             <LocalName>APS26Site</LocalName>
@@ -74413,9 +74368,6 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -75254,5 +75206,5 @@ namespace Models
   <Folder>
     <Name>Sensibility</Name>
   </Folder>
-  <ExplorerWidth>257</ExplorerWidth>
+  <ExplorerWidth>332</ExplorerWidth>
 </Simulations>
