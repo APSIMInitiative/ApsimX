@@ -173,4 +173,5 @@ namespace Models.Graph
                 Axes = allAxes;
         }
     }
+
 }

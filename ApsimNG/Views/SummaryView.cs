@@ -27,6 +27,7 @@ namespace UserInterface.Views
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Model = comboModel;
+            combobox1.Changed += comboBox1_TextChanged;
             htmlview = new HTMLView(this);
             vbox1.PackEnd(htmlview.MainWidget, true, true, 0);
         }

@@ -275,5 +275,12 @@ namespace Models.Core
             /// <summary>Unique name for image. Used to save image to temp folder.</summary>
             public string name;
         }
+
+
+        /// <summary>Describes a new page for the tags system.</summary>
+        public class NewPage : ITag
+        {
+
+        }
     }
 }

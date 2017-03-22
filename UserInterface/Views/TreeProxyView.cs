@@ -154,7 +154,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
-        public void Export(Bitmap bitmap, bool legendOutside)
+        public void Export(Bitmap bitmap, Rectangle r, bool legendOutside)
         {
             //TODO: This will only save the last bitmap. Might need to change the interface.
             foreach (PlotView plot in plots)
@@ -172,7 +172,7 @@ namespace UserInterface.Views
                     plot.Model.LegendPosition = LegendPosition.RightTop;
                 }
 
-                plot.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
+                plot.DrawToBitmap(bitmap, r);
 
                 if (legendOutside)
                 {
@@ -188,7 +188,7 @@ namespace UserInterface.Views
         {
             // Set the clipboard text.
             Bitmap bitmap = new Bitmap(800, 600);
-            Export(bitmap, false);
+            Export(bitmap, new Rectangle(0, 0, 800, 600), false);
             Clipboard.SetImage(bitmap);
         }
 
