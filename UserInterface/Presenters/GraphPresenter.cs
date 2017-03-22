@@ -152,11 +152,11 @@ namespace UserInterface.Presenters
                     TextAnnotation textAnnotation = annotations[i] as TextAnnotation;
                     if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
                     {
-                        int numLines = StringUtilities.CountSubStrings(textAnnotation.text, "\r\n") + 1;
                         double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
 
                         double yPosition = largestAxisScale - i * interval;
-                        graphView.DrawText(textAnnotation.text, minimumX, yPosition,
+                        double xPosition = minimumX + (maximumX - minimumX) * 0.01;
+                        graphView.DrawText(textAnnotation.text, xPosition, yPosition,
                                            textAnnotation.leftAlign, textAnnotation.textRotation,
                                            Axis.AxisType.Bottom, Axis.AxisType.Left, textAnnotation.colour);
                     }

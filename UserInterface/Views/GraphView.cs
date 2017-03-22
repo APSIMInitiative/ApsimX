@@ -378,6 +378,7 @@ namespace UserInterface.Views
                 yPosition = (double)y;
             annotation.TextPosition = new DataPoint(xPosition, yPosition);
             annotation.TextColor = ConverterExtensions.ToOxyColor(colour);
+            annotation.Text += "\r\n\r\n";
             this.plot1.Model.Annotations.Add(annotation);
         }
 
