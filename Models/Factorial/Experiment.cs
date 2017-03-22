@@ -55,6 +55,7 @@ namespace Models.Factorial
                     value.ApplyToSimulation(newSimulation);
                 
                 PushFactorsToReportModels(newSimulation, combination);
+                StoreFactorsInDataStore(newSimulation, combination);
                 jobManager.AddChildJob(this, newSimulation);
             }
         }
@@ -67,6 +68,21 @@ namespace Models.Factorial
             List<string> names = new List<string>();
             List<string> values = new List<string>();
 
+            GetFactorNamesAndValues(factorValues, names, values);
+
+            foreach (Report.Report report in Apsim.ChildrenRecursively(simulation, typeof(Report.Report)))
+            {
+                report.ExperimentFactorNames = names;
+                report.ExperimentFactorValues = values;
+            }
+        }
+
+        /// <summary>Get a list of factor names and values.</summary>
+        /// <param name="factorValues">The factor value instances</param>
+        /// <param name="names">The return list of factor names</param>
+        /// <param name="values">The return list of factor values</param>
+        private static void GetFactorNamesAndValues(List<FactorValue> factorValues, List<string> names, List<string> values)
+        {
             foreach (FactorValue factorValue in factorValues)
             {
                 Factor topLevelFactor = factorValue.Factor;
@@ -82,12 +98,25 @@ namespace Models.Factorial
                 names.Add(name);
                 values.Add(value);
             }
+        }
 
-            foreach (Report.Report report in Apsim.ChildrenRecursively(simulation, typeof(Report.Report)))
-            {
-                report.ExperimentFactorNames = names;
-                report.ExperimentFactorValues = values;
-            }
+        /// <summary>Find all report models and give them the factor values.</summary>
+        /// <param name="factorValues">The factor values to send to each report model.</param>
+        /// <param name="simulation">The simulation to search for report models.</param>
+        private void StoreFactorsInDataStore(Simulation simulation, List<FactorValue> factorValues)
+        {
+            List<string> names = new List<string>();
+            List<string> values = new List<string>();
+
+            GetFactorNamesAndValues(factorValues, names, values);
+
+            string parentFolderName = null;
+            IModel parentFolder = Apsim.Parent(this, typeof(Folder));
+            if (parentFolder != null)
+                parentFolderName = parentFolder.Name;
+            DataStore store = new DataStore(this);
+            store.StoreFactors(Name, simulation.Name, parentFolderName, names, values);
+            store.Disconnect();
         }
 
         /// <summary>

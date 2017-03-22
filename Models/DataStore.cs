@@ -303,10 +303,8 @@ namespace Models
         }
 
         /// <summary>Create a table in the database based on the specified one.</summary>
-        /// <param name="simulationName">Name of the simulation.</param>
-        /// <param name="tableName">Name of the table.</param>
         /// <param name="table">The table.</param>
-        public void WriteTable(string simulationName, string tableName, ReportTable table)
+        public void WriteTable(ReportTable table)
         {
             lock (TablesToWrite)
                 TablesToWrite.Add(table);
@@ -589,6 +587,21 @@ namespace Models
         public static void ClearTablesToWritten()
         {
             TablesToWrite.Clear();
+        }
+
+        /// <summary>Store the list of factor names and values for the specified simulation.</summary>
+        public void StoreFactors(string experimentName, string simulationName, string folderName, List<string> names, List<string> values)
+        {
+            ReportTable table = new ReportTable();
+            table.FileName = Filename;
+            table.TableName = "Factors";
+            table.SimulationName = simulationName;
+            table.Columns.Add(new ReportColumnConstantValue("ExperimentName", experimentName));
+            table.Columns.Add(new ReportColumnConstantValue("SimulationName", simulationName));
+            table.Columns.Add(new ReportColumnConstantValue("FolderName", folderName));
+            table.Columns.Add(new ReportColumnWithValues("FactorName", names.ToArray()));
+            table.Columns.Add(new ReportColumnWithValues("FactorValue", values.ToArray()));
+            WriteTable(table);
         }
 
         /// <summary>Write a single summary file.</summary>
