@@ -183,6 +183,9 @@
                 else
                         player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
                 player.Play();
+                IsRunning = false;
+                jobManager = null;
+                jobs = null;
             }
         }
     }
