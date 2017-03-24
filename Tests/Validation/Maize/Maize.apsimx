@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="4">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -1021,6 +1021,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -2086,6 +2089,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -2885,6 +2891,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -3328,6 +3337,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -3756,6 +3768,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -4176,6 +4191,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -4583,6 +4601,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -4990,6 +5011,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -5389,6 +5413,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -5742,6 +5769,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -6149,6 +6179,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -6502,6 +6535,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -6878,6 +6914,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -7231,6 +7270,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -7630,6 +7672,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -8029,6 +8074,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -8436,6 +8484,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -8820,6 +8871,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -9227,6 +9281,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -9580,6 +9637,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -9918,6 +9978,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -10248,6 +10311,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -10645,6 +10711,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -11050,6 +11119,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -11424,6 +11496,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -11852,6 +11927,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -12565,6 +12643,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -12669,9 +12750,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12716,9 +12797,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12763,9 +12844,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12810,9 +12891,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12857,9 +12938,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12904,9 +12985,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12951,9 +13032,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13007,9 +13088,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13054,9 +13135,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13101,9 +13182,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13149,9 +13230,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13197,9 +13278,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13244,9 +13325,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13292,9 +13373,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -14152,6 +14233,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -15296,6 +15380,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -16183,6 +16270,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -17121,6 +17211,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -17980,6 +18073,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -18934,6 +19030,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Gatton</SoilType>
               <Site>UQ Lawes</Site>
@@ -20421,6 +20520,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Gatton</SoilType>
               <Site>UQ Lawes</Site>
@@ -21810,6 +21912,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Gatton</SoilType>
               <Site>UQ Lawes</Site>
@@ -23483,6 +23588,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <LocalName>Clarion</LocalName>
               <NearestTown>Ames</NearestTown>
@@ -24319,6 +24427,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <LocalName>Nicollet</LocalName>
             <Region>Bremer</Region>
@@ -25263,6 +25374,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <LocalName>Canisteo</LocalName>
             <NearestTown>Ames</NearestTown>
@@ -25529,53 +25643,6 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
       </Simulation>
-      <Graph>
-        <Name>GrainWt</Name>
-        <Series>
-          <Name>Series1</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.GrainWt</XFieldName>
-          <YFieldName>Predicted.GrainWt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
     </Folder>
     <Folder>
       <Name>NewZealand</Name>
@@ -26107,6 +26174,9 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -32023,6 +32093,9 @@ This trial was conducted to provide data for parametersising the Leaf Area model
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -34498,6 +34571,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -35368,6 +35444,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -36754,7 +36833,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36810,7 +36889,7 @@ Simulation results for the combined datasets from the various countries are show
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36858,7 +36937,7 @@ Simulation results for the combined datasets from the various countries are show
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -37471,6 +37550,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>Bugesera</Site>
             <NearestTown>Nyamata</NearestTown>

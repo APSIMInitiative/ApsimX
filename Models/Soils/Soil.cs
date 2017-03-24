@@ -406,11 +406,22 @@ namespace Models.Soils
             {
                 return CalcPAWC(Thickness,
                                 LL15,
-                                InitialWaterVolumetric,
+                                SoilWater.SW,
                                 null);
             }
         }
 
+        /// <summary>Plant available water at standard thickness. Units:mm/mm</summary>
+        public double[] PAWInitial
+        {
+            get
+            {
+                return CalcPAWC(Thickness,
+                                LL15,
+                                InitialWaterVolumetric,
+                                null);
+            }
+        }
         /// <summary>Return the plant available water CAPACITY at water node thickness. Units: mm/mm</summary>
         public double[] PAWCAtWaterThickness
         {

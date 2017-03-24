@@ -367,6 +367,22 @@ namespace Models.PMF.Organs
             Zones.Clear();
         }
 
+        /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
+        [Units("0-1")]
+        public double WaterTensionFactor
+        {
+            get
+            {
+                double MeanWTF = 0;
+                
+                if (Live.Wt > 0)
+                   foreach (ZoneState Z in Zones)
+                       for (int i = 0; i < Z.LayerLive.Length; i++)
+                           MeanWTF += Z.LayerLive[i].Wt/ Live.Wt * MathUtilities.Bound(2 * Z.soil.PAW[i] / Z.soil.PAWC[i], 0, 1);
+
+                return MeanWTF;
+            }
+        }
 
         #endregion
 
