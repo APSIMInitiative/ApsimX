@@ -24,7 +24,7 @@ namespace Models.Soils.Nutrient
         private IFunction CO2Efficiency = null;
 
         [Link]
-        private Nutrient nutrient = null;
+        private SoluteManager solutes = null;
 
         /// <summary>
         /// Name of source pool
@@ -72,7 +72,7 @@ namespace Models.Soils.Nutrient
                 destination.C[i] += carbonFlowToDestination;
                 destination.N[i] += nitrogenFlowToDestination;
                 if (nitrogenFlowToDestination <= nitrogenFlow)
-                    nutrient.NH4[i] += (nitrogenFlow - nitrogenFlowToDestination);
+                    solutes.AddToLayer(i, "NH4", nitrogenFlow - nitrogenFlowToDestination);
                 else
                     throw new NotImplementedException();
             }
