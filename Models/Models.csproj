@@ -277,6 +277,7 @@
     <Compile Include="Soils\HydraulicProperties.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
+    <Compile Include="Soils\Nutrient\Solute.cs" />
     <Compile Include="Soils\OutputLayers.cs" />
     <Compile Include="Soils\MultiPoreWater\Evapotranspiration.cs" />
     <Compile Include="Soils\MultiPoreWater\MRSpline.cs" />

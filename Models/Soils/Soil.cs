@@ -1686,6 +1686,17 @@ namespace Models.Soils
             return double.NaN;
         }
 
+        /// <summary>
+        /// Calculate conversion factor from kg/ha to ppm (mg/kg)
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public double[] kgha2ppm(double[] values)
+        {
+            for (int i = 0; i < values.Length; i++)
+                values[i] *= MathUtilities.Divide(100.0, BD[i] * Thickness[i], 0.0);
+            return values;
+        }
         #endregion
 
         #region Checking
