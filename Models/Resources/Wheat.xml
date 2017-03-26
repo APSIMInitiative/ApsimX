@@ -539,7 +539,7 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
               <double>1</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].LengthDensity</XProperty>
+          <XProperty>[Root].RootLengthDensity</XProperty>
         </LinearInterpolationFunction>
         <NUptake3>
           <Name>NUptakeFunction</Name>
