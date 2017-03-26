@@ -58,8 +58,16 @@ namespace Models.PMF.Functions
             // add a heading.
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            string lhs = (ChildFunctions[0] as VariableReference).VariableName;
-            string rhs = (ChildFunctions[1] as VariableReference).VariableName;
+            string lhs;
+            if (ChildFunctions[0] is VariableReference)
+                lhs = (ChildFunctions[0] as VariableReference).VariableName;
+            else
+                lhs = ChildFunctions[0].Name;
+            string rhs;
+            if (ChildFunctions[1] is VariableReference)
+                rhs = (ChildFunctions[1] as VariableReference).VariableName;
+            else
+                rhs = ChildFunctions[1].Name;
 
             tags.Add(new AutoDocumentation.Paragraph("IF " + lhs + " < " + rhs + " THEN", indent));
             ChildFunctions[2].Document(tags, headingLevel, indent+1);
