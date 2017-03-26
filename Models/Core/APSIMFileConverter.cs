@@ -21,7 +21,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 5; } }
+        public static int LastestVersion { get { return 6; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -203,5 +203,33 @@ namespace Models.Core
             foreach (XmlNode soilNode in XmlUtilities.FindAllRecursivelyByType(node, "Soil"))
                 XmlUtilities.EnsureNodeExists(soilNode, "CERESSoilTemperature");
         }
+
+        /// <summary>
+        /// Upgrades to version 6. Make sure all KLModifier, KNO3, KNH4 nodes have value
+        /// XProperty values.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        private static void UpgradeToVersion6(XmlNode node)
+        {
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "KLModifier"))
+            {
+                string value = XmlUtilities.Value(n, "XProperty");
+                if (value == "[Root].RootLengthDensity")
+                    XmlUtilities.SetValue(n, "XProperty", value);
+            }
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "KNO3"))
+            {
+                string value = XmlUtilities.Value(n, "XProperty");
+                if (value == "[Root].RootLengthDensity")
+                    XmlUtilities.SetValue(n, "XProperty", value);
+            }
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "KNH4"))
+            {
+                string value = XmlUtilities.Value(n, "XProperty");
+                if (value == "[Root].RootLengthDensity")
+                    XmlUtilities.SetValue(n, "XProperty", value);
+            }
+        }
+
     }
 }
