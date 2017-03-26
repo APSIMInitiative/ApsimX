@@ -63,15 +63,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Link to the KNO3 link</summary>
         [Link]
-        LinearInterpolationFunction KNO3 = null;
+        IFunction KNO3 = null;
 
         /// <summary>Link to the KNH4 link</summary>
         [Link]
-        LinearInterpolationFunction KNH4 = null;
+        IFunction KNH4 = null;
 
         /// <summary>Soil water factor for N Uptake</summary>
         [Link]
-        LinearInterpolationFunction NUptakeSWFactor = null;
+        IFunction NUptakeSWFactor = null;
 
         /// <summary>Gets or sets the initial biomass dry matter weight</summary>
         [Link]
@@ -150,7 +150,7 @@ namespace Models.PMF.Organs
         /// <summary>The kl modifier</summary>
         [Link]
         [Units("0-1")]
-        LinearInterpolationFunction KLModifier = null;
+        IFunction KLModifier = null;
         
         /// <summary>The Maximum Root Depth</summary>
         [Link]
@@ -282,6 +282,15 @@ namespace Models.PMF.Organs
                 return uptake;
             }
         }
+
+        /// <summary>Gets or sets the mid points of each layer</summary>
+        [XmlIgnore]
+        public double[] LayerMidPointDepth { get; private set; }
+
+        /// <summary>Gets or sets root water content</summary>
+        [XmlIgnore]
+        public double[] RWC { get; private set; }
+
         #endregion
 
         #region Functions
@@ -775,24 +784,24 @@ namespace Models.PMF.Organs
             ZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
             if (myZone != null)
             {
-
+                if (RWC == null || RWC.Length != myZone.soil.Thickness.Length)
+                    RWC = new double[myZone.soil.Thickness.Length];
                 double NO3Uptake = 0;
                 double NH4Uptake = 0;
                 for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                 {
                     if (myZone.LayerLive[layer].Wt > 0)
                     {
-                        double RWC = 0;
-                        RWC = (myZone.soil.Water[layer] - myZone.soil.SoilWater.LL15mm[layer]) / (myZone.soil.SoilWater.DULmm[layer] - myZone.soil.SoilWater.LL15mm[layer]);
-                        RWC = Math.Max(0.0, Math.Min(RWC, 1.0));
-                        double SWAF = NUptakeSWFactor.ValueForX(RWC);
+                        RWC[layer] = (myZone.soil.Water[layer] - myZone.soil.SoilWater.LL15mm[layer]) / (myZone.soil.SoilWater.DULmm[layer] - myZone.soil.SoilWater.LL15mm[layer]);
+                        RWC[layer] = Math.Max(0.0, Math.Min(RWC[layer], 1.0));
+                        double SWAF = NUptakeSWFactor.Value(layer);
 
-                        double kno3 = KNO3.ValueForX(LengthDensity[layer]);
+                        double kno3 = KNO3.Value(layer);
                         double NO3ppm = zone.NO3N[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
                         NO3Supply[layer] = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF, (MaxDailyNUptake.Value() - NO3Uptake));
                         NO3Uptake += NO3Supply[layer];
 
-                        double knh4 = KNH4.ValueForX(LengthDensity[layer]);
+                        double knh4 = KNH4.Value(layer);
                         double NH4ppm = zone.NH4N[layer] * (100.0 / (myZone.soil.BD[layer] * myZone.soil.Thickness[layer]));
                         NH4Supply[layer] = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF, (MaxDailyNUptake.Value() - NH4Uptake));
                         NH4Uptake += NH4Supply[layer];
@@ -862,14 +871,14 @@ namespace Models.PMF.Organs
                 return null;
 
             double[] supply = new double[myZone.soil.Thickness.Length];
-            double[] layerMidPoints = Soil.ToMidPoints(myZone.soil.Thickness);
+            LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
             for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
             {
                 if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
                 {
                     if (myZone.soil.Weirdo == null)
                     {
-                        supply[layer] = Math.Max(0.0, myZone.soil.KL(Plant.Name)[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
+                        supply[layer] = Math.Max(0.0, myZone.soil.KL(Plant.Name)[layer] * KLModifier.Value(layer) *
                             (zone.Water[layer] - myZone.soil.LL(Plant.Name)[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
                     }
                     else supply[layer] = 0; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
