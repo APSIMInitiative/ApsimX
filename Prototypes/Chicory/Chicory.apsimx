@@ -2094,7 +2094,7 @@ No effect of soil water content on root growth is currently captured in the mode
               <double>1</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDensity</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
@@ -2109,7 +2109,7 @@ No effect of soil water content on root growth is currently captured in the mode
               <double>0.02</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDensity</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
@@ -2124,7 +2124,7 @@ No effect of soil water content on root growth is currently captured in the mode
               <double>0.03</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDensity</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MaxDailyNUptake</Name>

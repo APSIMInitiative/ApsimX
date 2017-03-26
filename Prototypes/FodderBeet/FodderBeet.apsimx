@@ -853,7 +853,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
               <double>1</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDensity</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>SoilWaterEffect</Name>
