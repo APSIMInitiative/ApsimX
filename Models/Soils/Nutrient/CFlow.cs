@@ -4,6 +4,7 @@ namespace Models.Soils.Nutrient
     using Core;
     using Models.PMF.Functions;
     using System;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Encapsulates a carbon flow between pools.
@@ -64,7 +65,7 @@ namespace Models.Soils.Nutrient
             for (int i= 0; i < source.C.Length; i++)
             {
                 double carbonFlow = rate.Value(i) * source.C[i];
-                double nitrogenFlow = carbonFlow / source.CNRatio[i];
+                double nitrogenFlow = MathUtilities.Divide(carbonFlow, source.CNRatio[i],0);
                 double carbonFlowToDestination = carbonFlow * CO2Efficiency.Value(i);
                 double nitrogenFlowToDestination = carbonFlowToDestination / destination.CNRatio[i];
                 source.C[i] -= carbonFlow;
