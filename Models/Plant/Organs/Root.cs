@@ -150,7 +150,7 @@ namespace Models.PMF.Organs
         /// <summary>The kl modifier</summary>
         [Link]
         [Units("0-1")]
-        LinearInterpolationFunction KLModifier = null;
+        IFunction KLModifier = null;
         
         /// <summary>The Maximum Root Depth</summary>
         [Link]
@@ -282,6 +282,11 @@ namespace Models.PMF.Organs
                 return uptake;
             }
         }
+
+        /// <summary>Gets or sets the mid points of each layer</summary>
+        [Units("kg/ha")]
+        [XmlIgnore]
+        public double[] LayerMidPointDepth { get; private set; }
         #endregion
 
         #region Functions
@@ -862,14 +867,14 @@ namespace Models.PMF.Organs
                 return null;
 
             double[] supply = new double[myZone.soil.Thickness.Length];
-            double[] layerMidPoints = Soil.ToMidPoints(myZone.soil.Thickness);
+            LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
             for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
             {
                 if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
                 {
                     if (myZone.soil.Weirdo == null)
                     {
-                        supply[layer] = Math.Max(0.0, myZone.soil.KL(Plant.Name)[layer] * KLModifier.ValueForX(layerMidPoints[layer]) *
+                        supply[layer] = Math.Max(0.0, myZone.soil.KL(Plant.Name)[layer] * KLModifier.Value(layer) *
                             (zone.Water[layer] - myZone.soil.LL(Plant.Name)[layer] * myZone.soil.Thickness[layer]) * Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness));
                     }
                     else supply[layer] = 0; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
