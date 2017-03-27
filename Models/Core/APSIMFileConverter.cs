@@ -213,7 +213,9 @@ namespace Models.Core
         {
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
             {
-                if (n.InnerText == "[Root].RootLengthDensity" || n.InnerText == "[Root].RootLengthDenisty")
+                if (n.InnerText == "[Root].RootLengthDensity" || 
+                    n.InnerText == "[Root].RootLengthDenisty" ||
+                    n.InnerText == "[Root].LengthDenisty")
                     n.InnerText = "[Root].LengthDensity";
             }
         }
