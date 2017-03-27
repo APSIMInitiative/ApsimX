@@ -211,23 +211,10 @@ namespace Models.Core
         /// <param name="node">The node to upgrade.</param>
         private static void UpgradeToVersion6(XmlNode node)
         {
-            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "KLModifier"))
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
             {
-                string value = XmlUtilities.Value(n, "XProperty");
-                if (value == "[Root].RootLengthDensity")
-                    XmlUtilities.SetValue(n, "XProperty", value);
-            }
-            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "KNO3"))
-            {
-                string value = XmlUtilities.Value(n, "XProperty");
-                if (value == "[Root].RootLengthDensity")
-                    XmlUtilities.SetValue(n, "XProperty", value);
-            }
-            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "KNH4"))
-            {
-                string value = XmlUtilities.Value(n, "XProperty");
-                if (value == "[Root].RootLengthDensity")
-                    XmlUtilities.SetValue(n, "XProperty", value);
+                if (n.InnerText == "[Root].RootLengthDensity" || n.InnerText == "[Root].RootLengthDenisty")
+                    n.InnerText = "[Root].LengthDensity";
             }
         }
 
