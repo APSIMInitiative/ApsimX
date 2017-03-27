@@ -224,9 +224,15 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double[] value = new double[PlantZone.soil.Thickness.Length];
-                for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-                    value[i] = PlantZone.LayerLive[i].Wt * SpecificRootLength.Value() * 1000 / 1000000 / PlantZone.soil.Thickness[i];
+                double[] value;
+                if (PlantZone == null)
+                    value = new double[0];
+                else
+                {
+                    value = new double[PlantZone.soil.Thickness.Length];
+                    for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
+                        value[i] = PlantZone.LayerLive[i].Wt * SpecificRootLength.Value() * 1000 / 1000000 / PlantZone.soil.Thickness[i];
+                }
                 return value;
             }
         }
