@@ -179,7 +179,7 @@ This is important in SLURP as it is set for each species to represent their diff
           <double>0.00</double>
         </Y>
       </XYPairs>
-      <XProperty>[Root].LengthDenisty</XProperty>
+      <XProperty>[Root].LengthDensity</XProperty>
     </LinearInterpolationFunction>
     <NuptakeSupply>0</NuptakeSupply>
     <BiomassRemoval>
