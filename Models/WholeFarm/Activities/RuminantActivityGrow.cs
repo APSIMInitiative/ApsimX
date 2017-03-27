@@ -20,7 +20,7 @@ namespace Models.WholeFarm.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	public class RuminantActivityGrow : WFModel
+	public class RuminantActivityGrow : WFActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
@@ -484,6 +484,23 @@ namespace Models.WholeFarm.Activities
 			died = herd.Where(a => a.Died).ToList();
 			died.Select(a => { a.SaleFlag = Common.HerdChangeReason.Died; return a; }).ToList();
 			ruminantHerd.RemoveRuminant(died);
+		}
+
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns>List of required resource requests</returns>
+		public override List<ResourceRequest> DetermineResourcesNeeded()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform activity if it can occur as soon as resources are available.
+		/// </summary>
+		public override void PerformActivity()
+		{
+			return; ;
 		}
 
 	}

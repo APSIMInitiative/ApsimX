@@ -16,7 +16,7 @@ namespace Models.WholeFarm.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	public class RuminantActivityManage: WFModel
+	public class RuminantActivityManage: WFActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
@@ -66,9 +66,9 @@ namespace Models.WholeFarm.Activities
 		public double SellingWeight { get; set; }
 
 		/// <summary>
-		/// Month to undertake management (1-12)
+		/// Month to undertake management (1-12) and assign costs
 		/// </summary>
-		[Description("Month to undertake management (1-12)")]
+		[Description("Month to undertake management (1-12) and assign costs")]
 		public int ManagementMonth { get; set; }
 
 		/// <summary>
@@ -156,6 +156,12 @@ namespace Models.WholeFarm.Activities
 			// if management month
 			if (Clock.Today.Month == ManagementMonth ^ MonthlyManagement)
 			{
+				// pay costs
+
+
+
+
+
 				// Perform weaning
 				foreach (var ind in herd.Where(a => a.Weaned == false))
 				{
@@ -273,6 +279,23 @@ namespace Models.WholeFarm.Activities
 
 				}
 			}
+		}
+
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns>List of required resource requests</returns>
+		public override List<ResourceRequest> DetermineResourcesNeeded()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform activity if it can occur as soon as resources are available.
+		/// </summary>
+		public override void PerformActivity()
+		{
+			return; ;
 		}
 	}
 }

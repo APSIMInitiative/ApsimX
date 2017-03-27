@@ -29,22 +29,11 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		public double DryMatter { get; set; }
 
-		///// <summary>
-		///// Dry Matter Digestibility (%) NOT USED
-		///// </summary>
-		//public double DMD { get; set; }
-
 		/// <summary>
 		/// Nitrogen (%)
 		/// </summary>
 		[Description("Initial Nitrogen (%)")]
 		public double Nitrogen { get; set; }
-
-		/// <summary>
-		/// Starting Amount (kg)
-		/// </summary>
-		[Description("Starting Amount (kg)")]
-		public double StartingAmount { get; set; }
 
 		/// <summary>
 		/// Proportion Nitrogen loss each month from pools

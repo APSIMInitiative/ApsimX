@@ -52,7 +52,6 @@ namespace Models.WholeFarm.Resources
 		[XmlIgnore]
 		public double Limit { get; set; }
 
-
 		/// <summary>
 		/// Amount to set at start
 		/// </summary>

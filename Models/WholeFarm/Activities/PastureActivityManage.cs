@@ -38,6 +38,14 @@ namespace Models.WholeFarm.Activities
 		public string FeedTypeName { get; set; }
 
 		/// <summary>
+		/// Starting Amount (kg)
+		/// </summary>
+		[Description("Starting Amount (kg/ha)")]
+		public double StartingAmount { get; set; }
+
+		private double startingAmount = 0;
+
+		/// <summary>
 		/// Area of pasture
 		/// </summary>
 		[XmlIgnore]
@@ -121,8 +129,7 @@ namespace Models.WholeFarm.Activities
 			bool resourceAvailable = false;
 			LinkedNativeFoodType = Resources.GetResourceItem("GrazeFoodStore", FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
 
-			// TODO: Set up pasture pools to start run
-
+			startingAmount = StartingAmount;
 		}
 
 		/// <summary>An event handler to allow us to get next supply of pasture</summary>
@@ -216,6 +223,62 @@ namespace Models.WholeFarm.Activities
 			{
 				Area = ResourceRequestList.FirstOrDefault().Available;
 				LinkedNativeFoodType.Area = Area;
+
+				// Set up pasture pools to start run based on month and user defined pasture
+				// the previous five months where growth occurred will be initialised.
+				// This months growth will not be included.
+
+				int month = Clock.Today.Month;
+				int monthCount = 0;
+				int includedMonthCount = 0;
+				double propBiomass = 1.0;
+				double currentN = LinkedNativeFoodType.Nitrogen;
+				double currentDMD = LinkedNativeFoodType.DMD;
+
+				LinkedNativeFoodType.Pools.Clear();
+
+				while (includedMonthCount < 5)
+				{
+					if (month == 0) month = 12;
+					if(month<=3 | month>=11)
+					{
+						// add new pool
+						LinkedNativeFoodType.Pools.Add(new GrazeFoodStorePool()
+						{
+							Age = monthCount,
+							Nitrogen = currentN,
+							DMD = currentDMD,
+							StartingAmount = propBiomass
+						});
+						includedMonthCount++;
+					}
+					propBiomass *= 1 - LinkedNativeFoodType.DetachRate;
+					currentN *= 1 - LinkedNativeFoodType.DecayNitrogen;
+					currentN = Math.Max(currentN, LinkedNativeFoodType.MinimumNitrogen);
+					currentDMD *= 1 - LinkedNativeFoodType.DecayDMD;
+					currentDMD = Math.Max(currentDMD, LinkedNativeFoodType.MinimumDMD);
+					monthCount++;
+					month--;
+				}
+
+				// assign pasture biomass to pools based on proportion of total
+				double amountToAdd = Area * startingAmount;
+
+				double total = LinkedNativeFoodType.Pools.Sum(a => a.Amount);
+				foreach (var pool in LinkedNativeFoodType.Pools)
+				{
+					pool.Set(amountToAdd * (pool.Amount / total));
+				}
+
+
+				// remove this months growth from pool age 0 to keep biomass at approximately setup.
+				// Get this months growth
+				double thisMonthsGrowth = 0;
+				if (thisMonthsGrowth> 0)
+				{
+					//TODO: remove from pool age 0
+				}
+
 			}
 			return;
 		}
