@@ -81,7 +81,7 @@ namespace Models.Core
                     st = st.Remove(0, 2);
                 StringReader reader = new StringReader(st);
                 string line = reader.ReadLine();
-                while (line != null)
+                while (line != null && line.Trim() != string.Empty)
                 {
                     if (numSpacesStartOfLine == -1)
                     {
