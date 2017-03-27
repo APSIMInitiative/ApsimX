@@ -12,8 +12,20 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class RuminantFilterGroup : WFModel
+	public class RuminantFeedGroup: WFModel
 	{
+		/// <summary>
+		/// Monthly values to supply selected individuals
+		/// </summary>
+		[Description("Monthly values to supply selected individuals")]
+		public double[] MonthlyValues { get; set; }
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public RuminantFeedGroup()
+		{
+			MonthlyValues = new double[12];
+		}
 	}
 }

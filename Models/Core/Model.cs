@@ -294,6 +294,7 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityTrade))]
 		[XmlElement(typeof(Models.WholeFarm.RuminantArbitratorFeed))]
 		[XmlElement(typeof(Models.WholeFarm.Groupings.RuminantFilter))]
+		[XmlElement(typeof(Models.WholeFarm.Groupings.RuminantFeedGroup))]
 		[XmlElement(typeof(Models.WholeFarm.Groupings.RuminantFilterGroup))]
 		[XmlElement(typeof(Models.WholeFarm.Groupings.RuminantMusterGroup))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.RuminantPricing))]

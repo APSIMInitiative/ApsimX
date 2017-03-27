@@ -152,9 +152,9 @@ namespace Models.WholeFarm.Activities
 				// get list from filters
 				foreach (var child in this.Children)
 				{
-					if (child.GetType() == typeof(RuminantFilterGroup))
+					if (child.GetType() == typeof(RuminantFeedGroup))
 					{
-						foreach (Ruminant ind in herd.Filter(child as RuminantFilterGroup))
+						foreach (Ruminant ind in herd.Filter(child as RuminantFeedGroup))
 						{
 							RuminantFeedRequest freqest = new RuminantFeedRequest();
 							freqest.FeedActivity = this;
@@ -163,16 +163,16 @@ namespace Models.WholeFarm.Activities
 							switch (FeedStyle)
 							{
 								case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-									freqest.Amount = (child as RuminantFilterGroup).MonthlyValues[month - 1] * 30.4; // * ind.Number;
+									freqest.Amount = (child as RuminantFeedGroup).MonthlyValues[month - 1] * 30.4; // * ind.Number;
 									break;
 								case RuminantFeedActivityTypes.ProportionOfWeight:
-									freqest.Amount = (child as RuminantFilterGroup).MonthlyValues[month - 1] * ind.Weight *30.4; // * ind.Number;
+									freqest.Amount = (child as RuminantFeedGroup).MonthlyValues[month - 1] * ind.Weight *30.4; // * ind.Number;
 									break;
 								case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-									freqest.Amount = (child as RuminantFilterGroup).MonthlyValues[month - 1] * ind.PotentialIntake; // * ind.Number;
+									freqest.Amount = (child as RuminantFeedGroup).MonthlyValues[month - 1] * ind.PotentialIntake; // * ind.Number;
 									break;
 								case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-									freqest.Amount = (child as RuminantFilterGroup).MonthlyValues[month - 1] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
+									freqest.Amount = (child as RuminantFeedGroup).MonthlyValues[month - 1] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
 									break;
 								default:
 									break;

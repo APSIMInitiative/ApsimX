@@ -124,9 +124,9 @@ namespace Models.WholeFarm.Activities
 					if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
 					// determine head to be fed
 					int head = 0;
-					foreach (RuminantFilterGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)))
+					foreach (RuminantFeedGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFeedGroup)))
 					{
-						head += herd.Filter(child as RuminantFilterGroup).Count();
+						head += herd.Filter(child as RuminantFeedGroup).Count();
 					}
 					ResourceRequestList.Add(new ResourceRequest()
 					{
@@ -146,23 +146,23 @@ namespace Models.WholeFarm.Activities
 				int month = Clock.Today.Month - 1;
 
 				// get list from filters
-				foreach (RuminantFilterGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)))
+				foreach (RuminantFeedGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFeedGroup)))
 				{
-					foreach (Ruminant ind in herd.Filter(child as RuminantFilterGroup))
+					foreach (Ruminant ind in herd.Filter(child as RuminantFeedGroup))
 					{
 						switch (FeedStyle)
 						{
 							case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * 30.4;
+								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
 								break;
 							case RuminantFeedActivityTypes.ProportionOfWeight:
-								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * ind.Weight * 30.4;
+								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4;
 								break;
 							case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * ind.PotentialIntake;
+								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake;
 								break;
 							case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake);
+								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake);
 								break;
 							default:
 								break;
@@ -220,36 +220,36 @@ namespace Models.WholeFarm.Activities
 				int month = Clock.Today.Month - 1;
 
 				// get list from filters
-				foreach (RuminantFilterGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)))
+				foreach (RuminantFeedGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFeedGroup)))
 				{
-					foreach (Ruminant ind in herd.Filter(child as RuminantFilterGroup))
+					foreach (Ruminant ind in herd.Filter(child as RuminantFeedGroup))
 					{
 //						double feedRequired = 0;
 						switch (FeedStyle)
 						{
 							case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-								details.Supplied = (child as RuminantFilterGroup).MonthlyValues[month] * 30.4;
+								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
 //								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * 30.4; // * ind.Number;
 //								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
 							case RuminantFeedActivityTypes.ProportionOfWeight:
-								details.Supplied = (child as RuminantFilterGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
+								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
 //								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
 //								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
 							case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-								details.Supplied = (child as RuminantFilterGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
+								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
 //								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
 //								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
 							case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-								details.Supplied = (child as RuminantFilterGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
+								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
 //								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake) ; // * ind.Number;

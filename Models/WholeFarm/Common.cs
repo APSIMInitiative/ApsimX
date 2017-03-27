@@ -97,6 +97,25 @@ namespace Models.WholeFarm
 		}
 
 		/// <summary>
+		/// Animal pricing style
+		/// </summary>
+		public enum HerdPaymentStyleType
+		{
+			/// <summary>
+			/// Fixed price
+			/// </summary>
+			Fixed,
+			/// <summary>
+			/// Amount per head
+			/// </summary>
+			perHead,
+			/// <summary>
+			/// Amount per adult equivilant
+			/// </summary>
+			perAE,
+		}
+
+		/// <summary>
 		/// Types of measures of area with value representing the number of hectares
 		/// </summary>
 		public enum UnitsOfAreaType
