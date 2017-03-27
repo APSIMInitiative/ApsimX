@@ -1310,7 +1310,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <double>0.01</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <XProperty>[Root].RootLengthDensity</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>NUptakeSWFactor</Name>
