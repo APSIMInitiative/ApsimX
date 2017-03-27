@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -82,15 +82,15 @@ Jamieson PD, Martin RJ, Francis GS, Wilson DR 1995. Drought effects on biomass p
         <string>[Barley].Leaf.Transpiration</string>
         <string>[Barley].Phenology.CurrentPhaseName</string>
         <string>[Barley].Phenology.CurrentStageName</string>
-        <string>[Barley].Phenology.DailyVernalisation.Value</string>
-        <string>[Barley].Phenology.MeanTemp.Value</string>
-        <string>[Barley].Phenology.Photoperiod.Value</string>
+        <string>[Barley].Phenology.DailyVernalisation.Value()</string>
+        <string>[Barley].Phenology.MeanTemp.Value()</string>
+        <string>[Barley].Phenology.Photoperiod.Value()</string>
         <string>[Barley].Phenology.Stage</string>
-        <string>[Barley].Phenology.ThermalTime.Value</string>
-        <string>[Barley].Phenology.ThermalTime.Value  </string>
-        <string>[Barley].Phenology.Vrn1.Value</string>
-        <string>[Barley].Phenology.Vrn2.Value</string>
-        <string>[Barley].Phenology.Vrn4.Value</string>
+        <string>[Barley].Phenology.ThermalTime.Value()</string>
+        <string>[Barley].Phenology.ThermalTime.Value () </string>
+        <string>[Barley].Phenology.Vrn1.Value()</string>
+        <string>[Barley].Phenology.Vrn2.Value()</string>
+        <string>[Barley].Phenology.Vrn4.Value()</string>
         <string>[Barley].Phenology.Zadok.Stage</string>
         <string>[Barley].Root.Depth</string>
         <string>[Barley].Root.N</string>
@@ -109,14 +109,14 @@ Jamieson PD, Martin RJ, Francis GS, Wilson DR 1995. Drought effects on biomass p
         <string>[Barley].StemPlusSpike.Wt</string>
         <string>[Barley].StemPlusSpike.N</string>
         <string>[Barley].SowingData.Cultivar</string>
-        <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value</string>
-        <string>[Barley].Structure.HaunStage.Value</string>
+        <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value()</string>
+        <string>[Barley].Structure.HaunStage.Value()</string>
         <string>[Barley].Structure.Height</string>
         <string>[Barley].Structure.LeafTipsAppeared</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber.Value</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value</string>
+        <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
+        <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
         <string>[Barley].Structure.MainStemPopn</string>
-        <string>[Barley].Structure.MeanTillerGrowthRate.Value</string>
+        <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
         <string>[Barley].Structure.TotalStemPopn</string>
         <string>[Barley].Total.N</string>
         <string>[Barley].Total.Wt</string>
@@ -129,7 +129,7 @@ Jamieson PD, Martin RJ, Francis GS, Wilson DR 1995. Drought effects on biomass p
         <string>[Barley].Phenology.PhotoPeriod</string>
         <string>[Barley].Phenology.PhotoPeriodDeltaFunction</string>
         <string>[Barley].Phenology.Stage</string>
-        <string>[Barley].Phenology.SoilTemperatureFunction.Value</string>
+        <string>[Barley].Phenology.SoilTemperatureFunction.Value()</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -153,16 +153,64 @@ Jamieson PD, Martin RJ, Francis GS, Wilson DR 1995. Drought effects on biomass p
     </Report>
     <Plant>
       <Name>Barley</Name>
-      <CultivarFolder>
-        <Name>Cultivars</Name>
-        <Cultivar>
-          <Name>Triumph</Name>
-          <Command>[Phenology].MinimumLeafNumber.Value = 9</Command>
-          <Command>[Phenology].VrnSensitivity.Value = 7</Command>
-          <Command>[Phenology].PpSensitivity.Value = 3</Command>
-          <Command>[Structure].BasePhyllochron.Value = 80</Command>
-        </Cultivar>
-      </CultivarFolder>
+      <Memo>
+        <Name>TitlePage</Name>
+        <MemoText><![CDATA[
+# An APSIM Oat Model
+
+_Zyskowski,R.F, Brown, H.E. and Texiera,E._
+
+The APSIM Oat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014], and is heavily based on  many pricipals implemented within. This framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+
+The model consists of:
+
+* a phenology model to simulate development between growth phases  
+* a structure model to simulate plant morphology  
+* a collection of organs to simulate the various plant parts  
+* an arbitrator to allocate resources (N, biomass) to the various plant organs  
+]]></MemoText>
+      </Memo>
+      <Memo>
+        <Name>Rerferences</Name>
+        <MemoText><![CDATA[Brown, H. E., et al. (2014). "Plant Modelling Framework: Software for building and running crop models on the APSIM platform." Environmental Modelling & Software 62: 385-398.
+
+Jamieson, P. D. and C. A. Munro (1999). A simple method for the phenological evaluation of new cereal cultivars. Agronomy Society of New Zealand - Proceedings, Twenty-Ninth Annual Conference, 1999. J. G. Hampton and K. M. Pollock. 29: 63-68.
+	
+
+Martin, R. J., et al. (1998). The effect of daylength on final leaf number in drummond oats. Australian Agronomy Conference. Wagga Wagga.
+	
+Sonego, M., et al. (1998). Cordination of apex and leaf deceolpment in oats. Austrlian Agronomy conference. Wagg Wagga.
+	
+Martin, R. J. and I. N. C. Agron Soc New Zealand (1996). The effect of sowing date on growth and yield of two cultivars of oats.
+	Oats cvs. Cashel and Drummond were sown at Lincoln on 16 September, 2 November, and 21 December 1994; and on 7 February, 3 April, and 16 May 1995 in order to compare the effect of sowing date on their growth and yield. Biomass and leaf area were measured at one to four-week intervals from the end of tillering. Crops grew for periods ranging from just over 100 days to nearly 300 days. The crop sown in February died before maturity, and the one sown in April was affected by frost. Biomass production was much higher for the April sowing (over 20 t/ha) than the 7.5-15 t/ha for the other sowings, and was higher for Drummond than for Cashel at all sowing dates. Leaf area indices did not exceed 4.5 except for the February and April sowings of Drummond. There was a strong linear relationship between cumulative biomass production and intercepted radiation for all sowing dates, with the same rate of increase in biomass with radiation increase for both cultivars. Grain yields estimated from quadrat samples were higher than header yields for all sowings, but especially for the April sowing in which grain weights and harvest indices were lower than for the other sowings. Fifty-seven percent of grain yield came from post anthesis photosynthesis and 43% from remobilization from other plant parts. Oat yield is dependent on the amount of radiation intercepted by the crop and harvest index. Changes in conversion of radiation to biomass were not significantly affected by the range of conditions experienced by the crops in this study.
+
+Martin, R. J., et al. Effects of Timing and Intensity of Drought on the Yield of Oats (Avena sativa L.). Australian Agronomy
+Hobart.
+	The response of oats (Avena sativa L.) to timing and intensity of drought was determined in a mobile
+rainshelter, which excluded rainfall during crop growth. Ten irrigation treatments subjected the crops to
+drought of varying duration at different stages during plant growth; the crops were otherwise fully
+irrigated. Oat grain yield generally increased linearly with cumulative water use, and decreased linearly as
+the maximum potential soil moisture deficit experienced during crop growth increased, regardless of the
+timing of drought. The exception to this was the no drought (fully irrigated) treatment, where lodging
+reduced panicle number and grain weight compared to early drought treatments. Drought affected yield
+mainly by reducing panicle and grain number, effects on grain weight were small. . Relieving early drought
+through late irrigation led to more late tillers, more panicles, heavier grains, and later maturity. Full and
+late drought increased screenings.
+
+
+
+Sonego, M., et al. (1999). Development and growth of oat leaves at different temperatures and nitrogen levels. Agronomy Society of New Zealand - Proceedings, Twenty-Ninth Annual Conference, 1999. J. G. Hampton and K. M. Pollock. 29: 75-81.
+	This paper reports the development of a model to predict leaf appearance rate in oats (Avena sativa L.) based on the results of two field experiments and including a comparison of air and near-apex soil temperatures as predictors of leaf appearance. Oat genotype C&F 435 was sown on eight dates from April 1996 to November 1997. Nitrogen treatments (0 and 100 kg N/ha) were applied to the May and November 1997 crops. Observation of the number of visible leaf tips and leaf lamina length were taken at 2-7 day intervals. Near apex soil temperature and air temperature were recorded by data loggers. The number of visible tips was linearly related to temperature expressed as accumulated thermal time (base temperature of 0 degreesC). The rate of leaf appearance in thermal time, using either air or soil temperature, was nearly constant within a sowing date, but faster for spring sown than for autumn sown crops. Differences in this rate were less among sowing dates when near apex soil temperature was used to calculate thermal time than when screen temperatures were used. This indicated that the use of temperature near the shoot apex may improve phenological predictions from crop models. Nitrogen application had no effect on the rate of leaf appearance regardless of sowing date, but caused an average increase of 19% (P < 0.05) in the final leaf lamina length for the last five leaves.
+
+Sonego, M., et al. (1997). Phenological development of oat crops in response to sowing dates. Proceedings of the Twenty-Seventh Annual Conference of the Agronomy Society of New Zealand. 27: 115-118.
+	Observations of apical development in oats were made from sowings made on six occasions through an annual cycle. These were analysed to determine the effects of temperature and daylength on the duration of the period from sowing until anthesis. A simple, two-phase thermal time accumulation model, modified by daylength in the post emergence phase, accounted for most of the variation (n = 6, CV = 6%).
+
+Zhao, G. Q., et al. (2009). "Response of Nitrogen Uptake and Partitioning to Critical Nitrogen Supply in Oat Cultivars." Crop Science 49(3): 1040-1048.
+	Nitrogen uptake and partitioning in oat (Avena sativa L.) are not well documented. A greenhouse study was conducted to determine the critical timing of N supply on the growth, N uptake, and partitioning. Plants grown in plastic pots were subjected to five N fertilization regimes: (i) control, N supply from seedling to physiological maturity (PM); (ii) N supply from seedling to flag leaf; (iii) N supply from flag leaf to PM; (iv) N supply from seedling to heading; and (v) N supply from heading to PM. Leaf chlorophyll content, plant dry matter (DM), and N uptake and accumulation were measured. Total plant DM was 21% greater for naked 'VAO-2' than for covered 'Prescott', while both genotypes produced similar grain yields. Varietal differences in total plant N were significant (P < 0.05) with average of 18% higher N content for VAO-2, but most of its accumulated N was in the vegetative components. For both varieties, N supply was more critical before heading than thereafter. Compared with the control, restriction of N supply from seedling to flag leaf stage significantly reduced spikelet number (28%) and grain yield (26%). Withholding N supply until heading reduced yield by up to 65% and N uptake by 75%. No yield reduction occurred when N was withheld from flag leaf or heading to PM. Although naked VAO-2 accumulated more N than Prescott under the same conditions, partitioning of N to the grain in VAO-2 was less efficient.
+
+
+]]></MemoText>
+      </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <RelativeAllocation>
@@ -176,8 +224,11 @@ Jamieson PD, Martin RJ, Francis GS, Wilson DR 1995. Drought effects on biomass p
         <Name>Phenology</Name>
         <Memo>
           <Name>Memo</Name>
-          <MemoText><![CDATA[The barley cultivar "Triumph" used in this model does not require vernalisation and therefore nil sensitivity is used here to reflect that.
+          <MemoText><![CDATA[The oats varieties used in this model have shown no sign of winter vernilisation, and the models used here reflect that.
 
+The data  shows a slowdown in phenological developement in winter conditions, which could be due to temperature and photo period. 
+
+Here we go with published data of Martin et al which usesa Photo Thermal model.
 
 
 
@@ -227,7 +278,7 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
             <Name>FP</Name>
             <Constant>
               <Name>Zero</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <DivideFunction>
               <Name>DivideFunction</Name>
@@ -235,16 +286,16 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
                 <Name>PP7</Name>
                 <VariableReference>
                   <Name>Photoperiod</Name>
-                  <VariableName>[Phenology].Photoperiod.Value</VariableName>
+                  <VariableName>[Phenology].Photoperiod.Value()</VariableName>
                 </VariableReference>
                 <Constant>
                   <Name>Seven</Name>
-                  <Value>7</Value>
+                  <FixedValue>7</FixedValue>
                 </Constant>
               </SubtractFunction>
               <Constant>
                 <Name>Nine</Name>
-                <Value>9</Value>
+                <FixedValue>9</FixedValue>
               </Constant>
             </DivideFunction>
           </MaximumFunction>
@@ -282,7 +333,7 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
             <Name>ApexBelowGround</Name>
             <Constant>
               <Name>Photoperiod</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
               <Units>h</Units>
             </Constant>
             <Start>Germination</Start>
@@ -294,7 +345,7 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>Photoperiod</Name>
-                <VariableName>[Phenology].Photoperiod.Value</VariableName>
+                <VariableName>[Phenology].Photoperiod.Value()</VariableName>
               </VariableReference>
               <LinearInterpolationFunction>
                 <Name>LinearInterpolationFunction</Name>
@@ -313,7 +364,7 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
                     <double>1</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Phenology].PhotoperiodDeltaFunction.Value</XProperty>
+                <XProperty>[Phenology].PhotoperiodDeltaFunction.Value()</XProperty>
               </LinearInterpolationFunction>
             </MultiplyFunction>
             <Start>Emergence</Start>
@@ -326,9 +377,9 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
             <Name>Memo</Name>
             <MemoText><![CDATA[The difference between Inherent earlyness leaf number and the number of leaves produced when the plant is unvernalisaed and grown in long photoperiod
 
-Not used in Barley]]></MemoText>
+Not used in oats]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>Leaves</Units>
         </Constant>
         <Constant>
@@ -338,7 +389,7 @@ Not used in Barley]]></MemoText>
             <MemoText><![CDATA[Number of leaves the plant will produce when fully vernalised early and grown in long photoperiod
 ]]></MemoText>
           </Memo>
-          <Value>6</Value>
+          <FixedValue>6</FixedValue>
           <Units>Leaves</Units>
         </Constant>
         <Constant>
@@ -348,9 +399,9 @@ Not used in Barley]]></MemoText>
             <MemoText><![CDATA[The amount of vernalising temperature required before vernalisation response will be evident.  Value of relative to the amount offl vernalisation temperature required from the end of the lag until vernalisation saturation.  A value of 0 means there is no lag, a value of 1 means the lag is the same (in vernal time) as the vernalisation requirement and a value of 2 means the lag is twice as long as the vernalisation response phase
 
 
-Not used in Barley]]></MemoText>
+Not used in oats]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>Unitless</Units>
         </Constant>
         <Constant>
@@ -361,7 +412,7 @@ Not used in Barley]]></MemoText>
 
 Not used in current oat model]]></MemoText>
           </Memo>
-          <Value>6</Value>
+          <FixedValue>6</FixedValue>
           <Units>Leaves</Units>
         </Constant>
         <Constant>
@@ -372,7 +423,7 @@ Not used in current oat model]]></MemoText>
 
 Not used in curreent oat model.]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>EarlyReproductiveLongDayBase</Name>
@@ -382,7 +433,7 @@ Not used in curreent oat model.]]></MemoText>
 
 Not used in current oat model.]]></MemoText>
           </Memo>
-          <Value>2.5</Value>
+          <FixedValue>2.5</FixedValue>
         </Constant>
         <GerminatingPhase>
           <Name>Germinating</Name>
@@ -393,7 +444,7 @@ Not used in current oat model.]]></MemoText>
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -412,17 +463,17 @@ Currently the leaf number is 4, due to March sowings in which th sixth leaf dosn
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
             <Constant>
               <Name>Six</Name>
-              <Value>4</Value>
+              <FixedValue>4</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyll</Name>
-              <VariableName>[Structure].BasePhyllochron.Value</VariableName>
+              <VariableName>[Structure].BasePhyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Start>Emergence</Start>
@@ -440,7 +491,7 @@ Duration is (TS-6)*Phyllocgron]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
@@ -448,16 +499,16 @@ Duration is (TS-6)*Phyllocgron]]></MemoText>
               <Name>SubtractFunction</Name>
               <VariableReference>
                 <Name>TST</Name>
-                <VariableName>[Structure].TSLN.Value</VariableName>
+                <VariableName>[Structure].TSLN.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>Six</Name>
-                <Value>6</Value>
+                <FixedValue>6</FixedValue>
               </Constant>
             </SubtractFunction>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].BasePhyllochron.Value</VariableName>
+              <VariableName>[Structure].BasePhyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Start>VS</Start>
@@ -474,17 +525,17 @@ Duration is (TS-6)*Phyllocgron]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].BasePhyllochron.Value</VariableName>
+              <VariableName>[Structure].BasePhyllochron.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>exp</Name>
-              <Value>1.5</Value>
+              <FixedValue>1.5</FixedValue>
             </Constant>
           </MultiplyFunction>
           <Start>TerminalSpikelet</Start>
@@ -494,7 +545,7 @@ Duration is (TS-6)*Phyllocgron]]></MemoText>
           <Name>EarDevelopment</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Memo>
             <Name>Memo</Name>
@@ -509,11 +560,11 @@ Was constant at 100, however have cahnge it 1 Phyllchron.
             <Name>Target</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].BasePhyllochron.Value</VariableName>
+              <VariableName>[Structure].BasePhyllochron.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>exp</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
           </MultiplyFunction>
           <Start>FlagLeaf</Start>
@@ -523,11 +574,11 @@ Was constant at 100, however have cahnge it 1 Phyllchron.
           <Name>GrainDevelopment</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>240</Value>
+            <FixedValue>240</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Flowering</Start>
           <End>StartGrainFill</End>
@@ -536,11 +587,11 @@ Was constant at 100, however have cahnge it 1 Phyllchron.
           <Name>GrainFilling</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>900</Value>
+            <FixedValue>900</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>StartGrainFill</Start>
           <End>EndGrainFill</End>
@@ -549,11 +600,11 @@ Was constant at 100, however have cahnge it 1 Phyllchron.
           <Name>Maturing</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>35</Value>
+            <FixedValue>35</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EndGrainFill</Start>
           <End>Maturity</End>
@@ -562,11 +613,11 @@ Was constant at 100, however have cahnge it 1 Phyllchron.
           <Name>Ripening</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>300</Value>
+            <FixedValue>300</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Maturity</Start>
           <End>HarvestRipe</End>
@@ -575,7 +626,7 @@ Was constant at 100, however have cahnge it 1 Phyllchron.
           <Name>ReadyForHarvesting</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>HarvestRipe</Start>
           <End>Unused</End>
@@ -593,7 +644,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -612,7 +663,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -630,7 +681,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -645,7 +696,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Structure</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
           <Name>MainStemNodeAppearanceRate</Name>
@@ -693,11 +744,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Phenology].Photoperiod.Value</XProperty>
+            <XProperty>[Phenology].Photoperiod.Value()</XProperty>
           </LinearInterpolationFunction>
           <VariableReference>
             <Name>Phyllochron</Name>
-            <VariableName>[Structure].BasePhyllochron.Value</VariableName>
+            <VariableName>[Structure].BasePhyllochron.Value()</VariableName>
           </VariableReference>
         </MultiplyFunction>
         <MultiplyFunction>
@@ -740,7 +791,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>Reproductive</Name>
               <Constant>
                 <Name>Zero</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>TerminalSpikelet</Start>
               <End>HarvestRipe</End>
@@ -761,7 +812,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Stem].PercentWSC.Value</XProperty>
+              <XProperty>[Stem].PercentWSC.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>Nitrogen</Name>
@@ -812,7 +863,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Structure].MeanTillerGrowthRate.Value</XProperty>
+              <XProperty>[Structure].MeanTillerGrowthRate.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>PhotoPeriodEffect</Name>
@@ -829,7 +880,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Phenology].Photoperiod.Value</XProperty>
+              <XProperty>[Phenology].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>TemperatureEffect</Name>
@@ -871,11 +922,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <double>0</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Structure].MeanTillerGrowthRate.Value</XProperty>
+                <XProperty>[Structure].MeanTillerGrowthRate.Value()</XProperty>
               </LinearInterpolationFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
             </MultiplyFunction>
             <Start>FlagLeaf</Start>
@@ -931,7 +982,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
             <VariableReference>
               <Name>ThermalTime</Name>
-              <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              <VariableName>[Phenology].ThermalTime.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>StemPopulation</Name>
@@ -945,7 +996,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>MeanPhyllochron</Name>
           <VariableReference>
             <Name>Phyllochron</Name>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
           </VariableReference>
           <NumberOfDays>300</NumberOfDays>
           <InitialValue>80</InitialValue>
@@ -956,16 +1007,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>FLNlessIntercept</Name>
             <VariableReference>
               <Name>FinalLeafNumber</Name>
-              <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
+              <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>Intercept</Name>
-              <Value>2.85</Value>
+              <FixedValue>2.85</FixedValue>
             </Constant>
           </SubtractFunction>
           <Constant>
             <Name>Slope</Name>
-            <Value>1.1</Value>
+            <FixedValue>1.1</FixedValue>
           </Constant>
         </DivideFunction>
         <AddFunction>
@@ -1052,7 +1103,7 @@ THe model allows these to be cultivar deined.
           </Memo>
           <Constant>
             <Name>MaxLN</Name>
-            <Value>15</Value>
+            <FixedValue>15</FixedValue>
           </Constant>
           <MinimumFunction>
             <Name>FLN</Name>
@@ -1060,50 +1111,50 @@ THe model allows these to be cultivar deined.
               <Name>AtLeafSix</Name>
               <VariableReference>
                 <Name>PreEventValue</Name>
-                <VariableName>[Structure].MaxLN.Value</VariableName>
+                <VariableName>[Structure].MaxLN.Value()</VariableName>
               </VariableReference>
               <MaximumFunction>
                 <Name>PostEventValue</Name>
                 <Constant>
                   <Name>Zero</Name>
-                  <Value>0</Value>
+                  <FixedValue>0</FixedValue>
                 </Constant>
                 <LessThanFunction>
                   <Name>LessThanFunction</Name>
                   <VariableReference>
                     <Name>TestVariable</Name>
-                    <VariableName>[Phenology].PhotoperiodDeltaFunction.Value</VariableName>
+                    <VariableName>[Phenology].PhotoperiodDeltaFunction.Value()</VariableName>
                   </VariableReference>
                   <Constant>
                     <Name>Zero</Name>
-                    <Value>0</Value>
+                    <FixedValue>0</FixedValue>
                   </Constant>
                   <SubtractFunction>
                     <Name>IfTrue</Name>
                     <VariableReference>
                       <Name>MLN</Name>
-                      <VariableName>[Structure].MaxLN.Value</VariableName>
+                      <VariableName>[Structure].MaxLN.Value()</VariableName>
                     </VariableReference>
                     <Constant>
                       <Name>Two</Name>
-                      <Value>2</Value>
+                      <FixedValue>2</FixedValue>
                     </Constant>
                   </SubtractFunction>
                   <SubtractFunction>
                     <Name>IfFalse</Name>
                     <VariableReference>
                       <Name>MLN</Name>
-                      <VariableName>[Structure].MaxLN.Value</VariableName>
+                      <VariableName>[Structure].MaxLN.Value()</VariableName>
                     </VariableReference>
                     <MultiplyFunction>
                       <Name>Ic</Name>
                       <VariableReference>
                         <Name>PP</Name>
-                        <VariableName>[Phenology].Photoperiod.Value</VariableName>
+                        <VariableName>[Phenology].Photoperiod.Value()</VariableName>
                       </VariableReference>
                       <VariableReference>
                         <Name>PPS</Name>
-                        <VariableName>[Structure].PPSlope.Value</VariableName>
+                        <VariableName>[Structure].PPSlope.Value()</VariableName>
                       </VariableReference>
                     </MultiplyFunction>
                   </SubtractFunction>
@@ -1114,7 +1165,7 @@ THe model allows these to be cultivar deined.
             </OnEventFunction>
             <VariableReference>
               <Name>MLN</Name>
-              <VariableName>[Structure].MaxLN.Value</VariableName>
+              <VariableName>[Structure].MaxLN.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
@@ -1132,7 +1183,7 @@ TSLN = FLN*0.995 - 1.95 ]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>MLN</Name>
-            <VariableName>[Structure].MaxLN.Value</VariableName>
+            <VariableName>[Structure].MaxLN.Value()</VariableName>
           </VariableReference>
           <SubtractFunction>
             <Name>SubtractFunction</Name>
@@ -1140,37 +1191,38 @@ TSLN = FLN*0.995 - 1.95 ]]></MemoText>
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>FLN</Name>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
+                <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>PS</Name>
-                <Value>0.995</Value>
+                <FixedValue>0.995</FixedValue>
               </Constant>
             </MultiplyFunction>
             <Constant>
               <Name>LVS</Name>
-              <Value>1.95</Value>
+              <FixedValue>1.95</FixedValue>
             </Constant>
           </SubtractFunction>
         </MinimumFunction>
         <Constant>
           <Name>MaxLN</Name>
-          <Value>17</Value>
+          <FixedValue>17</FixedValue>
         </Constant>
         <Constant>
           <Name>BasePhyllochron</Name>
-          <Value>90</Value>
+          <FixedValue>90</FixedValue>
           <Units>oC.d</Units>
         </Constant>
         <Constant>
           <Name>PPSlope</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
@@ -1191,24 +1243,24 @@ N conc values are from Zhao et al 2009
         </Biomass>
         <Constant>
           <Name>MaxNConcDailyGrowth</Name>
-          <Value>0.03</Value>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>WaterContent</Name>
-          <Value>0.12</Value>
+          <FixedValue>0.12</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.032</Value>
+          <FixedValue>0.032</FixedValue>
           <Units>0.045</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.03</Value>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
-          <Value>0.043</Value>
+          <FixedValue>0.043</FixedValue>
           <Units>g</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -1220,7 +1272,7 @@ N conc values are from Zhao et al 2009
           <Name>AccumThermalTime</Name>
           <VariableReference>
             <Name>DailyThermalTimeValue</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <StartStageName>Flowering</StartStageName>
           <EndStageName>Maturity</EndStageName>
@@ -1256,7 +1308,7 @@ N conc values are from Zhao et al 2009
               <Name>InitialPhase</Name>
               <Constant>
                 <Name>Constant</Name>
-                <Value>0.01</Value>
+                <FixedValue>0.01</FixedValue>
               </Constant>
               <Start>Flowering</Start>
               <End>StartGrainFill</End>
@@ -1267,7 +1319,7 @@ N conc values are from Zhao et al 2009
                 <Name>MultiplyFunction</Name>
                 <Constant>
                   <Name>Constant</Name>
-                  <Value>0.6</Value>
+                  <FixedValue>0.6</FixedValue>
                 </Constant>
                 <LinearInterpolationFunction>
                   <Name>FW</Name>
@@ -1294,7 +1346,7 @@ N conc values are from Zhao et al 2009
               <Name>Ripening</Name>
               <Constant>
                 <Name>Constant</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>EndGrainFill</Start>
               <End>HarvestRipe</End>
@@ -1320,7 +1372,7 @@ N conc values are from Zhao et al 2009
             <Name>DaysOfGrainDevelopment</Name>
             <Constant>
               <Name>LenthOfADay</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
               <Units>days/day</Units>
             </Constant>
             <StartStageName>FlagLeaf</StartStageName>
@@ -1329,7 +1381,7 @@ N conc values are from Zhao et al 2009
         </DivideFunction>
         <Constant>
           <Name>InitialGrainProportion</Name>
-          <Value>0.2</Value>
+          <FixedValue>0.2</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>NFillingRate</Name>
@@ -1339,33 +1391,33 @@ N conc values are from Zhao et al 2009
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <AddFunction>
                 <Name>FillingDuration</Name>
                 <VariableReference>
                   <Name>FloweringToGrainFilling</Name>
-                  <VariableName>[Phenology].GrainDevelopment.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainDevelopment.Target.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>GrainFilling</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
               </AddFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
                 <Constant>
                   <Name>MaximumFinalNConc</Name>
-                  <Value>0.026</Value>
+                  <FixedValue>0.026</FixedValue>
                   <Units>g/g</Units>
                 </Constant>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -1417,7 +1469,7 @@ N conc values are from Zhao et al 2009
             <Name>ValueToHold</Name>
             <Constant>
               <Name>GrainsPerGramOfStem</Name>
-              <Value>22</Value>
+              <FixedValue>22</FixedValue>
               <Units>grains</Units>
             </Constant>
             <VariableReference>
@@ -1466,23 +1518,23 @@ N conc values are from Zhao et al 2009
         </LinearInterpolationFunction>
         <Constant>
           <Name>SoilWaterEffect</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value>20</Value>
+          <FixedValue>20</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>PartitionFraction</Name>
@@ -1490,7 +1542,7 @@ N conc values are from Zhao et al 2009
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Emergence</End>
@@ -1499,7 +1551,7 @@ N conc values are from Zhao et al 2009
             <Name>PreFlowering</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>0.2</Value>
+              <FixedValue>0.2</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>Flowering</End>
@@ -1508,7 +1560,7 @@ N conc values are from Zhao et al 2009
             <Name>PostFlowering</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Flowering</Start>
             <End>EndGrainFill</End>
@@ -1516,11 +1568,11 @@ N conc values are from Zhao et al 2009
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
@@ -1528,7 +1580,7 @@ N conc values are from Zhao et al 2009
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>5</Value>
+              <FixedValue>5</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Emergence</End>
@@ -1537,7 +1589,7 @@ N conc values are from Zhao et al 2009
             <Name>PostEmergence</Name>
             <Constant>
               <Name>Value</Name>
-              <Value>20</Value>
+              <FixedValue>20</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>Maturity</End>
@@ -1635,12 +1687,12 @@ N conc values are from Zhao et al 2009
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.2</Value>
+          <FixedValue>0.2</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
@@ -1697,23 +1749,23 @@ N conc values are from Zhao et al 2009
           <Name>CohortParameters</Name>
           <Constant>
             <Name>NReallocationFactor</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
-            <Value>0.03</Value>
+            <FixedValue>0.03</FixedValue>
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
-            <Value>0.1</Value>
+            <FixedValue>0.1</FixedValue>
           </Constant>
           <MinimumFunction>
             <Name>CellDivisionStress</Name>
@@ -1791,7 +1843,7 @@ N conc values are from Zhao et al 2009
             <Name>MaxArea</Name>
             <Constant>
               <Name>AreaLargestLeaves</Name>
-              <Value>5000</Value>
+              <FixedValue>5000</FixedValue>
               <Units>mm^2</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -1836,11 +1888,11 @@ N conc values are from Zhao et al 2009
             <Name>GrowthDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>4</Value>
+              <FixedValue>4</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <PhaseLookup>
@@ -1851,7 +1903,7 @@ N conc values are from Zhao et al 2009
                 <Name>LagDuration</Name>
                 <VariableReference>
                   <Name>Phyllochron</Name>
-                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
                 </VariableReference>
                 <LinearInterpolationFunction>
                   <Name>AgeFactor</Name>
@@ -1890,7 +1942,7 @@ N conc values are from Zhao et al 2009
                 </LinearInterpolationFunction>
                 <Constant>
                   <Name>Multiplier</Name>
-                  <Value>1</Value>
+                  <FixedValue>1</FixedValue>
                 </Constant>
               </MultiplyFunction>
               <Start>Emergence</Start>
@@ -1904,24 +1956,24 @@ N conc values are from Zhao et al 2009
                   <Name>ThermalTimeToRipe</Name>
                   <VariableReference>
                     <Name>GrainDevelopment</Name>
-                    <VariableName>[Phenology].GrainDevelopment.Target.Value</VariableName>
+                    <VariableName>[Phenology].GrainDevelopment.Target.Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>GrainFilling</Name>
-                    <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                    <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>Maturing</Name>
-                    <VariableName>[Phenology].Maturing.Target.Value</VariableName>
+                    <VariableName>[Phenology].Maturing.Target.Value()</VariableName>
                   </VariableReference>
                   <VariableReference>
                     <Name>Ripening</Name>
-                    <VariableName>[Phenology].Ripening.Target.Value</VariableName>
+                    <VariableName>[Phenology].Ripening.Target.Value()</VariableName>
                   </VariableReference>
                 </AddFunction>
                 <ExpressionFunction>
                   <Name>SenescenceDuration</Name>
-                  <Expression>[Leaf].CohortParameters.SenescenceDuration.Value</Expression>
+                  <Expression>[Leaf].CohortParameters.SenescenceDuration.Value()</Expression>
                 </ExpressionFunction>
               </SubtractFunction>
               <Start>TerminalSpikelet</Start>
@@ -1932,7 +1984,7 @@ N conc values are from Zhao et al 2009
             <Name>LagDuration</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>AgeFactor</Name>
@@ -1953,8 +2005,8 @@ N conc values are from Zhao et al 2009
                     <MarkerSize>Normal</MarkerSize>
                     <Line>Solid</Line>
                     <LineThickness>Normal</LineThickness>
-                    <XFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.VegetativeGrowth.LagDuration.AgeFactor.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Barley.Leaf.CohortParameters.LagDuration.VegetativeGrowth.LagDuration.AgeFactor.XYPairs.Y</YFieldName>
+                    <XFieldName>.Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.VegetativeGrowth.LagDuration.AgeFactor.XYPairs.X</XFieldName>
+                    <YFieldName>.Simulations.Replacements.Oats.Leaf.CohortParameters.LagDuration.VegetativeGrowth.LagDuration.AgeFactor.XYPairs.Y</YFieldName>
                     <ShowInLegend>false</ShowInLegend>
                     <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -2013,18 +2065,18 @@ N conc values are from Zhao et al 2009
             </LinearInterpolationFunction>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
           </MultiplyFunction>
           <MultiplyFunction>
             <Name>SenescenceDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>LinearInterpolationFunction</Name>
@@ -2043,7 +2095,7 @@ N conc values are from Zhao et al 2009
                   <double>4</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Leaf].CohortParameters.MaxArea.Value</XProperty>
+              <XProperty>[Leaf].CohortParameters.MaxArea.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>AgeFactor</Name>
@@ -2083,15 +2135,15 @@ N conc values are from Zhao et al 2009
           </MultiplyFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>RelativeBranchLeafSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>MaximumNConc</Name>
@@ -2143,16 +2195,45 @@ N conc values are from Zhao et al 2009
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
           <AddFunction>
-            <Name>DroughtInducedSenAcceleration</Name>
+            <Name>DroughtInducedLagAcceleration</Name>
             <Constant>
               <Name>One</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>Stress</Name>
               <Constant>
                 <Name>StressResponseCoefficient</Name>
-                <Value>1</Value>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>StressFactor</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.7</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Barley].WaterSupplyDemandRatio</XProperty>
+              </LinearInterpolationFunction>
+            </MultiplyFunction>
+          </AddFunction>
+          <AddFunction>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Constant>
+              <Name>One</Name>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <MultiplyFunction>
+              <Name>Stress</Name>
+              <Constant>
+                <Name>StressResponseCoefficient</Name>
+                <FixedValue>1</FixedValue>
               </Constant>
               <LinearInterpolationFunction>
                 <Name>StressFactor</Name>
@@ -2204,23 +2285,23 @@ N conc values are from Zhao et al 2009
           </LinearInterpolationFunction>
           <Constant>
             <Name>SpecificLeafAreaMin</Name>
-            <Value>25000</Value>
+            <FixedValue>25000</FixedValue>
           </Constant>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0.5</Value>
+            <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
-            <Value>0.3</Value>
+            <FixedValue>0.3</FixedValue>
           </Constant>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <MultiplyFunction>
@@ -2247,7 +2328,7 @@ N conc values are from Zhao et al 2009
             </LinearInterpolationFunction>
             <VariableReference>
               <Name>ThermalTime</Name>
-              <VariableName>[Phenology].ThermalTime.Value</VariableName>
+              <VariableName>[Phenology].ThermalTime.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <PhaseLookup>
@@ -2256,7 +2337,7 @@ N conc values are from Zhao et al 2009
               <Name>VegetativeGrowth</Name>
               <Constant>
                 <Name>Constant</Name>
-                <Value>0.5</Value>
+                <FixedValue>0.5</FixedValue>
               </Constant>
               <Start>Emergence</Start>
               <End>StartGrainFill</End>
@@ -2265,7 +2346,7 @@ N conc values are from Zhao et al 2009
               <Name>StemElongation</Name>
               <Constant>
                 <Name>Constant</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>StartGrainFill</Start>
               <End>Maturity</End>
@@ -2276,7 +2357,7 @@ N conc values are from Zhao et al 2009
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.5</Value>
+            <FixedValue>1.5</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -2376,23 +2457,23 @@ N conc values are from Zhao et al 2009
         </LinearInterpolationFunction>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
@@ -2436,15 +2517,15 @@ N conc values are from Zhao et al 2009
         </BiomassRemoval>
         <Constant>
           <Name>ExtinctionCoeff</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
@@ -2473,33 +2554,33 @@ N conc values are from Zhao et al 2009
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>ExpansionStress</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>OrganPopulation</Name>
-            <VariableName>[Spike].HeadNumber.Value</VariableName>
+            <VariableName>[Spike].HeadNumber.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>StartStage</Name>
-            <Value>4.5</Value>
+            <FixedValue>4.5</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumOrganWt</Name>
-            <Value>0.2</Value>
+            <FixedValue>0.2</FixedValue>
           </Constant>
           <AddFunction>
             <Name>GrowthDuration</Name>
             <VariableReference>
               <Name>EarlyReproductive</Name>
-              <VariableName>[Phenology].EarlyReproductive.Target.Value</VariableName>
+              <VariableName>[Phenology].EarlyReproductive.Target.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>GrainDevelopment</Name>
-              <VariableName>[Phenology].GrainDevelopment.Target.Value</VariableName>
+              <VariableName>[Phenology].GrainDevelopment.Target.Value()</VariableName>
             </VariableReference>
           </AddFunction>
         </PopulationBasedDemandFunction>
@@ -2511,34 +2592,34 @@ N conc values are from Zhao et al 2009
         </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.9</Value>
+          <FixedValue>0.9</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.003</Value>
+          <FixedValue>0.003</FixedValue>
         </Constant>
         <MultiplyFunction>
           <Name>HeadNumber</Name>
           <Constant>
             <Name>FertileTillers</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>StemPopulation</Name>
@@ -2594,7 +2675,7 @@ N conc values are from Zhao et al 2009
             <Name>VegetativeGrowth</Name>
             <Constant>
               <Name>DMRetranslocationFactor</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>StartGrainFill</End>
@@ -2603,7 +2684,7 @@ N conc values are from Zhao et al 2009
             <Name>ReproductiveGrowth</Name>
             <Constant>
               <Name>DMRetranslocationFactor</Name>
-              <Value>0.5</Value>
+              <FixedValue>0.5</FixedValue>
             </Constant>
             <Start>StartGrainFill</Start>
             <End>EndGrainFill</End>
@@ -2611,22 +2692,22 @@ N conc values are from Zhao et al 2009
         </PhaseLookup>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -2651,7 +2732,7 @@ N conc values are from Zhao et al 2009
             <Name>VegetativeGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
-              <Value>0.7</Value>
+              <FixedValue>0.7</FixedValue>
             </Constant>
             <Start>Sowing</Start>
             <End>FlagLeaf</End>
@@ -2660,7 +2741,7 @@ N conc values are from Zhao et al 2009
             <Name>ReproductiveGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
-              <Value>0.7</Value>
+              <FixedValue>0.7</FixedValue>
             </Constant>
             <Start>FlagLeaf</Start>
             <End>Flowering</End>
@@ -2669,7 +2750,7 @@ N conc values are from Zhao et al 2009
             <Name>GrainFilling</Name>
             <Constant>
               <Name>Fraction</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <Start>Flowering</Start>
             <End>EndGrainFill</End>
@@ -2678,7 +2759,7 @@ N conc values are from Zhao et al 2009
             <Name>EndStemGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <Start>EndGrainFill</Start>
             <End>Maturity</End>
@@ -2686,7 +2767,7 @@ N conc values are from Zhao et al 2009
         </PhaseLookup>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -2732,7 +2813,7 @@ N conc values are from Zhao et al 2009
         </PhaseBasedSwitch>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>NRetranslocationFactor</Name>
@@ -2740,7 +2821,7 @@ N conc values are from Zhao et al 2009
             <Name>VegetativeGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Sowing</Start>
             <End>Flowering</End>
@@ -2749,7 +2830,7 @@ N conc values are from Zhao et al 2009
             <Name>ReproductiveGrowth</Name>
             <Constant>
               <Name>Fraction</Name>
-              <Value>0.5</Value>
+              <FixedValue>0.5</FixedValue>
             </Constant>
             <Start>Flowering</Start>
             <End>HarvestRipe</End>
@@ -2761,7 +2842,7 @@ N conc values are from Zhao et al 2009
             <Name>VegetativeGrowth</Name>
             <Constant>
               <Name>DMRetranslocationFactor</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>StartGrainFill</End>
@@ -2770,7 +2851,7 @@ N conc values are from Zhao et al 2009
             <Name>ReproductiveGrowth</Name>
             <Constant>
               <Name>DMRetranslocationFactor</Name>
-              <Value>0.5</Value>
+              <FixedValue>0.5</FixedValue>
             </Constant>
             <Start>StartGrainFill</Start>
             <End>EndGrainFill</End>
@@ -2788,7 +2869,7 @@ N conc values are from Zhao et al 2009
               <Name>PreStemElongation</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.4</Value>
+                <FixedValue>0.4</FixedValue>
               </Constant>
               <Start>Emergence</Start>
               <End>TerminalSpikelet</End>
@@ -2797,7 +2878,7 @@ N conc values are from Zhao et al 2009
               <Name>StemElongation</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.6</Value>
+                <FixedValue>0.6</FixedValue>
               </Constant>
               <Start>TerminalSpikelet</Start>
               <End>FlagLeaf</End>
@@ -2806,7 +2887,7 @@ N conc values are from Zhao et al 2009
               <Name>EarEmergence</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.4</Value>
+                <FixedValue>0.4</FixedValue>
               </Constant>
               <Start>FlagLeaf</Start>
               <End>Flowering</End>
@@ -2815,13 +2896,13 @@ N conc values are from Zhao et al 2009
               <Name>PostEarEmergence</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.4</Value>
+                <FixedValue>0.4</FixedValue>
               </Constant>
               <SubtractFunction>
                 <Name>SubtractFunction</Name>
                 <Constant>
                   <Name>Constant</Name>
-                  <Value>0</Value>
+                  <FixedValue>0</FixedValue>
                 </Constant>
               </SubtractFunction>
               <Start>Flowering</Start>
@@ -2831,13 +2912,13 @@ N conc values are from Zhao et al 2009
               <Name>BGF</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.1</Value>
+                <FixedValue>0.1</FixedValue>
               </Constant>
               <SubtractFunction>
                 <Name>SubtractFunction</Name>
                 <Constant>
                   <Name>Constant</Name>
-                  <Value>0</Value>
+                  <FixedValue>0</FixedValue>
                 </Constant>
               </SubtractFunction>
               <Start>StartGrainFill</Start>
@@ -2847,11 +2928,11 @@ N conc values are from Zhao et al 2009
               <Name>PostGrainFill</Name>
               <Constant>
                 <Name>One</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <VariableReference>
                 <Name>VariableReference</Name>
-                <VariableName>[Grain].PartitionFraction.Value</VariableName>
+                <VariableName>[Grain].PartitionFraction.Value()</VariableName>
               </VariableReference>
               <Start>EndGrainFill</Start>
               <End>HarvestRipe</End>
@@ -2909,22 +2990,22 @@ N conc values are from Zhao et al 2009
         </DivideFunction>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -3025,6 +3106,16 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <string>[Spike].Dead</string>
         </Propertys>
       </CompositeBiomass>
+      <CultivarFolder>
+        <Name>Cultivars</Name>
+        <Cultivar>
+          <Name>Triumph</Name>
+          <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+          <Command>[Structure].BasePhyllochron.FixedValue = 80</Command>
+        </Cultivar>
+      </CultivarFolder>
       <CropType>Wheat</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
@@ -3033,22 +3124,22 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     <Name>DataStore</Name>
     <Input>
       <Name>Biomass9596</Name>
-      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\ObservedData\RS_Barley_9596_biomass_observed.txt' because it is being used by another process.</ErrorMessage>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>ObservedData\RS_Barley_9596_biomass_observed.txt</FileName>
     </Input>
     <Input>
       <Name>SW9596</Name>
-      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\ObservedData\RS_Barley_9596_soilwater_observed.txt' because it is being used by another process.</ErrorMessage>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>ObservedData\RS_Barley_9596_soilwater_observed.txt</FileName>
     </Input>
     <Input>
       <Name>Biomass8889</Name>
-      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\ObservedData\RS_Barley_9596_biomass_observed.txt' because it is being used by another process.</ErrorMessage>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>ObservedData\RS_Barley_8889_Biomass_obs.txt</FileName>
     </Input>
     <Input>
       <Name>SW8889</Name>
-      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\ObservedData\RS_Barley_9596_soilwater_observed.txt' because it is being used by another process.</ErrorMessage>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>ObservedData\RS_Barley_8889_soilwater_observed.txt</FileName>
     </Input>
     <AutoExport>false</AutoExport>
@@ -3058,7 +3149,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     <Name>ModelTesting</Name>
     <Memo>
       <Name>Memo</Name>
-      <MemoText><![CDATA[A test dataset developed from the rainfed and rainshelter treatments has been developed to test the APSIM Barley model. Graphs of model performance are provided for yield, biomass production, canopy development, phenological development, water and nitrogen uptake, and grain yield components.
+      <MemoText><![CDATA[The Apsim Barley model has been tested using data from rainfed and rain shelter experiments. The rain shelter experiment evaluated different levels of drought on crop growth and development. Some of the data have been reported in published papers (xx, xx). Graphs of model performance are provided for yield, biomass production, canopy development, phenological development, water and nitrogen uptake, and grain yield components.
 ]]></MemoText>
     </Memo>
   </Folder>
@@ -4297,6 +4388,9 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType>NZ_sedementary</SoilType>
           <LocalName />
@@ -4584,15 +4678,15 @@ namespace Models
             <string>[Barley].Leaf.Transpiration</string>
             <string>[Barley].Phenology.CurrentPhaseName</string>
             <string>[Barley].Phenology.CurrentStageName</string>
-            <string>[Barley].Phenology.DailyVernalisation.Value</string>
-            <string>[Barley].Phenology.MeanTemp.Value</string>
-            <string>[Barley].Phenology.Photoperiod.Value</string>
+            <string>[Barley].Phenology.DailyVernalisation.Value()</string>
+            <string>[Barley].Phenology.MeanTemp.Value()</string>
+            <string>[Barley].Phenology.Photoperiod.Value()</string>
             <string>[Barley].Phenology.Stage</string>
-            <string>[Barley].Phenology.ThermalTime.Value</string>
+            <string>[Barley].Phenology.ThermalTime.Value()</string>
             <string>[Barley].Phenology.ThermalTime.Value  </string>
-            <string>[Barley].Phenology.Vrn1.Value</string>
-            <string>[Barley].Phenology.Vrn2.Value</string>
-            <string>[Barley].Phenology.Vrn4.Value</string>
+            <string>[Barley].Phenology.Vrn1.Value()</string>
+            <string>[Barley].Phenology.Vrn2.Value()</string>
+            <string>[Barley].Phenology.Vrn4.Value()</string>
             <string>[Barley].Phenology.Zadok.Stage</string>
             <string>[Barley].Root.Depth</string>
             <string>[Barley].Root.N</string>
@@ -4611,14 +4705,14 @@ namespace Models
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
-            <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value</string>
-            <string>[Barley].Structure.HaunStage.Value</string>
+            <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value()</string>
+            <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value</string>
+            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
+            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
-            <string>[Barley].Structure.MeanTillerGrowthRate.Value</string>
+            <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
             <string>[Barley].Total.N</string>
             <string>[Barley].Total.Wt</string>
@@ -4631,7 +4725,7 @@ namespace Models
             <string>[Barley].Phenology.PhotoPeriod</string>
             <string>[Barley].Phenology.PhotoPeriodDeltaFunction</string>
             <string>[Barley].Phenology.Stage</string>
-            <string>[Barley].Phenology.SoilTemperatureFunction.Value</string>
+            <string>[Barley].Phenology.SoilTemperatureFunction.Value()</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -4653,6 +4747,9 @@ namespace Models
             <string>[Clock].EndOfSimulation</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -5347,438 +5444,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Folder>
-        <Name>Nitrogen</Name>
-        <Graph>
-          <Name>AboveGroundN</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>AboveGroundN</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Barley9596</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>EarN</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Ear.N</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>EarNconc</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Ear.Nconc</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>StemN</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Stem.N</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>StemNconc</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Stem.NConc</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>LeafN</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Leaf.Live.N</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>LeafNconc</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Leaf.Live.NConc</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-      </Folder>
     </Folder>
     <Graph>
       <Name>LAI</Name>
@@ -6477,6 +6142,48 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
     </Folder>
+    <Graph>
+      <Name>HaunStage</Name>
+      <Series>
+        <Name>Predicted1</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Left</Type>
+        <Title>plants/m2</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
   </Experiment>
   <Experiment>
     <Name>RS_8889</Name>
@@ -6637,43 +6344,43 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-11-03</Date>
-                <Action>Irrigation.Apply(45);</Action>
+                <Action>[Irrigation].Apply(45);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-10</Date>
-                <Action>Irrigation.Apply(47);</Action>
+                <Action>[Irrigation].Apply(47);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-17</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-24</Date>
-                <Action>Irrigation.Apply(18);</Action>
+                <Action>[Irrigation].Apply(18);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-01</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-08</Date>
-                <Action>Irrigation.Apply(24);</Action>
+                <Action>[Irrigation].Apply(24);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-15</Date>
-                <Action>Irrigation.Apply(43);</Action>
+                <Action>[Irrigation].Apply(43);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-22</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-29</Date>
-                <Action>Irrigation.Apply(36);</Action>
+                <Action>[Irrigation].Apply(36);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-05</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -6812,43 +6519,43 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-11-17</Date>
-                <Action>Irrigation.Apply(57);</Action>
+                <Action>[Irrigation].Apply(57);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-24</Date>
-                <Action>Irrigation.Apply(18);</Action>
+                <Action>[Irrigation].Apply(18);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-01</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-08</Date>
-                <Action>Irrigation.Apply(24);</Action>
+                <Action>[Irrigation].Apply(24);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-15</Date>
-                <Action>Irrigation.Apply(43);</Action>
+                <Action>[Irrigation].Apply(43);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-22</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-29</Date>
-                <Action>Irrigation.Apply(36);</Action>
+                <Action>[Irrigation].Apply(36);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-05</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-12</Date>
-                <Action>Irrigation.Apply(26);</Action>
+                <Action>[Irrigation].Apply(26);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-19</Date>
-                <Action>Irrigation.Apply(22);</Action>
+                <Action>[Irrigation].Apply(22);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -6987,39 +6694,39 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-10-24</Date>
-                <Action>Irrigation.Apply(43);</Action>
+                <Action>[Irrigation].Apply(43);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-01</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-08</Date>
-                <Action>Irrigation.Apply(24);</Action>
+                <Action>[Irrigation].Apply(24);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-15</Date>
-                <Action>Irrigation.Apply(43);</Action>
+                <Action>[Irrigation].Apply(43);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-22</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-29</Date>
-                <Action>Irrigation.Apply(36);</Action>
+                <Action>[Irrigation].Apply(36);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-05</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-12</Date>
-                <Action>Irrigation.Apply(26);</Action>
+                <Action>[Irrigation].Apply(26);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-19</Date>
-                <Action>Irrigation.Apply(22);</Action>
+                <Action>[Irrigation].Apply(22);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -7158,47 +6865,47 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-12-01</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-08</Date>
-                <Action>Irrigation.Apply(50);</Action>
+                <Action>[Irrigation].Apply(50);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-15</Date>
-                <Action>Irrigation.Apply(43);</Action>
+                <Action>[Irrigation].Apply(43);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-22</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-29</Date>
-                <Action>Irrigation.Apply(36);</Action>
+                <Action>[Irrigation].Apply(36);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-05</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-12</Date>
-                <Action>Irrigation.Apply(26);</Action>
+                <Action>[Irrigation].Apply(26);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-19</Date>
-                <Action>Irrigation.Apply(22);</Action>
+                <Action>[Irrigation].Apply(22);</Action>
               </Operation>
               <Operation>
                 <Date>1989-01-26</Date>
-                <Action>Irrigation.Apply(20);</Action>
+                <Action>[Irrigation].Apply(20);</Action>
               </Operation>
               <Operation>
                 <Date>1989-02-02</Date>
-                <Action>Irrigation.Apply(17);</Action>
+                <Action>[Irrigation].Apply(17);</Action>
               </Operation>
               <Operation>
                 <Date>1989-02-09</Date>
-                <Action>Irrigation.Apply(15);</Action>
+                <Action>[Irrigation].Apply(15);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -7345,47 +7052,47 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-10-06</Date>
-                <Action>Irrigation.Apply(27);</Action>
+                <Action>[Irrigation].Apply(27);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-13</Date>
-                <Action>Irrigation.Apply(10);</Action>
+                <Action>[Irrigation].Apply(10);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-20</Date>
-                <Action>Irrigation.Apply(30);</Action>
+                <Action>[Irrigation].Apply(30);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-27</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-03</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-24</Date>
-                <Action>Irrigation.Apply(43);</Action>
+                <Action>[Irrigation].Apply(43);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-01</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-08</Date>
-                <Action>Irrigation.Apply(24);</Action>
+                <Action>[Irrigation].Apply(24);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-15</Date>
-                <Action>Irrigation.Apply(43);</Action>
+                <Action>[Irrigation].Apply(43);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-22</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-29</Date>
-                <Action>Irrigation.Apply(36);</Action>
+                <Action>[Irrigation].Apply(36);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -7524,47 +7231,47 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-10-06</Date>
-                <Action>Irrigation.Apply(27);</Action>
+                <Action>[Irrigation].Apply(27);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-13</Date>
-                <Action>Irrigation.Apply(10);</Action>
+                <Action>[Irrigation].Apply(10);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-20</Date>
-                <Action>Irrigation.Apply(30);</Action>
+                <Action>[Irrigation].Apply(30);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-27</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-03</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-24</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-01</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-08</Date>
-                <Action>Irrigation.Apply(50);</Action>
+                <Action>[Irrigation].Apply(50);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-15</Date>
-                <Action>Irrigation.Apply(43);</Action>
+                <Action>[Irrigation].Apply(43);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-22</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-29</Date>
-                <Action>Irrigation.Apply(36);</Action>
+                <Action>[Irrigation].Apply(36);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -7703,47 +7410,47 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-10-06</Date>
-                <Action>Irrigation.Apply(27);</Action>
+                <Action>[Irrigation].Apply(27);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-13</Date>
-                <Action>Irrigation.Apply(10);</Action>
+                <Action>[Irrigation].Apply(10);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-20</Date>
-                <Action>Irrigation.Apply(30);</Action>
+                <Action>[Irrigation].Apply(30);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-27</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-03</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-24</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-01</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-08</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-15</Date>
-                <Action>Irrigation.Apply(43);</Action>
+                <Action>[Irrigation].Apply(43);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-22</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-29</Date>
-                <Action>Irrigation.Apply(36);</Action>
+                <Action>[Irrigation].Apply(36);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -7882,47 +7589,47 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-10-06</Date>
-                <Action>Irrigation.Apply(27);</Action>
+                <Action>[Irrigation].Apply(27);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-13</Date>
-                <Action>Irrigation.Apply(10);</Action>
+                <Action>[Irrigation].Apply(10);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-20</Date>
-                <Action>Irrigation.Apply(30);</Action>
+                <Action>[Irrigation].Apply(30);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-27</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-03</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-24</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-01</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-08</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-15</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-22</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-29</Date>
-                <Action>Irrigation.Apply(0);</Action>
+                <Action>[Irrigation].Apply(0);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -8069,31 +7776,31 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-10-06</Date>
-                <Action>Irrigation.Apply(27);</Action>
+                <Action>[Irrigation].Apply(27);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-13</Date>
-                <Action>Irrigation.Apply(10);</Action>
+                <Action>[Irrigation].Apply(10);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-20</Date>
-                <Action>Irrigation.Apply(30);</Action>
+                <Action>[Irrigation].Apply(30);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-27</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-03</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-10</Date>
-                <Action>Irrigation.Apply(47);</Action>
+                <Action>[Irrigation].Apply(47);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-17</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -8232,35 +7939,35 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-10-06</Date>
-                <Action>Irrigation.Apply(27);</Action>
+                <Action>[Irrigation].Apply(27);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-13</Date>
-                <Action>Irrigation.Apply(10);</Action>
+                <Action>[Irrigation].Apply(10);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-20</Date>
-                <Action>Irrigation.Apply(30);</Action>
+                <Action>[Irrigation].Apply(30);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-24</Date>
-                <Action>Irrigation.Apply(18);</Action>
+                <Action>[Irrigation].Apply(18);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-27</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-03</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-10</Date>
-                <Action>Irrigation.Apply(47);</Action>
+                <Action>[Irrigation].Apply(47);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-17</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -8399,39 +8106,39 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
               <Name>IrrigationEvents</Name>
               <Operation>
                 <Date>1988-10-06</Date>
-                <Action>Irrigation.Apply(27);</Action>
+                <Action>[Irrigation].Apply(27);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-13</Date>
-                <Action>Irrigation.Apply(10);</Action>
+                <Action>[Irrigation].Apply(10);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-20</Date>
-                <Action>Irrigation.Apply(30);</Action>
+                <Action>[Irrigation].Apply(30);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-24</Date>
-                <Action>Irrigation.Apply(18);</Action>
+                <Action>[Irrigation].Apply(18);</Action>
               </Operation>
               <Operation>
                 <Date>1988-10-27</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-03</Date>
-                <Action>Irrigation.Apply(25);</Action>
+                <Action>[Irrigation].Apply(25);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-10</Date>
-                <Action>Irrigation.Apply(47);</Action>
+                <Action>[Irrigation].Apply(47);</Action>
               </Operation>
               <Operation>
                 <Date>1988-11-17</Date>
-                <Action>Irrigation.Apply(32);</Action>
+                <Action>[Irrigation].Apply(32);</Action>
               </Operation>
               <Operation>
                 <Date>1988-12-01</Date>
-                <Action>Irrigation.Apply(35);</Action>
+                <Action>[Irrigation].Apply(35);</Action>
               </Operation>
             </Operations>
             <Water>
@@ -9303,6 +9010,9 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Site>-</Site>
           <NearestTown>-</NearestTown>
@@ -9389,66 +9099,66 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
             <Name>IrrigationEvents</Name>
             <Operation>
               <Date>1988-10-06</Date>
-              <Action>Irrigation.Apply(27);</Action>
+              <Action>[Irrigation].Apply(27);</Action>
             </Operation>
             <Operation>
               <Date>1988-10-13</Date>
-              <Action>Irrigation.Apply(10);</Action>
+              <Action>[Irrigation].Apply(10);</Action>
             </Operation>
             <Operation>
               <Date>1988-10-20</Date>
-              <Action>Irrigation.Apply(30);</Action>
+              <Action>[Irrigation].Apply(30);</Action>
             </Operation>
             <Operation>
               <Date>1988-10-27</Date>
-              <Action>Irrigation.Apply(25);</Action>
+              <Action>[Irrigation].Apply(25);</Action>
             </Operation>
             <Operation>
               <Date>1988-11-03</Date>
-              <Action>Irrigation.Apply(25);</Action>
+              <Action>[Irrigation].Apply(25);</Action>
             </Operation>
             <Operation>
               <Date>1988-11-10</Date>
-              <Action>Irrigation.Apply(47);</Action>
+              <Action>[Irrigation].Apply(47);</Action>
             </Operation>
             <Operation>
               <Date>1988-11-17</Date>
-              <Action>Irrigation.Apply(32);</Action>
+              <Action>[Irrigation].Apply(32);</Action>
             </Operation>
             <Operation>
               <Date>1988-11-24</Date>
-              <Action>Irrigation.Apply(18);</Action>
+              <Action>[Irrigation].Apply(18);</Action>
             </Operation>
             <Operation>
               <Date>1988-12-01</Date>
-              <Action>Irrigation.Apply(35);</Action>
+              <Action>[Irrigation].Apply(35);</Action>
             </Operation>
             <Operation>
               <Date>1988-12-08</Date>
-              <Action>Irrigation.Apply(24);</Action>
+              <Action>[Irrigation].Apply(24);</Action>
             </Operation>
             <Operation>
               <Date>1988-12-15</Date>
-              <Action>Irrigation.Apply(43);</Action>
+              <Action>[Irrigation].Apply(43);</Action>
             </Operation>
             <Operation>
               <Date>1988-12-22</Date>
-              <Action>Irrigation.Apply(32);</Action>
+              <Action>[Irrigation].Apply(32);</Action>
             </Operation>
             <Operation>
               <Date>1988-12-29</Date>
-              <Action>Irrigation.Apply(36);</Action>
+              <Action>[Irrigation].Apply(36);</Action>
             </Operation>
           </Operations>
           <Operations>
             <Name>FertiliserEvents</Name>
             <Operation>
               <Date>1988-09-26</Date>
-              <Action>Fertiliser.Apply(50, Fertiliser.Types.NO3N,10);</Action>
+              <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,10);</Action>
             </Operation>
             <Operation>
               <Date>1988-11-02</Date>
-              <Action>Fertiliser.Apply(70, Fertiliser.Types.NO3N,10);</Action>
+              <Action>[Fertiliser].Apply(70, Fertiliser.Types.NO3N,10);</Action>
             </Operation>
           </Operations>
         </Folder>
@@ -9577,15 +9287,15 @@ namespace Models
             <string>[Barley].Leaf.Transpiration</string>
             <string>[Barley].Phenology.CurrentPhaseName</string>
             <string>[Barley].Phenology.CurrentStageName</string>
-            <string>[Barley].Phenology.DailyVernalisation.Value</string>
-            <string>[Barley].Phenology.MeanTemp.Value</string>
-            <string>[Barley].Phenology.Photoperiod.Value</string>
+            <string>[Barley].Phenology.DailyVernalisation.Value()</string>
+            <string>[Barley].Phenology.MeanTemp.Value()</string>
+            <string>[Barley].Phenology.Photoperiod.Value()</string>
             <string>[Barley].Phenology.Stage</string>
-            <string>[Barley].Phenology.ThermalTime.Value</string>
+            <string>[Barley].Phenology.ThermalTime.Value()</string>
             <string>[Barley].Phenology.ThermalTime.Value  </string>
-            <string>[Barley].Phenology.Vrn1.Value</string>
-            <string>[Barley].Phenology.Vrn2.Value</string>
-            <string>[Barley].Phenology.Vrn4.Value</string>
+            <string>[Barley].Phenology.Vrn1.Value()</string>
+            <string>[Barley].Phenology.Vrn2.Value()</string>
+            <string>[Barley].Phenology.Vrn4.Value()</string>
             <string>[Barley].Phenology.Zadok.Stage</string>
             <string>[Barley].Root.Depth</string>
             <string>[Barley].Root.N</string>
@@ -9604,14 +9314,14 @@ namespace Models
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
-            <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value</string>
-            <string>[Barley].Structure.HaunStage.Value</string>
+            <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value()</string>
+            <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value</string>
+            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
+            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
-            <string>[Barley].Structure.MeanTillerGrowthRate.Value</string>
+            <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
             <string>[Barley].Total.N</string>
             <string>[Barley].Total.Wt</string>
@@ -9624,7 +9334,7 @@ namespace Models
             <string>[Barley].Phenology.PhotoPeriod</string>
             <string>[Barley].Phenology.PhotoPeriodDeltaFunction</string>
             <string>[Barley].Phenology.Stage</string>
-            <string>[Barley].Phenology.SoilTemperatureFunction.Value</string>
+            <string>[Barley].Phenology.SoilTemperatureFunction.Value()</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -9646,6 +9356,9 @@ namespace Models
             <string>[Clock].EndOfSimulation</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -11471,5 +11184,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>484</ExplorerWidth>
+  <ExplorerWidth>500</ExplorerWidth>
 </Simulations>
