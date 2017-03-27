@@ -25,7 +25,7 @@ namespace Models.PMF.Functions
             double IfTrue = 0.0;
             double IfFalse = 0.0;
 
-            IFunction F = ChildFunctions[0] as IFunction;
+            IFunction F = null;
 
             for (int i = 0; i < ChildFunctions.Count; i++)
             {
@@ -46,5 +46,33 @@ namespace Models.PMF.Functions
                 return IfFalse;
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            string lhs;
+            if (ChildFunctions[0] is VariableReference)
+                lhs = (ChildFunctions[0] as VariableReference).VariableName;
+            else
+                lhs = ChildFunctions[0].Name;
+            string rhs;
+            if (ChildFunctions[1] is VariableReference)
+                rhs = (ChildFunctions[1] as VariableReference).VariableName;
+            else
+                rhs = ChildFunctions[1].Name;
+
+            tags.Add(new AutoDocumentation.Paragraph("IF " + lhs + " < " + rhs + " THEN", indent));
+            ChildFunctions[2].Document(tags, headingLevel, indent+1);
+            tags.Add(new AutoDocumentation.Paragraph("ELSE", indent));
+            ChildFunctions[3].Document(tags, headingLevel, indent + 1);
+        }
     }
 }

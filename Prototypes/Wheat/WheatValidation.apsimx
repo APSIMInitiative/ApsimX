@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1110,21 +1110,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <string>[Root].LayerDead</string>
           </Propertys>
         </CompositeBiomass>
-        <LinearInterpolationFunction>
+        <Constant>
           <Name>KLModifier</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>3</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].LAI</XProperty>
-        </LinearInterpolationFunction>
+          <FixedValue>1</FixedValue>
+        </Constant>
         <Constant>
           <Name>SoilWaterEffect</Name>
           <FixedValue>1</FixedValue>
@@ -1260,7 +1249,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <double>0.02</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
@@ -1275,25 +1264,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <double>0.01</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <XProperty>[Root].RootLengthDensity</XProperty>
         </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
+        <Constant>
           <Name>NUptakeSWFactor</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>0.2</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Root].RWC</XProperty>
-        </LinearInterpolationFunction>
+          <FixedValue>1</FixedValue>
+        </Constant>
         <Constant>
           <Name>InitialDM</Name>
           <FixedValue>0.2</FixedValue>
