@@ -1249,7 +1249,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <double>0.02</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
