@@ -891,7 +891,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <double>0.03</double>
         </Y>
       </XYPairs>
-      <XProperty>[Root].RootLengthDenisty</XProperty>
+      <XProperty>[Root].LengthDenisty</XProperty>
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>KNH4</Name>
