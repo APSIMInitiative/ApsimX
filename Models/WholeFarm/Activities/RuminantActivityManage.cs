@@ -156,12 +156,6 @@ namespace Models.WholeFarm.Activities
 			// if management month
 			if (Clock.Today.Month == ManagementMonth ^ MonthlyManagement)
 			{
-				// pay costs
-
-
-
-
-
 				// Perform weaning
 				foreach (var ind in herd.Where(a => a.Weaned == false))
 				{

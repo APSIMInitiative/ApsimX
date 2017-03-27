@@ -16,12 +16,10 @@ namespace Models.WholeFarm.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
-	public class RuminantActivityTrade : WFModel
+	public class RuminantActivityTrade : WFActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
-//		[Link]
-//		Clock Clock = null;
 
 		/// <summary>
 		/// Name of herd to trade
@@ -39,5 +37,23 @@ namespace Models.WholeFarm.Activities
 			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.HerdName == HerdName).ToList();
 
 		}
+
+		/// <summary>
+		/// Method to determine resources required for this activity in the current month
+		/// </summary>
+		/// <returns>List of required resource requests</returns>
+		public override List<ResourceRequest> DetermineResourcesNeeded()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform activity if it can occur as soon as resources are available.
+		/// </summary>
+		public override void PerformActivity()
+		{
+			return; ;
+		}
+
 	}
 }
