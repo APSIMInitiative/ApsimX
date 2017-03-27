@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.Core;
-using Models.Interfaces;
 using MathNet.Numerics.LinearAlgebra;
 using APSIM.Shared.Utilities;
 using System.IO;
@@ -22,9 +19,9 @@ namespace Models.Soils.SWIM4
     class SWIM4 : Model
     {
         [Link]
-        Clock Clock;
+        Clock Clock = null;
         [Link]
-        Soil Soil;
+        Soil Soil = null;
 
         int n = 1;
         int nt = 2;
@@ -65,6 +62,7 @@ namespace Models.Soils.SWIM4
             soff = new double[ns + 1];
             sdrn = new double[ns + 1];
             sinfil = new double[ns + 1];
+            bd = Soil.BD;
             SoilData sd = new SoilData();
             Flow.sink = new SinkDripperDrain(); //set the type of sink to use
             jt = new int[n + 1];
@@ -111,10 +109,10 @@ namespace Models.Soils.SWIM4
             wpi = MathUtilities.Sum(MathUtilities.Multiply(MathUtilities.Multiply(sd.ths, S), sd.dx)); //water in profile initially
             nsteps = 0; //no.of time steps for water soln(cumulative)
             win = 0.0; //water input(total precip)
-            evap = 0.0;
-            runoff = 0.0;
-            infil = 0.0;
-            drn = 0.0;
+            evap = Soil.SoilWater.Es;
+            runoff = Soil.SoilWater.Runoff;
+            infil = Soil.SoilWater.Infiltration;
+            drn = Soil.SoilWater.Drainage;
             for (int col = 1; col < sm.GetLength(0); col++)
                 sm[col, 1] = 1000.0 / sd.dx[1];
             //initial solute concn(mass units per cc of soil)
@@ -130,6 +128,7 @@ namespace Models.Soils.SWIM4
             MathUtilities.Zero(sdrn);
             qprec = 1.0; //precip at 1 cm / h for first 24 h
             ti = ts;
+            tf = 24; //hours
             qevap = 0.05;// potential evap rate from soil surface
             double[,] wex = new double[1, 1]; //unused option params in FORTRAN... must be a better way of doing this
             double[,,] sex = new double[1, 1, 1];
