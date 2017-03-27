@@ -701,8 +701,12 @@
         </Phenology>
         <Arbitrator>
           <Name>Arbitrator</Name>
-          <NArbitrationOption />
-          <DMArbitrationOption />
+    <PrioritythenRelativeAllocation>
+      <Name>NArbitrator</Name>
+    </PrioritythenRelativeAllocation>
+    <PrioritythenRelativeAllocation>
+      <Name>DMArbitrator</Name>
+    </PrioritythenRelativeAllocation>
         </Arbitrator>
         <Structure>
           <Name>Structure</Name>
@@ -721,11 +725,11 @@
           </PhaseLookupValue>
           <Constant>
             <Name>MainStemFinalNodeNumber</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>BranchMortality</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>HeightModel</Name>
@@ -761,7 +765,7 @@
             <Name>Photosynthesis</Name>
             <Constant>
               <Name>RUE</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <RUECO2Function>
               <Name>FCO2</Name>
@@ -860,7 +864,7 @@
             </LinearInterpolationFunction>
             <Constant>
               <Name>StructuralFraction</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
           </InitialLeafValues>
           <CurrentExpandingLeaf>0</CurrentExpandingLeaf>

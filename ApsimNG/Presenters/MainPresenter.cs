@@ -154,6 +154,24 @@ namespace UserInterface.Presenters
             view.ShowProgress(percent);
         }
 
+        /// <summary>
+        /// Add a handler for the "stop" button of the view
+        /// </summary>
+        /// <param name="handler">The handler to be added</param>
+        public void AddStopHandler(EventHandler<EventArgs> handler)
+        {
+            this.view.StopSimulation += handler;
+        }
+
+        /// <summary>
+        /// Remove a handler for the "stop" button of the view
+        /// </summary>
+        /// <param name="handler">The handler to be removed</param>
+        public void RemoveStopHandler(EventHandler<EventArgs> handler)
+        {
+            this.view.StopSimulation -= handler;
+        }
+
         /// <summary>Show the wait cursor</summary>
         /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
         public void ShowWaitCursor(bool wait)
@@ -214,15 +232,15 @@ namespace UserInterface.Presenters
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.png"),
                                           OnExample);
 
-            startPage.AddButton("Open standard toolbox",
+            startPage.AddButton("Standard toolbox",
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
                                           OnStandardToolboxClick);
 
-            startPage.AddButton("Open management toolbox",
+            startPage.AddButton("Management toolbox",
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
                                           OnManagementToolboxClick);
 
-            startPage.AddButton("Open training toolbox",
+            startPage.AddButton("Training toolbox",
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
                                           OnTrainingToolboxClick);
 
@@ -249,7 +267,7 @@ namespace UserInterface.Presenters
                     ProcessStartupScript(File.ReadAllText(argument));
 
                 else if (Path.GetExtension(argument) == ".apsimx")
-                    OpenApsimXFileInTab(argument, onLeftTabControl:true);
+                    OpenApsimXFileInTab(argument, onLeftTabControl: true);
             }
         }
 

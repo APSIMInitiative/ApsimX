@@ -35,15 +35,11 @@ namespace Models.PMF.Functions
         }
         
         /// <summary>Gets the value.</summary>
-        [Units("deg.day")]
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                AirTemperatureFunction airtempfunction = new AirTemperatureFunction();
-                //airtempfunction.XYPairs = XYPairs;
-                return airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, XYPairs);
-            }
+            AirTemperatureFunction airtempfunction = new AirTemperatureFunction();
+            //airtempfunction.XYPairs = XYPairs;
+            return airtempfunction.Linint3hrlyTemp(maxt_soil_surface, mint_soil_surface, XYPairs);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

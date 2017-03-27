@@ -59,6 +59,7 @@ namespace UserInterface.Presenters
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
+            (view.MaximumNumberRecords as EditView).EndEdit();
             view.TableList.Changed -= OnTableSelected;
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
@@ -179,7 +180,14 @@ namespace UserInterface.Presenters
             if (view.MaximumNumberRecords.Value == string.Empty)
                 dataStore.MaximumResultsPerPage = 0;
             else
-                dataStore.MaximumResultsPerPage = Convert.ToInt32(view.MaximumNumberRecords.Value);
+                try
+                {
+                    dataStore.MaximumResultsPerPage = Convert.ToInt32(view.MaximumNumberRecords.Value);
+                }
+                catch (Exception)
+                {  // If there are any errors, return 0
+                    dataStore.MaximumResultsPerPage = 0;
+                }
             PopulateGrid();
         }
     }

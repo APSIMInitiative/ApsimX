@@ -6,9 +6,7 @@
 namespace UserInterface.Views
 {
     using System;
-    ///using System.Windows.Forms;
     using Interfaces;
-    using APSIM.Shared.Utilities;
     using Gtk;
     using Glade;
 
@@ -131,7 +129,15 @@ namespace UserInterface.Views
         {
             get
             {
-                return Convert.ToInt32(this.entry1.Text);
+                int result = 0;
+                try
+                {
+                    result = Convert.ToInt32(this.entry1.Text);
+                }
+                catch (Exception)
+                {  // If there are any errors, return 0
+                }
+                return result;
             }
 
             set

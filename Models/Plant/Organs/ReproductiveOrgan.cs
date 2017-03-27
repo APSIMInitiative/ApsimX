@@ -5,6 +5,7 @@ using Models.PMF.Phen;
 using Models.PMF.Interfaces;
 using System.Xml;
 using System.Xml.Serialization;
+using Models.PMF.Library;
 
 namespace Models.PMF.Organs
 {
@@ -51,6 +52,10 @@ namespace Models.PMF.Organs
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
 
+        /// <summary>Link to biomass removal model</summary>
+        [ChildLink]
+        public BiomassRemoval biomassRemovalModel = null;
+
         /// <summary>Dry matter conversion efficiency</summary>
         [Link(IsOptional = true)]
         public IFunction DMConversionEfficiencyFunction = null;
@@ -90,7 +95,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (WaterContent != null)
-                    return Live.Wt / (1 - WaterContent.Value);
+                    return Live.Wt / (1 - WaterContent.Value());
                 else
                     return 0.0;
             }
@@ -118,7 +123,7 @@ namespace Models.PMF.Organs
                 if (Number > 0)
                 {
                     if (WaterContent != null)
-                        return (Live.Wt / Number) / (1 - WaterContent.Value);
+                        return (Live.Wt / Number) / (1 - WaterContent.Value());
                     else
                         return 0.0;
                 }
@@ -150,8 +155,8 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
-                Number = NumberFunction.Value;
-                MaximumSize = MaximumPotentialGrainSize.Value;
+                Number = NumberFunction.Value();
+                MaximumSize = MaximumPotentialGrainSize.Value();
             }
         }
 
@@ -166,7 +171,7 @@ namespace Models.PMF.Organs
 
 
             if (DMConversionEfficiencyFunction != null)
-                DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
+                DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
             else
                 DMConversionEfficiency = 1.0;
 
@@ -211,6 +216,22 @@ namespace Models.PMF.Organs
                 _ReadyForHarvest = false;
             }
         }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantEnding")]
+        private void OnPlantEnding(object sender, EventArgs e)
+        {
+            if (Wt > 0.0)
+            {
+                Detached.Add(Live);
+                Detached.Add(Dead);
+                SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+            }
+
+            Clear();
+        }
         #endregion
 
         #region Arbitrator methods
@@ -229,10 +250,10 @@ namespace Models.PMF.Organs
             if (MaintenanceRespirationFunction != null)
 
             {
-                MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value;
-                Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value);
-                MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value;
-                Live.NonStructuralWt *= (1 - MaintenanceRespirationFunction.Value);
+                MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
+                Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
+                MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value();
+                Live.NonStructuralWt *= (1 - MaintenanceRespirationFunction.Value());
             }
 
         }
@@ -241,7 +262,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return new BiomassPoolType { Structural = DMDemandFunction.Value/ DMConversionEfficiency};
+                return new BiomassPoolType { Structural = DMDemandFunction.Value() / DMConversionEfficiency};
             }
         }
         /// <summary>Sets the dm potential allocation.</summary>
@@ -271,8 +292,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double demand = NFillingRate.Value;
-                demand = Math.Min(demand, MaximumNConc.Value * PotentialDMAllocation);
+                double demand = NFillingRate.Value();
+                demand = Math.Min(demand, MaximumNConc.Value() * PotentialDMAllocation);
                 return new BiomassPoolType { Structural = demand };
             }
         }
@@ -289,7 +310,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return MaximumNConc.Value;
+                return MaximumNConc.Value();
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
@@ -297,9 +318,17 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return MinimumNConc.Value;
+                return MinimumNConc.Value();
             }
         }
         #endregion
+        
+        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="value">The fractions of biomass to remove</param>
+        public override void DoRemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType value)
+        {
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, Live, Dead, Removed, Detached);
+        }
     }
 }

@@ -20,12 +20,9 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return Phenology.CurrentPhase.TTinPhase;
-            }
+            return Phenology.CurrentPhase.TTinPhase;
         }
     }
 }

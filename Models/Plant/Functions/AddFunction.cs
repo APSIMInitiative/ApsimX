@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
 
 namespace Models.PMF.Functions
@@ -17,23 +15,17 @@ namespace Models.PMF.Functions
         private List<IModel> ChildFunctions;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction)); 
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction)); 
 
-                double returnValue = 0.0;
+            double returnValue = 0.0;
 
-                foreach (IFunction F in ChildFunctions)
-                {
-                    returnValue = returnValue + F.Value;
-                }
+            foreach (IFunction F in ChildFunctions)
+                returnValue = returnValue + F.Value(arrayIndex);
 
-                return returnValue;
-            }
+            return returnValue;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="4">
   <Name>Simulations</Name>
   <Experiment>
     <Name>Experiment</Name>
@@ -664,8 +664,9 @@
         }
 				]]></Code>
         </Manager>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -1284,8 +1285,9 @@
         }
 				]]></Code>
         </Manager>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -1907,8 +1909,9 @@
             <Action>[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 0);</Action>
           </Operation>
         </Operations>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -2590,8 +2593,9 @@
             <Action>[Fertiliser].Apply(10, Fertiliser.Types.UreaN, 0);</Action>
           </Operation>
         </Operations>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>
@@ -3302,8 +3306,9 @@
         }
 				]]></Code>
         </Manager>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Area>0</Area>
       <Slope>0</Slope>

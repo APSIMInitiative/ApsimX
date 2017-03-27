@@ -120,6 +120,9 @@ namespace Models.PMF.OilPalm
         [Link]
         ISummary Summary = null;
 
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
 
 
         /// <summary>The soil crop</summary>
@@ -557,14 +560,6 @@ namespace Models.PMF.OilPalm
         [Units("g/m^2")]
         public double UnderstoryDltDM{get;set;}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
-        /// <summary>Occurs when [nitrogen changed].</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
-
         /// <summary>Daily understory nitrogen fixation</summary>
         /// <value>The understory n fixation.</value>
         [XmlIgnore]
@@ -615,6 +610,8 @@ namespace Models.PMF.OilPalm
             public double Age = 0;
             /// <summary>The female fraction</summary>
             public double FemaleFraction = 1;
+            /// <summary>Duration of Bunch Filling</summary>
+            public double FillDuration = 0;
         }
 
 
@@ -727,27 +724,27 @@ namespace Models.PMF.OilPalm
                 RootType R = new RootType();
                 Roots.Add(R);
                 Roots[i].Mass = 0.1;
-                Roots[i].N = Roots[i].Mass * RootNConcentration.Value / 100;
+                Roots[i].N = Roots[i].Mass * RootNConcentration.Value() / 100;
             }
 
-            double FMA = FrondMaxArea.Value;
-            double GrowthDuration = ExpandingFronds.Value * FrondAppearanceRate.Value;
+            double FMA = FrondMaxArea.Value();
+            double GrowthDuration = ExpandingFronds.Value() * FrondAppearanceRate.Value();
 
-            for (int i = 0; i < (int)InitialFrondNumber.Value; i++)
+            for (int i = 0; i < (int)InitialFrondNumber.Value(); i++)
             {
                 FrondType F = new FrondType();
-                F.Age = ((int)InitialFrondNumber.Value - i) * FrondAppearanceRate.Value;
+                F.Age = ((int)InitialFrondNumber.Value() - i) * FrondAppearanceRate.Value();
                 F.Area = SizeFunction(F.Age, FMA, GrowthDuration);
-                F.Mass = F.Area / SpecificLeafArea.Value;
-                F.N = F.Mass * FrondCriticalNConcentration.Value / 100.0;
+                F.Mass = F.Area / SpecificLeafArea.Value();
+                F.N = F.Mass * FrondCriticalNConcentration.Value() / 100.0;
                 Fronds.Add(F);
                 CumulativeFrondNumber += 1;
             }
-            for (int i = 0; i < (int)InitialFrondNumber.Value + 60; i++)
+            for (int i = 0; i < (int)InitialFrondNumber.Value() + 60; i++)
             {
                 BunchType B = new BunchType();
                 if (i>40) 
-                   B.FemaleFraction =  FemaleFlowerFraction.Value;
+                   B.FemaleFraction =  FemaleFlowerFraction.Value();
                 else
                     B.FemaleFraction = 0;
 
@@ -887,7 +884,7 @@ namespace Models.PMF.OilPalm
             int B = Fronds.Count - 11;
             if (B > 0)
             {
-                double AF = (1 - FlowerAbortionFraction.Value);
+                double AF = (1 - FlowerAbortionFraction.Value());
                 Bunches[B - 1].FemaleFraction *= AF;
                 Bunches[B].FemaleFraction *= AF;
                 Bunches[B + 1].FemaleFraction *= AF;
@@ -897,7 +894,7 @@ namespace Models.PMF.OilPalm
             B = Fronds.Count - 21;
             if (B > 0)
             {
-                double BFF = (1 - BunchFailureFraction.Value);
+                double BFF = (1 - BunchFailureFraction.Value());
                 Bunches[B].FemaleFraction *= BFF;
             }
 
@@ -909,15 +906,15 @@ namespace Models.PMF.OilPalm
             // Main abortion stage occurs 25 plastochroons before spear leaf over 9 plastochrons
             // NH Try 20 as this allows for 26 per year and harvest at 32 - ie 26*2 - 32
             int B = 53; //Fronds.Count + 20;
-            Bunches[B - 4].FemaleFraction *= (1.0 - FFFStressImpact.Value);
-            Bunches[B - 3].FemaleFraction *= (1.0 - FFFStressImpact.Value);
-            Bunches[B - 2].FemaleFraction *= (1.0 - FFFStressImpact.Value);
-            Bunches[B - 1].FemaleFraction *= (1.0 - FFFStressImpact.Value);
-            Bunches[B + 0].FemaleFraction *= (1.0 - FFFStressImpact.Value);
-            Bunches[B + 1].FemaleFraction *= (1.0 - FFFStressImpact.Value);
-            Bunches[B + 2].FemaleFraction *= (1.0 - FFFStressImpact.Value);
-            Bunches[B + 3].FemaleFraction *= (1.0 - FFFStressImpact.Value);
-            Bunches[B + 4].FemaleFraction *= (1.0 - FFFStressImpact.Value);
+            Bunches[B - 4].FemaleFraction *= (1.0 - FFFStressImpact.Value());
+            Bunches[B - 3].FemaleFraction *= (1.0 - FFFStressImpact.Value());
+            Bunches[B - 2].FemaleFraction *= (1.0 - FFFStressImpact.Value());
+            Bunches[B - 1].FemaleFraction *= (1.0 - FFFStressImpact.Value());
+            Bunches[B + 0].FemaleFraction *= (1.0 - FFFStressImpact.Value());
+            Bunches[B + 1].FemaleFraction *= (1.0 - FFFStressImpact.Value());
+            Bunches[B + 2].FemaleFraction *= (1.0 - FFFStressImpact.Value());
+            Bunches[B + 3].FemaleFraction *= (1.0 - FFFStressImpact.Value());
+            Bunches[B + 4].FemaleFraction *= (1.0 - FFFStressImpact.Value());
 
 
         }
@@ -927,7 +924,7 @@ namespace Models.PMF.OilPalm
         private void DoRootGrowth(double Allocation)
         {
             int RootLayer = LayerIndex(RootDepth);
-            RootDepth = RootDepth + RootFrontVelocity.Value * soilCrop.XF[RootLayer];
+            RootDepth = RootDepth + RootFrontVelocity.Value() * soilCrop.XF[RootLayer];
             RootDepth = Math.Min(MaximumRootDepth, RootDepth);
             RootDepth = Math.Min(MathUtilities.Sum(Soil.Thickness), RootDepth);
 
@@ -984,7 +981,7 @@ namespace Models.PMF.OilPalm
 
             for (int layer = 0; layer < Soil.Thickness.Length; layer++)
             {
-                double Fr = RootSenescenceRate.Value;
+                double Fr = RootSenescenceRate.Value();
                 double DM = Roots[layer].Mass * Fr * 10.0;
                 double N = Roots[layer].N * Fr * 10.0;
                 Roots[layer].Mass *= (1.0 - Fr);
@@ -1016,8 +1013,8 @@ namespace Models.PMF.OilPalm
         /// <summary>Does the growth.</summary>
         private void DoGrowth()
         {
-            double RUEclear = RUE.Value;
-            double RUEcloud = RUE.Value * (1 + 0.33 * cover_green);
+            double RUEclear = RUE.Value();
+            double RUEcloud = RUE.Value() * (1 + 0.33 * cover_green);
             double WF = DiffuseLightFraction;
             double RUEadj = WF * WF * RUEcloud + (1 - WF * WF) * RUEclear;
             DltDM = RUEadj * Math.Min(Fn,Fvpd) * MetData.Radn * cover_green * FW;
@@ -1027,9 +1024,9 @@ namespace Models.PMF.OilPalm
             double[] FrondsAgeDelta = new double[Fronds.Count];
 
             //precalculate  above two arrays
-            double FMA = FrondMaxArea.Value;
-            double frondAppearanceRate = FrondAppearanceRate.Value;
-            double GrowthDuration = ExpandingFronds.Value * frondAppearanceRate;
+            double FMA = FrondMaxArea.Value();
+            double frondAppearanceRate = FrondAppearanceRate.Value();
+            double GrowthDuration = ExpandingFronds.Value() * frondAppearanceRate;
 
             for (int i = 0; i < Fronds.Count; i++)
                 {
@@ -1037,22 +1034,30 @@ namespace Models.PMF.OilPalm
                     FrondsAgeDelta[i] = SizeFunction(Fronds[i].Age + DeltaT, FMA, GrowthDuration);
                 }
 
-            RootGrowth = (DltDM * RootFraction.Value);
+            RootGrowth = (DltDM * RootFraction.Value());
             DMAvailable -= RootGrowth;
             DoRootGrowth(RootGrowth);
 
             double[] BunchDMD = new double[Bunches.Count];
             for (int i = 0; i < 6; i++)
-                BunchDMD[i] = BunchSizeMax.Value / (6 * frondAppearanceRate / DeltaT) * Fn * Population * Bunches[i].FemaleFraction * BunchOilConversionFactor.Value;
+            {
+                Bunches[i].FillDuration += DeltaT/frondAppearanceRate;
+                BunchDMD[i] = BunchSizeMax.Value() / (6 * frondAppearanceRate / DeltaT) * Fn * Population * Bunches[i].FemaleFraction * BunchOilConversionFactor.Value();
+            }
+            if (FrondNumber > HarvestFrondNumber.Value())  // start growing the 7th as well so that it can be ready to harvest on time
+            {
+                Bunches[6].FillDuration += DeltaT / frondAppearanceRate;
+                BunchDMD[6] = BunchSizeMax.Value() / (6 * frondAppearanceRate / DeltaT) * Fn * Population * Bunches[7].FemaleFraction * BunchOilConversionFactor.Value();
+            }
             double TotBunchDMD = MathUtilities.Sum(BunchDMD);
 
             double[] FrondDMD = new double[Fronds.Count];
-            double specificLeafArea = SpecificLeafArea.Value;
+            double specificLeafArea = SpecificLeafArea.Value();
             for (int i = 0; i < Fronds.Count; i++)
                 FrondDMD[i] = (FrondsAgeDelta[i] - FrondsAge[i]) / specificLeafArea * Population * Fn;
             double TotFrondDMD = MathUtilities.Sum(FrondDMD);
 
-            double StemDMD = TotFrondDMD * StemToFrondFraction.Value;
+            double StemDMD = TotFrondDMD * StemToFrondFraction.Value();
 
             double Fr = Math.Min(DMAvailable / (TotBunchDMD + TotFrondDMD + StemDMD), 1.0);
             Excess = 0.0;
@@ -1065,9 +1070,9 @@ namespace Models.PMF.OilPalm
 
             BunchGrowth = 0; // zero the daily value before incrementally building it up again with today's growth of individual bunches
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 7; i++)
             {
-                double IndividualBunchGrowth = BunchDMD[i] * Fr / Population / BunchOilConversionFactor.Value;
+                double IndividualBunchGrowth = BunchDMD[i] * Fr / Population / BunchOilConversionFactor.Value();
                 Bunches[i].Mass += IndividualBunchGrowth;
                 BunchGrowth += IndividualBunchGrowth * Population;
             }
@@ -1078,7 +1083,7 @@ namespace Models.PMF.OilPalm
 
             FrondGrowth = 0; // zero the daily value before incrementally building it up again with today's growth of individual fronds
 
-            double specificLeafAreaMax = SpecificLeafAreaMax.Value;
+            double specificLeafAreaMax = SpecificLeafAreaMax.Value();
 
             for (int i = 0; i < Fronds.Count; i++)
             {
@@ -1109,25 +1114,27 @@ namespace Models.PMF.OilPalm
                 F.Age += DeltaT;
                 //F.Area = SizeFunction(F.Age);
             }
-            if (Fronds[Fronds.Count - 1].Age >= FrondAppearanceRate.Value)
+            if (Fronds[Fronds.Count - 1].Age >= FrondAppearanceRate.Value())
             {
                 FrondType F = new FrondType();
                 Fronds.Add(F);
                 CumulativeFrondNumber += 1;
 
                 BunchType B = new BunchType();
-                B.FemaleFraction = FemaleFlowerFraction.Value;
+                B.FemaleFraction = FemaleFlowerFraction.Value();
                 Bunches.Add(B);
             }
 
             //if (Fronds[0].Age >= (40 * FrondAppRate.Value))
-            if (FrondNumber > Math.Round(HarvestFrondNumber.Value))
-            {
+            //if (FrondNumber > Math.Round(HarvestFrondNumber.Value)&&Bunches[0].FillDuration>6)
+            //if (FrondNumber > Math.Round(HarvestFrondNumber.Value))
+            if (FrondNumber > HarvestFrondNumber.Value() && Bunches[0].FillDuration > 6)
+                {
                 HarvestBunches = Bunches[0].FemaleFraction;
-                double HarvestYield = Bunches[0].Mass * Population / (1.0 - RipeBunchWaterContent.Value);
+                double HarvestYield = Bunches[0].Mass * Population / (1.0 - RipeBunchWaterContent.Value());
                 HarvestFFB = HarvestYield / 100;
                 HarvestNRemoved = Bunches[0].N * Population * 10;
-                HarvestBunchSize = Bunches[0].Mass / (1.0 - RipeBunchWaterContent.Value) / Bunches[0].FemaleFraction;
+                HarvestBunchSize = Bunches[0].Mass / (1.0 - RipeBunchWaterContent.Value()) / Bunches[0].FemaleFraction;
                 if (Harvesting != null)
                     Harvesting.Invoke(this, new EventArgs());
                 // Now rezero these outputs - they can only be output non-zero on harvesting event.
@@ -1226,18 +1233,12 @@ namespace Models.PMF.OilPalm
         /// <exception cref="System.Exception">Error in N Allocation</exception>
         private void DoNBalance()
         {
-            NitrogenChangedType NUptakeType = new NitrogenChangedType();
-            NUptakeType.Sender = Name;
-            NUptakeType.SenderType = "Plant";
-            NUptakeType.DeltaNO3 = new double[Soil.Thickness.Length];
-            NUptakeType.DeltaNH4 = new double[Soil.Thickness.Length];
-
             double StartN = PlantN;
 
-            double StemNDemand = StemGrowth * StemNConcentration.Value / 100.0 * 10.0;  // factor of 10 to convert g/m2 to kg/ha
-            double RootNDemand = Math.Max(0.0, (RootMass * RootNConcentration.Value / 100.0 - RootN)) * 10.0;  // kg/ha
-            double FrondNDemand = Math.Max(0.0, (FrondMass * FrondMaximumNConcentration.Value / 100.0 - FrondN)) * 10.0;  // kg/ha 
-            double BunchNDemand = Math.Max(0.0, (BunchMass * BunchNConcentration.Value / 100.0 - BunchN)) * 10.0;  // kg/ha 
+            double StemNDemand = StemGrowth * StemNConcentration.Value() / 100.0 * 10.0;  // factor of 10 to convert g/m2 to kg/ha
+            double RootNDemand = Math.Max(0.0, (RootMass * RootNConcentration.Value() / 100.0 - RootN)) * 10.0;  // kg/ha
+            double FrondNDemand = Math.Max(0.0, (FrondMass * FrondMaximumNConcentration.Value() / 100.0 - FrondN)) * 10.0;  // kg/ha 
+            double BunchNDemand = Math.Max(0.0, (BunchMass * BunchNConcentration.Value() / 100.0 - BunchN)) * 10.0;  // kg/ha 
 
             Ndemand = StemNDemand + FrondNDemand + RootNDemand + BunchNDemand;  //kg/ha
 
@@ -1248,20 +1249,15 @@ namespace Models.PMF.OilPalm
                 swaf = (Soil.Water[j] - Soil.SoilWater.LL15mm[j]) / (Soil.SoilWater.DULmm[j] - Soil.SoilWater.LL15mm[j]);
                 swaf = Math.Max(0.0, Math.Min(swaf, 1.0));
                 double no3ppm = Soil.NO3N[j] * (100.0 / (Soil.BD[j] * Soil.Thickness[j]));
-                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value * Soil.NO3N[j] * swaf);
+                PotNUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * KNO3.Value() * Soil.NO3N[j] * swaf);
             }
 
             double TotPotNUptake = MathUtilities.Sum(PotNUptake);
             double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
 
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
-            {
                 NUptake[j] = PotNUptake[j] * Fr;
-                NUptakeType.DeltaNO3[j] = -NUptake[j];
-            }
-
-            if (NitrogenChanged != null)
-                NitrogenChanged.Invoke(NUptakeType);
+            solutes.Subtract("NO3", NUptake);
 
             Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NUptake) / BunchNDemand));
             double DeltaBunchN = BunchNDemand * Fr;
@@ -1269,8 +1265,8 @@ namespace Models.PMF.OilPalm
             double Tot = 0;
             foreach (BunchType B in Bunches)
             {
-                Tot += Math.Max(0.0, B.Mass * BunchNConcentration.Value / 100.0 - B.N) * Fr / SowingData.Population;
-                B.N += Math.Max(0.0, B.Mass * BunchNConcentration.Value / 100.0 - B.N) * Fr;
+                Tot += Math.Max(0.0, B.Mass * BunchNConcentration.Value() / 100.0 - B.N) * Fr / SowingData.Population;
+                B.N += Math.Max(0.0, B.Mass * BunchNConcentration.Value() / 100.0 - B.N) * Fr;
             }
 
             // Calculate fraction of N demand for Vegetative Parts
@@ -1285,14 +1281,14 @@ namespace Models.PMF.OilPalm
             double TotNDef = 1e-20;
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
             {
-                RootNDef[j] = Math.Max(0.0, Roots[j].Mass * RootNConcentration.Value / 100.0 - Roots[j].N);
+                RootNDef[j] = Math.Max(0.0, Roots[j].Mass * RootNConcentration.Value() / 100.0 - Roots[j].N);
                 TotNDef += RootNDef[j];
             }
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
                 Roots[j].N += RootNDemand / 10 * Fr * RootNDef[j] / TotNDef;
 
             foreach (FrondType F in Fronds)
-                F.N += Math.Max(0.0, F.Mass * FrondMaximumNConcentration.Value / 100.0 - F.N) * Fr;
+                F.N += Math.Max(0.0, F.Mass * FrondMaximumNConcentration.Value() / 100.0 - F.N) * Fr;
 
             double EndN = PlantN;
             double Change = EndN - StartN;
@@ -1301,8 +1297,8 @@ namespace Models.PMF.OilPalm
                 throw new Exception("Error in N Allocation");
 
             double Nact = FrondNConc;
-            double Ncrit = FrondCriticalNConcentration.Value;
-            double Nmin = FrondMinimumNConcentration.Value;
+            double Ncrit = FrondCriticalNConcentration.Value();
+            double Nmin = FrondMinimumNConcentration.Value();
             Fn = Math.Min(Math.Max(0.0, (Nact - Nmin) / (Ncrit - Nmin)), 1.0);
 
         }
@@ -1524,7 +1520,7 @@ namespace Models.PMF.OilPalm
         {
             get
             {
-                return Math.Max(Fronds.Count - ExpandingFronds.Value, 0.0);
+                return Math.Max(Fronds.Count - ExpandingFronds.Value(), 0.0);
             }
         }
 
@@ -1537,8 +1533,8 @@ namespace Models.PMF.OilPalm
             get
             {
                 double DF = DiffuseLightFraction;
-                double DirectCover = 1.0 - Math.Exp(-DirectExtinctionCoeff.Value * LAI);
-                double DiffuseCover = 1.0 - Math.Exp(-DiffuseExtinctionCoeff.Value * LAI);
+                double DirectCover = 1.0 - Math.Exp(-DirectExtinctionCoeff.Value() * LAI);
+                double DiffuseCover = 1.0 - Math.Exp(-DiffuseExtinctionCoeff.Value() * LAI);
                 return DF * DiffuseCover + (1 - DF) * DirectCover;
             }
         }
@@ -1615,7 +1611,7 @@ namespace Models.PMF.OilPalm
                 //return Math.Min(Math.Pow(Fn,0.5),1.0);
                 //return Math.Min(1.4 * Fn, RelativeDevelopmentalRate.Value);
                 //return Math.Min(1.0 * Fn, RelativeDevelopmentalRate.Value);
-                return Math.Min(1.25 * Fn, 1.0) * RelativeDevelopmentalRate.Value;
+                return Math.Min(1.25 * Fn, 1.0) * RelativeDevelopmentalRate.Value();
             }
         }
 

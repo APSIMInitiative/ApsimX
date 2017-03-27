@@ -128,6 +128,7 @@ namespace UserInterface.Presenters
             if (this.view is Views.ExplorerView)
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
             HideRightHandPanel();
+            this.contextMenu = null;
             this.CommandHistory.Clear();
         }
 
@@ -358,7 +359,7 @@ namespace UserInterface.Presenters
                 {
                     document.LoadXml(xml);
                 }
-                catch(XmlException)
+                catch (XmlException)
                 {
                     MainPresenter.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", DataStore.ErrorLevel.Error);
                 }
@@ -594,7 +595,7 @@ namespace UserInterface.Presenters
             PopulateContextMenu(e.NewNodePath);
 
             Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);
-            CommandHistory.Add(selectCommand);
+            CommandHistory.Add(selectCommand, false);
         }
 
         /// <summary>A node has begun to be dragged.</summary>

@@ -113,12 +113,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APSIMFileReaderTests.cs" />
+    <Compile Include="ScopeTests.cs" />
     <Compile Include="MockSoil.cs" />
     <Compile Include="MockSummary.cs" />
     <Compile Include="MockSurfaceOrganicMatter.cs" />
     <Compile Include="MockIrrigation.cs" />
     <Compile Include="MockClock.cs" />
     <Compile Include="MockWeather.cs" />
+    <Compile Include="SWIMTests.cs" />
     <Compile Include="TestConverter.cs" />
     <Compile Include="APITest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -128,8 +130,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="FileFormatTests.cs" />
-    <Compile Include="TestLinks.cs" />
+    <Compile Include="LinksTests.cs" />
     <Compile Include="TestModelNode.cs" />
+    <Compile Include="TestReport.cs" />
     <Compile Include="TestSoils.cs" />
     <Compile Include="TestStats.cs" />
   </ItemGroup>
@@ -166,6 +169,10 @@
     <ProjectReference Include="..\..\Models\Models.csproj">
       <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
       <Name>Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SWIMFrame\SWIMFrame.csproj">
+      <Project>{e456aba4-bf7b-4be7-9c29-26e66f49922b}</Project>
+      <Name>SWIMFrame</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UserInterface\UserInterface.csproj">
       <Project>{27056DED-A49C-4351-90A8-DFA9C8AC906E}</Project>

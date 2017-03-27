@@ -35,18 +35,25 @@ namespace Models.PMF.OldPlant
         [Link]
         IFunction RUEModifier = null;   // used for CO2
 
+        /// <summary>
+        /// The Radiation Use Efficiency modifier (default is 1.0)
+        /// </summary>
+        public double RUEFactor { get; set; }
+
         /// <summary>Potentials the dm.</summary>
         /// <param name="radiationInterceptedGreen">The radiation intercepted green.</param>
         /// <returns></returns>
         public double PotentialDM(double radiationInterceptedGreen)
         {
-            double RUEFactor = 1.0;
-            double stress_factor = Math.Min(Math.Min(Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+            if (RUEFactor == 0)
+                RUEFactor = 1.0;
+
+            double stress_factor = Math.Min(Math.Min(Math.Min(Math.Min(TempStress.Value(), NStress.Photo),
                                                               SWStress.OxygenDeficitPhoto),
                                                      PStress.Photo),
                                             RUEFactor);
 
-            return radiationInterceptedGreen * RUE.Value * stress_factor * RUEModifier.Value;
+            return radiationInterceptedGreen * RUE.Value() * stress_factor * RUEModifier.Value();
         }
 
         /// <summary>Gets the FRGR.</summary>
@@ -55,7 +62,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+                return Math.Min(Math.Min(TempStress.Value(), NStress.Photo),
                                 Math.Min(SWStress.OxygenDeficitPhoto, PStress.Photo));
 
             }

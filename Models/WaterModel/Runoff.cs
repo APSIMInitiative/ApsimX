@@ -80,56 +80,53 @@ namespace Models.WaterModel
         // --- Outputs -----------------------------------------------------------------------
 
         /// <summary>Calculate and return the runoff (mm).</summary>
-        public double Value 
+        public double Value(int arrayIndex = -1)
         {
-            get
+            double runoff = 0.0;
+
+            if (soil.PotentialRunoff > 0.0)
             {
-                double runoff = 0.0;
+                double cn2New = CN2Bare - reductionForCover.Value(arrayIndex) - reductionForTillage.Value(arrayIndex);
 
-                if (soil.PotentialRunoff > 0.0)
+                // cut off response to cover at high covers
+                cn2New = MathUtilities.Bound(cn2New, 0.0, 100.0);
+
+                // Calculate CN proportional in dry range (dul to ll15)
+                double[] runoff_wf = RunoffWeightingFactor();
+                double[] SW = soil.Water;
+                double[] LL15 = MathUtilities.Multiply(soil.Properties.Water.LL15, soil.Properties.Water.Thickness);
+                double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, soil.Properties.Water.Thickness);
+                double cnpd = 0.0;
+                for (int i = 0; i < soil.Properties.Water.Thickness.Length; i++)
                 {
-                    double cn2New = CN2Bare - reductionForCover.Value - reductionForTillage.Value;
-
-                    // cut off response to cover at high covers
-                    cn2New = MathUtilities.Bound(cn2New, 0.0, 100.0);
-
-                    // Calculate CN proportional in dry range (dul to ll15)
-                    double[] runoff_wf = RunoffWeightingFactor();
-                    double[] SW = soil.Water;
-                    double[] LL15 = MathUtilities.Multiply(soil.Properties.Water.LL15, soil.Properties.Water.Thickness);
-                    double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, soil.Properties.Water.Thickness);
-                    double cnpd = 0.0;
-                    for (int i = 0; i < soil.Properties.Water.Thickness.Length; i++)
-                    {
-                        double DULFraction = MathUtilities.Divide((SW[i] - LL15[i]), (DUL[i] - LL15[i]), 0.0);
-                        cnpd = cnpd + DULFraction * runoff_wf[i];
-                    }
-                    cnpd = MathUtilities.Bound(cnpd, 0.0, 1.0);
-
-                    // curve no. for dry soil (antecedant) moisture
-                    double cn1 = MathUtilities.Divide(cn2New, (2.334 - 0.01334 * cn2New), 0.0);
-
-                    // curve no. for wet soil (antecedant) moisture
-                    double cn3 = MathUtilities.Divide(cn2New, (0.4036 + 0.005964 * cn2New), 0.0);
-
-                    // scs curve number
-                    double cn = cn1 + (cn3 - cn1) * cnpd;
-
-                    // curve number will be decided from scs curve number table ??dms
-                    // s is potential max retention (surface ponding + infiltration)
-                    double s = 254.0 * (MathUtilities.Divide(100.0, cn, 1000000.0) - 1.0);
-                    double xpb = soil.PotentialRunoff - 0.2 * s;
-                    xpb = Math.Max(xpb, 0.0);
-
-                    // assign the output variable
-                    runoff = MathUtilities.Divide(xpb * xpb, (soil.PotentialRunoff + 0.8 * s), 0.0);
-
-                    // bound check the ouput variable
-                    return MathUtilities.Bound(runoff, 0.0, soil.PotentialRunoff);
+                    double DULFraction = MathUtilities.Divide((SW[i] - LL15[i]), (DUL[i] - LL15[i]), 0.0);
+                    cnpd = cnpd + DULFraction * runoff_wf[i];
                 }
+                cnpd = MathUtilities.Bound(cnpd, 0.0, 1.0);
 
-                return 0.0;
+                // curve no. for dry soil (antecedant) moisture
+                double cn1 = MathUtilities.Divide(cn2New, (2.334 - 0.01334 * cn2New), 0.0);
+
+                // curve no. for wet soil (antecedant) moisture
+                double cn3 = MathUtilities.Divide(cn2New, (0.4036 + 0.005964 * cn2New), 0.0);
+
+                // scs curve number
+                double cn = cn1 + (cn3 - cn1) * cnpd;
+
+                // curve number will be decided from scs curve number table ??dms
+                // s is potential max retention (surface ponding + infiltration)
+                double s = 254.0 * (MathUtilities.Divide(100.0, cn, 1000000.0) - 1.0);
+                double xpb = soil.PotentialRunoff - 0.2 * s;
+                xpb = Math.Max(xpb, 0.0);
+
+                // assign the output variable
+                runoff = MathUtilities.Divide(xpb * xpb, (soil.PotentialRunoff + 0.8 * s), 0.0);
+
+                // bound check the ouput variable
+                return MathUtilities.Bound(runoff, 0.0, soil.PotentialRunoff);
             }
+
+            return 0.0;
         }
 
         // --- Private methods ---------------------------------------------------------------

@@ -8,7 +8,7 @@
   <Manager>
     <Name>ResetPMFSlurpProperties</Name>
     <Script>
-      <OverRidePath>[PMFSlurp].Leaf.LAIFunction.Value</OverRidePath>
+      <OverRidePath>[PMFSlurp].Leaf.LAIFunction.FixedValue</OverRidePath>
       <OverRideInterger>5</OverRideInterger>
     </Script>
     <Code><![CDATA[using System;
@@ -734,11 +734,11 @@ namespace Models
           <string>[PMFSlurp].Leaf.CoverDead</string>
           <string>[PMFSlurp].Leaf.LAI</string>
           <string>[PMFSlurp].Leaf.Height</string>
-          <string>[PMFSlurp].Leaf.PotentialBiomass.Value</string>
+          <string>[PMFSlurp].Leaf.PotentialBiomass.Value()</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[PMFSlurp].Arbitrator.NDemand</string>
+          <string>[PMFSlurp].Arbitrator.N.TotalPlantDemand</string>
           <string>[MicroClimate].net_radn</string>
           <string>[MicroClimate].peta</string>
           <string>[MicroClimate].petr</string>
@@ -759,7 +759,7 @@ namespace Models
       <Manager>
         <Name>ResetPMFSlurpProperties</Name>
         <Script>
-          <OverRidePath>PMFSlurp.Leaf.LAIFunction.value</OverRidePath>
+          <OverRidePath>PMFSlurp.Leaf.LAIFunction.FixedValue</OverRidePath>
           <OverRideInterger>5</OverRideInterger>
           <ChangeDate>1998-11-14</ChangeDate>
         </Script>
@@ -1817,7 +1817,7 @@ namespace Models
         <Line>Solid</Line>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Slurp.Arbitrator.NDemand</YFieldName>
+        <YFieldName>Slurp.Arbitrator.N.TotalPlantDemand</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>

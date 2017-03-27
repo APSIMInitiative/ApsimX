@@ -65,7 +65,7 @@ namespace Models.PMF.Functions
                 double DailyIncrement = 0.0;
                 foreach (IFunction function in ChildFunctions)
                 {
-                    DailyIncrement += function.Value;
+                    DailyIncrement += function.Value();
                 }
 
                 AccumulatedValue += DailyIncrement;
@@ -73,22 +73,20 @@ namespace Models.PMF.Functions
         }
 
         /// <summary>Called when [phase changed].</summary>
-        /// <param name="PhaseChange">The phase change.</param>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
         [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(PhaseChangedType PhaseChange)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (PhaseChange.EventStageName == ResetStageName)
+            if (phaseChange.EventStageName == ResetStageName)
                 AccumulatedValue = 0.0;
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return AccumulatedValue;
-            }
+            return AccumulatedValue;
         }
 
         /// <summary>Called when [cut].</summary>
@@ -118,7 +116,7 @@ namespace Models.PMF.Functions
             // add a heading.
             Name = this.Name;
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-            tags.Add(new AutoDocumentation.Paragraph(this.Name + " is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
+            tags.Add(new AutoDocumentation.Paragraph("**"+this.Name + "** is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
                                                         + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
 
             // write children.

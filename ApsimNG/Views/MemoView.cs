@@ -1,8 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
-///using System.Windows.Forms;
 using Glade;
 using Gtk;
 
@@ -51,6 +48,7 @@ namespace UserInterface.Views
             Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.MemoView.glade", "vbox1");
             gxml.Autoconnect(this);
             _mainWidget = vbox1;
+            textView.ModifyFont(Pango.FontDescription.FromString("monospace"));
             textView.FocusOutEvent += richTextBox1_Leave;
             textView.Buffer.Changed += richTextBox1_TextChanged;
             _mainWidget.Destroyed += _mainWidget_Destroyed;

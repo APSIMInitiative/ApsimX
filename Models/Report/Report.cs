@@ -12,6 +12,8 @@ namespace Models.Report
     using APSIM.Shared.Utilities;
     using Factorial;
     using System.Xml.Serialization;
+    using System.IO;
+    using System.Runtime.Serialization.Formatters.Binary;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -27,7 +29,7 @@ namespace Models.Report
         /// <summary>
         /// The columns to write to the data store.
         /// </summary>
-        private List<ReportColumn> columns = null;
+        private List<IReportColumn> columns = null;
 
         /// <summary>
         /// A reference to the simulation
@@ -72,7 +74,7 @@ namespace Models.Report
 
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
-            variableNames.Add("Name as ZoneName");
+            variableNames.Add("Name as Zone");
             for (int i = 0; i < this.VariableNames.Length; i++)
             {
                 bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
@@ -86,8 +88,11 @@ namespace Models.Report
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public void DoOutput()
         {
-            foreach (ReportColumn column in columns)
-                column.StoreValue();
+            foreach (IReportColumn column in columns)
+            {
+                if (column is ReportColumn)
+                    (column as ReportColumn).StoreValue();
+            }
         }
 
         /// <summary>
@@ -95,7 +100,7 @@ namespace Models.Report
         /// </summary>
         private void FindVariableMembers()
         {
-            this.columns = new List<ReportColumn>();
+            this.columns = new List<IReportColumn>();
 
             AddExperimentFactorLevels();
 
@@ -112,7 +117,7 @@ namespace Models.Report
             if (ExperimentFactorValues != null)
             {
                 for (int i = 0; i < ExperimentFactorNames.Count; i++)
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorNames[i], this.EventNames, this, ExperimentFactorValues[i]));
+                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
             }
         }
 
@@ -130,20 +135,19 @@ namespace Models.Report
             // Write and store a table in the DataStore
             if (this.columns != null && this.columns.Count > 0)
             {
-                DataTable table = new DataTable();
-
-                foreach (ReportColumn variable in this.columns)
-                    variable.AddColumnsToTable(table);
-
-                foreach (ReportColumn variable in this.columns)
-                    variable.AddRowsToTable(table);
-
-                dataStore.WriteTable(this.simulation.Name, this.Name, table);
+                ReportTable table = new ReportTable();
+                table.FileName = Path.ChangeExtension(simulation.FileName, ".db");
+                table.SimulationName = simulation.Name;
+                table.TableName = this.Name;
+                table.Columns = new List<IReportColumn>();
+                table.Columns.AddRange(columns);
+                table.Flatten();
+                dataStore.WriteTable(table);
 
                 this.columns.Clear();
                 this.columns = null;
             }
-            
+
             dataStore.Disconnect();
             dataStore = null;
         }

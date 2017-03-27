@@ -561,7 +561,7 @@ namespace Models
             <string>[SCRUM].Stover.LAI</string>
             <string>[SCRUM].Stover.Height</string>
             <string>[SCRUM].Product.LiveFWt</string>
-            <string>[SCRUM].Phenology.ThermalTime.Value</string>
+            <string>[SCRUM].Phenology.ThermalTime.Value()</string>
             <string>[SCRUM].Phenology.CurrentPhaseName</string>
             <string>[SCRUM].Phenology.Stage</string>
           </VariableNames>
@@ -902,7 +902,7 @@ namespace Models
              
              ]]></Code>
         </Manager>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
       <Area>0</Area>

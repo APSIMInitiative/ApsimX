@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -37,16 +37,16 @@
           <RegrStats>
             <Name>PSWC</Name>
             <n>448</n>
-            <Slope>0.7433261264647274</Slope>
-            <Intercept>47.537470959176346</Intercept>
-            <SEslope>0.03277526941183221</SEslope>
-            <SEintercept>7.3535171699026964</SEintercept>
-            <R2>0.53559028585105173</R2>
-            <RMSE>35.532319544018662</RMSE>
-            <NSE>0.41946951656353215</NSE>
-            <ME>-8.7925834333041433</ME>
-            <MAE>27.354327596053118</MAE>
-            <RSR>0.76107467206872115</RSR>
+            <Slope>0.75529467401224393</Slope>
+            <Intercept>46.641922387743136</Intercept>
+            <SEslope>0.032635564267904586</SEslope>
+            <SEintercept>7.3221726777587319</SEintercept>
+            <R2>0.54564549406362484</R2>
+            <RMSE>34.830827822681485</RMSE>
+            <NSE>0.44216532820903054</NSE>
+            <ME>-7.0614956234619486</ME>
+            <MAE>26.92381385501173</MAE>
+            <RSR>0.74604926453476561</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -428,7 +428,6 @@
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <Plant>
         <Name>Slurp</Name>
@@ -443,17 +442,13 @@
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.26</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
@@ -785,11 +780,11 @@ namespace Models
           <string>[Slurp].Leaf.CoverDead</string>
           <string>[Slurp].Leaf.LAI</string>
           <string>[Slurp].Leaf.Height</string>
-          <string>[Slurp].Leaf.PotentialBiomass.Value</string>
+          <string>[Slurp].Leaf.PotentialBiomass.Value()</string>
           <string>[Soil].SoilWater.SWmm</string>
           <string>[Soil].NO3N</string>
           <string>[ExtraVariables].Script.SoilNitrogenContent</string>
-          <string>[Slurp].Arbitrator.NDemand</string>
+          <string>[Slurp].Arbitrator.N.TotalPlantDemand</string>
           <string>[MicroClimate].net_radn</string>
           <string>[MicroClimate].peta</string>
           <string>[MicroClimate].petr</string>
@@ -808,7 +803,7 @@ namespace Models
       <Manager>
         <Name>ResetProduction</Name>
         <Script>
-          <OverRidePath>Slurp.Leaf.Photosynthesis.Value</OverRidePath>
+          <OverRidePath>Slurp.Leaf.Photosynthesis.FixedValue</OverRidePath>
           <OverRideInterger>2</OverRideInterger>
           <ChangeDate>1998-11-14</ChangeDate>
         </Script>
@@ -853,7 +848,7 @@ namespace Models
       <Manager>
         <Name>ResetLAI</Name>
         <Script>
-          <OverRidePath>Slurp.Leaf.LAIFunction.Value</OverRidePath>
+          <OverRidePath>Slurp.Leaf.LAIFunction.FixedValue</OverRidePath>
           <OverRideInterger>3</OverRideInterger>
           <ChangeDate>1999-01-01</ChangeDate>
         </Script>
@@ -895,7 +890,7 @@ namespace Models
 }
 	   ]]></Code>
       </Manager>
-      <Area>0</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Graph>
@@ -1708,7 +1703,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Slurp.Arbitrator.NDemand</YFieldName>
+        <YFieldName>Slurp.Arbitrator.N.TotalPlantDemand</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1817,8 +1812,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <Experiment>
     <Name>Tests</Name>
@@ -2124,7 +2117,6 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
           <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>
@@ -2406,7 +2398,6 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
           <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>
@@ -2713,7 +2704,6 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
           <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>
@@ -2796,17 +2786,13 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -3048,9 +3034,9 @@ namespace Models
 				Summary.WriteMessage(this, "Defoliation today reduced LAI to " + LAI);
 			}
 			object LeafLAI = LAI;
-			zone.Set("Slurp.Leaf.LAIFunction.Value", LeafLAI);
+			zone.Set("Slurp.Leaf.LAIFunction.FixedValue", LeafLAI);
 			object Height = MaximumHeight * (LAI / MaxLAI);
-			zone.Set("Slurp.Leaf.HeightFunction.Value", Height);  
+			zone.Set("Slurp.Leaf.HeightFunction.FixedValue", Height);  
 		}
 	}
 }
@@ -3505,7 +3491,6 @@ namespace Models
           <Country>New Zealand</Country>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
           <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
           <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
         </Soil>
@@ -3531,7 +3516,7 @@ namespace Models
             <string>[Slurp].Harvesting</string>
           </EventNames>
         </Report>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
       <Graph>
@@ -4192,8 +4177,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Graph>
       <Name>Rainfall</Name>
@@ -5626,7 +5609,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Plant>
           <Name>Slurp</Name>
@@ -5641,17 +5623,13 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -6018,16 +5996,16 @@ namespace Models
 				}
 				//Summary.WriteMessage(this, "LAI " + leaflai);
 				object LAIResetValue = leaflai;
-				zone.Set("Slurp.Leaf.LAIFunction.Value", LAIResetValue);  
+				zone.Set("Slurp.Leaf.LAIFunction.FixedValue", LAIResetValue);  
 				object HeightResetValue = CoverRead * MaximumHeight;
-				zone.Set("Slurp.Leaf.HeightFunction.Value", HeightResetValue);  
+				zone.Set("Slurp.Leaf.HeightFunction.FixedValue", HeightResetValue);  
 			}
 		}
 	}
 }
 				]]></Code>
         </Manager>
-        <Area>0</Area>
+        <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
       <Graph>
@@ -7323,7 +7301,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Slurp.Arbitrator.NDemand</YFieldName>
+          <YFieldName>Slurp.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7448,8 +7426,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Graph>
       <Name>Cover</Name>

@@ -110,6 +110,7 @@ namespace Models.PMF.OldPlant
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
+    [ScopedModel]
     public class Plant15 : ModelCollectionFromResource, ICrop, IUptake
     {
         /// <summary>The phenology</summary>
@@ -564,7 +565,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+                return Math.Min(Math.Min(TempStress.Value(), NStress.Photo),
                                 Math.Min(SWStress.OxygenDeficitPhoto, 1.0 /*PStress.Photo*/));  // FIXME
             }
         }
@@ -736,24 +737,25 @@ namespace Models.PMF.OldPlant
         }
 
         /// <summary>Called when [phase changed].</summary>
-        /// <param name="Data">The data.</param>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
         [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(PhaseChangedType Data)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
             if (SWStress != null && NStress != null)
             {
                 PhenologyEventToday = true;
                 AverageStressMessage += String.Format("{0,36}{1,13:F3}{2,13:F3}{3,13:F3}{4,13:F3}\r\n",
-                                                      Data.OldPhaseName,
+                                                      phaseChange.OldPhaseName,
                                                       1 - SWStress.PhotoAverage, 1 - SWStress.ExpansionAverage,
                                                       1 - NStress.PhotoAverage, 1 - NStress.GrainAverage);
                 SWStress.ResetAverage();
                 NStress.ResetAverage();
             }
 
-            if (Data.NewPhaseName.Contains("FloweringTo"))
+            if (phaseChange.NewPhaseName.Contains("FloweringTo"))
                 FloweringDate = Clock.Today;
-            else if (Data.NewPhaseName.Contains("MaturityTo"))
+            else if (phaseChange.NewPhaseName.Contains("MaturityTo"))
                 MaturityDate = Clock.Today;
         }
 
@@ -845,7 +847,7 @@ namespace Models.PMF.OldPlant
                 ext_n_demand += Organ.NDemand;
 
             //nh  use zero growth value here so that estimated n fix is always <= actual;
-            double n_fix_pot = NFixRate.Value * AboveGroundLive.Wt * SWStress.Fixation;
+            double n_fix_pot = NFixRate.Value() * AboveGroundLive.Wt * SWStress.Fixation;
 
             if (NSupplyPreference == "active")
             {
@@ -1246,17 +1248,16 @@ namespace Models.PMF.OldPlant
             if (IsAlive)
             {
                 List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
-                ZoneWaterAndN Uptake = new ZoneWaterAndN();
+                ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
 
-                ZoneWaterAndN MyZone = new ZoneWaterAndN();
+                ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
                 foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Name == this.Parent.Name)
+                    if (Z.Zone.Name == this.Parent.Name)
                         MyZone = Z;
 
                 double[] SW = MyZone.Water;
                 OnPrepare(null, null);  //DEAN!!!
 
-                Uptake.Name = this.Parent.Name;
                 Uptake.Water = Root.CalculateWaterUptake(TopsSWDemand, SW);
                 Uptake.NO3N = new double[SW.Length];
                 Uptake.NH4N = new double[SW.Length];
@@ -1274,11 +1275,11 @@ namespace Models.PMF.OldPlant
             if (IsAlive)
             {
                 List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
-                ZoneWaterAndN Uptake = new ZoneWaterAndN();
+                ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
 
-                ZoneWaterAndN MyZone = new ZoneWaterAndN();
+                ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
                 foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Name == this.Parent.Name)
+                    if (Z.Zone.Name == this.Parent.Name)
                         MyZone = Z;
 
                 double[] NO3N = MyZone.NO3N;
@@ -1291,7 +1292,6 @@ namespace Models.PMF.OldPlant
                 Uptake.NO3N = NO3NUp;
                 Uptake.NH4N = NH4NUp;
                 Uptake.Water = new double[NO3N.Length];
-                Uptake.Name = this.Parent.Name;
 
                 Uptakes.Add(Uptake);
                 return Uptakes;

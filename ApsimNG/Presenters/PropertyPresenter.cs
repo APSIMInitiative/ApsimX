@@ -71,15 +71,19 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            //if the model is Testable, run the test method.
-            ITestable testModel = model as ITestable;
-            if (testModel != null)
-                testModel.Test(false, true);
-
-            string[] split;
             this.grid = view as IGridView;
             this.model = model as Model;
             this.explorerPresenter = explorerPresenter;
+
+            // if the model is Testable, run the test method.
+            ITestable testModel = model as ITestable;
+            if (testModel != null)
+            {
+                testModel.Test(false, true);
+                this.grid.ReadOnly = true;
+            }
+
+            string[] split;
 
             this.FindAllProperties(this.model);
             if (this.grid.DataSource == null)
@@ -185,7 +189,7 @@ namespace UserInterface.Presenters
                         this.properties.Add(new VariableProperty(this.model, property));
                     }
 
-                    if(property.PropertyType == typeof(DataTable))
+                    if (property.PropertyType == typeof(DataTable))
                     {
                         VariableProperty vp = new VariableProperty(this.model, property);
                         DataTable dt = vp.Value as DataTable;

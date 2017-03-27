@@ -29,11 +29,6 @@ namespace UserInterface.Presenters
         private IMapView view;
 
         /// <summary>
-        /// The parent explorer presenter
-        /// </summary>
-        private ExplorerPresenter explorerPresenter;
-
-        /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
         /// <param name="model">The model</param>
@@ -43,7 +38,6 @@ namespace UserInterface.Presenters
         {
             this.map = model as Map;
             this.view = view as MapView;
-            this.explorerPresenter = explorerPresenter;
 
             // Tell the view to populate the axis.
             this.PopulateView();
@@ -58,6 +52,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            this.view.StoreSettings();
             this.view.ZoomChanged -= OnZoomChanged;
             this.view.PositionChanged -= OnPositionChanged;
         }

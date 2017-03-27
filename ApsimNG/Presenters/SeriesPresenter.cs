@@ -61,6 +61,7 @@ namespace UserInterface.Presenters
         /// <summary>Detach the model and view from this presenter.</summary>
         public void Detach()
         {
+            seriesView.EndEdit();
             if (graphPresenter != null)
                 graphPresenter.Detach();
             DisconnectViewEvents();
@@ -150,7 +151,7 @@ namespace UserInterface.Presenters
             else
             {
                 List<string> values = new List<string>();
-                values.AddRange(FactorNames.Select(factorName => "Vary by " + factorName));
+                values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
                 int factorIndex = values.IndexOf(this.seriesView.LineType.SelectedValue);
                 this.SetModelProperty("FactorIndexToVaryLines", factorIndex);
             }
@@ -170,7 +171,7 @@ namespace UserInterface.Presenters
             else
             {
                 List<string> values = new List<string>();
-                values.AddRange(FactorNames.Select(factorName => "Vary by " + factorName));
+                values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
                 int factorIndex = values.IndexOf(this.seriesView.MarkerType.SelectedValue);
                 this.SetModelProperty("FactorIndexToVaryMarkers", factorIndex);
             }
@@ -211,7 +212,7 @@ namespace UserInterface.Presenters
             else
             {
                 List<string> colourOptions = new List<string>();
-                colourOptions.AddRange(FactorNames.Select(factorName => "Vary by " + factorName));
+                colourOptions.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
                 int factorIndex = colourOptions.IndexOf(obj.ToString());
                 this.SetModelProperty("FactorIndexToVaryColours", factorIndex);
             }
@@ -383,34 +384,36 @@ namespace UserInterface.Presenters
         private void PopulateLineDropDown()
         {
             List<string> values = new List<string>(Enum.GetNames(typeof(LineType)));
-            values.AddRange(FactorNames.Select(factorName => "Vary by " + factorName));
+            if (series.FactorNamesForVarying != null)
+                values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
             this.seriesView.LineType.Values = values.ToArray();
             if (series.FactorIndexToVaryLines == -1)
                 this.seriesView.LineType.SelectedValue = series.Line.ToString();
-            else if (series.FactorIndexToVaryLines >= FactorNames.Count)
+            else if (series.FactorIndexToVaryLines >= series.FactorNamesForVarying.Count)
             {
                 series.FactorIndexToVaryLines = -1;
                 this.seriesView.LineType.SelectedValue = series.Line.ToString();
             }
             else
-                this.seriesView.LineType.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryLines];
+                this.seriesView.LineType.SelectedValue = "Vary by " + series.FactorNamesForVarying[series.FactorIndexToVaryLines];
         }
 
         /// <summary>Populate the marker drop down.</summary>
         private void PopulateMarkerDropDown()
         {
             List<string> values = new List<string>(Enum.GetNames(typeof(MarkerType)));
-            values.AddRange(FactorNames.Select(factorName => "Vary by " + factorName));
+            if (series.FactorNamesForVarying != null)
+                values.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
             this.seriesView.MarkerType.Values = values.ToArray();
             if (series.FactorIndexToVaryMarkers == -1)
                 this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
-            else if (series.FactorIndexToVaryMarkers >= FactorNames.Count)
+            else if (series.FactorIndexToVaryMarkers >= series.FactorNamesForVarying.Count)
             {
                 series.FactorIndexToVaryMarkers = -1;
                 this.seriesView.MarkerType.SelectedValue = series.Marker.ToString();
             }
             else
-                this.seriesView.MarkerType.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryMarkers];
+                this.seriesView.MarkerType.SelectedValue = "Vary by " + series.FactorNamesForVarying[series.FactorIndexToVaryMarkers];
         }
 
         /// <summary>Populate the colour drop down in the view.</summary>
@@ -421,36 +424,19 @@ namespace UserInterface.Presenters
                 colourOptions.Add(colour);
 
             // Send colour options to view.
-            colourOptions.AddRange(FactorNames.Select(factorName => "Vary by " + factorName));
+            if (series.FactorNamesForVarying != null)
+                colourOptions.AddRange(series.FactorNamesForVarying.Select(factorName => "Vary by " + factorName));
 
             this.seriesView.Colour.Values = colourOptions.ToArray();
             if (series.FactorIndexToVaryColours == -1)
                 this.seriesView.Colour.SelectedValue = series.Colour;
-            else if (series.FactorIndexToVaryColours >= FactorNames.Count)
+            else if (series.FactorIndexToVaryColours >= series.FactorNamesForVarying.Count)
             {
                 series.FactorIndexToVaryColours = -1;
                 this.seriesView.Colour.SelectedValue = series.Colour;
             }
             else
-                this.seriesView.Colour.SelectedValue = "Vary by " + FactorNames[series.FactorIndexToVaryColours];
-        }
-
-        /// <summary>Gets a list of factor names. Never returns null.</summary>
-        private List<string> FactorNames
-        {
-            get
-            {
-                // Send colour options to view.
-                Experiment experiment = Apsim.Parent(series, typeof(Experiment)) as Experiment;
-                if (experiment != null)
-                {
-                    Factors factorsModel = Apsim.Child(experiment as IModel, typeof(Factors)) as Factors;
-                    if (factorsModel != null)
-                        return factorsModel.Children.Select(f => f.Name).ToList();
-                }
-
-                return new List<string>();
-            }
+                this.seriesView.Colour.SelectedValue = "Vary by " + series.FactorNamesForVarying[series.FactorIndexToVaryColours];
         }
 
         /// <summary>Populates the field names in the view.</summary>
@@ -463,24 +449,15 @@ namespace UserInterface.Presenters
                 this.seriesView.DataSource.SelectedValue != null &&
                 parentGraph != null)
             {
-                DataTable data = parentGraph.GetBaseData(this.seriesView.DataSource.SelectedValue);
-                if (data != null)
-                {
+                List<string> fieldNames = new List<string>();
+                fieldNames.Add("SimulationName");
+                fieldNames.AddRange(dataStore.ColumnNames(seriesView.DataSource.SelectedValue));
+                fieldNames.Sort();
 
-                    List<string> fieldNames = new List<string>();
-                    foreach (DataColumn column in data.Columns)
-                    {
-                        if (column.DataType.Name != "Object")
-                            fieldNames.Add(column.ColumnName);
-                    }
-
-                    fieldNames.Sort();
-
-                    this.seriesView.X.Values = fieldNames.ToArray();
-                    this.seriesView.Y.Values = fieldNames.ToArray();
-                    this.seriesView.X2.Values = fieldNames.ToArray();
-                    this.seriesView.Y2.Values = fieldNames.ToArray();
-                }
+                this.seriesView.X.Values = fieldNames.ToArray();
+                this.seriesView.Y.Values = fieldNames.ToArray();
+                this.seriesView.X2.Values = fieldNames.ToArray();
+                this.seriesView.Y2.Values = fieldNames.ToArray();
             }
 
         }

@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
+using Models.Report;
 
 namespace Models
 {
@@ -41,26 +42,9 @@ namespace Models
         /// <summary>The maximum number of results to display per page.</summary>
         public int MaximumResultsPerPage { get; set; }
 
-        /// <summary>A flag that when true indicates that the DataStore is in post processing model.</summary>
-        private bool DoingPostProcessing = false;
-
-        /// <summary>A sub class for holding information about a table write.</summary>
-        private class TableToWrite
-        {
-            /// <summary>The file name</summary>
-            public string FileName;
-            /// <summary>The simulation name</summary>
-            public string SimulationName;
-            /// <summary>The simulation identifier</summary>
-            public int SimulationID = int.MaxValue;
-            /// <summary>The table name</summary>
-            public string TableName;
-            /// <summary>The data</summary>
-            public DataTable Data;
-        }
 
         /// <summary>A collection of datatables that need writing.</summary>
-        private static List<TableToWrite> TablesToWrite = new List<TableToWrite>();
+        public static List<ReportTable> TablesToWrite = new List<ReportTable>();
 
 
         /// <summary>
@@ -164,10 +148,10 @@ namespace Models
             Open(forWriting: true);
 
             // Get a list of tables for our .db file.
-            List<TableToWrite> tablesForOurFile = new List<TableToWrite>();
+            List<ReportTable> tablesForOurFile = new List<ReportTable>();
             lock (TablesToWrite)
             {
-                foreach (TableToWrite table in TablesToWrite)
+                foreach (ReportTable table in TablesToWrite)
                     if (table.FileName == Filename)
                         tablesForOurFile.Add(table);
             }
@@ -178,18 +162,18 @@ namespace Models
             foreach (string tableName in distinctTableNames)
             {
                 // Get a list of tables that have the same name as 'tableName'
-                List<TableToWrite> tables = new List<TableToWrite>();
-                foreach (TableToWrite table in tablesForOurFile)
+                List<ReportTable> tables = new List<ReportTable>();
+                foreach (ReportTable table in tablesForOurFile)
                     if (table.TableName == tableName)
                         tables.Add(table);
 
-                WriteTable(tables.ToArray());
+                WriteTables(tables.ToArray());
 
             }
 
             lock (TablesToWrite)
             {
-                foreach (TableToWrite table in tablesForOurFile)
+                foreach (ReportTable table in tablesForOurFile)
                     TablesToWrite.Remove(table);
             }
 
@@ -198,7 +182,8 @@ namespace Models
 
             if (AutoExport)
             {
-                WriteToTextFiles();
+                WriteOutputToTextFiles();
+                WriteSummaryToTextFiles();
             }
 
             // Disconnect.
@@ -217,76 +202,80 @@ namespace Models
 
             // Tell SQLite that we're beginning a transaction.
             Connection.ExecuteNonQuery("BEGIN");
-            
-            // Make sure that the list of simulations in 'simulationsToKeep' are in the 
-            // Simulations table.
-            string[] simulationNames = this.SimulationNames;
-            string sql = string.Empty;
-            foreach (string simulationNameToKeep in simulationNamesToKeep)
+
+            try
             {
-                if (!StringUtilities.Contains(simulationNames, simulationNameToKeep))
+                // Make sure that the list of simulations in 'simulationsToKeep' are in the 
+                // Simulations table.
+                string[] simulationNames = this.SimulationNames;
+                string sql = string.Empty;
+                foreach (string simulationNameToKeep in simulationNamesToKeep)
                 {
-                    if (sql != string.Empty)
-                        sql += ",";
-                    sql += "'" + simulationNameToKeep + "'";
-                }
-            }
-
-            if (sql != string.Empty)
-                RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
-
-            // Get a list of simulation IDs that we are to delete.
-            List<int> idsToDelete = new List<int>();
-            foreach (string simulationNameInDB in SimulationNames)
-                if (!simulationNamesToKeep.Contains(simulationNameInDB))
-                {
-                    idsToDelete.Add(GetSimulationID(simulationNameInDB));
+                    if (!StringUtilities.Contains(simulationNames, simulationNameToKeep))
+                    {
+                        if (sql != string.Empty)
+                            sql += "),(";
+                        sql += "'" + simulationNameToKeep + "'";
+                    }
                 }
 
-            // create an SQL WHERE clause with all IDs
-            string idString = "";
-            for (int i = 0; i < idsToDelete.Count; i++)
-            {
-                if (i > 0)
-                    idString += " OR ";
-                idString += "ID = " + idsToDelete[i].ToString();
+                if (sql != string.Empty)
+                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
+
+                // Get a list of simulation IDs that we are to delete.
+                List<int> idsToDelete = new List<int>();
+                foreach (string simulationNameInDB in SimulationNames)
+                    if (!simulationNamesToKeep.Contains(simulationNameInDB))
+                    {
+                        idsToDelete.Add(GetSimulationID(simulationNameInDB));
+                    }
+
+                // create an SQL WHERE clause with all IDs
+                string idString = "";
+                for (int i = 0; i < idsToDelete.Count; i++)
+                {
+                    if (i > 0)
+                        idString += " OR ";
+                    idString += "ID = " + idsToDelete[i].ToString();
+                }
+
+                if (idString != string.Empty)
+                    RunQueryWithNoReturnData("DELETE FROM Simulations WHERE " + idString);
+
+                // Now add to IDs to delete the simulations IDs of the simulations we are
+                // about to run i.e. remove the rows that we are about to regenerate.
+                idsToDelete.Clear();
+                foreach (string simulationNameToBeRun in simulationNamesToBeRun)
+                    idsToDelete.Add(GetSimulationID(simulationNameToBeRun));
+
+                idString = "";
+                for (int i = 0; i < idsToDelete.Count; i++)
+                {
+                    if (i > 0)
+                        idString += " OR ";
+                    idString += "SimulationID = " + idsToDelete[i].ToString();
+                }
+
+                foreach (string tableName in TableNames)
+                {
+                    // delete this simulation
+                    RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
+                }
             }
-
-            if (idString != string.Empty)
-                RunQueryWithNoReturnData("DELETE FROM Simulations WHERE " + idString);
-
-            // Now add to IDs to delete the simulations IDs of the simulations we are
-            // about to run i.e. remove the rows that we are about to regenerate.
-            idsToDelete.Clear();
-            foreach (string simulationNameToBeRun in simulationNamesToBeRun)
-                idsToDelete.Add(GetSimulationID(simulationNameToBeRun));
-
-            idString = "";
-            for (int i = 0; i < idsToDelete.Count; i++)
+            finally
             {
-                if (i > 0)
-                    idString += " OR ";
-                idString += "SimulationID = " + idsToDelete[i].ToString();
+                // Tell SQLite that we're ending a transaction.
+                Connection.ExecuteNonQuery("END");
             }
-
-            foreach (string tableName in TableNames)
-            {
-                // delete this simulation
-                RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
-            }
-
-
-
-            // Tell SQLite that we're beginning a transaction.
-            Connection.ExecuteNonQuery("END");
 
         }
 
         /// <summary>Delete all tables</summary>
-        public void DeleteAllTables()
+        /// <param name="cleanSlate">If true, all tables are deleted; otherwise Simulations and Messages tables are retained</param>
+        public void DeleteAllTables(bool cleanSlate = false)
         {
             foreach (string tableName in this.TableNames)
-                if (tableName != "Simulations" && tableName != "Messages")
+                if (cleanSlate || (tableName != "Simulations" && tableName != "Messages"))
                     DeleteTable(tableName);
         }
 
@@ -314,33 +303,11 @@ namespace Models
         }
 
         /// <summary>Create a table in the database based on the specified one.</summary>
-        /// <param name="simulationName">Name of the simulation.</param>
-        /// <param name="tableName">Name of the table.</param>
         /// <param name="table">The table.</param>
-        public void WriteTable(string simulationName, string tableName, DataTable table)
+        public void WriteTable(ReportTable table)
         {
-            if (DoingPostProcessing)
-            {
-                TableToWrite tableToWrite = new TableToWrite();
-                tableToWrite.SimulationName = simulationName;
-                tableToWrite.TableName = tableName;
-                tableToWrite.Data = table;
-
-                DeleteTable(tableName);
-                WriteTable(new TableToWrite[1] { tableToWrite });
-            }
-            else
-            {
-                lock (TablesToWrite)
-                    TablesToWrite.Add(new TableToWrite()
-                    {
-                        FileName = Filename,
-                        SimulationName = simulationName,
-                        TableName = tableName,
-                        Data = table
-                    });
-            }
-
+            lock (TablesToWrite)
+                TablesToWrite.Add(table);
         }
 
         /// <summary>Write a message to the DataStore.</summary>
@@ -420,6 +387,14 @@ namespace Models
                 }
 
             }
+        }
+
+        /// <summary>Get a list of column names for table.</summary>
+        public string[] ColumnNames(string tableName)
+        {
+            string sql = "SELECT * FROM " + tableName + " LIMIT 1";
+            DataTable data = RunQuery(sql);
+            return DataTableUtilities.GetColumnNames(data);
         }
 
         /// <summary>
@@ -578,39 +553,55 @@ namespace Models
         }
 
         /// <summary>Write all outputs to a text file (.csv)</summary>
-        public void WriteToTextFiles()
+        public void WriteOutputToTextFiles()
         {
-            string originalFileName = Filename;
-
             try
             {
                 // Write the output CSV file.
                 Open(forWriting: false);
                 WriteAllTables(this, Filename + ".csv");
-
-                // Write the summary file.
-                WriteSummaryFile(this, Filename + ".sum");
-
-                // If the baseline file exists then write the .CSV and .SUM files
-                string baselineFileName = Filename + ".baseline";
-                if (File.Exists(baselineFileName))
-                {
-                    DataStore baselineDataStore = new DataStore(this, baseline: true);
-
-                    // Write the CSV output file.
-                    WriteAllTables(baselineDataStore, baselineFileName + ".csv");
-
-                    // Write the SUM file.
-                    WriteSummaryFile(baselineDataStore, baselineFileName + ".sum");
-
-                    baselineDataStore.Disconnect();
-                }
             }
             finally
             {
-                Filename = originalFileName;
                 Disconnect();
             }
+        }
+
+        /// <summary>Write all summary to a text file (.sum)</summary>
+        public void WriteSummaryToTextFiles()
+        {
+            try
+            {
+                // Write the summary file.
+                Open(forWriting: false);
+                WriteSummaryFile(this, Filename + ".sum");
+            }
+            finally
+            {
+                Disconnect();
+            }
+        }
+
+
+        /// <summary>Clear all tables to be written.</summary>
+        public static void ClearTablesToWritten()
+        {
+            TablesToWrite.Clear();
+        }
+
+        /// <summary>Store the list of factor names and values for the specified simulation.</summary>
+        public void StoreFactors(string experimentName, string simulationName, string folderName, List<string> names, List<string> values)
+        {
+            ReportTable table = new ReportTable();
+            table.FileName = Filename;
+            table.TableName = "Factors";
+            table.SimulationName = simulationName;
+            table.Columns.Add(new ReportColumnConstantValue("ExperimentName", experimentName));
+            table.Columns.Add(new ReportColumnConstantValue("SimulationName", simulationName));
+            table.Columns.Add(new ReportColumnConstantValue("FolderName", folderName));
+            table.Columns.Add(new ReportColumnWithValues("FactorName", names.ToArray()));
+            table.Columns.Add(new ReportColumnWithValues("FactorValue", values.ToArray()));
+            WriteTable(table);
         }
 
         /// <summary>Write a single summary file.</summary>
@@ -632,19 +623,11 @@ namespace Models
         /// <summary>Run all post processing tools.</summary>
         public void RunPostProcessingTools()
         {
-            try
-            {
-                // Open the .db for writing.
-                Open(forWriting: true);
+            // Open the .db for writing.
+            Open(forWriting: true);
 
-                DoingPostProcessing = true;
-                foreach (IPostSimulationTool tool in Apsim.Children(this, typeof(IPostSimulationTool)))
-                    tool.Run(this);
-            }
-            finally
-            {
-                DoingPostProcessing = false;
-            }
+            foreach (IPostSimulationTool tool in Apsim.Children(this, typeof(IPostSimulationTool)))
+                tool.Run(this);
         }
 
         #region Privates
@@ -745,51 +728,122 @@ namespace Models
             }
         }
 
+        /// <summary>Create a table in the database based on the specified one.</summary>
+        /// <param name="simulationName">Name of the simulation.</param>
+        /// <param name="tableName">Name of the table.</param>
+        /// <param name="table">The table.</param>
+        public void WriteTable(string simulationName, string tableName, DataTable table)
+        {
+            if (table != null)
+            {
+                // Open the .db for writing.
+                Open(forWriting: true);
+
+                // Get a list of all names and datatypes for each field in this table.
+                List<string> names = new List<string>();
+                List<Type> types = new List<Type>();
+                names.Add("SimulationID");
+                types.Add(typeof(int));
+
+                int simulationID = int.MaxValue;
+
+                // If the table has a simulationname then go find its ID for later
+                if (table.Columns.Contains("SimulationID"))
+                {
+                    // do nothing.
+                }
+                else if (simulationName != null)
+                    simulationID = GetSimulationID(simulationName);
+                else if (table.Columns.Contains("SimulationName"))
+                    AddSimulationIDColumnToTable(table);
+
+                // Go through all columns for this table and add to 'names' and 'types'
+                foreach (DataColumn column in table.Columns)
+                {
+                    if (!names.Contains(column.ColumnName) && column.ColumnName != "SimulationName")
+                    {
+                        names.Add(column.ColumnName);
+                        types.Add(column.DataType);
+                    }
+                }
+
+                // Create the table.
+                CreateTable(tableName, names.ToArray(), types.ToArray());
+
+                // Prepare the insert query sql
+                IntPtr query = PrepareInsertIntoTable(Connection, tableName, names.ToArray());
+
+                // Tell SQLite that we're beginning a transaction.
+                Connection.ExecuteNonQuery("BEGIN");
+
+                try
+                {
+                    // Write each row to the .db
+                    if (table != null)
+                    {
+                        object[] values = new object[names.Count];
+                        foreach (DataRow row in table.Rows)
+                        {
+                            for (int i = 0; i < names.Count; i++)
+                            {
+                                if (names[i] == "SimulationID" && simulationID != int.MaxValue)
+                                    values[i] = simulationID;
+                                else if (table.Columns.Contains(names[i]))
+                                    values[i] = row[names[i]];
+                            }
+
+                            // Write the row to the .db
+                            Connection.BindParametersAndRunQuery(query, values);
+                        }
+                    }
+                }
+                finally
+                {
+                    // tell SQLite we're ending our transaction.
+                    Connection.ExecuteNonQuery("END");
+
+                    // finalise our query.
+                    Connection.Finalize(query);
+                }
+            }
+        }
+
         /// <summary>
         /// Write the specified tables to a single table in the DB. i.e. merge
         /// all columns and rows in all specified tables into a single table.
         /// </summary>
         /// <param name="tables">The tables.</param>
-        private void WriteTable(TableToWrite[] tables)
+        private void WriteTables(ReportTable[] tables)
         {
-            // Open the .db for writing.
-            Open(forWriting: true);
-
-            // What table are we writing?
-            string tableName = tables[0].TableName;
+            // Insert simulationID column into all tables.
+            foreach (ReportTable table in tables)
+            {
+                int simulationID = GetSimulationID(table.SimulationName);
+                table.Columns.Insert(0, new ReportColumnConstantValue("SimulationID", simulationID));
+            }
 
             // Get a list of all names and datatypes for each field in this table.
             List<string> names = new List<string>();
             List<Type> types = new List<Type>();
-            names.Add("SimulationID");
-            types.Add(typeof(int));
-            foreach (TableToWrite table in tables)
-            {
-                if (table.Data != null)
+            foreach (ReportTable table in tables)
+                foreach (IReportColumn column in table.Columns)
                 {
-                    // If the table has a simulationname then go find its ID for later
-                    if (table.Data.Columns.Contains("SimulationID"))
+                    if (!names.Contains(column.Name))
                     {
-                        // do nothing.
-                    }
-                    else if (table.SimulationName != null)
-                        table.SimulationID = GetSimulationID(table.SimulationName);
-                    else if (table.Data.Columns.Contains("SimulationName"))
-                        AddSimulationIDColumnToTable(table.Data);
-
-                    // Go through all columns for this table and add to 'names' and 'types'
-                    foreach (DataColumn column in table.Data.Columns)
-                    {
-                        if (!names.Contains(column.ColumnName) && column.ColumnName != "SimulationName")
+                        object firstNonBlankValue = column.Values.Find(value => value != null);
+                        if (firstNonBlankValue != null)
                         {
-                            names.Add(column.ColumnName);
-                            types.Add(column.DataType);
+                            names.Add(column.Name);
+                            types.Add(firstNonBlankValue.GetType());
                         }
                     }
                 }
-            }
+
+            // Open the .db for writing.
+            Open(forWriting: true);
 
             // Create the table.
+            string tableName = tables[0].TableName;
             CreateTable(tableName, names.ToArray(), types.ToArray());
 
             // Prepare the insert query sql
@@ -798,34 +852,50 @@ namespace Models
             // Tell SQLite that we're beginning a transaction.
             Connection.ExecuteNonQuery("BEGIN");
 
-            // Go through all tables and write the data.
-            foreach (TableToWrite table in tables)
+            try
             {
                 // Write each row to the .db
-                if (table.Data != null)
+                foreach (ReportTable table in tables)
                 {
-                    object[] values = new object[names.Count];
-                    foreach (DataRow row in table.Data.Rows)
+                    int numRows = 0;
+
+                    // Create an array of value indexes for column.
+                    int[] valueIndexes = new int[table.Columns.Count];
+                    for (int i = 0; i < table.Columns.Count; i++)
                     {
-                        for (int i = 0; i < names.Count; i++)
+                        numRows = Math.Max(numRows, table.Columns[i].Values.Count);
+                        valueIndexes[i] = names.IndexOf(table.Columns[i].Name);
+                    }
+
+                    object[] values = new object[names.Count];
+                    for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
+                    {
+                        Array.Clear(values, 0, values.Length);
+                        for (int colIndex = 0; colIndex < table.Columns.Count; colIndex++)
                         {
-                            if (names[i] == "SimulationID" && table.SimulationID != int.MaxValue)
-                                values[i] = table.SimulationID;
-                            else if (table.Data.Columns.Contains(names[i]))
-                                values[i] = row[names[i]];
+                            int valueIndex = valueIndexes[colIndex];
+                            if (valueIndex != -1)
+                            {
+                                if (table.Columns[colIndex] is ReportColumnConstantValue)
+                                    values[valueIndex] = table.Columns[colIndex].Values[0];
+                                else if (rowIndex < table.Columns[colIndex].Values.Count)
+                                    values[valueIndex] = table.Columns[colIndex].Values[rowIndex];
+                            }
                         }
 
                         // Write the row to the .db
-                        Connection.BindParametersAndRunQuery(query, values);
+                        Connection.BindParametersAndRunQuery(query, values.ToArray());
                     }
                 }
             }
+            finally
+            {
+                // tell SQLite we're ending our transaction.
+                Connection.ExecuteNonQuery("END");
 
-            // tell SQLite we're ending our transaction.
-            Connection.ExecuteNonQuery("END");
-
-            // finalise our query.
-            Connection.Finalize(query);
+                // finalise our query.
+                Connection.Finalize(query);
+            }
         }
 
         /// <summary>
@@ -835,7 +905,7 @@ namespace Models
         /// </summary>
         /// <param name="simulationName">Name of the simulation.</param>
         /// <returns></returns>
-        private int GetSimulationID(string simulationName)
+        public int GetSimulationID(string simulationName)
         {
             if (!TableExists("Simulations"))
                 return -1;
@@ -967,17 +1037,22 @@ namespace Models
             // Tell SQLite that we're beginning a transaction.
             Connection.ExecuteNonQuery("BEGIN");
 
-            // For those simulations in 'table' that aren't in the DB, add them
-            // to the simulations table
-            List<string> simulationNamesInTable = DataTableUtilities.GetDistinctValues(table, "SimulationName");
-            foreach (string simulationNameInTable in simulationNamesInTable)
+            try
             {
-                if (!StringUtilities.Contains(simulationNamesInDB, simulationNameInTable))
-                    RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameInTable + "')");
+                // For those simulations in 'table' that aren't in the DB, add them
+                // to the simulations table
+                List<string> simulationNamesInTable = DataTableUtilities.GetDistinctValues(table, "SimulationName");
+                foreach (string simulationNameInTable in simulationNamesInTable)
+                {
+                    if (!StringUtilities.Contains(simulationNamesInDB, simulationNameInTable))
+                        RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES ('" + simulationNameInTable + "')");
+                }
             }
-
-            // Tell SQLite that we're ending a transaction.
-            Connection.ExecuteNonQuery("END");
+            finally
+            {
+                // Tell SQLite that we're ending a transaction.
+                Connection.ExecuteNonQuery("END");
+            }
 
             // Get a list of simulation names and IDs from DB
             DB = Connection.ExecuteQuery("SELECT * FROM Simulations");

@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -17,8 +17,12 @@
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -52,7 +56,11 @@
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+          </VariableReference>
+          <VariableReference>
+            <Name>ThermalTime1</Name>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -74,8 +82,12 @@
                 <double>15</double>
               </Y>
             </XYPairs>
-            <XProperty>[Phenology].Photoperiod.Value</XProperty>
+            <XProperty>[Phenology].Photoperiod.Value()</XProperty>
           </LinearInterpolationFunction>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+          </VariableReference>
           <Start>Emergence</Start>
           <End>StartFlowering</End>
         </NodeNumberPhase>
@@ -85,7 +97,7 @@
             <Name>CompletionNodeNumber</Name>
             <VariableReference>
               <Name>VegetativeNodes</Name>
-              <VariableName>[Phenology].NFF.Value</VariableName>
+              <VariableName>[Phenology].NFF.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>FloweringNodes</Name>
@@ -100,20 +112,24 @@
                   <double>7</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Phenology].Photoperiod.Value</XProperty>
+              <XProperty>[Phenology].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
           </AddFunction>
           <MultiplyFunction>
             <Name>Target</Name>
             <VariableReference>
               <Name>NodeNumberDuration</Name>
-              <VariableName>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.Value</VariableName>
+              <VariableName>[Phenology].Flowering.CompletionNodeNumber.FloweringNodes.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
+          <VariableReference>
+            <Name>ThermalTime</Name>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+          </VariableReference>
           <Start>StartFlowering</Start>
           <End>EndFlowering</End>
         </NodeNumberPhase>
@@ -121,11 +137,11 @@
           <Name>GrainFilling</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>500</Value>
+            <FixedValue>500</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EndFlowering</Start>
           <End>EndGrainFill</End>
@@ -134,11 +150,11 @@
           <Name>Maturing</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>60</Value>
+            <FixedValue>60</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EndGrainFill</Start>
           <End>Maturity</End>
@@ -147,11 +163,11 @@
           <Name>Ripening</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Maturity</Start>
           <End>HarvestRipe</End>
@@ -160,7 +176,7 @@
           <Name>ReadyForHarvesting</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>HarvestRipe</Start>
           <End>Unused</End>
@@ -169,11 +185,11 @@
           <Name>NFF</Name>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
-            <VariableName>[Phenology].Vegetative.CompletionNodeNumber.Value</VariableName>
+            <VariableName>[Phenology].Vegetative.CompletionNodeNumber.Value()</VariableName>
           </VariableReference>
           <SetEvent>StartFlowering</SetEvent>
           <ReSetEvent>never</ReSetEvent>
@@ -182,7 +198,7 @@
           <Name>FN</Name>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <SubtractFunction>
             <Name>PostEventValue</Name>
@@ -192,7 +208,7 @@
             </VariableReference>
             <VariableReference>
               <Name>PostEventValue1</Name>
-              <VariableName>[Phenology].NFF.Value</VariableName>
+              <VariableName>[Phenology].NFF.Value()</VariableName>
             </VariableReference>
           </SubtractFunction>
           <SetEvent>EndFlowering</SetEvent>
@@ -204,15 +220,15 @@
         <Name>Structure</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MainStemFinalNodeNumber</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightModel</Name>
@@ -293,7 +309,7 @@
         </MultiplyFunction>
         <Constant>
           <Name>BranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>MainStemNodeAppearanceRate</Name>
@@ -301,7 +317,7 @@
             <Name>Vegetative</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>30</Value>
+              <FixedValue>30</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>StartFlowering</End>
@@ -310,7 +326,7 @@
             <Name>Flowering</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>40</Value>
+              <FixedValue>40</FixedValue>
             </Constant>
             <Start>StartFlowering</Start>
             <End>EndFlowering</End>
@@ -319,12 +335,15 @@
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
-          <Value>0.4</Value>
+          <FixedValue>0.4</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>DMDemandFunction</Name>
@@ -334,26 +353,26 @@
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <AddFunction>
                 <Name>FillingDuration</Name>
                 <VariableReference>
                   <Name>FillingDuration</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>FillingDuration</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
               </AddFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>PotentialSizeIncrement</Name>
-                <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
               </VariableReference>
             </FillingRateFunction>
             <Start>StartFlowering</Start>
@@ -368,15 +387,15 @@
         </Biomass>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.03</Value>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>WaterContent</Name>
-          <Value>0.12</Value>
+          <FixedValue>0.12</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>NFillingRate</Name>
@@ -386,32 +405,32 @@
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <AddFunction>
                 <Name>FillingDuration</Name>
                 <VariableReference>
                   <Name>FillingDuration</Name>
-                  <VariableName>[Phenology].Flowering.Target.Value</VariableName>
+                  <VariableName>[Phenology].Flowering.Target.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>FillingDuration</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
               </AddFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
                 <Constant>
                   <Name>MaximumFinalNConc</Name>
-                  <Value>0.04</Value>
+                  <FixedValue>0.04</FixedValue>
                 </Constant>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -423,14 +442,14 @@
           <Name>NumberFunction</Name>
           <Constant>
             <Name>PeasPerPod</Name>
-            <Value>3</Value>
+            <FixedValue>3</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PodNumber</Name>
-            <VariableName>[Shell].PodNumber.Value</VariableName>
+            <VariableName>[Shell].PodNumber.Value()</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -460,10 +479,10 @@
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage />
-        <GrowthRespiration>0</GrowthRespiration>
       </ReproductiveOrgan>
       <Root>
         <Name>Root</Name>
@@ -512,7 +531,7 @@
         </AirTemperatureFunction>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value>6</Value>
+          <FixedValue>6</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -520,11 +539,11 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
@@ -532,7 +551,7 @@
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>3</Value>
+              <FixedValue>3</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Emergence</End>
@@ -541,7 +560,7 @@
             <Name>early</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>15</Value>
+              <FixedValue>15</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>StartFlowering</End>
@@ -550,7 +569,7 @@
             <Name>late</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>17</Value>
+              <FixedValue>17</FixedValue>
             </Constant>
             <Start>StartFlowering</Start>
             <End>Maturity</End>
@@ -562,7 +581,7 @@
             <Name>Early</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0.1</Value>
+              <FixedValue>0.1</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>StartFlowering</End>
@@ -571,7 +590,7 @@
             <Name>Middle</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0.08</Value>
+              <FixedValue>0.08</FixedValue>
             </Constant>
             <Start>StartFlowering</Start>
             <End>EndFlowering</End>
@@ -580,7 +599,7 @@
             <Name>Late</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>EndFlowering</Start>
             <End>Maturity</End>
@@ -588,11 +607,11 @@
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -633,7 +652,7 @@
           </XYPairs>
           <XProperty>[Root].RootLengthDenisty</XProperty>
         </LinearInterpolationFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -663,7 +682,7 @@
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
           <XYPairs>
@@ -681,14 +700,15 @@
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.2</Value>
+          <FixedValue>0.2</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
@@ -707,77 +727,13 @@
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
         <Constant>
-          <Name>SpecificNitrogenaseActivity</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <Value>4.5</Value>
-        </Constant>
-        <Constant>
           <Name>FixationMetabolicCost</Name>
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>7</Value>
+          <FixedValue>7</FixedValue>
         </Constant>
-        <AirTemperatureFunction>
-          <Name>FT</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>20</double>
-              <double>30</double>
-              <double>40</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
-        <LinearInterpolationFunction>
-          <Name>FW</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-              <double>1.5</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].Fw</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>FWlog</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-              <double>1.5</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].Fw</XProperty>
-        </LinearInterpolationFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -786,7 +742,7 @@
               <Name>Early</Name>
               <Constant>
                 <Name>Function</Name>
-                <Value>0.03</Value>
+                <FixedValue>0.03</FixedValue>
               </Constant>
               <Start>Emergence</Start>
               <End>StartFlowering</End>
@@ -795,7 +751,7 @@
               <Name>Middle</Name>
               <Constant>
                 <Name>Function</Name>
-                <Value>0.02</Value>
+                <FixedValue>0.02</FixedValue>
               </Constant>
               <Start>StartFlowering</Start>
               <End>EndFlowering</End>
@@ -804,7 +760,7 @@
               <Name>Late</Name>
               <Constant>
                 <Name>Function</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>EndFlowering</Start>
               <End>Maturity</End>
@@ -821,7 +777,7 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -829,7 +785,7 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -837,11 +793,11 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -852,7 +808,7 @@
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -882,14 +838,14 @@
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
@@ -898,15 +854,102 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
+        </Constant>
+        <MultiplyFunction>
+          <Name>FixationRate</Name>
+          <Memo>
+            <Name>Memo1</Name>
+            <MemoText><![CDATA[
+]]></MemoText>
+          </Memo>
+          <VariableReference>
+            <Name>NoduleWt</Name>
+            <VariableName>[Nodule].Live.Wt</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>SpecificNitrogenaseActivity</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <FixedValue>4.5</FixedValue>
+          </Constant>
+          <MinimumFunction>
+            <Name>MinimumFunction</Name>
+            <AirTemperatureFunction>
+              <Name>FT</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>20</double>
+                  <double>30</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <LinearInterpolationFunction>
+              <Name>FW</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].Fw</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>FWlog</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].Fw</XProperty>
+            </LinearInterpolationFunction>
+          </MinimumFunction>
+        </MultiplyFunction>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <FixedValue>0</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
         </Constant>
       </Nodule>
       <GenericOrgan>
@@ -923,7 +966,7 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
@@ -931,7 +974,7 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
@@ -939,7 +982,7 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.7</Value>
+          <FixedValue>0.7</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -947,7 +990,7 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.03</Value>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -955,7 +998,7 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
@@ -963,7 +1006,7 @@
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -978,41 +1021,41 @@
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>OrganPopulation</Name>
-            <VariableName>[Shell].PodNumber.Value</VariableName>
+            <VariableName>[Shell].PodNumber.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>ExpansionStress</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <AddFunction>
             <Name>GrowthDuration</Name>
             <VariableReference>
               <Name>FloweringGrowthPeriod</Name>
-              <VariableName>[Phenology].Flowering.Target.Value</VariableName>
+              <VariableName>[Phenology].Flowering.Target.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>PostFloweringGrowthPeriod</Name>
-              <Value>60</Value>
+              <FixedValue>60</FixedValue>
             </Constant>
           </AddFunction>
           <Constant>
             <Name>StartStage</Name>
-            <Value>4</Value>
+            <FixedValue>4</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumOrganWt</Name>
-            <Value>0.5</Value>
+            <FixedValue>0.5</FixedValue>
           </Constant>
         </PopulationBasedDemandFunction>
         <MultiplyFunction>
           <Name>PodNumber</Name>
           <Constant>
             <Name>PodsPerNode</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>StemPopulation</Name>
@@ -1028,14 +1071,14 @@
               </VariableReference>
               <VariableReference>
                 <Name>VegetativeNodes</Name>
-                <VariableName>[Phenology].NFF.Value</VariableName>
+                <VariableName>[Phenology].NFF.Value()</VariableName>
               </VariableReference>
             </SubtractFunction>
             <Start>StartFlowering</Start>
             <End>HarvestRipe</End>
           </PhaseLookupValue>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1065,23 +1108,31 @@
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <FixedValue>0</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
       <Leaf>
@@ -1130,13 +1181,13 @@
         </LeafCohort>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LeafCohortParameters>
           <Name>LeafCohortParameters</Name>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -1241,11 +1292,11 @@
           </LinearInterpolationFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMax</Name>
@@ -1276,7 +1327,7 @@
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.5</Value>
+            <FixedValue>0.5</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMin</Name>
@@ -1326,7 +1377,7 @@
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.03</Value>
+            <FixedValue>0.03</FixedValue>
           </Constant>
           <Constant>
             <Name>CriticalNConc</Name>
@@ -1334,7 +1385,7 @@
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumNConc</Name>
@@ -1342,7 +1393,7 @@
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.08</Value>
+            <FixedValue>0.08</FixedValue>
           </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
@@ -1350,7 +1401,7 @@
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
@@ -1358,7 +1409,7 @@
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
@@ -1366,7 +1417,7 @@
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.5</Value>
+            <FixedValue>0.5</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ShadeInducedSenescenceRate</Name>
@@ -1387,11 +1438,56 @@
           </LinearInterpolationFunction>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>DMReallocationFactor</Name>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>LeafSizeShapeParameter</Name>
+            <FixedValue>0.01</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <FixedValue>1</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress1</Name>
+            <FixedValue>1</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress2</Name>
+            <FixedValue>1</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress3</Name>
+            <FixedValue>1</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress4</Name>
+            <FixedValue>1</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <FixedValue>1</FixedValue>
           </Constant>
         </LeafCohortParameters>
         <LinearInterpolationFunction>
@@ -1417,7 +1513,7 @@
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -1508,17 +1604,17 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
@@ -1541,7 +1637,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           </XYPairs>
           <XProperty>[Weather].MinT</XProperty>
         </LinearInterpolationFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1571,7 +1667,20 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[]]></MemoText>
+          </Memo>
+          <FixedValue>0.5</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -1583,11 +1692,10 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
+        <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
-        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -1610,7 +1718,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
@@ -1618,7 +1726,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
@@ -1626,13 +1734,13 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <InternodeDemandFunction>
           <Name>DMDemandFunction</Name>
           <Constant>
             <Name>InterNodeWt</Name>
-            <Value>0.1</Value>
+            <FixedValue>0.1</FixedValue>
           </Constant>
         </InternodeDemandFunction>
         <Constant>
@@ -1641,7 +1749,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.03</Value>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -1649,7 +1757,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1662,9 +1770,9 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </PhaseBasedSwitch>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.7</Value>
+          <FixedValue>0.7</FixedValue>
         </Constant>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1694,23 +1802,31 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
+        </Constant>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <FixedValue>0</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
       <CompositeBiomass>
@@ -2414,7 +2530,6 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -2423,17 +2538,13 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -2668,11 +2779,11 @@ namespace Models
             <string>[FieldPea].Leaf.CoverDead</string>
             <string>[FieldPea].Leaf.LAI</string>
             <string>[FieldPea].Leaf.Height</string>
-            <string>[FieldPea].Leaf.PotentialBiomass.Value</string>
+            <string>[FieldPea].Leaf.PotentialBiomass.Value()</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-            <string>[FieldPea].Arbitrator.NDemand</string>
+            <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -2709,13 +2820,13 @@ namespace Models
             <string>[FieldPea].AboveGround.Wt</string>
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-            <string>[FieldPea].Phenology.NFF.Value</string>
+            <string>[FieldPea].Phenology.NFF.Value()</string>
             <string>[FieldPeaHarvestRule].Script.FinalTag</string>
-            <string>[FieldPea].Grain.NumberFunction.Value</string>
-            <string>[FieldPea].Shell.PodNumber.Value</string>
-            <string>[FieldPea].Phenology.FN.Value</string>
-            <string>[FieldPea].Phenology.FN.TotalNodes.Value</string>
-            <string>[FieldPea].Phenology.FN.VegetativeNodes.Value</string>
+            <string>[FieldPea].Grain.NumberFunction.Value()</string>
+            <string>[FieldPea].Shell.PodNumber.Value()</string>
+            <string>[FieldPea].Phenology.FN.Value()</string>
+            <string>[FieldPea].Phenology.FN.TotalNodes.Value()</string>
+            <string>[FieldPea].Phenology.FN.VegetativeNodes.Value()</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -2839,7 +2950,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-            <string>[FieldPea].Phenology.NFF.Value</string>
+            <string>[FieldPea].Phenology.NFF.Value()</string>
             <string>[FieldPeaHarvestRule].Script.FinalTag</string>
           </VariableNames>
           <EventNames>
@@ -4220,7 +4331,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4760,8 +4871,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -5422,7 +5531,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Grain.DryMatterContent.Value</YFieldName>
+          <YFieldName>FieldPea.Grain.DryMatterContent.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -5529,12 +5638,12 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Grain.NumberFunction.Value</YFieldName>
+          <YFieldName>FieldPea.Grain.NumberFunction.Value()</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
-          <Filter>[FieldPea.Grain.NumberFunction.Value]&gt;0</Filter>
+          <Filter>[FieldPea.Grain.NumberFunction.Value()]&gt;0</Filter>
         </Series>
         <Series>
           <Name>Observed</Name>
@@ -5595,7 +5704,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Harvest</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Phenology.NFF.Value</YFieldName>
+          <YFieldName>FieldPea.Phenology.NFF.Value()</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -5638,7 +5747,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Shell.PodNumber.Value</YFieldName>
+          <YFieldName>FieldPea.Shell.PodNumber.Value()</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6152,7 +6261,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Plant>
           <Name>FieldPea</Name>
@@ -6167,17 +6275,13 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -6231,8 +6335,8 @@ namespace Models
             <string>[FieldPea].Structure.LeafTipsAppeared as FNN</string>
             <string>[FieldPea].Leaf.DeadCohortNo</string>
             <string>[FieldPea].Phenology.Stage</string>
-            <string>[FieldPea].Phenology.NFF.Value as NFF</string>
-            <string>[FieldPea].Phenology.FN.Value as FN</string>
+            <string>[FieldPea].Phenology.NFF.Value() as NFF</string>
+            <string>[FieldPea].Phenology.FN.Value() as FN</string>
             <string>[FieldPeaHarvestRule].Script.FinalLeafTag</string>
           </VariableNames>
           <EventNames>
@@ -7676,7 +7780,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8216,8 +8320,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -8809,7 +8911,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <Plant>
           <Name>FieldPea</Name>
@@ -8824,17 +8925,13 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -9069,11 +9166,11 @@ namespace Models
             <string>[FieldPea].Leaf.CoverDead</string>
             <string>[FieldPea].Leaf.LAI</string>
             <string>[FieldPea].Leaf.Height</string>
-            <string>[FieldPea].Leaf.PotentialBiomass.Value</string>
+            <string>[FieldPea].Leaf.PotentialBiomass.Value()</string>
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
-            <string>[FieldPea].Arbitrator.NDemand</string>
+            <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
             <string>[MicroClimate].petr</string>
@@ -9110,7 +9207,7 @@ namespace Models
             <string>[FieldPea].AboveGround.Wt</string>
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-            <string>[FieldPea].Phenology.NFF.Value</string>
+            <string>[FieldPea].Phenology.NFF.Value()</string>
             <string>[FieldPeaHarvestRule].Script.FinalTag</string>
           </VariableNames>
           <EventNames>
@@ -9235,7 +9332,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[FieldPea].Structure.MainStemPrimordiaNo</string>
-            <string>[FieldPea].Phenology.NFF.Value</string>
+            <string>[FieldPea].Phenology.NFF.Value()</string>
             <string>[FieldPeaHarvestRule].Script.FinalTag</string>
           </VariableNames>
           <EventNames>
@@ -10559,7 +10656,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -11099,8 +11196,6 @@ namespace Models
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -11761,7 +11856,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Grain.DryMatterContent.Value</YFieldName>
+          <YFieldName>FieldPea.Grain.DryMatterContent.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -11932,7 +12027,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Harvest</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Phenology.NFF.Value</YFieldName>
+          <YFieldName>FieldPea.Phenology.NFF.Value()</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12311,7 +12406,6 @@ namespace Models
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
-          <Area>0</Area>
         </Soil>
         <MicroClimate>
           <Name>MicroClimate</Name>
@@ -12320,17 +12414,13 @@ namespace Models
           <c_interception>0</c_interception>
           <d_interception>0</d_interception>
           <soil_albedo>0.23</soil_albedo>
-          <air_pressure>1010</air_pressure>
-          <soil_emissivity>0.96</soil_emissivity>
           <sun_angle>15</sun_angle>
           <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
           <night_interception_fraction>0.5</night_interception_fraction>
-          <windspeed_default>3</windspeed_default>
           <refheight>2</refheight>
           <albedo>0.26</albedo>
           <emissivity>0.96</emissivity>
-          <gsmax>0.01</gsmax>
-          <r50>200</r50>
+          <RadIntTotal>0</RadIntTotal>
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
@@ -12406,12 +12496,12 @@ namespace Models
             <string>[DiagnosticsVariables].Script.SoilNitrogenContent</string>
             <string>[DiagnosticsVariables].Script.SoilWaterDeficit</string>
             <string>[DiagnosticsVariables].Script.SWC</string>
-            <string>[FieldPea].Arbitrator.DMDemand</string>
-            <string>[FieldPea].Arbitrator.DMSupply</string>
-            <string>[FieldPea].Arbitrator.DMAllocated</string>
-            <string>[FieldPea].Arbitrator.DMNutrientLimitation</string>
-            <string>[FieldPea].Arbitrator.DMSinkLimitation</string>
-            <string>[FieldPea].Arbitrator.NDemand</string>
+            <string>[FieldPea].Arbitrator.DM.TotalPlantDemand</string>
+            <string>[FieldPea].Arbitrator.DM.TotalFixationSupply</string>
+            <string>[FieldPea].Arbitrator.DM.Allocated</string>
+            <string>[FieldPea].Arbitrator.DM.NutrientLimitation</string>
+            <string>[FieldPea].Arbitrator.DM.SinkLimitation</string>
+            <string>[FieldPea].Arbitrator.N.TotalPlantDemand</string>
             <string>[FieldPea].Arbitrator.NH4NSupply</string>
             <string>[FieldPea].Arbitrator.NO3NSupply</string>
             <string>[FieldPea].Arbitrator.TotalPotentialNO3Uptake</string>
@@ -12429,13 +12519,13 @@ namespace Models
             <string>[FieldPea].Leaf.Fw</string>
             <string>[FieldPea].Leaf.LAI</string>
             <string>[FieldPea].Leaf.LAIDead</string>
-            <string>[FieldPea].Leaf.LeafCohortParameters.MaximumNConc.Value</string>
-            <string>[FieldPea].Leaf.LeafCohortParameters.MinimumNConc.Value</string>
+            <string>[FieldPea].Leaf.LeafCohortParameters.MaximumNConc.Value()</string>
+            <string>[FieldPea].Leaf.LeafCohortParameters.MinimumNConc.Value()</string>
             <string>[FieldPea].Leaf.Live.N</string>
             <string>[FieldPea].Leaf.Live.NConc</string>
             <string>[FieldPea].Leaf.Live.Wt</string>
-            <string>[FieldPea].Leaf.Photosynthesis.FT.Value</string>
-            <string>[FieldPea].Leaf.Photosynthesis.FVPD.Value</string>
+            <string>[FieldPea].Leaf.Photosynthesis.FT.Value()</string>
+            <string>[FieldPea].Leaf.Photosynthesis.FVPD.Value()</string>
             <string>[FieldPea].Leaf.PlantAppearedGreenLeafNo</string>
             <string>[FieldPea].Leaf.SenescingCohortNo</string>
             <string>[FieldPea].Leaf.SpecificArea</string>
@@ -12451,8 +12541,8 @@ namespace Models
             <string>[FieldPea].Nodule.Live.NonStructuralWt</string>
             <string>[FieldPea].Nodule.Live.StructuralWt</string>
             <string>[FieldPea].Nodule.Live.Wt</string>
-            <string>[FieldPea].Nodule.MaximumNConc.Value</string>
-            <string>[FieldPea].Nodule.MinimumNConc.Value</string>
+            <string>[FieldPea].Nodule.MaximumNConc.Value()</string>
+            <string>[FieldPea].Nodule.MinimumNConc.Value()</string>
             <string>[FieldPea].Phenology.CurrentPhaseName</string>
             <string>[FieldPea].Phenology.Stage</string>
             <string>[FieldPea].Root.Dead.N</string>
@@ -12462,13 +12552,13 @@ namespace Models
             <string>[FieldPea].Root.Live.N</string>
             <string>[FieldPea].Root.Live.NConc</string>
             <string>[FieldPea].Root.Live.Wt</string>
-            <string>[FieldPea].Root.MaximumNConc.Value</string>
-            <string>[FieldPea].Root.MinimumNConc.Value</string>
+            <string>[FieldPea].Root.MaximumNConc.Value()</string>
+            <string>[FieldPea].Root.MinimumNConc.Value()</string>
             <string>[FieldPea].Root.NDemand</string>
             <string>[FieldPea].Root.NSupplyUptake</string>
             <string>[FieldPea].Root.NTakenUp</string>
             <string>[FieldPea].Root.NUptake</string>
-            <string>[FieldPea].Root.TotalNAllocated</string>
+            <string>[FieldPea].Root.Allocated.N</string>
             <string>[FieldPea].Root.PlantZone.TotalNDemand</string>
             <string>[FieldPea].Root.WaterSupply</string>
             <string>[FieldPea].Root.WaterUptake</string>
@@ -12480,8 +12570,8 @@ namespace Models
             <string>[FieldPea].Stem.Live.NonStructuralWt</string>
             <string>[FieldPea].Stem.Live.StructuralWt</string>
             <string>[FieldPea].Stem.Live.Wt</string>
-            <string>[FieldPea].Stem.MaximumNConc.Value</string>
-            <string>[FieldPea].Stem.MinimumNConc.Value</string>
+            <string>[FieldPea].Stem.MaximumNConc.Value()</string>
+            <string>[FieldPea].Stem.MinimumNConc.Value()</string>
             <string>[FieldPea].Shell.Dead.N</string>
             <string>[FieldPea].Shell.Dead.NConc</string>
             <string>[FieldPea].Shell.Dead.Wt</string>
@@ -12490,9 +12580,9 @@ namespace Models
             <string>[FieldPea].Shell.Live.NonStructuralWt</string>
             <string>[FieldPea].Shell.Live.StructuralWt</string>
             <string>[FieldPea].Shell.Live.Wt</string>
-            <string>[FieldPea].Shell.MaximumNConc.Value</string>
-            <string>[FieldPea].Shell.MinimumNConc.Value</string>
-            <string>[FieldPea].Structure.Height.Value</string>
+            <string>[FieldPea].Shell.MaximumNConc.Value()</string>
+            <string>[FieldPea].Shell.MinimumNConc.Value()</string>
+            <string>[FieldPea].Structure.Height.Value()</string>
             <string>[FieldPea].Structure.LeafTipsAppeared</string>
             <string>[FieldPea].Structure.PlantTotalNodeNo</string>
             <string>[FieldPea].Structure.PrimaryBudTotalNodeNo</string>
@@ -12510,13 +12600,13 @@ namespace Models
             <string>[FieldPea].Grain.Dead.N</string>
             <string>[FieldPea].Grain.Dead.NConc</string>
             <string>[FieldPea].Grain.Dead.Wt</string>
-            <string>[FieldPea].Grain.DryMatterContent.Value</string>
+            <string>[FieldPea].Grain.DryMatterContent.Value()</string>
             <string>[FieldPea].Grain.Live.N</string>
             <string>[FieldPea].Grain.Live.NConc</string>
             <string>[FieldPea].Grain.Live.Wt</string>
             <string>[FieldPea].Grain.LiveFWt</string>
-            <string>[FieldPea].Grain.MaximumNConc.Value</string>
-            <string>[FieldPea].Grain.MinimumNConc.Value</string>
+            <string>[FieldPea].Grain.MaximumNConc.Value()</string>
+            <string>[FieldPea].Grain.MinimumNConc.Value()</string>
             <string>[FieldPeaHarvestRule].Script.FinalTag</string>
             <string>[MicroClimate].net_radn</string>
             <string>[MicroClimate].peta</string>
@@ -12692,7 +12782,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>FieldPea.Root.TotalDMAllocated</YFieldName>
+            <YFieldName>FieldPea.Root.Allocation.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12734,7 +12824,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Fieldpea.Root.TotalNAllocated</YFieldName>
+            <YFieldName>Fieldpea.Root.Allocated.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -13951,7 +14041,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Leaf.Photosynthesis.FT.Value</YFieldName>
+              <YFieldName>FieldPea.Leaf.Photosynthesis.FT.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14014,7 +14104,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Leaf.Photosynthesis.FVPD.Value</YFieldName>
+              <YFieldName>FieldPea.Leaf.Photosynthesis.FVPD.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14597,7 +14687,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Leaf.LeafCohortParameters.MinimumNConc.Value</YFieldName>
+              <YFieldName>FieldPea.Leaf.LeafCohortParameters.MinimumNConc.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14618,7 +14708,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Leaf.LeafCohortParameters.MaximumNConc.Value</YFieldName>
+              <YFieldName>FieldPea.Leaf.LeafCohortParameters.MaximumNConc.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14730,7 +14820,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Stem.MinimumNConc.Value</YFieldName>
+              <YFieldName>FieldPea.Stem.MinimumNConc.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14751,7 +14841,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Stem.MaximumNConc.Value</YFieldName>
+              <YFieldName>FieldPea.Stem.MaximumNConc.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14863,7 +14953,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Grain.MinimumNConc.Value</YFieldName>
+              <YFieldName>FieldPea.Grain.MinimumNConc.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14884,7 +14974,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Grain.MaximumNConc.Value</YFieldName>
+              <YFieldName>FieldPea.Grain.MaximumNConc.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -14996,7 +15086,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Root.MinimumNConc.Value</YFieldName>
+              <YFieldName>FieldPea.Root.MinimumNConc.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15017,7 +15107,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Root.MaximumNConc.Value</YFieldName>
+              <YFieldName>FieldPea.Root.MaximumNConc.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15206,7 +15296,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMSupply</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.TotalFixationSupply</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15227,7 +15317,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMDemand</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.TotalPlantDemand</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15248,7 +15338,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMAllocated</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.Allocated</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15269,7 +15359,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMSinkLimitation</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.SinkLimitation</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15290,7 +15380,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Report</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>FieldPea.Arbitrator.DMNutrientLimitation</YFieldName>
+              <YFieldName>FieldPea.Arbitrator.DM.NutrientLimitation</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -15439,7 +15529,7 @@ namespace Models
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
 			if (FieldPea.Phenology.Stage >= 3)
-			AccumTtemerg += FieldPea.Phenology.ThermalTime.Value;
+			AccumTtemerg += FieldPea.Phenology.ThermalTime.Value();
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -15473,8 +15563,6 @@ namespace Models
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
-      <Area>0</Area>
-      <Slope>0</Slope>
     </Simulation>
     <Folder>
       <Name>Graphs</Name>
@@ -15581,7 +15669,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.NDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.N.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -16008,7 +16096,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Arbitrator.DMDemand</YFieldName>
+          <YFieldName>FieldPea.Arbitrator.DM.TotalPlantDemand</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>

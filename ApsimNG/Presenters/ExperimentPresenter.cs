@@ -43,14 +43,13 @@ namespace UserInterface.Presenters
         {
             try
             {
-                List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
                 Simulation simulation = Experiment.CreateSpecificSimulation(ListView.MemoLines[ListView.CurrentPosition.Y]);
-                jobs.Add(simulation);
-                jobs.Add(new RunAllCompletedEvent(ExplorerPresenter.ApsimXFile));
+                JobManager.IRunnable job = Runner.ForSimulations(ExplorerPresenter.ApsimXFile, simulation, false);
 
-                Commands.RunCommand run = new Commands.RunCommand(jobs, 
+                Commands.RunCommand run = new Commands.RunCommand(job, 
                                                                   simulation.Name,
-                                                                  ExplorerPresenter);
+                                                                  ExplorerPresenter,
+                                                                  false);
                 run.Do(null);
             }
             catch (Exception err)

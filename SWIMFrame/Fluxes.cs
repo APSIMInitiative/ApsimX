@@ -7,134 +7,138 @@ using APSIM.Shared.Utilities;
 
 namespace SWIMFrame
 {
-     // Calculates flux tables given soil properties and path lengths.
-    public class Fluxes
+    // Calculates flux tables given soil properties and path lengths.
+    // Static; there should not be more than one of these per simulation.
+    public static class Fluxes
     {
-        public static FluxTable ft = new FluxTable();
+        /// <summary>Store a list of flux tables and their associated soil names and layers.</summary>
+        public static Dictionary<string, FluxTable> FluxTables {get;set;}
+
+        public static FluxTable ft;
         static int mx = 100; // max no. of phi values
         static int i, j, ni, ns, nt, nu, nit, nfu, nphif, ip, nfs, ii, ie;
-        static int[] iphif = new int[mx];
-        static int[] ifs = new int[mx];
+        static int[] iphif = new int[mx+1];
+        static int[] ifs = new int[mx+1];
         static double qsmall = 1.0e-5;
         static double rerr = 1.0e-2;
         static double cfac = 1.2;
         static double dh, q1, x, he, Ks, q;
-        static double[] ah = new double[mx];
-        static double[] aK = new double[mx];
-        static double[] aphi = new double[mx];
-        static double[] hpK = new double[mx];
-        static double[] aS = new double[mx];
-        static double[] phif = new double[mx];
-        static double[] re = new double[mx];
-        static double[] phii = new double[mx];
-        static double[] phii5 = new double[mx];
-        static double[,] aKco = new double[3, mx];
-        static double[,] aphico = new double[3, mx];
-        static double[,] aq = new double[mx, mx];
-        static double[,] qf = new double[mx, mx];
-        static double[,] qi1 = new double[mx, mx];
-        static double[,] qi2 = new double[mx, mx];
-        static double[,] qi3 = new double[mx, mx];
-        static double[,] qi5 = new double[mx, mx];
-        static FluxEnd pe = new FluxEnd();
+        static double[] hpK = new double[mx + 1];
+        static double[] phif = new double[mx + 1];
+        static double[] re = new double[mx + 1];
+        static double[] phii = new double[mx + 1];
+        static double[] phii5 = new double[mx + 1];
+        static double[,] aq = new double[mx + 1, mx + 1];
+        static double[,] qf = new double[mx + 1, mx + 1];
+        static double[,] qi1 = new double[mx + 1, mx + 1];
+        static double[,] qi2 = new double[mx + 1, mx + 1];
+        static double[,] qi3 = new double[mx + 1, mx + 1];
+        static double[,] qi5 = new double[mx + 1, mx + 1];
+        static double[,] aKco = new double[mx + 1, 3 + 1];
+        static SoilProps sp;
 
-        public Fluxes()
-        {
-            ft.fend = new FluxEnd[2];
-        }
+        static StringBuilder diags = new StringBuilder();
 
-        public static void FluxTable(double dz, SoilProps sp)
+        public static void FluxTable(double dz, SoilProps props)
         {
             // Generates a flux table for use by other programs.
             // Assumes soil props available in sp of module soil.
             // dz - path length.
 
-
-            //diags - timer start here
-
+            sp = props;
+            ft.fend = new FluxEnd[2];
             nu = sp.nc;
-            ah = sp.hc; aK = sp.Kc; aphi = sp.phic; aS = sp.Sc;
-            aKco = sp.Kco; aphico = sp.phico;
             he = sp.he; Ks = sp.ks;
+            for (i = 1; i <= nu - 1; i++)
+                for (j = 1; j < sp.Kco.GetLength(0); j++)
+                    aKco[i, j] = sp.Kco[j, i];
 
             // Get K values for Simpson's integration rule in subroutine odef.
-            for (i = 0; i < nu - 2; i++)
+            for (i = 1; i <= nu - 1; i++)
             {
-                x = 0.5 * (aphi[i + 1] - aphi[i]);
-                hpK[i] = aK[i] + x * (aKco[0, i] + x * (aKco[1, i] + x * aKco[2, i]));
+                x = 0.5 * (sp.phic[i + 1] - sp.phic[i]);
+                hpK[i] = sp.Kc[i] + x * (aKco[i, 1] + x * (aKco[i, 2] + x * aKco[i, 3]));
             }
 
             // Get fluxes aq(1,:) for values aphi[i] at bottom (wet), aphi(1) at top (dry).
             // These are used to select suitable phi values for flux table.
+            // Note that due to the complexity of array indexing in the FORTRAN,
+            // we're keeping aq 1 indexed.
             nit = 0;
-            aq[1, 1] = aK[1]; // q=K here because dphi/dz=0
+            aq[1, 1] = sp.Kc[1]; // q=K here because dphi/dz=0
             dh = 2.0; // for getting phi in saturated region
-            q1 = (aphi[1] - aphi[2]) / dz; // q1 is initial estimate
-            aq[1, 2] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
-            for (j = 2; j < nu + 20; j++) // 20*dh should be far enough for small curvature in (phi,q)
+            q1 = (sp.phic[1] - sp.phic[2]) / dz; // q1 is initial estimate
+            aq[2, 1] = ssflux(1, 2, dz, q1, 0.1 * rerr); // get accurate flux
+            for (j = 3; j <= nu + 20; j++) // 20*dh should be far enough for small curvature in (phi,q)
+            {
                 if (j > nu) // part satn - set h, K and phi
                 {
-                    ah[j] = ah[j - 1] + dh * (j - nu);
-                    aK[j] = Ks;
-                    aphi[j] = aphi[j - 1] + Ks * dh * (j - nu);
+                    sp.hc[j] = sp.hc[j - 1] + dh * (j - nu);
+                    sp.Kc[j] = Ks;
+                    sp.phic[j] = sp.phic[j - 1] + Ks * dh * (j - nu);
                 }
 
-            // get approx q from linear extrapolation
-            q1 = aq[1, j - 1] + (aphi[j] - aphi[j - 1]) * (aq[1, j - 1] - aq[1, j - 2]) / (aphi[j - 1] - aphi[j - 2]);
-            aq[1, j] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
-            nt = j;
-            ns = nt - nu;
-            if (j > nu)
-                if (-(aphi[j] - aphi[j - 1]) / (aq[1, j] - aq[1, j - 1]) < (1 + rerr) * dz)
-                    Environment.Exit(0);
+                // get approx q from linear extrapolation
+                q1 = aq[j - 1, 1] + (sp.phic[j] - sp.phic[j - 1]) * (aq[j - 1, 1] - aq[j - 2, 1]) / (sp.phic[j - 1] - sp.phic[j - 2]);
+                aq[j, 1] = ssflux(1, j, dz, q1, 0.1 * rerr); // get accurate q
+                nt = j;
+                ns = nt - nu;
+                if (j > nu)
+                    if (-(sp.phic[j] - sp.phic[j - 1]) / (aq[j, 1] - aq[j - 1, 1]) < (1 + rerr) * dz)
+                        break;
+            }
 
             // Get phi values phif for flux table using curvature of q vs phi.
             // rerr and cfac determine spacings of phif.
-            Vector<double> aphiV = Vector<double>.Build.DenseOfArray(aphi);
             Matrix<double> aqM = Matrix<double>.Build.DenseOfArray(aq);
-            i = nonlin(nu, aphiV.SubVector(0, nu).ToArray(), aqM.Column(0).SubVector(0, nu).ToArray(), rerr);
-            re = curv(nu, aphiV.SubVector(0, nu).ToArray(), aqM.Column(0).SubVector(0, nu).ToArray());// for unsat phi
-            indices(nu - 2, re.Take(nu - 3).Reverse().ToArray(), 1 + nu - i, cfac, out nphif, ref iphif);
-            int[] iphifReverse = iphif.Take(nphif).Reverse().ToArray();
-            for (int idx = 0; idx < nphif; idx++)
-                iphif[idx] = 1 + nu - iphifReverse[idx]; // locations of phif in aphi
-            aphiV = Vector<double>.Build.DenseOfArray(aphi); //may not need to do this; haevn't check in aphi has changed since last use.
+            i = nonlin(nu, sp.phic.Slice(1, nu), aqM.Column(1).ToArray().Slice(1, nu), rerr);
+            re = curv(nu, sp.phic.Slice(1, nu), aqM.Column(1).ToArray().Slice(1, nu));// for unsat phi
+            double[] rei = new double[nu - 2 + 1];
+            Array.Copy(re.Slice(1, nu - 2).Reverse().ToArray(), 0, rei, 1, re.Slice(1, nu - 2).Reverse().ToArray().Length - 1); //need to 1-index slice JF
+            Indices(nu - 2, rei, 1 + nu - i, cfac, out nphif, out iphif);
+            int[] iphifReverse = iphif.Skip(1).Take(nphif).Reverse().ToArray();
+            int[] iphifReversei = new int[iphifReverse.Length + 1]; 
+            Array.Copy(iphifReverse, 0, iphifReversei, 1, iphifReverse.Length); // again, need to 1-index JF
+            for (int idx = 1; idx < nphif; idx++)
+                iphif[idx] = 1 + nu - iphifReversei[idx]; // locations of phif in aphi
             aqM = Matrix<double>.Build.DenseOfArray(aq); //as above
-            re = curv(1 + ns, aphiV.SubVector(nu, nt - nu).ToArray(), aqM.Column(1).SubVector(nu, nt - nu).ToArray()); // for sat phi
-            indices(ns - 1, re, ns, cfac, out nfs, ref ifs);
+            re = curv(1 + ns, sp.phic.Slice(nu, nt), aqM.Column(1).ToArray().Slice(nu, nt)); // for sat phi
+            Indices(ns - 1, re, ns, cfac, out nfs, out ifs);
 
-            for (int idx = nphif; i < nphif + nfs - 2; idx++)
-                iphif[idx] = nu - 1 + ifs[idx];
+            int[] ifsTemp = ifs.Slice(2, nfs);
+            for (int idx = nphif + 1; idx <= nphif + nfs - 1; idx++)
+                iphif[idx] = nu - 1 + ifsTemp[idx - nphif];
             nfu = nphif; // no. of unsat phif
             nphif = nphif + nfs - 1;
-            for (int idx = 0; i < nphif; idx++)
+            for (int idx = 1; idx <= nphif; idx++)
             {
-                phif[idx] = aphi[iphif[idx]];
-                qf[0, idx] = aq[0, iphif[idx]];
+                phif[idx] = sp.phic[iphif[idx]];
+                qf[idx, 1] = aq[iphif[idx], 1];
             }
+
             // Get rest of fluxes
             // First for lower end wetter
-            for (j = 1; j < nphif; j++)
-                for (i = 1; i < j; i++)
+            for (j = 2; j <= nphif; j++)
+                for (i = 2; i <= j; i++)
                 {
-                    q1 = qf[i - 1, j];
-                    if (ah[iphif[j]] - dz < ah[iphif[i]])
+                    q1 = qf[j, i - 1];
+                    if (sp.hc[iphif[j]] - dz < sp.hc[iphif[i]])
                         q1 = 0.0; // improve?
-                    qf[i, j] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
+                    qf[j, i] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
                 }
             // Then for upper end wetter
-            for (i = 1; i < nphif; i++)
-                for (j = i - 1; j > 1; j--)
+            for (i = 2; i <= nphif; i++)
+                for (j = i - 1; j >= 1; j--)
                 {
-                    q1 = qf[i, j + 1];
+                    q1 = qf[j + 1, i];
                     if (j + 1 == i)
-                        q1 = q1 + (aphi[iphif[i]] - aphi[iphif[j]]) / dz;
-                    qf[i, j] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
+                        q1 = q1 + (sp.phic[iphif[i]] - sp.phic[iphif[j]]) / dz;
+                    qf[j, i] = ssflux(iphif[i], iphif[j], dz, q1, 0.1 * rerr);
                 }
             // Use of flux table involves only linear interpolation, so gain accuracy
             // by providing fluxes in between using quadratic interpolation.
             ni = nphif - 1;
-            for (int idx = 0; idx < ni; idx++)
+            for (int idx = 1; idx <= ni; idx++)
                 phii[idx] = 0.5 * (phif[idx] + phif[idx + 1]);
 
             Matrix<double> qi1M = Matrix<double>.Build.DenseOfArray(qi1);
@@ -143,115 +147,132 @@ namespace SWIMFrame
             double[] qi2Return;
             double[] qi3Return;
 
-            for (i = 0; i < nphif; i++)
+            for (i = 1; i <= nphif; i++)
             {
-                qi1Return = quadinterp(phif, qfM.Row(i).ToArray(), nphif, phii);
-                for (int idx = 0; idx < qi1Return.Length; idx++)
-                    qi1[i, idx] = qi1Return[idx];
+                qi1Return = Quadinterp(phif, qfM.Column(i).ToArray(), nphif, phii);
+                for (int idx = 1; idx < qi1Return.Length; idx++)
+                    qi1[idx, i] = qi1Return[idx];
             }
 
-            for (j = 0; j < nphif; j++)
+            for (j = 1; j <= nphif; j++)
             {
-                qi2Return = quadinterp(phif, qfM.Column(j).ToArray(), nphif, phii);
-                for (int idx = 0; idx < qi2Return.Length; idx++)
-                    qi2[idx, i] = qi2Return[idx];
+                qi2Return = Quadinterp(phif, qfM.Row(j).ToArray(), nphif, phii);
+                for (int idx = 1; idx < qi2Return.Length; idx++)
+                    qi2[j, idx] = qi2Return[idx];
             }
 
-            for (j = 0; j < ni; j++)
+            for (j = 1; j <= ni; j++)
             {
                 qi1M = Matrix<double>.Build.DenseOfArray(qi1);
-                qi3Return = quadinterp(phif, qi1M.Column(j).ToArray(), nphif, phii);
-                for (int idx = 0; idx < qi3Return.Length; idx++)
-                    qi3[idx, i] = qi3Return[idx];
+                qi3Return = Quadinterp(phif, qi1M.Row(j).ToArray(), nphif, phii);
+                for (int idx = 1; idx < qi3Return.Length; idx++)
+                    qi3[j, idx] = qi3Return[idx];
             }
 
             // Put all the fluxes together.
             i = nphif + ni;
-            for (int iidx = 0; iidx < i; i += 2)
-                for (int npidx = 0; npidx < nphif; npidx++)
-                    for (int niidx = 0; niidx < ni; niidx++)
-                    {
-                        qi5[iidx, iidx] = qf[npidx, npidx];
-                        qi5[iidx, iidx + 1] = qi1[npidx, niidx];
-                        qi5[iidx + 1, iidx] = qi2[niidx, npidx];
-                        qi5[iidx + 1, iidx + 1] = qi3[niidx, niidx];
-                    }
+            for (int row = 1; row <= i; row += 2)
+                for (int col = 1; col <= i; col += 2)
+                {
+                    qi5[col, row] = qf[col / 2 + 1, row / 2 + 1];
+                    qi5[col+1, row] = qi1[col / 2 + 1, row / 2 + 1];
+                    qi5[col, row + 1] = qi2[col / 2 + 1, row / 2 + 1];
+                    qi5[col + 1, row + 1] = qi3[col / 2 + 1, row / 2 + 1];
+                }
 
             // Get accurate qi5(j,j)=Kofphi(phii(ip))
             ip = 0;
-            for (j = 1; j < i; j += 2)
+            for (j = 2; j <= i; j += 2)
             {
                 ip = ip + 1;
                 ii = iphif[ip + 1] - 1;
-                for (int idx = 0; idx < aphi.Length; idx++) // Search down to locate phii position for cubic.
+               // if (ii >= sp.Kco.GetLength(1))
+               //     ii = sp.Kco.GetLength(1) - 1;
+                while (true) // Search down to locate phii position for cubic.
                 {
-                    if (aphi[ii] <= phii[ip])
+                    if (sp.phic[ii] <= phii[ip])
                         break;
                     ii = ii - 1;
-                }
-                x = phii[ip] - aphi[ii];
-                qi5[j, j] = aK[ii] + x * (aKco[1, ii] + x * (aKco[2, ii] + x * aKco[3, ii]));
+                } 
+                x = phii[ip] - sp.phic[ii];
+                qi5[j, j] = sp.Kc[ii] + x * (aKco[ii, 1] + x * (aKco[ii, 2] + x * aKco[ii, 3]));
             }
 
-            for (int idx = 0; idx < i; i++)
+            double[] phii51 = phif.Slice(1, nphif);
+            double[] phii52 = phii.Slice(1, ni);
+            for (int a = 1; a <= nphif;a++)
             {
-                phii5[idx * 2] = phif[idx];
-                phii5[idx * 2 + 1] = phii[idx];
+                phii5[a * 2 - 1] = phii51[a];
             }
 
-            // diags - end timer here
-
+            for (int a = 1; a <= ni; a++)
+            {
+                phii5[a * 2] = phii52[a];
+            }
 
             // Assemble flux table
             j = 2 * nfu - 1;
             for (ie = 0; ie < 2; ie++)
             {
-                pe = ft.fend[ie];
-                pe.phif = new double[phif.Length];
-                pe.sid = sp.sid;
-                pe.nfu = j;
-                pe.nft = i;
-                pe.dz = dz;
-                pe.phif = phii5; //(1:i) assume it's the whole array
+                ft.fend[ie].phif = new double[phif.Length];
+                ft.fend[ie].sid = sp.sid;
+                ft.fend[ie].nfu = j;
+                ft.fend[ie].nft = i;
+                ft.fend[ie].dz = dz;
+                ft.fend[ie].phif = phii5; //(1:i) assume it's the whole array
             }
             ft.ftable = qi5; // (1:i,1:i) as above
         }
 
+        /// <summary>
+        /// Test harness for setting private variable 'q'
+        /// </summary>
+        /// <param name="setQ">The q value</param>
+        /// <param name="aphi">The sp.phic values</param>
+        public static void SetupOdef(double setQ, double[] aphi)
+        {
+            q = setQ;
+            sp.phic = aphi;
+        }
+
         private static double[] odef(int n1, int n2, double[] aK, double[] hpK)
         {
-            double[] u = new double[2];
+            double[] u = new double[3];
             int np;
-            double[] da = new double[n2 - n1 + 1];
-            double[] db = new double[n2 - n1];
+            double[] da = new double[n2 - n1 + 2];
+            double[] db = new double[n2 - n1 + 1];
             // Get z and dz/dq for flux q and phi from aphi(n1) to aphi(n2).
             // q is global to subroutine fluxtbl.
             np = n2 - n1 + 1;
-            Vector<double> akV = Vector<double>.Build.DenseOfArray(aK);
-            Vector<double> hpKV = Vector<double>.Build.DenseOfArray(hpK);
-            double[] daTemp = MathUtilities.Subtract_Value(akV.SubVector(n1, n2-n1+1).ToArray(), q);
-            double[] dbTemp = MathUtilities.Subtract_Value(akV.SubVector(n1, n2 - n1).ToArray(), q);
-            for (int idx = 0; idx < da.Length; idx++)
+            double[] daTemp = MathUtilities.Subtract_Value(aK.Slice(n1, n2), q);
+            double[] dbTemp = MathUtilities.Subtract_Value(hpK.Slice(n1, n2-1), q);
+            diags.AppendLine("n1: " + n1 + Environment.NewLine + "n2: " + n2);
+
+            for (int idx = 1; idx < da.Length; idx++)
             {
                 da[idx] = 1.0 / daTemp[idx];
-                if(idx < db.Length)
-                    db[idx] = 1.0 / dbTemp[idx];
             }
 
+            for (int idx=1;idx<db.Length;idx++)
+            {
+                db[idx] = 1.0 / dbTemp[idx];
+            }
+
+            diags.Append("da: ");
+            for (int i = 1; i < da.Length; i++)
+                diags.Append(" " + da[i]);
+            diags.AppendLine();
+
             // apply Simpson's rule
-            Vector<double> aphiV = Vector<double>.Build.DenseOfArray(aphi);
-            Vector<double> daV = Vector<double>.Build.DenseOfArray(da);
-
-            // sum((aphi(n1+1:n2)-aphi(n1:n2-1))*(da(1:np-1)+4*db+da(2:np))/6) for both of these stupid lines... find something better.
-            Vector<double> t1 = aphiV.SubVector(n1, n2 - n1 + 1);
-            Vector<double> t2 = aphiV.SubVector(n1 - 1, n2 - n1+1);
-            Vector<double> t3 = daV.SubVector(0, np);
-            Vector<double> t4 = daV.SubVector(1, np - 1);
-
-            //u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), MathUtilities.Add(MathUtilities.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
-            u[0] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), MathUtilities.Add(MathUtilities.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
+            // u[] = sum((aphi(n1+1:n2)-aphi(n1:n2-1))*(da(1:np-1)+4*db+da(2:np))/6). Love the C# implementation. Note aphi is now sp.phic
+            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
+                  (MathUtilities.Subtract(sp.phic.Slice(n1 + 1, n2), sp.phic.Slice(n1, n2 - 1)), 
+                  MathUtilities.Add(MathUtilities.Add(MathUtilities.Multiply_Value(db, 4), da.Slice(1, np - 1)), da.Slice(2, np))), 6)); // this is madness!
             da = MathUtilities.Multiply(da, da);
             db = MathUtilities.Multiply(db, db);
-            u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply(aphiV.SubVector(n1, n2 - n1 + 1).Subtract(aphiV.SubVector(n1 - 1, n2 - n1)).ToArray(), MathUtilities.Add(MathUtilities.Multiply(daV.SubVector(0, np).Add(4).ToArray(), db), daV.SubVector(1, np + 1).ToArray())), 6)); // this is madness!
+            u[2] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
+                  (MathUtilities.Subtract(sp.phic.Slice(n1 + 1, n2), sp.phic.Slice(n1, n2 - 1)),
+                  MathUtilities.Add(MathUtilities.Add(MathUtilities.Multiply_Value(db, 4), da.Slice(1, np - 1)), da.Slice(2, np))), 6));
             return u;
         }
 
@@ -267,13 +288,11 @@ namespace SWIMFrame
             double[] u0 = new double[2];
 
             i = ia; j = ib; n = nu;
-            //write (*,*) i,j
             if (i == j) // free drainage
             {
-                return aK[i];
-                //write (*,*) "aK[i] ",aK[i],i
+                return sp.Kc[i];
             }
-            ha = ah[i]; hb = ah[j]; Ka = aK[i]; Kb = aK[j];
+            ha = sp.hc[i]; hb = sp.hc[j]; Ka = sp.Kc[i]; Kb = sp.Kc[j];
             if (i >= n && j >= n) // saturated flow
                 return Ka * ((ha - hb) / dz + 1.0);
 
@@ -301,8 +320,8 @@ namespace SWIMFrame
 
             if (qin < q1 || qin > q2)
             {
-                Console.WriteLine("ssflux: qin ", qin, " out of range ", q1, q2);
-                Console.WriteLine("at ia, ib = ", ia, ib);
+                Console.WriteLine("ssflux: qin {0} out of range {1} {2}", qin, q1, q2);
+                Console.WriteLine("at ia, ib = {0} {1}", ia, ib);
             }
             else
                 q = qin;
@@ -332,48 +351,50 @@ namespace SWIMFrame
                     n2 = n;
                 }
                 else
+                {
                     n1 = ia;
-                n2 = ib;
+                    n2 = ib;
+                }
             }
-            u0 = new double[] { 0.0, 0.0 }; // u(1) is z, u(2) is dz/dq (partial deriv)
-            //write (*,*) q1,q,q2
+            MathUtilities.Zero(u0); // u(1) is z, u(2) is dz/dq (partial deriv)
             for (it = 1; it < maxit; it++)// bounded Newton iterations to get q that gives correct dz
             {
-                u = u0; //point?
-                u = odef(n1, n2, aK, hpK);
-                //write (*,*) it,q,u(1),u(2)
+                u = odef(n1, n2, sp.Kc, hpK);
                 if (i > n || j > n) // add sat solns
                 {
                     Ks = Math.Max(Ka, Kb);
-                    u[0] = u[0] + Ks * dh / (Ks - q);
-                    u[1] = u[1] + Ks * dh / Math.Pow(Ks - q, 2);
+                    u[1] += Ks * dh / (Ks - q);
+                    u[2] += Ks * dh / Math.Pow(Ks - q, 2);
                 }
 
-                dq = (v1 - u[0]) / u[1]; // delta z / dz/dq
+                dq = (v1 - u[1]) / u[2]; // delta z / dz/dq
                 qp = q; // save q before updating
                 if (dq > 0.0)
                 {
                     q1 = q;
                     q = q + dq;
+
+                    if (q >= q2)
+                        q = 0.5 * (q1 + q2);
                 }
-                if (q >= q2)
-                    q = 0.5 * (q1 + q2);
                 else
                 {
                     q2 = q;
                     q = q + dq;
-                }
-                if (q <= q1)
-                {
-                    q = 0.5 * (q1 + q2);
+
+                    if (q <= q1)
+                    {
+                        q = 0.5 * (q1 + q2);
+                    }
                 }
 
                 // convergence test - q can be at or near zero
-                if (Math.Abs(q - qp) < rerr * Math.Max(Math.Abs(q), Ka) && Math.Abs(u[0] - v1) < rerr * dz || Math.Abs(q1 - q2) < 0.01 * qsmall)
+                double qqp = q - qp;
+                if (Math.Abs(qqp) < rerr * Math.Max(Math.Abs(q), Ka) && Math.Abs(u[1] - v1) < rerr * dz || Math.Abs(q1 - q2) < 0.01 * qsmall)
                     break;
             }
             if (it > maxit)
-                Console.WriteLine("ssflux: too many its", ia, ib);
+                Console.WriteLine("ssflux: too many iterations {0} {1}", ia, ib);
             nit = nit + it;
             return q;
         }
@@ -381,119 +402,130 @@ namespace SWIMFrame
         // get curvature at interior points of (x,y)
         private static double[] curv(int n, double[] x, double[] y)
         {
-            double[] c = new double[n - 2];
-            double[] s = new double[n - 2];
-            double[] yl = new double[n - 2];
-            Vector<double> xV = Vector<double>.Build.DenseOfArray(x);
-            Vector<double> yV = Vector<double>.Build.DenseOfArray(y);
-            s = MathUtilities.Divide(MathUtilities.Subtract(yV.SubVector(2, n - 1).ToArray(), yV.SubVector(0, n - 3).ToArray()), MathUtilities.Subtract(xV.SubVector(2, n - 1).ToArray(), xV.SubVector(0, n - 3).ToArray()));
-            yl = MathUtilities.Add(yV.SubVector(0, n - 3).ToArray(), 
-                                  MathUtilities.Multiply(MathUtilities.Subtract(xV.SubVector(1, n - 2).ToArray(),
-                                                                                xV.SubVector(0, n - 3).ToArray()),
+            double[] s = new double[n - 1];
+            double[] yl = new double[n - 1];
+
+            double[] ySub = MathUtilities.Subtract(y.Slice(3, n), y.Slice(1, n - 2));
+            double[] xSub = MathUtilities.Subtract(x.Slice(3, n), x.Slice(1, n - 2));
+
+            s = MathUtilities.Divide(ySub, xSub);
+            yl = MathUtilities.Add(y.Slice(1, n-2), 
+                                  MathUtilities.Multiply(MathUtilities.Subtract(x.Slice(2, n-1),
+                                                                                x.Slice(1, n-2)),
                                                               s));
-            return MathUtilities.Subtract_Value(MathUtilities.Divide(yV.SubVector(1, n - 2).ToArray(), yl), 1);
+            double[] ySlice = y.Slice(2, n - 1);
+            return MathUtilities.Subtract_Value(MathUtilities.Divide(ySlice, yl), 1);
         }
 
         // get last point where (x,y) deviates from linearity by < re
         private static int nonlin(int n, double[] x, double[] y, double re)
         {
-            int nonlin, i;
+            int i;
             double s, are;
-            double[] yl = new double[n - 2];
-            nonlin = n;
-            for (i = 2; i < n; i++)
+            double[] yl = new double[n - 1];
+            for (i = 3; i <= n; i++)
             {
-                s = (y[i] - y[0]) / (x[i] - x[0]);
-                Vector<double> xV = Vector<double>.Build.DenseOfArray(x);
-                Vector<double> ylV = Vector<double>.Build.DenseOfArray(yl);
-                Vector<double> yV = Vector<double>.Build.DenseOfArray(y);
-                Vector<double> xSub = xV.SubVector(1, i - 2);
-                Vector<double> ylSub = ylV.SubVector(0, i - 3);
-                Vector<double> ySub = yV.SubVector(1, i - 2);
-                for (int idx = 0; idx < ylSub.Count; idx++)
+                s = (y[i] - y[1]) / (x[i] - x[1]);
+                double[] xSub = x.Slice(2, i - 1);
+                double[] ylSub = yl.Slice(1, i - 2);
+                double[] ySub = y.Slice(2, i - 1);
+                for (int idx = 1; idx < ylSub.Length; idx++)
                 {
-                    ylSub[idx] = y[0] + s * (xSub[i] - x[0]);
+                    ylSub[idx] = y[1] + s * (xSub[idx] - x[1]);
                 }
-                double[] div = MathUtilities.Subtract_Value(MathUtilities.Divide(ySub.ToArray(), ylSub.ToArray()), 1);
-                for (int idx = 0; idx < div.Length; idx++)
+                double[] div = MathUtilities.Subtract_Value(MathUtilities.Divide(ySub, ylSub), 1);
+                div = div.Skip(1).ToArray();
+                for (int idx = 1; idx <= div.Length - 1; idx++)
                     div[idx] = Math.Abs(div[idx]);
                 are = MathUtilities.Max(div);
                 if (are > re)
-                {
                     return i - 1;
-                }
             }
             return 0;
         }
 
-        // get indices of elements selected using curvature
-        private static void indices(int n, double[] c, int iend, double fac, out int nsel, ref int[] isel)
+        /// <summary>
+        /// Test harness for indices; can't use extension method due to presence of ref and out vars.
+        /// </summary>
+        /// <param name="n">n</param>
+        /// <param name="c">c</param>
+        /// <param name="iend">iend</param>
+        /// <param name="fac">fac</param>
+        /// <returns></returns>
+        public static KeyValuePair<int, int[]> TestIndices(int n, double[] c, int iend, double fac)
         {
-            int i, j;
-            int[] di = new int[n];
-            double[] ac = new double[n];
+            int nsel;
+            int[] isel = new int[n + 2];
+            Indices(n, c, iend, fac, out nsel, out isel);
+            return new KeyValuePair<int, int[]>(nsel, isel);
+        }
 
-            for (int idx = 0; idx < n; idx++)
-            {
+        // get indices of elements selected using curvature
+        private static void Indices(int n, double[] c, int iend, double fac, out int nsel, out int[] isel)
+        {
+            int a = 1, b = 1;
+            int[] di = new int[n+1];
+            isel = new int[100];
+            double[] ac = new double[n+1];
+
+            for (int idx = 1; idx < c.Length; idx++)
                 ac[idx] = Math.Abs(c[idx]);
+            for (int idx = 1; idx < c.Length; idx++)
                 di[idx] = (int)Math.Round(fac * MathUtilities.Max(ac) / ac[idx], MidpointRounding.ToEven); // min spacings
-            }
-            isel[0] = 1; i = 1; j = 1;
-            while (true) //will want to change this
-            {
-                if (i >= iend)
-                    break;
-                i++;
-                if (i > n)
-                    break;
-                if (di[i - 1] > 2 && di[i] > 1)
-                    i = i + 2; // don't want points to be any further apart
-                else if (di[i - 1] > 1)
-                    i = i + 1;
 
-                j++;
-                isel[j] = i;
-            }
-            if (isel[j] < n + 2)
+            isel[1] = 1; 
+            while (true) 
             {
-                j++;
-                isel[j] = n + 2;
+                if (a >= iend)
+                    break;
+                a++;
+                if (a > n)
+                    break;
+                if (di[a - 1] > 2 && di[a] > 1)
+                    a = a + 2; // don't want points to be any further apart
+                else if (di[a - 1] > 1)
+                    a = a + 1;
+
+                b++;
+                isel[b] = a;
             }
-            nsel = j;
+            if (isel[b] < n + 2)
+            {
+                b++;
+                isel[b] = n + 2;
+            }
+            nsel = b;
         }
         // Return quadratic interpolation coeffs co.
-        private static double[] quadco(double[] x, double[] y)
+        public static double[] Quadco(double[] x, double[] y)
         {
-            double[] co = new double[3];
-            double s, x1, y2, x12, c1, c2;
-            s = 1.0 / (x[2] - x[0]);
-            x1 = s * (x[1] - x[0]);
-            y2 = y[2] - y[0];
-            x12 = x1 * x1;
-            c1 = (y[1] - y[0] - x12 * y2) / (x1 - x12);
-            c2 = y2 - c1;
-            co[0] = y[1];
-            co[1] = s * c1;
-            co[2] = s * s * c2;
+            double[] co = new double[4];
+            double s = 1.0 / (x[3] - x[1]);
+            double x1 = s * (x[2] - x[1]);
+            double y2 = y[3] - y[1];
+            double x12 = x1 * x1;
+            double c1 = (y[2] - y[1] - x12 * y2) / (x1 - x12);
+            double c2 = y2 - c1;
+            co[1] = y[1];
+            co[2] = s * c1;
+            co[3] = s * s * c2;
             return co;
         }
 
         // Return v(1:n-1) corresponding to u(1:n-1) using quadratic interpolation.
-        private static double[] quadinterp(double[] x, double[] y, int n, double[] u)
+        public static double[] Quadinterp(double[] x, double[] y, int n, double[] u)
         {
-            double[] v = new double[3];
+            double[] v = new double[100 + 1];
             int i, j, k;
             double z;
-            double[] co = new double[3];
-            Vector<double> xV = Vector<double>.Build.DenseOfArray(x);
-            Vector<double> yV = Vector<double>.Build.DenseOfArray(y);
-            for (k = 0; k < n; k += 2)
+            double[] co = new double[4];
+            for (k = 1; k <= n; k += 2)
             {
                 i = k;
                 if (k + 2 > n)
                     i = n - 2;
-                co = quadco(xV.SubVector(i, 3).ToArray(), yV.SubVector(i, 3).ToArray());
-                for (j = k; j < i; j++)
+                co = Quadco(x.Slice(i, i+2), y.Slice(i, i+2));
+                for (j = k; j <= i+1; j++)
                 {
                     z = u[j] - x[i];
                     v[j] = co[1] + z * (co[2] + z * co[3]);
@@ -501,13 +533,32 @@ namespace SWIMFrame
             }
             return v;
         }
+
+        public static FluxTable ReadFluxTable(string key)
+        {
+            return FluxTables[key];
+        }
+
+        /// <summary>
+        /// Public accessor to set a SoilProps object.
+        /// Only required for unit testing.
+        /// </summary>
+        /// <param name="setsp"></param>
+        /// <param name="setnu"></param>
+        /// <param name="sethpK"></param>
+        public static void SetupSsflux(SoilProps setsp, int setnu, double[] sethpK)
+        {
+            sp = setsp;
+            nu = setnu;
+            hpK = sethpK;
+        }
     }
-
-
+    
     //  sid - soil ident
     //  nfu, nft - no. of fluxes unsat and total
     //  dz - path length
     //  phif(1:nft) - phi values
+    [Serializable]
     public struct FluxEnd
     {
         public int sid, nfu, nft;
@@ -517,6 +568,7 @@ namespace SWIMFrame
 
     //  fend(2) - flux end data
     //  qf(1:fend(1)%nft,1:fend(2)%nft) - flux table
+    [Serializable]
     public struct FluxTable
     {
         public FluxEnd[] fend;

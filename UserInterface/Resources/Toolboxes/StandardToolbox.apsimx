@@ -750,7 +750,7 @@
           <Alias><Name>wedgetail</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.9</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 380</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 380</Command>
           <Command />
         </Cultivar>
         <Cultivar>
@@ -766,7 +766,7 @@
           <Alias><Name>l</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 1.8</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 550</Command>
+          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.FixedValue = 550</Command>
         </Cultivar>
         <Cultivar>
           <Name>Lincoln</Name>
@@ -787,16 +787,16 @@
           <Alias><Name>eaglehawk</Name></Alias>
           <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 2.5</Command>
-          <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 500</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 655</Command>
-          <Command>[Phenology].FloweringToStartGrainFill.Target.Value = 250</Command>
-          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 500</Command>
+          <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.FixedValue = 500</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 655</Command>
+          <Command>[Phenology].FloweringToStartGrainFill.Target.FixedValue = 250</Command>
+          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.FixedValue = 500</Command>
         </Cultivar>
         <Cultivar>
           <Name>Marombi</Name>
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 455</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 455</Command>
           <Command />
         </Cultivar>
       </Folder>

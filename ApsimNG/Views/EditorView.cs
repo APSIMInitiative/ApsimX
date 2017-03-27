@@ -240,7 +240,7 @@
                 if (string.IsNullOrEmpty(_findForm.LookFor))
                     _findForm.ShowFor(textEditor, false);
                 else
-                    _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) != 0,
+                    _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0,
                         string.Format("Search text «{0}» not found.", _findForm.LookFor));
                 e.RetVal = true;
             }
@@ -338,7 +338,6 @@
             return false; 
         }
         
-
         /// <summary>
         /// Event handler for when the completion window loses focus
         /// </summary>

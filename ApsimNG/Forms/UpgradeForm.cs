@@ -32,7 +32,9 @@ namespace UserInterface.Forms
         /// <summary>
         /// A list of potential upgrades available.
         /// </summary>
-        private Upgrade[] upgrades;
+        private Upgrade[] upgrades = new Upgrade[0];
+
+        private bool loadFailure = false;
 
         /// <summary>
         /// Our explorer presenter.
@@ -44,6 +46,10 @@ namespace UserInterface.Forms
         private Button button1 = null;
         [Widget]
         private Button button2 = null;
+        [Widget]
+        private Table table1 = null;
+        [Widget]
+        private Table table2 = null;
         [Widget]
         private Entry firstNameBox = null;
         [Widget]
@@ -72,6 +78,16 @@ namespace UserInterface.Forms
         private CheckButton checkbutton1 = null;
         [Widget]
         private TreeView listview1 = null;
+        [Widget]
+        private Alignment alignment3 = null;
+        [Widget]
+        private Alignment alignment4 = null;
+        [Widget]
+        private Alignment alignment5 = null;
+        [Widget]
+        private Alignment alignment6 = null;
+        [Widget]
+        private Alignment alignment7 = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
         private Views.HTMLView HTMLview;
 
@@ -96,6 +112,11 @@ namespace UserInterface.Forms
             listview1.AppendColumn(column1);
             column1.Sizing = TreeViewColumnSizing.Autosize;
             column1.Resizable = true;
+
+            // Make the tab order a little more sensible than the defaults
+            table1.FocusChain = new Widget[] { alignment7, button1, button2 };
+            table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, organisationBox, emailBox,
+                          alignment3, alignment4, cityBox, alignment5, countryBox, alignment6 };
 
             HTMLview = new HTMLView(new ViewBase(null));
             HTMLalign.Add(HTMLview.MainWidget);
@@ -123,6 +144,8 @@ namespace UserInterface.Forms
                 Gtk.Application.RunIteration();
             PopulateForm();
             window1.GdkWindow.Cursor = null;
+            if (loadFailure)
+                window1.Destroy();
         }
 
         /// <summary>
@@ -136,7 +159,16 @@ namespace UserInterface.Forms
                 label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
             else
             {
-                PopulateUpgradeList();
+                try
+                {
+                    PopulateUpgradeList();
+                }
+                catch (Exception)
+                {
+                    ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok);
+                    loadFailure = true;
+                    return;
+                }
                 if (upgrades.Length > 0)
                 {
                     label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
@@ -171,6 +203,7 @@ namespace UserInterface.Forms
             catch (Exception)
             {
                 ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok);
+                loadFailure = true;
             }
 
         }
@@ -181,7 +214,7 @@ namespace UserInterface.Forms
         private void PopulateUpgradeList()
         {
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            //version = new Version(0, 0, 0, 652);  
+            // version = new Version(0, 0, 0, 652);  
             upgrades = WebUtilities.CallRESTService<Upgrade[]>("http://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in upgrades)
             {
@@ -242,12 +275,27 @@ namespace UserInterface.Forms
                         WebClient web = new WebClient();
 
                         string tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
+
+                        string sourceURL;
+                        if (ProcessUtilities.CurrentOS.IsMac)
+                        {
+                            sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
+                            tempSetupFileName = Path.ChangeExtension(tempSetupFileName, "dmg");
+                        }
+                        else if (ProcessUtilities.CurrentOS.IsUnix)
+                        {
+                            sourceURL = System.IO.Path.ChangeExtension(upgrade.ReleaseURL, "deb");
+                            tempSetupFileName = System.IO.Path.ChangeExtension(tempSetupFileName, "deb");
+                        }
+                        else
+                            sourceURL = upgrade.ReleaseURL;
+
                         if (File.Exists(tempSetupFileName))
                             File.Delete(tempSetupFileName);
 
                         try
                         {
-                            web.DownloadFile(upgrade.ReleaseURL, tempSetupFileName);
+                            web.DownloadFile(sourceURL, tempSetupFileName);
                         }
                         catch (Exception err)
                         {
@@ -263,6 +311,11 @@ namespace UserInterface.Forms
                             string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
                             string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
 
+                            // Check to see if upgrader is already running for whatever reason.
+                            // Kill them if found.
+                            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
+                                process.Kill();
+
                             // Delete the old upgrader.
                             if (File.Exists(upgraderFileName))
                                 File.Delete(upgraderFileName);
@@ -277,8 +330,16 @@ namespace UserInterface.Forms
                                                StringUtilities.DQuote(newDirectory);
 
                             ProcessStartInfo info = new ProcessStartInfo();
-                            info.FileName = upgraderFileName;
-                            info.Arguments = arguments;
+                            if (ProcessUtilities.CurrentOS.IsMac)
+                            {
+                                info.FileName = "mono";
+                                info.Arguments = upgraderFileName + " " + arguments;
+                            }
+                            else
+                            {
+                                info.FileName = upgraderFileName;
+                                info.Arguments = arguments;
+                            }
                             info.WorkingDirectory = Path.GetTempPath();
                             Process.Start(info);
 

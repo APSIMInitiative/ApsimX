@@ -22,12 +22,12 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return Arbitrator.DMSupply * PartitionFraction.Value;
-            }
+            if (Arbitrator.DM != null)
+                return Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value(arrayIndex);
+            else
+                return 0;
         }
 
     }

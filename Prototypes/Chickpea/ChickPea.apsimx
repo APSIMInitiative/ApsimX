@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -28,15 +28,15 @@ The model consists of:
       <VariableNames>
         <string>[Clock].Today</string>
         <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-        <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-        <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+        <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+        <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
         <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
         <string>[Chickpea].AboveGround.Wt</string>
-        <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-        <string>[Chickpea].Grain.NumberFunction.Value</string>
-        <string>[Chickpea].Shell.PodNumber.Value</string>
+        <string>[Chickpea].Phenology.FinalNodeNo.Value()</string>
+        <string>[Chickpea].Grain.NumberFunction.Value()</string>
+        <string>[Chickpea].Shell.PodNumber.Value()</string>
         <string>[Chickpea].Grain.Size</string>
-        <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+        <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
       </VariableNames>
       <EventNames>
         <string>[Chickpea].Harvesting</string>
@@ -73,16 +73,16 @@ The model consists of:
         <string>[Chickpea].Leaf.SpecificArea</string>
         <string>[Chickpea].Shell.Live.Wt</string>
         <string>[Chickpea].Grain.Live.Wt</string>
-        <string>[Chickpea].Grain.NumberFunction.Value</string>
-        <string>[Chickpea].Shell.PodNumber.Value</string>
+        <string>[Chickpea].Grain.NumberFunction.Value()</string>
+        <string>[Chickpea].Shell.PodNumber.Value()</string>
         <string>[Chickpea].Nodule.NFixed</string>
         <string>[Chickpea].Nodule.Live.Wt</string>
-        <string>[Chickpea].Arbitrator.DMNutrientLimitation</string>
-        <string>[Chickpea].Arbitrator.DMSinkLimitation</string>
-        <string>[Chickpea].Arbitrator.NDemand</string>
-        <string>[Chickpea].Arbitrator.NSupply</string>
-        <string>[Chickpea].Arbitrator.DMDemand</string>
-        <string>[Chickpea].Arbitrator.DMSupply</string>
+        <string>[Chickpea].Arbitrator.DM.NutrientLimitation</string>
+        <string>[Chickpea].Arbitrator.DM.SinkLimitation</string>
+        <string>[Chickpea].Arbitrator.N.TotalPlantDemand</string>
+        <string>[Chickpea].Arbitrator.N.TotalPlantSupply</string>
+        <string>[Chickpea].Arbitrator.DM.TotalPlantDemand</string>
+        <string>[Chickpea].Arbitrator.DM.TotalFixationSupply</string>
         <string>[Chickpea].Leaf.Live.MetabolicNConc</string>
         <string>[Chickpea].Leaf.Live.StructuralNConc</string>
         <string>[Chickpea].Leaf.Live.NonStructuralNConc</string>
@@ -103,8 +103,12 @@ The APSIM Chickpea model has been developed from the original APSIM Chickpea mod
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-        <NArbitrationOption>RelativeAllocation</NArbitrationOption>
-        <DMArbitrationOption>RelativeAllocation</DMArbitrationOption>
+        <RelativeAllocation>
+          <Name>NArbitrator</Name>
+        </RelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -143,7 +147,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -154,11 +158,11 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
           <Name>Vegetative</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>500</Value>
+            <FixedValue>500</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Stress</Name>
@@ -168,7 +172,7 @@ The cardinal temperatures for calculating thermal time have been taken from Sing
             <Name>PhotoperiodEffect</Name>
             <VariableReference>
               <Name>Photoperiod</Name>
-              <VariableName>[Phenology].Photoperiod.Value</VariableName>
+              <VariableName>[Phenology].Photoperiod.Value()</VariableName>
             </VariableReference>
             <OptimumPhotoperiod>21</OptimumPhotoperiod>
             <CriticalPhotoperiod>9</CriticalPhotoperiod>
@@ -185,17 +189,17 @@ The duration of the grain filling phase has been taken from the model of Roberts
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
             <Constant>
               <Name>NumberOfFloweringNodes</Name>
-              <Value>5</Value>
+              <FixedValue>5</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].NodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].NodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Start>StartFlowering</Start>
@@ -210,11 +214,11 @@ The duration of the grain filling phase has been taken from the model of Roberts
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>690</Value>
+            <FixedValue>690</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EndFlowering</Start>
           <End>EndGrainFill</End>
@@ -228,11 +232,11 @@ The duration of the Maturing phase has been taken from the model of Robertson et
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>60</Value>
+            <FixedValue>60</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EndGrainFill</Start>
           <End>Maturity</End>
@@ -241,11 +245,11 @@ The duration of the Maturing phase has been taken from the model of Robertson et
           <Name>Ripening</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Maturity</Start>
           <End>HarvestRipe</End>
@@ -254,7 +258,7 @@ The duration of the Maturing phase has been taken from the model of Robertson et
           <Name>ReadyForHarvesting</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>HarvestRipe</Start>
           <End>Unused</End>
@@ -268,7 +272,7 @@ A function is used to provide flowering date as days after sowing(DAS).]]></Memo
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -286,7 +290,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -304,7 +308,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -319,19 +323,19 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Structure</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>HeightModel</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MainStemFinalNodeNumber</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>Height</Name>
@@ -877,7 +881,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </MultiplyFunction>
         <Constant>
           <Name>BranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>MainStemNodeAppearanceRate</Name>
@@ -885,7 +889,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Emergence</End>
@@ -894,7 +898,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>CanopyDevelopment</Name>
             <VariableReference>
               <Name>NodeAppearanceRate</Name>
-              <VariableName>[Structure].NodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].NodeAppearanceRate.Value()</VariableName>
             </VariableReference>
             <Start>Emergence</Start>
             <End>EndFlowering</End>
@@ -903,7 +907,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Reproductive</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>EndFlowering</Start>
             <End>Maturity</End>
@@ -933,16 +937,19 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
+        <CohortToInitialise>0</CohortToInitialise>
+        <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <HIReproductiveOrgan>
         <Name>Grain</Name>
         <Constant>
           <Name>WaterContent</Name>
-          <Value>0.12</Value>
+          <FixedValue>0.12</FixedValue>
         </Constant>
         <Constant>
           <Name>NConc</Name>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <VariableReference>
           <Name>AboveGroundWt</Name>
@@ -954,7 +961,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Biomass>
           <Name>Dead</Name>
         </Biomass>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -991,14 +998,14 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.05</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <PhaseLookup>
           <Name>HIIncrement</Name>
           <PhaseLookupValue>
             <Name>Vegetative</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>EndFlowering</End>
@@ -1011,16 +1018,16 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>IncrementPerDegreeDay</Name>
                 <Constant>
                   <Name>PotentialHarvestIndex</Name>
-                  <Value>0.5</Value>
+                  <FixedValue>0.5</FixedValue>
                 </Constant>
                 <VariableReference>
                   <Name>GrainFillingDuration</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
               </DivideFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
             </MultiplyFunction>
             <Start>EndFlowering</Start>
@@ -1030,12 +1037,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Ripening</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>EndGrainFill</Start>
             <End>HarvestRipe</End>
           </PhaseLookupValue>
         </PhaseLookup>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
       </HIReproductiveOrgan>
       <Root>
@@ -1111,7 +1119,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </LinearInterpolationFunction>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value>6</Value>
+          <FixedValue>6</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -1120,11 +1128,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>RootFrontVelocity</Name>
@@ -1132,7 +1140,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>PreEmergence</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>3</Value>
+              <FixedValue>3</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Emergence</End>
@@ -1141,7 +1149,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>early</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>15</Value>
+              <FixedValue>15</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>StartFlowering</End>
@@ -1150,7 +1158,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>late</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>17</Value>
+              <FixedValue>17</FixedValue>
             </Constant>
             <Start>StartFlowering</Start>
             <End>Maturity</End>
@@ -1162,7 +1170,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Early</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0.2</Value>
+              <FixedValue>0.2</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>StartFlowering</End>
@@ -1171,7 +1179,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Middle</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0.1</Value>
+              <FixedValue>0.1</FixedValue>
             </Constant>
             <Start>StartFlowering</Start>
             <End>EndFlowering</End>
@@ -1180,7 +1188,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Late</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>EndFlowering</Start>
             <End>Maturity</End>
@@ -1188,11 +1196,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1203,7 +1211,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1233,7 +1241,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
@@ -1281,14 +1289,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.2</Value>
+          <FixedValue>0.2</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
@@ -1304,11 +1313,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -1316,15 +1325,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.007</Value>
+          <FixedValue>0.007</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
@@ -1333,7 +1342,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1348,41 +1357,41 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>OrganPopulation</Name>
-            <VariableName>[Shell].PodNumber.Value</VariableName>
+            <VariableName>[Shell].PodNumber.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>ExpansionStress</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <AddFunction>
             <Name>GrowthDuration</Name>
             <VariableReference>
               <Name>FloweringGrowthPeriod</Name>
-              <VariableName>[Phenology].Flowering.Target.Value</VariableName>
+              <VariableName>[Phenology].Flowering.Target.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>PostFloweringGrowthPeriod</Name>
-              <Value>60</Value>
+              <FixedValue>60</FixedValue>
             </Constant>
           </AddFunction>
           <Constant>
             <Name>StartStage</Name>
-            <Value>4</Value>
+            <FixedValue>4</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumOrganWt</Name>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
           </Constant>
         </PopulationBasedDemandFunction>
         <MultiplyFunction>
           <Name>PodNumber</Name>
           <Constant>
             <Name>PodsPerNode</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>StemPopulation</Name>
@@ -1390,10 +1399,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </VariableReference>
           <VariableReference>
             <Name>FloweringNodes</Name>
-            <VariableName>[Phenology].Flowering.Target.NumberOfFloweringNodes.Value</VariableName>
+            <VariableName>[Phenology].Flowering.Target.NumberOfFloweringNodes.Value()</VariableName>
           </VariableReference>
         </MultiplyFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -1423,24 +1432,32 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.7</Value>
+          <FixedValue>0.7</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <FixedValue>0</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <Leaf>
         <Name>Leaf</Name>
@@ -1491,18 +1508,18 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
           <Rank>3</Rank>
-          <Area>0</Area>
+          <Area>224</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LeafCohortParameters>
           <Name>LeafCohortParameters</Name>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -1557,42 +1574,42 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
             <Name>GrowthDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>4</Value>
+              <FixedValue>4</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <MultiplyFunction>
             <Name>LagDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>20</Value>
+              <FixedValue>20</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <MultiplyFunction>
             <Name>SenescenceDuration</Name>
             <Constant>
               <Name>Multiplier</Name>
-              <Value>2</Value>
+              <FixedValue>2</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>46</Value>
+            <FixedValue>46</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMax</Name>
@@ -1622,7 +1639,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <MemoText><![CDATA[
 ]]></MemoText>
             </Memo>
-            <Value>0.7</Value>
+            <FixedValue>0.7</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMin</Name>
@@ -1711,7 +1728,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.02</Value>
+            <FixedValue>0.02</FixedValue>
           </Constant>
           <Constant>
             <Name>CriticalNConc</Name>
@@ -1719,7 +1736,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumNConc</Name>
@@ -1727,7 +1744,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.08</Value>
+            <FixedValue>0.08</FixedValue>
           </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
@@ -1735,7 +1752,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.3</Value>
+            <FixedValue>0.3</FixedValue>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
@@ -1743,7 +1760,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0.1</Value>
+            <FixedValue>0.1</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
@@ -1751,7 +1768,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
               <Name>Memo</Name>
               <MemoText><![CDATA[]]></MemoText>
             </Memo>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ShadeInducedSenescenceRate</Name>
@@ -1774,11 +1791,36 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
           </LinearInterpolationFunction>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0.08</Value>
+            <FixedValue>0.08</FixedValue>
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>DMReallocationFactor</Name>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>LeafSizeShapeParameter</Name>
+            <FixedValue>0.01</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>CellDivisionStress</Name>
+            <FixedValue>1</FixedValue>
+            <Units>0-1</Units>
           </Constant>
         </LeafCohortParameters>
         <LinearInterpolationFunction>
@@ -1802,7 +1844,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.25</Value>
+            <FixedValue>1.25</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -2034,21 +2076,21 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2078,7 +2120,26 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
+        <Constant>
+          <Name>StructuralFraction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[
+]]></MemoText>
+          </Memo>
+          <FixedValue>0.7</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiencyFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[
+]]></MemoText>
+          </Memo>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
@@ -2090,11 +2151,10 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <R50>200</R50>
         <FRGR>0</FRGR>
         <PotentialEP>0</PotentialEP>
-        <FudgeToGetETDemandRight>0</FudgeToGetETDemandRight>
+        <MicroClimatePresent>true</MicroClimatePresent>
         <KDead>0.3</KDead>
         <MaximumMainStemLeafNumber>40</MaximumMainStemLeafNumber>
         <DMConversionEfficiency>0</DMConversionEfficiency>
-        <GrowthRespiration>0</GrowthRespiration>
         <TipsAtEmergence>0</TipsAtEmergence>
         <CohortsAtInitialisation>0</CohortsAtInitialisation>
         <FractionDied>0</FractionDied>
@@ -2118,7 +2178,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
@@ -2126,7 +2186,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
@@ -2134,7 +2194,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
@@ -2143,7 +2203,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -2152,7 +2212,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0.007</Value>
+          <FixedValue>0.007</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -2163,7 +2223,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2193,7 +2253,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -2230,7 +2290,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <Name>GrainFilling</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>EndFlowering</Start>
               <End>EndGrainFill</End>
@@ -2239,26 +2299,34 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <FixedValue>0</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
       </GenericOrgan>
       <Nodule>
         <Name>Nodule</Name>
@@ -2273,77 +2341,13 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
         <Constant>
-          <Name>SpecificNitrogenaseActivity</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <Value>0</Value>
-        </Constant>
-        <Constant>
           <Name>FixationMetabolicCost</Name>
           <Memo>
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
-        <AirTemperatureFunction>
-          <Name>FT</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>20</double>
-              <double>30</double>
-              <double>40</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-        </AirTemperatureFunction>
-        <LinearInterpolationFunction>
-          <Name>FW</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-              <double>1.5</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].Fw</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>FWlog</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <MemoText><![CDATA[]]></MemoText>
-          </Memo>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-              <double>1.5</double>
-            </X>
-            <Y>
-              <double>1</double>
-              <double>1</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Leaf].Fw</XProperty>
-        </LinearInterpolationFunction>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -2352,7 +2356,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <Name>Early</Name>
               <Constant>
                 <Name>Function</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>Emergence</Start>
               <End>StartFlowering</End>
@@ -2361,7 +2365,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <Name>Middle</Name>
               <Constant>
                 <Name>Function</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>StartFlowering</Start>
               <End>EndFlowering</End>
@@ -2370,7 +2374,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <Name>Late</Name>
               <Constant>
                 <Name>Function</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>EndFlowering</Start>
               <End>Maturity</End>
@@ -2387,7 +2391,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
@@ -2395,7 +2399,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>Memo</Name>
             <MemoText><![CDATA[]]></MemoText>
           </Memo>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -2404,11 +2408,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <MemoText><![CDATA[
 ]]></MemoText>
           </Memo>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -2419,7 +2423,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
           <Start>Emergence</Start>
           <End>EndGrainFill</End>
         </PhaseBasedSwitch>
-        <Folder>
+        <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
@@ -2449,25 +2453,116 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
-        </Folder>
+        </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <GrowthRespiration>0</GrowthRespiration>
-        <NFixationOption>Magic</NFixationOption>
+        <Constant>
+          <Name>FixationRate</Name>
+          <FixedValue>10000</FixedValue>
+          <Units>g/m^2/d</Units>
+        </Constant>
+        <MultiplyFunction>
+          <Name>FixationRate2</Name>
+          <Memo>
+            <Name>Memo1</Name>
+            <MemoText><![CDATA[
+]]></MemoText>
+          </Memo>
+          <VariableReference>
+            <Name>NoduleWt</Name>
+            <VariableName>[Nodule].Live.Wt</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>SpecificNitrogenaseActivity</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[]]></MemoText>
+            </Memo>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <MinimumFunction>
+            <Name>MinimumFunction</Name>
+            <AirTemperatureFunction>
+              <Name>FT</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>20</double>
+                  <double>30</double>
+                  <double>40</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>0</double>
+                </Y>
+              </XYPairs>
+            </AirTemperatureFunction>
+            <LinearInterpolationFunction>
+              <Name>FW</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].Fw</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>FWlog</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <MemoText><![CDATA[]]></MemoText>
+              </Memo>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>0</double>
+                  <double>1</double>
+                  <double>1.5</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Leaf].Fw</XProperty>
+            </LinearInterpolationFunction>
+          </MinimumFunction>
+        </MultiplyFunction>
+        <Constant>
+          <Name>MaintenanceRespirationFunction</Name>
+          <FixedValue>0</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <FixedValue>1</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
       </Nodule>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -2557,14 +2652,14 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
         <Name>Hashem</Name>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
-        <Command>[Phenology].Vegetative.Target.Value = 550</Command>
+        <Command>[Phenology].Vegetative.Target.FixedValue = 550</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
       </Cultivar>
       <Cultivar>
         <Name>Ayaz</Name>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.X = 1,  5,  10,  21</Command>
         <Command>[Leaf].LeafCohortParameters.MaxArea.XYPairs.Y = 224,  224,  489, 1080</Command>
-        <Command>[Phenology].Vegetative.Target.Value = 550</Command>
+        <Command>[Phenology].Vegetative.Target.FixedValue = 550</Command>
         <Command>[Phenology].Vegetative.PhotoperiodEffect.CriticalPhotoperiod = 10.5</Command>
       </Cultivar>
       <CropType>Chickpea</CropType>
@@ -2595,19 +2690,19 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>Chickpea.AboveGround.Wt</Name>
             <n>73</n>
-            <Slope>0.91287932221741563</Slope>
-            <Intercept>308.827921547124</Intercept>
-            <SEslope>0.1114079374080907</SEslope>
-            <SEintercept>88.146366616667237</SEintercept>
-            <R2>0.48603622192452223</R2>
-            <RMSE>359.7414839048385</RMSE>
-            <NSE>-0.65024774184940459</NSE>
-            <ME>244.35966185584331</ME>
-            <MAE>290.60070221553008</MAE>
-            <RSR>1.2757905817176316</RSR>
+            <Slope>0.91312923251408962</Slope>
+            <Intercept>335.17590768260675</Intercept>
+            <SEslope>0.11448117904179643</SEslope>
+            <SEintercept>90.577926611840056</SEintercept>
+            <R2>0.47259102676262121</R2>
+            <RMSE>383.33661670445139</RMSE>
+            <NSE>-0.87382364406178015</NSE>
+            <ME>270.89257862221143</ME>
+            <MAE>309.16296797005089</MAE>
+            <RSR>1.3594685825791775</RSR>
           </RegrStats>
           <RegrStats>
-            <Name>Chickpea.Shell.PodNumber.Value</Name>
+            <Name>Chickpea.Shell.PodNumber.Value()</Name>
             <n>197</n>
             <Slope>0.10067802847417431</Slope>
             <Intercept>199.27719834457537</Intercept>
@@ -2651,16 +2746,16 @@ Singh P, Virmani SM (1996) Modeling growth and yield of chickpea (Cicer arietinu
           <RegrStats>
             <Name>GrainWt</Name>
             <n>312</n>
-            <Slope>0.68798781349375138</Slope>
-            <Intercept>202.96533952706017</Intercept>
-            <SEslope>0.091318983996129727</SEslope>
-            <SEintercept>19.764288515837027</SEintercept>
-            <R2>0.15475969146794977</R2>
-            <RMSE>232.14919377369446</RMSE>
-            <NSE>-3.3961515987613184</NSE>
-            <ME>144.94170091026282</ME>
-            <MAE>179.94071726962997</MAE>
-            <RSR>2.0933373758852416</RSR>
+            <Slope>0.70283197955370136</Slope>
+            <Intercept>203.177835853479</Intercept>
+            <SEslope>0.09232138741107726</SEslope>
+            <SEintercept>19.981240013053892</SEintercept>
+            <R2>0.15750795665400807</R2>
+            <RMSE>235.27139553416006</RMSE>
+            <NSE>-3.5151954870910362</NSE>
+            <ME>147.91470648689685</ME>
+            <MAE>181.42233652722948</MAE>
+            <RSR>2.121490916003105</RSR>
           </RegrStats>
           <RegrStats>
             <Name>MaturityDAS</Name>
@@ -2912,8 +3007,8 @@ Simulation results for the combined datasets from the various growing regions ar
         <Line>None</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Chickpea.Grain.NumberFunction.Value</XFieldName>
-        <YFieldName>Predicted.Chickpea.Grain.NumberFunction.Value</YFieldName>
+        <XFieldName>Observed.Chickpea.Grain.NumberFunction.Value()</XFieldName>
+        <YFieldName>Predicted.Chickpea.Grain.NumberFunction.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3006,8 +3101,8 @@ Simulation results for the combined datasets from the various growing regions ar
         <Line>None</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Chickpea.Shell.PodNumber.Value</XFieldName>
-        <YFieldName>Predicted.Chickpea.Shell.PodNumber.Value</YFieldName>
+        <XFieldName>Observed.Chickpea.Shell.PodNumber.Value()</XFieldName>
+        <YFieldName>Predicted.Chickpea.Shell.PodNumber.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3052,9 +3147,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3099,9 +3194,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3146,9 +3241,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3193,9 +3288,9 @@ A selection of data from Kenya has been included from the work of Keating et al 
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -3317,17 +3412,12 @@ A selection of data from Kenya has been included from the work of Keating et al 
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -3759,7 +3849,6 @@ A selection of data from Kenya has been included from the work of Keating et al 
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -3768,8 +3857,8 @@ A selection of data from Kenya has been included from the work of Keating et al 
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
                 <string>[Chickpea].AboveGround.Wt</string>
               </VariableNames>
@@ -3935,8 +4024,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Biomass</Name>
@@ -4323,17 +4410,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -4755,7 +4837,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -4764,8 +4845,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -4930,8 +5011,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>MSLeafNo</Name>
@@ -5696,7 +5775,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Grain.NumberFunction.Value</YFieldName>
+            <YFieldName>Chickpea.Grain.NumberFunction.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5717,7 +5796,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ObservedTimeseriesData</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Grain.NumberFunction.Value</YFieldName>
+            <YFieldName>Grain.NumberFunction.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5760,7 +5839,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Shell.PodNumber.Value</YFieldName>
+            <YFieldName>Chickpea.Shell.PodNumber.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5781,7 +5860,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>ObservedTimeseriesData</TableName>
             <XFieldName>Date</XFieldName>
-            <YFieldName>Shell.PodNumber.Value</YFieldName>
+            <YFieldName>Shell.PodNumber.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5824,7 +5903,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.DMDemand</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.DM.TotalPlantDemand</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5845,7 +5924,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.DMSupply</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.DM.TotalFixationSupply</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5888,7 +5967,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.NDemand</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.N.TotalPlantDemand</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5909,7 +5988,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.NSupply</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.N.TotalPlantSupply</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -6665,17 +6744,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -7089,7 +7163,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -7098,8 +7171,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -7322,8 +7395,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Stress</Name>
@@ -7536,7 +7607,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.NDemand</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.N.TotalPlantDemand</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7580,7 +7651,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Arbitrator.NSupply</YFieldName>
+            <YFieldName>Chickpea.Arbitrator.N.TotalPlantSupply</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -7928,17 +7999,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -8352,7 +8418,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -8361,8 +8426,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -8527,8 +8592,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -8729,17 +8792,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -9153,7 +9211,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -9162,8 +9219,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -9328,8 +9385,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -9537,17 +9592,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -9961,7 +10011,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -9970,8 +10019,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -10136,8 +10185,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -10311,17 +10358,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -10735,7 +10777,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -10744,8 +10785,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -10910,8 +10951,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -11072,17 +11111,12 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -11167,8 +11201,8 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -11517,7 +11551,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -11684,8 +11717,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -12157,17 +12188,12 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -12245,8 +12271,8 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -12615,7 +12641,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -12782,8 +12807,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -13041,17 +13064,12 @@ The data presented for the trials done in Emerald and Biloela were obtained from
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -13367,7 +13385,6 @@ The data presented for the trials done in Emerald and Biloela were obtained from
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -13376,8 +13393,8 @@ The data presented for the trials done in Emerald and Biloela were obtained from
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -13542,8 +13559,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Stress</Name>
@@ -13696,17 +13711,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -14022,7 +14032,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -14031,8 +14040,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -14197,8 +14206,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>Stress</Name>
@@ -14500,17 +14507,12 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -14595,10 +14597,10 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -14974,7 +14976,6 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -15083,8 +15084,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -16023,17 +16022,12 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -16118,10 +16112,10 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -16497,7 +16491,6 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -16606,8 +16599,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -17510,17 +17501,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -17605,10 +17591,10 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -18005,13 +17991,10 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -18972,17 +18955,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -19067,10 +19045,10 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -19467,13 +19445,10 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -20385,17 +20360,12 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -20492,10 +20462,10 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -20995,7 +20965,6 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -21104,8 +21073,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -21366,17 +21333,12 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -21461,10 +21423,10 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -21964,7 +21926,6 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -22073,8 +22034,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -22402,17 +22361,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -22491,8 +22445,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -22820,7 +22774,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Operations>
               <Name>NRateSchedule</Name>
@@ -22939,8 +22892,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -23412,17 +23363,12 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -23500,8 +23446,8 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -23870,7 +23816,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -24037,8 +23982,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -24510,17 +24453,12 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -24598,8 +24536,8 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -24968,7 +24906,6 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -25135,8 +25072,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -25459,17 +25394,12 @@ Several minimal datasets are available with only flowering dates for a ranges of
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -25556,8 +25486,8 @@ Several minimal datasets are available with only flowering dates for a ranges of
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -26000,13 +25930,10 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -26192,17 +26119,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -26289,8 +26211,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -26733,13 +26655,10 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -26918,17 +26837,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -27015,8 +26929,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -27459,13 +27373,10 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -27644,17 +27555,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -27741,8 +27647,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -28185,13 +28091,10 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>GrainWt</Name>
@@ -28568,17 +28471,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -28657,8 +28555,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -28986,13 +28884,10 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -29339,17 +29234,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -29428,8 +29318,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -29757,13 +29647,10 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
-              <Area>0</Area>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -30046,17 +29933,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -30135,8 +30017,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -30568,15 +30450,12 @@ namespace Models
               <Country>Lebanon</Country>
               <Latitude>33.675</Latitude>
               <Longitude>35.842</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -30859,17 +30738,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -30948,8 +30822,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -31381,15 +31255,12 @@ namespace Models
               <Country>Lebanon</Country>
               <Latitude>33.675</Latitude>
               <Longitude>35.842</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -31672,17 +31543,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -31761,8 +31627,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -32194,15 +32060,12 @@ namespace Models
               <Country>Lebanon</Country>
               <Latitude>33.675</Latitude>
               <Longitude>35.842</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -32485,17 +32348,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -32574,8 +32432,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -32986,15 +32844,12 @@ namespace Models
               <Country>Portugal</Country>
               <Latitude>38.083</Latitude>
               <Longitude>-7.583</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -33277,17 +33132,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -33366,8 +33216,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
               </VariableNames>
               <EventNames>
@@ -33778,15 +33628,12 @@ namespace Models
               <Country>Portugal</Country>
               <Latitude>38.083</Latitude>
               <Longitude>-7.583</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -34597,17 +34444,12 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -34686,11 +34528,11 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value()</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -35471,15 +35313,12 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -36501,17 +36340,12 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Irrigation>
@@ -36589,11 +36423,11 @@ More information about the data is available in Anwar, M.R. 2001. Water use of K
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value()</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -37374,15 +37208,12 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>LAI</Name>
@@ -37643,17 +37474,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -37732,11 +37558,11 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value()</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -38355,7 +38181,6 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -38469,8 +38294,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -38758,7 +38581,7 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
-          <XFieldName>Chickpea.Phenology.FinalNodeNo.Value</XFieldName>
+          <XFieldName>Chickpea.Phenology.FinalNodeNo.Value()</XFieldName>
           <YFieldName>FloweringDAS</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -38805,8 +38628,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.Chickpea.Phenology.FinalNodeNo.Value</XFieldName>
-          <YFieldName>Predicted.Chickpea.Phenology.FinalNodeNo.Value</YFieldName>
+          <XFieldName>Observed.Chickpea.Phenology.FinalNodeNo.Value()</XFieldName>
+          <YFieldName>Predicted.Chickpea.Phenology.FinalNodeNo.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -39030,17 +38853,12 @@ namespace Models
               <c_interception>0</c_interception>
               <d_interception>0</d_interception>
               <soil_albedo>0.23</soil_albedo>
-              <air_pressure>1010</air_pressure>
-              <soil_emissivity>0.96</soil_emissivity>
               <sun_angle>15</sun_angle>
               <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
               <night_interception_fraction>0.5</night_interception_fraction>
-              <windspeed_default>3</windspeed_default>
               <refheight>2</refheight>
               <albedo>0.15</albedo>
               <emissivity>0.96</emissivity>
-              <gsmax>0.01</gsmax>
-              <r50>200</r50>
               <RadIntTotal>0</RadIntTotal>
             </MicroClimate>
             <Fertiliser>
@@ -39119,11 +38937,11 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Chickpea].Phenology.CurrentStageName as Stage</string>
-                <string>[Chickpea].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Chickpea].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Chickpea].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Chickpea].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Chickpea].Grain.Live.Wt as GrainWt</string>
-                <string>[Chickpea].Phenology.FinalNodeNo.Value</string>
-                <string>[Chickpea].Phenology.EmergenceDAS.Value as EmergenceDAS</string>
+                <string>[Chickpea].Phenology.FinalNodeNo.Value()</string>
+                <string>[Chickpea].Phenology.EmergenceDAS.Value() as EmergenceDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Chickpea].Harvesting</string>
@@ -39742,7 +39560,6 @@ namespace Models
               <Country>Afganistan</Country>
               <Latitude>34.333</Latitude>
               <Longitude>61.433</Longitude>
-              <Area>0</Area>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
             </Soil>
@@ -39856,8 +39673,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <Area>0</Area>
-          <Slope>0</Slope>
         </Simulation>
         <Graph>
           <Name>AboveGroundWt</Name>
@@ -39990,5 +39805,5 @@ namespace Models
       </Experiment>
     </Folder>
   </Folder>
-  <ExplorerWidth>304</ExplorerWidth>
+  <ExplorerWidth>415</ExplorerWidth>
 </Simulations>

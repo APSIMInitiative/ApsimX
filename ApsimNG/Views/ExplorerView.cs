@@ -80,6 +80,7 @@ namespace UserInterface.Views
             Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.ExplorerView.glade", "vbox1");
             gxml.Autoconnect(this);
             _mainWidget = vbox1;
+            RightHandView.ShadowType = ShadowType.EtchedOut;
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -92,7 +93,7 @@ namespace UserInterface.Views
             column.PackStart(textRender, true);
             column.SetAttributes(iconRender, "pixbuf", 1);
             column.SetAttributes(textRender, "text", 0);
-//            column.SetCellDataFunc(textRender, treecelldatafunc);
+            // column.SetCellDataFunc(textRender, treecelldatafunc);
             treeview1.AppendColumn(column);
             treeview1.TooltipColumn = 2;
 
@@ -100,12 +101,12 @@ namespace UserInterface.Views
             treeview1.ButtonReleaseEvent += OnButtonUp;
 
             TargetEntry[] target_table = new TargetEntry[] {
-               new TargetEntry ("application/x-model-component", TargetFlags.App, 0)
+               new TargetEntry("application/x-model-component", TargetFlags.App, 0)
             };
 
             Gdk.DragAction actions = Gdk.DragAction.Copy | Gdk.DragAction.Link | Gdk.DragAction.Move;
-            //treeview1.EnableModelDragDest(target_table, actions);
-            //treeview1.EnableModelDragSource(Gdk.ModifierType.Button1Mask, target_table, actions);
+            // treeview1.EnableModelDragDest(target_table, actions);
+            // treeview1.EnableModelDragSource(Gdk.ModifierType.Button1Mask, target_table, actions);
             Drag.SourceSet(treeview1, Gdk.ModifierType.Button1Mask, target_table, actions);
             Drag.DestSet(treeview1, 0, target_table, actions);
             treeview1.DragMotion += OnDragOver;
@@ -341,9 +342,6 @@ namespace UserInterface.Views
                     ToolButton button = new ToolButton(new Gtk.Image(pixbuf), description.Name);
                     button.Homogeneous = false;
                     button.LabelWidget = new Label(description.Name);
-                    Pango.FontDescription font = new Pango.FontDescription();
-                    font.Size = (int)(8 * Pango.Scale.PangoScale);
-                    button.LabelWidget.ModifyFont(font);
                     if (description.OnClick != null)
                         button.Clicked += description.OnClick;
                     toolStrip.Add(button);
@@ -369,7 +367,7 @@ namespace UserInterface.Views
             foreach (MenuDescriptionArgs Description in menuDescriptions)
             {
                 ImageMenuItem item = new ImageMenuItem(Description.Name);
-                if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage) )
+                if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
                     item.Image = new Image(null, Description.ResourceNameForImage);
                 if (!String.IsNullOrEmpty(Description.ShortcutKey))
                 {
@@ -477,36 +475,6 @@ namespace UserInterface.Views
             return -1;
         }
 
-        /// <summary>A helper function that asks user for a folder.</summary>
-        /// <param name="prompt"></param>
-        /// <returns>
-        /// Returns the selected folder or null if action cancelled by user.
-        /// </returns>
-        public string AskUserForFolder(string prompt)
-        {
-            string folderName = null;
-            FileChooserDialog fileChooser = new FileChooserDialog(prompt, null, FileChooserAction.SelectFolder, "Cancel", ResponseType.Cancel, "Select", ResponseType.Accept);
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-                folderName = fileChooser.Filename;
-            fileChooser.Destroy();
-            return folderName;
-        }
-
-        /// <summary>A helper function that asks user for a file.</summary>
-        /// <param name="prompt"></param>
-        /// <returns>
-        /// Returns the selected file or null if action cancelled by user.
-        /// </returns>
-        public string AskUserForFile(string prompt)
-        {
-            string fileName = null;
-            FileChooserDialog fileChooser = new FileChooserDialog(prompt, null, FileChooserAction.Open, "Cancel", ResponseType.Cancel, "Select", ResponseType.Accept);
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-                fileName = fileChooser.Filename;
-            fileChooser.Destroy();
-            return fileName;
-        }
-
         /// <summary>Show the wait cursor</summary>
         /// <param name="wait">If true will show the wait cursor otherwise the normal cursor.</param>
         public void ShowWaitCursor(bool wait)
@@ -606,7 +574,6 @@ namespace UserInterface.Views
             return result;         
         }
 
-
         #endregion
 
         #region Events
@@ -672,7 +639,7 @@ namespace UserInterface.Views
         private void OnDragBegin(object sender, DragBeginArgs e)
         {
             DragStartArgs args = new DragStartArgs();
-            args.NodePath = SelectedNode; //  FullPath(e.Item as TreeNode);
+            args.NodePath = SelectedNode; // FullPath(e.Item as TreeNode);
             if (DragStarted != null)
             {
                 DragStarted(this, args);
@@ -698,7 +665,7 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragOver(object sender, DragMotionArgs e)
         {
-            //e.Effect = DragDropEffects.None;
+            // e.Effect = DragDropEffects.None;
             e.RetVal = false;
 
             // Get the drop location
@@ -816,8 +783,8 @@ namespace UserInterface.Views
         private void OnBeforeLabelEdit(object sender, EditingStartedArgs e)
         {
             nodePathBeforeRename = SelectedNode;
-            //TreeView.ContextMenuStrip = null;
-            //e.CancelEdit = false;
+            // TreeView.ContextMenuStrip = null;
+            // e.CancelEdit = false;
         }
         
         /// <summary>User has finished renamed a node.</summary>
@@ -873,4 +840,3 @@ namespace UserInterface.Views
 
     }
 }
-

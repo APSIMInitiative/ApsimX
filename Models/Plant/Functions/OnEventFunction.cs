@@ -39,40 +39,38 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            _Value = PreEventValue.Value;
+            _Value = PreEventValue.Value();
         }
 
         /// <summary>Called when [phase changed].</summary>
-        /// <param name="PhaseChange">The phase change.</param>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
         [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(PhaseChangedType PhaseChange)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (PhaseChange.EventStageName == SetEvent)
+            if (phaseChange.EventStageName == SetEvent)
                 OnSetEvent();
 
-            if (PhaseChange.EventStageName == ReSetEvent)
+            if (phaseChange.EventStageName == ReSetEvent)
                 OnReSetEvent();
         }
 
         /// <summary>Called when [re set event].</summary>
         public void OnReSetEvent()
         {
-            _Value = PreEventValue.Value;
+            _Value = PreEventValue.Value();
         }
 
         /// <summary>Called when [set event].</summary>
         public void OnSetEvent()
         {
-            _Value = PostEventValue.Value;
+            _Value = PostEventValue.Value();
         }
 
         /// <summary>Gets the value.</summary>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return _Value;
-            }
+            return _Value;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

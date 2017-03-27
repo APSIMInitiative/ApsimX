@@ -41,7 +41,7 @@ namespace Models.PMF.OldPlant
         [Link]
         IFunction SWFactorRootDepth = null;
         /// <summary>The sw factor root length</summary>
-        [Link] IFunctionArray SWFactorRootLength = null;
+        [Link] IFunction SWFactorRootLength = null;
         /// <summary>The root depth rate</summary>
         [Link]
         IFunction RootDepthRate = null;
@@ -51,7 +51,7 @@ namespace Models.PMF.OldPlant
         Population1 Population = null;
 
         /// <summary>The relative root rate</summary>
-        [Link] IFunctionArray RelativeRootRate = null;
+        [Link] IFunction RelativeRootRate = null;
         /// <summary>The dm senescence fraction</summary>
         [Link]
         IFunction DMSenescenceFraction = null;
@@ -66,6 +66,10 @@ namespace Models.PMF.OldPlant
         /// <summary>The soil</summary>
         [Link]
         Soil Soil = null;
+
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
 
         /// <summary>Gets or sets the n concentration critical.</summary>
         /// <value>The n concentration critical.</value>
@@ -190,9 +194,6 @@ namespace Models.PMF.OldPlant
         /// <summary>Occurs when [water changed].</summary>
         public event WaterChangedDelegate WaterChanged;
 
-
-        /// <summary>Occurs when [nitrogen changed].</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
         #endregion
 
         #region Private variables
@@ -366,8 +367,8 @@ namespace Models.PMF.OldPlant
             //  the layer with root front
             int layer = FindLayerNo(RootDepth);
 
-            dltRootDepth = RootDepthRate.Value * RootAdvanceFactorTemp.Value *
-                            Math.Min(RootAdvanceFactorWaterStress.Value, SWFactorRootDepth.Value) *
+            dltRootDepth = RootDepthRate.Value() * RootAdvanceFactorTemp.Value() *
+                            Math.Min(RootAdvanceFactorWaterStress.Value(), SWFactorRootDepth.Value()) *
                             xf[layer];
 
             // prevent roots partially entering layers where xf == 0
@@ -421,15 +422,15 @@ namespace Models.PMF.OldPlant
         /// <param name="Delta">The delta.</param>
         public override void GiveDmGreen(double Delta)
         {
-            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value);
+            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value();
+            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value());
             Util.Debug("Root.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("Root.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
         /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
         {
-            double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
+            double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value(), 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -971,15 +972,12 @@ namespace Models.PMF.OldPlant
 
             double[] rlv_factor = new double[Soil.Thickness.Length];    // relative rooting factor for all layers
 
-            double[] relativeRootRate = RelativeRootRate.Values;
-            double[] sWFactorRootLength = SWFactorRootLength.Values;
-
             double rlv_factor_tot = 0.0;
             for (int layer = 0; layer <= deepest_layer; layer++)
             {
-                double branching_factor = relativeRootRate[layer];
+                double branching_factor = RelativeRootRate.Value(layer);
 
-                rlv_factor[layer] = sWFactorRootLength[layer] *
+                rlv_factor[layer] = SWFactorRootLength.Value(layer) *
                                     branching_factor *                                   // branching factor
                                     xf[layer] *                                          // growth factor
                                     MathUtilities.Divide(Soil.Thickness[layer], RootDepth, 0.0);   // space weighting factor
@@ -1099,10 +1097,11 @@ namespace Models.PMF.OldPlant
             RootLength = new double[Soil.Thickness.Length];
             RootLengthSenesced = new double[Soil.Thickness.Length];
 
-            SoilCrop soilCrop = Soil.Crop(Plant.Name) as SoilCrop;
-            ll = soilCrop.LL;
-            kl = soilCrop.KL;
-            xf = soilCrop.XF;
+            //SoilCrop soilCrop = Soil.Crop(Plant.Name) as SoilCrop;
+            
+            ll = Soil.LL(Plant.Name);
+            kl = Soil.KL(Plant.Name);
+            xf = Soil.XF(Plant.Name);
             DULmm = MathUtilities.Multiply(Soil.DUL, Soil.Thickness);
 
             ll_dep = MathUtilities.Multiply(ll, Soil.Thickness);
@@ -1174,13 +1173,14 @@ namespace Models.PMF.OldPlant
         }
 
         /// <summary>Called when [phase changed].</summary>
-        /// <param name="PhenologyChange">The phenology change.</param>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
         [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(PhaseChangedType PhenologyChange)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (PhenologyChange.NewPhaseName == "GerminationToEmergence")
+            if (phaseChange.NewPhaseName == "GerminationToEmergence")
                 RootDepth = InitialRootDepth;
-            else if (PhenologyChange.NewPhaseName == "EmergenceToEndOfJuvenile")
+            else if (phaseChange.NewPhaseName == "EmergenceToEndOfJuvenile")
             {
                 Live.StructuralWt = InitialWt * Population.Density;
                 Live.StructuralN = InitialNConcentration * Live.StructuralWt;
@@ -1431,14 +1431,8 @@ namespace Models.PMF.OldPlant
         /// <summary>Update the water and N balance.</summary>
         private void UpdateWaterAndNBalance()
         {
-            NitrogenChangedType NitrogenUptake = new NitrogenChangedType();
-            NitrogenUptake.Sender = "Plant";
-            NitrogenUptake.SenderType = "Plant";
-            NitrogenUptake.DeltaNO3 = MathUtilities.Multiply_Value(dlt_no3gsm, Conversions.gm2kg / Conversions.sm2ha);
-            NitrogenUptake.DeltaNH4 = MathUtilities.Multiply_Value(dlt_nh4gsm, Conversions.gm2kg / Conversions.sm2ha);
-            Util.Debug("Root.NitrogenUptake.DeltaNO3=%f", MathUtilities.Sum(NitrogenUptake.DeltaNO3));
-            Util.Debug("Root.NitrogenUptake.DeltaNH4=%f", MathUtilities.Sum(NitrogenUptake.DeltaNH4));
-            NitrogenChanged.Invoke(NitrogenUptake);
+            solutes.Add("NO3", MathUtilities.Multiply_Value(dlt_no3gsm, Conversions.gm2kg / Conversions.sm2ha));
+            solutes.Add("NH4", MathUtilities.Multiply_Value(dlt_nh4gsm, Conversions.gm2kg / Conversions.sm2ha));
 
             // Send back delta water and nitrogen back to APSIM.
             if (!SwimIsPresent)

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 using Models.Core;
 
 namespace Models.PMF.Functions
@@ -13,7 +10,6 @@ namespace Models.PMF.Functions
     [Description("Returns the age (in years) of the crop")]
     public class AgeCalculatorFunction : Model, IFunction
     {
-        /// <summary>The _ age</summary>
         private int _Age = 0;
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -26,25 +22,9 @@ namespace Models.PMF.Functions
         }
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
-        [Units("y")]
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return _Age / 365.25;
-            }
+           return _Age / 365.25;
         }
-        /// <summary>Gets the age.</summary>
-        /// <value>The age.</value>
-        [Units("y")]
-        public double Age
-        {
-            get
-            {
-                return _Age / 365.25;
-            }
-        }
-
     }
 }

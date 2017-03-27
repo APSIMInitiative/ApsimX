@@ -68,7 +68,7 @@ namespace Models.PMF.Phen
                 throw new ApsimXException(this, "Cannot find VernalisingDays");
 
             if (DaysToStabilise != null)
-                numberOfDaysToStabilise = (int)DaysToStabilise.Value;
+                numberOfDaysToStabilise = (int)DaysToStabilise.FixedValue;
 
             vernalisingRecord = new double[numberOfDaysToStabilise];
             permanentVernalisedDays = 0.0;
@@ -85,14 +85,15 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>Called when [phase changed].</summary>
-        /// <param name="PhaseChange">The phase change.</param>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
         [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(PhaseChangedType PhaseChange)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (PhaseChange.EventStageName == EndStage)
+            if (phaseChange.EventStageName == EndStage)
                 vernalisedToday = 0.0;
 
-            if (PhaseChange.EventStageName == ResetStage)
+            if (phaseChange.EventStageName == ResetStage)
             {
                 permanentVernalisedDays = 0.0;
                 temporaryVernalisingDays = 0.0;
@@ -137,14 +138,14 @@ namespace Models.PMF.Phen
             // get today's devernalisation
             double todaysDevernalisation = 0.0;
             if (DevernalisingDays != null)
-                todaysDevernalisation = DevernalisingDays.Value;
+                todaysDevernalisation = DevernalisingDays.Value();
 
             // update the temporary vernalisation record
             int i;
             for (i = 0; i < numberOfDaysToStabilise - 1; i++)
                 vernalisingRecord[i] = vernalisingRecord[i + 1];
 
-            vernalisingRecord[i] = VernalisingDays.Value;
+            vernalisingRecord[i] = VernalisingDays.Value();
 
             // account for any devernalisation
             if (todaysDevernalisation > vernalisingRecord.Sum())

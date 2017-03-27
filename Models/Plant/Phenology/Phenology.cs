@@ -16,7 +16,7 @@ namespace Models.PMF.Phen
     /// 
     /// </summary>
     [Serializable]
-    public class PhaseChangedType
+    public class PhaseChangedType : EventArgs
     {
         /// <summary>The old phase name</summary>
         public String OldPhaseName = "";
@@ -26,7 +26,10 @@ namespace Models.PMF.Phen
         public String EventStageName = "";
     }
     /// <summary>
-    /// This model simulates the development of the crop through successive developmental <i>phases</i>.  Each phase is bound by distinct growth <i>stages</i>.  Phases often require a target to be reached to signal movement to the next phase.  Differences between cultivars are specified by changing the values of the default parameters shown below.
+    /// This model simulates the development of the crop through successive developmental <i>phases</i>. 
+    /// Each phase is bound by distinct growth <i>stages</i>. 
+    /// Phases often require a target to be reached to signal movement to the next phase. 
+    /// Differences between cultivars are specified by changing the values of the default parameters shown below.
     /// </summary>
     /// \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" model 
     /// should be included as the last child of 
@@ -132,12 +135,8 @@ namespace Models.PMF.Phen
         #endregion
 
         #region Events
-        /// <summary>Delegate for a phase changed event</summary>
-        /// <param name="Data">The data describing the phase change.</param>
-        public delegate void PhaseChangedDelegate(PhaseChangedType Data);
-        
         /// <summary>Occurs when [phase changed].</summary>
-        public event PhaseChangedDelegate PhaseChanged;
+        public event EventHandler<PhaseChangedType> PhaseChanged;
 
         /// <summary>Occurs when phase is rewound.</summary>
         public event EventHandler PhaseRewind;
@@ -279,6 +278,9 @@ namespace Models.PMF.Phen
             Phases = new List<Phase>();
             foreach (Phase phase in Apsim.Children(this, typeof(Phase)))
                 Phases.Add(phase);
+
+       
+
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -298,7 +300,7 @@ namespace Models.PMF.Phen
         {
             if (data.Plant == Plant)
                 Clear();
-        }
+            }
 
         /// <summary>Called when crop is being harvested.</summary>
         /// <param name="sender">The sender.</param>
@@ -309,16 +311,21 @@ namespace Models.PMF.Phen
             if (sender == Plant)
             {
                 //Jump phenology to the end
-
-                string OldPhaseName = CurrentPhase.Name;
                 int EndPhase = Phases.Count;
-                PhaseChangedType PhaseChangedData = new PhaseChangedType();
-                PhaseChangedData.OldPhaseName = OldPhaseName;
-                PhaseChangedData.NewPhaseName = Phases[EndPhase - 1].Name;
-                PhaseChanged.Invoke(PhaseChangedData);
                 CurrentPhaseName = Phases[EndPhase - 1].Name;
             }
         }
+
+        /// <summary>Called when crop is being prunned.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Pruning")]
+        private void OnPruning(object sender, EventArgs e)
+        {
+            Germinated = false;
+            Emerged = false;
+        }
+
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
@@ -387,7 +394,7 @@ namespace Models.PMF.Phen
         {
             if (PlantIsAlive)
             {
-                if(ThermalTime.Value <0)
+                if(ThermalTime.Value() < 0)
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
                 // If this is the first time through here then setup some variables.
                 if (Phases == null || Phases.Count == 0)
@@ -412,8 +419,11 @@ namespace Models.PMF.Phen
                         if (Stage >= 1)
                             Germinated = true;
 
-                        if (CurrentPhase is EmergingPhase)
+                        if ((CurrentPhase is EmergingPhase) || (CurrentPhase is BuddingPhase))
+                        {
+                            Plant.SendEmergingEvent();
                             Emerged = true;
+                        }
 
                         CurrentPhase = Phases[CurrentPhaseIndex + 1];
                         if (GrowthStage != null)
@@ -469,6 +479,9 @@ namespace Models.PMF.Phen
                 //double TTRewound;
                 double OldPhaseINdex = IndexOfPhase(CurrentPhase.Name);
                 CurrentPhaseIndex = IndexOfPhase(value.Name);
+                bool HarvestCall = false;
+                if (CurrentPhaseIndex == Phases.Count - 1)
+                    HarvestCall = true;
                 PhaseIndexOffset = 0;
                 if (CurrentPhaseIndex == -1)
                     throw new Exception("Cannot jump to phenology phase: " + value + ". Phase not found.");
@@ -478,7 +491,7 @@ namespace Models.PMF.Phen
 
                 // If the new phase is a rewind or going ahead more that one phase(comming from a GoToPhase or PhaseSet Function), then reinitialise 
                 // all phases that are being wound back over.
-                if ((CurrentPhaseIndex < OldPhaseINdex)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
+                if (((CurrentPhaseIndex <= OldPhaseINdex)&&HarvestCall==false)||(CurrentPhaseIndex - OldPhaseINdex > 1)||(Phases[CurrentPhaseIndex]is GotoPhase))
                 {
                     foreach (Phase P in Phases)
                     {
@@ -516,7 +529,7 @@ namespace Models.PMF.Phen
                     PhaseChangedData.OldPhaseName = oldPhaseName;
                     PhaseChangedData.NewPhaseName = CurrentPhase.Name;
                     PhaseChangedData.EventStageName = stageOnEvent;
-                    PhaseChanged.Invoke(PhaseChangedData);
+                    PhaseChanged.Invoke(Plant, PhaseChangedData);
                 }
             }
         }
@@ -537,6 +550,7 @@ namespace Models.PMF.Phen
             Phase Current = Phases[CurrentPhaseIndex];
             double proportionOfPhase = NewStage - CurrentPhaseIndex - 1;
             Current.FractionComplete = proportionOfPhase;
+            if(PhaseRewind != null)
             PhaseRewind.Invoke(this, new EventArgs());
         }
 
@@ -579,6 +593,9 @@ namespace Models.PMF.Phen
         /// <exception cref="System.Exception">Cannot test between stages  + Start +   + End</exception>
         public bool Between(String Start, String End)
         {
+            if (Phases == null)
+                return false;
+
             string StartFractionSt = StringUtilities.SplitOffBracketedValue(ref Start, '(', ')');
             double StartFraction = 0;
             if (StartFractionSt != "")
@@ -707,7 +724,7 @@ namespace Models.PMF.Phen
                 FractionBiomassRemoved = removeBiomPheno; // The RewindDueToBiomassRemoved function will use this.
 
                 double ttCritical = TTInAboveGroundPhase;
-                double removeFractPheno = RewindDueToBiomassRemoved.Value;
+                double removeFractPheno = RewindDueToBiomassRemoved.Value();
                 double removeTTPheno = ttCritical * removeFractPheno;
 
                 string msg;
@@ -758,7 +775,7 @@ namespace Models.PMF.Phen
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.OldPhaseName = existingStage;
                     PhaseChangedData.NewPhaseName = CurrentPhase.Name;
-                    PhaseChanged.Invoke(PhaseChangedData);
+                    PhaseChanged.Invoke(Plant, PhaseChangedData);
                     //Fixme MyPaddock.Publish(CurrentPhase.Start);
                 }
             }
@@ -778,7 +795,7 @@ namespace Models.PMF.Phen
                 double TTInPhase = 0.0;
                 for (CurrentPhaseIndex = 0; CurrentPhaseIndex < Phases.Count; CurrentPhaseIndex++)
                 {
-                    if (AboveGroundPeriod.Value == 1)
+                    if (AboveGroundPeriod.Value() == 1)
                         TTInPhase += Phases[CurrentPhaseIndex].TTinPhase;
                 }
                 CurrentPhaseIndex = SavedCurrentPhaseIndex;

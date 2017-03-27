@@ -21,9 +21,6 @@ namespace UserInterface.Presenters
         /// <summary>The view model to work with.</summary>
         private ISummaryView view;
 
-        /// <summary>The parent explorer presenter</summary>
-        private ExplorerPresenter explorerPresenter;
-
         /// <summary>Our data store</summary>
         private DataStore dataStore;
 
@@ -35,7 +32,6 @@ namespace UserInterface.Presenters
         {
             this.summary = model as Summary;
             this.view = view as ISummaryView;
-            this.explorerPresenter = explorerPresenter;
 
             // populate the simulation names in the view.
             Simulation simulation = Apsim.Parent(this.summary, typeof(Simulation)) as Simulation;
@@ -78,7 +74,7 @@ namespace UserInterface.Presenters
         private void SetHtmlInView()
         {
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype:Summary.OutputType.html);
+            Summary.WriteReport(dataStore, this.view.SimulationName, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html);
             this.view.SetSummaryContent(writer.ToString());
             writer.Close();
         }

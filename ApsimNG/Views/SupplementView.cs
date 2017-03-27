@@ -317,9 +317,6 @@ namespace UserInterface.Views
         }
         */
 
-        private double ashAlk = 0;
-        private double maxPassage = 0;
-
         public TSupplementItem SelectedSupplementValues
         {
             set
@@ -336,8 +333,6 @@ namespace UserInterface.Views
                 tbADIP2CP.Text = (value.ADIP_2_CP * 100.0).ToString("F");
                 tbPhos.Text = (value.Phosphorus * 100.0).ToString("F");
                 tbSulph.Text = (value.Sulphur * 100.0).ToString("F");
-                ashAlk = value.AshAlkalinity;
-                maxPassage = value.MaxPassage;
             }
         }
 
@@ -352,6 +347,7 @@ namespace UserInterface.Views
                 lvSupps.GetCursor(out selPath, out selCol);
                 return selPath != null ? selPath.Indices[0] : 0;
             }
+
             set
             {
                 try

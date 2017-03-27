@@ -69,6 +69,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            propertyPresenter.Detach();
             this.BuildScript();  // compiles and saves the script
 
             this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;
@@ -183,7 +184,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The arguments</param>
         public void OnEditorLeave(object sender, EventArgs e)
         {
-            //this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            // this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
             BuildScript();
             if (this.manager.Script != null)
             {

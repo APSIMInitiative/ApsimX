@@ -78,9 +78,10 @@ namespace Models.PMF
         /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;
-        /// <summary>Occurs when [nitrogen changed].</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
 
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
 
         /// <summary>
         /// Is the plant alive?
@@ -174,9 +175,9 @@ namespace Models.PMF
         /// <exception cref="ApsimXException">Could not find root zone in Zone  + this.Parent.Name +  for SimpleTree</exception>
         public List<ZoneWaterAndN> GetSWUptakes(SoilState soilstate)
         {
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
             foreach (ZoneWaterAndN Z in soilstate.Zones)
-                if (Z.Name == this.Parent.Name)
+                if (Z.Zone.Name == this.Parent.Name)
                     MyZone = Z;
 
 
@@ -186,7 +187,7 @@ namespace Models.PMF
             SoilCrop soilCrop = Soil.Crop(this.Name) as SoilCrop;
 
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (MyZone.Water[j] - Soil.SoilWater.LL15mm[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL(this.Name)[j] * (MyZone.Water[j] - Soil.SoilWater.LL15mm[j]));
 
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
             
@@ -194,9 +195,8 @@ namespace Models.PMF
                 SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PotentialEP / TotPotSWUptake);
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
-            ZoneWaterAndN Uptake = new ZoneWaterAndN();
+            ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
 
-            Uptake.Name = this.Parent.Name;
             Uptake.Water = SWUptake;
             Uptake.NO3N = new double[SWUptake.Length];
             Uptake.NH4N = new double[SWUptake.Length];
@@ -209,9 +209,9 @@ namespace Models.PMF
         /// <returns></returns>
         public List<ZoneWaterAndN> GetNUptakes(SoilState soilstate)
         {
-            ZoneWaterAndN MyZone = new ZoneWaterAndN();
+            ZoneWaterAndN MyZone = new ZoneWaterAndN(this.Parent as Zone);
             foreach (ZoneWaterAndN Z in soilstate.Zones)
-                if (Z.Name == this.Parent.Name)
+                if (Z.Zone.Name == this.Parent.Name)
                     MyZone = Z;
 
             double[] PotNO3Uptake = new double[Soil.NO3N.Length];
@@ -219,12 +219,10 @@ namespace Models.PMF
             NO3Uptake = new double[Soil.NO3N.Length];
             NH4Uptake = new double[Soil.NH4N.Length];
 
-            SoilCrop soilCrop = Soil.Crop(this.Name) as SoilCrop;
-
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
             {
-                PotNO3Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NO3N[j]);
-                PotNH4Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NH4N[j]);
+                PotNO3Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL(this.Name)[j] * MyZone.NO3N[j]);
+                PotNH4Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL(this.Name)[j] * MyZone.NH4N[j]);
             }
             double TotPotNUptake = MathUtilities.Sum(PotNO3Uptake) + MathUtilities.Sum(PotNH4Uptake);
 
@@ -234,9 +232,7 @@ namespace Models.PMF
                 NH4Uptake[j] = PotNH4Uptake[j] * Math.Min(1.0, NDemand / TotPotNUptake);
             }
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
-            ZoneWaterAndN Uptake = new ZoneWaterAndN();
-
-            Uptake.Name = this.Parent.Name;
+            ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
             Uptake.NO3N = NO3Uptake;
             Uptake.NH4N = NH4Uptake;
             Uptake.Water = new double[NO3Uptake.Length];
@@ -260,22 +256,11 @@ namespace Models.PMF
         /// </summary>
         public void SetNUptake(List<ZoneWaterAndN> info)
         {
-            NitrogenChangedType NUptakeType = new NitrogenChangedType();
-            NUptakeType.Sender = Name;
-            NUptakeType.SenderType = "Plant";
-            NUptakeType.DeltaNO3 = new double[Soil.Thickness.Length];
-            NUptakeType.DeltaNH4 = new double[Soil.Thickness.Length];
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;
 
-            for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
-            {
-                    NUptakeType.DeltaNO3[j] = -NO3Uptake[j];
-                    NUptakeType.DeltaNH4[j] = -NH4Uptake[j];
-            }
-            
-            if (NitrogenChanged != null)
-                NitrogenChanged.Invoke(NUptakeType);
+            solutes.Subtract("NO3", NO3Uptake);
+            solutes.Subtract("NH4", NH4Uptake);
         }
 
 

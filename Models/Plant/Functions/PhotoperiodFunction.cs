@@ -40,12 +40,9 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return DayLength;                    
-            }
+            return DayLength;
         }
 
         [EventSubscribe("DoWeather")]

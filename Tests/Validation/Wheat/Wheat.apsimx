@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -28,72 +28,72 @@ science. The Wheat model has been tested on a range of environmental conditions.
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>32</n>
-            <Slope>0.77844649503057262</Slope>
-            <Intercept>2.3334834635704205</Intercept>
-            <SEslope>0.050153534529322481</SEslope>
-            <SEintercept>0.77764842118261723</SEintercept>
-            <R2>0.88926202984793323</R2>
-            <RMSE>3.1080000176342182</RMSE>
-            <NSE>0.87197697559550147</NSE>
-            <ME>-0.51210821297472475</ME>
-            <MAE>1.6787259412971807</MAE>
-            <RSR>0.352168006627317</RSR>
+            <Slope>0.7804985940396606</Slope>
+            <Intercept>2.3780615874630211</Intercept>
+            <SEslope>0.051057606932909</SEslope>
+            <SEintercept>0.79166638589600724</SEintercept>
+            <R2>0.88622614490115059</R2>
+            <RMSE>3.1194349157135997</RMSE>
+            <NSE>0.87103320258357786</NSE>
+            <ME>-0.44117331417795891</ME>
+            <MAE>1.7238810056440763</MAE>
+            <RSR>0.35346369685889806</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>79</n>
-            <Slope>0.86959291087092394</Slope>
-            <Intercept>121.38768801786534</Intercept>
-            <SEslope>0.0400276212459419</SEslope>
-            <SEintercept>39.894150213714326</SEintercept>
-            <R2>0.85973677746967136</R2>
-            <RMSE>180.88366569090812</RMSE>
-            <NSE>0.85937220979521778</NSE>
-            <ME>7.6506460398536111</ME>
-            <MAE>118.99015451679706</MAE>
-            <RSR>0.37262272018033887</RSR>
+            <Slope>0.8670641643045286</Slope>
+            <Intercept>142.66510809401427</Intercept>
+            <SEslope>0.039809948334291308</SEslope>
+            <SEintercept>39.677203126564457</SEintercept>
+            <R2>0.86034842263806877</R2>
+            <RMSE>182.25823512969583</RMSE>
+            <NSE>0.85722677412196291</NSE>
+            <ME>26.722571335813065</ME>
+            <MAE>124.99790034016594</MAE>
+            <RSR>0.37545435122563775</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.GrainNo</Name>
             <n>63</n>
-            <Slope>0.89028956432886286</Slope>
-            <Intercept>760.39555067035872</Intercept>
-            <SEslope>0.061227690465881168</SEslope>
-            <SEintercept>516.75360215734918</SEintercept>
-            <R2>0.77608935057046158</R2>
-            <RMSE>1498.4542419688264</RMSE>
-            <NSE>0.75814000717500352</NSE>
-            <ME>-103.10033788694395</ME>
-            <MAE>1189.1263777677184</MAE>
-            <RSR>0.48787390309365569</RSR>
+            <Slope>0.88084886746654245</Slope>
+            <Intercept>1060.6130160999046</Intercept>
+            <SEslope>0.061220961685946651</SEslope>
+            <SEintercept>516.69681214546347</SEintercept>
+            <R2>0.77240107810680025</R2>
+            <RMSE>1506.4562025850837</RMSE>
+            <NSE>0.75554997590511175</NSE>
+            <ME>122.81241007557254</ME>
+            <MAE>1236.0394580870307</MAE>
+            <RSR>0.49047921972523051</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
             <n>55</n>
-            <Slope>0.58404094769758452</Slope>
-            <Intercept>5.955901557685805</Intercept>
-            <SEslope>0.10755571702291793</SEslope>
-            <SEintercept>1.4169115186278656</SEintercept>
-            <R2>0.35746869594403097</R2>
-            <RMSE>2.5566828388442722</RMSE>
-            <NSE>0.16778308684108612</NSE>
-            <ME>0.601601007530514</ME>
-            <MAE>2.0267773338044228</MAE>
-            <RSR>0.90392792663797283</RSR>
+            <Slope>0.59765809279927562</Slope>
+            <Intercept>5.5809089063386876</Intercept>
+            <SEslope>0.10924493437062924</SEslope>
+            <SEintercept>1.4391648361054308</SEintercept>
+            <R2>0.3609048111259372</R2>
+            <RMSE>2.5300497675220641</RMSE>
+            <NSE>0.18503125532701281</NSE>
+            <ME>0.40189072377692825</ME>
+            <MAE>1.9950588353884906</MAE>
+            <RSR>0.89451167188219438</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>99</n>
-            <Slope>0.85660967634462426</Slope>
-            <Intercept>15.382479042812008</Intercept>
-            <SEslope>0.029428248600945204</SEslope>
-            <SEintercept>11.308277817294165</SEintercept>
-            <R2>0.89727838883985556</R2>
-            <RMSE>65.257643339265385</RMSE>
-            <NSE>0.856939792809157</NSE>
-            <ME>-33.851338848783044</ME>
-            <MAE>48.093492250145253</MAE>
-            <RSR>0.37631789034399588</RSR>
+            <Slope>0.85983756385555021</Slope>
+            <Intercept>20.093682672932687</Intercept>
+            <SEslope>0.029664704738813885</SEslope>
+            <SEintercept>11.399139891177065</SEintercept>
+            <R2>0.89649382319225812</R2>
+            <RMSE>62.542229962986923</RMSE>
+            <NSE>0.8685977499412767</NSE>
+            <ME>-28.031823152434971</ME>
+            <MAE>45.267838526548481</MAE>
+            <RSR>0.36065905590125519</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
@@ -103,10 +103,10 @@ science. The Wheat model has been tested on a range of environmental conditions.
             <SEslope>NaN</SEslope>
             <SEintercept>NaN</SEintercept>
             <R2>NaN</R2>
-            <RMSE>0.160674257326759</RMSE>
+            <RMSE>0.162293549603255</RMSE>
             <NSE>-INF</NSE>
-            <ME>0.160674257326759</ME>
-            <MAE>0.160674257326759</MAE>
+            <ME>0.162293549603255</ME>
+            <MAE>0.162293549603255</MAE>
             <RSR>NaN</RSR>
           </RegrStats>
           <RegrStats>
@@ -442,7 +442,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -489,6 +488,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -816,17 +816,13 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <PredictedObserved>
             <Name>PredictedObserved</Name>
@@ -881,8 +877,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Grain yield</Name>
@@ -1226,7 +1220,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -1270,6 +1263,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -1576,23 +1570,17 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Grain yield</Name>
@@ -1965,7 +1953,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -2012,6 +1999,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -2313,17 +2301,13 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>FertiliserSchedule</Name>
@@ -2523,8 +2507,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>NH4</Name>
@@ -3001,7 +2983,6 @@ private void OnDoManagement(object sender, EventArgs e)
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>2</SummerCona>
@@ -3054,6 +3035,7 @@ private void OnDoManagement(object sender, EventArgs e)
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -3340,17 +3322,13 @@ private void OnDoManagement(object sender, EventArgs e)
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -3484,23 +3462,17 @@ private void OnDoManagement(object sender, EventArgs e)
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
     </Experiment>
     <Experiment>
@@ -3847,7 +3819,6 @@ private void OnDoManagement(object sender, EventArgs e)
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>2</SummerCona>
@@ -3900,6 +3871,7 @@ private void OnDoManagement(object sender, EventArgs e)
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -4205,17 +4177,13 @@ private void OnDoManagement(object sender, EventArgs e)
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Fertiliser>
             <Name>Fertiliser</Name>
@@ -4511,8 +4479,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Biomass</Name>
@@ -5882,7 +5848,6 @@ public class Script : Model
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>7</SummerU>
               <SummerCona>3</SummerCona>
@@ -5929,6 +5894,7 @@ public class Script : Model
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -6226,23 +6192,17 @@ public class Script : Model
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.29366217672824863</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -6938,7 +6898,6 @@ public class Script : Model
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>7</SummerU>
               <SummerCona>3</SummerCona>
@@ -6985,6 +6944,7 @@ public class Script : Model
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
@@ -7351,17 +7311,13 @@ public class Script : Model
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.29366217672824863</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Plant15>
             <Name>Wheat</Name>
@@ -7408,8 +7364,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
@@ -7849,7 +7803,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>7.5</SummerU>
               <SummerCona>3</SummerCona>
@@ -7923,6 +7876,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -8428,17 +8382,13 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>SowingSchedule</Name>
@@ -8692,8 +8642,6 @@ namespace Models
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Biomass</Name>
@@ -9140,7 +9088,6 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>2</SummerU>
               <SummerCona>2</SummerCona>
@@ -9223,6 +9170,7 @@ namespace Models
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -9611,17 +9559,13 @@ namespace Models
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>SowingSchedule</Name>
@@ -9838,8 +9782,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Biomass</Name>
@@ -10009,7 +9951,6 @@ private void OnDoManagement(object sender, EventArgs e)
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>2</SummerCona>
@@ -10050,6 +9991,7 @@ private void OnDoManagement(object sender, EventArgs e)
                 <double>0.35</double>
                 <double>0.35</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -10458,7 +10400,6 @@ private void OnDoManagement(object sender, EventArgs e)
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>2</SummerCona>
@@ -10499,6 +10440,7 @@ private void OnDoManagement(object sender, EventArgs e)
                 <double>0.35</double>
                 <double>0.35</double>
               </SWCON>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -11071,7 +11013,6 @@ private void OnDoManagement(object sender, EventArgs e)
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>2</SummerU>
               <SummerCona>2</SummerCona>
@@ -11154,6 +11095,7 @@ private void OnDoManagement(object sender, EventArgs e)
                 <double>0</double>
                 <double>0</double>
               </KLAT>
+              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -11531,17 +11473,13 @@ private void OnDoManagement(object sender, EventArgs e)
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <air_pressure>1010</air_pressure>
-            <soil_emissivity>0.96</soil_emissivity>
             <sun_angle>15</sun_angle>
             <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
             <night_interception_fraction>0.5</night_interception_fraction>
-            <windspeed_default>3</windspeed_default>
             <refheight>2</refheight>
             <albedo>0.15</albedo>
             <emissivity>0.96</emissivity>
-            <gsmax>0.01</gsmax>
-            <r50>200</r50>
+            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Operations>
             <Name>SowingSchedule</Name>
@@ -11751,8 +11689,6 @@ private void OnDoManagement(object sender, EventArgs e)
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <Area>0</Area>
-        <Slope>0</Slope>
       </Simulation>
     </Experiment>
     <Memo>

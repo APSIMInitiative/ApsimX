@@ -118,7 +118,7 @@ namespace Models.Factorial
         private static void ApplyModelReplacement(Simulation newSimulation, string path, IModel value)
         {
             IModel newModel = Apsim.Clone(value);
-            newSimulation.Locator().Clear();
+            newSimulation.Locater.Clear();
             IModel modelToReplace = newSimulation.Get(path) as IModel;
             if (modelToReplace == null)
                 throw new Exception("Cannot find model to replace. Model path: " + path);
@@ -132,7 +132,9 @@ namespace Models.Factorial
             newModel.Name = modelToReplace.Name;
             newModel.Parent = modelToReplace.Parent;
 
-            Apsim.CallEventHandler(newModel, "Loaded", null);
+            Events events = new Events();
+            events.AddModelEvents(newModel);
+            events.CallEventHandler(newModel, "Loaded", null);
         }
     }
 }

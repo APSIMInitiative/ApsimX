@@ -8,20 +8,14 @@ using Models.Factorial;
 using APSIM.Shared.Utilities;
 using Models;
 using System.Collections.Generic;
-using System.Text;
 using Models.Graph;
 using System.Drawing;
 using MigraDoc.Rendering;
 using MigraDoc.DocumentObjectModel;
-using System.Xml;
 using MigraDoc.DocumentObjectModel.Tables;
-using MigraDoc.DocumentObjectModel.Shapes;
 using UserInterface.Classes;
-using MigraDoc.DocumentObjectModel.Fields;
 using Models.Agroforestry;
 using Models.Zones;
-//using System.Windows.Forms;
-using System.Threading;
 using Models.PostSimulationTools;
 using PdfSharp.Fonts;
 
@@ -33,10 +27,6 @@ namespace UserInterface.Commands
     public class ExportNodeCommand : ICommand
     {
         private ExplorerPresenter ExplorerPresenter;
-        private string NodePath;
-        private string[] indents = new string[] { string.Empty, " class=\"tab1\"", " class=\"tab2\"", " class=\"tab3\"",
-                                                   " class=\"tab4\"", " class=\"tab5\"", " class=\"tab6\"",
-                                                   " class=\"tab7\"", " class=\"tab8\"", " class=\"tab9\""};
 
         // Setup a list of model types that we will recurse down through.
         private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
@@ -47,7 +37,7 @@ namespace UserInterface.Commands
                                                                     typeof(AgroforestrySystem),
                                                                     typeof(CircularZone),
                                                                     typeof(RectangularZone),
-                                                                    typeof(PredictedObserved)};
+                                                                    typeof(PredictedObserved) };
 
         /// <summary>A .bib file instance.</summary>
         private BibTeX bibTeX;
@@ -66,7 +56,6 @@ namespace UserInterface.Commands
         public ExportNodeCommand(ExplorerPresenter explorerPresenter, string nodePath)
         {
             this.ExplorerPresenter = explorerPresenter;
-            this.NodePath = nodePath;
         }
 
         /// <summary>
@@ -442,10 +431,10 @@ namespace UserInterface.Commands
 
             Column column1 = table.AddColumn();
             column1.Width = "8cm";
-            //column1.Format.Alignment = ParagraphAlignment.Right;
+            // column1.Format.Alignment = ParagraphAlignment.Right;
             Column column2 = table.AddColumn();
             column2.Width = "8cm";
-            //column2.Format.Alignment = ParagraphAlignment.Right;
+            // column2.Format.Alignment = ParagraphAlignment.Right;
             Row row = table.AddRow();
 
             // Ensure graphs directory exists.
@@ -538,9 +527,9 @@ namespace UserInterface.Commands
         /// <param name="text">The text</param>
         private static void AddFixedWidthText(Paragraph paragraph, string text, int width)
         {
-            //For some reason, a parapraph converts all sequences of white
-            //space to a single space.  Thus we need to split the text and add
-            //the spaces using the AddSpace function.
+            // For some reason, a parapraph converts all sequences of white
+            // space to a single space.  Thus we need to split the text and add
+            // the spaces using the AddSpace function.
 
             int numSpaces = width - text.Length;
 

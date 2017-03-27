@@ -7,6 +7,7 @@ using System.Linq;
 using Models.Core;
 using Models.SurfaceOM;
 using APSIM.Shared.Utilities;
+using Models.Interfaces;
 
 namespace Models.Soils
 {
@@ -130,38 +131,6 @@ namespace Models.Soils
     /// <summary>
     /// 
     /// </summary>
-    public class NewSoluteType
-    {
-        /// <summary>The owner full path</summary>
-        public string OwnerFullPath;
-        /// <summary>The solutes</summary>
-        public string[] solutes;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class NitrogenChangedType
-    {
-        /// <summary>The sender</summary>
-        public string Sender = "";
-        /// <summary>The sender type</summary>
-        public string SenderType = "";
-        /// <summary>The delta n o3</summary>
-        public double[] DeltaNO3;
-        /// <summary>The delta n h4</summary>
-        public double[] DeltaNH4;
-        /// <summary>The delta urea</summary>
-        public double[] DeltaUrea;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void NitrogenChangedDelegate(NitrogenChangedType Data);
-
-    /// <summary>
-    /// 
-    /// </summary>
     public class MergeSoilCNPatchType
     {
         /// <summary>The sender</summary>
@@ -220,7 +189,7 @@ namespace Models.Soils
     /// </summary>
     [Serializable]
     [ValidParent(ParentType=typeof(Soil))]
-    public partial class SoilNitrogen : Model
+    public partial class SoilNitrogen : Model, ISolute
     {
         /// <summary>The surface organic matter</summary>
         [Link]
@@ -248,14 +217,6 @@ namespace Models.Soils
         /// <summary>Occurs when [external mass flow].</summary>
         public event ExternalMassFlowDelegate ExternalMassFlow;
 
-        /// <summary>
-        /// Event to communicate other modules that solutes have been added to the simulation (owned by SoilNitrogen)
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void NewSoluteDelegate(NewSoluteType Data);
-        /// <summary>Occurs when [new solute].</summary>
-        public event NewSoluteDelegate NewSolute;
-
         /// <summary>Event to comunicate other modules (SurfaceOM) that residues have been decomposed</summary>
         /// <param name="Data">The data.</param>
         public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
@@ -271,6 +232,13 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Reset();
+        }
+
+        /// <summary>Reset the state values to those set during the initialisation</summary>
+        public void Reset()
+        {
+
             Patch = new List<soilCNPatch>();
             soilCNPatch newPatch = new soilCNPatch(this);
             Patch.Add(newPatch);
@@ -290,9 +258,8 @@ namespace Models.Soils
             salb = Soil.SoilWater.Salb;
             NO3ppm = Soil.InitialNO3N;
             NH4ppm = Soil.InitialNH4N;
+            ureappm = new double[Soil.Thickness.Length];
             num_residues = 0;
-            Tsoil = null;
-            simpleST = null;
 
             fbiom = Soil.FBiom;
             finert = Soil.FInert;
@@ -305,7 +272,7 @@ namespace Models.Soils
             if (Soil.SoilType != null && Soil.SoilType.Equals("Sand", StringComparison.CurrentCultureIgnoreCase))
             {
                 rd_biom = new double[] { 0.0324, 0.015 };
-                wfmin_values = new double[] {0.05, 1.0, 1.0, 0.5 };
+                wfmin_values = new double[] { 0.05, 1.0, 1.0, 0.5 };
             }
             else
             {
@@ -325,51 +292,6 @@ namespace Models.Soils
 
             // perform initial calculations and setup
             InitCalc();
-
-            // notifify apsim about solutes
-            AdvertiseMySolutes();
-        }
-
-        /// <summary>Reset the state values to those set during the initialisation</summary>
-        public void Reset()
-        {
-
-            inReset = true;
-
-            // Save present state
-            SaveState();
-
-            // reset the size of arrays - so it zeroes them
-            ResizeLayerArrays(dlayer.Length);
-
-            // reset patches
-            Patch.Clear();
-            soilCNPatch newPatch = new soilCNPatch(this);
-            Patch.Add(newPatch);
-
-            foreach (soilCNPatch aPatch in Patch)
-                aPatch.ResizeLayerArrays(dlayer.Length);
-
-            // reset C and N variables to their initial state
-            oc = OC_reset;
-            NO3ppm = no3ppm_reset;
-            NH4ppm = nh4ppm_reset;
-            ureappm = ureappm_reset;
-
-            // perform initial calculations and setup
-            InitCalc();
-
-            // reset soil temperature
-            if (!use_external_st)
-            {
-                simpleST = new simpleSoilTemp(MetFile.Latitude, MetFile.Tav, MetFile.Amp, MetFile.MinT, MetFile.MaxT);
-                Tsoil = simpleST.SoilTemperature(Clock.Today, MetFile.MinT, MetFile.MaxT, MetFile.Radn, salb, dlayer, bd, ll15_dep, sw_dep);
-            }
-
-            // get the changes of state and publish (let other component to know)
-            DeltaState();
-
-            inReset = false;
         }
 
         /// <summary>Check general initialisation parameters, and let user know of some settings</summary>
@@ -385,10 +307,6 @@ namespace Models.Soils
 
             SoilCNParameterSet = SoilCNParameterSet.Trim();
             NPartitionApproach = NPartitionApproach.Trim();
-
-            // check whether soil temperature is present. If not, check whether the basic params for simpleSoilTemp have been supplied
-            if (AllowsimpleSoilTemp)
-                use_external_st = (ave_soil_temp != null);
 
             // check whether ph is supplied, use a default if not - might be better to throw an exception?
             use_external_ph = (ph != null);
@@ -528,34 +446,9 @@ namespace Models.Soils
         {
             // Note: this doesn't clear the existing values
 
-            Array.Resize(ref Tsoil, nLayers);
             Array.Resize(ref urea_min, nLayers);
             Array.Resize(ref nh4_min, nLayers);
             Array.Resize(ref no3_min, nLayers);
-        }
-
-        /// <summary>Notify any interested module about this module's ownership of solute information.</summary>
-        private void AdvertiseMySolutes()
-        {
-
-            if (NewSolute != null)
-            {
-                string[] solute_names;
-                if (useOrganicSolutes)
-                {
-                    solute_names = new string[7] { "urea", "NH4", "NO3", "org_c_pool1", "org_c_pool2", "org_c_pool3", "org_n" };
-                }
-                else
-                { // don't publish the organic solutes
-                    solute_names = new string[3] { "urea", "NH4", "NO3" };
-                }
-
-                NewSoluteType SoluteData = new NewSoluteType();
-                SoluteData.OwnerFullPath = Apsim.FullPath(this);
-                SoluteData.solutes = solute_names;
-
-                NewSolute.Invoke(SoluteData);
-            }
         }
 
         /// <summary>Stores the total amounts of C an N</summary>
@@ -601,18 +494,6 @@ namespace Models.Soils
             num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
 
             sw_dep = Soil.Water;
-
-            // update soil temperature
-            if (use_external_st)
-                Tsoil = ave_soil_temp;
-            else
-            {
-                // initialise soil temperature
-                if (simpleST == null)
-                    simpleST = new simpleSoilTemp(MetFile.Latitude, MetFile.Tav, MetFile.Amp, MetFile.MinT, MetFile.MaxT);
-
-                Tsoil = simpleST.SoilTemperature(Clock.Today, MetFile.MinT, MetFile.MaxT, MetFile.Radn, salb, dlayer, bd, ll15_dep, sw_dep);
-            }
 
             // calculate C and N processes
             //    - Assesses potential decomposition of surface residues;
@@ -734,74 +615,6 @@ namespace Models.Soils
 
             foreach (soilCNPatch aPatch in Patch)
                 aPatch.OnIncorpFOMPool(inFOMPoolData);
-        }
-
-        /// <summary>Gets the changes in mineral N made by other modules</summary>
-        /// <param name="NitrogenChanges">The nitrogen changes.</param>
-        public void SetNitrogenChanged(NitrogenChangedType NitrogenChanges)
-        {
-            OnNitrogenChanged(NitrogenChanges);
-        }
-
-        /// <summary>Gets the changes in mineral N made by other modules</summary>
-        /// <param name="NitrogenChanges">The nitrogen changes.</param>
-        [EventSubscribe("NitrogenChanged")]
-        private void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
-        {
-            // Note:
-            //     Send deltas to each patch, if delta comes from soil or plant then the values are modified (partioned)
-            //      based on N content. If sender is any other module then values are passed to patches as they come
-
-            string module = NitrogenChanges.SenderType.ToLower();
-            if ((Patch.Count > 1) && (module == "WaterModule".ToLower()) || (module == "Plant".ToLower()))
-            {
-                // values supplied by a module from which a different treatment for each patch is required,
-                //  they will be partitioned according to the N content in each patch, following:
-                //  - If module is Plant (uptake): partition is based on the relative concentration, at each layer, of all patches
-                //  - If module is WaterModule (leaching):
-                //        . if is removal (negative): partition is equal to a plant uptake
-                //        . if is incoming leaching: partition is based on relative concentration on the layer and above
-
-                // 1- consider urea:
-                if (hasValues(NitrogenChanges.DeltaUrea, EPSILON))
-                {
-                    // 1.1-send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaUrea, "urea", NPartitionApproach.ToLower());
-                    // 1.2- send dlt's to each patch
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].dlt_urea = newDelta[k];
-                }
-
-                // 2- consider nh4:
-                if (hasValues(NitrogenChanges.DeltaNH4, EPSILON))
-                {
-                    // 2.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNH4, "NH4", NPartitionApproach.ToLower());
-                    // 2.2- send dlt's to each patch
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].dlt_nh4 = newDelta[k];
-                }
-
-                // 3- consider no3:
-                if (hasValues(NitrogenChanges.DeltaNO3, EPSILON))
-                {
-                    // 3.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNO3, "NO3", NPartitionApproach.ToLower());
-                    // 3.2- send dlt's to each patch
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].dlt_no3 = newDelta[k];
-                }
-            }
-            else
-            {
-                // values will passed to patches as they come
-                for (int k = 0; k < Patch.Count; k++)
-                {
-                    Patch[k].dlt_urea = NitrogenChanges.DeltaUrea;
-                    Patch[k].dlt_nh4 = NitrogenChanges.DeltaNH4;
-                    Patch[k].dlt_no3 = NitrogenChanges.DeltaNO3;
-                }
-            }
         }
 
         /// <summary>Get the information about urine being added</summary>
@@ -938,14 +751,16 @@ namespace Models.Soils
         /// <param name="dltC">C changes</param>
         private void SendExternalMassFlowC(double dltC)
         {
-
-            ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
-            if (Math.Abs(dltC) <= EPSILON)
-                dltC = 0.0;
-            massBalanceChange.FlowType = dltC >= 0 ? "gain" : "loss";
-            massBalanceChange.PoolClass = "soil";
-            massBalanceChange.N = (float)Math.Abs(dltC);
-            ExternalMassFlow.Invoke(massBalanceChange);
+            if (ExternalMassFlow != null)
+            {
+                ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
+                if (Math.Abs(dltC) <= EPSILON)
+                    dltC = 0.0;
+                massBalanceChange.FlowType = dltC >= 0 ? "gain" : "loss";
+                massBalanceChange.PoolClass = "soil";
+                massBalanceChange.N = (float)Math.Abs(dltC);
+                ExternalMassFlow.Invoke(massBalanceChange);
+            }
         }
 
         #endregion

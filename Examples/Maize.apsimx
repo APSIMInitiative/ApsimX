@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Maize</Name>
@@ -31,7 +31,7 @@
           <string>Maize.AboveGround.N</string>
           <string>Maize.Grain.Wt</string>
           <string>Maize.Grain.Size</string>
-          <string>Maize.Grain.NumberFunction.Value</string>
+          <string>Maize.Grain.NumberFunction.Value()</string>
           <string>Maize.Grain.N</string>
           <string>Maize.Total.Wt</string>
         </VariableNames>
@@ -142,7 +142,6 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>5</SummerU>
           <SummerCona>5</SummerCona>
@@ -177,6 +176,7 @@
             <double>0.3</double>
             <double>0.3</double>
           </SWCON>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
@@ -450,6 +450,7 @@
         <Name>Maize</Name>
         <ResourceName>Maize</ResourceName>
         <CropType>Maize</CropType>
+        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
@@ -458,17 +459,13 @@
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.15</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Manager>
         <Name>SowingFertiliser</Name>
@@ -680,8 +677,6 @@ namespace Models
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>

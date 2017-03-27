@@ -736,10 +736,6 @@ namespace Importer
         /// <returns>The new node</returns>
         private XmlNode ImportSample(XmlNode compNode, XmlNode destParent, XmlNode newNode)
         {
-            string name = XmlUtilities.NameAttr(compNode);
-            if (XmlUtilities.Value(compNode, "Name") != "")
-                name = XmlUtilities.Value(compNode, "Name");
-
             newNode = this.AddCompNode(destParent, "Sample", XmlUtilities.NameAttr(compNode));
 
             string date = this.GetInnerText(compNode, "Date");

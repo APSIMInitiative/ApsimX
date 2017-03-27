@@ -73,5 +73,9 @@ namespace UserInterface.Interfaces
         /// <param name="show"></param>
         void ShowX2Y2(bool show);
 
+        /// <summary>
+        /// If editing is in progress, stop it and store the current value
+        /// </summary>
+        void EndEdit();
     }
 }

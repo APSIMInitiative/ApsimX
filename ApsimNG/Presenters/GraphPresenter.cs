@@ -32,7 +32,7 @@ namespace UserInterface.Presenters
         private IPresenter currentPresenter = null;
 
         /// <summary>The series definitions to show on graph.</summary>
-        private List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
+        public List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
@@ -49,9 +49,8 @@ namespace UserInterface.Presenters
             graphView.OnCaptionClick += OnCaptionClick;
             graphView.OnHoverOverPoint += OnHoverOverPoint;
             explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
-            this.graphView.AddContextAction("Copy graph to clipboard", false, CopyGraphToClipboard);
-            this.graphView.AddContextAction("Include in auto-documentation?", graph.IncludeInDocumentation, IncludeInDocumentationClicked);
-            this.graph.ClearBaseData();
+            this.graphView.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
+            this.graphView.AddContextOption("Include in auto-documentation?", IncludeInDocumentationClicked, graph.IncludeInDocumentation);
 
             DrawGraph();
         }
@@ -153,7 +152,6 @@ namespace UserInterface.Presenters
                     TextAnnotation textAnnotation = annotations[i] as TextAnnotation;
                     if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
                     {
-                        int numLines = StringUtilities.CountSubStrings(textAnnotation.text, "\r\n") + 1;
                         double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
 
                         double yPosition = largestAxisScale - i * interval;
@@ -352,7 +350,7 @@ namespace UserInterface.Presenters
         private void IncludeInDocumentationClicked(object sender, EventArgs e)
         {
             graph.IncludeInDocumentation = !graph.IncludeInDocumentation; // toggle
-            this.graphView.AddContextAction("Include in auto-documentation?", graph.IncludeInDocumentation, IncludeInDocumentationClicked);
+            this.graphView.AddContextOption("Include in auto-documentation?", IncludeInDocumentationClicked, graph.IncludeInDocumentation);
         }
 
         /// <summary>

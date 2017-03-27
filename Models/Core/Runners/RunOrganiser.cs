@@ -42,7 +42,7 @@
             // Otherwise just remove the unwanted simulations from the DataStore.
             DataStore store = Apsim.Child(simulations, typeof(DataStore)) as DataStore;
             if (model is Simulations)
-                store.DeleteAllTables();
+                store.DeleteAllTables(true);
             else
                 store.RemoveUnwantedSimulations(simulations, simulationNames);
             store.Disconnect();

@@ -32,7 +32,7 @@ namespace UserInterface.Presenters
         private IPresenter currentPresenter = null;
 
         /// <summary>The series definitions to show on graph.</summary>
-        private List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
+        public List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
@@ -51,7 +51,6 @@ namespace UserInterface.Presenters
             explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
             this.graphView.AddContextAction("Copy graph to clipboard", false, CopyGraphToClipboard);
             this.graphView.AddContextAction("Include in auto-documentation?", graph.IncludeInDocumentation, IncludeInDocumentationClicked);
-            this.graph.ClearBaseData();
             DrawGraph();
         }
 
@@ -153,11 +152,11 @@ namespace UserInterface.Presenters
                     TextAnnotation textAnnotation = annotations[i] as TextAnnotation;
                     if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
                     {
-                        int numLines = StringUtilities.CountSubStrings(textAnnotation.text, "\r\n") + 1;
                         double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
 
                         double yPosition = largestAxisScale - i * interval;
-                        graphView.DrawText(textAnnotation.text, minimumX, yPosition,
+                        double xPosition = minimumX + (maximumX - minimumX) * 0.01;
+                        graphView.DrawText(textAnnotation.text, xPosition, yPosition,
                                            textAnnotation.leftAlign, textAnnotation.textRotation,
                                            Axis.AxisType.Bottom, Axis.AxisType.Left, textAnnotation.colour);
                     }
@@ -212,7 +211,7 @@ namespace UserInterface.Presenters
             Rectangle r = new Rectangle(0, 0, 800, 500);
             Bitmap img = new Bitmap(r.Width, r.Height);
 
-            graphView.Export(img, true);
+            graphView.Export(img, r, true);
 
             string fileName = Path.Combine(folder, graph.Name + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
@@ -233,7 +232,7 @@ namespace UserInterface.Presenters
             Rectangle r = new Rectangle(0, 0, 600, 450); 
             Bitmap img = new Bitmap(r.Width, r.Height);
 
-            graphView.Export(img, true);
+            graphView.Export(img, r, true);
 
             string path = Apsim.FullPath(graph).Replace(".Simulations.", "");
             string fileName = Path.Combine(folder, path + ".png");
@@ -374,9 +373,10 @@ namespace UserInterface.Presenters
                             MathUtilities.FloatsAreEqual(x, (double)rowX) &&
                             MathUtilities.FloatsAreEqual(y, (double)rowY))
                         {
-                            object simulationName = simNameEnum.Current;
-                            if (simulationName != null)
-                                return simulationName.ToString();
+                            return definition.title;
+                            //object simulationName = simNameEnum.Current;
+                            //if (simulationName != null)
+                            //    return simulationName.ToString();
                         }
                     }
                 }

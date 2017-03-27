@@ -17,6 +17,7 @@ namespace Models.Core
     /// new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
+    [ScopedModel]
     public class Simulations : Model
     {
         /// <summary>The _ file name</summary>
@@ -71,9 +72,10 @@ namespace Models.Core
                 simulations.SetFileNameInAllSimulations();
 
                 // Call the OnDeserialised method in each model.
+                Events events = new Core.Events();
+                events.AddModelEvents(simulations);
                 object[] args = new object[] { true };
-                foreach (Model model in Apsim.ChildrenRecursively(simulations))
-                    Apsim.CallEventHandler(model, "Deserialised", args);
+                events.CallEventHandler(simulations, "Deserialised", args);
 
                 // Parent all models.
                 simulations.Parent = null;
@@ -85,7 +87,7 @@ namespace Models.Core
                 {
                     try
                     {
-                        Apsim.CallEventHandler(child, "Loaded", null);
+                        events.CallEventHandler(child, "Loaded", null);
                     }
                     catch (ApsimXException err)
                     {
@@ -121,8 +123,9 @@ namespace Models.Core
 
                 // Call the OnSerialised method in each model.
                 object[] args = new object[] { true };
-                foreach (Model model in Apsim.ChildrenRecursively(simulations))
-                    Apsim.CallEventHandler(model, "Deserialised", args);
+                Events events = new Events();
+                events.AddModelEvents(simulations);
+                events.CallEventHandler(simulations, "Deserialised", args);
 
                 // Parent all models.
                 simulations.Parent = null;
@@ -147,9 +150,9 @@ namespace Models.Core
                 {
                     foreach (Simulation simulation in simulations)
                     {
-                        foreach (IModel match in Apsim.FindAll(simulation, replacement.GetType()))
+                        foreach (IModel match in Apsim.FindAll(simulation))
                         {
-                            if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
+                            if (!(match is Simulation) && match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
                             {
                                 // Do replacement.
                                 IModel newModel = Apsim.Clone(replacement);
@@ -169,10 +172,9 @@ namespace Models.Core
         /// <param name="model">The model.</param>
         public static void CallOnLoaded(IModel model)
         {
-            // Call OnLoaded in all models.
-            Apsim.CallEventHandler(model, "Loaded", null);
-            foreach (Model child in Apsim.ChildrenRecursively(model))
-                Apsim.CallEventHandler(child, "Loaded", null);
+            Events events = new Events();
+            events.AddModelEvents(model);
+            events.CallEventHandler(model, "Loaded", null);
         }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
@@ -200,8 +202,10 @@ namespace Models.Core
         public void Write(TextWriter stream)
         {
             object[] args = new object[] { true };
-            foreach (Model model in Apsim.ChildrenRecursively(this))
-                Apsim.CallEventHandler(model, "Serialising", args);
+
+            Events events = new Events();
+            events.AddModelEvents(this);
+            events.CallEventHandler(this, "Serialising", args);
 
             try
             {
@@ -209,9 +213,7 @@ namespace Models.Core
             }
             finally
             {
-                foreach (Model model in Apsim.ChildrenRecursively(this))
-                    Apsim.CallEventHandler(model, "Serialised", args);
-
+                events.CallEventHandler(this, "Serialised", args);
             }
         }
 
@@ -284,6 +286,10 @@ namespace Models.Core
                 if (modelToDocument == null)
                     modelToDocument = Apsim.Get(simulation, "[" + modelNameToDocument + "]") as IModel;
 
+                // If the simulation has the same name as the model we want to document, dig a bit deeper
+                if (modelToDocument == simulation)
+                    modelToDocument = Apsim.ChildrenRecursivelyVisible(simulation).FirstOrDefault(m => m.Name.Equals(modelNameToDocument, StringComparison.OrdinalIgnoreCase));
+
                 // If still not found throw an error.
                 if (modelToDocument == null)
                     throw new ApsimXException(this, "Could not find a model of the name " + modelNameToDocument + ". Simulation file name must match the name of the node to document.");
@@ -303,18 +309,18 @@ namespace Models.Core
                 // Now use the path to get the model we want to document.
                 modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
 
+                if (modelToDocument == null)
+                    throw new Exception("Cannot find model to document: " + modelNameToDocument);
+
                 // resolve all links in cloned simulation.
-                Apsim.ResolveLinks(clonedSimulation);
-                foreach (Model child in Apsim.ChildrenRecursively(clonedSimulation))
-                    Apsim.ResolveLinks(child);
+                Links links = new Core.Links();
+                links.Resolve(clonedSimulation);
 
                 // Document the model.
                 modelToDocument.Document(tags, headingLevel, 0);
 
                 // Unresolve links.
-                Apsim.UnresolveLinks(clonedSimulation);
-                foreach (Model child in Apsim.ChildrenRecursively(clonedSimulation))
-                    Apsim.UnresolveLinks(child);
+                links.Unresolve(clonedSimulation);
             }
         }
     }

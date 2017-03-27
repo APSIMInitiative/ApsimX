@@ -44,6 +44,11 @@ namespace Models.Interfaces
         /// </summary>
         double CO2 { get; }
 
+        /// <summary>
+        /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
+        /// </summary>
+        double AirPressure { get; }
+
         /// <summary>Gets the latitude</summary>
         double Latitude { get; }
 
