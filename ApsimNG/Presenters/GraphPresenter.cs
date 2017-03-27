@@ -210,7 +210,7 @@ namespace UserInterface.Presenters
             Rectangle r = new Rectangle(0, 0, 800, 500);
             Bitmap img = new Bitmap(r.Width, r.Height);
 
-            graphView.Export(ref img, true);
+            graphView.Export(ref img, r, true);
 
             string fileName = Path.Combine(folder, graph.Name + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
@@ -231,7 +231,7 @@ namespace UserInterface.Presenters
             Rectangle r = new Rectangle(0, 0, 600, 450);
             Bitmap img = new Bitmap(r.Width, r.Height);
 
-            graphView.Export(ref img, true);
+            graphView.Export(ref img, r, true);
 
             string path = Apsim.FullPath(graph).Replace(".Simulations.", "");
             string fileName = Path.Combine(folder, path + ".png");
