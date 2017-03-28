@@ -475,9 +475,10 @@ namespace Models.Soils
             if (waterNode != null)
             {
                 ISoilCrop MeasuredCrop = waterNode.Crop(CropName);
-                if (MeasuredCrop != null && MeasuredCrop is SoilCrop)
+                if (MeasuredCrop != null)
                 {
-                    if (CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
+                    if (MeasuredCrop is SoilCrop && 
+                        CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
                         ModifyKLForSubSoilConstraints(MeasuredCrop as SoilCrop);
                     return MeasuredCrop;
                 }
