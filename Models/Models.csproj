@@ -478,6 +478,7 @@
     <Compile Include="WholeFarm\Activities\ActivityFolder.cs" />
     <Compile Include="WholeFarm\Activities\ControlledMatingSettings.cs" />
     <Compile Include="WholeFarm\Activities\FinanceActivityPayOverhead.cs" />
+    <Compile Include="WholeFarm\Activities\GrazeBreedPoolLimit.cs" />
     <Compile Include="WholeFarm\Activities\LabourActivityOffFarm.cs" />
     <Compile Include="WholeFarm\Activities\OtherAnimalsActivityGrow.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityGrazeAll.cs" />
@@ -534,7 +535,7 @@
     <Compile Include="WholeFarm\Activities\RuminantActivityBreed.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityBuySell.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityFeed.cs" />
-    <Compile Include="WholeFarm\Activities\RuminantActivityGraze.cs" />
+    <Compile Include="WholeFarm\Old\RuminantActivityGraze.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityGrow.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityManage.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityMuster.cs" />

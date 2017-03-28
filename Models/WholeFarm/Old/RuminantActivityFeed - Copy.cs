@@ -57,7 +57,7 @@ namespace Models.WholeFarm.Activities
 		/// Feeding style to use
 		/// </summary>
 		[Description("Feeding style to use")]
-		public RuminantFeedActivityTypes FeedStyle { get; set; }
+		public Common.RuminantFeedActivityTypes FeedStyle { get; set; }
 
 		/// <summary>
 		/// Feeding priority (1 high, 10 low)
@@ -162,16 +162,16 @@ namespace Models.WholeFarm.Activities
 							freqest.Amount = 0;
 							switch (FeedStyle)
 							{
-								case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+								case Common.RuminantFeedActivityTypes.SpecifiedDailyAmount:
 									freqest.Amount = (child as RuminantFeedGroup).MonthlyValues[month - 1] * 30.4; // * ind.Number;
 									break;
-								case RuminantFeedActivityTypes.ProportionOfWeight:
+								case Common.RuminantFeedActivityTypes.ProportionOfWeight:
 									freqest.Amount = (child as RuminantFeedGroup).MonthlyValues[month - 1] * ind.Weight *30.4; // * ind.Number;
 									break;
-								case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+								case Common.RuminantFeedActivityTypes.ProportionOfPotentialIntake:
 									freqest.Amount = (child as RuminantFeedGroup).MonthlyValues[month - 1] * ind.PotentialIntake; // * ind.Number;
 									break;
-								case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+								case Common.RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
 									freqest.Amount = (child as RuminantFeedGroup).MonthlyValues[month - 1] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
 									break;
 								default:

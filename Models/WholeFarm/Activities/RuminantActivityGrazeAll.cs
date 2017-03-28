@@ -23,6 +23,14 @@ namespace Models.WholeFarm.Activities
 		[Link]
 		private ResourcesHolder Resources = null;
 
+		/// <summary>
+		/// Number of hours grazed
+		/// Based on 8 hour grazing days
+		/// Could be modified to account for rain/heat walking to water etc.
+		/// </summary>
+		[Description("Number of hours grazed")]
+		public double HoursGrazed { get; set; }
+
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -40,6 +48,7 @@ namespace Models.WholeFarm.Activities
 					RuminantActivityGrazePastureBreed ragpb = new RuminantActivityGrazePastureBreed();
 					ragpb.GrazeFoodStoreModel = pastureType;
 					ragpb.RuminantTypeModel = herdType;
+					ragpb.HoursGrazed = HoursGrazed;
 					ragp.ActivityList.Add(ragpb);
 				}
 				ActivityList.Add(ragp);

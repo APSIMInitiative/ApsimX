@@ -49,11 +49,11 @@ namespace Models.WholeFarm.Activities
 		[Description("Number of head per labour unit required")]
 		public double LabourHeadUnit { get; set; }
 
-		/// <summary>
-		/// Does labour shortfall limit feeding
-		/// </summary>
-		[Description("Does labour shortfall limit feeding")]
-		public bool LabourShortfallLimitsFeeding { get; set; }
+		///// <summary>
+		///// Does labour shortfall limit feeding
+		///// </summary>
+		//[Description("Does labour shortfall limit feeding")]
+		//public bool LabourShortfallLimitsFeeding { get; set; }
 
 		private IResourceType FoodSource { get; set; }
 
@@ -72,7 +72,7 @@ namespace Models.WholeFarm.Activities
 		/// Feeding style to use
 		/// </summary>
 		[Description("Feeding style to use")]
-		public RuminantFeedActivityTypes FeedStyle { get; set; }
+		public Common.RuminantFeedActivityTypes FeedStyle { get; set; }
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -152,16 +152,16 @@ namespace Models.WholeFarm.Activities
 					{
 						switch (FeedStyle)
 						{
-							case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+							case Common.RuminantFeedActivityTypes.SpecifiedDailyAmount:
 								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
 								break;
-							case RuminantFeedActivityTypes.ProportionOfWeight:
+							case Common.RuminantFeedActivityTypes.ProportionOfWeight:
 								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4;
 								break;
-							case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+							case Common.RuminantFeedActivityTypes.ProportionOfPotentialIntake:
 								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake;
 								break;
-							case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+							case Common.RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
 								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake);
 								break;
 							default:
@@ -224,36 +224,27 @@ namespace Models.WholeFarm.Activities
 				{
 					foreach (Ruminant ind in herd.Filter(child as RuminantFeedGroup))
 					{
-//						double feedRequired = 0;
 						switch (FeedStyle)
 						{
-							case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+							case Common.RuminantFeedActivityTypes.SpecifiedDailyAmount:
 								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
-//								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * 30.4; // * ind.Number;
-//								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
-							case RuminantFeedActivityTypes.ProportionOfWeight:
+							case Common.RuminantFeedActivityTypes.ProportionOfWeight:
 								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
-//								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
-//								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
-							case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+							case Common.RuminantFeedActivityTypes.ProportionOfPotentialIntake:
 								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
-//								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
-//								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
-							case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+							case Common.RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
 								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
-//								feedRequired += (child as RuminantFilterGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake) ; // * ind.Number;
-//								ind.Intake += feedRequired * feedLimit * labourLimit;
 								break;
 							default:
 								break;
@@ -278,29 +269,6 @@ namespace Models.WholeFarm.Activities
 			if (ResourceShortfallOccurred != null)
 				ResourceShortfallOccurred(this, e);
 		}
-	}
-
-	/// <summary>
-	/// Ruminant feeding styles
-	/// </summary>
-	public enum RuminantFeedActivityTypes
-	{
-		/// <summary>
-		/// Feed specified amount daily in selected months
-		/// </summary>
-		SpecifiedDailyAmount,
-		/// <summary>
-		/// Feed proportion of animal weight in selected months
-		/// </summary>
-		ProportionOfWeight,
-		/// <summary>
-		/// Feed proportion of potential intake
-		/// </summary>
-		ProportionOfPotentialIntake,
-		/// <summary>
-		/// Feed proportion of remaining amount required
-		/// </summary>
-		ProportionOfRemainingIntakeRequired
 	}
 
 }

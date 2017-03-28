@@ -37,9 +37,9 @@ namespace Models.WholeFarm.Activities
 		public string BreedName { get; set; }
 
 		/// <summary>
-		/// Pricing of breeding sire
+		/// Price of breeding sire
 		/// </summary>
-		[Description("Pricing of breeding sire")]
+		[Description("Price of breeding sire")]
 		public double BreedingSirePrice { get; set; }
 
 		/// <summary>
@@ -165,7 +165,6 @@ namespace Models.WholeFarm.Activities
 					purchaseRequest.AllowTransmutation = false;
 					purchaseRequest.Reason = newgroup.Key.ToString();
 					bankAccount.Remove(purchaseRequest);
-//					bankAccount.Remove(cost, this.Name, newgroup.Key.ToString());
 				}
 			}
 		}

@@ -105,8 +105,6 @@ namespace Models
 
 		/// <summary>WholeFarm update pasture</summary>
 		public event EventHandler WFUpdatePasture;
-		///// <summary>WholeFarm update resources other than pasture</summary>
-		//public event EventHandler WFGetResourcesRequired;
 		/// <summary>WholeFarm cut and carry</summary>
 		public event EventHandler WFDoCutAndCarry;
 		/// <summary>WholeFarm Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
@@ -129,6 +127,8 @@ namespace Models
 		public event EventHandler WFAnimalStock;
 		/// <summary>WholeFarm sell animals to market including transporting and labour</summary>
 		public event EventHandler WFAnimalSell;
+		/// <summary>WholeFarm buy animals including transporting and labour</summary>
+		public event EventHandler WFAnimalBuy;
 		/// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
 		public event EventHandler WFAgeResources;
 		// WholeFarm versions of the following events to ensure APSIM tasks perfomed before WF not yet implemented
@@ -289,7 +289,8 @@ namespace Models
 						WFAnimalSell.Invoke(this, args);
 					if (WFAgeResources != null)
 						WFAgeResources.Invoke(this, args);
-
+					if (WFAnimalBuy != null)
+						WFAnimalBuy.Invoke(this, args);
 					EndOfMonth.Invoke(this, args);
 				}
 

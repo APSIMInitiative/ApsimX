@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.WholeFarm.Resources;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -130,6 +131,28 @@ namespace Models.WholeFarm
 			SquareKilometres = 100
 		}
 
+		/// <summary>
+		/// Ruminant feeding styles
+		/// </summary>
+		public enum RuminantFeedActivityTypes
+		{
+			/// <summary>
+			/// Feed specified amount daily in selected months
+			/// </summary>
+			SpecifiedDailyAmount,
+			/// <summary>
+			/// Feed proportion of animal weight in selected months
+			/// </summary>
+			ProportionOfWeight,
+			/// <summary>
+			/// Feed proportion of potential intake
+			/// </summary>
+			ProportionOfPotentialIntake,
+			/// <summary>
+			/// Feed proportion of remaining amount required
+			/// </summary>
+			ProportionOfRemainingIntakeRequired
+		}
 
 	}
 }

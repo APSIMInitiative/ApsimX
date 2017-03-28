@@ -28,11 +28,11 @@ namespace Models.WholeFarm.Activities
 		[Link]
 		Clock Clock = null;
 
-		/// <summary>
-		/// Amount provided from resource or arbitrator
-		/// </summary>
-		[XmlIgnore]
-		public double AmountProvided { get; set; }
+		///// <summary>
+		///// Amount provided from resource or arbitrator
+		///// </summary>
+		//[XmlIgnore]
+		//public double AmountProvided { get; set; }
 
 		/// <summary>
 		/// Daily labour rate
@@ -64,7 +64,6 @@ namespace Models.WholeFarm.Activities
 			bool resourceAvailable = false;
 			bankType = Resources.GetResourceItem("Finances", BankAccountName, out resourceAvailable) as FinanceType;
 		}
-
 
 		/// <summary>
 		/// Method to determine resources required for this activity in the current month
@@ -102,7 +101,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void PerformActivity()
 		{
-			// days provided from labour set in the only request ins the resourceResquestList
+			// days provided from labour set in the only request in the resourceResquestList
 			// receive payment for labour
 			bankType.Add(ResourceRequestList.FirstOrDefault().Available*DailyRate, this.Name, this.Name);
 		}

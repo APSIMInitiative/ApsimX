@@ -38,6 +38,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void PerformActivity()
 		{
+			return;
 		}
 
 		/// <summary>An event handler to allow us to make all payments when needed</summary>
@@ -62,7 +63,6 @@ namespace Models.WholeFarm.Activities
 					interestRequest.AllowTransmutation = false;
 					interestRequest.Reason = "Interest charged";
 					bankAccount.Remove(interestRequest);
-//					bankAccount.Remove(Math.Abs(accnt.Balance) * accnt.InterestRateCharged/1200, this.Name, "InterestCharged");
 				}
 			}
 		}

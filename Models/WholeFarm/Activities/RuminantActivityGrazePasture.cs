@@ -122,7 +122,7 @@ namespace Models.WholeFarm.Activities
 				// calculate breed feed limits
 				if(item.PoolFeedLimits == null)
 				{
-					item.PoolFeedLimits = new List<BreedPoolLimit>();
+					item.PoolFeedLimits = new List<GrazeBreedPoolLimit>();
 				}
 				else
 				{
@@ -131,7 +131,7 @@ namespace Models.WholeFarm.Activities
 
 				foreach (var pool in GrazeFoodStoreModel.Pools)
 				{
-					item.PoolFeedLimits.Add(new BreedPoolLimit() { Limit=1.0, Pool=pool });
+					item.PoolFeedLimits.Add(new GrazeBreedPoolLimit() { Limit=1.0, Pool=pool });
 				}
 
 				// if Jan-March then user first three months otherwise use 2

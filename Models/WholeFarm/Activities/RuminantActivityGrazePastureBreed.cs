@@ -82,7 +82,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Proportion of intake that can be taken from each pool
 		/// </summary>
-		public List<BreedPoolLimit> PoolFeedLimits { get; set; }
+		public List<GrazeBreedPoolLimit> PoolFeedLimits { get; set; }
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -180,19 +180,4 @@ namespace Models.WholeFarm.Activities
 		}
 	}
 
-	/// <summary>
-	/// The proportional intake limit for a given pool by breed
-	/// </summary>
-	public class BreedPoolLimit
-	{
-		/// <summary>
-		/// Proportion of intake limit for pool
-		/// </summary>
-		public double Limit { get; set; }
-
-		/// <summary>
-		/// Pool that this limit applies to
-		/// </summary>
-		public GrazeFoodStorePool Pool { get; set; }
-	}
 }
