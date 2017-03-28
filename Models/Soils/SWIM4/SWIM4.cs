@@ -18,8 +18,8 @@ namespace Models.Soils.SWIM4
     [ValidParent(ParentType = typeof(Soil))]
     class SWIM4 : Model
     {
-        [Link]
-        Clock Clock = null;
+    //    [Link]
+    //    Clock Clock = null;
         [Link]
         Soil Soil = null;
 
@@ -30,8 +30,8 @@ namespace Models.Soils.SWIM4
         int[] jt, sidx;//n
         int nsteps;
         int[] nssteps; //ns
-        double drn, evap, h0, h1, h2, infil, qevap, qprec, runoff;
-        double S1, S2, ti, tf, ts, win, wp, wpi;
+        double drn, evap, h0, h1, infil, qevap, qprec, runoff; //h2
+        double ti, tf, ts, win, wp, wpi;
         double[] bd, dis; //nt
         double[] c0, cin, sdrn, sinfil, soff, spi;//ns
         double[] h, S, x;//n
@@ -39,6 +39,10 @@ namespace Models.Soils.SWIM4
         //define isotype and isopar for solute 2
         string[] isotype;//(nt)
         double[,] isopar; //2 params (nt,2)
+        SolProps solProps;
+        SoilData sd;
+        double[,] wex = new double[1, 1]; //unused option params in FORTRAN... must be a better way of doing this
+        double[,,] sex = new double[1, 1, 1];
 
         /// <summary>Initialise soil and generate flux tables</summary>
         /// <param name="sender">The sender model</param>
@@ -63,7 +67,7 @@ namespace Models.Soils.SWIM4
             sdrn = new double[ns + 1];
             sinfil = new double[ns + 1];
             bd = Soil.BD;
-            SoilData sd = new SoilData();
+            sd = new SoilData();
             Flow.sink = new SinkDripperDrain(); //set the type of sink to use
             jt = new int[n + 1];
             nssteps = new int[ns + 1];
@@ -75,7 +79,7 @@ namespace Models.Soils.SWIM4
                 sidx[c] = c < 5 ? 103 : 109; //soil ident of layers
                                              //set required soil hydraulic params
             sd.GetTables(n, sidx, x);
-            SolProps solProps = new SolProps(nt, ns);
+            solProps = new SolProps(nt, ns);
             Array.Copy(Soil.BD, 0, new double[Soil.BD.Length + 1], 1, Soil.BD.Length);
 
             dis = new double[] { Soil.BD.Length + 1}; //TODO: put some real data here
@@ -102,7 +106,7 @@ namespace Models.Soils.SWIM4
                 jt[c] = c; //currenty using 1 SWIM layer per APSIM layer
             h0 = 0.0; //pond depth initially zero
             h1 = -1000.0;
-            h2 = -400.0; //initial matric heads
+        //    h2 = -400.0; //initial matric heads
             double Sh = 0; //not used for this call but required as C# does not have 'present' operator
             for (int c = 1; c <= n; c++)
                 sd.Sofh(h1, 1, out S[c], out Sh); //solve uses degree of satn
@@ -110,9 +114,11 @@ namespace Models.Soils.SWIM4
             nsteps = 0; //no.of time steps for water soln(cumulative)
             win = 0.0; //water input(total precip)
             evap = Soil.SoilWater.Es;
+            qevap = Soil.SoilWater.Eos;
             runoff = Soil.SoilWater.Runoff;
             infil = Soil.SoilWater.Infiltration;
             drn = Soil.SoilWater.Drainage;
+            qprec = 10; //TODO: precipitation rate in cm/h, need to give this a real value
             for (int col = 1; col < sm.GetLength(0); col++)
                 sm[col, 1] = 1000.0 / sd.dx[1];
             //initial solute concn(mass units per cc of soil)
@@ -130,8 +136,25 @@ namespace Models.Soils.SWIM4
             ti = ts;
             tf = 24; //hours
             qevap = 0.05;// potential evap rate from soil surface
-            double[,] wex = new double[1, 1]; //unused option params in FORTRAN... must be a better way of doing this
-            double[,,] sex = new double[1, 1, 1];
+        }
+
+        public void OnPrepare()
+        {
+            //timer here in FORTRAN, this basically runs the solution for 100 days
+            for (j = 1; j <= 100; j++)
+            {
+                tf = ti + 24.0;
+                Flow.Solve(solProps, sd, ti, tf, qprec, qevap, ns, Flow.sink.nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn, ref nsteps, jt, cin, ref c0, ref sm, ref soff, ref sinfil, ref sdrn, ref nssteps, ref wex, ref sex);
+                win = win + qprec * (tf - ti);
+                if (j == 1)
+                    ti = tf;
+                qprec = 0.0;
+            }
+            win = win + qprec * (tf - ti);
+            wp = MathUtilities.Sum(MathUtilities.Multiply(MathUtilities.Multiply(sd.ths, S), sd.dx)); //!water in profile
+            double hS = 0; //hS is not used used here, but is a required parameter
+            for (j = 1; j <= n; j++)
+                sd.hofS(S[j], j, out h[j], out hS);
         }
 
         public static void GenerateFlux()
