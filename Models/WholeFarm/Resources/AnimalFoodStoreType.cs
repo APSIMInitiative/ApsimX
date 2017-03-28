@@ -16,7 +16,7 @@ namespace Models.WholeFarm.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
-    public class AnimalFoodStoreType : WFModel, IResourceType, IFeedType, IFeedPurchaseType, IResourceWithTransactionType
+    public class AnimalFoodStoreType : WFModel, IResourceType, IResourceWithTransactionType
     {
         //[Link]
         //ISummary Summary = null;
