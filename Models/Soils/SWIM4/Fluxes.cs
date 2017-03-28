@@ -504,7 +504,13 @@ namespace Models.Soils.SWIM4
             }
             nsel = b;
         }
-        // Return quadratic interpolation coeffs co.
+
+        /// <summary>
+        /// Return quadratic interpolation coeffs co.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static double[] Quadco(double[] x, double[] y)
         {
             double[] co = new double[4];
@@ -520,7 +526,14 @@ namespace Models.Soils.SWIM4
             return co;
         }
 
-        // Return v(1:n-1) corresponding to u(1:n-1) using quadratic interpolation.
+        /// <summary>
+        /// Return v(1:n-1) corresponding to u(1:n-1) using quadratic interpolation.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="n"></param>
+        /// <param name="u"></param>
+        /// <returns></returns>
         public static double[] Quadinterp(double[] x, double[] y, int n, double[] u)
         {
             double[] v = new double[100 + 1];
@@ -542,6 +555,11 @@ namespace Models.Soils.SWIM4
             return v;
         }
 
+        /// <summary>
+        /// Read a flux table.
+        /// </summary>
+        /// <param name="key">The name of the flux table to return.</param>
+        /// <returns></returns>
         public static FluxTable ReadFluxTable(string key)
         {
             return FluxTables[key];
@@ -561,25 +579,33 @@ namespace Models.Soils.SWIM4
             hpK = sethpK;
         }
     }
-    
-    //  sid - soil ident
-    //  nfu, nft - no. of fluxes unsat and total
-    //  dz - path length
-    //  phif(1:nft) - phi values
+
+    /// <summary>
+    /// </summary>
     [Serializable]
     public struct FluxEnd
     {
-        public int sid, nfu, nft;
+        /// <summary>Soil ident</summary>
+        public int sid;
+        /// <summary>Number of unsaturated fluxes</summary>
+        public int nfu;
+        /// <summary>Number of total fluxes</summary>
+        public int nft;
+        /// <summary>Phi values</summary>
         public double[] phif;
+        /// <summary>Path length</summary>
         public double dz;
     }
 
-    //  fend(2) - flux end data
-    //  qf(1:fend(1)%nft,1:fend(2)%nft) - flux table
+/// <summary>
+/// 
+/// </summary>
     [Serializable]
     public struct FluxTable
     {
+        /// <summary>flux end data</summary>
         public FluxEnd[] fend;
+        /// <summary>flux table</summary>
         public double[,] ftable;
     }
 }

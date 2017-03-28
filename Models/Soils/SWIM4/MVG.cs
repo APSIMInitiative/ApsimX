@@ -5,23 +5,35 @@ using System.Text;
 
 namespace Models.Soils.SWIM4
 {
-    /*
-     * Uses van Genuchten S(h) modified to be 1 at he and zero at hd:
-     * S(h)=(f(h)-f(hd))/(f(he)-f(hd)), where f(h)=(1+(h/hg**n)**(-m).
-     * K can either be of the Brooks-Corey form, K=S**eta, or it can be
-     * calculated from the Mualem model using numerical integration.
-     * Refer to these as the modified van Genuchten Brooks-Corey (MVGBC)
-     * model and the modified van Genuchten Mualem (MVGM) model.
-     * Work in cm and hours.
-     */
+
+    /// <summary>
+    /// Uses van Genuchten S(h) modified to be 1 at he and zero at hd:
+    /// S(h)=(f(h)-f(hd))/(f(he)-f(hd)), where f(h)=(1+(h/hg** n)** (-m).
+    /// K can either be of the Brooks-Corey form, K = S * *eta, or it can be
+    /// calculated from the Mualem model using numerical integration.
+    ///
+    /// Refer to these as the modified van Genuchten Brooks-Corey(MVGBC)
+    /// model and the modified van Genuchten Mualem(MVGM) model.
+    ///
+    /// Work in cm and hours.
+    /// </summary>
     public static class MVG
     {
         static int sid; // soil ident
         static double ths, Ks, he, hd, p, hg, m, n, eta, fhe, fhd;
 
-        // Set hydraulic params.
-        // sid1      - soil ident (arbitrary identifier).
-        // ths1 etc. - MVGBC or MVGM params.
+        /// <summary>
+        /// Set hydraulic params.
+        /// </summary>
+        /// <param name="sid1">soil ident</param>
+        /// <param name="ths1"></param>
+        /// <param name="Ks1"></param>
+        /// <param name="he1"></param>
+        /// <param name="hd1"></param>
+        /// <param name="p1"></param>
+        /// <param name="hg1"></param>
+        /// <param name="m1"></param>
+        /// <param name="n1"></param>
         public static void Params(int sid1, double ths1, double Ks1, double he1, double hd1, double p1, double hg1, double m1, double n1)
         {
             sid = sid1; ths = ths1; Ks = Ks1; he = he1; hd = hd1; p = p1; hg = hg1; m = m1; n = n1;
@@ -40,7 +52,7 @@ namespace Models.Soils.SWIM4
         /// <returns></returns>
         public static bool TestParams(int sidTest, double etaTest, double fheTest, double fhdTest)
         {
-            if (sidTest==103)
+            if (sidTest == 103)
             {
                 ths = 0.4;
                 Ks = 2.0;
@@ -67,10 +79,15 @@ namespace Models.Soils.SWIM4
 
             if (etaTest == eta && fheTest == fhe && fhdTest == fhd)
                 return true;
-            
+
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="h"></param>
+        /// <returns></returns>
         public static double Sofh(double h)
         {
             double f;
@@ -82,12 +99,21 @@ namespace Models.Soils.SWIM4
             return 1.0;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static double GetP()
         {
             return p;
         }
 
-        // Used instead of Sofh when K to be calculated.
+        /// <summary>
+        /// Used instead of Sofh when K to be calculated.
+        /// </summary>
+        /// <param name="h"></param>
+        /// <param name="S"></param>
+        /// <param name="dSdh"></param>
         public static void Sdofh(double h, out double S, out double dSdh)
         {
             double dfdh, f, v, vn;
@@ -107,11 +133,21 @@ namespace Models.Soils.SWIM4
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="h"></param>
+        /// <param name="S"></param>
+        /// <returns></returns>
         public static double KofhS(double h, double S)
         {
             return Ks * Math.Pow(S, eta);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="h"></param>
+        /// <returns></returns>
         public static double Kofh(double h)
         {
             return Ks * Math.Pow(Sofh(h), eta);
