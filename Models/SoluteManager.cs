@@ -16,14 +16,22 @@
     public class SoluteManager : Model
     {
         /// <summary>List of all solutes</summary>
-        private List<Solute> solutes = new List<Solute>();
+        private List<Solute> solutes = null;
 
         /// <summary>List of all models that have solutes.</summary>
         [Link]
         private List<ISolute> soluteModels = null;
 
         /// <summary>Return a list of solute names.</summary>
-        public string[] SoluteNames {  get { return solutes.Select(solute => solute.Name).ToArray(); } }
+        public string[] SoluteNames
+        {
+            get
+            {
+                if (solutes == null)
+                    FindSolutes();
+                return solutes.Select(solute => solute.Name).ToArray();
+            }
+        }
         
         /// <summary>
         /// Return the value of a solute. Will throw if solute not found.
@@ -70,6 +78,17 @@
         /// <param name="delta">Value to be added to top layer of solute</param>
         public void AddToTopLayer(string name, double delta)
         {
+            AddToLayer(0, name, delta);
+        }
+
+        /// <summary>
+        /// Add a delta value to the top layer of a solute. Will throw if solute not found.
+        /// </summary>
+        /// <param name="name">Name of solute</param>
+        /// <param name="layerIndex">Layer index to add delta to</param>
+        /// <param name="delta">Value to be added to top layer of solute</param>
+        public void AddToLayer(int layerIndex, string name, double delta)
+        {
             Solute foundSolute = solutes.Find(solute => solute.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             if (foundSolute == null)
                 throw new Exception("Cannot find solute: " + name);
@@ -78,12 +97,13 @@
             if (foundSolute.addToTopLayerMethod == null)
             {
                 double[] values = foundSolute.Value;
-                values[0] += delta;
+                values[layerIndex] += delta;
                 foundSolute.Value = values;
             }
             else
                 foundSolute.addToTopLayerMethod.Invoke(foundSolute.model, new object[] { delta });
         }
+
 
         /// <summary>
         /// Set the value of a solute by specifying a delta. Will throw if solute not found.
@@ -104,6 +124,14 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            if (solutes == null)
+                FindSolutes();
+        }
+
+        /// <summary>Find all solutes.</summary>
+        private void FindSolutes()
+        {
+            solutes = new List<Solute>();
             // Find all solutes.
             foreach (IModel soluteModel in soluteModels)
             {
@@ -116,6 +144,10 @@
                         solutes.Add(new Solute() { model = soluteModel, property = property, addToTopLayerMethod = addToTopLayerMethod });
                     }
                 }
+
+                PropertyInfo kgha = soluteModel.GetType().GetProperty("kgha");
+                if (kgha != null)
+                    solutes.Add(new Solute() { model = soluteModel, property = kgha, addToTopLayerMethod = null });
             }
         }
 
@@ -128,7 +160,16 @@
             public PropertyInfo property;
             public IModel model;
             public MethodInfo addToTopLayerMethod;
-            public string Name {  get { return property.Name; } }
+            public string Name
+            {
+                get
+                {
+                    if (property.Name == "kgha")
+                        return model.Name;
+                    else
+                        return property.Name;
+                }
+            }
             public double[] Value
             {
                 get

@@ -160,6 +160,7 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
+    <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="IClock.cs" />
     <Compile Include="IIrrigation.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
+    <Compile Include="Interfaces\ISoilTemperature.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
@@ -275,6 +277,7 @@
     <Compile Include="Soils\HydraulicProperties.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
+    <Compile Include="Soils\Nutrient\Solute.cs" />
     <Compile Include="Soils\OutputLayers.cs" />
     <Compile Include="Soils\MultiPoreWater\Evapotranspiration.cs" />
     <Compile Include="Soils\MultiPoreWater\MRSpline.cs" />
@@ -428,7 +431,7 @@
     <Compile Include="Soils\LayerStructure.cs" />
     <Compile Include="Soils\Phosphorus.cs" />
     <Compile Include="Soils\Sample.cs" />
-    <Compile Include="Soils\simpleSoilTemp.cs" />
+    <Compile Include="Soils\CERESSoilTemperature.cs" />
     <Compile Include="Soils\Soil.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
     <Compile Include="Soils\SoilNitrogen.cs" />

@@ -187,7 +187,7 @@ namespace Models.PMF
             SoilCrop soilCrop = Soil.Crop(this.Name) as SoilCrop;
 
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (MyZone.Water[j] - Soil.SoilWater.LL15mm[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL(this.Name)[j] * (MyZone.Water[j] - Soil.SoilWater.LL15mm[j]));
 
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
             
@@ -219,12 +219,10 @@ namespace Models.PMF
             NO3Uptake = new double[Soil.NO3N.Length];
             NH4Uptake = new double[Soil.NH4N.Length];
 
-            SoilCrop soilCrop = Soil.Crop(this.Name) as SoilCrop;
-
             for (int j = 0; j < Soil.SoilWater.LL15mm.Length; j++)
             {
-                PotNO3Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NO3N[j]);
-                PotNH4Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NH4N[j]);
+                PotNO3Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL(this.Name)[j] * MyZone.NO3N[j]);
+                PotNH4Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL(this.Name)[j] * MyZone.NH4N[j]);
             }
             double TotPotNUptake = MathUtilities.Sum(PotNO3Uptake) + MathUtilities.Sum(PotNH4Uptake);
 

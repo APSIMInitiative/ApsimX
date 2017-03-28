@@ -196,6 +196,7 @@ namespace UserInterface.Views
                     {
                         CellRendererText textRender = render as CellRendererText;
                         textRender.EditingStarted -= OnCellBeginEdit;
+                        textRender.EditingCanceled -= TextRender_EditingCanceled;
                         textRender.Edited -= OnCellValueChanged;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
@@ -209,6 +210,7 @@ namespace UserInterface.Views
                     {
                         CellRendererText textRender = render as CellRendererText;
                         textRender.EditingStarted -= OnCellBeginEdit;
+                        textRender.EditingCanceled -= TextRender_EditingCanceled;
                         textRender.Edited -= OnCellValueChanged;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
@@ -241,7 +243,12 @@ namespace UserInterface.Views
         /// </summary>
         private void PopulateGrid()
         {
-            WaitCursor = true;
+            // WaitCursor = true;
+            // Set the cursor directly rather than via the WaitCursor property, as the property setter
+            // runs a message loop. This is normally desirable, but in this case, we have lots
+            // of events associated with the grid data, and it's best to let them be handled in the 
+            // main message loop. 
+            mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
             ClearGridColumns();
             fixedcolview.Visible = false;
             colLookup.Clear();
@@ -276,6 +283,7 @@ namespace UserInterface.Views
                 textRender.FixedHeightFromFont = 1; // 1 line high
                 textRender.Editable = !isReadOnly;
                 textRender.EditingStarted += OnCellBeginEdit;
+                textRender.EditingCanceled += TextRender_EditingCanceled;
                 textRender.Edited += OnCellValueChanged;
                 textRender.Xalign = i == 0 ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
@@ -311,12 +319,18 @@ namespace UserInterface.Views
             for (int i = 0; i < nCols; i++)
             {
                 Label label = GetColumnHeaderLabel(i);
-                label.Justify = Justification.Center;
-                label.Style.FontDescription.Weight = Pango.Weight.Bold;
+                if (label != null)
+                {
+                    label.Justify = Justification.Center;
+                    label.Style.FontDescription.Weight = Pango.Weight.Bold;
+                }
 
                 label = GetColumnHeaderLabel(i, fixedcolview);
-                label.Justify = Justification.Center;
-                label.Style.FontDescription.Weight = Pango.Weight.Bold;
+                if (label != null)
+                {
+                    label.Justify = Justification.Center;
+                    label.Style.FontDescription.Weight = Pango.Weight.Bold;
+                }
             }
 
             int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
@@ -333,13 +347,14 @@ namespace UserInterface.Views
 
             gridview.Show();
 
-            Gdk.Window main = mainWindow;
-            while (Gtk.Application.EventsPending() && gridview.IsMapped)
-                Gtk.Application.RunIteration();
-
-            main.Cursor = null;
-            //WaitCursor = false; // This won't work if the above Run loop has resulted in our own closure
+            mainWindow.Cursor = null;
         }
+
+        private void TextRender_EditingCanceled(object sender, EventArgs e)
+        {
+            this.userEditingCell = false;
+        }
+
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
         {
             gridview.Vadjustment.Value = fixedcolview.Vadjustment.Value;
@@ -352,18 +367,19 @@ namespace UserInterface.Views
 
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
-            TreePath startPath;
-            TreePath endPath;
+            //TreePath startPath;
+            //TreePath endPath;
             TreePath path = model.GetPath(iter);
+            TreeView view = col.TreeView as TreeView;
             int rowNo = path.Indices[0];
             // This gets called a lot, even when it seemingly isn't necessary.
-            if (numberLockedCols == 0 && gridview.GetVisibleRange(out startPath, out endPath) && (rowNo < startPath.Indices[0] || rowNo > endPath.Indices[0]))
-                return;
+            //if (numberLockedCols == 0 && view.GetVisibleRange(out startPath, out endPath) && (rowNo < startPath.Indices[0] || rowNo > endPath.Indices[0]))
+            //    return;
             int colNo;
             string text = String.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
             {
-                if (col.TreeView == gridview)
+                if (view == gridview)
                 {
                     col.CellRenderers[1].Visible = false;
                     col.CellRenderers[2].Visible = false;
@@ -377,7 +393,7 @@ namespace UserInterface.Views
                     text = String.Format("{0:" + NumericFormat + "}", dataVal);
                 else if (dataType == typeof(DateTime))
                     text = String.Format("{0:d}", dataVal);
-                else if (col.TreeView == gridview)  // Currently not handling booleans and lists in the "fixed" column grid
+                else if (view == gridview)  // Currently not handling booleans and lists in the "fixed" column grid
                 {
                     if (dataType == typeof(Boolean))
                     {
@@ -1336,6 +1352,8 @@ namespace UserInterface.Views
                         int xpos = (int)e.Event.X;
                         foreach (Widget child in (sender as TreeView).AllChildren)
                         {
+                            if (child.GetType() != (typeof(Gtk.Button)))
+                                continue;
                             if (xpos >= child.Allocation.Left && xpos <= child.Allocation.Right)
                                 break;
                             i++;

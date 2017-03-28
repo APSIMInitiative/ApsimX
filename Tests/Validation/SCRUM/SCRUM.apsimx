@@ -546,6 +546,26 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <LayerStructure>
+          <Name>LayerStructure</Name>
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+          </Thickness>
+        </LayerStructure>
         <RecordNumber>0</RecordNumber>
         <SoilType />
         <LocalName />
@@ -1248,7 +1268,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1269,7 +1289,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-8388353</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1290,7 +1310,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16744193</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1311,7 +1331,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1332,7 +1352,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1353,7 +1373,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-8372224</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1374,7 +1394,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1395,7 +1415,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16777152</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -12248,17 +12268,17 @@ namespace Models
           <Manager>
             <Name>Sowing_Yield</Name>
             <Script>
-              <Crop2>Dried_Peas</Crop2>
-              <SowingDate2>2005-09-28</SowingDate2>
-              <HarvestDate2>2006-02-24</HarvestDate2>
-              <CropNConc>0</CropNConc>
               <YieldFile>%root%\Tests\Validation\SCRUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
               <HarvestDate1>2005-03-14</HarvestDate1>
               <Yield1>5500</Yield1>
+              <Crop2>Dried_Peas</Crop2>
+              <SowingDate2>2005-09-28</SowingDate2>
+              <HarvestDate2>2006-02-24</HarvestDate2>
               <Yield2>958</Yield2>
+              <CropNConc>0</CropNConc>
               <Crop3>Potatoes_Short</Crop3>
               <SowingDate3>2006-10-11</SowingDate3>
               <HarvestDate3>2007-03-12</HarvestDate3>
@@ -12552,22 +12572,22 @@ namespace Models
           <Manager>
             <Name>InF</Name>
             <Script>
-              <NFert>0</NFert>
-              <Irr1>0</Irr1>
-              <Irr2>0</Irr2>
-              <Irr3>0</Irr3>
-              <Irr4>0</Irr4>
-              <IrrFact1>0</IrrFact1>
-              <IrrFact2>0</IrrFact2>
-              <IrrFact3>0</IrrFact3>
-              <IrrFact4>0</IrrFact4>
-              <TreatFact>0</TreatFact>
               <FertDate1>2005-10-26</FertDate1>
               <FertDate2>2005-11-25</FertDate2>
+              <NFert>0</NFert>
+              <TreatFact>0</TreatFact>
               <IrrDate1>2005-11-18</IrrDate1>
+              <Irr1>0</Irr1>
+              <IrrFact1>0</IrrFact1>
               <IrrDate2>2005-11-23</IrrDate2>
+              <Irr2>0</Irr2>
+              <IrrFact2>0</IrrFact2>
               <IrrDate3>2005-12-07</IrrDate3>
+              <Irr3>0</Irr3>
+              <IrrFact3>0</IrrFact3>
               <IrrDate4>2005-12-29</IrrDate4>
+              <Irr4>0</Irr4>
+              <IrrFact4>0</IrrFact4>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;

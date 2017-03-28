@@ -7,7 +7,7 @@ using Models.PMF.Phen;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// Returns the ValueToHold which is updated daily until the WhenToHold stage is reached, beyond which it is held constant
+    /// Returns the a value which is updated daily until a given stage is reached, beyond which it is held constant
     /// </summary>
     [Serializable]
     [Description("Returns the ValueToHold which is updated daily until the WhenToHold stage is reached, beyond which it is held constant")]
@@ -23,7 +23,7 @@ namespace Models.PMF.Functions
         public string WhenToHold { get; set; }
 
         /// <summary>The value to hold after event</summary>
-        [Link]
+        [ChildLink]
         IFunction ValueToHold = null;
 
         /// <summary>The phenology</summary>
@@ -65,13 +65,13 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
             // Describe the function
-            tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as ValueToHold.Value until it raches " + WhenToHold + " stage when it fixes its value", indent));
+            tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as " + (ValueToHold as IModel).Name + " until it reaches " + WhenToHold + " stage when it fixes its value", indent));
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
                 child.Document(tags, headingLevel + 1, indent + 1);
-            }
         }
 
     }

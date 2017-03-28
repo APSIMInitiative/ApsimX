@@ -12,7 +12,9 @@ using Models.PMF.Library;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// A generic leaf model
+    ///     This provides a phytomer type which predicts the area, biomass and nutrient as the tally of separate cohorts of leaves.  
+    ///     A cohort of leaves is represented by a main-stem node position and branch leaves are kept in the same cohort as the mainstem leaf appearing at the same time ([lawless2005wheat]). 
+    ///     The Leaf class delegates the status and function of individual cohorts into LeafCohort sub-classes.
     /// </summary>
     [Serializable]
     [Description("Leaf Class")]
