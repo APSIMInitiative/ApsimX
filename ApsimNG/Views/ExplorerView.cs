@@ -74,6 +74,8 @@ namespace UserInterface.Views
         private CellRendererText textRender;
         private AccelGroup accel = new AccelGroup();
 
+        private const string modelMime = "application/x-model-component";
+
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
@@ -101,14 +103,14 @@ namespace UserInterface.Views
             treeview1.ButtonReleaseEvent += OnButtonUp;
 
             TargetEntry[] target_table = new TargetEntry[] {
-               new TargetEntry("application/x-model-component", TargetFlags.App, 0)
+               new TargetEntry(modelMime, TargetFlags.App, 0)
             };
 
             Gdk.DragAction actions = Gdk.DragAction.Copy | Gdk.DragAction.Link | Gdk.DragAction.Move;
             // treeview1.EnableModelDragDest(target_table, actions);
             // treeview1.EnableModelDragSource(Gdk.ModifierType.Button1Mask, target_table, actions);
             Drag.SourceSet(treeview1, Gdk.ModifierType.Button1Mask, target_table, actions);
-            Drag.DestSet(treeview1, 0, target_table, actions);
+            Drag.DestSet(treeview1, DestDefaults.All, target_table, actions);
             treeview1.DragMotion += OnDragOver;
             treeview1.DragDrop += OnDragDrop;
             treeview1.DragBegin += OnDragBegin;
@@ -675,7 +677,14 @@ namespace UserInterface.Views
             {
                 AllowDropArgs Args = new AllowDropArgs();
                 Args.NodePath = FullPath(path);
-                Drag.GetData(treeview1, e.Context, e.Context.Targets[0], e.Time);
+                // I don't know why, but on OSX, e.Context.Targets is being passed in with no elements
+                // This is a hack to get around that problem.
+                Gdk.Atom bomb;
+                if (e.Context.Targets.Length == 0)
+                    bomb = Gdk.Atom.Intern(modelMime, true);
+                else
+                    bomb = e.Context.Targets[0];
+                Drag.GetData(treeview1, e.Context, bomb, e.Time);
                 if (DragDropData != null)
                 {
                     Args.DragObject = DragDropData;
@@ -718,7 +727,14 @@ namespace UserInterface.Views
             Gdk.Atom[] targets = e.Context.Targets;
             IntPtr data = (IntPtr)dragSourceHandle;
             Int64 ptrInt = data.ToInt64();
-            e.SelectionData.Set(targets[0], 8, BitConverter.GetBytes(ptrInt));
+            // I don't know why, but on OSX, e.Context.Targets is being passed in with no elements
+            // This is a hack to get around that problem.
+            Gdk.Atom bomb;
+            if (e.Context.Targets.Length == 0)
+                bomb = Gdk.Atom.Intern(modelMime, true);
+            else
+                bomb = e.Context.Targets[0];
+            e.SelectionData.Set(bomb, 8, BitConverter.GetBytes(ptrInt));
         }
 
         private void OnDragDataReceived(object sender, DragDataReceivedArgs e)
@@ -746,7 +762,14 @@ namespace UserInterface.Views
                 AllowDropArgs Args = new AllowDropArgs();
                 Args.NodePath = FullPath(path);
 
-                Drag.GetData(treeview1, e.Context, e.Context.Targets[0], e.Time);
+                // I don't know why, but on OSX, e.Context.Targets is being passed in with no elements
+                // This is a hack to get around that problem.
+                Gdk.Atom bomb;
+                if (e.Context.Targets.Length == 0)
+                    bomb = Gdk.Atom.Intern(modelMime, true);
+                else
+                    bomb = e.Context.Targets[0];
+                Drag.GetData(treeview1, e.Context, bomb, e.Time);
                 if (DragDropData != null)
                 {
                     DropArgs args = new DropArgs();
