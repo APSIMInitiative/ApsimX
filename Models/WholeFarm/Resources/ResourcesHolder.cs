@@ -179,15 +179,6 @@ namespace Models.WholeFarm.Resources
         }
 
         /// <summary>
-        /// Get the Resource Group for Labour Hired
-        /// </summary>
-        /// <returns></returns>
-        public LabourHired LabourHired()
-        {
-			return GetByType(typeof(LabourHired)) as LabourHired;
-        }
-
-        /// <summary>
         /// Get the Resource Group for Land
         /// </summary>
         /// <returns></returns>
