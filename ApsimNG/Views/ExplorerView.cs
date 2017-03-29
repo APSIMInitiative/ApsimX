@@ -669,22 +669,18 @@ namespace UserInterface.Views
         {
             // e.Effect = DragDropEffects.None;
             e.RetVal = false;
+            Gdk.Drag.Status(e.Context, 0, e.Time); // Default to no drop
 
+            Gdk.Atom target = Drag.DestFindTarget(treeview1, e.Context, null);
             // Get the drop location
             TreePath path;
             TreeIter dest;
-            if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path))
+            if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path) &&
+                target != Gdk.Atom.Intern("GDK_NONE", false))
             {
                 AllowDropArgs Args = new AllowDropArgs();
                 Args.NodePath = FullPath(path);
-                // I don't know why, but on OSX, e.Context.Targets is being passed in with no elements
-                // This is a hack to get around that problem.
-                Gdk.Atom bomb;
-                if (e.Context.Targets.Length == 0)
-                    bomb = Gdk.Atom.Intern(modelMime, true);
-                else
-                    bomb = e.Context.Targets[0];
-                Drag.GetData(treeview1, e.Context, bomb, e.Time);
+                Drag.GetData(treeview1, e.Context, target, e.Time);
                 if (DragDropData != null)
                 {
                     Args.DragObject = DragDropData;
@@ -697,7 +693,7 @@ namespace UserInterface.Views
                             string SourceParent = null;
                             if (sourcePathOfItemBeingDragged != null)
                                 SourceParent = StringUtilities.ParentName(sourcePathOfItemBeingDragged);
-                            
+                                                              
                             // Now determine the effect. If the drag originated from a different view 
                             // (e.g. a toolbox or another file) then only copy is supported.
                             if (sourcePathOfItemBeingDragged == null)
@@ -705,13 +701,10 @@ namespace UserInterface.Views
                             else if (SourceParent == Args.NodePath)
                                 Gdk.Drag.Status(e.Context, Gdk.DragAction.Copy, e.Time);
                             else
-                            // The "SuggestedAction" will normally be Copy, but will be Move 
-                            // if shift is pressed, and Link if Ctrl-Shift is pressed
+                                // The "SuggestedAction" will normally be Copy, but will be Move 
+                                // if shift is pressed, and Link if Ctrl-Shift is pressed
                                 Gdk.Drag.Status(e.Context, e.Context.SuggestedAction, e.Time);
-
                         }
-                        else
-                            Gdk.Drag.Status(e.Context, 0, e.Time);
                     }
                 }
             }
@@ -724,17 +717,11 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragDataGet(object sender, DragDataGetArgs e)
         {
-            Gdk.Atom[] targets = e.Context.Targets;
             IntPtr data = (IntPtr)dragSourceHandle;
             Int64 ptrInt = data.ToInt64();
-            // I don't know why, but on OSX, e.Context.Targets is being passed in with no elements
-            // This is a hack to get around that problem.
-            Gdk.Atom bomb;
-            if (e.Context.Targets.Length == 0)
-                bomb = Gdk.Atom.Intern(modelMime, true);
-            else
-                bomb = e.Context.Targets[0];
-            e.SelectionData.Set(bomb, 8, BitConverter.GetBytes(ptrInt));
+            Gdk.Atom target = Drag.DestFindTarget(sender as Widget, e.Context, null);
+            if (target != Gdk.Atom.Intern("GDK_NONE", false))
+               e.SelectionData.Set(target, 8, BitConverter.GetBytes(ptrInt));
         }
 
         private void OnDragDataReceived(object sender, DragDataReceivedArgs e)
@@ -753,23 +740,18 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragDrop(object sender, DragDropArgs e)
         {
-            // Get the drop location
-            TreePath path;
+            Gdk.Atom target = Drag.DestFindTarget(treeview1, e.Context, null);
+                // Get the drop location
+                TreePath path;
             TreeIter dest;
             bool success = false;
-            if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path))
+            if (treeview1.GetPathAtPos(e.X, e.Y, out path) && treemodel.GetIter(out dest, path) &&
+                target != Gdk.Atom.Intern("GDK_NONE", false))                
             {
                 AllowDropArgs Args = new AllowDropArgs();
                 Args.NodePath = FullPath(path);
 
-                // I don't know why, but on OSX, e.Context.Targets is being passed in with no elements
-                // This is a hack to get around that problem.
-                Gdk.Atom bomb;
-                if (e.Context.Targets.Length == 0)
-                    bomb = Gdk.Atom.Intern(modelMime, true);
-                else
-                    bomb = e.Context.Targets[0];
-                Drag.GetData(treeview1, e.Context, bomb, e.Time);
+                Drag.GetData(treeview1, e.Context, target, e.Time);
                 if (DragDropData != null)
                 {
                     DropArgs args = new DropArgs();
