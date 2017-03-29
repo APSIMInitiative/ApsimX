@@ -6,6 +6,7 @@ using MathNet.Numerics.LinearAlgebra;
 using APSIM.Shared.Utilities;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using Models.Interfaces;
 
 namespace Models.Soils.SWIM4
 {
@@ -16,12 +17,15 @@ namespace Models.Soils.SWIM4
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    class SWIM4 : Model
+    public class SWIM4 : Model, ISoilWater
     {
-    //    [Link]
-    //    Clock Clock = null;
+        #region Links
         [Link]
         Soil Soil = null;
+        #region
+
+        #region Public properties
+        #region
 
         int n = 1;
         int nt = 2;
@@ -138,7 +142,13 @@ namespace Models.Soils.SWIM4
             qevap = 0.05;// potential evap rate from soil surface
         }
 
-        public void OnPrepare()
+        /// <summary>
+        /// Called when DoDailyInitialisation invoked.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Prepare")]
+        public void OnPrepare(object sender, EventArgs e)
         {
             //timer here in FORTRAN, this basically runs the solution for 100 days
             for (j = 1; j <= 100; j++)
@@ -157,6 +167,9 @@ namespace Models.Soils.SWIM4
                 sd.hofS(S[j], j, out h[j], out hS);
         }
 
+        /// <summary>
+        /// Generate the flux tables used during the simulation
+        /// </summary>
         public static void GenerateFlux()
         {
 

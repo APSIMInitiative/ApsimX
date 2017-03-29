@@ -102,6 +102,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.SoilTemperature))]
         [XmlElement(typeof(Soils.SoilTemperature2))]
         [XmlElement(typeof(Soils.OutputLayers))]
+        [XmlElement(typeof(Soils.SWIM4.SWIM4))]
         [XmlElement(typeof(Soils.Arbitrator.SoilArbitrator))]
         [XmlElement(typeof(Soils.Sample))]
         [XmlElement(typeof(Soils.Nutrient.Nutrient))]
