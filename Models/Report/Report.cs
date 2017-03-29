@@ -142,7 +142,7 @@ namespace Models.Report
                 table.Columns = new List<IReportColumn>();
                 table.Columns.AddRange(columns);
                 table.Flatten();
-                dataStore.WriteTable(this.simulation.Name, this.Name, table);
+                dataStore.WriteTable(table);
 
                 this.columns.Clear();
                 this.columns = null;

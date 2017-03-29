@@ -122,7 +122,10 @@ namespace UserInterface.Views
         /// </summary>
         public Image Export()
         {
-            return mapControl.ToImage();
+            //mapControl.Zoom = 1;
+            var Image = new Bitmap(mapControl.Width, mapControl.Height);
+            mapControl.ParentForm.DrawToBitmap(Image, new Rectangle(0, 0, mapControl.Width, mapControl.Height));
+            return Image;
         }
 
         private void mapControl_OnPositionChanged(GMap.NET.PointLatLng point)

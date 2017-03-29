@@ -29,7 +29,7 @@ namespace UserInterface.Commands
         private ExplorerPresenter ExplorerPresenter;
 
         // Setup a list of model types that we will recurse down through.
-        private static Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
+        private static Type[] modelTypesToRecurseDown = new Type[] {//typeof(Folder),
                                                                     typeof(Simulations),
                                                                     typeof(Simulation),
                                                                     typeof(Experiment),
@@ -37,7 +37,7 @@ namespace UserInterface.Commands
                                                                     typeof(AgroforestrySystem),
                                                                     typeof(CircularZone),
                                                                     typeof(RectangularZone),
-                                                                    typeof(PredictedObserved) };
+                                                                    typeof(PredictedObserved)};
 
         /// <summary>A .bib file instance.</summary>
         private BibTeX bibTeX;
@@ -133,10 +133,10 @@ namespace UserInterface.Commands
 
                 if (!ignoreChild)
                 {
-                    if (Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
+                    if (child.Name == "Validation" || Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
                     {
                         tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel));
-                        // string childFolderPath = Path.Combine(workingDirectory, child.Name);
+                        string childFolderPath = Path.Combine(workingDirectory, child.Name);
                         AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
 
                         if (child.Name == "Validation")
@@ -144,12 +144,16 @@ namespace UserInterface.Commands
                             IModel dataStore = Apsim.Child(modelToExport, "DataStore");
                             if (dataStore != null)
                             {
+                                tags.Add(new AutoDocumentation.NewPage());
                                 tags.Add(new AutoDocumentation.Heading("Statistics", headingLevel + 1));
                                 AddValidationTags(tags, dataStore, headingLevel + 2, workingDirectory);
                             }
                         }
                     }
-                    else if (child.Name != "TitlePage" && child.Name != "Introduction" && (child is Memo || child is Graph || child is Map || child is Tests))
+                    else if (child is Graph && (child as Graph).IncludeInDocumentation)
+                        child.Document(tags, headingLevel, 0);
+                    else if (child.Name != "TitlePage" && child.Name != "Introduction" &&
+                             (child is Folder || child is Memo || child is Map || child is Tests))
                         child.Document(tags, headingLevel, 0);
                 }
             }
@@ -180,6 +184,9 @@ namespace UserInterface.Commands
 
             Document document = new Document();
             CreatePDFSyles(document);
+            document.DefaultPageSetup.LeftMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
+            document.DefaultPageSetup.TopMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
+            document.DefaultPageSetup.BottomMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
             Section section = document.AddSection();
 
             // write image files
@@ -351,7 +358,7 @@ namespace UserInterface.Commands
                 {
                     AutoDocumentation.Heading thisTag = tags[i] as AutoDocumentation.Heading;
                     AutoDocumentation.Heading nextTag = tags[i + 1] as AutoDocumentation.Heading;
-                    if (thisTag != null && nextTag != null && thisTag.headingLevel >= nextTag.headingLevel)
+                    if (thisTag != null && nextTag != null && (thisTag.headingLevel >= nextTag.headingLevel && nextTag.headingLevel !=-1))
                     {
                         // Need to renumber headings after this tag until we get to the same heading
                         // level that thisTag is on.
@@ -431,10 +438,10 @@ namespace UserInterface.Commands
 
             Column column1 = table.AddColumn();
             column1.Width = "8cm";
-            // column1.Format.Alignment = ParagraphAlignment.Right;
+            //column1.Format.Alignment = ParagraphAlignment.Right;
             Column column2 = table.AddColumn();
             column2.Width = "8cm";
-            // column2.Format.Alignment = ParagraphAlignment.Right;
+            //column2.Format.Alignment = ParagraphAlignment.Right;
             Row row = table.AddRow();
 
             // Ensure graphs directory exists.
@@ -464,8 +471,7 @@ namespace UserInterface.Commands
 
             // Export graph to bitmap file.
             Bitmap image = new Bitmap(400, 250);
-            graph.Export(ref image, false);
-            graph.MainWidget.Destroy();
+            graph.Export(ref image, new Rectangle(0, 0, image.Width, image.Height), false);
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
             row.Cells[0].AddImage(PNGFileName);
 
@@ -486,7 +492,52 @@ namespace UserInterface.Commands
             // Add an empty paragraph for spacing.
             section.AddParagraph();
         }
+		
+        /// <summary>Creates the graph page.</summary>
+        /// <param name="section">The section to write to.</param>
+        /// <param name="graphPage">The graph and table to convert to html.</param>
+        /// <param name="workingDirectory">The working directory.</param>
+        private void CreateGraphPage(Section section, GraphPage graphPage, string workingDirectory)
+        {
+            int numColumns = 2;
+            int numRows = 3;
 
+            // Export graph to bitmap file.
+            Bitmap image = new Bitmap(700, 850);
+
+            GraphPresenter graphPresenter = new GraphPresenter();
+            GraphView graphView = new GraphView();
+            graphView.BackColor = OxyPlot.OxyColors.White;
+            graphView.FontSize = 10;
+            graphView.MarkerSize = 4;
+            graphView.Width = image.Width / numColumns;
+            graphView.Height = image.Height / numRows;
+
+            int col = 0;
+            int row = 0;
+            for (int i = 0; i < graphPage.graphs.Count; i++)
+            {
+                if (graphPage.graphs[i].IncludeInDocumentation)
+                {
+                    graphPresenter.Attach(graphPage.graphs[i], graphView, ExplorerPresenter);
+                    Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height,
+                                                graphView.Width, graphView.Height);
+                    graphView.Export(ref image, r, false);
+                    graphPresenter.Detach();
+                    col++;
+                    if (col >= numColumns)
+                    {
+                        col = 0;
+                        row++;
+                    }
+                }
+            }
+
+            string PNGFileName = Path.Combine(workingDirectory, graphPage.name + ".png");
+            image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
+            section.AddImage(PNGFileName);
+
+        }
         /// <summary>Creates the table.</summary>
         /// <param name="section">The section.</param>
         /// <param name="tableObj">The table to convert to html.</param>
@@ -575,6 +626,14 @@ namespace UserInterface.Commands
                 else if (tag is AutoDocumentation.GraphAndTable)
                 {
                     CreateGraphPDF(section, tag as AutoDocumentation.GraphAndTable, workingDirectory);
+                }
+                else if (tag is GraphPage)
+                {
+                    CreateGraphPage(section, tag as GraphPage, workingDirectory);
+                }
+                else if (tag is AutoDocumentation.NewPage)
+                {
+                    section.AddPageBreak();
                 }
                 else if (tag is AutoDocumentation.Table)
                 {

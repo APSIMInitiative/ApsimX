@@ -368,9 +368,9 @@ namespace Models.PMF
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
 
             // Then check it all adds up
-            if (Math.Round(DM.Allocated, 8) > Math.Round(DM.TotalPlantSupply, 8))
+            if (MathUtilities.IsGreaterThan(DM.Allocated, DM.TotalPlantSupply) )
                 throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM supply.   Thats not really possible so something has gone a miss");
-            if (Math.Round(DM.Allocated, 8) > Math.Round(DM.TotalPlantDemand, 8))
+            if (MathUtilities.IsGreaterThan(DM.Allocated,DM.TotalPlantDemand))
                 throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM Demand.   Thats not really possible so something has gone a miss");
 
             // Send potential DM allocation to organs to set this variable for calculating N demand

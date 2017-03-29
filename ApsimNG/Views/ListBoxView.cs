@@ -29,6 +29,11 @@ namespace UserInterface.Views
 
         /// <summary>Return true if dropdown is visible.</summary>
         bool IsVisible { get; set; }
+
+        /// <summary>
+        /// If true, try to show images; otherwise text only
+        /// </summary>
+        bool showImages { get; set; }
     }
 
     public class IkonView : IconView
@@ -85,6 +90,8 @@ namespace UserInterface.Views
             listview.ButtonPressEvent -= OnDoubleClick;
         }
 
+        private bool _showImages;
+
         /// <summary>Get or sets the list of valid values.</summary>
         public string[] Values
         {
@@ -102,10 +109,21 @@ namespace UserInterface.Views
                 {
                     string text = val;
                     Gdk.Pixbuf image = null;
-                    int posLastSlash = val.LastIndexOfAny("\\/".ToCharArray());
-                    if (posLastSlash != -1)
+                    if (showImages)
                     {
-                        text = AddFileNameListItem(val, ref image);
+                        int posLastSlash = val.LastIndexOfAny("\\/".ToCharArray());
+                        if (posLastSlash != -1)
+                        {
+                            text = AddFileNameListItem(val, ref image);
+                        }
+                        else
+                        {
+                            string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + val + ".png";
+                            if (hasResource(resourceNameForImage))
+                                image = new Gdk.Pixbuf(null, resourceNameForImage);
+                            else
+                                image = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
+                        }
                     }
                     listmodel.AppendValues(text, image, val);
                 }
@@ -185,9 +203,20 @@ namespace UserInterface.Views
             set { listview.Visible = value; }
         }
 
+
+        /// <summary>
+        /// If true, try to show images; otherwise text only
+        /// </summary>
+        public bool showImages
+        {
+            get { return _showImages; }
+            set { _showImages = value; }
+        }
+
         /// <summary>User has changed the selection.</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        
         private void OnSelectionChanged(object sender, EventArgs e)
         {
             if (Changed != null)
