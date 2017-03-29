@@ -110,7 +110,7 @@ namespace UserInterface.Views
             // treeview1.EnableModelDragDest(target_table, actions);
             // treeview1.EnableModelDragSource(Gdk.ModifierType.Button1Mask, target_table, actions);
             Drag.SourceSet(treeview1, Gdk.ModifierType.Button1Mask, target_table, actions);
-            Drag.DestSet(treeview1, DestDefaults.All, target_table, actions);
+            Drag.DestSet(treeview1, 0, target_table, actions);
             treeview1.DragMotion += OnDragOver;
             treeview1.DragDrop += OnDragDrop;
             treeview1.DragBegin += OnDragBegin;
