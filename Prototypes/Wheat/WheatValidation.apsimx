@@ -2715,6 +2715,97 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
           </Cultivar>
           <Cultivar>
+            <Name>Cunningham</Name>
+            <Alias>
+              <Name>Anlace</Name>
+            </Alias>
+            <Alias>
+              <Name>Arrivato</Name>
+            </Alias>
+            <Alias>
+              <Name>Babbler</Name>
+            </Alias>
+            <Alias>
+              <Name>Barham</Name>
+            </Alias>
+            <Alias>
+              <Name>Baxter</Name>
+            </Alias>
+            <Alias>
+              <Name>Bowie</Name>
+            </Alias>
+            <Alias>
+              <Name>Buckley</Name>
+            </Alias>
+            <Alias>
+              <Name>Buckly</Name>
+            </Alias>
+            <Alias>
+              <Name>Burunga</Name>
+            </Alias>
+            <Alias>
+              <Name>Camm</Name>
+            </Alias>
+            <Alias>
+              <Name>Carinya</Name>
+            </Alias>
+            <Alias>
+              <Name>ChiefCLPlus</Name>
+            </Alias>
+            <Alias>
+              <Name>CLF_Janz</Name>
+            </Alias>
+            <Alias>
+              <Name>Dagger</Name>
+            </Alias>
+            <Alias>
+              <Name>DBAAurora</Name>
+            </Alias>
+            <Alias>
+              <Name>ElmoreCLPlus</Name>
+            </Alias>
+            <Alias>
+              <Name>Espada</Name>
+            </Alias>
+            <Alias>
+              <Name>Frame</Name>
+            </Alias>
+            <Alias>
+              <Name>Gazelle</Name>
+            </Alias>
+            <Alias>
+              <Name>Halberd</Name>
+            </Alias>
+            <Alias>
+              <Name>Hybrid_Meteor</Name>
+            </Alias>
+            <Alias>
+              <Name>JusticaCLPlus</Name>
+            </Alias>
+            <Alias>
+              <Name>Preston</Name>
+            </Alias>
+            <Alias>
+              <Name>Saphire</Name>
+            </Alias>
+            <Alias>
+              <Name>Scout</Name>
+            </Alias>
+            <Alias>
+              <Name>Stiletto</Name>
+            </Alias>
+            <Alias>
+              <Name>Ventura</Name>
+            </Alias>
+            <Alias>
+              <Name>Wallup</Name>
+            </Alias>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+          </Cultivar>
+          <Cultivar>
             <Name>Derrimut</Name>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
@@ -2722,6 +2813,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>EGAGregory</Name>
+            <Alias>
+              <Name>Gregory</Name>
+            </Alias>
+            <Alias>
+              <Name>Lancer</Name>
+            </Alias>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 1</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
@@ -2742,6 +2839,73 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].GrainFilling.Target.FixedValue = 665</Command>
           </Cultivar>
           <Cultivar>
+            <Name>Gauntlet</Name>
+            <Alias>
+              <Name>Braewood</Name>
+            </Alias>
+            <Alias>
+              <Name>Chara</Name>
+            </Alias>
+            <Alias>
+              <Name>Clearfield_stl</Name>
+            </Alias>
+            <Alias>
+              <Name>Drysdale</Name>
+            </Alias>
+            <Alias>
+              <Name>Envoy</Name>
+            </Alias>
+            <Alias>
+              <Name>Estoc</Name>
+            </Alias>
+            <Alias>
+              <Name>Giles</Name>
+            </Alias>
+            <Alias>
+              <Name>Harper</Name>
+            </Alias>
+            <Alias>
+              <Name>Krichauff</Name>
+            </Alias>
+            <Alias>
+              <Name>Magenta</Name>
+            </Alias>
+            <Alias>
+              <Name>Mitch</Name>
+            </Alias>
+            <Alias>
+              <Name>Phantom</Name>
+            </Alias>
+            <Alias>
+              <Name>Pugsley</Name>
+            </Alias>
+            <Alias>
+              <Name>Sentinel</Name>
+            </Alias>
+            <Alias>
+              <Name>Silverstar</Name>
+            </Alias>
+            <Alias>
+              <Name>Suneca</Name>
+            </Alias>
+            <Alias>
+              <Name>Sunlin</Name>
+            </Alias>
+            <Alias>
+              <Name>Sunvale</Name>
+            </Alias>
+            <Alias>
+              <Name>Trojan</Name>
+            </Alias>
+            <Alias>
+              <Name>Strzelecki</Name>
+            </Alias>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+          </Cultivar>
+          <Cultivar>
             <Name>Gladius</Name>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
@@ -2756,6 +2920,21 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>H45</Name>
+            <Alias>
+              <Name>Saintly</Name>
+            </Alias>
+            <Alias>
+              <Name>Tamarinrock</Name>
+            </Alias>
+            <Alias>
+              <Name>Waagin</Name>
+            </Alias>
+            <Alias>
+              <Name>Wollaroi</Name>
+            </Alias>
+            <Alias>
+              <Name>Zippy</Name>
+            </Alias>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
@@ -2769,6 +2948,84 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Hartog</Name>
+            <Alias>
+              <Name>Annuello</Name>
+            </Alias>
+            <Alias>
+              <Name>Carnamah</Name>
+            </Alias>
+            <Alias>
+              <Name>Catalina</Name>
+            </Alias>
+            <Alias>
+              <Name>CLF_Stiletto</Name>
+            </Alias>
+            <Alias>
+              <Name>Cobra</Name>
+            </Alias>
+            <Alias>
+              <Name>Corack</Name>
+            </Alias>
+            <Alias>
+              <Name>Correll</Name>
+            </Alias>
+            <Alias>
+              <Name>Diamondbird</Name>
+            </Alias>
+            <Alias>
+              <Name>Gladius</Name>
+            </Alias>
+            <Alias>
+              <Name>Goroke</Name>
+            </Alias>
+            <Alias>
+              <Name>GrenadeCLPlus</Name>
+            </Alias>
+            <Alias>
+              <Name>Guardian</Name>
+            </Alias>
+            <Alias>
+              <Name>Halbred</Name>
+            </Alias>
+            <Alias>
+              <Name>Impala</Name>
+            </Alias>
+            <Alias>
+              <Name>Justica</Name>
+            </Alias>
+            <Alias>
+              <Name>Kord</Name>
+            </Alias>
+            <Alias>
+              <Name>Merlin</Name>
+            </Alias>
+            <Alias>
+              <Name>Mitre</Name>
+            </Alias>
+            <Alias>
+              <Name>Peake</Name>
+            </Alias>
+            <Alias>
+              <Name>Shield</Name>
+            </Alias>
+            <Alias>
+              <Name>Spitfire</Name>
+            </Alias>
+            <Alias>
+              <Name>Sunguard</Name>
+            </Alias>
+            <Alias>
+              <Name>Sunstate</Name>
+            </Alias>
+            <Alias>
+              <Name>Yallaroi</Name>
+            </Alias>
+            <Alias>
+              <Name>Yawa</Name>
+            </Alias>
+            <Alias>
+              <Name>Yitpi</Name>
+            </Alias>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
@@ -2784,6 +3041,24 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Kelallac</Name>
+            <Alias>
+              <Name>Beaufort</Name>
+            </Alias>
+            <Alias>
+              <Name>Calingiri</Name>
+            </Alias>
+            <Alias>
+              <Name>Endure</Name>
+            </Alias>
+            <Alias>
+              <Name>Forrest</Name>
+            </Alias>
+            <Alias>
+              <Name>Scenario</Name>
+            </Alias>
+            <Alias>
+              <Name>Zen</Name>
+            </Alias>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
@@ -2809,13 +3084,36 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
-            <Name>Lorikeet</Name>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
+            <Name>Lincoln</Name>
+            <Alias>
+              <Name>Crusader</Name>
+            </Alias>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Mace</Name>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>MacKellar</Name>
+            <Alias>
+              <Name>Adagio</Name>
+            </Alias>
+            <Alias>
+              <Name>Brennan</Name>
+            </Alias>
+            <Alias>
+              <Name>Declic</Name>
+            </Alias>
+            <Alias>
+              <Name>Revenue</Name>
+            </Alias>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
@@ -2838,6 +3136,72 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Mercury</Name>
+            <Alias>
+              <Name>Agtscythe</Name>
+            </Alias>
+            <Alias>
+              <Name>Arrino</Name>
+            </Alias>
+            <Alias>
+              <Name>Bonnie_rock</Name>
+            </Alias>
+            <Alias>
+              <Name>Bowerbird</Name>
+            </Alias>
+            <Alias>
+              <Name>Condo</Name>
+            </Alias>
+            <Alias>
+              <Name>Dart</Name>
+            </Alias>
+            <Alias>
+              <Name>Dollarbird</Name>
+            </Alias>
+            <Alias>
+              <Name>Emurock</Name>
+            </Alias>
+            <Alias>
+              <Name>Hyperno</Name>
+            </Alias>
+            <Alias>
+              <Name>ImposeCLPlus</Name>
+            </Alias>
+            <Alias>
+              <Name>Kalka</Name>
+            </Alias>
+            <Alias>
+              <Name>Kirchauff</Name>
+            </Alias>
+            <Alias>
+              <Name>Kukri</Name>
+            </Alias>
+            <Alias>
+              <Name>Hibred_Mercury</Name>
+            </Alias>
+            <Alias>
+              <Name>Hunter</Name>
+            </Alias>
+            <Alias>
+              <Name>LRPBArrow</Name>
+            </Alias>
+            <Alias>
+              <Name>Mace</Name>
+            </Alias>
+            <Alias>
+              <Name>Ouyen</Name>
+            </Alias>
+            <Alias>
+              <Name>Ruby</Name>
+            </Alias>
+            <Alias>
+              <Name>Tamaroi</Name>
+            </Alias>
+            <Alias>
+              <Name>Young</Name>
+            </Alias>
+            <Alias>
+              <Name>Katana</Name>
+            </Alias>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
@@ -2858,17 +3222,34 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.045</Command>
           </Cultivar>
           <Cultivar>
+            <Name>Sunbri</Name>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+          </Cultivar>
+          <Cultivar>
             <Name>Sunco</Name>
+            <Alias>
+              <Name>Advantage</Name>
+            </Alias>
+            <Alias>
+              <Name>Bellaroi</Name>
+            </Alias>
+            <Alias>
+              <Name>Caparoi</Name>
+            </Alias>
+            <Alias>
+              <Name>Ellison</Name>
+            </Alias>
+            <Alias>
+              <Name>Suntop</Name>
+            </Alias>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6.5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 3.5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 4</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
-          </Cultivar>
-          <Cultivar>
-            <Name>Suntop</Name>
-            <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
-            <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
           </Cultivar>
           <Cultivar>
             <Name>Ventura</Name>
@@ -2878,9 +3259,28 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Wedgetail</Name>
+            <Alias>
+              <Name>Lorikeet</Name>
+            </Alias>
+            <Alias>
+              <Name>Rosella</Name>
+            </Alias>
+            <Alias>
+              <Name>Whistler</Name>
+            </Alias>
+            <Alias>
+              <Name>Wylah</Name>
+            </Alias>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>Westonia</Name>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wilgoyne</Name>
@@ -37363,10 +37763,10 @@ Considerable canopy decay was observed during the winter for the early sown trea
                 <Name>Sowing</Name>
                 <Script>
                   <SowDate>24-Jul</SowDate>
-                  <Population>150</Population>
                   <CultivarName>Wakanui</CultivarName>
                   <SowingDepth>50</SowingDepth>
                   <RowSpacing>150</RowSpacing>
+                  <Population>150</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -51256,8 +51656,8 @@ namespace Models
             <Manager>
               <Name>StateFactors</Name>
               <Script>
-                <NitFactor>0</NitFactor>
                 <IrrFactor>False</IrrFactor>
+                <NitFactor>0</NitFactor>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -62183,8 +62583,8 @@ namespace Models
             <Manager>
               <Name>MouseActivity</Name>
               <Script>
-                <ProportionNibbled>0.5</ProportionNibbled>
                 <NibblingDate>2002-10-31</NibblingDate>
+                <ProportionNibbled>0.5</ProportionNibbled>
               </Script>
               <Code><![CDATA[
 using System;
