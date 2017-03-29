@@ -75,7 +75,7 @@ namespace UserInterface.Presenters
                     object child = Activator.CreateInstance(selectedModelType, true);
                     string childXML = XmlUtilities.Serialise(child, false, deserializerFileName);
                     this.explorerPresenter.Add(childXML, Apsim.FullPath(model));
-                    this.explorerPresenter.HideRightHandPanel();
+                    // this.explorerPresenter.HideRightHandPanel();
                 }
                 finally
                 {
