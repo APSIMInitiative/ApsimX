@@ -28,6 +28,16 @@ namespace Models.PMF.Phen
         [Link(IsOptional=true)]
         private IFunction Target = null;
 
+        [Link]
+        ISummary summary = null;
+
+        [Link]
+        Phenology phenology = null;
+
+        /// <summary>Number of days from sowing to end of this phase.</summary>
+        [XmlIgnore]
+        public int DaysFromSowingToEndPhase { get; set; }
+
         /// <summary>
         /// This function increments thermal time accumulated in each phase 
         /// and returns a non-zero value if the phase target is met today so
@@ -42,8 +52,14 @@ namespace Models.PMF.Phen
             // Get the Target TT
             double Target = CalcTarget();
 
-
-            if (TTinPhase > Target)
+            if (DaysFromSowingToEndPhase > 0)
+            {
+                if (phenology.DaysAfterSowing >= DaysFromSowingToEndPhase)
+                    PropOfDayUnused = 1.0;
+                else
+                    PropOfDayUnused = 0.0;
+            }
+            else if (TTinPhase > Target)
             {
                 double LeftOverValue = TTinPhase - Target;
                 if (_TTForToday > 0.0)
@@ -114,6 +130,17 @@ namespace Models.PMF.Phen
             if (Target != null)
                 writer.WriteLine(string.Format("         Target                    = {0,8:F0} (dd)", Target.Value()));
         }
+
+        /// <summary>Called when crop is ending</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, SowPlant2Type data)
+        {
+            if (DaysFromSowingToEndPhase > 0)
+                summary.WriteMessage(this, "FIXED number of days from sowing to " + Name + " = " + DaysFromSowingToEndPhase);
+        }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

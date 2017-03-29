@@ -40,6 +40,8 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter;
 
             allowableChildModels = Apsim.GetAllowableChildModels(this.model);
+            List<Type> allowableChildFunctions = Apsim.GetAllowableChildFunctions(this.model);
+            allowableChildModels.RemoveAll(a => allowableChildFunctions.Any(b => a == b));
 
             this.view.List.Values = allowableChildModels.Select(m => m.Name).ToArray();
             this.view.AddButton("Add", null, this.OnAddButtonClicked);
