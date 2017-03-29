@@ -5,6 +5,7 @@ namespace Models.Soils.SWIM4
     /// <summary>
     /// A class to hold solute properties
     /// </summary>
+    [Serializable]
     public class SolProps
     {
         /// <summary></summary>
