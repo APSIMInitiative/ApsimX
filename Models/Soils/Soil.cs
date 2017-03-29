@@ -476,7 +476,13 @@ namespace Models.Soils
             {
                 ISoilCrop MeasuredCrop = waterNode.Crop(CropName);
                 if (MeasuredCrop != null)
+                {
+                    if (MeasuredCrop is SoilCrop && 
+                        CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
+                        ModifyKLForSubSoilConstraints(MeasuredCrop as SoilCrop);
                     return MeasuredCrop;
+                }
+
                 ISoilCrop Predicted = PredictedCrop(CropName);
                 if (Predicted != null)
                     return Predicted;
@@ -485,56 +491,52 @@ namespace Models.Soils
             else return null;
         }
 
-        ///// <summary>
-        ///// Crop lower limit mapped. Units: mm/mm
-        ///// </summary>
-        //public double[] LL(string CropName)
-        //{
-        //    return LLMapped(CropName, Thickness);
-        //}
+        /// <summary>Standard thicknesses</summary>
+        static double[] StandardThickness = new double[] { 100, 100, 200, 200, 200, 200, 200 };
+        /// <summary>Standard Kls</summary>
+        static double[] StandardKL = new double[] { 0.06, 0.06, 0.04, 0.04, 0.04, 0.04, 0.02 };
 
-        ///// <summary>
-        ///// KL mapped. Units: /day
-        ///// </summary>
-        //public double[] KL(string CropName)
-        //{
-        //    SoilCrop SoilCrop = Crop(CropName);
-        //    if (SoilCrop.KL == null)
-        //        return null;
-        //    return Map(SoilCrop.KL, Water.Thickness, Thickness, MapType.Concentration, SoilCrop.KL.Last());
-        //}
-
-        ///// <summary>
-        ///// XF mapped. Units: 0-1
-        ///// </summary>
-        //public double[] XF(string CropName)
-        //{
-        //    SoilCrop SoilCrop = Crop(CropName);
-        //    if (SoilCrop.XF == null)
-        //    {
-        //        double[] XF = new double[Thickness.Length];
-        //        for (int i = 0; i != XF.Length; i++)
-        //            XF[i] = 1.0;
-        //        return XF;
-        //    }
-        //    return Map(SoilCrop.XF, Water.Thickness, Thickness, MapType.Concentration, SoilCrop.XF.Last());
-        //}
-
-
-        ///// <summary>
-        ///// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
-        ///// </summary>
-        //public double[] PAWCrop(string CropName)
-        //{
-        //    return CalcPAWC(Thickness,
-        //                    LL(CropName),
-        //                    SW,
-        //                    XF(CropName));
-        //}
-        //public double[] PAWmm(string CropName)
-        //{
-        //    return MathUtilities.Multiply(PAWCrop(CropName), Thickness);
-        //}
+        /// <summary>
+        /// Modify the KL values for subsoil constraints.
+        /// </summary>
+        /// <remarks>
+        /// From:
+        /// Hochman, Z., Dang, Y.P., Schwenke, G.D., Dalgliesh, N.P., Routley, R., McDonald, M., 
+        ///     Daniells, I.G., Manning, W., Poulton, P.L., 2007. 
+        ///     Simulating the effects of saline and sodic subsoils on wheat crops 
+        ///     growing on Vertosols. Australian Journal of Agricultural Research 58, 802–810. doi:10.1071/ar06365
+        /// </remarks>
+        /// <param name="measuredCrop"></param>
+        private void ModifyKLForSubSoilConstraints(SoilCrop measuredCrop)
+        {
+            double[] cl = Cl;
+            if (MathUtilities.ValuesInArray(cl))
+            {
+                measuredCrop.KL = Map(StandardKL, StandardThickness, Thickness, MapType.Concentration, StandardKL.Last());
+                for (int i = 0; i < Thickness.Length; i++)
+                    measuredCrop.KL[i] *= Math.Min(1.0, 4.0 * Math.Exp(-0.005 * cl[i]));
+            }
+            else
+            {
+                double[] esp = ESP;
+                if (MathUtilities.ValuesInArray(esp))
+                {
+                    measuredCrop.KL = Map(StandardKL, StandardThickness, Thickness, MapType.Concentration, StandardKL.Last());
+                    for (int i = 0; i < Thickness.Length; i++)
+                        measuredCrop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
+                }
+                else
+                {
+                    double[] ec = EC;
+                    if (MathUtilities.ValuesInArray(ec))
+                    {
+                        measuredCrop.KL = Map(StandardKL, StandardThickness, Thickness, MapType.Concentration, StandardKL.Last());
+                        for (int i = 0; i < Thickness.Length; i++)
+                            measuredCrop.KL[i] *= Math.Min(1.0, 3.0 * Math.Exp(-1.3 * ec[i]));
+                    }
+                }
+            }
+        }
 
         /// <summary>Return the plant available water CAPACITY at water node thickness. Units: mm/mm</summary>
         /// <param name="CropName">Name of the crop.</param>
@@ -1270,6 +1272,8 @@ namespace Models.Soils
         internal double[] KLMapped (string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
+            if (CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
+                ModifyKLForSubSoilConstraints(SoilCrop);
             if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
                 return SoilCrop.KL;
             return Map(SoilCrop.KL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.KL));
@@ -1686,6 +1690,17 @@ namespace Models.Soils
             return double.NaN;
         }
 
+        /// <summary>
+        /// Calculate conversion factor from kg/ha to ppm (mg/kg)
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public double[] kgha2ppm(double[] values)
+        {
+            for (int i = 0; i < values.Length; i++)
+                values[i] *= MathUtilities.Divide(100.0, BD[i] * Thickness[i], 0.0);
+            return values;
+        }
         #endregion
 
         #region Checking

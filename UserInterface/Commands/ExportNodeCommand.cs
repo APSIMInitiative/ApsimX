@@ -159,8 +159,10 @@ namespace UserInterface.Commands
                             }
                         }
                     }
-                    else if (child.Name != "TitlePage" && child.Name != "Introduction" && 
-                             (child is Folder || child is Memo || child is Graph || child is Map || child is Tests))
+                    else if (child is Graph && (child as Graph).IncludeInDocumentation)
+                        child.Document(tags, headingLevel, 0);
+                    else if (child.Name != "TitlePage" && child.Name != "Introduction" &&
+                             (child is Folder || child is Memo || child is Map || child is Tests))
                         child.Document(tags, headingLevel, 0);
                 }
             }
@@ -357,7 +359,7 @@ namespace UserInterface.Commands
                 {
                     AutoDocumentation.Heading thisTag = tags[i] as AutoDocumentation.Heading;
                     AutoDocumentation.Heading nextTag = tags[i + 1] as AutoDocumentation.Heading;
-                    if (thisTag != null && nextTag != null && thisTag.headingLevel >= nextTag.headingLevel)
+                    if (thisTag != null && nextTag != null && (thisTag.headingLevel >= nextTag.headingLevel && nextTag.headingLevel !=-1))
                     {
                         // Need to renumber headings after this tag until we get to the same heading
                         // level that thisTag is on.
@@ -516,16 +518,19 @@ namespace UserInterface.Commands
             int row = 0;
             for (int i = 0; i < graphPage.graphs.Count; i++)
             {
-                graphPresenter.Attach(graphPage.graphs[i], graphView, ExplorerPresenter);
-                Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height, 
-                                            graphView.Width, graphView.Height);
-                graphView.Export(image, r, false);
-                graphPresenter.Detach();
-                col++;
-                if (col >= numColumns)
+                if (graphPage.graphs[i].IncludeInDocumentation)
                 {
-                    col = 0;
-                    row++;
+                    graphPresenter.Attach(graphPage.graphs[i], graphView, ExplorerPresenter);
+                    Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height,
+                                                graphView.Width, graphView.Height);
+                    graphView.Export(image, r, false);
+                    graphPresenter.Detach();
+                    col++;
+                    if (col >= numColumns)
+                    {
+                        col = 0;
+                        row++;
+                    }
                 }
             }
 

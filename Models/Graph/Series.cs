@@ -631,6 +631,10 @@ namespace Models.Graph
             if (Y2FieldName != null && !fieldNames.Contains(Y2FieldName))
                 fieldNames.Add(Y2FieldName);
 
+            // Add in column names from annotation series.
+            foreach (EventNamesOnGraph annotation in Apsim.Children(this, typeof(EventNamesOnGraph)))
+                fieldNames.Add(annotation.ColumnName);
+
             return dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
         }
 

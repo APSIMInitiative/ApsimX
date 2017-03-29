@@ -150,7 +150,7 @@ namespace Models.PMF.Functions
             // add a heading.
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            tags.Add(new AutoDocumentation.Paragraph(Name + " = " + Expression, indent));
+            tags.Add(new AutoDocumentation.Paragraph(Name + " = " + Expression.Replace(".Value()", ""), indent));
 
         }
 
