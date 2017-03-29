@@ -2706,13 +2706,15 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Bolac</Name>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Cunningham</Name>
@@ -2807,9 +2809,10 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Derrimut</Name>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>EGAGregory</Name>
@@ -2910,6 +2913,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gutha</Name>
@@ -2945,6 +2949,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Hartog</Name>
@@ -3062,12 +3067,14 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kennedy</Name>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Lang</Name>
@@ -3088,7 +3095,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Alias>
               <Name>Crusader</Name>
             </Alias>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
@@ -3097,7 +3104,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Name>Mace</Name>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
@@ -3212,6 +3219,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Spear</Name>
@@ -3256,6 +3264,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wedgetail</Name>
@@ -3277,6 +3286,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Westonia</Name>
@@ -3299,6 +3309,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Yitpi</Name>
@@ -3314,6 +3325,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
         </CultivarFolder>
         <CultivarFolder>
@@ -4078,16 +4090,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Phenology.Zadok.Stage</Name>
             <n>1472</n>
-            <Slope>0.5452879721827999</Slope>
-            <Intercept>17.156342409070064</Intercept>
-            <SEslope>0.019337023894310825</SEslope>
-            <SEintercept>1.1419887239131585</SEintercept>
-            <R2>0.3510486851248763</R2>
-            <RMSE>25.241941790043089</RMSE>
-            <NSE>0.19029645553584407</NSE>
-            <ME>-6.4748724393396611</ME>
-            <MAE>12.787343181485996</MAE>
-            <RSR>0.89952958490616042</RSR>
+            <Slope>0.62931055411445613</Slope>
+            <Intercept>13.105960521071218</Intercept>
+            <SEslope>0.020439669702964229</SEslope>
+            <SEintercept>1.2071077973980275</SEintercept>
+            <R2>0.39204525470523843</R2>
+            <RMSE>25.0862774671716</RMSE>
+            <NSE>0.20025237029684173</NSE>
+            <ME>-6.1586320163419517</ME>
+            <MAE>11.206412945373835</MAE>
+            <RSR>0.89398228331969831</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Spike.N</Name>
@@ -4148,16 +4160,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Structure.HaunStage.Value()</Name>
             <n>482</n>
-            <Slope>0.96270003513421365</Slope>
-            <Intercept>0.48418580438451375</Intercept>
-            <SEslope>0.022776012293201708</SEslope>
-            <SEintercept>0.14846462646639888</SEintercept>
-            <R2>0.788228784435982</R2>
-            <RMSE>1.2713263129227952</RMSE>
-            <NSE>0.73872953748705927</NSE>
-            <ME>0.25944250701404326</ME>
-            <MAE>0.94618990098083589</MAE>
-            <RSR>0.51061571422299723</RSR>
+            <Slope>0.95900752856842375</Slope>
+            <Intercept>0.74170787174540465</Intercept>
+            <SEslope>0.021871229424854206</SEslope>
+            <SEintercept>0.14256683150329624</SEintercept>
+            <R2>0.80021963573163968</R2>
+            <RMSE>1.2944271310576112</RMSE>
+            <NSE>0.72914836796917459</NSE>
+            <ME>0.49471613247575585</ME>
+            <MAE>0.95677785902997214</MAE>
+            <RSR>0.519893930705378</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Structure.LeafTipsAppeared</Name>
@@ -4593,17 +4605,17 @@ namespace Models
         <AcceptedStats>
           <RegrStats>
             <Name>MaxLeafSize.Script.MaxLeafSize</Name>
-            <n>435</n>
-            <Slope>0.96577858084837875</Slope>
-            <Intercept>-5.7747164174497811</Intercept>
-            <SEslope>0.012547878663908708</SEslope>
-            <SEintercept>17.782493569198412</SEintercept>
-            <R2>0.93188603202462872</R2>
-            <RMSE>193.84806249166795</RMSE>
-            <NSE>0.92618835031581437</NSE>
-            <ME>-47.677170229502536</ME>
-            <MAE>143.15893016893654</MAE>
-            <RSR>0.27137053585621379</RSR>
+            <n>145</n>
+            <Slope>0.96577858084838053</Slope>
+            <Intercept>-5.7747164174541012</Intercept>
+            <SEslope>0.021834650259815954</SEslope>
+            <SEintercept>30.943439782189031</SEintercept>
+            <R2>0.9318860320246245</R2>
+            <RMSE>193.84806249166809</RMSE>
+            <NSE>0.92618835031581426</NSE>
+            <ME>-47.677170229502543</ME>
+            <MAE>143.15893016893662</MAE>
+            <RSR>0.27074453609314963</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -5354,8 +5366,8 @@ namespace Models
             <Manager>
               <Name>ApplyFertiliser</Name>
               <Script>
-                <Amount>160</Amount>
                 <FertDayOfYear>186</FertDayOfYear>
+                <Amount>160</Amount>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -14549,7 +14561,7 @@ namespace Models
           <Clock>
             <Name>Clock</Name>
             <StartDate>2011-05-05T00:00:00</StartDate>
-            <EndDate>2011-12-29T00:00:00</EndDate>
+            <EndDate>2011-11-12T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
@@ -68498,7 +68510,7 @@ namespace Models
           <Clock>
             <Name>Clock</Name>
             <StartDate>2011-05-05T00:00:00</StartDate>
-            <EndDate>2011-12-29T00:00:00</EndDate>
+            <EndDate>2011-12-28T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
