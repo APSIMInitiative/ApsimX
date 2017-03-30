@@ -248,7 +248,9 @@ namespace UserInterface.Views
             // runs a message loop. This is normally desirable, but in this case, we have lots
             // of events associated with the grid data, and it's best to let them be handled in the 
             // main message loop. 
-            mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+
+            if (mainWindow != null)
+               mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
             ClearGridColumns();
             fixedcolview.Visible = false;
             colLookup.Clear();
@@ -347,7 +349,8 @@ namespace UserInterface.Views
 
             gridview.Show();
 
-            mainWindow.Cursor = null;
+            if (mainWindow != null)
+                mainWindow.Cursor = null;
         }
 
         private void TextRender_EditingCanceled(object sender, EventArgs e)
