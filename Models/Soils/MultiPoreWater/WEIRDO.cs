@@ -1399,7 +1399,7 @@ namespace Models.Soils
                 }
                 double MatrixRelativeWaterContent = MatrixWaterContent / MatrixWaterCapacity;
 
-                MatrixRelativeWater[l] = MatrixRelativeWaterContent;
+                //MatrixRelativeWater[l] = MatrixRelativeWaterContent;
 
                 double[] X = { MappedLowerRepellentWC[l], MappedUpperRepellentWC[l] };
                 double[] Y = { MappedMinRepellancyFactor[l],1.0};
