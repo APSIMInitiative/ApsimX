@@ -20,13 +20,6 @@ The wheat model consists of:
 
 This work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]) , and the earlier versions developed within the Plant Modelling Framework ([brown_plant_2014]).]]></MemoText>
   </Memo>
-  <Memo>
-    <Name>Combined Results</Name>
-    <MemoText><![CDATA[
-#Combined Results
-Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
-]]></MemoText>
-  </Memo>
   <Replacements>
     <Name>Replacements</Name>
     <Plant>
@@ -1624,23 +1617,41 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </XYPairs>
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
-          <LinearInterpolationFunction>
+          <MultiplyFunction>
             <Name>CriticalNConc</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <X>
-                <double>3</double>
-                <double>4</double>
-                <double>6</double>
-              </X>
-              <Y>
-                <double>0.07</double>
-                <double>0.04</double>
-                <double>0.015</double>
-              </Y>
-            </XYPairs>
-            <XProperty>[Phenology].Stage</XProperty>
-          </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>CriticalNConcAt350ppm</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>3</double>
+                  <double>4</double>
+                  <double>6</double>
+                </X>
+                <Y>
+                  <double>0.07</double>
+                  <double>0.04</double>
+                  <double>0.015</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+            <LinearInterpolationFunction>
+              <Name>CO2Factor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>350</double>
+                  <double>700</double>
+                </X>
+                <Y>
+                  <double>1</double>
+                  <double>0.93</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Weather].CO2</XProperty>
+            </LinearInterpolationFunction>
+          </MultiplyFunction>
           <LinearInterpolationFunction>
             <Name>MinimumNConc</Name>
             <XYPairs>
@@ -3809,16 +3820,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>947</n>
-            <Slope>0.4926743108933706</Slope>
-            <Intercept>157.26317625035512</Intercept>
-            <SEslope>0.022093491377820327</SEslope>
-            <SEintercept>27.074589863952106</SEintercept>
-            <R2>0.34478229067819621</R2>
-            <RMSE>691.42922245464138</RMSE>
-            <NSE>0.029108864667973133</NSE>
-            <ME>-352.42452766535251</ME>
-            <MAE>395.70610095460256</MAE>
-            <RSR>0.98481770247108158</RSR>
+            <Slope>0.49267020191231892</Slope>
+            <Intercept>157.33959585459377</Intercept>
+            <SEslope>0.022095569917832104</SEslope>
+            <SEintercept>27.077137022179492</SEintercept>
+            <R2>0.34473601949775634</R2>
+            <RMSE>691.42477016100656</RMSE>
+            <NSE>0.02912136827170908</NSE>
+            <ME>-352.35223617282327</ME>
+            <MAE>395.71557309752831</MAE>
+            <RSR>0.98481136097227628</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Ear.N</Name>
@@ -3879,30 +3890,30 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>146</n>
-            <Slope>0.81273219655999407</Slope>
-            <Intercept>1040.2884030481964</Intercept>
-            <SEslope>0.034542630293529886</SEslope>
-            <SEintercept>553.5646788474287</SEintercept>
-            <R2>0.79357347013082369</R2>
-            <RMSE>3371.462415062475</RMSE>
-            <NSE>0.72119723050321394</NSE>
-            <ME>-1712.2832441738626</ME>
-            <MAE>2521.8685837742278</MAE>
-            <RSR>0.52620638677854725</RSR>
+            <Slope>0.812773393879833</Slope>
+            <Intercept>1040.21618582476</Intercept>
+            <SEslope>0.034544965407494813</SEslope>
+            <SEintercept>553.60210033505371</SEintercept>
+            <R2>0.79356792985780711</R2>
+            <RMSE>3371.2387664117696</RMSE>
+            <NSE>0.7212342184849192</NSE>
+            <ME>-1711.7499191073434</ME>
+            <MAE>2521.8116002293827</MAE>
+            <RSR>0.52617148045781537</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>466</n>
-            <Slope>0.23211958109653846</Slope>
-            <Intercept>39.047082289135673</Intercept>
-            <SEslope>0.024747311389833236</SEslope>
-            <SEintercept>10.860808060304146</SEintercept>
-            <R2>0.15938475883513137</R2>
-            <RMSE>353.3034897321956</RMSE>
-            <NSE>-0.26267245118772675</NSE>
-            <ME>-196.06583603443065</ME>
-            <MAE>204.78688178040943</MAE>
-            <RSR>1.1224806696121716</RSR>
+            <Slope>0.23217942145716639</Slope>
+            <Intercept>39.046966704910034</Intercept>
+            <SEslope>0.024752037549925183</SEslope>
+            <SEintercept>10.862882221687269</SEintercept>
+            <R2>0.15940266169215855</R2>
+            <RMSE>353.29571604519811</RMSE>
+            <NSE>-0.2626168869902854</NSE>
+            <ME>-196.04762944052226</ME>
+            <MAE>204.76860699337206</MAE>
+            <RSR>1.1224559718278591</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CoverTotal</Name>
@@ -3977,16 +3988,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Leaf.LAI</Name>
             <n>685</n>
-            <Slope>0.71876077056755039</Slope>
-            <Intercept>0.55930219160384276</Intercept>
-            <SEslope>0.018284784801142925</SEslope>
-            <SEintercept>0.072414776409433182</SEintercept>
-            <R2>0.69347667034654314</R2>
-            <RMSE>1.3367323006481355</RMSE>
-            <NSE>0.67113364831535816</NSE>
-            <ME>-0.34115856146697249</ME>
-            <MAE>1.0266482905977499</MAE>
-            <RSR>0.57304995839880191</RSR>
+            <Slope>0.71882780436633043</Slope>
+            <Intercept>0.55950817966709732</Intercept>
+            <SEslope>0.018284645950966596</SEslope>
+            <SEintercept>0.072414226509361482</SEintercept>
+            <R2>0.69351954443532038</R2>
+            <RMSE>1.3365413363422627</RMSE>
+            <NSE>0.6712276046724327</NSE>
+            <ME>-0.34073794721144512</ME>
+            <MAE>1.0263304735370165</MAE>
+            <RSR>0.57296809302644347</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.Live.N</Name>
@@ -4172,16 +4183,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>215</n>
-            <Slope>0.98433143854661931</Slope>
-            <Intercept>-32.951694473950965</Intercept>
-            <SEslope>0.021511119621484592</SEslope>
-            <SEintercept>30.268745450492297</SEintercept>
-            <R2>0.90766844319398365</R2>
-            <RMSE>197.78171902155052</RMSE>
-            <NSE>0.89359657740126952</NSE>
-            <ME>-52.847400872982611</ME>
-            <MAE>147.02205362410757</MAE>
-            <RSR>0.325435896850265</RSR>
+            <Slope>0.98436640950769727</Slope>
+            <Intercept>-32.971773101565304</Intercept>
+            <SEslope>0.021513877490849379</SEslope>
+            <SEintercept>30.272626106044278</SEintercept>
+            <R2>0.90765290908795171</R2>
+            <RMSE>197.79769186056987</RMSE>
+            <NSE>0.8935793904400372</NSE>
+            <ME>-52.823073894110941</ME>
+            <MAE>147.04611857413795</MAE>
+            <RSR>0.32546217903254776</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.N</Name>
@@ -4214,16 +4225,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>192</n>
-            <Slope>0.7953124613001924</Slope>
-            <Intercept>1423.2126909312574</Intercept>
-            <SEslope>0.026996903614858687</SEslope>
-            <SEintercept>392.99669648841274</SEintercept>
-            <R2>0.820391430551543</R2>
-            <RMSE>3022.7352339078839</RMSE>
-            <NSE>0.78282248909824048</NSE>
-            <ME>-1244.3143260398501</ME>
-            <MAE>2190.1012757884196</MAE>
-            <RSR>0.46480789368563813</RSR>
+            <Slope>0.7953583384106192</Slope>
+            <Intercept>1423.0170544026532</Intercept>
+            <SEslope>0.026998427398321145</SEslope>
+            <SEintercept>393.01887836065458</SEintercept>
+            <R2>0.82039179639517235</R2>
+            <RMSE>3022.5477762775831</RMSE>
+            <NSE>0.78284942517832379</NSE>
+            <ME>-1243.9120833213765</ME>
+            <MAE>2190.0612511020527</MAE>
+            <RSR>0.46477906820819703</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Protein</Name>
@@ -4242,16 +4253,16 @@ namespace Models
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>240</n>
-            <Slope>0.96981336413650465</Slope>
-            <Intercept>-15.022366447937202</Intercept>
-            <SEslope>0.031005273560170066</SEslope>
-            <SEintercept>16.338360123929256</SEintercept>
-            <R2>0.80433660063570822</R2>
-            <RMSE>114.38772139963204</RMSE>
-            <NSE>0.75413504007285259</NSE>
-            <ME>-29.324026072648842</ME>
-            <MAE>86.592683269617353</MAE>
-            <RSR>0.49481362409913249</RSR>
+            <Slope>0.96990766351641489</Slope>
+            <Intercept>-15.05320167298305</Intercept>
+            <SEslope>0.03100211210061422</SEslope>
+            <SEintercept>16.336694179436286</SEintercept>
+            <R2>0.80439929300097812</R2>
+            <RMSE>114.37199725271937</RMSE>
+            <NSE>0.75420263038735491</NSE>
+            <ME>-29.310184652029502</ME>
+            <MAE>86.578841848998024</MAE>
+            <RSR>0.49474560524164912</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Leaf.CohortMaxSize(1)</Name>
@@ -4602,6 +4613,13 @@ namespace Models
     </Map>
     <Folder>
       <Name>Combined Results</Name>
+      <Memo>
+        <Name>Combined Results</Name>
+        <MemoText><![CDATA[
+#Combined Results
+Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
+]]></MemoText>
+      </Memo>
       <Graph>
         <Name>Harvest Biomass</Name>
         <Series>
@@ -18141,8 +18159,8 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-1663232</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
@@ -61341,7 +61359,7 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-1663232</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
@@ -61485,7 +61503,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
       </Folder>
       <Folder>
@@ -62238,7 +62256,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>GrainSize</Name>
@@ -62302,7 +62320,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>ZadokCode</Name>
@@ -62605,7 +62623,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SW 40cm</Name>
@@ -62669,7 +62687,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SW 60cm</Name>
@@ -62733,7 +62751,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SW 80cm</Name>
@@ -62797,7 +62815,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SW 100cm</Name>
@@ -62861,7 +62879,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SW 120cm</Name>
@@ -62925,7 +62943,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SW 140cm</Name>
@@ -62989,7 +63007,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SW 160cm</Name>
@@ -63053,7 +63071,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>SW 180cm</Name>
@@ -63117,7 +63135,7 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Stress</Name>
@@ -63272,53 +63290,6 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
-          <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Graph>
-        <Graph>
-          <Name>Cover</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <EventNamesOnGraph>
-              <Name>EventNamesOnGraph</Name>
-              <ColumnName>CurrentStageName</ColumnName>
-            </EventNamesOnGraph>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Leaf.CoverTotal</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter />
-          </Series>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
@@ -64230,7 +64201,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -64272,7 +64243,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -64314,7 +64285,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -64356,7 +64327,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -64462,7 +64433,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -64504,7 +64475,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -64636,8 +64607,8 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
             <Marker>None</Marker>
@@ -72025,7 +71996,7 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>WaterStress</Name>
@@ -73604,7 +73575,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -73625,7 +73596,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -73667,7 +73638,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -73709,7 +73680,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -73730,7 +73701,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -73772,7 +73743,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -73793,7 +73764,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
