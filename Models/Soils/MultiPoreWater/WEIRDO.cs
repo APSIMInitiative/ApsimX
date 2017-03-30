@@ -335,6 +335,17 @@ namespace Models.Soils
         /// <summary>Gets or sets the bd.</summary>
         /// <value>The bd.</value>
         [Summary]
+        [Description("RFacMin")]
+        public double[] MinRepellancyFactor { get; set; }
+        /// <summary>Root extension factor</summary>
+        [Summary]
+        [Description("XF")]
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        public double[] XF { get; set; }
+        /// <summary>Gets or sets the bd.</summary>
+        /// <value>The bd.</value>
+        [Summary]
         [Description("BD")]
         [Units("g/cc")]
         [Display(Format = "N2")]
@@ -443,6 +454,8 @@ namespace Models.Soils
                 return null;
             }
         }
+        /// <summary>The factor for root penetration into soil layer</summary>
+        public double[] MappedXF { get; set; }
         #endregion
 
         #region Outputs
@@ -629,17 +642,17 @@ namespace Models.Soils
             SaturatedWaterDepth = new double[ProfileLayers];
             HourlyWaterExtraction = new double[ProfileLayers];
             RootLengthDensity = new double[ProfileLayers];
-            MatrixRelativeWater = new double[ProfileLayers];
 
-            MappedSAT = Soil.Map(SAT, ParamThickness, Thickness);
-            MappedDUL = Soil.Map(DUL, ParamThickness, Thickness);
-            MappedLL15 = Soil.Map(LL15, ParamThickness, Thickness);
-            MappedCFlow = Soil.Map(CFlow, ParamThickness, Thickness);
-            MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness);
-            MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness);
-            MappedUpperRepellentWC = Soil.Map(UpperRepellentWC, ParamThickness, Thickness);
-            MappedLowerRepellentWC = Soil.Map(LowerRepellentWC, ParamThickness, Thickness);
-            MappedMinRepellancyFactor = Soil.Map(MinRepellancyFactor, ParamThickness, Thickness);
+            MappedSAT = Soil.Map(SAT, ParamThickness, Thickness, Soil.MapType.Concentration,SAT[SAT.Length-1]);
+            MappedDUL = Soil.Map(DUL, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedLL15 = Soil.Map(LL15, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedCFlow = Soil.Map(CFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedMinHydrophilicRWC = Soil.Map(MaxRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedMaxHydrophobicRWC = Soil.Map(MaxRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedMinRepellancyFactor = Soil.Map(MinRepellancyFactor, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedXF = Soil.Map(XF, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
 
             Pores = new Pore[ProfileLayers][];
             PoreWater = new double[ProfileLayers][];

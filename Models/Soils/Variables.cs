@@ -25,10 +25,6 @@ namespace Models.Soils
         [Link]
         private Clock Clock = null;
 
-        /// <summary>Link to APSIM's metFile (weather data)</summary>
-        [Link]
-        private IWeather MetFile = null;
-
         /// <summary>The soil</summary>
         [Link]
         private Soil Soil = null;
@@ -36,7 +32,6 @@ namespace Models.Soils
         /// <summary>The soil organic matter</summary>
         [Link]
         private SoilOrganicMatter SoilOrganicMatter = null;
-
         #endregion
 
         #region Parameters and inputs provided by the user or APSIM
@@ -182,22 +177,6 @@ namespace Models.Soils
         {
             get { return SoilCNParameterSet; }
             set { SoilCNParameterSet = value.Trim(); }
-        }
-
-        /// <summary>Indicates whether simpleSoilTemp is allowed</summary>
-        /// <remarks>
-        /// When 'yes', soil temperature may be computed internally, if an external value is not supplied.
-        /// If 'no', a value for soil temperature must be supplied or an fatal error will occur.
-        /// </remarks>
-        private bool AllowsimpleSoilTemp = false;
-
-        /// <summary>Gets or sets the allow_simple soil temporary.</summary>
-        /// <value>The allow_simple soil temporary.</value>
-        [XmlIgnore]
-        public string allow_simpleSoilTemp
-        {
-            get { return (AllowsimpleSoilTemp) ? "yes" : "no"; }
-            set { AllowsimpleSoilTemp = value.ToLower().Contains("yes"); }
         }
 
         /// <summary>Indicates whether soil profile reduction is allowed (from erosion)</summary>
@@ -1210,6 +1189,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         [Description("Soil urea nitrogen amount")]
         [XmlIgnore]
+        [Solute]
         public double[] urea
         {
             get
@@ -1224,15 +1204,31 @@ namespace Models.Soils
                 }
                 return null;
             }
-            set  // should this be private?
+            set  
             {
-                double sumOld = MathUtilities.Sum(urea);
-
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].urea = value;
-
-                SendExternalMassFlowN(MathUtilities.Sum(urea) - sumOld);
+                if (hasValues(value, EPSILON))
+                {
+                    double[] delta = MathUtilities.Subtract(value, urea);
+                    // 3.1- send incoming dlt to be partitioned amongst patches
+                    double[][] newDelta = partitionDelta(delta, "urea", NPartitionApproach.ToLower());
+                    // 3.2- send dlt's to each patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_urea = newDelta[k];
+                }
             }
+        }
+
+        /// <summary>
+        /// Add an amount of Urea to top layer.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void AddureaToTopLayer(double amount)
+        {
+            // values will passed to patches as they come
+            double[] delta = new double[Soil.Thickness.Length];
+            delta[0] = amount;
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].dlt_urea = delta;
         }
 
         /// <summary>
@@ -1285,6 +1281,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         [Description("Soil ammonium nitrogen amount")]
         [XmlIgnore]
+        [Solute]
         public double[] NH4
         {
             get
@@ -1299,15 +1296,31 @@ namespace Models.Soils
                 }
                 return null;
             }
-            set  // should this be private?
+            set  
             {
-                double sumOld = MathUtilities.Sum(NH4);
-
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].nh4 = value;
-
-                SendExternalMassFlowN(MathUtilities.Sum(NH4) - sumOld);
+                if (hasValues(value, EPSILON))
+                {
+                    double[] delta = MathUtilities.Subtract(value, NH4);
+                    // 3.1- send incoming dlt to be partitioned amongst patches
+                    double[][] newDelta = partitionDelta(delta, "NH4", NPartitionApproach.ToLower());
+                    // 3.2- send dlt's to each patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_nh4 = newDelta[k];
+                }
             }
+        }
+
+        /// <summary>
+        /// Add an amount of NH4 to top layer.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void AddNH4ToTopLayer(double amount)
+        {
+            // values will passed to patches as they come
+            double[] delta = new double[Soil.Thickness.Length];
+            delta[0] = amount;
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].dlt_nh4 = delta;
         }
 
         /// <summary>
@@ -1360,6 +1373,7 @@ namespace Models.Soils
         [Units("kg/ha")]
         [Description("Soil nitrate nitrogen amount")]
         [XmlIgnore]
+        [Solute]
         public double[] NO3
         {
             get
@@ -1374,14 +1388,31 @@ namespace Models.Soils
                 }
                 return null;
             }
-            set  // should this be private? or not exist at all?
+            set
             {
-                double sumOld = MathUtilities.Sum(NO3);
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].no3 = value;
-
-                SendExternalMassFlowN(MathUtilities.Sum(NO3) - sumOld);
+                if (hasValues(value, EPSILON))
+                {
+                    double[] delta = MathUtilities.Subtract(value, NO3);
+                    // 3.1- send incoming dlt to be partitioned amongst patches
+                    double[][] newDelta = partitionDelta(delta, "NO3", NPartitionApproach.ToLower());
+                    // 3.2- send dlt's to each patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_no3 = newDelta[k];
+                }
             }
+        }
+
+        /// <summary>
+        /// Add an amount of NO3 to top layer.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void AddNO3ToTopLayer(double amount)
+        {
+            // values will passed to patches as they come
+            double[] delta = new double[Soil.Thickness.Length];
+            delta[0] = amount;
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].dlt_no3 = delta;
         }
 
         #endregion
@@ -2909,24 +2940,6 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>Soil temperature (oC), values actually used in the model</summary>
-        private double[] Tsoil;
-
-        /// <summary>SoilN's simple soil temperature</summary>
-        /// <value>The st.</value>
-
-        [Units("oC")]
-        public double[] st
-        {
-            get
-            {
-                double[] Result = new double[0];
-                if (!use_external_st)
-                    Result = Tsoil;
-                return Result;
-            }
-        }
-
         /// <summary>Temperature factor for nitrification and mineralisation</summary>
         /// <value>The tf.</value>
 
@@ -3023,9 +3036,6 @@ namespace Models.Soils
         /// <summary>List of all existing patches (internal instances of C and N processes)</summary>
         List<soilCNPatch> Patch;
 
-        /// <summary>The internal soil temp module - to be avoided (deprecated)</summary>
-        private simpleSoilTemp simpleST;
-
         #endregion
 
         #region Decision auxiliary variables
@@ -3035,9 +3045,6 @@ namespace Models.Soils
 
         /// <summary>Marker for whether a reset is going on</summary>
         private bool inReset = false;
-
-        /// <summary>Marker for whether external soil temperature is supplied, otherwise use internal</summary>
-        private bool use_external_st = false;
 
         /// <summary>Marker for whether external ph is supplied, otherwise default is used</summary>
         private bool use_external_ph = false;

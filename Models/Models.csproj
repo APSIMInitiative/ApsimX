@@ -142,6 +142,7 @@
     <Compile Include="Core\APSIMFileWriter.cs" />
     <Compile Include="Core\Attributes\DoNotDocumentAttribute.cs" />
     <Compile Include="Core\Attributes\ScopedModelAttribute.cs" />
+    <Compile Include="Core\Attributes\SoluteAttribute.cs" />
     <Compile Include="Core\AutoDocumentation.cs" />
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\Events.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
+    <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
     <Compile Include="Core\Replacements.cs" />
@@ -169,9 +171,11 @@
     <Compile Include="IClock.cs" />
     <Compile Include="IIrrigation.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
+    <Compile Include="Interfaces\ISoilTemperature.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
+    <Compile Include="Interfaces\ISolute.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Lifecycle\Cohort.cs" />
     <Compile Include="Lifecycle\Lifecycle.cs" />
@@ -188,6 +192,8 @@
     <Compile Include="Plant\Arbitrator\RelativeAllocationSinglePass.cs" />
     <Compile Include="Plant\Arbitrator\RelativeAllocation.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
+    <Compile Include="Plant\Functions\Bound.cs" />
+    <Compile Include="Plant\Functions\SoilWaterScale.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\BerryFillingRateFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\TEWaterDemandFunction.cs" />
     <Compile Include="Plant\Functions\MovingAverage.cs" />
@@ -261,7 +267,8 @@
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
     <Compile Include="Report\ReportTable.cs" />
-    <Compile Include="Soils\Nutrient\Flow.cs" />
+    <Compile Include="Soils\Nutrient\NFlow.cs" />
+    <Compile Include="Soils\Nutrient\CFlow.cs" />
     <Compile Include="Soils\Nutrient\NutrientPool.cs" />
     <Compile Include="Soils\Nutrient\Nutrient.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
@@ -270,6 +277,7 @@
     <Compile Include="Soils\HydraulicProperties.cs" />
     <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
+    <Compile Include="Soils\Nutrient\Solute.cs" />
     <Compile Include="Soils\OutputLayers.cs" />
     <Compile Include="Soils\MultiPoreWater\Evapotranspiration.cs" />
     <Compile Include="Soils\MultiPoreWater\MRSpline.cs" />
@@ -287,6 +295,7 @@
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
     <Compile Include="Soils\Variables.cs" />
+    <Compile Include="SoluteManager.cs" />
     <Compile Include="Stock\animgrp.cs" />
     <Compile Include="Stock\animprm.cs" />
     <Compile Include="Stock\grazenv.cs" />
@@ -422,7 +431,7 @@
     <Compile Include="Soils\LayerStructure.cs" />
     <Compile Include="Soils\Phosphorus.cs" />
     <Compile Include="Soils\Sample.cs" />
-    <Compile Include="Soils\simpleSoilTemp.cs" />
+    <Compile Include="Soils\CERESSoilTemperature.cs" />
     <Compile Include="Soils\Soil.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
     <Compile Include="Soils\SoilNitrogen.cs" />

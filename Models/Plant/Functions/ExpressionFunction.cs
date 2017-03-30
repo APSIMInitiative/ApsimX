@@ -38,7 +38,7 @@ namespace Models.PMF.Functions
                 Parse(fn, Expression);
                 parsed = true;
             }
-            FillVariableNames(fn, this);
+            FillVariableNames(fn, this, arrayIndex);
             Evaluate(fn);
             if (fn.Results != null && arrayIndex != -1)
                 return fn.Results[arrayIndex];
@@ -66,8 +66,9 @@ namespace Models.PMF.Functions
         /// <summary>Fills the variable names.</summary>
         /// <param name="fn">The function.</param>
         /// <param name="RelativeTo">The relative to.</param>
+        /// <param name="arrayIndex">The array index</param>
         /// <exception cref="System.Exception">Cannot find variable:  + sym.m_name +  in function:  + RelativeTo.Name</exception>
-        private static void FillVariableNames(ExpressionEvaluator fn, Model RelativeTo)
+        private static void FillVariableNames(ExpressionEvaluator fn, Model RelativeTo, int arrayIndex)
         {
             ArrayList varUnfilled = fn.Variables;
             ArrayList varFilled = new ArrayList();
@@ -88,6 +89,8 @@ namespace Models.PMF.Functions
                     for (int i = 0; i < arr.Length; i++)
                         symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i));
                 }
+                else if (sometypeofobject is IFunction)
+                    symFilled.m_value = (sometypeofobject as IFunction).Value(arrayIndex);
                 else
                     symFilled.m_value = Convert.ToDouble(sometypeofobject);
                 varFilled.Add(symFilled);
@@ -130,7 +133,7 @@ namespace Models.PMF.Functions
         {
             ExpressionEvaluator fn = new ExpressionEvaluator();
             Parse(fn, Expression);
-            FillVariableNames(fn, RelativeTo);
+            FillVariableNames(fn, RelativeTo, -1);
             Evaluate(fn);
             if (fn.Results != null)
                 return fn.Results;
@@ -147,7 +150,7 @@ namespace Models.PMF.Functions
             // add a heading.
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            tags.Add(new AutoDocumentation.Paragraph(Name + " = " + Expression, indent));
+            tags.Add(new AutoDocumentation.Paragraph(Name + " = " + Expression.Replace(".Value()", ""), indent));
 
         }
 

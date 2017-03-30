@@ -65,16 +65,16 @@ namespace Models.PMF
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
-        public double FDM { get { return MathUtilities.Divide(DM.TotalPlantSupply, DM.TotalPlantDemand, 0); } }
+        public double FDM { get { return DM == null ? 0 : MathUtilities.Divide(DM.TotalPlantSupply, DM.TotalPlantDemand, 0); } }
 
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
-        public double DeltaWt { get { return DM.End - DM.Start; } }
+        public double DeltaWt { get { return DM == null ? 0 : (DM.End - DM.Start); } }
 
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
-        public double FN { get { return MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
+        public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
 
         /// <summary>Gets the water supply.</summary>
         /// <value>The water supply.</value>
@@ -368,9 +368,9 @@ namespace Models.PMF
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
 
             // Then check it all adds up
-            if (Math.Round(DM.Allocated, 8) > Math.Round(DM.TotalPlantSupply, 8))
+            if (MathUtilities.IsGreaterThan(DM.Allocated, DM.TotalPlantSupply) )
                 throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM supply.   Thats not really possible so something has gone a miss");
-            if (Math.Round(DM.Allocated, 8) > Math.Round(DM.TotalPlantDemand, 8))
+            if (MathUtilities.IsGreaterThan(DM.Allocated,DM.TotalPlantDemand))
                 throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM Demand.   Thats not really possible so something has gone a miss");
 
             // Send potential DM allocation to organs to set this variable for calculating N demand

@@ -238,7 +238,7 @@ namespace Models
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             DataStore dataStore = new DataStore(this);
-            dataStore.WriteTable(this.Simulation.Name, "Messages", this.messagesTable);
+            dataStore.WriteTable(this.messagesTable);
             dataStore.Disconnect();
         }
 
@@ -865,7 +865,7 @@ namespace Models
 
             // Write to data store.
             DataStore dataStore = new DataStore(Simulation);
-            dataStore.WriteTable(Simulation.Name, "InitialConditions", table);
+            dataStore.WriteTable(table);
             dataStore.Disconnect();
         }
     }

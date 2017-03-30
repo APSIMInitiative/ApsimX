@@ -148,6 +148,7 @@
                 player.Play();
                 IsRunning = false;
                 jobManager = null;
+                jobs = null;
             }
         }
     }

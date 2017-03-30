@@ -255,6 +255,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
             }
             set
             {
+                if (ProcessUtilities.CurrentOS.IsWindows) // Want only integer values with IE
+                   value = Math.Truncate(value + 0.5);
                 browser.ExecJavaScript("SetZoom", new object[] { value });
                 if (popupWin != null)
                 {

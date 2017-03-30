@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -4811,6 +4811,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType>NZ_sedementary</SoilType>
           <LocalName />
@@ -4885,6 +4888,9 @@ namespace Models
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -9042,6 +9048,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -9068,6 +9077,9 @@ namespace Models
             <string>[Clock].EndOfSimulation</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -10200,6 +10212,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -10210,6 +10225,9 @@ namespace Models
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -11231,6 +11249,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -11261,6 +11282,9 @@ namespace Models
             <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -12206,6 +12230,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -12216,6 +12243,9 @@ namespace Models
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -13116,6 +13146,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -13126,6 +13159,9 @@ namespace Models
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -13438,51 +13474,6 @@ This experiment is part of the ongoing Cultivar Prediction Trial at Plant & Food
       <TableName>PredictedObserved</TableName>
       <XFieldName>Predicted.Oats.Structure.MainStemFinalNodeNumber</XFieldName>
       <YFieldName>Observed.Oats.Structure.MainStemFinalNodeNumber</YFieldName>
-      <ShowInLegend>true</ShowInLegend>
-      <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>Leaf Weight</Name>
-    <Series>
-      <Name>Series</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-16777216</ColourArgb>
-      <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>DailyObsPred</TableName>
-      <XFieldName>Observed.Oats.Leaf.Live.Wt</XFieldName>
-      <YFieldName>Predicted.Oats.Leaf.Live.Wt</YFieldName>
       <ShowInLegend>true</ShowInLegend>
       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
       <Cumulative>false</Cumulative>

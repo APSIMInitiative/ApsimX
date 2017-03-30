@@ -17,6 +17,12 @@
       <ObservedTableName>ObsCrop</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today.Year</FieldNameUsedForMatch>
     </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObservedSoil</Name>
+      <PredictedTableName>HarvestReport</PredictedTableName>
+      <ObservedTableName>ObsSoil</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today.Year</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -25,739 +31,2628 @@
     <Factors>
       <Name>Factors</Name>
       <Factor>
-        <Name>Burn</Name>
+        <Name>Treatment</Name>
         <Operations>
-          <Name>Spring</Name>
-        </Operations>
-        <Operations>
-          <Name>Fall</Name>
-        </Operations>
-        <Operations>
-          <Name>Nil</Name>
-        </Operations>
-        <Specifications>
-          <string>[BurnOperations]</string>
-        </Specifications>
-      </Factor>
-      <Factor>
-        <Name>N</Name>
-        <Operations>
-          <Name>0</Name>
+          <Name>6_fBN0</Name>
+          <Operation>
+            <Date>1931-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
+          </Operation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 0, Type: Fertiliser.Types.NO3N);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Operations>
-          <Name>45</Name>
-          <Operation>
-            <Date>1931-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1933-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1935-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1937-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1939-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1941-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1943-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1945-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1947-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1949-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1951-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1953-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1955-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1957-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1959-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1961-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1963-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1965-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1967-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1969-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1971-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1973-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1975-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1977-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1979-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1981-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1983-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1985-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1987-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1989-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1991-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1993-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1995-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1997-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-        </Operations>
-        <Operations>
-          <Name>90</Name>
-          <Operation>
-            <Date>1931-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1933-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1935-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1937-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1939-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1941-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1943-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1945-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1947-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1949-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1951-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1953-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1955-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1957-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1959-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1961-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1963-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1965-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1967-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1969-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1971-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1973-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1975-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1977-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1979-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1981-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1983-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1985-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1987-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1989-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1991-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1993-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1995-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1997-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-10-15</Date>
-            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
-          </Operation>
-        </Operations>
-        <Operations>
-          <Name>Manure</Name>
+          <Name>7_sBN0</Name>
           <Operation>
             <Date>1931-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1931-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 0, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 0, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 0, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 100, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Operations>
-          <Name>PeaVine</Name>
+          <Name>0_nBN0</Name>
           <Operation>
-            <Date>1931-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 73, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1931-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1933-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 73, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1933-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1935-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 73, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1935-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1937-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 73, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1937-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1939-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 73, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1939-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1941-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 73, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1941-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1943-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 73, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1943-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1945-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 73, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1945-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1947-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 73, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1947-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1949-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 73, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1949-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1951-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1951-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1953-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1953-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1955-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1955-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1957-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1957-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1959-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1959-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1961-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1961-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1963-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1963-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1965-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1965-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1967-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1967-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1969-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1969-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1971-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1971-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1973-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1973-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1975-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1975-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1977-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1977-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
-            <Date>1979-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Date>1979-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>2_sBN45</Name>
+          <Operation>
+            <Date>1931-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1931-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-04-15</Date>
-            <Action> [SurfaceOrganicMatter].Add(mass: 2009, N: 35, P:0.0, type: "wheat", name: "");</Action>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>3_sBN90</Name>
+          <Operation>
+            <Date>1931-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1931-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>4_nBN45</Name>
+          <Operation>
+            <Date>1931-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1931-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1931-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-08-15</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 45, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>5_nBN90</Name>
+          <Operation>
+            <Date>1931-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1931-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1931-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-04-01</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 34, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Fertiliser].Apply(Amount: 90, Type: Fertiliser.Types.NO3N);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>9_nBPv</Name>
+          <Operation>
+            <Date>1931-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1931-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 34, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>8_nBMn</Name>
+          <Operation>
+            <Date>1931-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1931-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1933-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1935-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1937-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1939-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1941-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1943-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1945-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1947-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 56, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1949-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 56, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1951-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1953-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1955-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1957-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1959-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1961-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1963-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1965-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1967-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1969-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1971-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1973-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1975-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1977-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-04-15</Date>
+            <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-10-15</Date>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Specifications>
-          <string>[NOperations]</string>
+          <string>[Operations]</string>
         </Specifications>
       </Factor>
     </Factors>
@@ -771,7 +2666,7 @@
       <Clock>
         <Name>clock</Name>
         <StartDate>1930-01-01T00:00:00</StartDate>
-        <EndDate>1996-12-31T00:00:00</EndDate>
+        <EndDate>1990-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
@@ -779,7 +2674,7 @@
       <Zone>
         <Name>Field</Name>
         <Operations>
-          <Name>SowOperations</Name>
+          <Name>Operations</Name>
           <Operation>
             <Date>1931-10-15</Date>
             <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
@@ -850,83 +2745,117 @@
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
-        <Operations>
+        <Manager>
           <Name>TillageOperations</Name>
-        </Operations>
-        <Operations>
-          <Name>BurnOperations</Name>
-        </Operations>
+          <Script>
+            <Crop>wheat</Crop>
+            <TillDate>16-may</TillDate>
+            <IncorpFraction>0.95</IncorpFraction>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Description("Crop")]
+		public ICrop Crop { get; set; }
+		[Description("Tillage date (d-mmm)")]
+		public string TillDate { get; set; }
+		[Description("Incorporation fraction (0-1)")]
+		public double IncorpFraction { get; set; }
+
+		[Link] Clock Clock;
+		[Link] SurfaceOrganicMatter SOM;
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if ((!Crop.IsAlive) && DateUtilities.WithinDates(TillDate, Clock.Today, TillDate))
+				SOM.Incorporate(fraction: IncorpFraction, depth: 200);			
+		}
+	}
+}
+	   ]]></Code>
+        </Manager>
         <Operations>
           <Name>NOperations</Name>
         </Operations>
@@ -936,7 +2865,9 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Soil].SoilNitrogen.oc[1:3]</string>
+            <string>sum([Soil].SoilWater.SWmm) as TotalSW</string>
+            <string>sum([Soil].SoilWater.LL15mm) as TotalLL15</string>
+            <string>sum([Soil].SoilWater.DULmm) as TotalDUL</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -949,6 +2880,7 @@
           <VariableNames>
             <string>[Clock].Today.Year</string>
             <string>[Wheat].Grain.Wt</string>
+            <string>[Wheat].Grain.N*10 as NExport</string>
             <string>[Wheat].AboveGround.Wt</string>
             <string>sum([Soil].SoilNitrogen.TotalC[1:2]) as SOC30</string>
             <string>[Soil].SoilNitrogen.TotalC[3] as SOC60</string>
@@ -1037,6 +2969,7 @@ namespace Models
 		[Description("Crop")]
 		public ICrop Crop { get; set; }
         
+       
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
@@ -1049,46 +2982,6 @@ namespace Models
 	}
 }
 	   ]]></Code>
-        </Manager>
-        <Manager>
-          <Name>SowingFertiliser</Name>
-          <Script>
-            <Amount>160</Amount>
-            <CropName>wheat</CropName>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		[Link] Summary Summary;
-		
-		
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount { get; set; }
-		
-		[Description("Crop to be fertilised")]
-		public string CropName { get; set; }
-		
-		
-		
-
-		[EventSubscribe("Sowing")]
-		private void OnSowing(object sender, EventArgs e)
-		{
-			Model crop = sender as Model;
-			if (crop.Name.ToLower() == CropName.ToLower())
-				Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
-		}
-		
-	}
-}
-]]></Code>
         </Manager>
         <Fertiliser>
           <Name>Fertiliser</Name>
@@ -1272,7 +3165,7 @@ namespace Models
             <Name>SoilOrganicMatter</Name>
             <RootCN>57</RootCN>
             <RootWt>1109</RootWt>
-            <SoilCN>12</SoilCN>
+            <SoilCN>13</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
             <Thickness>
@@ -1419,8 +3312,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -1440,17 +3333,17 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
+          <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>Clock.Today.Year</XFieldName>
           <YFieldName>SOC30</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -1481,8 +3374,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -1502,12 +3395,12 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
+          <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>Clock.Today.Year</XFieldName>
@@ -1543,8 +3436,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -1564,12 +3457,12 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
+          <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>Clock.Today.Year</XFieldName>
@@ -1605,8 +3498,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -1626,12 +3519,12 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
+          <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>Clock.Today.Year</XFieldName>
@@ -1667,8 +3560,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -1688,12 +3581,12 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
+          <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>Clock.Today.Year</XFieldName>
@@ -1729,8 +3622,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -1750,16 +3643,196 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
+          <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>Clock.Today.Year</XFieldName>
           <YFieldName>CNR60</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SOC30 Pre vs Obs</Name>
+        <Series>
+          <Name>Pre vs Obs</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoil</TableName>
+          <XFieldName>Observed.SOC30</XFieldName>
+          <YFieldName>Predicted.SOC30</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SOC60 Pre vs Obs</Name>
+        <Series>
+          <Name>Pre vs Obs</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoil</TableName>
+          <XFieldName>Observed.SOC60</XFieldName>
+          <YFieldName>Predicted.SOC60</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SON30 Pre vs Obs</Name>
+        <Series>
+          <Name>Pre vs Obs</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoil</TableName>
+          <XFieldName>Observed.SON30</XFieldName>
+          <YFieldName>Predicted.SON30</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>SON60 Pre vs Obs</Name>
+        <Series>
+          <Name>Pre vs Obs</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoil</TableName>
+          <XFieldName>Observed.SON60</XFieldName>
+          <YFieldName>Predicted.SON60</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -1794,8 +3867,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -1815,12 +3888,12 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
+          <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestReport</TableName>
           <XFieldName>Clock.Today.Year</XFieldName>
@@ -1860,8 +3933,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -1871,6 +3944,154 @@ namespace Models
           <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
           <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>NExport</Name>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObsCrop</TableName>
+          <XFieldName>Clock.Today.Year</XFieldName>
+          <YFieldName>Nexport</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Clock.Today.Year</XFieldName>
+          <YFieldName>NExport</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>true</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
+      <Name>Debug</Name>
+      <Graph>
+        <Name>SoilWater</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalSW</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>LL15</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalLL15</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>DUL</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TotalLL15</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>

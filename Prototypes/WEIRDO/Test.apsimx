@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -779,6 +779,18 @@
                 <double>0.8</double>
                 <double>0.8</double>
               </UpperRepellentWC>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
               <BD>
                 <double>1.2</double>
                 <double>1.2</double>
@@ -1036,6 +1048,9 @@
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <OutputLayers>
               <Name>OutputLayers</Name>
               <Thickness>
@@ -1183,6 +1198,18 @@
                 <double>0.8</double>
                 <double>0.8</double>
               </UpperRepellentWC>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
               <BD>
                 <double>1.2</double>
                 <double>1.2</double>
@@ -1574,6 +1601,9 @@ namespace Models
               <string />
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -2881,9 +2911,7 @@ namespace Models
               <string>[InitialWater]</string>
             </Specifications>
           </Factor>
-          <Specifications>
-            <string>[SurfaceOrganicMatter]</string>
-          </Specifications>
+          <Specifications />
         </Factor>
       </Factors>
       <Simulation>
@@ -3371,6 +3399,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -3734,6 +3765,9 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -5826,6 +5860,16 @@ namespace Models
                 <double>0.8</double>
                 <double>0.8</double>
               </UpperRepellentWC>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
               <BD>
                 <double>1</double>
                 <double>1</double>
@@ -6234,6 +6278,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -6347,6 +6394,16 @@ namespace Models
                 <double>0.8</double>
                 <double>0.8</double>
               </UpperRepellentWC>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
               <BD>
                 <double>1</double>
                 <double>1</double>
@@ -6440,6 +6497,9 @@ namespace Models
               <string />
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -8181,6 +8241,9 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -8265,6 +8328,9 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -9410,6 +9476,9 @@ namespace Models
                 <double>50</double>
               </Thickness>
             </LayerStructure>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -9481,6 +9550,9 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -11104,6 +11176,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -11324,6 +11399,9 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Report>
             <Name>Report</Name>
             <ExperimentFactorNames />
@@ -13334,6 +13412,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -13514,6 +13595,9 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -14537,6 +14621,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -14651,6 +14738,9 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -15778,6 +15868,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -15859,6 +15952,9 @@ namespace Models
             <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
             <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -16658,6 +16754,9 @@ namespace Models
                 <double>200</double>
               </Thickness>
             </OutputLayers>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -16838,6 +16937,9 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -17981,6 +18083,9 @@ namespace Models
             <LayerStructure>
               <Name>LayerStructure</Name>
             </LayerStructure>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <Weirdo>
               <Name>WEIRDO</Name>
               <Salb>0.15</Salb>
@@ -18163,6 +18268,9 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>

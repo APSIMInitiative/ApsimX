@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -1021,6 +1021,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -1106,6 +1109,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -2083,6 +2089,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -2195,6 +2204,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -2879,6 +2891,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -3322,6 +3337,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -3750,6 +3768,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -4170,6 +4191,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -4577,6 +4601,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -4984,6 +5011,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -5383,6 +5413,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -5736,6 +5769,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -6143,6 +6179,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -6496,6 +6535,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -6872,6 +6914,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -7225,6 +7270,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -7624,6 +7672,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -8023,6 +8074,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -8430,6 +8484,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -8814,6 +8871,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -9221,6 +9281,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -9574,6 +9637,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -9912,6 +9978,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -10242,6 +10311,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -10639,6 +10711,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -11044,6 +11119,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -11418,6 +11496,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -11846,6 +11927,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -12559,6 +12643,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -12644,6 +12731,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -12660,9 +12750,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12707,9 +12797,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12754,9 +12844,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12801,9 +12891,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12848,9 +12938,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12895,9 +12985,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12942,9 +13032,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12998,9 +13088,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13045,9 +13135,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13092,9 +13182,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13140,9 +13230,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13188,9 +13278,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13235,9 +13325,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13283,9 +13373,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -14143,6 +14233,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -14239,6 +14332,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -15284,6 +15380,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -15380,6 +15479,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -16168,6 +16270,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -16305,6 +16410,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -17103,6 +17211,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -17240,6 +17351,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -17959,6 +18073,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -18096,6 +18213,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -18910,6 +19030,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Gatton</SoilType>
               <Site>UQ Lawes</Site>
@@ -19066,6 +19189,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -20394,6 +20520,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Gatton</SoilType>
               <Site>UQ Lawes</Site>
@@ -20550,6 +20679,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -21780,6 +21912,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Gatton</SoilType>
               <Site>UQ Lawes</Site>
@@ -21936,6 +22071,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -23450,6 +23588,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <LocalName>Clarion</LocalName>
               <NearestTown>Ames</NearestTown>
@@ -23539,6 +23680,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -24283,6 +24427,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <LocalName>Nicollet</LocalName>
             <Region>Bremer</Region>
@@ -24371,6 +24518,9 @@ namespace Models
 }
 	   ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -25224,6 +25374,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <LocalName>Canisteo</LocalName>
             <NearestTown>Ames</NearestTown>
@@ -25313,6 +25466,9 @@ namespace Models
 }
 	   ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -25487,53 +25643,6 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
       </Simulation>
-      <Graph>
-        <Name>GrainWt</Name>
-        <Series>
-          <Name>Series1</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.GrainWt</XFieldName>
-          <YFieldName>Predicted.GrainWt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
     </Folder>
     <Folder>
       <Name>NewZealand</Name>
@@ -26065,6 +26174,9 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -28966,6 +29078,9 @@ namespace Models
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -31722,222 +31837,6 @@ This trial was conducted to provide data for parametersising the Leaf Area model
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
-                  <Name>Barley</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Canola</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Cloverseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.04</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fieldpea</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fababean</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.08</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Foragebrassica</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Itallian_ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Lucerne</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.038</double>
-                    <double>0.038</double>
-                    <double>0.03</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
                   <Name>MaizeSoil</Name>
                   <LL>
                     <double>0.154</double>
@@ -31959,249 +31858,6 @@ This trial was conducted to provide data for parametersising the Leaf Area model
                     <double>1</double>
                     <double>1</double>
                     <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Oats</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Potato</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.057</double>
-                    <double>0.023</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Grassseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Wheat</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass_whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>kale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>triticale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -32437,6 +32093,9 @@ This trial was conducted to provide data for parametersising the Leaf Area model
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -32960,6 +32619,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -34653,222 +34315,6 @@ namespace Models
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
-                  <Name>Barley</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Canola</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Cloverseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.04</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fieldpea</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fababean</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.08</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Foragebrassica</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Itallian_ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Lucerne</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.038</double>
-                    <double>0.038</double>
-                    <double>0.03</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
                   <Name>MaizeSoil</Name>
                   <LL>
                     <double>0.154</double>
@@ -34890,249 +34336,6 @@ namespace Models
                     <double>1</double>
                     <double>1</double>
                     <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Oats</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Potato</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.057</double>
-                    <double>0.023</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Grassseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Wheat</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass_whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>kale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>triticale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -35368,6 +34571,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -35895,6 +35101,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -35979,222 +35188,6 @@ namespace Models
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
-                  <Name>Barley</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Canola</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Cloverseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.04</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fieldpea</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fababean</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.08</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Foragebrassica</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Itallian_ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Lucerne</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.038</double>
-                    <double>0.038</double>
-                    <double>0.03</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
                   <Name>MaizeSoil</Name>
                   <LL>
                     <double>0.154</double>
@@ -36216,249 +35209,6 @@ namespace Models
                     <double>1</double>
                     <double>1</double>
                     <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Oats</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Potato</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.057</double>
-                    <double>0.023</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Grassseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Wheat</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass_whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>kale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>triticale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -36694,6 +35444,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -37259,6 +36012,9 @@ namespace Models
 }
 				]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -38077,7 +36833,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38133,7 +36889,7 @@ Simulation results for the combined datasets from the various countries are show
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38181,7 +36937,7 @@ Simulation results for the combined datasets from the various countries are show
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38794,6 +37550,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>Bugesera</Site>
             <NearestTown>Nyamata</NearestTown>
@@ -39078,6 +37837,9 @@ namespace Models
 }
 	   ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>

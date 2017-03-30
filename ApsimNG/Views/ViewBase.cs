@@ -242,7 +242,9 @@ namespace UserInterface
             try
             {
                 Gdk.EventKey evnt = new Gdk.EventKey(ptr);
-                Gtk.Main.DoEvent(evnt);
+                Gdk.EventHelper.Put(evnt);
+                GLib.MainContext.Iteration();
+                // Gtk.Main.DoEvent(evnt);
             }
             finally
             {

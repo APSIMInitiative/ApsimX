@@ -21,7 +21,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 3; } }
+        public static int LastestVersion { get { return 6; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -163,7 +163,6 @@ namespace Models.Core
             }
         }
 
-
         /// <summary>Upgrades to version 3. Make sure all area elements are greater than zero.</summary>
         /// <param name="node">The node to upgrade.</param>
         private static void UpgradeToVersion3(XmlNode node)
@@ -184,5 +183,42 @@ namespace Models.Core
                 }
             }
         }
+
+        /// <summary>Upgrades to version 4. Make sure all zones have a SoluteManager model.</summary>
+        /// <param name="node">The node to upgrade.</param>
+        private static void UpgradeToVersion4(XmlNode node)
+        {
+            foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "Zone"))
+                XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
+            foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "RectangularZone"))
+                XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
+            foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "CircularZone"))
+                XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
+        }
+
+        /// <summary>Upgrades to version 5. Make sure all zones have a SoluteManager model.</summary>
+        /// <param name="node">The node to upgrade.</param>
+        private static void UpgradeToVersion5(XmlNode node)
+        {
+            foreach (XmlNode soilNode in XmlUtilities.FindAllRecursivelyByType(node, "Soil"))
+                XmlUtilities.EnsureNodeExists(soilNode, "CERESSoilTemperature");
+        }
+
+        /// <summary>
+        /// Upgrades to version 6. Make sure all KLModifier, KNO3, KNH4 nodes have value
+        /// XProperty values.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        private static void UpgradeToVersion6(XmlNode node)
+        {
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
+            {
+                if (n.InnerText == "[Root].RootLengthDensity" || 
+                    n.InnerText == "[Root].RootLengthDenisty" ||
+                    n.InnerText == "[Root].LengthDenisty")
+                    n.InnerText = "[Root].LengthDensity";
+            }
+        }
+
     }
 }
