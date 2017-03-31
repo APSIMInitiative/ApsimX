@@ -124,8 +124,16 @@ namespace Models.Core.Runners
         private void OnGetJob(object sender, SocketServer.CommandArgs args)
         {
             Job jobToRun = null;
-            lock (jobs)
+            lock (this)
             {
+                // Free up memory be removing all child models on completed jobs.
+                // This helps the garbage collector when there are many jobs.
+                foreach (JobManager.Job job in jobs)
+                {
+                    if (job.IsCompleted && job.RunnableJob is Simulation)
+                        (job.RunnableJob as Simulation).Children.Clear();
+                }
+
                 jobToRun = jobs.Find(job => !job.IsRunning && !job.isCompleted && typeof(Simulation).IsAssignableFrom(job.RunnableJob.GetType()));
                 if (jobToRun != null)
                 {
@@ -150,7 +158,7 @@ namespace Models.Core.Runners
         private void OnGetJobFailed(object sender, SocketServer.CommandArgs args)
         {
             Job jobToRun = null;
-            lock (jobs)
+            lock (this)
             {
                 if (jobs.Count > 0)
                 {
@@ -188,7 +196,7 @@ namespace Models.Core.Runners
         private void OnEndJob(object sender, SocketServer.CommandArgs args)
         {
             EndJobArguments arguments = args.obj as EndJobArguments;
-            lock (jobs)
+            lock (this)
             {
                 SetJobCompleted(arguments.key, arguments.errorMessage);
             }

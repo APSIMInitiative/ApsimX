@@ -110,6 +110,7 @@ namespace Models.Core
         [XmlElement(typeof(Soils.Nutrient.NutrientPool))]
         [XmlElement(typeof(Soils.Nutrient.CarbonFlow))]
         [XmlElement(typeof(Soils.Nutrient.NFlow))]
+        [XmlElement(typeof(Soils.Nutrient.Solute))]
         [XmlElement(typeof(WaterModel.CNReductionForCover))]
         [XmlElement(typeof(WaterModel.CNReductionForTillage))]
         [XmlElement(typeof(WaterModel.EvaporationModel))]
