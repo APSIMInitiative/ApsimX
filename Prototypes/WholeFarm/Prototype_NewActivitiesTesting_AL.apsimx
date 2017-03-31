@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
@@ -157,7 +157,6 @@
             <Name>Native Pasture</Name>
             <DryMatter>0</DryMatter>
             <Nitrogen>0</Nitrogen>
-            <StartingAmount>1000</StartingAmount>
             <DecayNitrogen>0.35</DecayNitrogen>
             <MinimumNitrogen>0.4</MinimumNitrogen>
             <DecayDMD>0.1</DecayDMD>
@@ -627,20 +626,6 @@
                 <Operator>Equal</Operator>
                 <Value>Female</Value>
               </RuminantFilter>
-              <MonthlyValues>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </MonthlyValues>
             </RuminantFilterGroup>
             <LabourFilterGroup>
               <Name>Labour details</Name>
@@ -655,12 +640,12 @@
             <FeedTypeName>Lucerne</FeedTypeName>
             <LabourRequired>0.2</LabourRequired>
             <LabourHeadUnit>100</LabourHeadUnit>
-            <LabourShortfallLimitsFeeding>false</LabourShortfallLimitsFeeding>
             <LabourFilterList />
             <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
           </RuminantActivityFeed>
           <RuminantActivityGrow>
             <Name>Grow all ruminants</Name>
+            <PerformWithPartialResources>false</PerformWithPartialResources>
             <EnergyGross>18.4</EnergyGross>
           </RuminantActivityGrow>
           <RuminantActivityBreed>
@@ -688,6 +673,7 @@
           </RuminantActivityBreed>
           <RuminantActivityManage>
             <Name>Manage Bos indicus herd</Name>
+            <PerformWithPartialResources>false</PerformWithPartialResources>
             <HerdName>Breeding</HerdName>
             <MaximumBreedersKept>60</MaximumBreedersKept>
             <MaximumBreederAge>120</MaximumBreederAge>
@@ -699,9 +685,6 @@
             <MonthlyManagement>true</MonthlyManagement>
             <WeaningAge>9</WeaningAge>
             <WeaningWeight>250</WeaningWeight>
-            <VetCosts>3</VetCosts>
-            <DipCosts>2</DipCosts>
-            <VaccineCosts>2</VaccineCosts>
             <SellFemalesLikeMales>false</SellFemalesLikeMales>
           </RuminantActivityManage>
           <RuminantActivityBuySell>
@@ -766,6 +749,7 @@
               </RuminantPriceEntry>
               <PricingStyle>perKg</PricingStyle>
             </RuminantPricing>
+            <PerformWithPartialResources>false</PerformWithPartialResources>
             <BreedName>Bos indicus</BreedName>
             <BreedingSirePrice>4500</BreedingSirePrice>
             <DistanceToMarket>200</DistanceToMarket>
@@ -870,6 +854,7 @@
             <PerformWithPartialResources>true</PerformWithPartialResources>
             <LandTypeNameToUse>Sandy loam country</LandTypeNameToUse>
             <FeedTypeName>Native Pasture</FeedTypeName>
+            <StartingAmount>0</StartingAmount>
             <LandConditionIndexAtStart>2</LandConditionIndexAtStart>
             <UnitsOfArea>Squarekm</UnitsOfArea>
             <AreaRequested>50</AreaRequested>
