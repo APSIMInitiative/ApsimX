@@ -1499,8 +1499,56 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
-          <PhaseLookup>
+          <MultiplyFunction>
             <Name>LagDuration</Name>
+            <LinearInterpolationFunction>
+              <Name>AgeFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <X>
+                  <double>3</double>
+                  <double>4</double>
+                </X>
+                <Y>
+                  <double>0.4</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <XProperty>[Phenology].Stage</XProperty>
+            </LinearInterpolationFunction>
+            <SubtractFunction>
+              <Name>LastLeafDuration</Name>
+              <AddFunction>
+                <Name>ThermalTimeToRipe</Name>
+                <VariableReference>
+                  <Name>EarlyReproductive</Name>
+                  <VariableName>[Phenology].EarlyReproductive.Target.Value()</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>GrainDevelopment</Name>
+                  <VariableName>[Phenology].GrainDevelopment.Target.Value()</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>GrainFilling</Name>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>Maturing</Name>
+                  <VariableName>[Phenology].Maturing.Target.Value()</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>Ripening</Name>
+                  <VariableName>[Phenology].Ripening.Target.Value()</VariableName>
+                </VariableReference>
+              </AddFunction>
+              <VariableReference>
+                <Name>SenescenceDuration</Name>
+                <VariableName>[Leaf].CohortParameters.SenescenceDuration.Value()</VariableName>
+              </VariableReference>
+            </SubtractFunction>
+          </MultiplyFunction>
+          <PhaseLookup>
+            <Name>LagDuration1</Name>
             <PhaseLookupValue>
               <Name>VegetativeGrowth</Name>
               <MultiplyFunction>
@@ -1659,7 +1707,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <double>0.5</double>
                   </X>
                   <Y>
-                    <double>0.5</double>
+                    <double>1</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -1688,7 +1736,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                     <double>0.5</double>
                   </X>
                   <Y>
-                    <double>0.5</double>
+                    <double>1</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -2566,8 +2614,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8.5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].GrainDevelopment.Target.FixedValue = 120</Command>
-            <Command>[Phenology].GrainFilling.Target.FixedValue = 545</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
             <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.051</Command>
@@ -4655,7 +4701,7 @@ namespace Models
         <Latitude>1.4061088354351625</Latitude>
         <Longitude>-7.734375</Longitude>
       </Center>
-      <Zoom>1.4</Zoom>
+      <Zoom>1</Zoom>
     </Map>
     <Folder>
       <Name>Combined Results</Name>
@@ -12873,8 +12919,8 @@ namespace Models
             <Manager>
               <Name>1</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>29-Apr</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12931,8 +12977,8 @@ namespace Models
             <Manager>
               <Name>2</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>20-May</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12989,8 +13035,8 @@ namespace Models
             <Manager>
               <Name>3</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>10-Jun</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -13047,8 +13093,8 @@ namespace Models
             <Manager>
               <Name>4</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>4-Jul</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -13105,8 +13151,8 @@ namespace Models
             <Manager>
               <Name>5</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>22-Jul</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -13163,8 +13209,8 @@ namespace Models
             <Manager>
               <Name>6</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>15-Aug</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -13660,8 +13706,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>25-May</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -16500,8 +16546,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <CultivarName>Hartog</CultivarName>
                   <SowDate>25-May</SowDate>
+                  <CultivarName>Hartog</CultivarName>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -17215,8 +17261,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <CultivarName>Hartog</CultivarName>
                   <SowDate>25-May</SowDate>
+                  <CultivarName>Hartog</CultivarName>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -17930,8 +17976,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <CultivarName>Hartog</CultivarName>
                   <SowDate>25-May</SowDate>
+                  <CultivarName>Hartog</CultivarName>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -26788,8 +26834,8 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -26987,8 +27033,8 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -27150,8 +27196,8 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -27313,8 +27359,8 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -27488,8 +27534,8 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -27675,8 +27721,8 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.2</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -27822,8 +27868,8 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                   </KL>
                   <XF>
                     <double>1</double>
-                    <double>0.15</double>
-                    <double>0.3</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -28083,10 +28129,10 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
-                    <double>0.6</double>
-                    <double>0.4</double>
-                    <double>0.4</double>
-                    <double>0.4</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
                   </XF>
                 </SoilCrop>
                 <Thickness>
@@ -28690,7 +28736,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -28711,7 +28757,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -28753,7 +28799,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -28774,7 +28820,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -28816,7 +28862,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -28837,7 +28883,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -28879,7 +28925,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -28900,7 +28946,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -28942,7 +28988,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -28963,7 +29009,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29005,7 +29051,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29026,7 +29072,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29068,7 +29114,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29089,7 +29135,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29131,7 +29177,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -29152,7 +29198,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -30352,16 +30398,16 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                     <double>0.02</double>
                   </KL>
                   <XF>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
                   </XF>
                 </SoilCrop>
                 <Thickness>
@@ -30522,16 +30568,16 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                     <double>0.02</double>
                   </KL>
                   <XF>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
                   </XF>
                 </SoilCrop>
                 <Thickness>
@@ -30719,16 +30765,16 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                     <double>0.02</double>
                   </KL>
                   <XF>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
                   </XF>
                 </SoilCrop>
                 <Thickness>
@@ -30928,16 +30974,16 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                     <double>0.02</double>
                   </KL>
                   <XF>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
                   </XF>
                 </SoilCrop>
                 <Thickness>
@@ -31149,16 +31195,16 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                     <double>0.02</double>
                   </KL>
                   <XF>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
                   </XF>
                 </SoilCrop>
                 <Thickness>
@@ -31362,16 +31408,16 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
                     <double>0.02</double>
                   </KL>
                   <XF>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
-                    <double>0.5</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
                   </XF>
                 </SoilCrop>
                 <Thickness>
@@ -32288,10 +32334,6 @@ namespace Models
             <Name>SoilWaterProfile</Name>
             <Series>
               <Name>Predicted</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -33281,7 +33323,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33302,7 +33344,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33323,7 +33365,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33344,7 +33386,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33428,7 +33470,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33512,7 +33554,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33533,7 +33575,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33575,7 +33617,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33596,7 +33638,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33642,7 +33684,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33663,7 +33705,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33705,7 +33747,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33726,7 +33768,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33772,7 +33814,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33793,7 +33835,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33835,7 +33877,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33856,7 +33898,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -33898,7 +33940,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -35033,7 +35075,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -35054,7 +35096,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -35095,7 +35137,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -35698,15 +35740,15 @@ Emergence was recorded as the 28th of May for the first planting.  The model was
               <Manager>
                 <Name>Fertilise</Name>
                 <Script>
-                  <SDSwitch>0</SDSwitch>
-                  <Amount1>0</Amount1>
-                  <Amount2>0</Amount2>
-                  <Amount3>0</Amount3>
-                  <Amount4>0</Amount4>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
                   <FertDate4>25-Nov</FertDate4>
+                  <Amount1>0</Amount1>
+                  <Amount2>0</Amount2>
+                  <Amount3>0</Amount3>
+                  <Amount4>0</Amount4>
+                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -35790,9 +35832,9 @@ namespace Models
                   <XF>
                     <double>1</double>
                     <double>1</double>
-                    <double>0.3</double>
-                    <double>0.7</double>
-                    <double>0.9</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -36398,7 +36440,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -36420,7 +36462,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36462,7 +36504,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -36484,7 +36526,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>0</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36526,7 +36568,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36547,7 +36589,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36589,7 +36631,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -36611,7 +36653,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36656,7 +36698,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -36678,7 +36720,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36720,7 +36762,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -36742,7 +36784,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36784,7 +36826,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -36806,7 +36848,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36848,7 +36890,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -36870,7 +36912,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36916,7 +36958,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -36938,7 +36980,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -36980,7 +37022,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -37002,7 +37044,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -37820,7 +37862,7 @@ namespace Models
                 <Name>Pred</Name>
                 <EventNamesOnGraph>
                   <Name>EventNamesOnGraph</Name>
-                  <ColumnName>CurrentStageName</ColumnName>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
                 </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -37888,7 +37930,7 @@ namespace Models
                 <Name>Pred</Name>
                 <EventNamesOnGraph>
                   <Name>EventNamesOnGraph</Name>
-                  <ColumnName>CurrentStageName</ColumnName>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
                 </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -37961,7 +38003,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -37983,7 +38025,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38025,7 +38067,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -38047,7 +38089,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38093,7 +38135,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -38115,7 +38157,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38157,7 +38199,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -38179,7 +38221,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38221,7 +38263,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -38242,7 +38284,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38288,7 +38330,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -38309,7 +38351,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -38947,10 +38989,10 @@ Considerable canopy decay was observed during the winter for the early sown trea
                 <Name>Sowing</Name>
                 <Script>
                   <SowDate>24-Jul</SowDate>
-                  <Population>150</Population>
                   <CultivarName>Wakanui</CultivarName>
                   <SowingDepth>50</SowingDepth>
                   <RowSpacing>150</RowSpacing>
+                  <Population>150</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -39696,7 +39738,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -39717,7 +39759,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -40248,7 +40290,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -40269,7 +40311,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -40311,7 +40353,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -40332,7 +40374,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -41578,15 +41620,15 @@ namespace Models
               <Manager>
                 <Name>Fertilise</Name>
                 <Script>
-                  <SDSwitch>0</SDSwitch>
-                  <Amount1>0</Amount1>
-                  <Amount2>0</Amount2>
-                  <Amount3>0</Amount3>
-                  <Amount4>0</Amount4>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
                   <FertDate4>25-Nov</FertDate4>
+                  <Amount1>0</Amount1>
+                  <Amount2>0</Amount2>
+                  <Amount3>0</Amount3>
+                  <Amount4>0</Amount4>
+                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -42149,7 +42191,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -42170,7 +42212,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42735,7 +42777,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -42756,7 +42798,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42798,7 +42840,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -42819,7 +42861,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42861,7 +42903,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -42882,7 +42924,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42927,7 +42969,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -42948,7 +42990,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -42990,7 +43032,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -43032,7 +43074,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-8388608</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -43053,7 +43095,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>-16776961</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -51646,7 +51688,7 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(2);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-09-30</Date>
+                  <Date>2015-09-29</Date>
                   <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
                 <Operation>
@@ -51659,11 +51701,15 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 </Operation>
                 <Operation>
                   <Date>2015-10-22</Date>
-                  <Action>[Irrigation].Apply(0);</Action>
+                  <Action>[Irrigation].Apply(15);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-10-29</Date>
                   <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-03</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-11-06</Date>
@@ -51674,15 +51720,15 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(13);</Action>
                 </Operation>
                 <Operation>
+                  <Date>2015-11-19</Date>
+                  <Action>[Irrigation].Apply(24);</Action>
+                </Operation>
+                <Operation>
                   <Date>2015-11-26</Date>
                   <Action>[Irrigation].Apply(39);</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-12-03</Date>
-                  <Action>[Irrigation].Apply(40);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-10</Date>
                   <Action>[Irrigation].Apply(40);</Action>
                 </Operation>
                 <Operation>
@@ -51694,28 +51740,12 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(35);</Action>
                 </Operation>
                 <Operation>
+                  <Date>2015-12-31</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
                   <Date>2016-01-07</Date>
                   <Action>[Irrigation].Apply(30);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2016-01-14</Date>
-                  <Action>[Irrigation].Apply(33);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2016-01-21</Date>
-                  <Action>[Irrigation].Apply(21);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2016-02-03</Date>
-                  <Action>[Irrigation].Apply(30);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2016-02-04</Date>
-                  <Action>[Irrigation].Apply(40);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-03</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
               </Operations>
               <Specifications>
@@ -51757,6 +51787,14 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                   <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
                 <Operation>
+                  <Date>2015-11-03</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-19</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
                   <Date>2015-12-24</Date>
                   <Action>[Irrigation].Apply(25);</Action>
                 </Operation>
@@ -51767,10 +51805,6 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <Operation>
                   <Date>2016-02-04</Date>
                   <Action>[Irrigation].Apply(40);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-03</Date>
-                  <Action>[Irrigation].Apply(10);</Action>
                 </Operation>
               </Operations>
               <Memo>
@@ -52295,15 +52329,15 @@ namespace Models
                   <double>200</double>
                 </Thickness>
                 <SWCON>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
@@ -52455,19 +52489,19 @@ namespace Models
                     <double>0.06</double>
                     <double>0.11</double>
                     <double>0.12</double>
+                    <double>0.14</double>
+                    <double>0.14</double>
                     <double>0.16</double>
-                    <double>0.16</double>
-                    <double>0.2</double>
                     <double>0.2</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
                     <double>0.06</double>
                     <double>0.05</double>
+                    <double>0.04</double>
                     <double>0.03</double>
-                    <double>0.015</double>
                     <double>0.01</double>
-                    <double>0.02</double>
+                    <double>0</double>
                   </KL>
                   <XF>
                     <double>1</double>
@@ -52840,8 +52874,8 @@ namespace Models
             <Manager>
               <Name>StateFactors</Name>
               <Script>
-                <NitFactor>0</NitFactor>
                 <IrrFactor>False</IrrFactor>
+                <NitFactor>0</NitFactor>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -52862,9 +52896,7 @@ namespace Models
 		[Link] Irrigation Irrigation;
 		[Link] Soil ThisSoil;
 		[Link] Zone MyZone;
-		[Description("Amount of Irrgation be applied 0/1")]
 		public bool IrrFactor { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
 		public double NitFactor { get; set; }
 		
           
@@ -52956,9 +52988,9 @@ namespace Models
 				ThisSoil.LL15[0] = 0.06;
 				ThisSoil.LL15[1] = 0.11;
 				ThisSoil.LL15[2] = 0.16;
-				ThisSoil.LL15[3] = 0.16;
-				ThisSoil.LL15[4] = 0.16;
-				ThisSoil.LL15[5] = 0.16;
+				ThisSoil.LL15[3] = 0.14;
+				ThisSoil.LL15[4] = 0.14;
+				ThisSoil.LL15[5] = 0.14;
 				ThisSoil.LL15[6] = 0.16;
 				ThisSoil.DUL[0] = 0.3;
 				ThisSoil.DUL[1] = 0.3;
@@ -53065,21 +53097,21 @@ namespace Models
 				ThisSoil.LL15[4] = 0.27;
 				ThisSoil.LL15[5] = 0.27;
 				ThisSoil.LL15[6] = 0.21;
-				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
-				ThisSoil.DUL[4] = 0.29;
+				ThisSoil.DUL[0] = 0.26;
+				ThisSoil.DUL[1] = 0.24;
+				ThisSoil.DUL[2] = 0.26;
+				ThisSoil.DUL[3] = 0.27;
+				ThisSoil.DUL[4] = 0.24;
 				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
-				ThisSoil.SAT[0] = 0.34;
-				ThisSoil.SAT[1] = 0.34;
+				ThisSoil.DUL[6] = 0.35;
+				ThisSoil.SAT[0] = 0.38;
+				ThisSoil.SAT[1] = 0.36;
 				ThisSoil.SAT[2] = 0.34;
-				ThisSoil.SAT[3] = 0.34;
+				ThisSoil.SAT[3] = 0.36;
 				ThisSoil.SAT[4] = 0.34;
-				ThisSoil.SAT[5] = 0.34;
-				ThisSoil.SAT[6] = 0.34;
-				double[] nSW = { 0.18, 0.18, 0.26, 0.26, 0.23, 0.28, 0.33 };
+				ThisSoil.SAT[5] = 0.4;
+				ThisSoil.SAT[6] = 0.4;
+				double[] nSW = { 0.18, 0.18, 0.24, 0.27, 0.24, 0.28, 0.35 };
 				
 				ThisSoil.SoilWater.Reset();
 				
@@ -53099,33 +53131,47 @@ namespace Models
 		{
 		
 			// Try setting soil water table here
-			ThisSoil.SoilWater.SetWaterTable(1500.0);
+			//ThisSoil.SoilWater.SetWaterTable(1500.0);
 		
 			//Specific irrgations
-			if ((IrrFactor == true) && (NitFactor == 250))
+			if (IrrFactor == true)
 			{
-				if ((DateUtilities.CompareDates("17-Dec", Clock.Today) == 0))
-					Irrigation.Apply(39.7);
-				if ((DateUtilities.CompareDates("21-Jan", Clock.Today) == 0))
-					Irrigation.Apply(20.1);
+				if (NitFactor == 250)
+				{
+					if ((DateUtilities.CompareDates("10-Dec", Clock.Today) == 0))
+						Irrigation.Apply(40);
+					if ((DateUtilities.CompareDates("17-Dec", Clock.Today) == 0))
+						Irrigation.Apply(39.7);
+					if ((DateUtilities.CompareDates("14-Jan", Clock.Today) == 0))
+						Irrigation.Apply(30);
+					if ((DateUtilities.CompareDates("21-Jan", Clock.Today) == 0))
+						Irrigation.Apply(20.1);
+				}
+				if (NitFactor == 50)
+				{
+					if ((DateUtilities.CompareDates("10-Dec", Clock.Today) == 0))
+						Irrigation.Apply(40);
+					if ((DateUtilities.CompareDates("14-Jan", Clock.Today) == 0))
+						Irrigation.Apply(30);
+				}
 			}
 			//fertigation event	
-			if ((DateUtilities.CompareDates("19-Nov", Clock.Today) == 0))
-			{
-				if ((IrrFactor == true))
-					Irrigation.Apply(24);
-				else
-				{
-					Irrigation.Apply(20);
+			//if ((DateUtilities.CompareDates("19-Nov", Clock.Today) == 0))
+			//	{
+			//if ((IrrFactor == true))
+			//	Irrigation.Apply(24);
+			//	else
+			//	{
+			//Irrigation.Apply(20);
 /*					if (NitFactor == 0)
 						Irrigation.Apply(20);
 					if (NitFactor == 50)
 						Irrigation.Apply(10);
 					if (NitFactor == 250)
 						Irrigation.Apply(20);*/
-				}
+			//	}
 	    
-			}
+			//	}
 	
 			
 		}
@@ -54916,6 +54962,10 @@ namespace Models
               <Name>FullySenesced</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -54936,13 +54986,13 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>Predicted1</Name>
+                <Name>Observed</Name>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>FilledCircle</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -54981,6 +55031,7 @@ namespace Models
                 <Name>Predicted</Name>
                 <EventNamesOnGraph>
                   <Name>EventNamesOnGraph</Name>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
                 </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -55632,9 +55683,9 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -55717,8 +55768,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -55738,9 +55789,9 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -55770,10 +55821,9 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
                 <string>0Full</string>
-                <string>250Full</string>
+                <string>50Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
-                <string>250Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -55785,8 +55835,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -55806,9 +55856,9 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -55839,7 +55889,8 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
+                <string>0Nil</string>
+                <string>50Nil</string>
               </DisabledSeries>
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
@@ -55851,8 +55902,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -55872,9 +55923,9 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -55905,7 +55956,6 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
               </DisabledSeries>
@@ -55919,8 +55969,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -55940,9 +55990,9 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -55973,7 +56023,6 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
               </DisabledSeries>
@@ -55987,8 +56036,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -56008,9 +56057,9 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -56041,7 +56090,6 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
               </DisabledSeries>
@@ -56055,8 +56103,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -56076,9 +56124,9 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -56109,7 +56157,6 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
               </DisabledSeries>
@@ -56123,8 +56170,8 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
@@ -56144,9 +56191,9 @@ namespace Models
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
                 <ColourArgb>-16736653</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
                 <Marker>None</Marker>
                 <MarkerSize>Normal</MarkerSize>
                 <Line>Solid</Line>
@@ -56177,7 +56224,6 @@ namespace Models
               <DisabledSeries>
                 <string>0Full</string>
                 <string>50Full</string>
-                <string>250Full</string>
                 <string>0Nil</string>
                 <string>50Nil</string>
               </DisabledSeries>
@@ -56361,8 +56407,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -56375,6 +56421,7 @@ namespace Models
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
+              <Filter />
             </Series>
             <Axis>
               <Type>Left</Type>
@@ -56393,6 +56440,8 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries>
+              <string>0Full</string>
+              <string>50Full</string>
               <string>0Nil</string>
               <string>50Nil</string>
               <string>250Nil</string>
@@ -56403,13 +56452,17 @@ namespace Models
             <Name>WaterProfileNIl</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -56464,7 +56517,7 @@ namespace Models
               <string>50Full</string>
               <string>250Full</string>
               <string>0Nil</string>
-              <string>250Nil</string>
+              <string>50Nil</string>
             </DisabledSeries>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
@@ -63767,8 +63820,8 @@ namespace Models
             <Manager>
               <Name>MouseActivity</Name>
               <Script>
-                <ProportionNibbled>0.5</ProportionNibbled>
                 <NibblingDate>2002-10-31</NibblingDate>
+                <ProportionNibbled>0.5</ProportionNibbled>
               </Script>
               <Code><![CDATA[
 using System;
@@ -64858,8 +64911,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>25-May</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -65612,8 +65665,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>25-May</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -66327,8 +66380,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>25-May</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -67042,8 +67095,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <CultivarName>Hartog</CultivarName>
                 <SowDate>25-May</SowDate>
+                <CultivarName>Hartog</CultivarName>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
