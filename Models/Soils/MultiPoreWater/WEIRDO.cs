@@ -317,21 +317,21 @@ namespace Models.Soils
         [Units("mm H2O")]
         [Display(Format = "N0")]
         public double[] PsiBub { get; set; }
-        /// <summary>Relative Water content above which soil is hydrophillic</summary>
-        [Units("0-1")]
-        [Display(Format = "N2")]
-        [Description("Rupper")]
-        public double[] MaxRepellentWC { get; set; }
-        /// <summary>Relative water content at which soil reaches maximum hydrophobicity</summary>
-        [Units("0-1")]
-        [Display(Format = "N2")]
-        [Description("Rlower")]
-        public double[] MinRepellentWC { get; set; }
         /// <summary>Minimum repelancy Factor, when soil becomes dry</summary>
         [Units("0-1")]
         [Display(Format = "N2")]
         [Description("RFacMin")]
         public double[] MinRepellancyFactor { get; set; }
+        /// <summary>Relative water content at which soil reaches maximum hydrophobicity</summary>
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        [Description("Rlower")]
+        public double[] LowerRepellentWC { get; set; }
+        /// <summary>Relative Water content above which soil is hydrophillic</summary>
+        [Units("0-1")]
+        [Display(Format = "N2")]
+        [Description("Rupper")]
+        public double[] UpperRepellentWC { get; set; }
         /// <summary>Root extension factor</summary>
         [Summary]
         [Description("XF")]
@@ -379,8 +379,8 @@ namespace Models.Soils
         [Description("Report SW at all timesteps.  lots of data")]
         public bool ReportDetail { get; set; }
         /// <summary>
-                                             /// Allows Sorption processes to be switched off from the UI
-                                             /// </summary>
+        /// Allows Sorption processes to be switched off from the UI
+        /// </summary>
         [Description("Include Sorption in Ks in.  Normally yes, this is for testing")]
         public bool IncludeSorption { get; set; }
         /// <summary>
@@ -397,10 +397,10 @@ namespace Models.Soils
         /// Factor to scale Diffusivity
         /// </summary>
         [Description("Factor to scale Diffusivity")]
-        public double DiffusivityMultiplier{get; set; }
+        public double DiffusivityMultiplier { get; set; }
         /// <summary>
-            /// Factor to scale Water Extraction
-            /// </summary>
+        /// Factor to scale Water Extraction
+        /// </summary>
         [Description("Factor to scale Water Extraction")]
         public double ExtractionMultiplier { get; set; }
 
@@ -421,9 +421,9 @@ namespace Models.Soils
         /// <summary>Mapped from parameter set onto Layer structure</summary>
         public double[] MappedPsiBub { get; set; }
         /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedMinHydrophilicRWC { get; set; }
+        public double[] MappedUpperRepellentWC { get; set; }
         /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedMaxHydrophobicRWC { get; set; }
+        public double[] MappedLowerRepellentWC { get; set; }
         /// <summary>Mapped from parameter set onto Layer structure</summary>
         public double[] MappedMinRepellancyFactor { get; set; }
         /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
@@ -503,7 +503,7 @@ namespace Models.Soils
         /// </summary>
         [Units("mm/h")]
         [Summary]
-        [Description("The Capillarity of each pore")]
+        [Description("The Poiseuille conductivity of each pore")]
         [Display(Format = "N1")]
         public double[][] Capillarity { get; set; }
         /// <summary>
@@ -542,16 +542,16 @@ namespace Models.Soils
         /// </summary>
         [Units("mm/d")]
         public double[] Diffusion { get; set; }
-        ///<summary> Who knows</summary>
-        [XmlIgnore]
-        public double[] SWdailyMax { get; set; }
-        ///<summary> Who knows</summary>
-        [XmlIgnore]
-        public double[] SWmmdailyMax { get; set; }
         ///<summary> Water extracted by crop roots for transpiration</summary>
         [XmlIgnore]
         [Units("mm/d")]
         public double WaterExtraction { get; set; }
+        /// <summary>
+        /// Factor quantifying the hydrophobicity of the soi
+        /// </summary>
+        [XmlIgnore]
+        [Units("0-1")]
+        public double[] MatrixRelativeWater { get; set;}
         #endregion
 
         #region Properties
@@ -644,8 +644,8 @@ namespace Models.Soils
             MappedCFlow = Soil.Map(CFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedMinHydrophilicRWC = Soil.Map(MaxRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedMaxHydrophobicRWC = Soil.Map(MaxRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedUpperRepellentWC = Soil.Map(UpperRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedLowerRepellentWC = Soil.Map(LowerRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedMinRepellancyFactor = Soil.Map(MinRepellancyFactor, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedXF = Soil.Map(XF, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
 
@@ -740,10 +740,8 @@ namespace Models.Soils
             doPrecipitation();
             SODPondDepth = pond;
             double SoilWaterContentSOD = MathUtilities.Sum(SWmm);
-            SWdailyMax = SW; //Set SWmax value to the end of yesterday start of today value.  Later in the code we increase this if SW exceeds it at any of the time steps
             for (int h = 0; h < 24; h++)
             {
-                SetRepellencyFactor();
                 //If duration of precipitation is less than an hour and the rate is high, set up sub hourly timestep
                 int TimeStepSplits = 1;
                 bool SplitTimeStep = ((((IrrigationDuration>0.0)&&(IrrigationDuration < 1.0)) 
@@ -758,6 +756,7 @@ namespace Models.Soils
                 if (ReportDetail) { DoDetailReport("UpdatePond", 0, h); }
                 for (int Subh = 0; Subh < TimeStepSplits; Subh++)
                 {
+                    SetRepellencyFactor();
                     InitialProfileWater = MathUtilities.Sum(SWmm);
                     InitialPondDepth = pond;
                     InitialResidueWater = ResidueWater;
@@ -783,11 +782,6 @@ namespace Models.Soils
                 if(CalculateDiffusion)
                     doDiffusion();
                 ClearSubHourlyData();
-                for (int l = 0; l < ProfileLayers; l++)
-                {
-                    if (SW[l] > SWdailyMax[l])
-                        SWdailyMax[l] = SW[l];
-                }
             }
             DoDetailReport("Final",0,0);
             EODPondDepth = pond;
@@ -868,6 +862,14 @@ namespace Models.Soils
                 {
                     SubHourly.Irrigation[Subh] = IrrigationRate;
                 }
+                if (Met.RainfallHours >= 1 && Rain > 0) //Rainfall won't be filled in loop below so do here
+                {
+                    double RainfallRate = Rain / 10;
+                    for (int Subh = 0; Subh < 10; Subh++)
+                    {
+                        SubHourly.Rainfall[Subh] = RainfallRate;
+                    }
+                }
                 if (Math.Abs(MathUtilities.Sum(SubHourly.Irrigation) - Irrig) > FloatingPointTolerance)
                     throw new Exception(this + " Sub hourly irrigation partition has gone wrong.  Check you are specifying a Duration > 0 in the irrigation method call");
             }
@@ -875,9 +877,17 @@ namespace Models.Soils
             {
                 int RainSubHours = (int)(Met.RainfallHours * 10);
                 double RainRate = Rain / RainSubHours;
-                for (int h = 0; h < RainSubHours; h++)
+                for (int Subh = 0; Subh < RainSubHours; Subh++)
                 {
-                    Hourly.Rainfall[h] = RainRate;
+                    Hourly.Rainfall[Subh] = RainRate;
+                }
+                if (IrrigationDuration >= 1.0 && Irrig > 0) //Irrigation not set in first loop so set here
+                {
+                    double IrrigationRate = Irrig / 10;
+                    for (int Subh = 0; Subh < RainSubHours; Subh++)
+                    {
+                        SubHourly.Irrigation[Subh] = IrrigationRate;
+                    }
                 }
                 if (Math.Abs(MathUtilities.Sum(SubHourly.Rainfall) - Rain) > FloatingPointTolerance)
                     throw new Exception(this + " Subhourly rainfall partition has gone wrong");
@@ -1139,6 +1149,7 @@ namespace Models.Soils
         /// <summary>
         /// This is the Irrigation ariving at the soil surface, less what has been intercepted by residue
         /// </summary>
+        [XmlIgnore]
         private double Irrigation {get;set; }
         private double IrrigationDuration { get; set; }
         /// <summary>
@@ -1282,11 +1293,13 @@ namespace Models.Soils
         /// <param name="SPH">Number of time steps in an hour</param>
         private void DistributWaterInFlux(int l, ref double InFlux, int SPH)
         {
+            double LayerAbsorbtion = 0;
             for (int c = PoreCompartments - 1; c >= 0 && InFlux > 0; c--)
             {//Absorb Water onto samllest pores first followed by larger ones
                 double PotentialAdsorbtion = Math.Min(Pores[l][c].HydraulicConductivityIn/SPH, Pores[l][c].AirDepth);
                 double Absorbtion = Math.Min(InFlux, PotentialAdsorbtion);
                 Pores[l][c].WaterDepth += Absorbtion;
+                LayerAbsorbtion += Absorbtion;
                 InFlux -= Absorbtion;
             }
             if ((LayerSum(Pores[l], "WaterDepth") - SaturatedWaterDepth[l])>FloatingPointTolerance)
@@ -1377,11 +1390,22 @@ namespace Models.Soils
         {
             for (int l = 0; l < ProfileLayers; l++)
             {
-                double[] X = { MappedMaxHydrophobicRWC[l], MappedMinHydrophilicRWC[l] };
+                double MatrixWaterContent = 0;
+                double MatrixWaterCapacity = 0;
+                for (int c = PoreCompartments - 2; c >= 0 && Pores[l][c].TensionFactor!=1; c--) //Excluding pore compartment 9 because it is below LL15
+                {
+                    MatrixWaterContent += Pores[l][c].WaterDepth;
+                    MatrixWaterCapacity += Pores[l][c].VolumeDepth;
+                }
+                double MatrixRelativeWaterContent = MatrixWaterContent / MatrixWaterCapacity;
+
+                //MatrixRelativeWater[l] = MatrixRelativeWaterContent;
+
+                double[] X = { MappedLowerRepellentWC[l], MappedUpperRepellentWC[l] };
                 double[] Y = { MappedMinRepellancyFactor[l],1.0};
-                double dX = SW[l] / MappedSAT[l];
                 bool DidInterpolate;
-                double Factor = MathUtilities.LinearInterpReal(dX, X, Y, out DidInterpolate);
+                double Factor = MathUtilities.LinearInterpReal(MatrixRelativeWaterContent, X, Y, out DidInterpolate);
+               
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {
                     Pores[l][c].RepelancyFactor = Factor;
