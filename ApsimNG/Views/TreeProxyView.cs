@@ -176,7 +176,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
-        public void Export(ref Bitmap bitmap, bool legendOutside)
+        public void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside)
         {
             //TODO: This will only save the last bitmap. Might need to change the interface.
             foreach (PlotView plot in plots)
@@ -196,8 +196,8 @@ namespace UserInterface.Views
 
                 System.IO.MemoryStream stream = new System.IO.MemoryStream();
                 PngExporter pngExporter = new PngExporter();
-                pngExporter.Width = bitmap.Width;
-                pngExporter.Height = bitmap.Height;
+                pngExporter.Width = r.Width;
+                pngExporter.Height = r.Height;
                 pngExporter.Export(plot.Model, stream);
                 bitmap = new Bitmap(stream);
 

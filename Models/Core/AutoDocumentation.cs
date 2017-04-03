@@ -81,7 +81,7 @@ namespace Models.Core
                     st = st.Remove(0, 2);
                 StringReader reader = new StringReader(st);
                 string line = reader.ReadLine();
-                while (line != null)
+                while (line != null && line.Trim() != string.Empty)
                 {
                     if (numSpacesStartOfLine == -1)
                     {
@@ -274,6 +274,13 @@ namespace Models.Core
 
             /// <summary>Unique name for image. Used to save image to temp folder.</summary>
             public string name;
+        }
+
+
+        /// <summary>Describes a new page for the tags system.</summary>
+        public class NewPage : ITag
+        {
+
         }
     }
 }

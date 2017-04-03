@@ -80,7 +80,14 @@ namespace Models
                     if (posComment != -1)
                         operation.Action = operation.Action.Remove(posComment);
 
-                    if (operation.Action.Trim() != string.Empty)
+                    if (operation.Action.Contains("="))
+                    {
+                        string variableName = st;
+                        string value = StringUtilities.SplitOffAfterDelimiter(ref variableName, "=").Trim();
+                        variableName = variableName.Trim();
+                        Apsim.Set(this, variableName, value);
+                    }
+                    else if (operation.Action.Trim() != string.Empty)
                     {
                         string argumentsString = StringUtilities.SplitOffBracketedValue(ref st, '(', ')');
                         string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

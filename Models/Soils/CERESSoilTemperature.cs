@@ -16,6 +16,7 @@ namespace Models.Soils
     /// This code was separated from old SoilN - tidied up but not updated (RCichota, sep/2012)
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(Soil))]
     public class CERESSoilTemperature : Model, ISoilTemperature
     {
         [Link]

@@ -196,6 +196,7 @@ namespace UserInterface.Views
                     {
                         CellRendererText textRender = render as CellRendererText;
                         textRender.EditingStarted -= OnCellBeginEdit;
+                        textRender.EditingCanceled -= TextRender_EditingCanceled;
                         textRender.Edited -= OnCellValueChanged;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
@@ -209,6 +210,7 @@ namespace UserInterface.Views
                     {
                         CellRendererText textRender = render as CellRendererText;
                         textRender.EditingStarted -= OnCellBeginEdit;
+                        textRender.EditingCanceled -= TextRender_EditingCanceled;
                         textRender.Edited -= OnCellValueChanged;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
@@ -246,7 +248,9 @@ namespace UserInterface.Views
             // runs a message loop. This is normally desirable, but in this case, we have lots
             // of events associated with the grid data, and it's best to let them be handled in the 
             // main message loop. 
-            mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+
+            if (mainWindow != null)
+               mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
             ClearGridColumns();
             fixedcolview.Visible = false;
             colLookup.Clear();
@@ -281,6 +285,7 @@ namespace UserInterface.Views
                 textRender.FixedHeightFromFont = 1; // 1 line high
                 textRender.Editable = !isReadOnly;
                 textRender.EditingStarted += OnCellBeginEdit;
+                textRender.EditingCanceled += TextRender_EditingCanceled;
                 textRender.Edited += OnCellValueChanged;
                 textRender.Xalign = i == 0 ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
@@ -344,8 +349,15 @@ namespace UserInterface.Views
 
             gridview.Show();
 
-            mainWindow.Cursor = null;
+            if (mainWindow != null)
+                mainWindow.Cursor = null;
         }
+
+        private void TextRender_EditingCanceled(object sender, EventArgs e)
+        {
+            this.userEditingCell = false;
+        }
+
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
         {
             gridview.Vadjustment.Value = fixedcolview.Vadjustment.Value;
@@ -1343,6 +1355,8 @@ namespace UserInterface.Views
                         int xpos = (int)e.Event.X;
                         foreach (Widget child in (sender as TreeView).AllChildren)
                         {
+                            if (child.GetType() != (typeof(Gtk.Button)))
+                                continue;
                             if (xpos >= child.Allocation.Left && xpos <= child.Allocation.Right)
                                 break;
                             i++;

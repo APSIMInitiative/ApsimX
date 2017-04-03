@@ -51,7 +51,7 @@ namespace Models.PMF.Functions
             if (XYPairs != null)
             {
                 tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of average daily temperature weighted toward max temperature according to the specified MaximumTemperatureWeighting factor.</i>", indent));
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + MaximumTemperatureWeighting + " = " + MaximumTemperatureWeighting + "</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("<i>MaximumTemperatureWeighting = " + MaximumTemperatureWeighting + "</i>", indent));
 
                 // write memos.
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
