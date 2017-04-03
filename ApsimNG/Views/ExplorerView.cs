@@ -279,7 +279,7 @@ namespace UserInterface.Views
             treeview1.GetCursor(out cursorPath, out cursorCol);
             TreeIter nextSel = node;
             TreePath pathToSelect = treemodel.GetPath(node);
-            if (pathToSelect.Compare(cursorPath) != 0)  
+            if (pathToSelect.Compare(cursorPath) != 0)
                 pathToSelect = null;
             else if (!treemodel.IterNext(ref nextSel)) // If there's a "next" sibling, the current TreePath will do
             {                                     // Otherwise
@@ -831,12 +831,13 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Get whatever text is currently on the clipboard
+        /// Get whatever text is currently on the _APSIM_MODEL clipboard
         /// </summary>
         /// <returns></returns>
         public string GetClipboardText()
         {
-            Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
             return cb.WaitForText();
         }
 
@@ -846,7 +847,8 @@ namespace UserInterface.Views
         /// <param name="text"></param>
         public void SetClipboardText(string text)
         {
-            Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
             cb.Text = text;
         }
 
