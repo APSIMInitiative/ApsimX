@@ -22,10 +22,87 @@ namespace Models.Soils.SWIM4
         #region Links
         [Link]
         Soil Soil = null;
-        #region
+        #endregion
 
         #region Public properties
-        #region
+        public double residueinterception { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double catchment_area { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double CN2Bare { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double CNCov { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double CNRed { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double DiffusConst { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double DiffusSlope { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double discharge_width { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public double[] dlayer => throw new NotImplementedException();
+
+        public double[] dlt_sw { set => throw new NotImplementedException(); }
+        public double[] dlt_sw_dep { set => throw new NotImplementedException(); }
+
+        public double Drainage => throw new NotImplementedException();
+
+        public double[] DULmm => throw new NotImplementedException();
+
+        public double Eo => throw new NotImplementedException();
+
+        public double Eos => throw new NotImplementedException();
+
+        public double Es => throw new NotImplementedException();
+
+        public double ESW => throw new NotImplementedException();
+
+        public double[] flow => throw new NotImplementedException();
+
+        public double[] flow_nh4 => throw new NotImplementedException();
+
+        public double[] flow_no3 => throw new NotImplementedException();
+
+        public double[] flow_urea => throw new NotImplementedException();
+
+        public double[] flux => throw new NotImplementedException();
+
+        public double Infiltration => throw new NotImplementedException();
+
+        public double[] KLAT => throw new NotImplementedException();
+
+        public double LeachNH4 => throw new NotImplementedException();
+
+        public double LeachNO3 => throw new NotImplementedException();
+
+        public double LeachUrea => throw new NotImplementedException();
+
+        public double[] LL15mm => throw new NotImplementedException();
+
+        public double max_pond { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public double[] outflow_lat => throw new NotImplementedException();
+
+        public double pond => throw new NotImplementedException();
+
+        public double pond_evap => throw new NotImplementedException();
+
+        public double Runoff => throw new NotImplementedException();
+
+        public double Salb { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public double[] SATmm => throw new NotImplementedException();
+
+        public double slope { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double[] solute_flow_eff { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double[] solute_flux_eff { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double SummerCona { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string SummerDate { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double SummerU { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double[] SW { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double[] SWCON { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double[] SWmm { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double[] Thickness { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double WaterTable { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double WinterCona { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string WinterDate { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double WinterU { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        #endregion
 
         int n = 1;
         int nt = 2;
@@ -48,6 +125,7 @@ namespace Models.Soils.SWIM4
         double[,] wex = new double[1, 1]; //unused option params in FORTRAN... must be a better way of doing this
         double[,,] sex = new double[1, 1, 1];
 
+        
         /// <summary>Initialise soil and generate flux tables</summary>
         /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
@@ -228,6 +306,36 @@ namespace Models.Soils.SWIM4
             FluxTable ft2 = Fluxes.ReadFluxTable("soil109dz100");
             FluxTable ftwo = TwoFluxes.TwoTables(ft1, sp1, ft2, sp2);
             Fluxes.FluxTables.Add("soil103dz50_soil109dz100", ftwo);
+        }
+
+        public void SetSWmm(int Layer, double NewSWmm)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetWater_frac(double[] New_SW)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetWaterTable(double InitialDepth)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Tillage(TillageType Data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Tillage(string DefaultTillageName)
+        {
+            throw new NotImplementedException();
         }
     }
 }
