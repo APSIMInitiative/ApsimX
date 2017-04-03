@@ -654,7 +654,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>0.5</double>
+                  <double>0.2</double>
                   <double>2</double>
                   <double>3</double>
                 </X>
@@ -1426,7 +1426,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+              <XProperty>[Root].WaterTensionFactor</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>TemperatuerEffect</Name>
@@ -1696,7 +1696,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>Stress</Name>
               <Constant>
                 <Name>StressResponseCoefficient</Name>
-                <FixedValue>1</FixedValue>
+                <FixedValue>2</FixedValue>
               </Constant>
               <LinearInterpolationFunction>
                 <Name>StressFactor</Name>
@@ -1704,7 +1704,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <Name>XYPairs</Name>
                   <X>
                     <double>0</double>
-                    <double>0.5</double>
+                    <double>1</double>
                   </X>
                   <Y>
                     <double>1</double>
@@ -1719,7 +1719,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>DroughtInducedSenAcceleration</Name>
             <Constant>
               <Name>One</Name>
-              <FixedValue>1</FixedValue>
+              <FixedValue>2</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>Stress</Name>
@@ -1733,7 +1733,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <Name>XYPairs</Name>
                   <X>
                     <double>0</double>
-                    <double>0.5</double>
+                    <double>1</double>
                   </X>
                   <Y>
                     <double>1</double>
@@ -2611,13 +2611,20 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Discovery</Name>
+            <Memo>
+              <Name>Memo</Name>
+              <MemoText><![CDATA[A test dataset has been developed to test the APSIM Wheat model for a range of environmental (soil and climate) conditions, management options (sowing dates, populations, nitrogen rates, row spacing, irrigation), genetic backgrounds (different regions, cultivar types) and for special considerations such as crop damage.  These tests have been groups into various geographical regions to allow the user to evaluate the suitability of the model for their particular region of interest.  Graphs of model performance are provided for yield, biomass production, canopy development, phenological development, water and nitrogen uptake, and grain yield components.
+]]></MemoText>
+            </Memo>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8.5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
             <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.051</Command>
-            <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 25</Command>
+            <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30</Command>
+            <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.5</Command>
+            <Command>[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20</Command>
           </Cultivar>
           <Cultivar>
             <Name>Einstein</Name>
@@ -12919,8 +12926,8 @@ namespace Models
             <Manager>
               <Name>1</Name>
               <Script>
-                <SowDate>29-Apr</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>29-Apr</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -12977,8 +12984,8 @@ namespace Models
             <Manager>
               <Name>2</Name>
               <Script>
-                <SowDate>20-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>20-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -13035,8 +13042,8 @@ namespace Models
             <Manager>
               <Name>3</Name>
               <Script>
-                <SowDate>10-Jun</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>10-Jun</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -13093,8 +13100,8 @@ namespace Models
             <Manager>
               <Name>4</Name>
               <Script>
-                <SowDate>4-Jul</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>4-Jul</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -13151,8 +13158,8 @@ namespace Models
             <Manager>
               <Name>5</Name>
               <Script>
-                <SowDate>22-Jul</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>22-Jul</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -13209,8 +13216,8 @@ namespace Models
             <Manager>
               <Name>6</Name>
               <Script>
-                <SowDate>15-Aug</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>15-Aug</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -13706,8 +13713,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -16546,8 +16553,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -17261,8 +17268,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -17976,8 +17983,8 @@ namespace Models
               <Manager>
                 <Name>Sowing</Name>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -52064,7 +52071,7 @@ namespace Models
               <Name>Sow</Name>
               <Operation>
                 <Date>2015-09-10</Date>
-                <Action>[Wheat].Sow(population:256, cultivar:"Discovery", depth:80, rowSpacing:130);</Action>
+                <Action>[Wheat].Sow(population:200, cultivar:"Discovery", depth:80, rowSpacing:130);</Action>
               </Operation>
             </Operations>
             <Manager>
@@ -52235,6 +52242,7 @@ namespace Models
                 <string>[Wheat].Leaf.Fw</string>
                 <string>[Wheat].Leaf.Fn</string>
                 <string>[Root].WaterTensionFactor</string>
+                <string>[Wheat].Arbitrator.FN</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -52408,8 +52416,8 @@ namespace Models
                   <string>150-200</string>
                 </Depth>
                 <OC>
-                  <double>2.62509797633343</double>
-                  <double>1.24694031672971</double>
+                  <double>2</double>
+                  <double>0.8</double>
                   <double>0.316004293710514</double>
                   <double>0.207953620272232</double>
                   <double>0.200365542475381</double>
@@ -52424,8 +52432,8 @@ namespace Models
                   <double>0.01</double>
                 </FBiom>
                 <FInert>
-                  <double>0.1</double>
-                  <double>0.25</double>
+                  <double>0.4</double>
+                  <double>0.7</double>
                   <double>0.849635116265262</double>
                   <double>0.944959741045969</double>
                   <double>0.982659151583417</double>
@@ -52449,22 +52457,22 @@ namespace Models
                   <double>300</double>
                 </Thickness>
                 <NO3>
-                  <double>2</double>
-                  <double>2</double>
-                  <double>2</double>
-                  <double>2.9</double>
-                  <double>2.43</double>
-                  <double>3.1</double>
-                  <double>3</double>
+                  <double>9</double>
+                  <double>7</double>
+                  <double>2.05</double>
+                  <double>2.87</double>
+                  <double>3.09</double>
+                  <double>3.09</double>
+                  <double>3.09</double>
                 </NO3>
                 <NH4>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.11944444444444445</double>
-                  <double>0.2</double>
-                  <double>3</double>
-                  <double>1</double>
-                  <double>1</double>
+                  <double>0.12</double>
+                  <double>0.12</double>
+                  <double>0</double>
+                  <double>0.19</double>
+                  <double>3.29</double>
+                  <double>2.7</double>
+                  <double>2.7</double>
                 </NH4>
                 <SW>
                   <double>0.18</double>
@@ -52533,7 +52541,7 @@ namespace Models
                 </BD>
                 <AirDry>
                   <double>0.05</double>
-                  <double>0.12</double>
+                  <double>0.1</double>
                   <double>0.1</double>
                   <double>0.08</double>
                   <double>0.06</double>
@@ -52545,9 +52553,9 @@ namespace Models
                   <double>0.15</double>
                   <double>0.17</double>
                   <double>0.17</double>
-                  <double>0.25</double>
-                  <double>0.28</double>
-                  <double>0.26</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
+                  <double>0.16</double>
                 </LL15>
                 <DUL>
                   <double>0.28</double>
@@ -52912,13 +52920,13 @@ namespace Models
 				}
 			    
 				// SOi paramters
-				ThisSoil.LL15[0] = 0.06;
-				ThisSoil.LL15[1] = 0.06;
-				ThisSoil.LL15[2] = 0.08;
-				ThisSoil.LL15[3] = 0.14;
+				ThisSoil.LL15[0] = 0.07;
+				ThisSoil.LL15[1] = 0.12;
+				ThisSoil.LL15[2] = 0.17;
+				ThisSoil.LL15[3] = 0.16;
 				ThisSoil.LL15[4] = 0.16;
 				ThisSoil.LL15[5] = 0.16;
-				ThisSoil.LL15[6] = 0.11;
+				ThisSoil.LL15[6] = 0.16;
 				ThisSoil.DUL[0] = 0.34;
 				ThisSoil.DUL[1] = 0.3;
 				ThisSoil.DUL[2] = 0.28;
@@ -52985,12 +52993,12 @@ namespace Models
 					throw new Exception("Soil layer exception");
 				}
 			 
-				ThisSoil.LL15[0] = 0.06;
-				ThisSoil.LL15[1] = 0.11;
-				ThisSoil.LL15[2] = 0.16;
-				ThisSoil.LL15[3] = 0.14;
-				ThisSoil.LL15[4] = 0.14;
-				ThisSoil.LL15[5] = 0.14;
+				ThisSoil.LL15[0] = 0.07;
+				ThisSoil.LL15[1] = 0.12;
+				ThisSoil.LL15[2] = 0.17;
+				ThisSoil.LL15[3] = 0.16;
+				ThisSoil.LL15[4] = 0.16;
+				ThisSoil.LL15[5] = 0.16;
 				ThisSoil.LL15[6] = 0.16;
 				ThisSoil.DUL[0] = 0.3;
 				ThisSoil.DUL[1] = 0.3;
@@ -53020,9 +53028,9 @@ namespace Models
 					throw new Exception("Soil layer exception");
 				}
 			 
-				ThisSoil.LL15[0] = 0.06;
-				ThisSoil.LL15[1] = 0.11;
-				ThisSoil.LL15[2] = 0.16;
+				ThisSoil.LL15[0] = 0.07;
+				ThisSoil.LL15[1] = 0.12;
+				ThisSoil.LL15[2] = 0.17;
 				ThisSoil.LL15[3] = 0.16;
 				ThisSoil.LL15[4] = 0.16;
 				ThisSoil.LL15[5] = 0.16;
@@ -53055,13 +53063,13 @@ namespace Models
 					throw new Exception("Soil layer exception");
 				}
 			 
-				ThisSoil.LL15[0] = 0.14;
-				ThisSoil.LL15[1] = 0.21;
-				ThisSoil.LL15[2] = 0.27;
-				ThisSoil.LL15[3] = 0.27;
-				ThisSoil.LL15[4] = 0.27;
-				ThisSoil.LL15[5] = 0.32;
-				ThisSoil.LL15[6] = 0.30;
+				ThisSoil.LL15[0] = 0.07;
+				ThisSoil.LL15[1] = 0.12;
+				ThisSoil.LL15[2] = 0.17;
+				ThisSoil.LL15[3] = 0.16;
+				ThisSoil.LL15[4] = 0.16;
+				ThisSoil.LL15[5] = 0.16;
+				ThisSoil.LL15[6] = 0.16;
 				ThisSoil.DUL[0] = 0.31;
 				ThisSoil.DUL[1] = 0.28;
 				ThisSoil.DUL[2] = 0.30;
@@ -53090,13 +53098,13 @@ namespace Models
 					throw new Exception("Soil layer exception");
 				}
 			 
-				ThisSoil.LL15[0] = 0.12;
-				ThisSoil.LL15[1] = 0.18;
+				ThisSoil.LL15[0] = 0.07;
+				ThisSoil.LL15[1] = 0.12;
 				ThisSoil.LL15[2] = 0.17;
-				ThisSoil.LL15[3] = 0.20;
-				ThisSoil.LL15[4] = 0.27;
-				ThisSoil.LL15[5] = 0.27;
-				ThisSoil.LL15[6] = 0.21;
+				ThisSoil.LL15[3] = 0.16;
+				ThisSoil.LL15[4] = 0.16;
+				ThisSoil.LL15[5] = 0.16;
+				ThisSoil.LL15[6] = 0.16;
 				ThisSoil.DUL[0] = 0.26;
 				ThisSoil.DUL[1] = 0.24;
 				ThisSoil.DUL[2] = 0.26;
@@ -53797,6 +53805,10 @@ namespace Models
             <Name>AboveGroundWt</Name>
             <Series>
               <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
@@ -54374,6 +54386,10 @@ namespace Models
               <Name>LeafBiomass</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -54437,6 +54453,10 @@ namespace Models
               <Name>StemBiomass</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -54502,7 +54522,7 @@ namespace Models
                 <Name>Predicted</Name>
                 <EventNamesOnGraph>
                   <Name>EventNamesOnGraph</Name>
-                  <ColumnName>CurrentStageName</ColumnName>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
                 </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -54569,7 +54589,7 @@ namespace Models
                 <Name>Predicted</Name>
                 <EventNamesOnGraph>
                   <Name>EventNamesOnGraph</Name>
-                  <ColumnName>[Wheat].Phenology.CurrentStageName</ColumnName>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
                 </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -54899,6 +54919,10 @@ namespace Models
               <Name>LeafTips</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -55096,6 +55120,10 @@ namespace Models
               <Name>Cover</Name>
               <Series>
                 <Name>Predicted</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -55288,6 +55316,10 @@ namespace Models
               </Series>
               <Series>
                 <Name>Pred</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -55597,6 +55629,10 @@ namespace Models
               <Name>Fn</Name>
               <Series>
                 <Name>Series</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -55610,7 +55646,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Wheat.Leaf.Fn</YFieldName>
+                <YFieldName>Wheat.Arbitrator.FN</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -55626,7 +55662,7 @@ namespace Models
               <Axis>
                 <Type>Left</Type>
                 <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
+                <Minimum>0</Minimum>
                 <Maximum>NaN</Maximum>
                 <Interval>NaN</Interval>
               </Axis>
@@ -55638,6 +55674,10 @@ namespace Models
               <Name>Fw</Name>
               <Series>
                 <Name>Series</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -55652,7 +55692,7 @@ namespace Models
                 <TableName>WheatReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Wheat.Leaf.Fw</YFieldName>
-                <ShowInLegend>false</ShowInLegend>
+                <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
                 <CumulativeX>false</CumulativeX>
@@ -55720,6 +55760,10 @@ namespace Models
               <Name>Tension</Name>
               <Series>
                 <Name>Series</Name>
+                <EventNamesOnGraph>
+                  <Name>EventNamesOnGraph</Name>
+                  <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+                </EventNamesOnGraph>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
@@ -56521,8 +56565,125 @@ namespace Models
             </DisabledSeries>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
+          <Graph>
+            <Name>Phenology</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Wheat.Phenology.Zadok.Stage</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+              <Filter />
+            </Series>
+            <Axis>
+              <Type>Left</Type>
+              <Title>Above Ground Biomass (g/m2)</Title>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Graph>
         </Folder>
       </Experiment>
+      <Graph>
+        <Name>FlagLeafDate</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HarvestObsPred</TableName>
+          <XFieldName>Observed.Wheat.Phenology.FlagLeafDAS.Value()</XFieldName>
+          <YFieldName>Predicted.Wheat.Phenology.FlagLeafDAS.Value()</YFieldName>
+          <ShowInLegend>false</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Observed</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title>Predicted</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Graph>
     </Folder>
     <Folder>
       <Name>Southern Australia</Name>
@@ -61856,7 +62017,7 @@ namespace Models
             <Name>Predicted</Name>
             <EventNamesOnGraph>
               <Name>EventNamesOnGraph</Name>
-              <ColumnName>CurrentStageName</ColumnName>
+              <ColumnName>Wheat.Phenology.CurrentStageName</ColumnName>
             </EventNamesOnGraph>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -63820,8 +63981,8 @@ namespace Models
             <Manager>
               <Name>MouseActivity</Name>
               <Script>
-                <NibblingDate>2002-10-31</NibblingDate>
                 <ProportionNibbled>0.5</ProportionNibbled>
+                <NibblingDate>2002-10-31</NibblingDate>
               </Script>
               <Code><![CDATA[
 using System;
@@ -64911,8 +65072,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -65665,8 +65826,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -66380,8 +66541,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -67095,8 +67256,8 @@ namespace Models
             <Manager>
               <Name>Sowing</Name>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
