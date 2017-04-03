@@ -647,7 +647,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>0.2</double>
+                  <double>0.5</double>
                   <double>2</double>
                   <double>3</double>
                 </X>
@@ -1439,7 +1439,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Root].WaterTensionFactor</XProperty>
+              <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>TemperatureEffect</Name>
@@ -1512,56 +1512,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
-          <MultiplyFunction>
-            <Name>LagDuration</Name>
-            <LinearInterpolationFunction>
-              <Name>AgeFactor</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>3</double>
-                  <double>4</double>
-                </X>
-                <Y>
-                  <double>0.4</double>
-                  <double>1</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Phenology].Stage</XProperty>
-            </LinearInterpolationFunction>
-            <SubtractFunction>
-              <Name>LastLeafDuration</Name>
-              <AddFunction>
-                <Name>ThermalTimeToRipe</Name>
-                <VariableReference>
-                  <Name>EarlyReproductive</Name>
-                  <VariableName>[Phenology].EarlyReproductive.Target.Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>GrainDevelopment</Name>
-                  <VariableName>[Phenology].GrainDevelopment.Target.Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>GrainFilling</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>Maturing</Name>
-                  <VariableName>[Phenology].Maturing.Target.Value()</VariableName>
-                </VariableReference>
-                <VariableReference>
-                  <Name>Ripening</Name>
-                  <VariableName>[Phenology].Ripening.Target.Value()</VariableName>
-                </VariableReference>
-              </AddFunction>
-              <VariableReference>
-                <Name>SenescenceDuration</Name>
-                <VariableName>[Leaf].CohortParameters.SenescenceDuration.Value()</VariableName>
-              </VariableReference>
-            </SubtractFunction>
-          </MultiplyFunction>
           <PhaseLookup>
-            <Name>LagDuration1</Name>
+            <Name>LagDuration</Name>
             <PhaseLookupValue>
               <Name>VegetativeGrowth</Name>
               <MultiplyFunction>
@@ -1727,7 +1679,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Name>Stress</Name>
               <Constant>
                 <Name>StressResponseCoefficient</Name>
-                <FixedValue>2</FixedValue>
+                <FixedValue>1</FixedValue>
               </Constant>
               <LinearInterpolationFunction>
                 <Name>StressFactor</Name>
@@ -1735,10 +1687,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <Name>XYPairs</Name>
                   <X>
                     <double>0</double>
-                    <double>1</double>
+                    <double>0.5</double>
                   </X>
                   <Y>
-                    <double>1</double>
+                    <double>0.5</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -1750,7 +1702,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>DroughtInducedSenAcceleration</Name>
             <Constant>
               <Name>One</Name>
-              <FixedValue>2</FixedValue>
+              <FixedValue>1</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>Stress</Name>
@@ -1764,10 +1716,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <Name>XYPairs</Name>
                   <X>
                     <double>0</double>
-                    <double>1</double>
+                    <double>0.5</double>
                   </X>
                   <Y>
-                    <double>1</double>
+                    <double>0.5</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -5380,8 +5332,8 @@ Simulation results for the combined datasets from the various countries are show
             <Manager>
               <Name>ApplyFertiliser</Name>
               <Script>
-                <Amount>160</Amount>
                 <FertDayOfYear>186</FertDayOfYear>
+                <Amount>160</Amount>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
