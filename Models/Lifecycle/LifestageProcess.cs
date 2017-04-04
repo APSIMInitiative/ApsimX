@@ -85,7 +85,9 @@ namespace Models.Lifecycle
                 else if (ProcessAction == ProcessType.Mortality)
                 {
                     //kill some creatures
+                    double mortality = cohortItem.Count - cohortItem.Count * (1 - func.Value());
                     cohortItem.Count = cohortItem.Count * (1 - func.Value());
+                    cohortItem.Mortality = mortality;
                 }
             }
         }
