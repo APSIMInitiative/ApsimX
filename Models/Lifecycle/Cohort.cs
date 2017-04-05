@@ -41,6 +41,11 @@ namespace Models.Lifecycle
         public double Fecundity = -1.0;
 
         /// <summary>
+        /// Mortality for the timestep.
+        /// </summary>
+        public double Mortality { get; set; }
+
+        /// <summary>
         /// The Lifestage that owns this cohort.
         /// </summary>
         public Lifestage OwningStage;
