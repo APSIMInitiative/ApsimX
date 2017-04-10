@@ -320,6 +320,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\LinearAfterThresholdFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Evapotranspiration.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LayerStructure.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\MRSpline.png" />
