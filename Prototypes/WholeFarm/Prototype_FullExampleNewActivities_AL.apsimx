@@ -761,6 +761,51 @@
             <MinimumLoadBeforeSelling>0</MinimumLoadBeforeSelling>
             <SalesCommission>0</SalesCommission>
           </RuminantActivityBuySell>
+          <RuminantActivityHerdCost>
+            <Name>Vet costs</Name>
+            <RuminantFilterGroup>
+              <Name>BosIndicus</Name>
+              <RuminantFilter>
+                <Name>Filter[HerdName=Breeding]</Name>
+                <Parameter>HerdName</Parameter>
+                <Operator>Equal</Operator>
+                <Value>Breeding</Value>
+              </RuminantFilter>
+            </RuminantFilterGroup>
+            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <PaymentInterval>6</PaymentInterval>
+            <MonthDue>2</MonthDue>
+            <Amount>2</Amount>
+            <PaymentStyle>perHead</PaymentStyle>
+            <AccountName>General account</AccountName>
+          </RuminantActivityHerdCost>
+          <RuminantActivityHerdCost>
+            <Name>Vaccines and drenches</Name>
+            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <PaymentInterval>5</PaymentInterval>
+            <MonthDue>7</MonthDue>
+            <Amount>200</Amount>
+            <PaymentStyle>Fixed</PaymentStyle>
+            <AccountName>General account</AccountName>
+          </RuminantActivityHerdCost>
+          <RuminantActivityHerdCost>
+            <Name>Dips and sprays</Name>
+            <RuminantFilterGroup>
+              <Name>BosIndicus</Name>
+              <RuminantFilter>
+                <Name>Filter[HerdName=Breeding]</Name>
+                <Parameter>HerdName</Parameter>
+                <Operator>Equal</Operator>
+                <Value>Breeding</Value>
+              </RuminantFilter>
+            </RuminantFilterGroup>
+            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <PaymentInterval>12</PaymentInterval>
+            <MonthDue>5</MonthDue>
+            <Amount>5</Amount>
+            <PaymentStyle>perAE</PaymentStyle>
+            <AccountName>General account</AccountName>
+          </RuminantActivityHerdCost>
           <PerformWithPartialResources>false</PerformWithPartialResources>
         </ActivityFolder>
         <ActivityFolder>
@@ -859,12 +904,6 @@
             <UnitsOfArea>Squarekm</UnitsOfArea>
             <AreaRequested>50</AreaRequested>
           </PastureActivityManage>
-          <RuminantActivityGraze>
-            <Name>Graze native pasture</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
-            <HoursGrazed>8</HoursGrazed>
-            <PaddockName>Native pasture paddock</PaddockName>
-          </RuminantActivityGraze>
           <PerformWithPartialResources>false</PerformWithPartialResources>
         </ActivityFolder>
         <SummariseRuminantHerd>

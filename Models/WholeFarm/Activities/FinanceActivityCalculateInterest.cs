@@ -53,7 +53,7 @@ namespace Models.WholeFarm.Activities
 			{
 				if(accnt.Balance >0)
 				{
-					bankAccount.Add(accnt.Balance*accnt.InterestRatePaid/1200, this.Name, "InterestPaid");
+					bankAccount.Add(accnt.Balance*accnt.InterestRatePaid/1200, this.Name, "Interest earned");
 				}
 				else
 				{

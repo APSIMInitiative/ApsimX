@@ -103,7 +103,8 @@ namespace Models.WholeFarm.Activities
 					Required = this.Amount,
 					ResourceName = "Finances",
 					ResourceTypeName = this.AccountName,
-					ActivityName = this.Name
+					ActivityName = "Overheads",
+					Reason = this.Name
 				}
 				);
 			}

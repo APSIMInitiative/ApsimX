@@ -143,7 +143,8 @@ namespace Models.WholeFarm.Activities
 						Required = amount,
 						ResourceName = "AnimalFoodStore",
 						ResourceTypeName = FeedTypeName,
-						ActivityName = (child as OtherAnimalsFilterGroup).AnimalType,
+						ActivityName = "Feed "+(child as OtherAnimalsFilterGroup).AnimalType,
+						Reason = "oops",
 						FilterDetails = null
 					}
 					);

@@ -285,6 +285,7 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityFeed))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityGraze))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityGrow))]
+		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityHerdCost))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityManage))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityMuster))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityPredictiveStocking))]

@@ -17,6 +17,7 @@ namespace Models.WholeFarm.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
+	[ValidParent(ParentType = typeof(ActivityFolder))]
 	public class RuminantActivityHerdCost : WFActivityBase
 	{
 		/// <summary>
@@ -77,7 +78,7 @@ namespace Models.WholeFarm.Activities
 			// check payment interval > 0
 			if (PaymentInterval <= 0)
 			{
-				Summary.WriteWarning(this, String.Format("Overhead payment interval must be greater than 1 ({0})", this.Name));
+				Summary.WriteWarning(this, String.Format("Herd cost payment interval must be greater than 1 ({0})", this.Name));
 				throw new Exception(String.Format("Invalid payment interval supplied for overhead {0}", this.Name));
 			}
 

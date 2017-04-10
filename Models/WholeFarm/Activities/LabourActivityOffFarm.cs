@@ -85,6 +85,7 @@ namespace Models.WholeFarm.Activities
 					ResourceName = "Labour",
 					ResourceTypeName = "",
 					ActivityName = this.Name,
+					Reason = this.Name,
 					FilterDetails = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>()
 				}
 				);
@@ -103,7 +104,7 @@ namespace Models.WholeFarm.Activities
 		{
 			// days provided from labour set in the only request in the resourceResquestList
 			// receive payment for labour
-			bankType.Add(ResourceRequestList.FirstOrDefault().Available*DailyRate, this.Name, this.Name);
+			bankType.Add(ResourceRequestList.FirstOrDefault().Available*DailyRate, "Off farm labour", this.Name);
 		}
 
 		/// <summary>
