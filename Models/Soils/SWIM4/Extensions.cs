@@ -97,5 +97,18 @@ namespace Models.Soils.SWIM4
             }
             return retVal;
         }
+
+        /// <summary>
+        /// Takes a 0-Based array and returns a 1-Based array
+        /// </summary>
+        /// <typeparam name="T">Array</typeparam>
+        /// <param name="arr">The array to 1-base</param>
+        /// <returns></returns>
+        public static T[] OneBase<T>(this T[] arr)
+        {
+            T[] tmp = new T[arr.Length + 1];
+            Array.Copy(arr, 0, tmp, 1, arr.Length);
+            return tmp;
+        }
     }
 }

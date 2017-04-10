@@ -7,9 +7,9 @@
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Folder>
-    <Name>SoilWat</Name>
+    <Name>SWIM</Name>
     <Simulation>
-      <Name>FallowSW</Name>
+      <Name>FallowSWIM</Name>
       <Clock>
         <Name>Clock</Name>
         <StartDate>1900-01-01T00:00:00</StartDate>
@@ -30,20 +30,10 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>Wheat.Zadok.Stage</string>
-            <string>Wheat.Phenology.CurrentStageName</string>
-            <string>Wheat.AboveGround.Wt</string>
-            <string>Wheat.AboveGround.N</string>
-            <string>Wheat.Grain.Yield</string>
-            <string>Wheat.Grain.Protein</string>
-            <string>Wheat.Grain.Size</string>
-            <string>Wheat.Grain.GrainNo</string>
-            <string>Wheat.Grain.Wt</string>
-            <string>Wheat.Grain.N</string>
-            <string>Wheat.Total.Wt</string>
+            <string>[Soil].SoilWater.SW</string>
           </VariableNames>
           <EventNames>
-            <string>[Wheat].Harvesting</string>
+            <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
         <Fertiliser>
@@ -437,23 +427,23 @@
         <Slope>0</Slope>
       </Zone>
       <Graph>
-        <Name>Wheat Yield Time Series</Name>
+        <Name>SW</Name>
         <Series>
-          <Name>Wheat Yield</Name>
+          <Name>SW</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
+          <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Grain.Yield</YFieldName>
+          <YFieldName>SW</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -482,13 +472,13 @@
     </Simulation>
   </Folder>
   <Folder>
-    <Name>SWIM</Name>
+    <Name>SoilWat</Name>
     <Simulation>
-      <Name>FallowSWIM</Name>
+      <Name>FallowSW</Name>
       <Clock>
         <Name>Clock</Name>
         <StartDate>1900-01-01T00:00:00</StartDate>
-        <EndDate>2000-12-31T00:00:00</EndDate>
+        <EndDate>1910-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>SummaryFile</Name>
@@ -505,10 +495,10 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Soil].SoilWater.SW</string>
+            <string>sum([Soil].SoilWater.SW) as SW</string>
           </VariableNames>
           <EventNames>
-            <string>DoReport</string>
+            <string>[Clock].DoReport</string>
           </EventNames>
         </Report>
         <Fertiliser>
@@ -937,9 +927,9 @@
         <Slope>0</Slope>
       </Zone>
       <Graph>
-        <Name>Wheat Yield Time Series</Name>
+        <Name>SW</Name>
         <Series>
-          <Name>Wheat Yield</Name>
+          <Name>SW</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -947,13 +937,13 @@
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
+          <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Grain.Yield</YFieldName>
+          <YFieldName>SW</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
