@@ -3082,23 +3082,13 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     <Name>DataStore</Name>
     <Input>
       <Name>Biomass9596</Name>
-      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\Observations\BarleyObservedData.txt' because it is being used by another process.</ErrorMessage>
-      <FileName>Observations\BarleyObservedData.txt</FileName>
-    </Input>
-    <Input>
-      <Name>SW9596</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>ObservedData\RS_Barley_9596_soilwater_observed.txt</FileName>
+      <FileName>Observations\BarleyObservedData.txt</FileName>
     </Input>
     <Input>
       <Name>Biomass8889</Name>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
       <FileName>ObservedData\RS_Barley_8889_Biomass_obs.txt</FileName>
-    </Input>
-    <Input>
-      <Name>SW8889</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>ObservedData\RS_Barley_8889_soilwater_observed.txt</FileName>
     </Input>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>5000</MaximumResultsPerPage>
@@ -3965,7 +3955,7 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
       <Name>Base_Rainfed</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>%root%\Prototypes\Wheat\lincoln.met</FileName>
+        <FileName>Weather\Lincoln60-13.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <Clock>
@@ -11643,5 +11633,5 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
-  <ExplorerWidth>415</ExplorerWidth>
+  <ExplorerWidth>278</ExplorerWidth>
 </Simulations>
