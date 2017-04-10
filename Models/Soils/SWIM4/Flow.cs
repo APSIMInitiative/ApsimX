@@ -544,7 +544,7 @@ namespace Models.Soils.SWIM4
 
                         // There's a condition based on botbc in the FORTRAN here, but both paths
                         // resolve to the same equation.
-                        drn = drn + (q[sd.n] + sig * qya[sd.n] * dy[sd.n]) * dt;
+                        drn += (q[sd.n] + sig * qya[sd.n] * dy[sd.n]) * dt;
 
                         if (extraction)
                         {

@@ -7,6 +7,7 @@ using APSIM.Shared.Utilities;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Models.Interfaces;
+using System.Xml.Serialization;
 
 namespace Models.Soils.SWIM4
 {
@@ -25,83 +26,153 @@ namespace Models.Soils.SWIM4
         #endregion
 
         #region Public properties
-        public double residueinterception { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double catchment_area { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double CN2Bare { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double CNCov { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double CNRed { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double DiffusConst { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double DiffusSlope { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double discharge_width { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public double[] dlayer => throw new NotImplementedException();
-
-        public double[] dlt_sw { set => throw new NotImplementedException(); }
-        public double[] dlt_sw_dep { set => throw new NotImplementedException(); }
-
-        public double Drainage => throw new NotImplementedException();
-
-        public double[] DULmm => throw new NotImplementedException();
-
-        public double Eo => throw new NotImplementedException();
-
-        public double Eos => throw new NotImplementedException();
-
-        public double Es => throw new NotImplementedException();
-
-        public double ESW => throw new NotImplementedException();
-
-        public double[] flow => throw new NotImplementedException();
-
-        public double[] flow_nh4 => throw new NotImplementedException();
-
-        public double[] flow_no3 => throw new NotImplementedException();
-
-        public double[] flow_urea => throw new NotImplementedException();
-
-        public double[] flux => throw new NotImplementedException();
-
-        public double Infiltration => throw new NotImplementedException();
-
-        public double[] KLAT => throw new NotImplementedException();
-
-        public double LeachNH4 => throw new NotImplementedException();
-
-        public double LeachNO3 => throw new NotImplementedException();
-
-        public double LeachUrea => throw new NotImplementedException();
-
-        public double[] LL15mm => throw new NotImplementedException();
-
-        public double max_pond { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public double[] outflow_lat => throw new NotImplementedException();
-
-        public double pond => throw new NotImplementedException();
-
-        public double pond_evap => throw new NotImplementedException();
-
-        public double Runoff => throw new NotImplementedException();
-
-        public double Salb { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public double[] SATmm => throw new NotImplementedException();
-
-        public double slope { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double[] solute_flow_eff { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double[] solute_flux_eff { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double SummerCona { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string SummerDate { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double SummerU { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double[] SW { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double[] SWCON { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double[] SWmm { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double[] Thickness { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double WaterTable { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double WinterCona { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public string WinterDate { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public double WinterU { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
+        /// <summary></summary>
+        [XmlIgnore]
+        public double residueinterception { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double catchment_area { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double CN2Bare { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double CNCov { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double CNRed { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double DiffusConst { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double DiffusSlope { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double discharge_width { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] dlayer { get { return new double[]{ 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] dlt_sw { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] dlt_sw_dep { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double Drainage { get { return drn; } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] DULmm { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double Eo { get { return qevap; } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double Eos { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double Es { get { return evap; } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double ESW { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] flow { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] flow_nh4 { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] flow_no3 { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] flow_urea { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] flux { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double Infiltration { get { return infil; } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] KLAT { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double LeachNH4 { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double LeachNO3 { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double LeachUrea { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] LL15mm { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double max_pond { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] outflow_lat { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double pond { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double pond_evap { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double Runoff { get { return runoff; } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double Salb { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] SATmm { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double slope { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] solute_flow_eff { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] solute_flux_eff { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double SummerCona { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public string SummerDate { get { return ""; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double SummerU { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] SW { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] SWCON { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] SWmm { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double[] Thickness { get { return new double[] { 0 }; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double WaterTable { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double WinterCona { get { return 0; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public string WinterDate { get { return ""; } set { } }
+        /// <summary></summary>
+        [XmlIgnore]
+        public double WinterU { get { return 0; } set { } }
         #endregion
 
         int n = 1;
@@ -144,11 +215,11 @@ namespace Models.Soils.SWIM4
             h = new double[n + 1];
             S = new double[n + 1];
             isotype = new string[nt + 1];
-            isopar = new double[nt + 1, 2 + 1];
+            isopar = new double[nt + 1, nt + 1];
             soff = new double[ns + 1];
             sdrn = new double[ns + 1];
             sinfil = new double[ns + 1];
-            bd = Soil.BD;
+            bd = Soil.BD.OneBase();
             sd = new SoilData();
             Flow.sink = new SinkDripperDrain(); //set the type of sink to use
             jt = new int[n + 1];
@@ -164,7 +235,7 @@ namespace Models.Soils.SWIM4
             solProps = new SolProps(nt, ns);
             Array.Copy(Soil.BD, 0, new double[Soil.BD.Length + 1], 1, Soil.BD.Length);
 
-            dis = new double[] { Soil.BD.Length + 1}; //TODO: put some real data here
+            dis = new double[Soil.BD.Length + 1]; //TODO: put some real data here
             //set isotherm type and params for solute 2 here
             isotype[1] = "Fr";
             isotype[2] = "La";
@@ -308,31 +379,54 @@ namespace Models.Soils.SWIM4
             Fluxes.FluxTables.Add("soil103dz50_soil109dz100", ftwo);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Layer"></param>
+        /// <param name="NewSWmm"></param>
         public void SetSWmm(int Layer, double NewSWmm)
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="New_SW"></param>
         public void SetWater_frac(double[] New_SW)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Reset()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="InitialDepth"></param>
         public void SetWaterTable(double InitialDepth)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Data"></param>
         public void Tillage(TillageType Data)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="DefaultTillageName"></param>
         public void Tillage(string DefaultTillageName)
         {
             throw new NotImplementedException();

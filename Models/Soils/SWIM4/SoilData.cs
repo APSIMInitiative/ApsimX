@@ -9,6 +9,7 @@ namespace Models.Soils.SWIM4
     /// <summary>
     /// Functions for soil related data
     /// </summary>
+    [Serializable]
     public class SoilData
     {
         /// <summary></summary>
