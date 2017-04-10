@@ -18,6 +18,7 @@ namespace Models.WholeFarm.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
+	[ValidParent(ParentType = typeof(ActivityFolder))]
 	public class PastureActivityManage: WFActivityBase
 	{
 		[Link]
