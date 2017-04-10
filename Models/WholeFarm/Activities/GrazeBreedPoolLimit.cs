@@ -9,6 +9,7 @@ namespace Models.WholeFarm.Activities
 {
 	/// <summary>
 	/// The proportional intake limit for a given pool by breed
+	/// This class is used internally in pasture grazing activities
 	/// </summary>
 	public class GrazeBreedPoolLimit
 	{

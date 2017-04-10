@@ -225,6 +225,8 @@ namespace Models.WholeFarm.Activities
 					expenseRequest.ActivityName = this.Name;
 					expenseRequest.AllowTransmutation = false;
 
+					// TODO: report shortfall before transactions
+
 					// calculate transport costs
 					expenseRequest.Required = trucks * DistanceToMarket * CostPerKmTrucking;
 					expenseRequest.Reason = "Transport";

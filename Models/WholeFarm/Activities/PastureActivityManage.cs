@@ -186,8 +186,8 @@ namespace Models.WholeFarm.Activities
 				}
 				pool.Set(pool.Amount * detach);
 			}
-			// remove all pools with less than 100g of food
-			LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.1);
+			// remove all pools with less than 10g of food
+			LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
 		}
 
 		/// <summary>

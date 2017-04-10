@@ -89,24 +89,6 @@ namespace Models.WholeFarm.Activities
 		[Description("Weaning weight (kg)")]
 		public double WeaningWeight { get; set; }
 
-		///// <summary>
-		///// Vet costs (per head/year)
-		///// </summary>
-		//[Description("Vet costs (per head/year)")]
-		//public double VetCosts { get; set; }
-
-		///// <summary>
-		///// Dip and spray costs (per head/year)
-		///// </summary>
-		//[Description("Dip and spray costs (per head/year)")]
-		//public double DipCosts { get; set; }
-
-		///// <summary>
-		///// Vaccines and drenches costs (per head/year)
-		///// </summary>
-		//[Description("Vaccines and drenches costs (per head/year)")]
-		//public double VaccineCosts { get; set; }
-
 		/// <summary>
 		/// Perform selling of young females the same as males
 		/// </summary>
@@ -289,7 +271,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void PerformActivity()
 		{
-			return; ;
+			return;
 		}
 
 		/// <summary>

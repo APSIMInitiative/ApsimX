@@ -106,13 +106,14 @@ namespace Models.WholeFarm.Activities
 			if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
 			{
 				double amountNeeded = 0;
+				List<Ruminant> herd = new List<Ruminant>();
 				switch (PaymentStyle)
 				{
 					case Common.HerdPaymentStyleType.Fixed:
 						amountNeeded = Amount;
 						break;
 					case Common.HerdPaymentStyleType.perHead:
-						List<Ruminant> herd = Resources.RuminantHerd().Herd;
+						herd = Resources.RuminantHerd().Herd;
 						// check for Ruminant filter group
 						if(this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).Count() > 0)
 						{
@@ -133,6 +134,16 @@ namespace Models.WholeFarm.Activities
 						throw new Exception(String.Format("Unknown Payment style {0} in {1}",PaymentStyle, this.Name));
 				}
 
+				if (amountNeeded == 0) return null;
+
+				// determine breed
+				string BreedName = "Multiple breeds";
+				List<string> breeds = herd.Select(a => a.Breed).Distinct().ToList();
+				if(breeds.Count==1)
+				{
+					BreedName = breeds[0];
+				}
+
 				ResourceRequestList.Add(new ResourceRequest()
 				{
 					AllowTransmutation = false,
@@ -140,7 +151,7 @@ namespace Models.WholeFarm.Activities
 					ResourceName = "Finances",
 					ResourceTypeName = this.AccountName,
 					ActivityName = this.Name,
-					Reason = "AddBreedHere"
+					Reason = BreedName
 				}
 				);
 			}
