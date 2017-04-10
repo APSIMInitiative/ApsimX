@@ -15,7 +15,7 @@ The model consists of:
 * a phenology model to simulate development between growth phases  
 * a structure model to simulate plant morphology  
 * a collection of organs to simulate the various plant parts  
-* an arbitrator to allocate resources (N, biomass) to the various plant organs  
+* an arbitrator to allocate resources (N, biomass) to various plant organs.  
 ]]></MemoText>
   </Memo>
   <Memo>
@@ -43,7 +43,7 @@ Jamieson PD, Martin RJ, Francis GS, Wilson DR 1995. Drought effects on biomass p
         <string>[Soil].SoilWater.SWmm</string>
         <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
         <string>[Barley].AboveGround.N</string>
-        <string>[Barley].AboveGround.Wt</string>
+        <string>[Barley].AboveGround.Wt*10 as AboveGround_Wt</string>
         <string>[Barley].AboveGroundLive.N</string>
         <string>[Barley].AboveGroundLive.N*10 as AboveGroundN</string>
         <string>[Barley].AboveGroundLive.Wt</string>
@@ -3955,7 +3955,7 @@ Irrigation was applied at weekly intervals through and assemply of low rate drip
       <Name>Base_Rainfed</Name>
       <Weather>
         <Name>Weather</Name>
-        <FileName>Weather\Lincoln60-13.met</FileName>
+        <FileName>Weather\lincoln.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <Clock>
