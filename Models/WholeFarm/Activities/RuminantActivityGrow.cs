@@ -476,7 +476,8 @@ namespace Models.WholeFarm.Activities
 				{
 					mortalityRate = 1 - (1 - ind.BreedParams.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.BreedParams.MortalityCoefficient * (ind.Weight / ind.NormalisedAnimalWeight - ind.BreedParams.MortalityIntercept)), ind.BreedParams.MortalityExponent)));
 				}
-				if (WholeFarm.RandomGenerator.NextDouble() <= mortalityRate)
+				// convert mortality from annual (calculated) to monthly (applied).
+				if (WholeFarm.RandomGenerator.NextDouble() <= (mortalityRate/12))
 				{
 					ind.Died = true;
 				}

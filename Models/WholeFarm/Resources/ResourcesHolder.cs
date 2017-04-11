@@ -89,7 +89,18 @@ namespace Models.WholeFarm.Resources
 				{
 					case "Models.WholeFarm.Resources.Labour":
 						List<LabourType> items = resourceGroup.Children.Where(a => a.GetType() == typeof(LabourType)).Cast<LabourType>().ToList();
-						return items.Filter(Request.FilterDetails.FirstOrDefault() as Model).FirstOrDefault();
+						// get matching labout types
+						items = items.Filter(Request.FilterDetails.FirstOrDefault() as Model);
+						if (items.Where(a => a.Amount >= Request.Required).Count()>0)
+						{
+							// get labour least available but with the amount needed
+							return items.Where(a => a.Amount >= Request.Required).OrderByDescending(a => a.Amount).FirstOrDefault();
+						}
+						else
+						{
+							// get labour with most available but with less than the amount needed
+							return items.OrderByDescending(a => a.Amount).FirstOrDefault();
+						}
 					default:
 						throw new Exception("Resource cannot be filtered. Filtering not implemented for "+ resourceGroupObject.GetType().ToString());
 				}
@@ -249,18 +260,44 @@ namespace Models.WholeFarm.Resources
 							foreach (TransmutationCost transcost in trans.Children.Where(a => a.GetType() == typeof(TransmutationCost)))
 							{
 								double transmutationCost = unitsNeeded * transcost.CostPerUnit;
+
+								// get transcost resource
+								IResourceType transResource = null;
+								if (transcost.ResourceName == "Labour")
+								{
+									// get by labour group filter under the transmutation cost
+									ResourceRequest labourRequest = new ResourceRequest();
+									labourRequest.ResourceName = "Labour";
+									labourRequest.FilterDetails = transcost.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>();
+									transResource = this.GetResourceItem(labourRequest, out resourceAvailable) as IResourceType;
+
+									// put group name in the transcost resource type name
+
+								}
+								else
+								{
+									transResource = this.GetResourceItem(transcost.ResourceName, transcost.ResourceTypeName, out resourceAvailable) as IResourceType;
+								}
+
 								if (!QueryOnly)
 								{
 									//remove cost
-									IResourceType transResource = this.GetResourceItem(transcost.ResourceName, transcost.ResourceTypeName, out resourceAvailable) as IResourceType;
 									request.Reason = trans.Name + " " + trans.Parent.Name;
-									transResource.Remove(request);
+									// create new request for this transmutation cost
+									ResourceRequest transRequest = new ResourceRequest();
+									transRequest.Reason = trans.Name + " " + trans.Parent.Name;
+									transRequest.ActivityName = trans.Name + " " + trans.Parent.Name;
+									transRequest.Required = transmutationCost;
+									transRequest.ResourceName = transcost.ResourceName;
+
+									// used to pass request, but this is not the transmutation cost
+									//transResource.Remove(request);
+									transResource.Remove(transRequest);
 								}
 								else
 								{
 									double activityCost = requests.Where(a => a.ResourceName == transcost.ResourceName & a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
-									IResourceType resourceToTake = this.GetResourceItem(transcost.ResourceName, transcost.ResourceTypeName, out resourceAvailable) as IResourceType;
-									if (transmutationCost + activityCost <= resourceToTake.Amount)
+									if (transmutationCost + activityCost <= transResource.Amount)
 									{
 										request.TransmutationPossible = true;
 										break;

@@ -70,15 +70,36 @@
           <Name>AnimalFoodStore</Name>
           <AnimalFoodStoreType>
             <Name>Lucerne</Name>
+            <Transmutation>
+              <Name>Purchase</Name>
+              <TransmutationCost>
+                <Name>Money</Name>
+                <ResourceName>Finances</ResourceName>
+                <ResourceTypeName>General account</ResourceTypeName>
+                <CostPerUnit>100</CostPerUnit>
+              </TransmutationCost>
+              <TransmutationCost>
+                <Name>Labour</Name>
+                <LabourFilterGroup>
+                  <Name>Labour details</Name>
+                  <LabourFilter>
+                    <Name>Filter[Name=Joe B]</Name>
+                    <Parameter>Name</Parameter>
+                    <Operator>Equal</Operator>
+                    <Value>Joe B</Value>
+                  </LabourFilter>
+                </LabourFilterGroup>
+                <ResourceName>Labour</ResourceName>
+                <ResourceTypeName />
+                <CostPerUnit>0.5</CostPerUnit>
+              </TransmutationCost>
+              <AmountPerUnitPurchase>1000</AmountPerUnitPurchase>
+            </Transmutation>
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
-            <StartingAmount>10000</StartingAmount>
+            <StartingAmount>1000</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Maize</Name>
@@ -87,10 +108,6 @@
             <Nitrogen>20</Nitrogen>
             <StartingAmount>100</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>CutGrass</Name>
@@ -99,10 +116,6 @@
             <Nitrogen>20</Nitrogen>
             <StartingAmount>100</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>BoughtSupplement</Name>
@@ -111,10 +124,6 @@
             <Nitrogen>20</Nitrogen>
             <StartingAmount>100</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Chicken pellets</Name>
@@ -132,11 +141,7 @@
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
             <StartingAmount>20</StartingAmount>
-            <PurchaseAsNeeded>true</PurchaseAsNeeded>
-            <KgPerUnitPurchased>20</KgPerUnitPurchased>
-            <CostPerUnitPurchased>40</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0.1</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
+            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Household scraps</Name>
@@ -145,10 +150,6 @@
             <Nitrogen>7</Nitrogen>
             <StartingAmount>5</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
         <GrazeFoodStore>
@@ -324,9 +325,24 @@
             <MinimumSize1stMating>0.5</MinimumSize1stMating>
             <TwinRate>0</TwinRate>
             <CriticalCowWeight>0.5</CriticalCowWeight>
-            <ConceptionRateCoefficent />
-            <ConceptionRateIntercept />
-            <ConceptionRateAsymptote />
+            <ConceptionRateCoefficent>
+              <double>-12.634</double>
+              <double>-14.247</double>
+              <double>-11</double>
+              <double>-9.8353</double>
+            </ConceptionRateCoefficent>
+            <ConceptionRateIntercept>
+              <double>7.073</double>
+              <double>5.182</double>
+              <double>8.6</double>
+              <double>6.754</double>
+            </ConceptionRateIntercept>
+            <ConceptionRateAsymptote>
+              <double>90</double>
+              <double>90</double>
+              <double>90</double>
+              <double>95</double>
+            </ConceptionRateAsymptote>
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>7.9</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
@@ -388,10 +404,6 @@
             <Nitrogen>0</Nitrogen>
             <StartingAmount>0</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
         <AnimalFoodStore>
@@ -403,10 +415,6 @@
             <Nitrogen>0</Nitrogen>
             <StartingAmount>0</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
         <AnimalFoodStore>
@@ -418,10 +426,6 @@
             <Nitrogen>0</Nitrogen>
             <StartingAmount>0</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>CO2e</Name>
@@ -430,10 +434,6 @@
             <Nitrogen>0</Nitrogen>
             <StartingAmount>0</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>NOx</Name>
@@ -442,10 +442,6 @@
             <Nitrogen>0</Nitrogen>
             <StartingAmount>0</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
         <AnimalFoodStore>
@@ -457,10 +453,6 @@
             <Nitrogen>0</Nitrogen>
             <StartingAmount>0</StartingAmount>
             <PurchaseAsNeeded>false</PurchaseAsNeeded>
-            <KgPerUnitPurchased>0</KgPerUnitPurchased>
-            <CostPerUnitPurchased>0</CostPerUnitPurchased>
-            <LabourPerUnitPurchased>0</LabourPerUnitPurchased>
-            <OtherCosts>0</OtherCosts>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
       </ResourcesHolder>
@@ -612,7 +604,7 @@
           <Name>Manage breeding herd</Name>
           <RuminantActivityFeed>
             <Name>Feed female Bos indicus lucerne</Name>
-            <RuminantFilterGroup>
+            <RuminantFeedGroup>
               <Name>FemaleBosIndicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=Breeding]</Name>
@@ -626,7 +618,21 @@
                 <Operator>Equal</Operator>
                 <Value>Female</Value>
               </RuminantFilter>
-            </RuminantFilterGroup>
+              <MonthlyValues>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </MonthlyValues>
+            </RuminantFeedGroup>
             <LabourFilterGroup>
               <Name>Labour details</Name>
               <LabourFilter>

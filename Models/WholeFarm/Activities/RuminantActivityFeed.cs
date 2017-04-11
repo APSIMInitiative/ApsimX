@@ -85,6 +85,10 @@ namespace Models.WholeFarm.Activities
 			bool resourceAvailable = false;
 			FeedType = Resources.GetResourceItem("AnimalFoodStore",FeedTypeName, out resourceAvailable) as IFeedType;
 			FoodSource = FeedType;
+			if(FeedType==null)
+			{
+				Summary.WriteWarning(this, String.Format("Unable to locate feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
+			}
 
 			if (LabourRequired > 0)
 			{

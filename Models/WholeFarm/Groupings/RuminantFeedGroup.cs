@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Activities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+	[ValidParent(ParentType = typeof(RuminantActivityFeed))]
 	public class RuminantFeedGroup: WFModel
 	{
 		/// <summary>

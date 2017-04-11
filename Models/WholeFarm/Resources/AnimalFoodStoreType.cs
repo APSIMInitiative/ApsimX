@@ -16,7 +16,7 @@ namespace Models.WholeFarm.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
-    public class AnimalFoodStoreType : WFModel, IResourceType, IResourceWithTransactionType
+    public class AnimalFoodStoreType : WFModel, IResourceType, IResourceWithTransactionType, IFeedType
     {
         //[Link]
         //ISummary Summary = null;
@@ -51,29 +51,29 @@ namespace Models.WholeFarm.Resources
 		[Description("Purchase as needed")]
 		public bool PurchaseAsNeeded { get; set; }
 
-		/// <summary>
-		/// Weight (kg) per unit purchased
-		/// </summary>
-		[Description("Weight (kg) per unit purchased")]
-		public double KgPerUnitPurchased { get; set; }
+		///// <summary>
+		///// Weight (kg) per unit purchased
+		///// </summary>
+		//[Description("Weight (kg) per unit purchased")]
+		//public double KgPerUnitPurchased { get; set; }
 
-		/// <summary>
-		/// Cost per unit purchased
-		/// </summary>
-		[Description("Cost per unit purchased")]
-		public double CostPerUnitPurchased { get; set; }
+		///// <summary>
+		///// Cost per unit purchased
+		///// </summary>
+		//[Description("Cost per unit purchased")]
+		//public double CostPerUnitPurchased { get; set; }
 
-		/// <summary>
-		/// Labour required per unit purchase
-		/// </summary>
-		[Description("Labour required per unit purchase")]
-		public double LabourPerUnitPurchased { get; set; }
+		///// <summary>
+		///// Labour required per unit purchase
+		///// </summary>
+		//[Description("Labour required per unit purchase")]
+		//public double LabourPerUnitPurchased { get; set; }
 
-		/// <summary>
-		/// Other costs per unit purchased
-		/// </summary>
-		[Description("Other costs per unit purchased")]
-		public double OtherCosts { get; set; }
+		///// <summary>
+		///// Other costs per unit purchased
+		///// </summary>
+		//[Description("Other costs per unit purchased")]
+		//public double OtherCosts { get; set; }
 
         /// <summary>
         /// Amount currently available (kg dry)

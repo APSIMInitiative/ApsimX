@@ -184,6 +184,7 @@ namespace Models.WholeFarm.Activities
 							newCalfRuminant.Age = 0;
 							newCalfRuminant.HerdName = female.HerdName;
 							newCalfRuminant.BreedParams = female.BreedParams;
+							newCalfRuminant.Breed = female.BreedParams.Breed;
 							newCalfRuminant.Gender = (isMale) ? Sex.Male : Sex.Female;
 							newCalfRuminant.ID = ruminantHerd.NextUniqueID;
 							newCalfRuminant.Location = female.Location;
@@ -304,7 +305,7 @@ namespace Models.WholeFarm.Activities
 					rate = female.BreedParams.ConceptionRateAsymptote[2] / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent[2] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept[2]));
 					break;
 				default:
-					// females who have had more then one birth (twins should could as one birth)
+					// females who have had more then one birth (twins should count as one birth)
 					if(female.WeightAtConception > female.BreedParams.CriticalCowWeight * female.StandardReferenceWeight)
 					{
 						rate = female.BreedParams.ConceptionRateAsymptote[3] / (1 + Math.Exp(female.BreedParams.ConceptionRateCoefficent[3] * female.WeightAtConception / female.StandardReferenceWeight + female.BreedParams.ConceptionRateIntercept[3]));
