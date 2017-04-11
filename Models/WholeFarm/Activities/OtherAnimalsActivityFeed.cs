@@ -61,50 +61,6 @@ namespace Models.WholeFarm.Activities
 			FoodSource = FeedType;
 		}
 
-		///// <summary>An event handler to call for all feed requests prior to arbitration and growth</summary>
-		///// <param name="sender">The sender.</param>
-		///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		//[EventSubscribe("WFRequestFeed")]
-		//private void OnWFRequestFeed(object sender, EventArgs e)
-		//{
-		//	if (labourLimiter > 0)
-		//	{
-		//		// get month from clock
-		//		int month = Clock.Today.Month;
-
-		//		// get list from filters
-		//		foreach (var child in this.Children)
-		//		{
-		//			if (child.GetType() == typeof(OtherAnimalsFilterGroup))
-		//			{
-		//				double total = 0;
-		//				foreach (OtherAnimalsTypeCohort item in (child as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.Cohorts.Filter(child as OtherAnimalsFilterGroup))
-		//				{
-		//					total += item.Number;
-		//				}
-		//				double amount = 0;
-		//				switch (FeedStyle)
-		//				{
-		//					case OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount:
-		//						amount = (child as OtherAnimalsFilterGroup).MonthlyValues[month - 1] * 30.4 * total;
-		//						break;
-		//					case OtherAnimalsFeedActivityTypes.ProportionOfWeight:
-		//						throw new NotImplementedException("Proportion of weight is not implemented as a feed style for other animals");
-		//					default:
-		//						amount = 0;
-		//						break;
-		//				}
-		//				amount *= labourLimiter;
-		//				if (amount > 0)
-		//				{
-		//					FoodSource.Remove(amount, this.Name, (child as OtherAnimalsFilterGroup).AnimalType);
-		//				}
-		//			}
-		//		}
-		//	}
-
-		//}
-
 		/// <summary>
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
@@ -149,7 +105,6 @@ namespace Models.WholeFarm.Activities
 						FilterDetails = null
 					}
 					);
-//					FoodSource.Remove(amount, this.Name, (child as OtherAnimalsFilterGroup).AnimalType);
 				}
 			}
 

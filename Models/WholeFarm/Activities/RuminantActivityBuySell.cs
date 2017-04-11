@@ -91,6 +91,14 @@ namespace Models.WholeFarm.Activities
 		[Description("Sales commission to agent (%)")]
 		public double SalesCommission { get; set; }
 
+		/// <summary>
+		/// name of account to use
+		/// </summary>
+		[Description("Name of bank account to use")]
+		public string BankAccountName { get; set; }
+
+		private FinanceType bankAccount = null;
+
 		/// <summary>An event handler to allow us to initialise herd pricing.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -114,6 +122,10 @@ namespace Models.WholeFarm.Activities
 					PriceList.Add(val);
 				}
 			}
+
+			// get account
+			bool tmp = true;
+			bankAccount = Resources.GetResourceItem("Finances", BankAccountName, out tmp) as FinanceType;
 		}
 
 		/// <summary>An event handler to call for animal purchases</summary>
@@ -122,10 +134,9 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("WFAnimalBuy")]
 		private void OnWFAnimalBuy(object sender, EventArgs e)
 		{
-			RuminantHerd ruminantHerd = Resources.RuminantHerd();
+			// This activity will purchase animals based on available funds.
 
-			Finance Accounts = Resources.FinanceResource() as Finance;
-			FinanceType bankAccount = Accounts.GetFirst() as FinanceType;
+			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
 			var newRequests = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == BreedName).ToList();
 			foreach (var newgroup in newRequests.GroupBy(a => a.SaleFlag))
@@ -136,6 +147,8 @@ namespace Models.WholeFarm.Activities
 					fundsAvailable = bankAccount.FundsAvailable;
 				}
 				double cost = 0;
+				double shortfall = 0;
+				bool fundsexceeded = false;
 				foreach (var newind in newgroup)
 				{
 					double value = 0;
@@ -148,16 +161,18 @@ namespace Models.WholeFarm.Activities
 						RuminantValue getvalue = PriceList.Where(a => a.Age < newind.Age).OrderBy(a => a.Age).LastOrDefault();
 						value = getvalue.PurchaseValue * ((getvalue.Style == Common.PricingStyleType.perKg) ? newind.Weight : 1.0);
 					}
-					if (cost + value <= fundsAvailable)
+					if (cost + value <= fundsAvailable & fundsexceeded==false)
 					{
 						ruminantHerd.AddRuminant(newind);
 						cost += value;
 					}
 					else
 					{
-						break;
+						fundsexceeded = true;
+						shortfall += value;
 					}
 				}
+
 				if (bankAccount != null)
 				{
 					ResourceRequest purchaseRequest = new ResourceRequest();
@@ -166,6 +181,18 @@ namespace Models.WholeFarm.Activities
 					purchaseRequest.AllowTransmutation = false;
 					purchaseRequest.Reason = newgroup.Key.ToString();
 					bankAccount.Remove(purchaseRequest);
+
+					// report any financial shortfall in purchases
+					if (shortfall > 0)
+					{
+						purchaseRequest.Available = bankAccount.Amount;
+						purchaseRequest.Required = cost + shortfall;
+						purchaseRequest.Provided = cost;
+						purchaseRequest.ResourceName = "Finances";
+						purchaseRequest.ResourceTypeName = BankAccountName;
+						ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
+						OnShortfallOccurred(rre);
+					}
 				}
 			}
 		}

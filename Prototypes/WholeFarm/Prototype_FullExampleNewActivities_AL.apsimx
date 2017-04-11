@@ -682,7 +682,7 @@
             <SellingAge>42</SellingAge>
             <SellingWeight>580</SellingWeight>
             <ManagementMonth>10</ManagementMonth>
-            <MonthlyManagement>true</MonthlyManagement>
+            <MonthlyManagement>false</MonthlyManagement>
             <WeaningAge>9</WeaningAge>
             <WeaningWeight>250</WeaningWeight>
             <SellFemalesLikeMales>false</SellFemalesLikeMales>
@@ -760,6 +760,7 @@
             <MinimumTrucksBeforeSelling>0</MinimumTrucksBeforeSelling>
             <MinimumLoadBeforeSelling>0</MinimumLoadBeforeSelling>
             <SalesCommission>0</SalesCommission>
+            <BankAccountName>General account</BankAccountName>
           </RuminantActivityBuySell>
           <RuminantActivityHerdCost>
             <Name>Vet costs</Name>

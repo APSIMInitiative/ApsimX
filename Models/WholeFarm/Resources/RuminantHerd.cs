@@ -90,7 +90,6 @@ namespace Models.WholeFarm.Resources
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 			OnTransactionOccurred(te);
 
-//			HerdChanged(new EventArgs());
 			// remove change flag
 			ind.SaleFlag = Common.HerdChangeReason.None;
 		}
@@ -122,7 +121,6 @@ namespace Models.WholeFarm.Resources
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 			OnTransactionOccurred(te);
 
-			//			HerdChanged(new EventArgs());
 			// remove change flag
 			ind.SaleFlag = Common.HerdChangeReason.None;
 		}
@@ -145,16 +143,6 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		public int NextUniqueID { get { return id++; } }
 		private int id = 1;
-
-		///// <summary>
-		///// Herd change occurred 
-		///// </summary>
-		///// <param name="e"></param>
-		//protected virtual void HerdChanged(EventArgs e)
-		//{
-		//	if (OnHerdChanged != null)
-		//		OnHerdChanged(this, e);
-		//}
 
 		#region Transactions
 

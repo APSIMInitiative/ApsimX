@@ -103,6 +103,9 @@ namespace Models.WholeFarm.Activities
 		private void OnWFAnimalManage(object sender, EventArgs e)
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
+			// clear store of individuals to try and purchase
+			ruminantHerd.PurchaseIndividuals.Clear();
+
 			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.HerdName == HerdName).ToList();
 
 			RuminantType breedParams;
@@ -137,7 +140,7 @@ namespace Models.WholeFarm.Activities
 			}
 
 			// if management month
-			if (Clock.Today.Month == ManagementMonth ^ MonthlyManagement)
+			if ((Clock.Today.Month == ManagementMonth) ^ MonthlyManagement)
 			{
 				// Perform weaning
 				foreach (var ind in herd.Where(a => a.Weaned == false))
@@ -156,43 +159,50 @@ namespace Models.WholeFarm.Activities
 
 				// MALES
 				// check for breeder bulls after sale of old individuals and buy/sell
-				int numberinherd = herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == Common.HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.BreedingSire).Count();
+				int numberMaleinherd = herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == Common.HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.BreedingSire).Count();
 
-				if (numberinherd > MaximumSiresKept)
+				// Number of females
+				int numberFemaleinherd = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating & a.SaleFlag == Common.HerdChangeReason.None).Count();
+
+				if (numberMaleinherd > MaximumSiresKept)
 				{
 					// sell bulls
 					// What rule? oldest first as they may be lost soonest
-					int numberToRemove = MaximumSiresKept - numberinherd;
+					int numberToRemove = MaximumSiresKept - numberMaleinherd;
 					foreach (var male in herd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire).OrderByDescending(a => a.Age).Take(numberToRemove))
 					{
 						male.SaleFlag = Common.HerdChangeReason.ExcessBullSale;
 					}
 				}
-				else if(numberinherd < MaximumSiresKept)
+				else if(numberMaleinherd < MaximumSiresKept)
 				{
 					// remove young bulls from sale herd to replace breed bulls (not those sold because too old)
 					foreach (RuminantMale male in herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == Common.HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
 					{
 						male.SaleFlag = Common.HerdChangeReason.None;
 						male.BreedingSire = true;
-						numberinherd++;
-						if (numberinherd >= MaximumSiresKept) break;
+						numberMaleinherd++;
+						if (numberMaleinherd >= MaximumSiresKept) break;
 					}
 
 					// if still insufficient buy bulls.
-					if (numberinherd < MaximumSiresKept)
+					if (numberMaleinherd < MaximumSiresKept)
 					{
-						int numberToBuy = Convert.ToInt32((MaximumSiresKept - numberinherd) * 0.05);
+						// limit by breeders as proportion of max breeders so we don't spend alot on sires when building the herd and females more valuable
+						double propOfBreeders = numberFemaleinherd / MaximumBreedersKept;
+						int sires = Convert.ToInt32(Math.Ceiling(MaximumSiresKept * propOfBreeders));
+						int numberToBuy = Math.Max(0, sires - numberMaleinherd);
 
 						for (int i = 0; i < numberToBuy; i++)
 						{
 							RuminantMale newbull = new RuminantMale();
 							newbull.Age = 48;
+							newbull.Breed = breedParams.Breed;
 							newbull.HerdName = HerdName;
 							newbull.BreedingSire = true;
 							newbull.BreedParams = breedParams;
 							newbull.Gender = Sex.Male;
-							newbull.ID = ruminantHerd.NextUniqueID;
+							newbull.ID = 0; // ruminantHerd.NextUniqueID;
 							newbull.Weight = 450;
 							newbull.HighWeight = newbull.Weight;
 							newbull.SaleFlag = Common.HerdChangeReason.SirePurchase;
@@ -205,15 +215,14 @@ namespace Models.WholeFarm.Activities
 
 				// FEMALES
 				// check for maximum number of breeders remaining after sale and buy/sell
-				numberinherd = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating & a.SaleFlag == Common.HerdChangeReason.None).Count();
 
-				if (numberinherd > MaximumBreedersKept)
+				if (numberFemaleinherd > MaximumBreedersKept)
 				{
 					// sell breeders
 					// What rule? oldest first as they may be lost soonest
 					// should keep pregnant females... and young...
 					// this will currently remove pregnant females and females with suckling calf
-					int numberToRemove = MaximumBreedersKept - numberinherd;
+					int numberToRemove = MaximumBreedersKept - numberFemaleinherd;
 					foreach (var female in herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating).OrderByDescending(a => a.Age).Take(numberToRemove))
 					{
 						female.SaleFlag = Common.HerdChangeReason.ExcessBreederSale;
@@ -225,26 +234,29 @@ namespace Models.WholeFarm.Activities
 					foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == Common.HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
 					{
 						female.SaleFlag = Common.HerdChangeReason.None;
-						numberinherd++;
-						if (numberinherd >= MaximumBreedersKept) break;
+						numberFemaleinherd++;
+						if (numberFemaleinherd >= MaximumBreedersKept) break;
 					}
 
 					// if still insufficient buy breeders.
-					if (numberinherd < MaximumBreedersKept)
+					if (numberFemaleinherd < MaximumBreedersKept)
 					{
 						int ageOfHeifer = 12;
 						double weightOfHeifer = 260;
 
-						int numberToBuy = Convert.ToInt32((MaximumBreedersKept - numberinherd) * 0.05);
+
+						//TODO: add 5% extra to the number of breeders to sell.
+						int numberToBuy = Convert.ToInt32((MaximumBreedersKept - numberFemaleinherd));
 
 						for (int i = 0; i < numberToBuy; i++)
 						{
 							RuminantFemale newheifer = new RuminantFemale();
 							newheifer.Age = ageOfHeifer;
+							newheifer.Breed = breedParams.Breed;
 							newheifer.HerdName = HerdName;
 							newheifer.BreedParams = breedParams;
 							newheifer.Gender = Sex.Female;
-							newheifer.ID = ruminantHerd.NextUniqueID;
+							newheifer.ID = 0;// ruminantHerd.NextUniqueID;
 							newheifer.Weight = weightOfHeifer;
 							newheifer.HighWeight = newheifer.Weight;
 							newheifer.SaleFlag = Common.HerdChangeReason.HeiferPurchase;

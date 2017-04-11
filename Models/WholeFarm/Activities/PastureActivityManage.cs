@@ -207,6 +207,7 @@ namespace Models.WholeFarm.Activities
 					ResourceName = "Land",
 					ResourceTypeName = LandTypeNameToUse,
 					ActivityName = this.Name,
+					Reason = "Assign",
 					FilterDetails = null
 				}
 				);

@@ -170,7 +170,7 @@ namespace Models.WholeFarm.Resources
 			if (Request.Required == 0) return;
 			double amountRemoved = Math.Round(Request.Required, 2, MidpointRounding.ToEven); 
 			// avoid taking too much
-			amountRemoved = Math.Min(this.amount, amountRemoved);
+			amountRemoved = Math.Min(this.Amount, amountRemoved);
 			this.amount -= amountRemoved;
 
 			Request.Provided = amountRemoved;
