@@ -1357,7 +1357,7 @@ namespace Models.AgPasture
             foreach (PastureSpecies species in mySpecies)
             {
                 species.EvaluateSoilWaterUptake();
-                for (int layer = 0; layer <= species.roots.BottomLayer; layer++)
+                for (int layer = 0; layer <= species.plantZoneRoots.BottomLayer; layer++)
                     swardSoilWaterUptake[layer] += species.WaterUptake[layer];
             }
         }

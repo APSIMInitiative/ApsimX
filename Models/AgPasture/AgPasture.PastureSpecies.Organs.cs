@@ -11,6 +11,8 @@ using Models.Soils;
 using Models.PMF;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.Soils.Arbitrator;
+using static Models.AgPasture.PastureSpecies;
 
 namespace Models.AgPasture
 {
@@ -404,16 +406,57 @@ namespace Models.AgPasture
     [Serializable]
     public class PastureBelowGroundOrgan
     {
+        /// <summary>Flag which method for computing soil available water will be used.</summary>
+        private PlantAvailableWaterMethod myWaterAvailableMethod;
+
+        /// <summary>Number of layers in the soil.</summary>
+        private int nLayers;
+
+        /// <summary>Soil object where these roots are growing.</summary>
+        private Soil mySoil = null;
+
+        /// <summary>Name of pasture species</summary>
+        private string pastureName;
+
+        /// <summary>Specific root length (m/gDM).</summary>
+        private double mySpecificRootLength = 100.0;
+
+        /// <summary>Reference value for root length density for the Water and N availability.</summary>
+        private double ReferenceRLD = 5.0;
+
+        /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
+        private double ExponentSoilMoisture = 1.50;
+
+        /// <summary>Reference value of Ksat for water availability function.</summary>
+        private double ReferenceKSuptake = 15.0;
+
         /// <summary>Constructor, initialise tissues.</summary>
         /// <param name="numTissues">The number of tissues in the organ</param>
         /// <param name="numLayers">The number of layers in the soil</param>
-        public PastureBelowGroundOrgan(int numTissues, int numLayers)
+        /// <param name="myWaterAvailableMethod">Water uptake method</param>
+        /// <param name="soil">Soil where roots are growing</param>
+        /// <param name="nameOfPasture">Name of pasture</param>
+        /// <param name="specificRootLength">Specific root length (m/gDM)</param>
+        /// <param name="referenceRLD">Reference value for root length density for the Water and N availability.</param>
+        /// <param name="exponentSoilMoisture">Exponent controlling the effect of soil moisture variations on water extractability</param>
+        /// <param name="referenceKSuptake">Reference value of Ksat for water availability function</param>
+        public PastureBelowGroundOrgan(int numTissues, int numLayers, PlantAvailableWaterMethod myWaterAvailableMethod, Soil soil,
+                                       string nameOfPasture, double specificRootLength, double referenceRLD, double exponentSoilMoisture,
+                                       double referenceKSuptake)
         {
             // Typically two tissues below ground, one live and one dead
             TissueCount = numTissues;
             Tissue = new RootTissue[TissueCount];
             for (int t = 0; t < TissueCount; t++)
                 Tissue[t] = new RootTissue(numLayers);
+            this.myWaterAvailableMethod = myWaterAvailableMethod;
+            nLayers = numLayers;
+            mySoil = soil;
+            pastureName = nameOfPasture;
+            mySpecificRootLength = specificRootLength;
+            ReferenceRLD = referenceRLD;
+            ExponentSoilMoisture = exponentSoilMoisture;
+            ReferenceKSuptake = referenceKSuptake;
         }
 
         /// <summary>The collection of tissues for this organ.</summary>
@@ -605,6 +648,151 @@ namespace Models.AgPasture
         internal double NDetached
         {
             get { return Tissue[TissueCount - 1].NTransferedOut; }
+        }
+
+        /// <summary>Finds out the amount of plant available water in the soil.</summary>
+        /// <param name="myZone">The soil information</param>
+        internal double[] EvaluateSoilWaterAvailable(ZoneWaterAndN myZone)
+        {
+            if (myWaterAvailableMethod == PlantAvailableWaterMethod.DefaultAPSIM)
+                return PlantAvailableSoilWaterDefault(myZone);
+            else if (myWaterAvailableMethod == PlantAvailableWaterMethod.AlternativeKL)
+                return PlantAvailableSoilWaterAlternativeKL(myZone);
+            else if (myWaterAvailableMethod == PlantAvailableWaterMethod.AlternativeKS)
+                return PlantAvailableSoilWaterAlternativeKS(myZone);
+            else
+                throw new Exception("Invalid water uptake method found");
+        }
+
+        /// <summary>Estimates the amount of plant available water in each soil layer of the root zone.</summary>
+        /// <remarks>This is the default APSIM method, with kl representing the daily rate for water extraction</remarks>
+        /// <param name="myZone">The soil information</param>
+        /// <returns>The amount of available water in each layer (mm)</returns>
+        internal double[] PlantAvailableSoilWaterDefault(ZoneWaterAndN myZone)
+        {
+            double[] result = new double[nLayers];
+            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(pastureName);
+            for (int layer = 0; layer <= BottomLayer; layer++)
+            {
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * mySoil.Thickness[layer]));
+                result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer];
+            }
+
+            return result;
+        }
+
+        /// <summary>Estimates the amount of plant available  water in each soil layer of the root zone.</summary>
+        /// <remarks>
+        /// This is an alternative method, kl representing a soil limiting factor for water extraction (clayey soils have lower values)
+        ///  this is further modified by soil water content (a reduction for dry soil). A plant related factor is defined based on root
+        ///  length density (limiting conditions when RLD is below ReferenceRLD)
+        /// </remarks>
+        /// <param name="myZone">The soil information</param>
+        /// <returns>The amount of available water in each layer (mm)</returns>
+        internal double[] PlantAvailableSoilWaterAlternativeKL(ZoneWaterAndN myZone)
+        {
+            double[] result = new double[nLayers];
+            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(pastureName);
+            for (int layer = 0; layer <= BottomLayer; layer++)
+            {
+                double rldFac = Math.Min(1.0, RootLengthDensity[layer] / ReferenceRLD);
+                double swFac;
+                if (mySoil.SoilWater.SWmm[layer] >= mySoil.SoilWater.DULmm[layer])
+                    swFac = 1.0;
+                else if (mySoil.SoilWater.SWmm[layer] <= mySoil.SoilWater.LL15mm[layer])
+                    swFac = 0.0;
+                else
+                {
+                    double waterRatio = (myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) /
+                                        (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]);
+                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
+                }
+
+                // Total available water
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * mySoil.Thickness[layer]));
+
+                // Actual plant available water
+                result[layer] *= FractionLayerWithRoots(layer) * Math.Min(1.0, soilCropData.KL[layer] * swFac * rldFac);
+            }
+
+            return result;
+        }
+
+        /// <summary>Estimates the amount of plant available water in each soil layer of the root zone.</summary>
+        /// <remarks>
+        /// This is an alternative method, which does not use kl. A factor based on Ksat is used instead. This is further modified
+        ///  by soil water content and a plant related factor, defined based on root length density. All three factors are normalised 
+        ///  (using ReferenceKSat and ReferenceRLD for KSat and root and DUL for soil water content). The effect of all factors are
+        ///  assumed to vary between zero and one following exponential functions, such that the effect is 90% at the reference value.
+        /// </remarks>
+        /// <param name="myZone">The soil information</param>
+        /// <returns>The amount of available water in each layer (mm)</returns>
+        internal double[] PlantAvailableSoilWaterAlternativeKS(ZoneWaterAndN myZone)
+        {
+            double[] result = new double[nLayers];
+            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(pastureName);
+            for (int layer = 0; layer <= BottomLayer; layer++)
+            {
+                double condFac = 1.0 - Math.Pow(10.0, -mySoil.KS[layer] / ReferenceKSuptake);
+                double rldFac = 1.0 - Math.Pow(10.0, -RootLengthDensity[layer] / ReferenceRLD);
+                double swFac;
+                if (mySoil.SoilWater.SWmm[layer] >= mySoil.SoilWater.DULmm[layer])
+                    swFac = 1.0;
+                else if (mySoil.SoilWater.SWmm[layer] <= mySoil.SoilWater.LL15mm[layer])
+                    swFac = 0.0;
+                else
+                {
+                    double waterRatio = (myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) /
+                                        (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]);
+                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
+                }
+
+                // Total available water
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LL[layer]) * mySoil.Thickness[layer];
+
+                // Actual plant available water
+                result[layer] *= FractionLayerWithRoots(layer) * Math.Min(1.0, rldFac * condFac * swFac);
+            }
+
+            return result;
+        }
+
+        /// <summary>Computes how much of the layer is actually explored by roots (considering depth only).</summary>
+        /// <param name="layer">The index for the layer being considered</param>
+        /// <returns>The fraction of the layer that is explored by roots (0-1)</returns>
+        internal double FractionLayerWithRoots(int layer)
+        {
+            double fractionInLayer = 0.0;
+            if (layer < BottomLayer)
+            {
+                fractionInLayer = 1.0;
+            }
+            else if (layer == BottomLayer)
+            {
+                double depthTillTopThisLayer = 0.0;
+                for (int z = 0; z < layer; z++)
+                    depthTillTopThisLayer += mySoil.Thickness[z];
+                fractionInLayer = (Depth - depthTillTopThisLayer) / mySoil.Thickness[layer];
+                fractionInLayer = Math.Min(1.0, Math.Max(0.0, fractionInLayer));
+            }
+
+            return fractionInLayer;
+        }
+
+        /// <summary>Gets the root length density by volume (mm/mm^3).</summary>
+        public double[] RootLengthDensity
+        {
+            get
+            {
+                double[] result = new double[nLayers];
+                double totalRootLength = Tissue[0].DM * mySpecificRootLength; // m root/m2 
+                totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
+                for (int layer = 0; layer < result.Length; layer++)
+                {
+                    result[layer] = Tissue[0].FractionWt[layer] * totalRootLength / mySoil.Thickness[layer];
+                }
+                return result;
+            }
         }
 
         #endregion ---------------------------------------------------------------------------------------------------------
