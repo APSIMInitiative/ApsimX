@@ -31,8 +31,8 @@ namespace Models.WholeFarm.Resources
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 			// setup price list 
 			// initialise herd price list
@@ -441,9 +441,8 @@ namespace Models.WholeFarm.Resources
 		{
 			List<Ruminant> Individuals = new List<Ruminant>();
 
-			List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
-
-			foreach (IModel childModel in childNodes)
+			List<RuminantTypeCohort> childNodes = this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().ToList();
+			foreach (RuminantTypeCohort childModel in childNodes)
 			{
 				//cast the generic IModel to a specfic model.
 				RuminantTypeCohort cohort = childModel as RuminantTypeCohort;

@@ -264,6 +264,66 @@
               <StartingWeightSD>0</StartingWeightSD>
               <Suckling>false</Suckling>
             </RuminantTypeCohort>
+            <AnimalPricing>
+              <Name>Prices</Name>
+              <AnimalPriceEntry>
+                <Name>Female calves</Name>
+                <Gender>Female</Gender>
+                <Age>0</Age>
+                <PurchaseValue>2</PurchaseValue>
+                <SellValue>2</SellValue>
+              </AnimalPriceEntry>
+              <AnimalPriceEntry>
+                <Name>Female weaners</Name>
+                <Gender>Female</Gender>
+                <Age>9</Age>
+                <PurchaseValue>1.8</PurchaseValue>
+                <SellValue>1.8</SellValue>
+              </AnimalPriceEntry>
+              <AnimalPriceEntry>
+                <Name>Female 1-3y</Name>
+                <Gender>Female</Gender>
+                <Age>12</Age>
+                <PurchaseValue>1.6</PurchaseValue>
+                <SellValue>1.6</SellValue>
+              </AnimalPriceEntry>
+              <AnimalPriceEntry>
+                <Name>Female 3+y</Name>
+                <Gender>Female</Gender>
+                <Age>36</Age>
+                <PurchaseValue>1.2</PurchaseValue>
+                <SellValue>1.2</SellValue>
+              </AnimalPriceEntry>
+              <AnimalPriceEntry>
+                <Name>Male calves</Name>
+                <Gender>Male</Gender>
+                <Age>0</Age>
+                <PurchaseValue>2</PurchaseValue>
+                <SellValue>2</SellValue>
+              </AnimalPriceEntry>
+              <AnimalPriceEntry>
+                <Name>Male weaners</Name>
+                <Gender>Male</Gender>
+                <Age>9</Age>
+                <PurchaseValue>1.8</PurchaseValue>
+                <SellValue>1.8</SellValue>
+              </AnimalPriceEntry>
+              <AnimalPriceEntry>
+                <Name>Male 1-3y</Name>
+                <Gender>Male</Gender>
+                <Age>12</Age>
+                <PurchaseValue>1.6</PurchaseValue>
+                <SellValue>1.6</SellValue>
+              </AnimalPriceEntry>
+              <AnimalPriceEntry>
+                <Name>Male 3+y</Name>
+                <Gender>Male</Gender>
+                <Age>36</Age>
+                <PurchaseValue>1.5</PurchaseValue>
+                <SellValue>1.5</SellValue>
+              </AnimalPriceEntry>
+              <PricingStyle>perKg</PricingStyle>
+            </AnimalPricing>
             <Breed>Bos indicus</Breed>
             <EMaintCoefficient>0.35</EMaintCoefficient>
             <EMaintIntercept>0.503</EMaintIntercept>
