@@ -23,6 +23,8 @@ namespace Models.WholeFarm.Activities
 		private ResourcesHolder Resources = null;
 		[Link]
 		Clock Clock = null;
+		[Link]
+		ISummary Summary = null;
 
 		/// <summary>
 		/// Name of herd to breed
@@ -91,10 +93,35 @@ namespace Models.WholeFarm.Activities
 		public double WeaningWeight { get; set; }
 
 		/// <summary>
+		/// Name of GrazeFoodStore (paddock) to place purchases in for grazing/ (leave blank for general yards)
+		/// </summary>
+		[Description("Name of GrazeFoodStore (paddock) to place purchases in (leave blank for general yards)")]
+		public string GrazeFoodStoreName { get; set; }
+
+		/// <summary>
 		/// Perform selling of young females the same as males
 		/// </summary>
 		[Description("Perform selling of young females the same as males")]
 		public bool SellFemalesLikeMales { get; set; }
+
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			// check GrazeFoodStoreExists
+			if (GrazeFoodStoreName == null) GrazeFoodStoreName = "";
+			if(GrazeFoodStoreName!="")
+			{
+				bool resourceAvailable = false;
+				Resources.GetResourceItem("GrazeFoodStore", GrazeFoodStoreName, out resourceAvailable);
+				if(!resourceAvailable)
+				{
+					Summary.WriteWarning(this, String.Format("Could not find graze food store named {0} in which to place new purchases for {1}", GrazeFoodStoreName, this.Name));
+				}
+			}
+		}
 
 		/// <summary>An event handler to call for all herd management activities</summary>
 		/// <param name="sender">The sender.</param>
@@ -196,6 +223,7 @@ namespace Models.WholeFarm.Activities
 						for (int i = 0; i < numberToBuy; i++)
 						{
 							RuminantMale newbull = new RuminantMale();
+							newbull.Location = GrazeFoodStoreName;
 							newbull.Age = 48;
 							newbull.Breed = breedParams.Breed;
 							newbull.HerdName = HerdName;
@@ -251,6 +279,7 @@ namespace Models.WholeFarm.Activities
 						for (int i = 0; i < numberToBuy; i++)
 						{
 							RuminantFemale newheifer = new RuminantFemale();
+							newheifer.Location = GrazeFoodStoreName;
 							newheifer.Age = ageOfHeifer;
 							newheifer.Breed = breedParams.Breed;
 							newheifer.HerdName = HerdName;

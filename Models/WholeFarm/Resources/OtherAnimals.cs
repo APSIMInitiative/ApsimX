@@ -23,7 +23,6 @@ namespace Models.WholeFarm.Resources
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-
 			// create cohort list that can be modified by simulation
 			foreach (var child in Children)
 			{

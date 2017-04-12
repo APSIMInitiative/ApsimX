@@ -22,6 +22,71 @@ namespace Models.WholeFarm.Resources
         [Description("Breed")]
         public string Breed { get; set; }
 
+		/// <summary>
+		/// Current value of individuals in the herd
+		/// </summary>
+		[XmlIgnore]
+		public List<AnimalPriceValue> PriceList;
+
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			// setup price list 
+			// initialise herd price list
+			PriceList = new List<AnimalPriceValue>();
+
+			foreach (AnimalPricing priceGroup in this.Children.Where(a => a.GetType() == typeof(AnimalPricing)))
+			{
+				foreach (AnimalPriceEntry price in priceGroup.Children.Where(a => a.GetType() == typeof(AnimalPriceEntry)))
+				{
+					AnimalPriceValue val = new AnimalPriceValue();
+					val.Age = price.Age;
+					val.PurchaseValue = price.PurchaseValue;
+					val.Gender = price.Gender;
+					val.Breed = this.Breed;
+					val.SellValue = price.SellValue;
+					val.Style = priceGroup.PricingStyle;
+					PriceList.Add(val);
+				}
+			}
+			PriceList = PriceList.OrderBy(a => a.Age).ToList();
+		}
+
+		/// <summary>
+		/// Determine if a price schedule has been provided for this breed
+		/// </summary>
+		/// <returns>boolean</returns>
+		public bool PricingAvailable() {  return (PriceList.Count>0); }
+
+		/// <summary>
+		/// Get value of a specific individual
+		/// </summary>
+		/// <returns>value</returns>
+		public double ValueofIndividual(Ruminant ind, bool PurchasePrice)
+		{
+			if (PricingAvailable())
+			{
+				// ordering now done when the list is created for speed
+				//AnimalPriceValue getvalue = PriceList.Where(a => a.Age < ind.Age).OrderBy(a => a.Age).LastOrDefault();
+				AnimalPriceValue getvalue = PriceList.Where(a => a.Age < ind.Age).LastOrDefault();
+				if(PurchasePrice)
+				{
+					return getvalue.PurchaseValue * ((getvalue.Style == Common.PricingStyleType.perKg) ? ind.Weight : 1.0);
+				}
+				else
+				{
+					return getvalue.SellValue * ((getvalue.Style == Common.PricingStyleType.perKg) ? ind.Weight : 1.0);
+				}
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
 		#region Grow Activity
 
 		/// <summary>
@@ -367,6 +432,27 @@ namespace Models.WholeFarm.Resources
 		public double MaximumConceptionUncontrolledBreeding { get; set; }
 
 		#endregion
+
+		/// <summary>
+		/// Create the individual ruminant animals for this Ruminant Type (Breed)
+		/// </summary>
+		/// <returns></returns>
+		public List<Ruminant> CreateIndividuals()
+		{
+			List<Ruminant> Individuals = new List<Ruminant>();
+
+			List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
+
+			foreach (IModel childModel in childNodes)
+			{
+				//cast the generic IModel to a specfic model.
+				RuminantTypeCohort cohort = childModel as RuminantTypeCohort;
+				Individuals.AddRange(cohort.CreateIndividuals());
+			}
+
+			return Individuals;
+		}
+
 
 		////Ruminant Coefficients
 		////---------------------
@@ -936,32 +1022,7 @@ namespace Models.WholeFarm.Resources
 		//      public double Max_concep_uncontrolled { get; set; }
 
 
-
-
-
-		/// <summary>
-		/// Create the individual ruminant animals for this Ruminant Type (Breed)
-		/// </summary>
-		/// <returns></returns>
-		public List<Ruminant> CreateIndividuals()
-        {
-            List<Ruminant> Individuals = new List<Ruminant>();
-
-            List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
-
-            foreach (IModel childModel in childNodes)
-            {
-                //cast the generic IModel to a specfic model.
-                RuminantTypeCohort cohort = childModel as RuminantTypeCohort;
-                Individuals.AddRange(cohort.CreateIndividuals());
-            }
-
-            return Individuals;
-        }
-
-
-
-    }
+	}
 
 
 

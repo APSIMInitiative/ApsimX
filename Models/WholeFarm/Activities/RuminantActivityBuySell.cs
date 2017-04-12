@@ -26,12 +26,6 @@ namespace Models.WholeFarm.Activities
 		ISummary Summary = null;
 
 		/// <summary>
-		/// Current value of individuals in the herd
-		/// </summary>
-		[XmlIgnore]
-		public List<RuminantValue> PriceList;
-
-		/// <summary>
 		/// Name of breed to buy or sell
 		/// </summary>
 		[Description("Name of breed to buy or sell")]
@@ -105,27 +99,23 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("StartOfSimulation")]
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
-			// initialise herd price list
-			PriceList = new List<RuminantValue>();
-
-			foreach (RuminantPricing priceGroup in this.Children.Where(a => a.GetType() == typeof(RuminantPricing)))
-			{
-				foreach (RuminantPriceEntry price in priceGroup.Children.Where(a => a.GetType() == typeof(RuminantPriceEntry)))
-				{
-					RuminantValue val = new RuminantValue();
-					val.Age = price.Age;
-					val.PurchaseValue = price.PurchaseValue;
-					val.Gender = price.Gender;
-					val.Breed = this.BreedName;
-					val.SellValue = price.SellValue;
-					val.Style = priceGroup.PricingStyle;
-					PriceList.Add(val);
-				}
-			}
-
 			// get account
 			bool tmp = true;
 			bankAccount = Resources.GetResourceItem("Finances", BankAccountName, out tmp) as FinanceType;
+
+			// check if pricing is present
+			if(bankAccount != null)
+			{
+				RuminantHerd ruminantHerd = Resources.RuminantHerd();
+				var breeds = ruminantHerd.Herd.Where(a => a.BreedParams.Breed == BreedName).GroupBy(a => a.HerdName);
+				foreach (var breed in breeds)
+				{
+					if (!breed.FirstOrDefault().BreedParams.PricingAvailable())
+					{
+						Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd ({0}). No transactions will be recorded for activity ({1}).", breed.Key, this.Name));
+					}
+				}
+			}
 		}
 
 		/// <summary>An event handler to call for animal purchases</summary>
@@ -158,8 +148,7 @@ namespace Models.WholeFarm.Activities
 					}
 					else
 					{
-						RuminantValue getvalue = PriceList.Where(a => a.Age < newind.Age).OrderBy(a => a.Age).LastOrDefault();
-						value = getvalue.PurchaseValue * ((getvalue.Style == Common.PricingStyleType.perKg) ? newind.Weight : 1.0);
+						value = newind.BreedParams.ValueofIndividual(newind, true);
 					}
 					if (cost + value <= fundsAvailable & fundsexceeded==false)
 					{
@@ -233,8 +222,9 @@ namespace Models.WholeFarm.Activities
 							nonloaded = false;
 							head++;
 							load450kgs += ind.Weight / 450.0;
-							RuminantValue getvalue = PriceList.Where(a => a.Age < ind.Age).OrderBy(a => a.Age).LastOrDefault();
-							saleValue += getvalue.SellValue * ((getvalue.Style == Common.PricingStyleType.perKg) ? ind.Weight : 1.0);
+//							RuminantValue getvalue = PriceList.Where(a => a.Age < ind.Age).OrderBy(a => a.Age).LastOrDefault();
+//							saleValue += getvalue.SellValue * ((getvalue.Style == Common.PricingStyleType.perKg) ? ind.Weight : 1.0);
+							saleValue += ind.BreedParams.ValueofIndividual(ind, false);
 							saleWeight += ind.Weight;
 							ruminantHerd.RemoveRuminant(ind);
 						}

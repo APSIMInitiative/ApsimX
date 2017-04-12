@@ -22,8 +22,6 @@ namespace Models.WholeFarm.Groupings
 		Clock Clock = null;
 		[Link]
 		private ResourcesHolder Resources = null;
-		//[Link]
-		//private Activities.ActivitiesHolder Activities =  null;
 		[Link]
 		ISummary Summary = null;
 
@@ -85,7 +83,6 @@ namespace Models.WholeFarm.Groupings
 			// This needs to happen after all manage pasture activities have been initialised on commencing
 			// Therefore we use StartOfSimulation event
 
-			// Activities.GetByName(ManagedPastureName) as PastureActivityManage
 			// link to graze food store type pasture to muster to
 			bool resavailable;
 			pasture = Resources.GetResourceItem("GrazeFoodStore", ManagedPastureName, out resavailable) as GrazeFoodStoreType;
@@ -195,6 +192,8 @@ namespace Models.WholeFarm.Groupings
 		/// </summary>
 		public override void PerformActivity()
 		{
+			// check if labour provided or PartialResources allowed
+
 			if (Clock.Today.Month == Month)
 			{
 				// move individuals

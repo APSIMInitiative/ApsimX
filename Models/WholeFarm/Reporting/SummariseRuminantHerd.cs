@@ -48,8 +48,8 @@ namespace Models.WholeFarm
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("EndOfMonth")]
-		private void OnEndOfMonth(object sender, EventArgs e)
+		[EventSubscribe("WFHerdSummary")]
+		private void OnWFHerdSummary(object sender, EventArgs e)
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 			List<Ruminant> herd = ruminantHerd.Herd;

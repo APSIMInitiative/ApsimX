@@ -9,20 +9,19 @@ using System.Text;
 namespace Models.WholeFarm.Resources
 {
 	/// <summary>
-	/// User entry of Ruminant prices
+	/// User entry of Animal prices
 	/// </summary>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantActivityBuySell))]
-	public class RuminantPricing: Model
+	public class AnimalPricing: Model
 	{
 		/// <summary>
 		/// Style of pricing animals
 		/// </summary>
 		[Description("Style of pricing animals")]
 		public Common.PricingStyleType PricingStyle { get; set; }
-
 	}
 
 	/// <summary>
@@ -31,8 +30,8 @@ namespace Models.WholeFarm.Resources
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(RuminantPricing))]
-	public class RuminantPriceEntry: Model
+	[ValidParent(ParentType = typeof(AnimalPricing))]
+	public class AnimalPriceEntry: Model
 	{
 		/// <summary>
 		/// Gender

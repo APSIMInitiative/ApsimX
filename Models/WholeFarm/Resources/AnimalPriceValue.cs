@@ -7,9 +7,9 @@ using System.Text;
 namespace Models.WholeFarm.Resources
 {
 	/// <summary>
-	/// Ruuminant valuation entry
+	/// Animal valuation entry
 	/// </summary>
-	public class RuminantValue
+	public class AnimalPriceValue
 	{
 		/// <summary>
 		/// Name of herd

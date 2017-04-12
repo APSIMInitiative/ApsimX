@@ -131,6 +131,9 @@ namespace Models
 		public event EventHandler WFAnimalBuy;
 		/// <summary>WholeFarm Age your resources (eg. Decomose Fodder, Age your labour, Age your Animals)</summary>
 		public event EventHandler WFAgeResources;
+		/// <summary>WholeFarm event to calculate monthly herd summary</summary>
+		public event EventHandler WFHerdSummary;
+
 		// WholeFarm versions of the following events to ensure APSIM tasks perfomed before WF not yet implemented
 		///// <summary>WholeFarm start of simulation performed after APSIM StartOfSimulation</summary>
 		//public event EventHandler WFStartOfSimulation;
@@ -289,6 +292,8 @@ namespace Models
 						WFAnimalSell.Invoke(this, args);
 					if (WFAgeResources != null)
 						WFAgeResources.Invoke(this, args);
+					if (WFHerdSummary != null)
+						WFHerdSummary.Invoke(this, args);
 					if (WFAnimalBuy != null)
 						WFAnimalBuy.Invoke(this, args);
 					EndOfMonth.Invoke(this, args);
