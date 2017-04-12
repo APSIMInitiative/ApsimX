@@ -226,7 +226,7 @@ namespace Models.WholeFarm.Activities
 								conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
 								if (WholeFarm.RandomGenerator.NextDouble() <= conceptionRate)
 								{
-									female.UpdateConceptionDetails(WholeFarm.RandomGenerator.NextDouble() > female.BreedParams.TwinRate, conceptionRate);
+									female.UpdateConceptionDetails(WholeFarm.RandomGenerator.NextDouble() < female.BreedParams.TwinRate, conceptionRate);
 								}
 							}
 						}
@@ -242,9 +242,11 @@ namespace Models.WholeFarm.Activities
 						{
 							// calculate conception
 							double conceptionRate = ConceptionRate(female);
-							if (WholeFarm.RandomGenerator.NextDouble() <= conceptionRate)
+							double rnd = WholeFarm.RandomGenerator.NextDouble();
+							if (rnd <= conceptionRate)
 							{
-								female.UpdateConceptionDetails(WholeFarm.RandomGenerator.NextDouble() > female.BreedParams.TwinRate, conceptionRate);
+								rnd = WholeFarm.RandomGenerator.NextDouble();
+								female.UpdateConceptionDetails(rnd < female.BreedParams.TwinRate, conceptionRate);
 							}
 						}
 					}
@@ -266,10 +268,6 @@ namespace Models.WholeFarm.Activities
 						}
 					}
 				}
-			}
-			if (ControlledMatings != null && ControlledMatings.IsDueDate())
-			{
-				// To do. Add controlled matings here.
 			}
 		}
 
@@ -312,7 +310,7 @@ namespace Models.WholeFarm.Activities
 					}
 					break;
 			}
-			return rate;
+			return rate/100;
 		}
 
 		/// <summary>

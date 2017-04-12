@@ -28,6 +28,49 @@ namespace Models.WholeFarm.Activities
 		[Description("Name of herd to trade")]
 		public string HerdName { get; set; }
 
+		/// <summary>
+		/// Weight of inividuals to buy
+		/// </summary>
+		[Description("Weight of inividuals to buy")]
+		public double BuyWeight { get; set; }
+
+		/// <summary>
+		/// Animal age at purchase (months)
+		/// </summary>
+		[Description("Animal age at purchase (months)")]
+		public int BuyAge { get; set; }
+
+		/// <summary>
+		/// Trade price (purchase/sell price /kg LWT)
+		/// </summary>
+		[Description("trade price (purchase/sell price /kg LWT)")]
+		public double TradePrice { get; set; }
+
+		/// <summary>
+		/// Months kept before sale
+		/// </summary>
+		[Description("Months kept before sale")]
+		public int MinMonthsKept { get; set; }
+
+		/// <summary>
+		/// Weight to achieve before sale
+		/// </summary>
+		[Description("Weight to achieve before sale")]
+		public int TradeWeight { get; set; }
+
+		/// <summary>
+		/// Purchase month
+		/// </summary>
+		[Description("Purchase month")]
+		public int PurchaseMonth { get; set; }
+
+		//TODO: devide how many to stock.
+		// stocking rate for paddock
+		// fixed number
+
+
+
+
 		/// <summary>An event handler to call for all herd management activities</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -45,6 +88,8 @@ namespace Models.WholeFarm.Activities
 		/// <returns>List of required resource requests</returns>
 		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
+			// check for labour
+
 			return null;
 		}
 
