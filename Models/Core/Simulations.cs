@@ -150,9 +150,9 @@ namespace Models.Core
                 {
                     foreach (Simulation simulation in simulations)
                     {
-                        foreach (IModel match in Apsim.FindAll(simulation, replacement.GetType()))
+                        foreach (IModel match in Apsim.FindAll(simulation))
                         {
-                            if (match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
+                            if (!(match is Simulation) && match.Name.Equals(replacement.Name, StringComparison.InvariantCultureIgnoreCase))
                             {
                                 // Do replacement.
                                 IModel newModel = Apsim.Clone(replacement);
@@ -285,6 +285,10 @@ namespace Models.Core
                 // If not found then find a model of the specified type.
                 if (modelToDocument == null)
                     modelToDocument = Apsim.Get(simulation, "[" + modelNameToDocument + "]") as IModel;
+
+                // If the simulation has the same name as the model we want to document, dig a bit deeper
+                if (modelToDocument == simulation)
+                    modelToDocument = Apsim.ChildrenRecursivelyVisible(simulation).FirstOrDefault(m => m.Name.Equals(modelNameToDocument, StringComparison.OrdinalIgnoreCase));
 
                 // If still not found throw an error.
                 if (modelToDocument == null)

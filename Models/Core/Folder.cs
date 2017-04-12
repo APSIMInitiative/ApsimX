@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Models.Factorial;
 using Models.PMF.Interfaces;
+using Models.Graph;
+
 namespace Models.Core
 {
     /// <summary>
@@ -28,11 +30,33 @@ namespace Models.Core
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             // add a heading.
+            if (!(tags.Last() is AutoDocumentation.Heading))
+                tags.Add(new AutoDocumentation.NewPage());
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            // write any memo children.
+            foreach (IModel child in Apsim.Children(this, typeof(Memo)))
                 child.Document(tags, headingLevel + 1, indent);
+
+            int pageNumber = 1;
+            int i = 0;
+            List<IModel> children = Apsim.Children(this, typeof(Graph.Graph));
+            while (i < children.Count)
+            {
+                GraphPage page = new GraphPage();
+                page.name = Name + pageNumber;
+                for (int j = i; j < i + 6 && j < children.Count; j++)
+                    page.graphs.Add(children[j] as Graph.Graph);
+                tags.Add(page);
+                i += 6;
+                pageNumber++;
+            }
+
+            // write any folder children.
+            foreach (IModel child in Apsim.Children(this, typeof(Folder)))
+                child.Document(tags, headingLevel + 1, indent);
+
         }
+
     }
 }

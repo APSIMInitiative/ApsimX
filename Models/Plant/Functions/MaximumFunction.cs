@@ -18,20 +18,17 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
-                double ReturnValue = -999999999;
-                foreach (IFunction F in ChildFunctions)
-                {
-                    ReturnValue = Math.Max(ReturnValue, F.Value);
-                }
-                return ReturnValue;
+            double ReturnValue = -999999999;
+            foreach (IFunction F in ChildFunctions)
+            {
+                ReturnValue = Math.Max(ReturnValue, F.Value(arrayIndex));
             }
+            return ReturnValue;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

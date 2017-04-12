@@ -33,7 +33,7 @@ namespace Models.WaterModel
     /// KLAT only alters the amount of water flowing out of the layer
     /// </summary>
     [Serializable]
-    public class LateralFlowModel : Model, IFunctionArray
+    public class LateralFlowModel : Model
     {
         /// <summary>The water movement model.</summary>
         [Link]

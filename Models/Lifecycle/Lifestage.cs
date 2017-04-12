@@ -29,6 +29,9 @@ namespace Models.Lifecycle
         private List<Cohort> CohortList;
 
         [NonSerialized]
+        private double StepMortality;
+
+        [NonSerialized]
         private List<ILifestageProcess> ProcessList;
 
         /// <summary>
@@ -77,6 +80,17 @@ namespace Models.Lifecycle
         }
 
         /// <summary>
+        /// The current mortality numbers for this timestep
+        /// </summary>
+        public double Mortality
+        {
+            get
+            {
+                return StepMortality;
+            }
+        }
+
+        /// <summary>
         /// Process the lifestage which involves configured functions and promoting cohorts to linked stages.
         /// </summary>
         public void Process()
@@ -86,6 +100,7 @@ namespace Models.Lifecycle
                 Cohort aCohort;
                 int count = CohortList.Count;
 
+                StepMortality = 0;
                 // for each cohort in the lifestage
                 for (int i = 0; i < count; i++)
                 {
@@ -98,6 +113,7 @@ namespace Models.Lifecycle
                         proc.ProcessCohort(aCohort);    // execute process function and may include transfer to another lifestage
                     }
                     aCohort.AgeCohort();                // finally age the creatures in the cohort
+                    StepMortality += aCohort.Mortality;
                 }
                 RemoveEmptyCohorts();                   // remove any empty cohorts from the cohortlist
             }

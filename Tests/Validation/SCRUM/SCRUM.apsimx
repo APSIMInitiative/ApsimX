@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -56,16 +56,16 @@
           <RegrStats>
             <Name>NLeaching</Name>
             <n>36</n>
-            <Slope>1.0176619632865627</Slope>
-            <Intercept>11.896347779682529</Intercept>
-            <SEslope>0.079369759508785</SEslope>
-            <SEintercept>7.1800702959000144</SEintercept>
-            <R2>0.82862744406805788</R2>
-            <RMSE>32.247189792706507</RMSE>
-            <NSE>0.74364083633387768</NSE>
-            <ME>13.031025340318209</ME>
-            <MAE>17.9698670784793</MAE>
-            <RSR>0.49923749437167464</RSR>
+            <Slope>0.9584193505497689</Slope>
+            <Intercept>13.128193083666034</Intercept>
+            <SEslope>0.075474104053685973</SEslope>
+            <SEintercept>7.5089407548347529</SEintercept>
+            <R2>0.82586940631123074</R2>
+            <RMSE>32.445767696901719</RMSE>
+            <NSE>0.78327762517998423</NSE>
+            <ME>10.176018648600682</ME>
+            <MAE>16.019440270270671</MAE>
+            <RSR>0.45902321167103649</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -83,128 +83,128 @@
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>126</n>
-            <Slope>1.0034864464216875</Slope>
-            <Intercept>-0.16481305858286532</Intercept>
-            <SEslope>0.03344121068250288</SEslope>
-            <SEintercept>10.59270582872891</SEintercept>
-            <R2>0.878959303445856</R2>
-            <RMSE>15.746156835911295</RMSE>
-            <NSE>0.86083169597746378</NSE>
-            <ME>0.92969126741823915</ME>
-            <MAE>12.822594580857636</MAE>
-            <RSR>0.37156936589707057</RSR>
+            <Slope>1.1591955959186775</Slope>
+            <Intercept>-37.802863951580605</Intercept>
+            <SEslope>0.049060199764068259</SEslope>
+            <SEintercept>15.54011512721212</SEintercept>
+            <R2>0.81825737618925021</R2>
+            <RMSE>26.927224780319694</RMSE>
+            <NSE>0.59301876949739873</NSE>
+            <ME>12.173601290931003</ME>
+            <MAE>19.6857487825889</MAE>
+            <RSR>0.635414211941083</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(1)</Name>
             <n>126</n>
-            <Slope>1.2048285770289724</Slope>
-            <Intercept>-0.0052745497790046</Intercept>
-            <SEslope>0.034269736839094407</SEslope>
-            <SEintercept>0.0062248811237683331</SEintercept>
-            <R2>0.90882553472707139</R2>
-            <RMSE>0.0445079535247144</RMSE>
-            <NSE>0.68701279828897044</NSE>
-            <ME>0.028172914972865507</ME>
-            <MAE>0.030922980270429428</MAE>
-            <RSR>0.55722811872753208</RSR>
+            <Slope>1.257886280759017</Slope>
+            <Intercept>-0.0064806444855074752</Intercept>
+            <SEslope>0.035765020777174659</SEslope>
+            <SEintercept>0.0064964900014359136</SEintercept>
+            <R2>0.908889777659132</R2>
+            <RMSE>0.051907391700905671</RMSE>
+            <NSE>0.57429403010878122</NSE>
+            <ME>0.035630873403219729</ME>
+            <MAE>0.0372770359576631</MAE>
+            <RSR>0.64986717957022444</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(2)</Name>
             <n>126</n>
-            <Slope>1.0197121710598931</Slope>
-            <Intercept>-0.011920004882188529</Intercept>
-            <SEslope>0.0357063163185024</SEslope>
-            <SEintercept>0.0075991545799199674</SEintercept>
-            <R2>0.86802575491079159</R2>
-            <RMSE>0.022827201720404415</RMSE>
-            <NSE>0.82019431944397359</NSE>
-            <ME>-0.00786121410492578</ME>
-            <MAE>0.018236907342969861</MAE>
-            <RSR>0.4223489686802423</RSR>
+            <Slope>1.1716950029271251</Slope>
+            <Intercept>-0.032909963387705993</Intercept>
+            <SEslope>0.045297262838145259</SEslope>
+            <SEintercept>0.0096403364403054026</SEintercept>
+            <R2>0.84364973434961887</R2>
+            <RMSE>0.02878778924840384</RMSE>
+            <NSE>0.71403381332910731</NSE>
+            <ME>0.0024425146455528857</ME>
+            <MAE>0.022601915162832067</MAE>
+            <RSR>0.53263178065226846</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(3)</Name>
             <n>126</n>
-            <Slope>0.76264801615741507</Slope>
-            <Intercept>0.038725345650105436</Intercept>
-            <SEslope>0.0350059454777675</SEslope>
-            <SEintercept>0.0070704785789128628</SEintercept>
-            <R2>0.79286394960350459</R2>
-            <RMSE>0.023878572761277712</RMSE>
-            <NSE>0.76716203467963184</NSE>
-            <ME>-0.0077537298366880556</ME>
-            <MAE>0.019500526366405344</MAE>
-            <RSR>0.48061423715978568</RSR>
+            <Slope>0.96505558784908607</Slope>
+            <Intercept>0.01222034650648704</Intercept>
+            <SEslope>0.030858487359215692</SEslope>
+            <SEintercept>0.0062327776288618776</SEintercept>
+            <R2>0.88748111646724681</R2>
+            <RMSE>0.017918259064120822</RMSE>
+            <NSE>0.86889215230338024</NSE>
+            <ME>0.0053774124643553509</ME>
+            <MAE>0.0147626822106193</MAE>
+            <RSR>0.360648456565167</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(4)</Name>
             <n>126</n>
-            <Slope>0.523375760018811</Slope>
-            <Intercept>0.09313155167275658</Intercept>
-            <SEslope>0.041058267545399617</SEslope>
-            <SEintercept>0.0083015403960354159</SEintercept>
-            <R2>0.56717474067672868</R2>
-            <RMSE>0.023650911158966469</RMSE>
-            <NSE>0.56146934768899825</NSE>
-            <ME>-0.0017214004985791358</ME>
-            <MAE>0.018454880789031184</MAE>
-            <RSR>0.65958339147414369</RSR>
+            <Slope>0.70946677218837784</Slope>
+            <Intercept>0.06687398119308216</Intercept>
+            <SEslope>0.028447130054411452</SEslope>
+            <SEintercept>0.0057517039421316214</SEintercept>
+            <R2>0.83377914574888867</R2>
+            <RMSE>0.017822917394282187</RMSE>
+            <NSE>0.75096419619460342</NSE>
+            <ME>0.0090549865844840333</ME>
+            <MAE>0.015350675857052595</MAE>
+            <RSR>0.49705063039092956</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(5)</Name>
             <n>126</n>
-            <Slope>0.2785069802701502</Slope>
-            <Intercept>0.14508209350490997</Intercept>
-            <SEslope>0.046913256612161357</SEslope>
-            <SEintercept>0.0095241059157724437</SEintercept>
-            <R2>0.22131907894898506</R2>
-            <RMSE>0.028580992355331531</RMSE>
-            <NSE>0.2063465266052632</NSE>
-            <ME>0.00044851065692266931</ME>
-            <MAE>0.023740476895936755</MAE>
-            <RSR>0.8873300605210569</RSR>
+            <Slope>0.29621209584584623</Slope>
+            <Intercept>0.15190613672151238</Intercept>
+            <SEslope>0.05059345286726695</SEslope>
+            <SEintercept>0.010271241831196582</SEintercept>
+            <R2>0.21656888839141475</R2>
+            <RMSE>0.030880554826629152</RMSE>
+            <NSE>0.073497697380896621</NSE>
+            <ME>0.010821797220895881</ME>
+            <MAE>0.026121611965173597</MAE>
+            <RSR>0.95872264484634673</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(6)</Name>
             <n>126</n>
-            <Slope>0.15541169051177292</Slope>
-            <Intercept>0.1723937527541638</Intercept>
-            <SEslope>0.027998365013419967</SEslope>
-            <SEintercept>0.0056000308522965881</SEintercept>
-            <R2>0.19902194246821492</R2>
-            <RMSE>0.0192466348911448</RMSE>
-            <NSE>0.14513919531283692</NSE>
-            <ME>0.0043826826728540569</ME>
-            <MAE>0.015410389535320958</MAE>
-            <RSR>0.92091052503821136</RSR>
+            <Slope>0.096437801472786189</Slope>
+            <Intercept>0.1867073520636908</Intercept>
+            <SEslope>0.025604944514332512</SEslope>
+            <SEintercept>0.005121316161957188</SEintercept>
+            <R2>0.10265597119142922</R2>
+            <RMSE>0.020916829923035663</RMSE>
+            <NSE>-0.00966550694398749</NSE>
+            <ME>0.0069648074959527935</ME>
+            <MAE>0.017627246914090365</MAE>
+            <RSR>1.0008258033418744</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(7)</Name>
             <n>126</n>
-            <Slope>-0.018850076664950744</Slope>
-            <Intercept>0.20364771403202919</Intercept>
-            <SEslope>0.0072454499848462672</SEslope>
-            <SEintercept>0.0014694724335259214</SEintercept>
-            <R2>0.051759755275817665</R2>
-            <RMSE>0.025513337182034593</RMSE>
-            <NSE>-0.047820713346055532</NSE>
-            <ME>-0.0014221437598807144</ME>
-            <MAE>0.020991850048180497</MAE>
-            <RSR>1.0195610211941937</RSR>
+            <Slope>-0.0536993968302481</Slope>
+            <Intercept>0.21169411492762125</Intercept>
+            <SEslope>0.011146914930400398</SEslope>
+            <SEintercept>0.0022607407743260336</SEintercept>
+            <R2>0.15765194523749171</R2>
+            <RMSE>0.026447242712822189</RMSE>
+            <NSE>-0.12593480350564357</NSE>
+            <ME>-0.00039006743874943215</ME>
+            <MAE>0.02168544310618762</MAE>
+            <RSR>1.0568816456924732</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(8)</Name>
             <n>126</n>
-            <Slope>-0.034631289978149786</Slope>
-            <Intercept>0.20245914104296114</Intercept>
-            <SEslope>0.016788051946962142</SEslope>
-            <SEintercept>0.0034668909441649466</SEintercept>
-            <R2>0.033178839449227282</R2>
-            <RMSE>0.028241895059584975</RMSE>
-            <NSE>-0.24972531372762319</NSE>
-            <ME>-0.0095971637654772273</ME>
-            <MAE>0.021695084572901147</MAE>
-            <RSR>1.113466146255363</RSR>
+            <Slope>-0.057870206145808824</Slope>
+            <Intercept>0.20778499641357881</Intercept>
+            <SEslope>0.020143432167880393</SEslope>
+            <SEintercept>0.0041598085821900445</SEintercept>
+            <R2>0.062407334565083072</R2>
+            <RMSE>0.028774296406878078</RMSE>
+            <NSE>-0.29728776693533</NSE>
+            <ME>-0.00903431792105591</ME>
+            <MAE>0.022168687247974352</MAE>
+            <RSR>1.1344566242378389</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -546,6 +546,29 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <LayerStructure>
+          <Name>LayerStructure</Name>
+          <Thickness>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+            <double>100</double>
+          </Thickness>
+        </LayerStructure>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+        </CERESSoilTemperature>
         <RecordNumber>0</RecordNumber>
         <SoilType />
         <LocalName />
@@ -1199,25 +1222,25 @@ namespace Models
           <string>[SCRUM].Stover.CoverDead</string>
           <string>[SCRUM].Stover.LAI</string>
           <string>[SCRUM].Stover.Height</string>
-          <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
           <string>[SCRUM].Product.LiveFWt</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
-          <string>[SCRUM].ExpectedYield.Value</string>
-          <string>[SCRUM].DryYield.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-          <string>[SCRUM].Ymax.Value</string>
+          <string>[SCRUM].ExpectedYield.Value()</string>
+          <string>[SCRUM].DryYield.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+          <string>[SCRUM].Ymax.Value()</string>
           <string>[SCRUM].Total.N</string>
           <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
           <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
           <string>[SCRUM].Phenology.AccumulatedEmergedTT</string>
           <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
           <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-          <string>[SCRUM].Phenology.ThermalTime.Value</string>
+          <string>[SCRUM].Phenology.ThermalTime.Value()</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
@@ -1238,6 +1261,9 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+      </SoluteManager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -1248,7 +1274,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1269,7 +1295,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-8388353</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1290,7 +1316,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16744193</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1311,7 +1337,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-256</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1332,7 +1358,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1353,7 +1379,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-8372224</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1374,7 +1400,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-32768</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1395,7 +1421,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16777152</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1751,7 +1777,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCRUM.DryYield.Value</YFieldName>
+        <YFieldName>SCRUM.DryYield.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1772,7 +1798,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1793,7 +1819,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1814,7 +1840,7 @@ This model has been built to simulate a range of different crops in simulations 
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-        <YFieldName>SCRUM.Ymax.Value</YFieldName>
+        <YFieldName>SCRUM.Ymax.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -2993,6 +3019,9 @@ This model has been built to simulate a range of different crops in simulations 
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+        </CERESSoilTemperature>
         <RecordNumber>0</RecordNumber>
         <SoilType />
         <LocalName />
@@ -3386,25 +3415,25 @@ namespace Models
           <string>[SCRUM].Stover.CoverDead</string>
           <string>[SCRUM].Stover.LAI</string>
           <string>[SCRUM].Stover.Height</string>
-          <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
           <string>[SCRUM].Product.LiveFWt</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
-          <string>[SCRUM].ExpectedYield.Value</string>
-          <string>[SCRUM].DryYield.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-          <string>[SCRUM].Ymax.Value</string>
+          <string>[SCRUM].ExpectedYield.Value()</string>
+          <string>[SCRUM].DryYield.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+          <string>[SCRUM].Ymax.Value()</string>
           <string>[SCRUM].Total.N</string>
           <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
           <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
-          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value()</string>
           <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
           <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-          <string>[SCRUM].Phenology.ThermalTime.Value</string>
+          <string>[SCRUM].Phenology.ThermalTime.Value()</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
@@ -3428,6 +3457,9 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+      </SoluteManager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -5035,6 +5067,9 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -5070,8 +5105,8 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
           <Name>SCRUMSowingRule</Name>
           <Script>
             <CultivarName>Barley_Spring</CultivarName>
-            <InitialRootDepth>10</InitialRootDepth>
             <SowingDate>1998-10-14</SowingDate>
+            <InitialRootDepth>10</InitialRootDepth>
           </Script>
           <Code><![CDATA[
 using System;
@@ -5355,25 +5390,25 @@ namespace Models
             <string>[SCRUM].Stover.CoverGreen</string>
             <string>[SCRUM].Stover.LAI</string>
             <string>[SCRUM].Stover.Height</string>
-            <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+            <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
             <string>[SCRUM].Product.LiveFWt</string>
             <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
             <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
             <string>[SCRUM].Stover.Fw</string>
             <string>[SCRUM].Stover.Fn</string>
             <string>[SCRUM].Total.Wt</string>
-            <string>[SCRUM].ExpectedYield.Value</string>
-            <string>[SCRUM].DryYield.Value</string>
-            <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-            <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-            <string>[SCRUM].Ymax.Value</string>
+            <string>[SCRUM].ExpectedYield.Value()</string>
+            <string>[SCRUM].DryYield.Value()</string>
+            <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+            <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+            <string>[SCRUM].Ymax.Value()</string>
             <string>[SCRUM].Total.N</string>
             <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
             <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
             <string>[SCRUM].Phenology.AccumulatedEmergedTT</string>
             <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
             <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-            <string>[SCRUM].Phenology.ThermalTime.Value</string>
+            <string>[SCRUM].Phenology.ThermalTime.Value()</string>
             <string>[SCRUM].Phenology.CurrentPhaseName</string>
             <string>[SCRUM].Phenology.Stage</string>
           </VariableNames>
@@ -5827,6 +5862,9 @@ namespace Models
              
              ]]></Code>
         </Manager>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -6331,7 +6369,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCRUM.DryYield.Value</YFieldName>
+          <YFieldName>SCRUM.DryYield.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6352,7 +6390,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+          <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6373,7 +6411,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+          <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6394,7 +6432,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>SCRUM.Phenology.AccumulatedEmergedTT</XFieldName>
-          <YFieldName>SCRUM.Ymax.Value</YFieldName>
+          <YFieldName>SCRUM.Ymax.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7827,6 +7865,9 @@ Testing of SCRUM under New Zealand conditions was undertaken using the data Maiz
             </FInert>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType>lignin_FOM</SoilType>
           <Region>Generic soil types</Region>
@@ -8235,7 +8276,7 @@ namespace Models
         <Manager>
           <Name>SetSCRUMYield</Name>
           <Script>
-            <OverRidePath>SCRUM.Product.ExpectedYield.Value</OverRidePath>
+            <OverRidePath>SCRUM.Product.ExpectedYield.FixedValue</OverRidePath>
             <OverRideInterger>1800</OverRideInterger>
             <ChangeDate>2012-10-23</ChangeDate>
           </Script>
@@ -8280,7 +8321,7 @@ namespace Models
         <Manager>
           <Name>SetSCRUMCoverMax</Name>
           <Script>
-            <OverRidePath>SCRUM.Stover.CoverFunction.Expanding.SigCoverFunction.Ymax.Value</OverRidePath>
+            <OverRidePath>SCRUM.Stover.CoverFunction.Expanding.SigCoverFunction.Ymax.FixedValue</OverRidePath>
             <OverRideDouble>0.9</OverRideDouble>
             <ChangeDate>2012-10-23</ChangeDate>
           </Script>
@@ -8390,12 +8431,12 @@ namespace Models
             <string>[SCRUM].Arbitrator.DM.Allocated</string>
             <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
             <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-            <string>[SCRUM].Stover.MaximumNConc.Value</string>
-            <string>[SCRUM].Stover.MinimumNConc.Value</string>
+            <string>[SCRUM].Stover.MaximumNConc.Value()</string>
+            <string>[SCRUM].Stover.MinimumNConc.Value()</string>
             <string>[SCRUM].Stover.Live.NConc</string>
             <string>[SCRUM].Stover.Live.NConc</string>
             <string>[SCRUM].Product.Live.NConc</string>
-            <string>[SCRUM].Stover.FRGRFunction.Value</string>
+            <string>[SCRUM].Stover.FRGRFunction.Value()</string>
             <string>[SCRUM].Stover.Fw</string>
             <string>[SCRUM].Arbitrator.FN</string>
           </VariableNames>
@@ -8525,7 +8566,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.CohortParameters.GrowthDuration.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.CohortParameters.GrowthDuration.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8546,7 +8587,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.CohortParameters.LagDuration.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.CohortParameters.LagDuration.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8567,7 +8608,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.CohortParameters.SenescenceDuration.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.CohortParameters.SenescenceDuration.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8588,7 +8629,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Structure.MainStoverNodeAppearanceRate.Value</YFieldName>
+            <YFieldName>SCRUM.Structure.MainStoverNodeAppearanceRate.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8672,7 +8713,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.DMDemandFunction.PotentialDMAccumulation.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.DMDemandFunction.PotentialDMAccumulation.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -8693,7 +8734,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.DMDemandFunction.HightLimitedDMAccumulation.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.DMDemandFunction.HightLimitedDMAccumulation.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9240,7 +9281,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>SCRUM.Structure.MainStoverNodeNo</XFieldName>
-            <YFieldName>SCRUM.Structure.MainStoverNodeAppearanceRate.Value</YFieldName>
+            <YFieldName>SCRUM.Structure.MainStoverNodeAppearanceRate.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9958,7 +9999,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.MaximumNConc.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.MaximumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -9979,7 +10020,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.MinimumNConc.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.MinimumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -10025,6 +10066,9 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -10038,7 +10082,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10059,7 +10103,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10101,7 +10145,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10122,7 +10166,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10164,7 +10208,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-8388608</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10185,7 +10229,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10736,7 +10780,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10757,7 +10801,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10799,7 +10843,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10820,7 +10864,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10862,7 +10906,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10883,7 +10927,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10925,7 +10969,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -10946,7 +10990,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10991,7 +11035,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -11012,7 +11056,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -11054,7 +11098,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -11075,7 +11119,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -11117,7 +11161,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -11159,7 +11203,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -11340,7 +11384,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SCRUM.Stover.FRGRFunction.Value</YFieldName>
+            <YFieldName>SCRUM.Stover.FRGRFunction.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -12131,6 +12175,9 @@ namespace Models
             <FractionFull>0.9</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Site>-</Site>
           <NearestTown>-</NearestTown>
@@ -12248,17 +12295,17 @@ namespace Models
           <Manager>
             <Name>Sowing_Yield</Name>
             <Script>
+              <Crop2>Dried_Peas</Crop2>
+              <SowingDate2>2005-09-28</SowingDate2>
+              <HarvestDate2>2006-02-24</HarvestDate2>
+              <CropNConc>0</CropNConc>
               <YieldFile>%root%\Tests\Validation\SCRUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
               <HarvestDate1>2005-03-14</HarvestDate1>
               <Yield1>5500</Yield1>
-              <Crop2>Dried_Peas</Crop2>
-              <SowingDate2>2005-09-28</SowingDate2>
-              <HarvestDate2>2006-02-24</HarvestDate2>
               <Yield2>958</Yield2>
-              <CropNConc>0</CropNConc>
               <Crop3>Potatoes_Short</Crop3>
               <SowingDate3>2006-10-11</SowingDate3>
               <HarvestDate3>2007-03-12</HarvestDate3>
@@ -12372,9 +12419,9 @@ namespace Models
 			{
 				SCRUM.Sow(cultivar: Crop1, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[0][Treatment]);
-				zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);
+				zone.Set("[SCRUM].Product.ExpectedYield.FixedValue", ResetValue);
 				ResetValue = 0.025;
-				zone.Set("[SCRUM].Product.MaximumNConc.Value", ResetValue);
+				zone.Set("[SCRUM].Product.MaximumNConc.FixedValue", ResetValue);
 			}
 			else if (Clock.Today.Date == HarvestDate1)
 			{
@@ -12385,9 +12432,9 @@ namespace Models
 			{
 				SCRUM.Sow(cultivar: Crop2, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[1][Treatment]);
-				zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);
+				zone.Set("[SCRUM].Product.ExpectedYield.FixedValue", ResetValue);
 				ResetValue = CropNConc;
-				zone.Set("[SCRUM].Product.MaximumNConc.Value", ResetValue);
+				zone.Set("[SCRUM].Product.MaximumNConc.FixedValue", ResetValue);
 			}
 			else if (Clock.Today.Date == HarvestDate2)
 			{
@@ -12400,9 +12447,9 @@ namespace Models
 				SurfOM.Incorporate(1, 10);
 				SCRUM.Sow(cultivar: Crop3, population: 1, depth: InitialRootDepth, rowSpacing: 150);
 				object ResetValue = Convert.ToDouble(Yields.Rows[2][Treatment]);
-				zone.Set("[SCRUM].Product.ExpectedYield.Value", ResetValue);
+				zone.Set("[SCRUM].Product.ExpectedYield.FixedValue", ResetValue);
 				ResetValue = 0.025;
-				zone.Set("[SCRUM].Product.MaximumNConc.Value", ResetValue);
+				zone.Set("[SCRUM].Product.MaximumNConc.FixedValue", ResetValue);
 		
 			}
 			else if (Clock.Today.Date == HarvestDate3)
@@ -12552,22 +12599,22 @@ namespace Models
           <Manager>
             <Name>InF</Name>
             <Script>
+              <NFert>0</NFert>
+              <Irr1>0</Irr1>
+              <Irr2>0</Irr2>
+              <Irr3>0</Irr3>
+              <Irr4>0</Irr4>
+              <IrrFact1>0</IrrFact1>
+              <IrrFact2>0</IrrFact2>
+              <IrrFact3>0</IrrFact3>
+              <IrrFact4>0</IrrFact4>
+              <TreatFact>0</TreatFact>
               <FertDate1>2005-10-26</FertDate1>
               <FertDate2>2005-11-25</FertDate2>
-              <NFert>0</NFert>
-              <TreatFact>0</TreatFact>
               <IrrDate1>2005-11-18</IrrDate1>
-              <Irr1>0</Irr1>
-              <IrrFact1>0</IrrFact1>
               <IrrDate2>2005-11-23</IrrDate2>
-              <Irr2>0</Irr2>
-              <IrrFact2>0</IrrFact2>
               <IrrDate3>2005-12-07</IrrDate3>
-              <Irr3>0</Irr3>
-              <IrrFact3>0</IrrFact3>
               <IrrDate4>2005-12-29</IrrDate4>
-              <Irr4>0</Irr4>
-              <IrrFact4>0</IrrFact4>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -12712,25 +12759,24 @@ namespace Models
             <string>[SCRUM].Stover.CoverDead</string>
             <string>[SCRUM].Stover.LAI</string>
             <string>[SCRUM].Stover.Height</string>
-            <string>[SCRUM].Stover.PotentialBiomass.Value</string>
-            <string>[SCRUM].Product.LiveFWt</string>
+            <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
             <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
             <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
             <string>[SCRUM].Stover.Fw</string>
             <string>[SCRUM].Stover.Fn</string>
             <string>[SCRUM].Total.Wt</string>
-            <string>[SCRUM].ExpectedYield.Value</string>
-            <string>[SCRUM].DryYield.Value</string>
-            <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-            <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-            <string>[SCRUM].Ymax.Value</string>
+            <string>[SCRUM].ExpectedYield.Value()</string>
+            <string>[SCRUM].DryYield.Value()</string>
+            <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+            <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+            <string>[SCRUM].Ymax.Value()</string>
             <string>[SCRUM].Total.N</string>
             <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
             <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
-            <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
+            <string>[SCRUM].Phenology.AccumulatedThermalTime.Value()</string>
             <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
             <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-            <string>[SCRUM].Phenology.ThermalTime.Value</string>
+            <string>[SCRUM].Phenology.ThermalTime.Value()</string>
             <string>[SCRUM].Phenology.CurrentPhaseName</string>
             <string>[SCRUM].Phenology.Stage</string>
             <string>[AutomaticIrrigation].Script.Top_Refull</string>
@@ -13167,6 +13213,9 @@ namespace Models
 }
 	]]></Code>
         </Manager>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -13188,7 +13237,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Product.LiveFWt</YFieldName>
+        <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -14211,13 +14260,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries>
-          <string>W1_N0</string>
-          <string>W2_N0</string>
-          <string>W1_N1</string>
-          <string>W2_N1</string>
-          <string>W1_N2</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -16827,5 +16870,5 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>286</ExplorerWidth>
+  <ExplorerWidth>270</ExplorerWidth>
 </Simulations>

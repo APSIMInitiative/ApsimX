@@ -22,7 +22,7 @@ namespace Models.WaterModel
     /// cascades to the next layer.
     /// </summary>
     [Serializable]
-    public class SaturatedFlowModel : Model, IFunctionArray
+    public class SaturatedFlowModel : Model
     {
         /// <summary>The water movement model.</summary>
         [Link]

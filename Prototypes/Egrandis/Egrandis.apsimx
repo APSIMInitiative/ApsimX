@@ -9,7 +9,7 @@
         <Name>Age</Name>
         <Constant>
           <Name>day</Name>
-          <Value>0.0027397260273972603</Value>
+          <FixedValue>0.0027397260273972603</FixedValue>
         </Constant>
         <StartStageName>Emergence</StartStageName>
         <EndStageName>Old</EndStageName>
@@ -34,7 +34,7 @@
         </StageBasedInterpolation>
         <Constant>
           <Name>ThermalTime</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <GerminatingPhase>
           <Name>Germinating</Name>
@@ -45,7 +45,7 @@
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -56,11 +56,11 @@
           <Name>Juvenile</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <Value>365</Value>
+            <FixedValue>365</FixedValue>
           </Constant>
           <Start>Emergence</Start>
           <End>EndJuvenile</End>
@@ -69,11 +69,11 @@
           <Name>Mature</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <Value>1825</Value>
+            <FixedValue>1825</FixedValue>
           </Constant>
           <Start>EndJuvenile</Start>
           <End>Maturity</End>
@@ -82,11 +82,11 @@
           <Name>Declining</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <Value>27010</Value>
+            <FixedValue>27010</FixedValue>
           </Constant>
           <Start>Maturity</Start>
           <End>Old</End>
@@ -95,7 +95,7 @@
           <Name>Old</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Start>Old</Start>
           <End>Unused</End>
@@ -186,7 +186,7 @@
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
@@ -196,12 +196,12 @@
         </MultiplyFunction>
         <Constant>
           <Name>LaiDeadFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>m^2/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <MinimumFunction>
@@ -242,7 +242,7 @@
                 <double>0.1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Eucalyptus].IndividualTreeLiveWt.Value</XProperty>
+            <XProperty>[Eucalyptus].IndividualTreeLiveWt.Value()</XProperty>
           </LinearInterpolationFunction>
         </PartitionFractionDemandFunction>
         <Constant>
@@ -256,7 +256,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <Value>0.57</Value>
+          <FixedValue>0.57</FixedValue>
         </Constant>
         <Constant>
           <Name>ExtinctionCoefficientDead</Name>
@@ -269,7 +269,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <Value>0.57</Value>
+          <FixedValue>0.57</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
@@ -295,19 +295,19 @@ But their data suggests a value of 0.3]]></MemoText>
             <MemoText><![CDATA[0.043 gN/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
           </Memo>
-          <Value>0.03</Value>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.015</Value>
+          <FixedValue>0.015</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
@@ -342,33 +342,33 @@ But their data suggests a value of 0.3]]></MemoText>
         </BiomassRemoval>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafResidenceTime</Name>
-          <Value>365</Value>
+          <FixedValue>365</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafDetachmentTime</Name>
-          <Value>7</Value>
+          <FixedValue>7</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.3</Value>
+            <FixedValue>1.3</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -583,11 +583,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </RUEModel>
         <Constant>
           <Name>LeafKillFraction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumLAI</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>SpecificLeafAreaFunction</Name>
@@ -608,7 +608,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
               <double>0.008</double>
             </Y>
           </XYPairs>
-          <XProperty>[Eucalyptus].Age.Value</XProperty>
+          <XProperty>[Eucalyptus].Age.Value()</XProperty>
         </LinearInterpolationFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
@@ -647,11 +647,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </PhaseBasedSwitch>
         <Constant>
           <Name>RootFrontVelocity</Name>
-          <Value>10</Value>
+          <FixedValue>10</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>PartitionFraction</Name>
@@ -659,7 +659,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
             <Name>PhaseLookupValue</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>0.2</Value>
+              <FixedValue>0.2</FixedValue>
             </Constant>
             <Start>Emergence</Start>
             <End>Old</End>
@@ -667,19 +667,19 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.0041</Value>
+          <FixedValue>0.0041</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value>6</Value>
+          <FixedValue>6</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.004</Value>
+          <FixedValue>0.004</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
@@ -743,12 +743,12 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>5</Value>
+          <FixedValue>5</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>100</Value>
+          <FixedValue>100</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <BiomassRemoval>
@@ -792,11 +792,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -805,7 +805,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -824,21 +824,21 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
                 <double>0.48</double>
               </Y>
             </XYPairs>
-            <XProperty>[Eucalyptus].IndividualTreeLiveWt.Value</XProperty>
+            <XProperty>[Eucalyptus].IndividualTreeLiveWt.Value()</XProperty>
           </LinearInterpolationFunction>
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.0015</Value>
+          <FixedValue>0.0015</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.0014</Value>
+          <FixedValue>0.0014</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
@@ -848,27 +848,27 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </Biomass>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <BiomassRemoval>
@@ -918,11 +918,11 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <Name>Branch</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -931,7 +931,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -950,21 +950,21 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
                 <double>0.2</double>
               </Y>
             </XYPairs>
-            <XProperty>[Eucalyptus].IndividualTreeLiveWt.Value</XProperty>
+            <XProperty>[Eucalyptus].IndividualTreeLiveWt.Value()</XProperty>
           </LinearInterpolationFunction>
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.0015</Value>
+          <FixedValue>0.0015</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.0014</Value>
+          <FixedValue>0.0014</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
@@ -974,27 +974,27 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </Biomass>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <BiomassRemoval>
@@ -1046,7 +1046,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
       <VariableNames>
         <string>[Clock].Today</string>
         <string>Eucalyptus.Phenology.CurrentPhaseName</string>
-        <string>Eucalyptus.Phenology.StageCode.Value</string>
+        <string>Eucalyptus.Phenology.StageCode.Value()</string>
         <string>Eucalyptus.Root.NSupplyUptake</string>
         <string>[Soil].SoilWater.Eo</string>
         <string>[Soil].SoilWater.Es</string>
@@ -1092,13 +1092,13 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <string>Eucalyptus.Leaf.LAIDead</string>
         <string>Eucalyptus.Leaf.Fn</string>
         <string>Eucalyptus.Leaf.Fw</string>
-        <string>Eucalyptus.Leaf.Photosynthesis.FT.Value</string>
-        <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value</string>
+        <string>Eucalyptus.Leaf.Photosynthesis.FT.Value()</string>
+        <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value()</string>
         <string>Eucalyptus.Leaf.Photosynthesis.RueAct</string>
-        <string>Eucalyptus.Stem.MinimumNConc.Value</string>
-        <string>Eucalyptus.Root.MinimumNConc.Value</string>
-        <string>Eucalyptus.Stem.MaximumNConc.Value</string>
-        <string>Eucalyptus.Root.MaximumNConc.Value</string>
+        <string>Eucalyptus.Stem.MinimumNConc.Value()</string>
+        <string>Eucalyptus.Root.MinimumNConc.Value()</string>
+        <string>Eucalyptus.Stem.MaximumNConc.Value()</string>
+        <string>Eucalyptus.Root.MaximumNConc.Value()</string>
         <string>Eucalyptus.TotalLive.Wt</string>
         <string>Eucalyptus.Stem.Live.StructuralWt</string>
         <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
@@ -1107,9 +1107,9 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <string>[Soil].SoilWater.SWmm</string>
         <string>[Soil].NO3N</string>
         <string>Eucalyptus.Arbitrator.N.TotalPlantDemand</string>
-        <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-        <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
-        <string>Eucalyptus.Age.Value</string>
+        <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+        <string>Eucalyptus.IndividualTreeLiveWt.Value()</string>
+        <string>Eucalyptus.Age.Value()</string>
       </VariableNames>
       <EventNames>
         <string>[Clock].DoReport</string>
@@ -4492,7 +4492,7 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>Eucalyptus.Phenology.CurrentPhaseName</string>
-                <string>Eucalyptus.Phenology.StageCode.Value</string>
+                <string>Eucalyptus.Phenology.StageCode.Value()</string>
                 <string>Eucalyptus.Root.NSupplyUptake</string>
                 <string>[Soil].SoilWater.Eo</string>
                 <string>[Soil].SoilWater.Es</string>
@@ -4535,12 +4535,12 @@ namespace Models
                 <string>Eucalyptus.Leaf.LAIDead</string>
                 <string>Eucalyptus.Leaf.Fn</string>
                 <string>Eucalyptus.Leaf.Fw</string>
-                <string>Eucalyptus.Leaf.Photosynthesis.FT.Value</string>
-                <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value</string>
-                <string>Eucalyptus.Stem.MinimumNConc.Value</string>
-                <string>Eucalyptus.Root.MinimumNConc.Value</string>
-                <string>Eucalyptus.Stem.MaximumNConc.Value</string>
-                <string>Eucalyptus.Root.MaximumNConc.Value</string>
+                <string>Eucalyptus.Leaf.Photosynthesis.FT.Value()</string>
+                <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value()</string>
+                <string>Eucalyptus.Stem.MinimumNConc.Value()</string>
+                <string>Eucalyptus.Root.MinimumNConc.Value()</string>
+                <string>Eucalyptus.Stem.MaximumNConc.Value()</string>
+                <string>Eucalyptus.Root.MaximumNConc.Value()</string>
                 <string>Eucalyptus.TotalLive.Wt</string>
                 <string>Eucalyptus.Stem.Live.StructuralWt</string>
                 <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
@@ -4549,9 +4549,9 @@ namespace Models
                 <string>[Soil].SoilWater.SWmm</string>
                 <string>[Soil].NO3N</string>
                 <string>Eucalyptus.Arbitrator.N.TotalPlantDemand</string>
-                <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-                <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
-                <string>Eucalyptus.Age.Value</string>
+                <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+                <string>Eucalyptus.IndividualTreeLiveWt.Value()</string>
+                <string>Eucalyptus.Age.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -5251,7 +5251,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Eucalyptus.Phenology.CurrentPhaseName</string>
-              <string>Eucalyptus.Phenology.StageCode.Value</string>
+              <string>Eucalyptus.Phenology.StageCode.Value()</string>
               <string>Eucalyptus.Root.NSupplyUptake</string>
               <string>[Soil].SoilWater.Eo</string>
               <string>[Soil].SoilWater.Es</string>
@@ -5294,12 +5294,12 @@ namespace Models
               <string>Eucalyptus.Leaf.LAIDead</string>
               <string>Eucalyptus.Leaf.Fn</string>
               <string>Eucalyptus.Leaf.Fw</string>
-              <string>Eucalyptus.Leaf.Photosynthesis.FT.Value</string>
-              <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value</string>
-              <string>Eucalyptus.Stem.MinimumNConc.Value</string>
-              <string>Eucalyptus.Root.MinimumNConc.Value</string>
-              <string>Eucalyptus.Stem.MaximumNConc.Value</string>
-              <string>Eucalyptus.Root.MaximumNConc.Value</string>
+              <string>Eucalyptus.Leaf.Photosynthesis.FT.Value()</string>
+              <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>Eucalyptus.Stem.MinimumNConc.Value()</string>
+              <string>Eucalyptus.Root.MinimumNConc.Value()</string>
+              <string>Eucalyptus.Stem.MaximumNConc.Value()</string>
+              <string>Eucalyptus.Root.MaximumNConc.Value()</string>
               <string>Eucalyptus.TotalLive.Wt</string>
               <string>Eucalyptus.Stem.Live.StructuralWt</string>
               <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
@@ -5308,10 +5308,10 @@ namespace Models
               <string>[Soil].SoilWater.SWmm</string>
               <string>[Soil].NO3N</string>
               <string>Eucalyptus.Arbitrator.N.TotalPlantDemand</string>
-              <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-              <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
-              <string>Eucalyptus.Age.Value</string>
-              <string>Eucalyptus.Leaf.Photosynthesis.Value</string>
+              <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+              <string>Eucalyptus.IndividualTreeLiveWt.Value()</string>
+              <string>Eucalyptus.Age.Value()</string>
+              <string>Eucalyptus.Leaf.Photosynthesis.Value()</string>
               <string>Eucalyptus.Arbitrator.N.TotalPlantSupply</string>
               <string>([SurfaceOrganicMatter].Wt / 10)  as Litter</string>
             </VariableNames>
@@ -5663,7 +5663,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Eucalyptus.Leaf.Photosynthesis.FVPD.Value</YFieldName>
+          <YFieldName>Eucalyptus.Leaf.Photosynthesis.FVPD.Value()</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6242,7 +6242,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Eucalyptus.Phenology.CurrentPhaseName</string>
-              <string>Eucalyptus.Phenology.StageCode.Value</string>
+              <string>Eucalyptus.Phenology.StageCode.Value()</string>
               <string>Eucalyptus.Root.NSupplyUptake</string>
               <string>[Soil].SoilWater.Eo</string>
               <string>[Soil].SoilWater.Es</string>
@@ -6285,12 +6285,12 @@ namespace Models
               <string>Eucalyptus.Leaf.LAIDead</string>
               <string>Eucalyptus.Leaf.Fn</string>
               <string>Eucalyptus.Leaf.Fw</string>
-              <string>Eucalyptus.Leaf.Photosynthesis.FT.Value</string>
-              <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value</string>
-              <string>Eucalyptus.Stem.MinimumNConc.Value</string>
-              <string>Eucalyptus.Root.MinimumNConc.Value</string>
-              <string>Eucalyptus.Stem.MaximumNConc.Value</string>
-              <string>Eucalyptus.Root.MaximumNConc.Value</string>
+              <string>Eucalyptus.Leaf.Photosynthesis.FT.Value()</string>
+              <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value()</string>
+              <string>Eucalyptus.Stem.MinimumNConc.Value()</string>
+              <string>Eucalyptus.Root.MinimumNConc.Value()</string>
+              <string>Eucalyptus.Stem.MaximumNConc.Value()</string>
+              <string>Eucalyptus.Root.MaximumNConc.Value()</string>
               <string>Eucalyptus.TotalLive.Wt</string>
               <string>Eucalyptus.Stem.Live.StructuralWt</string>
               <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
@@ -6299,9 +6299,9 @@ namespace Models
               <string>[Soil].SoilWater.SWmm</string>
               <string>[Soil].NO3N</string>
               <string>Eucalyptus.Arbitrator.N.TotalPlantDemand</string>
-              <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-              <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
-              <string>Eucalyptus.Age.Value</string>
+              <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+              <string>Eucalyptus.IndividualTreeLiveWt.Value()</string>
+              <string>Eucalyptus.Age.Value()</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -8644,7 +8644,7 @@ namespace Models
           <VariableNames>
             <string>[Clock].Today</string>
             <string>Eucalyptus.Phenology.CurrentPhaseName</string>
-            <string>Eucalyptus.Phenology.StageCode.Value</string>
+            <string>Eucalyptus.Phenology.StageCode.Value()</string>
             <string>Eucalyptus.Root.NSupplyUptake</string>
             <string>[Soil].SoilWater.Eo</string>
             <string>[Soil].SoilWater.Es</string>
@@ -8687,12 +8687,12 @@ namespace Models
             <string>Eucalyptus.Leaf.LAIDead</string>
             <string>Eucalyptus.Leaf.Fn</string>
             <string>Eucalyptus.Leaf.Fw</string>
-            <string>Eucalyptus.Leaf.Photosynthesis.FT.Value</string>
-            <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value</string>
-            <string>Eucalyptus.Stem.MinimumNConc.Value</string>
-            <string>Eucalyptus.Root.MinimumNConc.Value</string>
-            <string>Eucalyptus.Stem.MaximumNConc.Value</string>
-            <string>Eucalyptus.Root.MaximumNConc.Value</string>
+            <string>Eucalyptus.Leaf.Photosynthesis.FT.Value()</string>
+            <string>Eucalyptus.Leaf.Photosynthesis.FVPD.Value()</string>
+            <string>Eucalyptus.Stem.MinimumNConc.Value()</string>
+            <string>Eucalyptus.Root.MinimumNConc.Value()</string>
+            <string>Eucalyptus.Stem.MaximumNConc.Value()</string>
+            <string>Eucalyptus.Root.MaximumNConc.Value()</string>
             <string>Eucalyptus.TotalLive.Wt</string>
             <string>Eucalyptus.Stem.Live.StructuralWt</string>
             <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
@@ -8701,9 +8701,9 @@ namespace Models
             <string>[Soil].SoilWater.SWmm</string>
             <string>[Soil].NO3N</string>
             <string>Eucalyptus.Arbitrator.N.TotalPlantDemand</string>
-            <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-            <string>Eucalyptus.IndividualTreeLiveWt.Value</string>
-            <string>Eucalyptus.Age.Value</string>
+            <string>Eucalyptus.Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+            <string>Eucalyptus.IndividualTreeLiveWt.Value()</string>
+            <string>Eucalyptus.Age.Value()</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>

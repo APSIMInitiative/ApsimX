@@ -70,11 +70,11 @@ namespace Models.Lifecycle
             {
                 if (ProcessAction == ProcessType.PhysiologicalGrowth)
                 {
-                    cohortItem.PhysiologicalAge += func.Value;
+                    cohortItem.PhysiologicalAge += func.Value();
                 }
                 else if (ProcessAction == ProcessType.Transfer)
                 {
-                    double numberToMove = cohortItem.Count * func.Value;
+                    double numberToMove = cohortItem.Count * func.Value();
                     if (numberToMove > 0)
                     {
                         //transfer magic here
@@ -85,7 +85,9 @@ namespace Models.Lifecycle
                 else if (ProcessAction == ProcessType.Mortality)
                 {
                     //kill some creatures
-                    cohortItem.Count = cohortItem.Count * (1 - func.Value);
+                    double mortality = cohortItem.Count - cohortItem.Count * (1 - func.Value());
+                    cohortItem.Count = cohortItem.Count * (1 - func.Value());
+                    cohortItem.Mortality = mortality;
                 }
             }
         }

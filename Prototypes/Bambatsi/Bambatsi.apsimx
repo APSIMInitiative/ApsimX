@@ -9,7 +9,7 @@
         <Name>Age</Name>
         <Constant>
           <Name>day</Name>
-          <Value>0.0027397260273972603</Value>
+          <FixedValue>0.0027397260273972603</FixedValue>
         </Constant>
         <StartStageName>Emergence</StartStageName>
         <EndStageName>Old</EndStageName>
@@ -39,7 +39,7 @@
         </StageBasedInterpolation>
         <Constant>
           <Name>ThermalTime</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <GerminatingPhase>
           <Name>Germinating</Name>
@@ -50,7 +50,7 @@
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -61,11 +61,11 @@
           <Name>Juvenile</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <Value>365</Value>
+            <FixedValue>365</FixedValue>
           </Constant>
           <Start>Emergence</Start>
           <End>EndJuvenile</End>
@@ -74,11 +74,11 @@
           <Name>Mature</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <Value>1825</Value>
+            <FixedValue>1825</FixedValue>
           </Constant>
           <Start>EndJuvenile</Start>
           <End>Maturity</End>
@@ -87,11 +87,11 @@
           <Name>Declining</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>Target</Name>
-            <Value>27010</Value>
+            <FixedValue>27010</FixedValue>
           </Constant>
           <Start>Maturity</Start>
           <End>Old</End>
@@ -100,7 +100,7 @@
           <Name>Old</Name>
           <Constant>
             <Name>ThermalTime</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Start>Old</Start>
           <End>Unused</End>
@@ -183,7 +183,7 @@
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
@@ -193,7 +193,7 @@
         </MultiplyFunction>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <MinimumFunction>
@@ -238,7 +238,7 @@
                   <double>0.52</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Bambatsi].Age.Value</XProperty>
+              <XProperty>[Bambatsi].Age.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>PhotoperiodEffect</Name>
@@ -257,7 +257,7 @@
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Bambatsi].Photoperiod.Value</XProperty>
+              <XProperty>[Bambatsi].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
         </PartitionFractionDemandFunction>
@@ -272,7 +272,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <Value>0.57</Value>
+          <FixedValue>0.57</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
@@ -298,15 +298,15 @@ But their data suggests a value of 0.3]]></MemoText>
             <MemoText><![CDATA[0.043 gN/g from R.B. Thomas 1, D.D. Richter 2, H. Ye 2, P.R. Heine z, and B.R. Strain 1 Nitrogen dynamics and growth of seedlings of an N-fixing tree
 (GKricidia sepium (Jacq.) Walp.) exposed to elevated atmospheric carbon dioxide Oecologia (1991) 88:415-421]]></MemoText>
           </Memo>
-          <Value>0.025</Value>
+          <FixedValue>0.025</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.015</Value>
+          <FixedValue>0.015</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
@@ -341,29 +341,29 @@ But their data suggests a value of 0.3]]></MemoText>
         </BiomassRemoval>
         <Constant>
           <Name>LeafResidenceTime</Name>
-          <Value>130</Value>
+          <FixedValue>130</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafDetachmentTime</Name>
-          <Value>365</Value>
+          <FixedValue>365</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>2</Value>
+            <FixedValue>2</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -593,7 +593,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumLAI</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
           <Units>m2/m2</Units>
         </Constant>
         <MultiplyFunction>
@@ -615,7 +615,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
                 <double>0.015</double>
               </Y>
             </XYPairs>
-            <XProperty>[Bambatsi].Age.Value</XProperty>
+            <XProperty>[Bambatsi].Age.Value()</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <Constant>
@@ -629,7 +629,7 @@ Source: Journal of Applied Ecology, Vol. 32, No. 1 (Feb., 1995), pp. 1-8
 
 But their data suggests a value of 0.3]]></MemoText>
           </Memo>
-          <Value>0.57</Value>
+          <FixedValue>0.57</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>SpecificLeafAreaFunction</Name>
@@ -644,7 +644,7 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>0.0125</double>
             </Y>
           </XYPairs>
-          <XProperty>[Bambatsi].Age.Value</XProperty>
+          <XProperty>[Bambatsi].Age.Value()</XProperty>
         </LinearInterpolationFunction>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <GrowthRespiration>0</GrowthRespiration>
@@ -683,27 +683,27 @@ But their data suggests a value of 0.3]]></MemoText>
         </PhaseBasedSwitch>
         <Constant>
           <Name>RootFrontVelocity</Name>
-          <Value>20</Value>
+          <FixedValue>20</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
-          <Value>6</Value>
+          <FixedValue>6</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.008</Value>
+          <FixedValue>0.008</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
@@ -769,12 +769,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.02</Value>
+          <FixedValue>0.02</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>100</Value>
+          <FixedValue>100</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <BiomassRemoval>
@@ -832,7 +832,7 @@ But their data suggests a value of 0.3]]></MemoText>
               <double>0.2</double>
             </Y>
           </XYPairs>
-          <XProperty>[Bambatsi].Age.Value</XProperty>
+          <XProperty>[Bambatsi].Age.Value()</XProperty>
         </LinearInterpolationFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -844,11 +844,11 @@ But their data suggests a value of 0.3]]></MemoText>
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -857,7 +857,7 @@ But their data suggests a value of 0.3]]></MemoText>
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -878,21 +878,21 @@ But their data suggests a value of 0.3]]></MemoText>
                 <double>0.27</double>
               </Y>
             </XYPairs>
-            <XProperty>[Bambatsi].Age.Value</XProperty>
+            <XProperty>[Bambatsi].Age.Value()</XProperty>
           </LinearInterpolationFunction>
         </PartitionFractionDemandFunction>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.0015</Value>
+          <FixedValue>0.0015</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.0014</Value>
+          <FixedValue>0.0014</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
@@ -902,17 +902,17 @@ But their data suggests a value of 0.3]]></MemoText>
         </Biomass>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <BiomassRemoval>
@@ -955,12 +955,12 @@ But their data suggests a value of 0.3]]></MemoText>
         </BiomassRemoval>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -1723,7 +1723,7 @@ But their data suggests a value of 0.3]]></MemoText>
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Bambatsi.Phenology.CurrentPhaseName</string>
-              <string>Bambatsi.Phenology.StageCode.Value</string>
+              <string>Bambatsi.Phenology.StageCode.Value()</string>
               <string>Bambatsi.Root.NSupplyUptake</string>
               <string>[Soil].SoilWater.Eo</string>
               <string>[Soil].SoilWater.Es</string>
@@ -1778,13 +1778,13 @@ But their data suggests a value of 0.3]]></MemoText>
               <string>Bambatsi.Leaf.LAIDead</string>
               <string>Bambatsi.Leaf.Fn</string>
               <string>Bambatsi.Leaf.Fw</string>
-              <string>Bambatsi.Leaf.Photosynthesis.FT.Value</string>
-              <string>Bambatsi.Leaf.Photosynthesis.FVPD.Value</string>
+              <string>Bambatsi.Leaf.Photosynthesis.FT.Value()</string>
+              <string>Bambatsi.Leaf.Photosynthesis.FVPD.Value()</string>
               <string>Bambatsi.Leaf.Photosynthesis.RueAct</string>
-              <string>Bambatsi.Stem.MinimumNConc.Value</string>
-              <string>Bambatsi.Root.MinimumNConc.Value</string>
-              <string>Bambatsi.Stem.MaximumNConc.Value</string>
-              <string>Bambatsi.Root.MaximumNConc.Value</string>
+              <string>Bambatsi.Stem.MinimumNConc.Value()</string>
+              <string>Bambatsi.Root.MinimumNConc.Value()</string>
+              <string>Bambatsi.Stem.MaximumNConc.Value()</string>
+              <string>Bambatsi.Root.MaximumNConc.Value()</string>
               <string>Bambatsi.TotalLive.Wt</string>
               <string>Bambatsi.Stem.Live.StructuralWt</string>
               <string>Bambatsi.Stem.Live.NonStructuralWt</string>
@@ -1793,9 +1793,9 @@ But their data suggests a value of 0.3]]></MemoText>
               <string>[Soil].SoilWater.SWmm</string>
               <string>[Soil].NO3N</string>
               <string>Bambatsi.Arbitrator.N.TotalPlantDemand</string>
-              <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-              <string>Bambatsi.IndividualTreeLiveWt.Value</string>
-              <string>Bambatsi.Age.Value</string>
+              <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+              <string>Bambatsi.IndividualTreeLiveWt.Value()</string>
+              <string>Bambatsi.Age.Value()</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2056,7 +2056,7 @@ But their data suggests a value of 0.3]]></MemoText>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Bambatsi.Leaf.Photosynthesis.FVPD.Value</YFieldName>
+          <YFieldName>Bambatsi.Leaf.Photosynthesis.FVPD.Value()</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -3255,8 +3255,8 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>Bambatsi.Phenology.CurrentPhaseName</string>
-                <string>Bambatsi.Phenology.StageCode.Value</string>
-                <string>Bambatsi.Photoperiod.Value</string>
+                <string>Bambatsi.Phenology.StageCode.Value()</string>
+                <string>Bambatsi.Photoperiod.Value()</string>
                 <string>Bambatsi.Root.NSupplyUptake</string>
                 <string>[Soil].SoilWater.Eo</string>
                 <string>[Soil].SoilWater.Es</string>
@@ -3309,13 +3309,13 @@ namespace Models
                 <string>Bambatsi.Leaf.LAIDead</string>
                 <string>Bambatsi.Leaf.Fn</string>
                 <string>Bambatsi.Leaf.Fw</string>
-                <string>Bambatsi.Leaf.Photosynthesis.FT.Value</string>
-                <string>Bambatsi.Leaf.Photosynthesis.FVPD.Value</string>
+                <string>Bambatsi.Leaf.Photosynthesis.FT.Value()</string>
+                <string>Bambatsi.Leaf.Photosynthesis.FVPD.Value()</string>
                 <string>Bambatsi.Leaf.Photosynthesis.RueAct</string>
-                <string>Bambatsi.Stem.MinimumNConc.Value</string>
-                <string>Bambatsi.Root.MinimumNConc.Value</string>
-                <string>Bambatsi.Stem.MaximumNConc.Value</string>
-                <string>Bambatsi.Root.MaximumNConc.Value</string>
+                <string>Bambatsi.Stem.MinimumNConc.Value()</string>
+                <string>Bambatsi.Root.MinimumNConc.Value()</string>
+                <string>Bambatsi.Stem.MaximumNConc.Value()</string>
+                <string>Bambatsi.Root.MaximumNConc.Value()</string>
                 <string>Bambatsi.TotalLive.Wt</string>
                 <string>Bambatsi.Stem.Live.StructuralWt</string>
                 <string>Bambatsi.Stem.Live.NonStructuralWt</string>
@@ -3324,9 +3324,9 @@ namespace Models
                 <string>[Soil].SoilWater.SWmm</string>
                 <string>[Soil].NO3N</string>
                 <string>Bambatsi.Arbitrator.N.TotalPlantDemand</string>
-                <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-                <string>Bambatsi.IndividualTreeLiveWt.Value</string>
-                <string>Bambatsi.Age.Value</string>
+                <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+                <string>Bambatsi.IndividualTreeLiveWt.Value()</string>
+                <string>Bambatsi.Age.Value()</string>
                 <string>Bambatsi.Root.LengthDensity</string>
                 <string>Bambatsi.Leaf.Height</string>
                 <string>[MicroClimate].peta</string>
@@ -3846,7 +3846,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Bambatsi.Photoperiod.Value</YFieldName>
+            <YFieldName>Bambatsi.Photoperiod.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5691,7 +5691,7 @@ namespace Models
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Bambatsi.Phenology.CurrentPhaseName</string>
-              <string>Bambatsi.Phenology.StageCode.Value</string>
+              <string>Bambatsi.Phenology.StageCode.Value()</string>
               <string>Bambatsi.Root.NSupplyUptake</string>
               <string>[Soil].SoilWater.Eo</string>
               <string>[Soil].SoilWater.Es</string>
@@ -5746,13 +5746,13 @@ namespace Models
               <string>Bambatsi.Leaf.LAIDead</string>
               <string>Bambatsi.Leaf.Fn</string>
               <string>Bambatsi.Leaf.Fw</string>
-              <string>Bambatsi.Leaf.Photosynthesis.FT.Value</string>
-              <string>Bambatsi.Leaf.Photosynthesis.FVPD.Value</string>
+              <string>Bambatsi.Leaf.Photosynthesis.FT.Value()</string>
+              <string>Bambatsi.Leaf.Photosynthesis.FVPD.Value()</string>
               <string>Bambatsi.Leaf.Photosynthesis.RueAct</string>
-              <string>Bambatsi.Stem.MinimumNConc.Value</string>
-              <string>Bambatsi.Root.MinimumNConc.Value</string>
-              <string>Bambatsi.Stem.MaximumNConc.Value</string>
-              <string>Bambatsi.Root.MaximumNConc.Value</string>
+              <string>Bambatsi.Stem.MinimumNConc.Value()</string>
+              <string>Bambatsi.Root.MinimumNConc.Value()</string>
+              <string>Bambatsi.Stem.MaximumNConc.Value()</string>
+              <string>Bambatsi.Root.MaximumNConc.Value()</string>
               <string>Bambatsi.TotalLive.Wt</string>
               <string>Bambatsi.Stem.Live.StructuralWt</string>
               <string>Bambatsi.Stem.Live.NonStructuralWt</string>
@@ -5761,9 +5761,9 @@ namespace Models
               <string>[Soil].SoilWater.SWmm</string>
               <string>[Soil].NO3N</string>
               <string>Bambatsi.Arbitrator.N.TotalPlantDemand</string>
-              <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value</string>
-              <string>Bambatsi.IndividualTreeLiveWt.Value</string>
-              <string>Bambatsi.Age.Value</string>
+              <string>Bambatsi.Leaf.LAIFunction.SpecificLeafArea.Value()</string>
+              <string>Bambatsi.IndividualTreeLiveWt.Value()</string>
+              <string>Bambatsi.Age.Value()</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>

@@ -38,6 +38,6 @@ namespace Models.WholeFarm
 		/// <summary>
 		/// Amount (kg)
 		/// </summary>
-		double Amount { get; }
+		new double Amount { get; }
 	}
 }

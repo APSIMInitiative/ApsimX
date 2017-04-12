@@ -12,7 +12,9 @@ using Models.PMF.Library;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// A generic leaf model
+    ///     This provides a phytomer type which predicts the area, biomass and nutrient as the tally of separate cohorts of leaves.  
+    ///     A cohort of leaves is represented by a main-stem node position and branch leaves are kept in the same cohort as the mainstem leaf appearing at the same time ([lawless2005wheat]). 
+    ///     The Leaf class delegates the status and function of individual cohorts into LeafCohort sub-classes.
     /// </summary>
     [Serializable]
     [Description("Leaf Class")]
@@ -66,7 +68,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Plant != null && Plant.IsAlive)
-                    return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value * LAI / MaxCover)), 0.999999999);
+                    return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoeff.Value() * LAI / MaxCover)), 0.999999999);
                 return 0;
             }
         }
@@ -206,7 +208,10 @@ namespace Models.PMF.Organs
             /// <summary>The shade induced senescence rate</summary>
             [Link]
             public IFunction ShadeInducedSenescenceRate = null;
-            /// <summary>The drought induced sen acceleration</summary>
+            /// <summary>The drought induced reduction of lag phase through acceleration of tt accumulation by the cohort during this phase</summary>
+            [Link]
+            public IFunction DroughtInducedLagAcceleration = null;
+            /// <summary>The drought induced reduction of senescence phase through acceleration of tt accumulation by the cohort during this phase</summary>
             [Link]
             public IFunction DroughtInducedSenAcceleration = null;
             /// <summary>The non structural fraction</summary>
@@ -272,6 +277,20 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the maximum number of leaves on the main stem</summary>
         [Description("Maximum number of Main-Stem leaves")]
         public int MaximumMainStemLeafNumber { get; set; }
+
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double[] ApexGroupSize { get { return apexGroupSize.ToArray(); } }
+
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public double[] ApexGroupAge { get { return apexGroupAge.ToArray(); } }
+
+        /// <summary>The number of apex in each age group.</summary>
+        private List<double> apexGroupSize = new List<double>();
+        /// <summary>The age of apex in age group.</summary>
+        private List<double> apexGroupAge = new List<double>();
 
         #endregion
 
@@ -360,7 +379,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the dead cohort no.</summary>
         [Description("Number of leaf cohorts that have fully Senesced")]
-        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.MainStemFinalNodeNumber.Value); } }
+        public double DeadCohortNo { get { return Math.Min(CohortCounter("IsDead"), Structure.MainStemFinalNodeNumber.Value()); } }
 
         /// <summary>Gets the plant appeared green leaf no.</summary>
         [Units("/plant")]
@@ -539,6 +558,23 @@ namespace Models.PMF.Organs
         }
 
         //General Leaf State variables
+        /// <summary>Returns the area of the largest leaf.</summary>
+        /// <value>The area of the largest leaf</value>
+        [Units("mm2")]
+        public double AreaLargestLeaf
+        {
+            get
+            {
+                double LLA = 0;
+                foreach (LeafCohort L in Leaves)
+                {
+                    LLA = Math.Max(LLA, L.MaxArea);
+                }
+
+                return LLA;
+            }
+        }
+
 
         /// <summary>Gets the live n conc.</summary>
         [Units("g/g")]
@@ -573,9 +609,9 @@ namespace Models.PMF.Organs
                     return 1;
 
                 double f;
-                double functionalNConc = (CohortParameters.CriticalNConc.Value -
-                                          CohortParameters.MinimumNConc.Value*CohortParameters.StructuralFraction.Value)*
-                                         (1/(1 - CohortParameters.StructuralFraction.Value));
+                double functionalNConc = (CohortParameters.CriticalNConc.Value() -
+                                          CohortParameters.MinimumNConc.Value() * CohortParameters.StructuralFraction.Value()) *
+                                         (1/(1 - CohortParameters.StructuralFraction.Value()));
                     if (functionalNConc <= 0)
                         f = 1;
                     else
@@ -615,11 +651,11 @@ namespace Models.PMF.Organs
             double NonStructuralDemand = 0.0;
             double MetabolicDemand = 0.0;
 
-            DMConversionEfficiency = DMConversionEfficiencyFunction.Value;
+            DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
             if (DMDemandFunction != null)
             {
-                StructuralDemand = DMDemandFunction.Value * StructuralFraction.Value;
-                NonStructuralDemand = DMDemandFunction.Value * (1 - StructuralFraction.Value);
+                StructuralDemand = DMDemandFunction.Value() * StructuralFraction.Value();
+                NonStructuralDemand = DMDemandFunction.Value() * (1 - StructuralFraction.Value());
             }
             else
             {
@@ -644,15 +680,15 @@ namespace Models.PMF.Organs
                 if (MicroClimatePresent == false)
                     throw new Exception(Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
 
-                if (FrostFraction.Value > 0)
+                if (FrostFraction.Value() > 0)
                     foreach (LeafCohort l in Leaves)
-                        l.DoFrost(FrostFraction.Value);
+                        l.DoFrost(FrostFraction.Value());
 
                 bool nextExpandingLeaf = false;
                 foreach (LeafCohort L in Leaves)
                 {
                     CurrentRank = L.Rank;
-                    L.DoPotentialGrowth(ThermalTime.Value, CohortParameters);
+                    L.DoPotentialGrowth(ThermalTime.Value(), CohortParameters);
                     if ((L.IsFullyExpanded == false) && (nextExpandingLeaf == false))
                     {
                         nextExpandingLeaf = true;
@@ -664,7 +700,7 @@ namespace Models.PMF.Organs
                         FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
                     }
                 }
-                FRGR = FRGRFunction.Value;
+                FRGR = FRGRFunction.Value();
         }
 
         /// <summary>Clears this instance.</summary>
@@ -681,7 +717,9 @@ namespace Models.PMF.Organs
         {
             Leaves = new List<LeafCohort>();
             foreach (LeafCohort Leaf in InitialLeaves)
+            {
                 Leaves.Add(Leaf.Clone());
+            }
             foreach (LeafCohort Leaf in Leaves)
             {
                 CohortsAtInitialisation += 1;
@@ -705,7 +743,39 @@ namespace Models.PMF.Organs
             NewLeaf.Area = 0.0;
             NewLeaf.DoInitialisation();
             Leaves.Add(NewLeaf);
+            DoApexCalculations();
+            
         }
+
+        private void DoApexCalculations()
+        {
+            for (int i = 0; i < apexGroupAge.Count; i++)
+                apexGroupAge[i]++;
+            
+            while (apexGroupSize.Sum() < Structure.ApexNum)
+            {
+                if (apexGroupSize.Count == 0)
+                    apexGroupSize.Add(Structure.ApexNum);
+                else 
+                    apexGroupSize.Add(Structure.ApexNum - apexGroupSize[apexGroupSize.Count - 1]);
+                apexGroupAge.Add(1);
+            }
+
+            while (apexGroupSize.Sum() > Structure.ApexNum)
+            {
+                double removeApex = apexGroupSize.Sum() - Structure.ApexNum;
+                double remainingRemoveApex = removeApex;
+                for (int i = apexGroupSize.Count - 1; i > 0; i--)
+                {
+                    double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
+                    apexGroupSize[i] -= remove;
+                    remainingRemoveApex -= remove;
+                    if (remainingRemoveApex <= 0)
+                        break;
+                }
+            }
+        }
+
         /// <summary>Method to make leaf cohort appear and start expansion</summary>
         [EventSubscribe("LeafTipAppearance")]
         private void OnLeafTipAppearance(object sender, ApparingLeafParams CohortParams)
@@ -731,7 +801,7 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 foreach (LeafCohort L in Leaves)
-                    L.DoActualGrowth(ThermalTime.Value, CohortParameters);
+                    L.DoActualGrowth(ThermalTime.Value(), CohortParameters);
 
                 Structure.UpdateHeight();
 
@@ -763,7 +833,7 @@ namespace Models.PMF.Organs
             double LAIabove = 0;
             for (int i = Leaves.Count - 1; i > cohortno - 1; i--)
                 LAIabove += Leaves[i].LiveArea/MM2ToM2;
-            return 1 - Math.Exp(-ExtinctionCoeff.Value*LAIabove);
+            return 1 - Math.Exp(-ExtinctionCoeff.Value() * LAIabove);
         }
 
         /// <summary>
@@ -825,7 +895,7 @@ namespace Models.PMF.Organs
                 Reallocation += L.LeafStartDMReallocationSupply;
             }
 
-            return new BiomassSupplyType { Fixation = Photosynthesis.Value, Retranslocation = Retranslocation, Reallocation = Reallocation };
+            return new BiomassSupplyType { Fixation = Photosynthesis.Value(), Retranslocation = Retranslocation, Reallocation = Reallocation };
         }
 
         /// <summary>Sets the dm potential allocation.</summary>
@@ -1228,7 +1298,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return CohortParameters.CriticalNConc.Value;
+                return CohortParameters.CriticalNConc.Value();
             }
         }
         #endregion

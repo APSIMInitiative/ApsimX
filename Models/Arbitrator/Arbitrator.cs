@@ -33,6 +33,10 @@ namespace Models.Arbitrator
         [Link]
         Zone zone = null;
 
+        /// <summary>Link to Apsim's solute manager module.</summary>
+        [Link]
+        private SoluteManager solutes = null;
+
         /// <summary>The plants</summary>
         List<ICrop2> plants;
 
@@ -89,15 +93,6 @@ namespace Models.Arbitrator
 
         // soil water evaporation stuff
         //public double ArbitEOS { get; set; }  //
-
-        /// <summary>
-        /// The NitrogenChangedDelegate is for the Arbitrator to set the change in nitrate and ammonium in SoilNitrogen
-        /// Eventually this should be changes to a set rather than an event
-        /// </summary>
-        /// <param name="Data">The data.</param>
-        public delegate void NitrogenChangedDelegate(Soils.NitrogenChangedType Data);
-        /// <summary>To publish the nitrogen change event</summary>
-        public event NitrogenChangedDelegate NitrogenChanged;
 
         /// <summary>
         /// 
@@ -653,11 +648,8 @@ namespace Models.Arbitrator
         /// <param name="resourceToArbitrate">The resource to arbitrate.</param>
         private void SetNitrogenUptake(string resourceToArbitrate)
         {
-            NitrogenChangedType NUptakeType = new NitrogenChangedType();
-            NUptakeType.Sender = Name;
-            NUptakeType.SenderType = "Plant";
-            NUptakeType.DeltaNO3 = new double[Soil.Thickness.Length];
-            NUptakeType.DeltaNH4 = new double[Soil.Thickness.Length];
+            double[] DeltaNO3 = new double[Soil.Thickness.Length];
+            double[] DeltaNH4 = new double[Soil.Thickness.Length];
 
             for (int p = 0; p < plants.Count; p++)
             {
@@ -674,12 +666,12 @@ namespace Models.Arbitrator
                                 dummyArray1[l] += uptake[p, l, z, b, f];       // add the forms together to give the total nitrogen uptake
                                 if (f == 0)
                                 {
-                                    NUptakeType.DeltaNO3[l] += -1.0 * uptake[p, l, z, b, f];
+                                    DeltaNO3[l] += -1.0 * uptake[p, l, z, b, f];
                                     dummyArray2[l] += uptake[p, l, z, b, f];   // nitrate only uptake so can do the proportion before sending to the plant
                                 }
                                 else
                                 {
-                                    NUptakeType.DeltaNH4[l] += -1.0 * uptake[p, l, z, b, f];
+                                    DeltaNH4[l] += -1.0 * uptake[p, l, z, b, f];
                                 }
                             }
                         }
@@ -694,9 +686,8 @@ namespace Models.Arbitrator
                 plants[p].uptakeNitrogenPropNO3 = dummyArray2;
             }
             // and finally set the changed soil resources
-            if (NitrogenChanged != null)
-                NitrogenChanged.Invoke(NUptakeType);
-
+            solutes.Add("NO3", DeltaNO3);
+            solutes.Add("NH4", DeltaNH4);
         }
 
         /// <summary>Old_s the on do water arbitration.</summary>
@@ -776,12 +767,8 @@ namespace Models.Arbitrator
         private void Old_OnDoNutrientArbitration()
         {
             // use i for the plant loop and j for the layer loop
-
-            NitrogenChangedType NUptakeType = new NitrogenChangedType();
-            NUptakeType.Sender = Name;
-            NUptakeType.SenderType = "Plant";
-            NUptakeType.DeltaNO3 = new double[Soil.Thickness.Length];
-            NUptakeType.DeltaNH4 = new double[Soil.Thickness.Length];
+            double[] DeltaNO3 = new double[Soil.Thickness.Length];
+            double[] DeltaNH4 = new double[Soil.Thickness.Length];
 
             double tempSupply = 0.0;  // this zeros the variable for each crop - calculates the potentialSupply for the crop for all layers - will be used to compare against demand
             // calculate the potentially available water and sum the demand
@@ -884,8 +871,8 @@ namespace Models.Arbitrator
                     uptakeNitrogenPlantLayer[i, j] = potentialSupplyNitrogenPlantLayer[i, j]
                                                    * MathUtilities.Constrain(MathUtilities.Divide(MathUtilities.Sum(totalAvailableNitrogen), MathUtilities.Sum(demandNitrogen), 0.0), 0.0, 1.0);
                     uptakeNitrogenPropNO3PlantLayer[i, j] = 0.0;
-                    NUptakeType.DeltaNO3[j] += -1.0 * uptakeNitrogenPlantLayer[i, j] * potentialSupplyPropNO3PlantLayer[i, j];  // -ve to reduce water content in the soil
-                    NUptakeType.DeltaNH4[j] += -1.0 * uptakeNitrogenPlantLayer[i, j] * (1.0 - potentialSupplyPropNO3PlantLayer[i, j]);  // -ve to reduce water content in the soil
+                    DeltaNO3[j] += -1.0 * uptakeNitrogenPlantLayer[i, j] * potentialSupplyPropNO3PlantLayer[i, j];  // -ve to reduce water content in the soil
+                    DeltaNH4[j] += -1.0 * uptakeNitrogenPlantLayer[i, j] * (1.0 - potentialSupplyPropNO3PlantLayer[i, j]);  // -ve to reduce water content in the soil
 
                     if ((i == plants.Count - 1) && (j == 0))
                     {
@@ -913,9 +900,8 @@ namespace Models.Arbitrator
 
             // send the change in soil soil nitrate and ammonium to the soil nitrogen module
 
-            if (NitrogenChanged != null)
-                NitrogenChanged.Invoke(NUptakeType);
-
+            solutes.Add("NO3", DeltaNO3);
+            solutes.Add("NH4", DeltaNH4);
         }
 
         /// <summary>Zeroes the hamish variables.</summary>

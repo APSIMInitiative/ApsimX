@@ -56,32 +56,28 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-
+            if (Phenology.CurrentPhaseName == FirstPhase)
             {
-                if (Phenology.CurrentPhaseName == FirstPhase)
-                {
-                    AccTT += TT.Value;
-                    double TodaysDM = 0;
-                    TodaysDM = Wf1 / (1 + (Wf1 - Wo1) / Wo1 * Math.Exp(-Mu1 * AccTT));
-                    double returnValue = TodaysDM - yesterdaysDM;
-                    yesterdaysDM = TodaysDM;
-                    return returnValue;
-                }
-                if (Phenology.CurrentPhaseName == SecondPhase)
-                {
-                    AccTT += TT.Value;
-                    double TodaysDM = 0;
-                    TodaysDM = Wf1 / (1 + (Wf1 - Wo1) / Wo1 * Math.Exp(-Mu1 * AccTT)) + Wf2 / (1 + (Wf2 - Wo2) / Wo2 * Math.Exp(-Mu2 * AccTT));
-                    double returnValue = TodaysDM - yesterdaysDM;
-                    yesterdaysDM = TodaysDM;
-                    return returnValue;
-                }
-                else
-                    return 0;
+                AccTT += TT.Value(arrayIndex);
+                double TodaysDM = 0;
+                TodaysDM = Wf1 / (1 + (Wf1 - Wo1) / Wo1 * Math.Exp(-Mu1 * AccTT));
+                double returnValue = TodaysDM - yesterdaysDM;
+                yesterdaysDM = TodaysDM;
+                return returnValue;
             }
+            if (Phenology.CurrentPhaseName == SecondPhase)
+            {
+                AccTT += TT.Value(arrayIndex);
+                double TodaysDM = 0;
+                TodaysDM = Wf1 / (1 + (Wf1 - Wo1) / Wo1 * Math.Exp(-Mu1 * AccTT)) + Wf2 / (1 + (Wf2 - Wo2) / Wo2 * Math.Exp(-Mu2 * AccTT));
+                double returnValue = TodaysDM - yesterdaysDM;
+                yesterdaysDM = TodaysDM;
+                return returnValue;
+            }
+            else
+                return 0;
         }
 
         /// <summary>Called when crop is being prunned.</summary>

@@ -42,21 +42,18 @@ namespace Models.PMF.Functions
             {
                 if (Phenology.Beyond(StartStageName))
                 {
-                    YesterdaysValue = Integral.Value;
+                    YesterdaysValue = Integral.Value();
                 }
             }
             else
-                YesterdaysValue = Integral.Value;
+                YesterdaysValue = Integral.Value();
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return Integral.Value - YesterdaysValue;
-            }
+            return Integral.Value(arrayIndex) - YesterdaysValue;
         }
 
         /// <summary>Called when [EndCrop].</summary>
@@ -74,7 +71,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("PhaseRewind")]
         private void OnPhaseRewind(object sender, EventArgs e)
         {
-            YesterdaysValue = Integral.Value;
+            YesterdaysValue = Integral.Value();
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

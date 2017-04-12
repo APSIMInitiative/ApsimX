@@ -51,33 +51,39 @@ namespace Models.Lifecycle
             //apply the functions from the function list to this cohort
             foreach (IFunction func in FunctionList)
             {
-
-                if (FecundityFunc != null && ProgenyFunc != null)
+                if (func == ProgenyFunc)    // assume there is only one of these for the process
                 {
-                    if (cohortItem.Fecundity < 0)
-                        cohortItem.Fecundity = FecundityFunc.Value;
-                    double progenyrate = ProgenyFunc.Value;
-
-                    if (cohortItem.Fecundity > 0)
+                    if (FecundityFunc != null && ProgenyFunc != null)
                     {
-                        //number of Progeny produced per individual per timestep
-                        double progenyRate = Math.Max(0.0, Math.Min(cohortItem.Fecundity, progenyrate));
-                        if (progenyRate > 0)
+                        if (cohortItem.Fecundity < 0)
+                            cohortItem.Fecundity = FecundityFunc.Value();
+                        double progenyrate = ProgenyFunc.Value();
+
+                        if (cohortItem.Fecundity > 0)
                         {
-                            double numberToCreate = cohortItem.Count * progenyRate;
-                            if (numberToCreate > 0)
+                            //number of Progeny produced per individual per timestep
+                            double progenyRate = Math.Max(0.0, Math.Min(cohortItem.Fecundity, progenyrate));
+                            if (progenyRate > 0)
                             {
-                                //transfer magic here
-                                Lifestage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
-                                cohortItem.OwningStage.Reproduce(cohortItem, destStage, numberToCreate);
+                                double numberToCreate = cohortItem.Count * progenyRate;
+                                if (numberToCreate > 0)
+                                {
+                                    //transfer magic here
+                                    Lifestage destStage = cohortItem.OwningStage.OwningCycle.ChildStages.Find(s => s.Name == TransferTo);
+                                    cohortItem.OwningStage.Reproduce(cohortItem, destStage, numberToCreate);
+                                }
+                                cohortItem.Fecundity -= progenyRate;
                             }
-                            cohortItem.Fecundity -= progenyRate;
                         }
+                    }
+                    else
+                    {
+                        throw new Exception("Fecundity and Progeny functions must be configured for " + this.Name + " lifestage");
                     }
                 }
                 else
                 {
-                    throw new Exception("Fecundity and Progeny functions must be configured for " + this.Name + " lifestage");
+                    //execute another function
                 }
             }
         }

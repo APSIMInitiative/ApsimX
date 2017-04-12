@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="5">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -558,7 +558,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -638,7 +638,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -656,12 +656,12 @@ namespace Models
                 <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
                 <string>[ExtraVariables].Script.LeafExpandedPosition</string>
                 <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
-                <string>[Maize].Grain.NumberFunction.Value</string>
-                <string>[Maize].Grain.NumberFunction.StemNumber.Value</string>
-                <string>[Maize].Grain.NumberFunction.CobsPerStem.Value</string>
-                <string>[Maize].Grain.NumberFunction.KernalsPerCob.Value</string>
-                <string>[Maize].Grain.NumberFunction.GrainPerKernal.Value</string>
-                <string>[Maize].Rachis.CobSize.Value</string>
+                <string>[Maize].Grain.NumberFunction.Value()</string>
+                <string>[Maize].Grain.NumberFunction.StemNumber.Value()</string>
+                <string>[Maize].Grain.NumberFunction.CobsPerStem.Value()</string>
+                <string>[Maize].Grain.NumberFunction.KernalsPerCob.Value()</string>
+                <string>[Maize].Grain.NumberFunction.GrainPerKernal.Value()</string>
+                <string>[Maize].Rachis.CobSize.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -1021,6 +1021,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -1050,11 +1053,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Maize].Harvesting</string>
@@ -1106,6 +1109,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -1627,7 +1633,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -1706,7 +1712,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -2083,6 +2089,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -2139,11 +2148,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Maize].Harvesting</string>
@@ -2195,6 +2204,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -2879,6 +2891,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -3322,6 +3337,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -3750,6 +3768,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -4170,6 +4191,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -4577,6 +4601,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -4984,6 +5011,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -5383,6 +5413,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -5736,6 +5769,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -6143,6 +6179,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -6496,6 +6535,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -6872,6 +6914,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -7225,6 +7270,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -7624,6 +7672,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -8023,6 +8074,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -8430,6 +8484,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -8814,6 +8871,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -9221,6 +9281,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -9574,6 +9637,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -9912,6 +9978,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -10242,6 +10311,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -10639,6 +10711,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -11044,6 +11119,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -11418,6 +11496,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -11846,6 +11927,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -12103,7 +12187,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -12182,7 +12266,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -12559,6 +12643,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -12588,11 +12675,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Maize].Harvesting</string>
@@ -12644,6 +12731,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -12660,9 +12750,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12707,9 +12797,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12754,9 +12844,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12801,9 +12891,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12848,9 +12938,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12895,9 +12985,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12942,9 +13032,9 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -12998,9 +13088,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13045,9 +13135,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13092,9 +13182,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13140,9 +13230,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13188,9 +13278,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13235,9 +13325,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13283,9 +13373,9 @@ The data for two trials from near Katherine, Northern Territory, Australia, have
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
@@ -13685,7 +13775,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -13764,7 +13854,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -14143,6 +14233,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -14183,11 +14276,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Maize].Harvesting</string>
@@ -14239,6 +14332,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -14826,7 +14922,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -14905,7 +15001,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -15284,6 +15380,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -15324,11 +15423,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
               </VariableNames>
               <EventNames>
                 <string>[Maize].Harvesting</string>
@@ -15380,6 +15479,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -15823,7 +15925,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -15837,8 +15939,8 @@ namespace Models
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Phenology.Photoperiod.Value</string>
-                <string>[Maize].Grain.GrowthRateGrainDevelopment.Value</string>
+                <string>[Maize].Phenology.Photoperiod.Value()</string>
+                <string>[Maize].Grain.GrowthRateGrainDevelopment.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -16168,6 +16270,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -16200,11 +16305,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               </VariableNames>
               <EventNames>
@@ -16305,6 +16410,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -16368,7 +16476,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Phenology.Photoperiod.Value</YFieldName>
+            <YFieldName>Maize.Phenology.Photoperiod.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -16530,7 +16638,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Grain.GrowthRateGrainDevelopment.Value</YFieldName>
+            <YFieldName>Maize.Grain.GrowthRateGrainDevelopment.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -16759,7 +16867,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -16773,7 +16881,7 @@ namespace Models
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Phenology.Photoperiod.Value</string>
+                <string>[Maize].Phenology.Photoperiod.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -17103,6 +17211,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -17135,11 +17246,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               </VariableNames>
               <EventNames>
@@ -17240,6 +17351,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -17303,7 +17417,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Phenology.Photoperiod.Value</YFieldName>
+            <YFieldName>Maize.Phenology.Photoperiod.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17615,7 +17729,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -17629,7 +17743,7 @@ namespace Models
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Phenology.Photoperiod.Value</string>
+                <string>[Maize].Phenology.Photoperiod.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -17959,6 +18073,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -17991,11 +18108,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               </VariableNames>
               <EventNames>
@@ -18096,6 +18213,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -18159,7 +18279,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Phenology.Photoperiod.Value</YFieldName>
+            <YFieldName>Maize.Phenology.Photoperiod.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -18363,7 +18483,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Maize.Phenology.Photoperiod.Value</YFieldName>
+            <YFieldName>Maize.Phenology.Photoperiod.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -18560,7 +18680,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -18574,8 +18694,8 @@ namespace Models
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Phenology.Photoperiod.Value</string>
-                <string>[Maize].Phenology.ThermalTime.Value</string>
+                <string>[Maize].Phenology.Photoperiod.Value()</string>
+                <string>[Maize].Phenology.ThermalTime.Value()</string>
                 <string>[Maize].Rachis.Live.Wt</string>
                 <string>[Maize].Husk.Live.Wt</string>
               </VariableNames>
@@ -18611,11 +18731,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               </VariableNames>
               <EventNames>
@@ -18910,6 +19030,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Gatton</SoilType>
               <Site>UQ Lawes</Site>
@@ -19066,6 +19189,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -20047,7 +20173,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -20061,7 +20187,7 @@ namespace Models
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Phenology.Photoperiod.Value</string>
+                <string>[Maize].Phenology.Photoperiod.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -20095,11 +20221,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               </VariableNames>
               <EventNames>
@@ -20394,6 +20520,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Gatton</SoilType>
               <Site>UQ Lawes</Site>
@@ -20550,6 +20679,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -21433,7 +21565,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -21447,7 +21579,7 @@ namespace Models
                 <string>[Maize].Leaf.ExpandedCohortNo</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Phenology.Photoperiod.Value</string>
+                <string>[Maize].Phenology.Photoperiod.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -21481,11 +21613,11 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
-                <string>[Maize].Phenology.FloweringDAS.Value as FloweringDAS</string>
-                <string>[Maize].Phenology.MaturityDAS.Value as MaturityDAS</string>
+                <string>[Maize].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+                <string>[Maize].Phenology.MaturityDAS.Value() as MaturityDAS</string>
                 <string>[Maize].Leaf.AppearedCohortNo as FinalLeafNo</string>
               </VariableNames>
               <EventNames>
@@ -21780,6 +21912,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>Gatton</SoilType>
               <Site>UQ Lawes</Site>
@@ -21936,6 +22071,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -23011,7 +23149,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -23090,7 +23228,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -23450,6 +23588,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <LocalName>Clarion</LocalName>
               <NearestTown>Ames</NearestTown>
@@ -23485,7 +23626,7 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
                 <string>[Maize].Grain.Size as GrainSize</string>
                 <string>[Maize].Population</string>
               </VariableNames>
@@ -23539,6 +23680,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -23802,7 +23946,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -23881,7 +24025,7 @@ namespace Models
               <string>[Maize].Leaf.CoverDead</string>
               <string>[Maize].Leaf.LAI</string>
               <string>[Maize].Leaf.Height</string>
-              <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+              <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
               <string>[Maize].Leaf.Fw</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -24283,6 +24427,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <LocalName>Nicollet</LocalName>
             <Region>Bremer</Region>
@@ -24317,8 +24464,8 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
-              <string>[Maize].Grain.Size.Value as GrainSize</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
+              <string>[Maize].Grain.Size.Value() as GrainSize</string>
               <string>[Maize].Population</string>
             </VariableNames>
             <EventNames>
@@ -24371,6 +24518,9 @@ namespace Models
 }
 	   ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -24803,7 +24953,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -24882,7 +25032,7 @@ namespace Models
               <string>[Maize].Leaf.CoverDead</string>
               <string>[Maize].Leaf.LAI</string>
               <string>[Maize].Leaf.Height</string>
-              <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+              <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
               <string>[Maize].Leaf.Fw</string>
               <string>[Maize].Leaf.Fn</string>
               <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -25224,6 +25374,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <LocalName>Canisteo</LocalName>
             <NearestTown>Ames</NearestTown>
@@ -25259,8 +25412,8 @@ namespace Models
               <string>[Maize].Total.N</string>
               <string>[Maize].Total.Wt</string>
               <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-              <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
-              <string>[Maize].Grain.Size.Value as GrainSize</string>
+              <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
+              <string>[Maize].Grain.Size.Value() as GrainSize</string>
               <string>[Maize].Population</string>
             </VariableNames>
             <EventNames>
@@ -25313,6 +25466,9 @@ namespace Models
 }
 	   ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -25487,53 +25643,6 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Graph>
       </Simulation>
-      <Graph>
-        <Name>GrainWt</Name>
-        <Series>
-          <Name>Series1</Name>
-          <Regression>
-            <Name>Regression</Name>
-            <ForEachSeries>false</ForEachSeries>
-          </Regression>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>PredictedObserved</TableName>
-          <XFieldName>Observed.GrainWt</XFieldName>
-          <YFieldName>Predicted.GrainWt</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Axis>
-          <Type>Bottom</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title />
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>TopRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
     </Folder>
     <Folder>
       <Name>NewZealand</Name>
@@ -26065,6 +26174,9 @@ Testing of APSIM Maize under New Zealand conditions was undertaken using the dat
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -26474,7 +26586,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday)
 			{
 				LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-				MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+				MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -26598,10 +26710,10 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
-                <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-                <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+                <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+                <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
                 <string>[Maize].Phenology.Stage</string>
@@ -26620,8 +26732,8 @@ namespace Models
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
                 <string>[Maize].Leaf.CohortArea[1:30]</string>
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
-                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
+                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
                 <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Arbitrator.N.TotalPlantSupply</string>
                 <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
@@ -26629,24 +26741,24 @@ namespace Models
                 <string>[Maize].Arbitrator.DM.Allocated</string>
                 <string>[Maize].Arbitrator.DM.SinkLimitation</string>
                 <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
-                <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
-                <string>[Maize].Leaf.CohortParameters.LagDuration.Value</string>
-                <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value</string>
-                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value</string>
+                <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value()</string>
                 <string>[Maize].Structure.Height</string>
-                <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
-                <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
+                <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Grain.NumberFunction.Value</string>
+                <string>[Maize].Grain.NumberFunction.Value()</string>
                 <string>[ExtraVariables].Script.LeafAppearedPosition</string>
                 <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
                 <string>[ExtraVariables].Script.LeafExpandedPosition</string>
                 <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
                 <string>[Maize].Leaf.DeadCohortNo</string>
-                <string>[Phenology].ThermalTime.Value</string>
+                <string>[Phenology].ThermalTime.Value()</string>
                 <string>[Maize].Leaf.SenescingCohortNo</string>
-                <string>[Maize].Stem.MaximumNConc.Value</string>
-                <string>[Maize].Stem.MinimumNConc.Value</string>
+                <string>[Maize].Stem.MaximumNConc.Value()</string>
+                <string>[Maize].Stem.MinimumNConc.Value()</string>
                 <string>[Maize].Stem.Live.NConc</string>
                 <string>[Maize].Leaf.Live.NConc</string>
                 <string>[Maize].Grain.Live.NConc</string>
@@ -26655,7 +26767,7 @@ namespace Models
                 <string>[Maize].Leaf.Dead.NConc</string>
                 <string>[Maize].Leaf.Photosynthesis.RueAct</string>
                 <string>[Maize].Stem.Live.StructuralWt</string>
-                <string>[Maize].Grain.GrowthRateGrainDevelopment.Value</string>
+                <string>[Maize].Grain.GrowthRateGrainDevelopment.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -26686,8 +26798,8 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
-                <string>[Maize].Grain.Size.Value as GrainSize</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
+                <string>[Maize].Grain.Size.Value() as GrainSize</string>
                 <string>[Maize].Population</string>
               </VariableNames>
               <EventNames>
@@ -27488,7 +27600,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Leaf.CohortParameters.GrowthDuration.Value</YFieldName>
+                <YFieldName>Maize.Leaf.CohortParameters.GrowthDuration.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27509,7 +27621,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Leaf.CohortParameters.LagDuration.Value</YFieldName>
+                <YFieldName>Maize.Leaf.CohortParameters.LagDuration.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27530,7 +27642,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Leaf.CohortParameters.SenescenceDuration.Value</YFieldName>
+                <YFieldName>Maize.Leaf.CohortParameters.SenescenceDuration.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27551,7 +27663,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value</YFieldName>
+                <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27635,7 +27747,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.DMDemandFunction.PotentialDMAccumulation.Value</YFieldName>
+                <YFieldName>Maize.Stem.DMDemandFunction.PotentialDMAccumulation.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -27656,7 +27768,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</YFieldName>
+                <YFieldName>Maize.Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -28224,7 +28336,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Maize.Structure.LeafTipsAppeared</XFieldName>
-                <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value</YFieldName>
+                <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -28899,7 +29011,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.MaximumNConc.Value</YFieldName>
+                <YFieldName>Maize.Stem.MaximumNConc.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -28920,7 +29032,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Stem.MinimumNConc.Value</YFieldName>
+                <YFieldName>Maize.Stem.MinimumNConc.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -28966,6 +29078,9 @@ namespace Models
               <DisabledSeries />
               <IncludeInDocumentation>false</IncludeInDocumentation>
             </Graph>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -30987,7 +31102,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Grain.GrowthRateGrainDevelopment.Value</YFieldName>
+                <YFieldName>Maize.Grain.GrowthRateGrainDevelopment.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31603,7 +31718,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Grain.NumberFunction.Value</YFieldName>
+                <YFieldName>Maize.Grain.NumberFunction.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -31722,222 +31837,6 @@ This trial was conducted to provide data for parametersising the Leaf Area model
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
-                  <Name>Barley</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Canola</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Cloverseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.04</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fieldpea</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fababean</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.08</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Foragebrassica</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Itallian_ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Lucerne</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.038</double>
-                    <double>0.038</double>
-                    <double>0.03</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
                   <Name>MaizeSoil</Name>
                   <LL>
                     <double>0.154</double>
@@ -31959,249 +31858,6 @@ This trial was conducted to provide data for parametersising the Leaf Area model
                     <double>1</double>
                     <double>1</double>
                     <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Oats</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Potato</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.057</double>
-                    <double>0.023</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Grassseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Wheat</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass_whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>kale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>triticale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -32437,6 +32093,9 @@ This trial was conducted to provide data for parametersising the Leaf Area model
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -32784,7 +32443,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -32858,7 +32517,7 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
@@ -32906,8 +32565,8 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
-                <string>[Maize].Grain.Size.Value as GrainSize</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
+                <string>[Maize].Grain.Size.Value() as GrainSize</string>
                 <string>[Maize].Population</string>
               </VariableNames>
               <EventNames>
@@ -32960,6 +32619,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -33445,7 +33107,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Phenology.StageCode.Value</YFieldName>
+              <YFieldName>Phenology.StageCode.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -34303,7 +33965,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>phenologySimple_RainS</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Phenology.StageCode.Value</YFieldName>
+              <YFieldName>Phenology.StageCode.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -34653,222 +34315,6 @@ namespace Models
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
-                  <Name>Barley</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Canola</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Cloverseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.04</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fieldpea</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fababean</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.08</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Foragebrassica</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Itallian_ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Lucerne</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.038</double>
-                    <double>0.038</double>
-                    <double>0.03</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
                   <Name>MaizeSoil</Name>
                   <LL>
                     <double>0.154</double>
@@ -34890,249 +34336,6 @@ namespace Models
                     <double>1</double>
                     <double>1</double>
                     <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Oats</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Potato</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.057</double>
-                    <double>0.023</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Grassseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Wheat</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass_whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>kale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>triticale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -35368,6 +34571,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -35583,10 +34789,10 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
-                <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-                <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+                <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+                <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
                 <string>[Maize].Phenology.Stage</string>
@@ -35605,32 +34811,32 @@ namespace Models
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
                 <string>[Maize].Leaf.CohortArea[1:30]</string>
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
-                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
+                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
                 <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
                 <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Maize].Arbitrator.DM.Allocated</string>
                 <string>[Maize].Arbitrator.DM.SinkLimitation</string>
                 <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
-                <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
-                <string>[Maize].Leaf.CohortParameters.LagDuration.Value</string>
-                <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value</string>
-                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value</string>
+                <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value()</string>
                 <string>[Maize].Structure.Height</string>
-                <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
-                <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
+                <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Grain.NumberFunction.Value</string>
+                <string>[Maize].Grain.NumberFunction.Value()</string>
                 <string>[ExtraVariables].Script.LeafAppearedPosition</string>
                 <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
                 <string>[ExtraVariables].Script.LeafExpandedPosition</string>
                 <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
                 <string>[Maize].Leaf.DeadCohortNo</string>
-                <string>[Phenology].ThermalTime.Value</string>
+                <string>[Phenology].ThermalTime.Value()</string>
                 <string>[Maize].Leaf.SenescingCohortNo</string>
-                <string>[Maize].Stem.MaximumNConc.Value</string>
-                <string>[Maize].Stem.MinimumNConc.Value</string>
+                <string>[Maize].Stem.MaximumNConc.Value()</string>
+                <string>[Maize].Stem.MinimumNConc.Value()</string>
                 <string>[Maize].Stem.Live.NConc</string>
                 <string>[Maize].Leaf.Live.NConc</string>
                 <string>[Maize].Grain.Live.NConc</string>
@@ -35668,8 +34874,8 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
-                <string>[Maize].Grain.Size.Value as GrainSize</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
+                <string>[Maize].Grain.Size.Value() as GrainSize</string>
                 <string>[Maize].Population</string>
               </VariableNames>
               <EventNames>
@@ -35839,7 +35045,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday) 
 			{
 			LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+			MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -35895,6 +35101,9 @@ namespace Models
 }
 	   ]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -35979,222 +35188,6 @@ namespace Models
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
-                  <Name>Barley</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                    <double>0.066</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Canola</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Cloverseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.04</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                    <double>0.016</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fieldpea</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Fababean</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.08</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Foragebrassica</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Itallian_ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                    <double>0.057</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Lucerne</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.038</double>
-                    <double>0.038</double>
-                    <double>0.03</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                    <double>0.019</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
                   <Name>MaizeSoil</Name>
                   <LL>
                     <double>0.154</double>
@@ -36216,249 +35209,6 @@ namespace Models
                     <double>1</double>
                     <double>1</double>
                     <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Oats</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Potato</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.057</double>
-                    <double>0.023</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                    <double>0.002</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Grassseed</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>Wheat</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.075</double>
-                    <double>0.075</double>
-                    <double>0.06</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                    <double>0.049</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass_whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>ryegrass</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.025</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                    <double>0.003</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.51</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>whiteclover</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.054</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                    <double>0.009</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.3</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>kale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                  </XF>
-                </SoilCrop>
-                <SoilCrop>
-                  <Name>triticale</Name>
-                  <LL>
-                    <double>0.154</double>
-                    <double>0.152</double>
-                    <double>0.162</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                  </LL>
-                  <KL>
-                    <double>0.088</double>
-                    <double>0.088</double>
-                    <double>0.07</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.73</double>
                     <double>1</double>
                     <double>1</double>
                     <double>1</double>
@@ -36694,6 +35444,9 @@ namespace Models
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
               </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
               <RecordNumber>0</RecordNumber>
               <SoilType>lignin_FOM</SoilType>
               <Region>Generic soil types</Region>
@@ -36902,10 +35655,10 @@ namespace Models
                 <string>[Maize].Leaf.CoverDead</string>
                 <string>[Maize].Leaf.LAI</string>
                 <string>[Maize].Leaf.Height</string>
-                <string>[Maize].Leaf.CohortParameters.MaxArea.Value</string>
+                <string>[Maize].Leaf.CohortParameters.MaxArea.Value()</string>
                 <string>[Maize].Leaf.Fw</string>
-                <string>[Maize].Leaf.Photosynthesis.FVPD.Value</string>
-                <string>[Maize].Leaf.Photosynthesis.FT.Value</string>
+                <string>[Maize].Leaf.Photosynthesis.FVPD.Value()</string>
+                <string>[Maize].Leaf.Photosynthesis.FT.Value()</string>
                 <string>[Maize].Leaf.Fn</string>
                 <string>[Maize].Phenology.CurrentPhaseName</string>
                 <string>[Maize].Phenology.Stage</string>
@@ -36924,32 +35677,32 @@ namespace Models
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
                 <string>[Maize].Leaf.CohortArea[1:30]</string>
                 <string>[Maize].Leaf.CohortSLA[1:30]</string>
-                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value</string>
-                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value</string>
+                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
                 <string>[Maize].Arbitrator.N.TotalPlantDemand</string>
                 <string>[Maize].Arbitrator.DM.TotalFixationSupply</string>
                 <string>[Maize].Arbitrator.DM.TotalPlantDemand</string>
                 <string>[Maize].Arbitrator.DM.Allocated</string>
                 <string>[Maize].Arbitrator.DM.SinkLimitation</string>
                 <string>[Maize].Arbitrator.DM.NutrientLimitation</string>
-                <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value</string>
-                <string>[Maize].Leaf.CohortParameters.LagDuration.Value</string>
-                <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value</string>
-                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value</string>
+                <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
+                <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value()</string>
                 <string>[Maize].Structure.Height</string>
-                <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value</string>
-                <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value</string>
+                <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
                 <string>[Maize].Structure.MainStemPrimordiaNo</string>
-                <string>[Maize].Grain.NumberFunction.Value</string>
+                <string>[Maize].Grain.NumberFunction.Value()</string>
                 <string>[ExtraVariables].Script.LeafAppearedPosition</string>
                 <string>[ExtraVariables].Script.MostRecentlyAppearedLeafMaxSize</string>
                 <string>[ExtraVariables].Script.LeafExpandedPosition</string>
                 <string>[ExtraVariables].Script.MostRecentlyExpandedLeafSize</string>
                 <string>[Maize].Leaf.DeadCohortNo</string>
-                <string>[Phenology].ThermalTime.Value</string>
+                <string>[Phenology].ThermalTime.Value()</string>
                 <string>[Maize].Leaf.SenescingCohortNo</string>
-                <string>[Maize].Stem.MaximumNConc.Value</string>
-                <string>[Maize].Stem.MinimumNConc.Value</string>
+                <string>[Maize].Stem.MaximumNConc.Value()</string>
+                <string>[Maize].Stem.MinimumNConc.Value()</string>
                 <string>[Maize].Stem.Live.NConc</string>
                 <string>[Maize].Leaf.Live.NConc</string>
                 <string>[Maize].Grain.Live.NConc</string>
@@ -36987,8 +35740,8 @@ namespace Models
                 <string>[Maize].Total.N</string>
                 <string>[Maize].Total.Wt</string>
                 <string>max of [Maize].Leaf.LAI from [Maize].Sowing to [Maize].Harvesting as LAImax</string>
-                <string>[Maize].Grain.NumberFunction.Value as GPSM</string>
-                <string>[Maize].Grain.Size.Value as GrainSize</string>
+                <string>[Maize].Grain.NumberFunction.Value() as GPSM</string>
+                <string>[Maize].Grain.Size.Value() as GrainSize</string>
                 <string>[Maize].Population</string>
               </VariableNames>
               <EventNames>
@@ -37158,7 +35911,7 @@ namespace Models
 			if ((double)zone.Get("Maize.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday)
 			{
 				LeafAppearedPosition = (double)zone.Get("Maize.Leaf.AppearedCohortNo");
-				MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value");
+				MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Maize.Leaf.CohortParameters.MaxArea.Value()");
 			}
 			//else
 			//LeafAppearedPosition = 0;
@@ -37217,11 +35970,11 @@ namespace Models
             <Manager>
               <Name>SowingRule</Name>
               <Script>
-                <SowingDate>2010-10-04</SowingDate>
-                <CultivarName>Pioneer_39V43</CultivarName>
                 <RowSpace>720</RowSpace>
                 <PlantPopulation>10.5</PlantPopulation>
                 <PlantingDepth>20</PlantingDepth>
+                <CultivarName>Pioneer_39V43</CultivarName>
+                <SowingDate>2010-10-04</SowingDate>
               </Script>
               <Code><![CDATA[
 using System;
@@ -37259,6 +36012,9 @@ namespace Models
 }
 				]]></Code>
             </Manager>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -37303,7 +36059,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>PhenologySimple</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Phenology.StageCode.Value</YFieldName>
+              <YFieldName>Phenology.StageCode.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -38077,7 +36833,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38133,7 +36889,7 @@ Simulation results for the combined datasets from the various countries are show
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38181,7 +36937,7 @@ Simulation results for the combined datasets from the various countries are show
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>4</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>4</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -38413,8 +37169,8 @@ namespace Models
               <string>Maize.Grain.Wt</string>
               <string>Maize.Grain.N</string>
               <string>Maize.Total.Wt</string>
-              <string>Maize.Phenology.FloweringDAS.value as FloweringDAS</string>
-              <string>Maize.Phenology.MaturityDAS.value as MaturityDAS</string>
+              <string>Maize.Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>Maize.Phenology.MaturityDAS.Value() as MaturityDAS</string>
               <string>[Maize].Phenology.DaysAfterSowing</string>
               <string>sum of [Weather].Rain from [Maize].Sowing to [Maize].Harvesting as InCropRain</string>
               <string>[Soil].SoilNitrogen.OC[1] as SurfaceOC</string>
@@ -38794,6 +37550,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>Bugesera</Site>
             <NearestTown>Nyamata</NearestTown>
@@ -39078,6 +37837,9 @@ namespace Models
 }
 	   ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>

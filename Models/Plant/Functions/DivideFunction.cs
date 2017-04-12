@@ -18,29 +18,26 @@ namespace Models.PMF.Functions
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+
+            double returnValue = 0.0;
+            if (ChildFunctions.Count > 0)
             {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                IFunction F = ChildFunctions[0] as IFunction;
+                returnValue = F.Value(arrayIndex);
 
-                double returnValue = 0.0;
-                if (ChildFunctions.Count > 0)
-                {
-                    IFunction F = ChildFunctions[0] as IFunction;
-                    returnValue = F.Value;
+                if (ChildFunctions.Count > 1)
+                    for (int i = 1; i < ChildFunctions.Count; i++)
+                    {
+                        F = ChildFunctions[i] as IFunction;
+                        returnValue = returnValue / F.Value(arrayIndex);
+                    }
 
-                    if (ChildFunctions.Count > 1)
-                        for (int i = 1; i < ChildFunctions.Count; i++)
-                        {
-                            F = ChildFunctions[i] as IFunction;
-                            returnValue = returnValue / F.Value;
-                        }
-
-                }
-                return returnValue;
             }
+            return returnValue;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
