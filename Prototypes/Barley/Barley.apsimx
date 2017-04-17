@@ -331,11 +331,9 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
           <Name>VrnSensitivity</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The barley cultivar "Valetta" used in this model is not sensitive to vernalisation and therefore nil sensitivity is used here to reflect that.
+            <MemoText><![CDATA[Barley cultivar "Valetta" used in this model is a spring variety and therefore does not require a period of cold temperature (vernalisation) to initiate reproduction.
 
-The difference between Inherent earlyness leaf number and the number of leaves produced when the plant is unvernalisaed and grown in long photoperiod
-
-Not used in barley]]></MemoText>
+]]></MemoText>
           </Memo>
           <FixedValue>0</FixedValue>
           <Units>Leaves</Units>
@@ -344,7 +342,7 @@ Not used in barley]]></MemoText>
           <Name>MinimumLeafNumber</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[Number of leaves the plant will produce when fully vernalised early and grown in long photoperiod
+            <MemoText><![CDATA[Number of leaves the plant will produce when grown in long photoperiod.
 ]]></MemoText>
           </Memo>
           <FixedValue>6</FixedValue>
@@ -739,13 +737,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   </X>
                   <Y>
                     <double>0</double>
-                    <double>0</double>
+                    <double>1</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>2</double>
-                    <double>4</double>
-                    <double>7</double>
-                    <double>12</double>
-                    <double>20</double>
+                    <double>2</double>
+                    <double>2</double>
+                    <double>2</double>
                   </Y>
                 </XYPairs>
                 <XProperty>[Structure].LeafTipsAppeared</XProperty>
@@ -1224,12 +1222,17 @@ N conc values are from Zhao et al 2009
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <FixedValue>0.032</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>0.045</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <FixedValue>0.03</FixedValue>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Grain N concentration of 1.92 % according to Procrop (ref xx)
+]]></MemoText>
+          </Memo>
+          <FixedValue>0.0192</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
@@ -1831,7 +1834,7 @@ N conc values are from Zhao et al 2009
                   <double>9</double>
                 </X>
                 <Y>
-                  <double>0.2</double>
+                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                   <double>0.5</double>
@@ -4847,7 +4850,7 @@ namespace Models
           <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
+          <Maximum>15000</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
@@ -6501,7 +6504,7 @@ namespace Models
       </Graph>
     </Folder>
     <Graph>
-      <Name>LAI1</Name>
+      <Name>LAI_vs_Phase</Name>
       <Series>
         <Name>Predicted</Name>
         <Type>Scatter</Type>
@@ -6538,7 +6541,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>DailyReport</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
+        <YFieldName>Barley.Phenology.CurrentPhaseName</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -14629,5 +14632,5 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>436</ExplorerWidth>
+  <ExplorerWidth>594</ExplorerWidth>
 </Simulations>
