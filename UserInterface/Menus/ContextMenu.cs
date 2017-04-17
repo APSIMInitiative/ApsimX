@@ -289,7 +289,7 @@ namespace UserInterface.Presenters
             DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
             if (dataStore != null)
             {
-                dataStore.DeleteAllTables();
+                dataStore.DeleteAllTables(false);
             }
         }
 

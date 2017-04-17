@@ -15,9 +15,6 @@ namespace Models.Soils.Nutrient
     [ViewName("UserInterface.Views.GridView")]
     public class NFlow : Model
     {
-        private PropertyInfo sourceProperty;
-        private PropertyInfo destinationProperty;
-
         [Link]
         private IFunction rate = null;
 
@@ -25,7 +22,10 @@ namespace Models.Soils.Nutrient
         private IFunction NLoss = null;
 
         [Link]
-        private Nutrient nutrient = null;
+        private SoluteManager solutes = null;
+
+        [Link]
+        private Soil soil = null;
 
         /// <summary>
         /// Name of source pool
@@ -39,16 +39,6 @@ namespace Models.Soils.Nutrient
         [Description("Name of destination pool")]
         public string destinationName { get; set; }
 
-        /// <summary>Performs the initial checks and setup</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            sourceProperty = nutrient.GetType().GetProperty(sourceName);
-            destinationProperty = nutrient.GetType().GetProperty(destinationName);
-        }
-
         /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
@@ -58,11 +48,11 @@ namespace Models.Soils.Nutrient
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
 
-            double[] source = (double[])sourceProperty.GetValue(nutrient);
+            double[] source = solutes.GetSolute(sourceName);
 
-            double[] destination = (double[])destinationProperty.GetValue(nutrient);
+            double[] destination = solutes.GetSolute(destinationName);
 
-            for (int i= 0; i < nutrient.NO3.Length; i++)
+            for (int i= 0; i < soil.Thickness.Length; i++)
             {
                 double nitrogenFlow = rate.Value(i) * source[i];
                 double nitrogenFlowToDestination = nitrogenFlow * (1-NLoss.Value(i));
@@ -70,8 +60,8 @@ namespace Models.Soils.Nutrient
                 source[i] -= nitrogenFlow;
                 destination[i] += nitrogenFlowToDestination;
             }
-            sourceProperty.SetValue(nutrient, source);
-            destinationProperty.SetValue(nutrient, destination);
+            solutes.SetSolute(sourceName, source);
+            solutes.SetSolute(destinationName, destination);
         }
 
 

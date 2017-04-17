@@ -48,7 +48,7 @@ namespace Models.PMF.Functions
                 memo.Document(tags, -1, indent);
 
 
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + StringUtilities.RemoveTrailingString(VariableName,".Value") + "</i>", indent));
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + StringUtilities.RemoveTrailingString(VariableName,".Value()") + "</i>", indent));
         
         }
 
