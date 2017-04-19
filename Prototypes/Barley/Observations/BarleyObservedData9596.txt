@@ -1,4 +1,4 @@
-SimulationName	Treatment	Clock.Today	Barley.Stem.Wt	Barley.Leaf.Wt	Barley.Ear.Wt	Barley.Grain.Wt	Barley.Chaff.Wt	Barley.AbovegroundLive.Wt	Barley.Leaf.Dead.Wt	Barley.Aboveground.Wt	grainno_perear	Barley.Leaf.LAI
+SimulationName	Treatment	Clock.Today	Barley.Stem.Wt	Barley.Leaf.Live.Wt	Barley.Ear.Wt	Barley.Grain.Wt	Barley.Chaff.Wt	Aboveground_LiveWt	Barley.Leaf.Dead.Wt	TotalAboveGroundWt	grainno_perear	Barley.Leaf.LAI
 ()	()	()	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(kg/ha)	(g/m2)	(kg/ha)	(#/ear)	(m2/m2)
 RS_Barley_9596_Fulldrought_150NA3	A3	1995-11-21	*	*	*	*	*	*	0	88.1	*	*
 RS_Barley_9596_Earlydrought_150NB3	B3	1995-11-21	*	*	*	*	*	*	0	75.3	*	*
