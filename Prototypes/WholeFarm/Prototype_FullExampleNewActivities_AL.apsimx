@@ -879,37 +879,72 @@
           <Name>Manage paddocks</Name>
           <PastureActivityManage>
             <Name>Native pasture paddock</Name>
-            <FodderLimitsFilterGroup>
-              <Name>Fodder limits</Name>
-              <RuminantFilter>
-                <Name>Filter[Breed=Bos indicus]</Name>
-                <Parameter>Breed</Parameter>
-                <Operator>Equal</Operator>
-                <Value>Bos indicus</Value>
-              </RuminantFilter>
-              <PoolValues>
-                <double>0.6</double>
-                <double>0.8</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </PoolValues>
-              <StrictLimits>false</StrictLimits>
-            </FodderLimitsFilterGroup>
+            <Relationship>
+              <Name>LandConditionIndex</Name>
+              <Point>
+                <Name>Point</Name>
+                <X>0</X>
+                <Y>-0.5</Y>
+              </Point>
+              <Point>
+                <Name>Point</Name>
+                <X>15</X>
+                <Y>-0.2</Y>
+              </Point>
+              <Point>
+                <Name>Point</Name>
+                <X>35</X>
+                <Y>0.5</Y>
+              </Point>
+              <Point>
+                <Name>Point</Name>
+                <X>100</X>
+                <Y>1</Y>
+              </Point>
+              <Value>0</Value>
+              <StartingValue>2</StartingValue>
+              <Minumum>0</Minumum>
+              <Maximum>11</Maximum>
+              <ExtropolateEquation>false</ExtropolateEquation>
+              <Points />
+            </Relationship>
+            <Relationship>
+              <Name>GrassBasalArea</Name>
+              <Point>
+                <Name>Point</Name>
+                <X>0</X>
+                <Y>-0.5</Y>
+              </Point>
+              <Point>
+                <Name>Point</Name>
+                <X>15</X>
+                <Y>-0.2</Y>
+              </Point>
+              <Point>
+                <Name>Point</Name>
+                <X>35</X>
+                <Y>0.5</Y>
+              </Point>
+              <Point>
+                <Name>Point</Name>
+                <X>100</X>
+                <Y>1</Y>
+              </Point>
+              <Value>0</Value>
+              <StartingValue>3</StartingValue>
+              <Minumum>0</Minumum>
+              <Maximum>3</Maximum>
+              <ExtropolateEquation>false</ExtropolateEquation>
+              <Points />
+            </Relationship>
             <PerformWithPartialResources>true</PerformWithPartialResources>
             <LandTypeNameToUse>Sandy loam country</LandTypeNameToUse>
             <FeedTypeName>Native Pasture</FeedTypeName>
             <StartingAmount>0</StartingAmount>
-            <LandConditionIndexAtStart>2</LandConditionIndexAtStart>
             <UnitsOfArea>Squarekm</UnitsOfArea>
             <AreaRequested>50</AreaRequested>
+            <EcolCalculationMonth>0</EcolCalculationMonth>
+            <EcolCalculationInterval>0</EcolCalculationInterval>
           </PastureActivityManage>
           <PerformWithPartialResources>false</PerformWithPartialResources>
         </ActivityFolder>
@@ -1059,6 +1094,8 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <RandomSeed>1</RandomSeed>
+      <EcologicalIndicatorsCalculationInterval>12</EcologicalIndicatorsCalculationInterval>
+      <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
     </WholeFarm>
     <Graph>
       <Name>Graph</Name>

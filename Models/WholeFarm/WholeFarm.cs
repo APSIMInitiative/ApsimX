@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.WholeFarm
 {
@@ -35,6 +36,24 @@ namespace Models.WholeFarm
 		[Description("Random number generator for simulation")]
 		public static Random RandomGenerator { get { return randomGenerator; } }
 
+		/// <summary>
+		/// Ecological indicators calculation interval (in months, 1 monthly, 12 annual)
+		/// </summary>
+		[Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
+		public int EcologicalIndicatorsCalculationInterval { get; set; }
+
+		/// <summary>
+		/// End of month to calculate ecological indicators
+		/// </summary>
+		[Description("End of month to calculate ecological indicators")]
+		public int EcologicalIndicatorsCalculationMonth { get; set; }
+
+		/// <summary>
+		/// Month this overhead is next due.
+		/// </summary>
+		[XmlIgnore]
+		public DateTime EcologicalIndicatorsNextDueDate { get; set; }
+
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -61,6 +80,43 @@ namespace Models.WholeFarm
 				string error = String.Format("WholeFarm must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString());
 				Summary.WriteWarning(this, error);
 			}
+
+			if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
+			{
+				EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+			}
+			else
+			{
+				EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+				while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
+				{
+					EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+				}
+			}
+
 		}
+
+		/// <summary>
+		/// Method to determine if this is the month to calculate ecological indicators
+		/// </summary>
+		/// <returns></returns>
+		public bool IsEcologicalIndicatorsCalculationMonth()
+		{
+			return this.EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year & this.EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
+		}
+
+		/// <summary>Data stores to clear at start of month</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("EndOfMonth")]
+		private void OnEndOfMonth(object sender, EventArgs e)
+		{
+			if(IsEcologicalIndicatorsCalculationMonth())
+			{
+				this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
+			}
+		}
+
+
 	}
 }

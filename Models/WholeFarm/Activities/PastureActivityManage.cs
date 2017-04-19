@@ -25,6 +25,10 @@ namespace Models.WholeFarm.Activities
 		private ResourcesHolder Resources = null;
 		[Link]
 		Clock Clock = null;
+		[Link]
+		ISummary Summary = null;
+		[Link]
+		WholeFarm WholeFarm = null;
 
 		/// <summary>
 		/// Name of land type where pasture is located
@@ -56,19 +60,13 @@ namespace Models.WholeFarm.Activities
 		/// Current land condition index
 		/// </summary>
 		[XmlIgnore]
-		public double LandConditionIndex { get; set; }
-
-		/// <summary>
-		/// Land condition index at start
-		/// </summary>
-		[Description("Land condition index at start")]
-		public double LandConditionIndexAtStart { get; set; }
+		public Relationship LandConditionIndex { get; set; }
 
 		/// <summary>
 		/// Grass basal area
 		/// </summary>
 		[XmlIgnore]
-		public double GrassBasalArea { get; set; }
+		public Relationship GrassBasalArea { get; set; }
 
 		/// <summary>
 		/// Stocking Rate (#/ha)
@@ -89,16 +87,22 @@ namespace Models.WholeFarm.Activities
 		public double AreaRequested { get; set; }
 
 		/// <summary>
+		/// Month for ecological indicators calulation (end of month)
+		/// </summary>
+		[Description("Month for ecological indicators calulation (end of month)")]
+		public int EcolCalculationMonth { get; set; }
+
+		/// <summary>
+		/// Ecological indicators calulation interval (months)
+		/// </summary>
+		[Description("Ecological indicators calulation interval (months)")]
+		public int EcolCalculationInterval { get; set; }
+
+		/// <summary>
 		/// Feed type
 		/// </summary>
 		[XmlIgnore]
 		public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
-
-		/// <summary>
-		/// Feed at start of month before grazing after updating
-		/// </summary>
-		[XmlIgnore]
-		private double PastureAtStartOfMonth { get; set; }
 
 		/// <summary>
 		/// Convert area type specified to hectares
@@ -124,12 +128,25 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			LandConditionIndex = LandConditionIndexAtStart;
-
+			// Get Land condition relationship from children
+			LandConditionIndex = this.Children.Where(a => a.GetType() == typeof(Relationship) & a.Name=="LandConditionIndex").FirstOrDefault() as Relationship; ;
+			if (LandConditionIndex == null)
+			{
+				Summary.WriteWarning(this, String.Format("Unable to locate Land Condition Index relationship for {0}", this.Name));
+			}
+			// Get Grass basal area relationship fron children
+			GrassBasalArea = this.Children.Where(a => a.GetType() == typeof(Relationship) & a.Name == "GrassBasalArea").FirstOrDefault() as Relationship; ;
+			if (GrassBasalArea == null)
+			{
+				Summary.WriteWarning(this, String.Format("Unable to locate Grass Basal Area relationship for {0}", this.Name));
+			}
 			// locate Pasture Type resource
 			bool resourceAvailable = false;
 			LinkedNativeFoodType = Resources.GetResourceItem("GrazeFoodStore", FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
-
+			if (LinkedNativeFoodType == null)
+			{
+				Summary.WriteWarning(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
+			}
 			startingAmount = StartingAmount;
 		}
 
@@ -141,22 +158,39 @@ namespace Models.WholeFarm.Activities
 		{
 			//TODO: Get pasture growth from pasture model or GRASP output
 
-			//
-			// temporary pasture input for testing
-			//
-			GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
-			newPasture.Age = 0;
-			if (Clock.Today.Month >= 11 ^ Clock.Today.Month <= 3)
+			double AmountToAdd = 0;
+			//double AmountToAdd = FileGRASP.GetPasture(Clock.Today, LandConditionIndex, GrassBasalArea, Utilisation);
+
+			if (AmountToAdd> 0)
 			{
-				newPasture.Set(500 * Area);
+				GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
+				newPasture.Age = 0;
+				newPasture.Set(AmountToAdd * Area);
 				newPasture.DMD = this.LinkedNativeFoodType.DMD;
 				newPasture.DryMatter = this.LinkedNativeFoodType.DryMatter;
 				newPasture.Nitrogen = this.LinkedNativeFoodType.Nitrogen;
 				this.LinkedNativeFoodType.Add(newPasture);
 			}
+		}
 
-			// store total pasture at start of month
-			PastureAtStartOfMonth = this.LinkedNativeFoodType.Amount;
+		/// <summary>
+		/// Function to calculate ecological indicators
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("WFAnimalMilking")]
+		private void OnWFAnimalMilking(object sender, EventArgs e)
+		{
+			// Using the milking event as it happens after growth and pasture consumption and animal death
+			// But before any management, buying and selling of animals.
+			
+			// update monthly stocking rate total
+			StockingRate += Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent);
+
+			if (WholeFarm.IsEcologicalIndicatorsCalculationMonth())
+			{
+				CalculateEcologicalIndicators();
+			}
 		}
 
 		/// <summary>
@@ -167,12 +201,6 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("WFAgeResources")]
 		private void OnWFAgeResources(object sender, EventArgs e)
 		{
-			//TODO: calculate stocking rate and Land Condition from numbers and amount consumed.
-
-
-
-			// consumption needs to be calculated before decay and againg.
-
 			// decay N and DMD of pools and age by 1 month
 			foreach (var pool in LinkedNativeFoodType.Pools)
 			{
@@ -189,6 +217,31 @@ namespace Models.WholeFarm.Activities
 			}
 			// remove all pools with less than 10g of food
 			LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
+		}
+
+		/// <summary>
+		/// Method to perform calculation of all ecological indicators.
+		/// </summary>
+		private void CalculateEcologicalIndicators()
+		{
+			// Calculate change in Land Condition index and Grass basal area
+			double utilisation = LinkedNativeFoodType.PercentUtilisation;
+
+			LandConditionIndex.Modify(utilisation);
+			GrassBasalArea.Modify(utilisation);
+
+			// Calculate average monthly stocking rate
+			StockingRate /= WholeFarm.EcologicalIndicatorsCalculationInterval;
+
+			//erosion
+			//tree basal area
+
+
+
+			// Reset all stores
+			// reset utilisation rate for native food store
+//			LinkedNativeFoodType.ResetUtilisation;
+			StockingRate = 0;
 		}
 
 		/// <summary>

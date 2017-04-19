@@ -19,11 +19,6 @@ namespace Models.WholeFarm.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     public class RuminantHerd: ResourceBaseWithTransactions
     {
-		///// <summary>
-		///// Individual added or removed from herd
-		///// </summary>
-		//public event EventHandler OnHerdChanged;
-
 		/// <summary>
 		/// Current state of this resource.
 		/// </summary>

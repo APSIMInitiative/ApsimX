@@ -18,6 +18,9 @@ namespace Models.WholeFarm.Resources
 	[ValidParent(ParentType = typeof(GrazeFoodStore))]
 	public class GrazeFoodStoreType : WFModel, IResourceWithTransactionType, IResourceType
 	{
+		[Link]
+		WholeFarm WholeFarm = null;
+
 		/// <summary>
 		/// List of pools available
 		/// </summary>
@@ -99,7 +102,7 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Percent utilisation
 		/// </summary>
-		public double PercentUtilisation { get { return ((biomassAvailable>0)?0:biomassConsumed / biomassAvailable * 100); } }
+		public double PercentUtilisation { get { return ((biomassAvailable==0)?0:biomassConsumed / biomassAvailable * 100); } }
 
 		/// <summary>
 		/// Calculated total pasture (all pools) Dry Matter Digestibility (%)
@@ -139,14 +142,17 @@ namespace Models.WholeFarm.Resources
             Initialise();
         }
 
-		/// <summary>Data stores to clear at start of month</summary>
+		/// <summary>Data stores to clear at end of ecological indicators calculation month</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("StartOfMonth")]
-		private void OnStartOfMonth(object sender, EventArgs e)
+		[EventSubscribe("EndOfMonth")]
+		private void OnEndOfMonth(object sender, EventArgs e)
 		{
-			biomassAvailable = this.Amount;
-			biomassConsumed = 0;
+			if (WholeFarm.IsEcologicalIndicatorsCalculationMonth())
+			{
+				biomassAvailable = this.Amount;
+				biomassConsumed = 0;
+			}
 		}
 
 		/// <summary>
@@ -157,8 +163,8 @@ namespace Models.WholeFarm.Resources
 		{
 			Pools.Insert(0, newpool);
 
-			// calculate biomass available
-			biomassAvailable = this.Amount;
+			// update biomass available
+			biomassAvailable += newpool.Amount;
 		}
 
 		/// <summary>
