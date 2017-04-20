@@ -4075,6 +4075,49 @@ This is a water response trial conducted inside and outside the rain shelter at 
       </SoilArbitrator>
       <Zone>
         <Name>Paddock</Name>
+        <Manager>
+          <Name>DAS</Name>
+          <Script>
+            <DAS>0</DAS>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		
+	
+		
+		
+		[Description("Days after sowing")]
+		public double DAS { get; set; }
+		
+		[EventSubscribe("DoInitialSummary")]
+		private void OnDoInitialSummary(object sender, EventArgs e)
+		{
+			DAS = 0;
+		}
+		
+		[EventSubscribe("DoReportCalculations")]
+		private void OnDoReportCalculations(object sender, EventArgs e)
+		{
+			DAS += 1;
+		}
+	
+	}
+}]]></Code>
+        </Manager>
         <Soil>
           <Name>Soil</Name>
           <Analysis>
@@ -4614,6 +4657,7 @@ This is a water response trial conducted inside and outside the rain shelter at 
           <Script>
             <StartDate>1995-10-15</StartDate>
             <EndDate>1996-04-01</EndDate>
+            <CCOnOff>True</CCOnOff>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
@@ -4641,11 +4685,14 @@ namespace Models
         
 		[Description("End Date")]
 		public DateTime EndDate { get; set; }
+
+		[Description("Turn on or off")]
+		public bool CCOnOff { get; set; }
  
-    
 		[EventSubscribe("PreparingNewWeatherData")]
 		private void OnPreparingNewWeatherData(object sender, EventArgs e)
 		{
+			if (CCOnOff == true)
 			if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))
 				Met.Rain = 0;		
 		}
@@ -4845,7 +4892,7 @@ namespace Models
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledDiamond</Marker>
+          <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
@@ -5037,7 +5084,7 @@ namespace Models
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledDiamond</Marker>
+          <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
@@ -5137,7 +5184,7 @@ namespace Models
       </Graph>
     </Folder>
     <Folder>
-      <Name>Phenology</Name>
+      <Name>Canopy</Name>
       <Graph>
         <Name>LeafNo</Name>
         <Series>
@@ -5285,12 +5332,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries>
-          <string>Rainfed150ND3</string>
-          <string>Earlydrought150NB3</string>
-          <string>Latedrought150NC3</string>
-          <string>Fulldrought150NA3</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -5464,7 +5506,7 @@ namespace Models
           <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
+          <Maximum>14000</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <Axis>
@@ -5472,8 +5514,8 @@ namespace Models
           <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
+          <Maximum>14000</Maximum>
+          <Interval>2000</Interval>
         </Axis>
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
@@ -13977,5 +14019,5 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>289</ExplorerWidth>
+  <ExplorerWidth>278</ExplorerWidth>
 </Simulations>
