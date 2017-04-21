@@ -26,12 +26,24 @@ namespace Models.WholeFarm.Activities
 		[Link]
 		private ResourcesHolder Resources = null;
 
+		private GreenhouseGasesType methaneEmissions;
+
 		/// <summary>
 		/// Gross energy content of forage (MJ/kg DM)
 		/// </summary>
 		[Description("Gross energy content of forage")]
 		[Units("MJ/kg DM")]
 		public double EnergyGross { get; set; }
+
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			bool resourceAvailable = false;
+			methaneEmissions = Resources.GetResourceItem("GreenhouseGases", "Methane", out resourceAvailable) as GreenhouseGasesType;
+		}
 
 		/// <summary>Function to determine all individuals potnetial intake and suckling intake after milk consumption from mother</summary>
 		/// <param name="sender">The sender.</param>
@@ -158,82 +170,91 @@ namespace Models.WholeFarm.Activities
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 			List<Ruminant> herd = ruminantHerd.Herd;
 
-			double totalMethane = 0;
-
 			// grow all weaned individuals
-			foreach (Ruminant ind in herd)
+
+			List<string> breeds = herd.Select(a => a.BreedParams.Name).Distinct().ToList();
+			foreach (string breed in breeds)
 			{
-				if (ind.Weaned)
+				double totalMethane = 0;
+				foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed))
 				{
-					// calculate protein concentration
-
-					// Calculate diet dry matter digestibilty from the %N of the current diet intake.
-					// Reference: Ash and McIvor
-					//ind.DietDryMatterDigestibility = 36.7 + 9.36 * ind.PercentNOfIntake / 62.5;
-					// Now tracked via incoming food DMD values
-
-					// TODO: NABSA restricts Diet_DMD to 75% before supplements. Why?
-					// Our flow has already taken in supplements by this stage and cannot be distinguished
-					// Maybe this limit should be placed on some feed to limit DMD to 75% for non supp feeds
-
-					// TODO: Check equation. NABSA doesn't include the 0.9
-					// Crude protein required generally 130g per kg of digestable feed.
-					double crudeProteinRequired = ind.BreedParams.ProteinCoefficient * ind.DietDryMatterDigestibility / 100;
-
-					// adjust for efficiency of use of protein, 90% degradable
-					double crudeProteinSupply = (ind.PercentNOfIntake * 62.5) * 0.9;
-					// This was proteinconcentration * 0.9
-
-					// prevent future divide by zero issues.
-					if (crudeProteinSupply == 0.0) crudeProteinSupply = 0.001;
-
-					if (crudeProteinSupply < crudeProteinRequired)
+					if (ind.Weaned)
 					{
-						double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired);
-						//TODO: add min protein to parameters
-						ratioSupplyRequired = Math.Max(ratioSupplyRequired, 0.3);
-						ind.Intake *= ratioSupplyRequired;
+						// calculate protein concentration
+
+						// Calculate diet dry matter digestibilty from the %N of the current diet intake.
+						// Reference: Ash and McIvor
+						//ind.DietDryMatterDigestibility = 36.7 + 9.36 * ind.PercentNOfIntake / 62.5;
+						// Now tracked via incoming food DMD values
+
+						// TODO: NABSA restricts Diet_DMD to 75% before supplements. Why?
+						// Our flow has already taken in supplements by this stage and cannot be distinguished
+						// Maybe this limit should be placed on some feed to limit DMD to 75% for non supp feeds
+
+						// TODO: Check equation. NABSA doesn't include the 0.9
+						// Crude protein required generally 130g per kg of digestable feed.
+						double crudeProteinRequired = ind.BreedParams.ProteinCoefficient * ind.DietDryMatterDigestibility / 100;
+
+						// adjust for efficiency of use of protein, 90% degradable
+						double crudeProteinSupply = (ind.PercentNOfIntake * 62.5) * 0.9;
+						// This was proteinconcentration * 0.9
+
+						// prevent future divide by zero issues.
+						if (crudeProteinSupply == 0.0) crudeProteinSupply = 0.001;
+
+						if (crudeProteinSupply < crudeProteinRequired)
+						{
+							double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired);
+							//TODO: add min protein to parameters
+							ratioSupplyRequired = Math.Max(ratioSupplyRequired, 0.3);
+							ind.Intake *= ratioSupplyRequired;
+						}
+
+						// old. I think IAT
+						//double ratioSupplyRequired = Math.Max(0.3, Math.Min(1.3, crudeProteinSupply / crudeProteinRequired));
+
+						// TODO: check if we still need to apply modification to only the non-supplemented component of intake
+
+						ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake * 1.2);
+
 					}
+					else
+					{
+						// no petential * 1.2 as potential has been fixed based on suckling individuals.
+						ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
 
-					// old. I think IAT
-					//double ratioSupplyRequired = Math.Max(0.3, Math.Min(1.3, crudeProteinSupply / crudeProteinRequired));
+					}
+					// TODO: nabsa adjusts potential intake for digestability of fodder here.
+					// I'm sure it can be done here, but prob as this is after the 1.2x cap has been performed.
+					// calculate from the pools of fodder fed to this individual
+					//if (0.8 - ind.BreedParams.IntakeTropicalQuality - dietDMD / 100 >= 0)
+					//{
+					//	ind.PotentialIntake *= ind.BreedParams.IntakeCoefficientQuality * (0.8 - ind.BreedParams.IntakeTropicalQuality - dietDMD / 100);
+					//}
 
-					// TODO: check if we still need to apply modification to only the non-supplemented component of intake
+					// calculate energy
+					// includes mortality and growth
+					double methane = 0;
 
-					ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake * 1.2);
+					CalculateEnergy(ind, out methane);
 
+					// ? call methane produced event
+					// or sum and produce one event for breed at end of loop
+					totalMethane += methane;
+
+					// calculate manure
+					// ? call manure produce event
+					// or sum and produce one event for breed at end of loop
+
+					// grow wool and cashmere
+					ind.Wool += ind.BreedParams.WoolCoefficient * ind.Intake;
+					ind.Cashmere += ind.BreedParams.CashmereCoefficient * ind.Intake;
 				}
-				else
+
+				if (methaneEmissions != null)
 				{
-					// no petential * 1.2 as potential has been fixed based on suckling individuals.
-					ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
-
+					methaneEmissions.Add(totalMethane * 30.4 / 1000, "Ruminants", breed);
 				}
-				// TODO: nabsa adjusts potential intake for digestability of fodder here.
-				// I'm sure it can be done here, but prob as this is after the 1.2x cap has been performed.
-				// calculate from the pools of fodder fed to this individual
-				//if (0.8 - ind.BreedParams.IntakeTropicalQuality - dietDMD / 100 >= 0)
-				//{
-				//	ind.PotentialIntake *= ind.BreedParams.IntakeCoefficientQuality * (0.8 - ind.BreedParams.IntakeTropicalQuality - dietDMD / 100);
-				//}
-
-				// calculate energy
-				// includes mortality and growth
-				double methane = 0;
-
-				CalculateEnergy(ind, out methane);
-
-				// ? call methane produced event
-				// or sum and produce one event for breed at end of loop
-				totalMethane += methane;
-
-				// calculate manure
-				// ? call manure produce event
-				// or sum and produce one event for breed at end of loop
-
-				// grow wool and cashmere
-				ind.Wool += ind.BreedParams.WoolCoefficient * ind.Intake;
-				ind.Cashmere += ind.BreedParams.CashmereCoefficient * ind.Intake;
 			}
 		}
 

@@ -170,7 +170,6 @@ namespace Models.WholeFarm.Resources
 			return GetByType(typeof(OtherAnimals)) as OtherAnimals;
 		}
 
-
 		/// <summary>
 		/// Get the Resource Group for FoodStore
 		/// </summary>
@@ -180,11 +179,20 @@ namespace Models.WholeFarm.Resources
 			return GetByType(typeof(HumanFoodStore)) as HumanFoodStore;
         }
 
-        /// <summary>
-        /// Get the Resource Group for Labour Family
-        /// </summary>
-        /// <returns></returns>
-        public Labour LabourFamily()
+		/// <summary>
+		/// Get the Resource Group for GreenhouseGases
+		/// </summary>
+		/// <returns></returns>
+		public GreenhouseGases GreenhouseGases()
+		{
+			return GetByType(typeof(GreenhouseGases)) as GreenhouseGases;
+		}
+
+		/// <summary>
+		/// Get the Resource Group for Labour Family
+		/// </summary>
+		/// <returns></returns>
+		public Labour LabourFamily()
         {
 			return GetByType(typeof(Labour)) as Labour;
         }

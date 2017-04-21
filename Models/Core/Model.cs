@@ -261,6 +261,8 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Groupings.FodderLimitsFilterGroup))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.GrazeFoodStore))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.GrazeFoodStoreType))]
+		[XmlElement(typeof(Models.WholeFarm.Resources.GreenhouseGases))]
+		[XmlElement(typeof(Models.WholeFarm.Resources.GreenhouseGasesType))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.HumanFoodStore))]
         [XmlElement(typeof(Models.WholeFarm.Resources.HumanFoodStoreType))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.LabourActivityOffFarm))]

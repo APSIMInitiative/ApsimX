@@ -501,6 +501,8 @@
     <Compile Include="WholeFarm\Activities\FinanceActivityCalculateInterest.cs" />
     <Compile Include="WholeFarm\Groupings\FilterOperators.cs" />
     <Compile Include="WholeFarm\Resources\EcologicalIndicators.cs" />
+    <Compile Include="WholeFarm\Resources\GreenhouseGases.cs" />
+    <Compile Include="WholeFarm\Resources\GreenhouseGasesType.cs" />
     <Compile Include="WholeFarm\Resources\Finance.cs" />
     <Compile Include="WholeFarm\Resources\FinanceType.cs" />
     <Compile Include="WholeFarm\Groupings\FodderLimitsFilterGroup.cs" />

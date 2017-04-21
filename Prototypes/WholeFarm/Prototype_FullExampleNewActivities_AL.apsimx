@@ -457,55 +457,29 @@
             <AgeWhenAdult>10</AgeWhenAdult>
           </OtherAnimalsType>
         </OtherAnimals>
-        <AnimalFoodStore>
-          <Name>Crops</Name>
-          <AnimalFoodStoreType>
-            <Name>Rice</Name>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
-            <StartingAmount>0</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
-          </AnimalFoodStoreType>
-        </AnimalFoodStore>
-        <AnimalFoodStore>
-          <Name>Tree crops</Name>
-          <AnimalFoodStoreType>
-            <Name>Cashews</Name>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
-            <StartingAmount>0</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
-          </AnimalFoodStoreType>
-        </AnimalFoodStore>
-        <AnimalFoodStore>
-          <Name>Greenhouse gases</Name>
-          <AnimalFoodStoreType>
+        <GreenhouseGases>
+          <Name>GreenhouseGases</Name>
+          <GreenhouseGasesType>
+            <Name>Methane store</Name>
+            <StartingAmount>1100</StartingAmount>
+            <GlobalWarmingPotential>25</GlobalWarmingPotential>
+          </GreenhouseGasesType>
+          <GreenhouseGasesType>
             <Name>Methane</Name>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
             <StartingAmount>0</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
-          </AnimalFoodStoreType>
-          <AnimalFoodStoreType>
-            <Name>CO2e</Name>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
+            <GlobalWarmingPotential>25</GlobalWarmingPotential>
+          </GreenhouseGasesType>
+          <GreenhouseGasesType>
+            <Name>CO2</Name>
             <StartingAmount>0</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
-          </AnimalFoodStoreType>
-          <AnimalFoodStoreType>
+            <GlobalWarmingPotential>1</GlobalWarmingPotential>
+          </GreenhouseGasesType>
+          <GreenhouseGasesType>
             <Name>NOx</Name>
-            <DryMatter>0</DryMatter>
-            <DMD>0</DMD>
-            <Nitrogen>0</Nitrogen>
             <StartingAmount>0</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
-          </AnimalFoodStoreType>
-        </AnimalFoodStore>
+            <GlobalWarmingPotential>298</GlobalWarmingPotential>
+          </GreenhouseGasesType>
+        </GreenhouseGases>
         <AnimalFoodStore>
           <Name>Water</Name>
           <AnimalFoodStoreType>
@@ -1112,6 +1086,22 @@
           </VariableNames>
           <EventNames>
             <string>[Clock].EndOfMonth</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>GreenhouseGases</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GreenhouseGases.LastTransaction.Credit as Credit</string>
+            <string>[Resources].GreenhouseGases.LastTransaction.CreditStandardised as CreditCO2e</string>
+            <string>[Resources].GreenhouseGases.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].GreenhouseGases.LastTransaction.Activity as Activity</string>
+            <string>[Resources].GreenhouseGases.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].GreenhouseGases.TransactionOccurred</string>
           </EventNames>
         </Report>
       </Folder>

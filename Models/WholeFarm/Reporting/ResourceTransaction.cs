@@ -26,13 +26,22 @@ namespace Models.WholeFarm
 		/// </summary>
 		public string Reason { get; set; }
 		/// <summary>
-		/// Amount to add
+		/// Amount removed
 		/// </summary>
 		public double Debit { get; set; }
 		/// <summary>
-		/// Amount to remove
+		/// Amount added
 		/// </summary>
 		public double Credit { get; set; }
+		/// <summary>
+		/// Standardised amount removed
+		/// </summary>
+		public double DebitStandardised { get; set; }
+		/// <summary>
+		/// Standardised amount added
+		/// </summary>
+		public double CreditStandardised { get; set; }
+
 		/// <summary>
 		/// Object to sotre specific extra information such as cohort details
 		/// </summary>
