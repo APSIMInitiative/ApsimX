@@ -16,7 +16,7 @@ namespace Models.Soils
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(ParentType=typeof(Water))]
+    [ValidParent(ParentType = typeof(Water))]
     public class SoilCrop : Model, ISoilCrop
     {
         /// <summary>
@@ -50,9 +50,23 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Gets or sets the crop lower limit
+        /// Gets the associated thickness of layers
         /// </summary>
-        [Summary]
+        public double[] Thickness
+        {
+            get
+            {
+                if (Soil != null)
+                    return Soil.WaterNodeThickness;
+                else
+                    return new double[0];
+            }
+        }
+
+/// <summary>
+/// Gets or sets the crop lower limit
+/// </summary>
+[Summary]
         [Description("LL")]
         [Units("mm/mm")]
         public double[] LL { get; set; }
@@ -70,7 +84,9 @@ namespace Models.Soils
             {
                 Soil parentSoil = Soil;
                 if (parentSoil != null)
-                    return MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, parentSoil.LL(this.Name), parentSoil.DUL, parentSoil.XF(this.Name)), parentSoil.Thickness);
+                { double[] PAWCALLlayers = MathUtilities.Multiply(Soil.CalcPAWC(parentSoil.Thickness, parentSoil.LL(this.Name), parentSoil.DUL, parentSoil.XF(this.Name)), parentSoil.Thickness);
+                    return Soil.Map(PAWCALLlayers, Soil.Thickness, Thickness, Soil.MapType.Mass);
+                }
                 else
                     return new double[0];
             }

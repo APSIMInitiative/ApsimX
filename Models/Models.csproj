@@ -193,6 +193,7 @@
     <Compile Include="Plant\Arbitrator\RelativeAllocation.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
     <Compile Include="Plant\Functions\Bound.cs" />
+    <Compile Include="Plant\Functions\LinearAfterThresholdFunction.cs" />
     <Compile Include="Plant\Functions\SoilWaterScale.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\BerryFillingRateFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\TEWaterDemandFunction.cs" />

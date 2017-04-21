@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -3297,9 +3297,11 @@ namespace Models
           <LocationAccuracy>+/- 20m</LocationAccuracy>
           <DataSource>Characterisation 2008 by University of Adelaide, CSIRO Sustainable Ecosystems and Allan Mayfield Consulting, Clare, SA</DataSource>
           <Comments> Roots: Wheat 90cm; barley and oats estimated; OC WB as measured; Strongly duplex low-moderate clay soil. Surface CEC low, moderate below. Texture change at about 7cm. Little chemical impediment to root growth, but high ESP below about 60cm may result in slaking or dispersion and high bulk density.</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
     </Simulation>
     <Folder>

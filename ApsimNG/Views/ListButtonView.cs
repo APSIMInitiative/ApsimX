@@ -37,7 +37,6 @@ namespace UserInterface.Views
             buttonPanel = new HBox();
             // buttonPanel.Layout = ButtonBoxStyle.Start;
             listboxView = new ListBoxView(this);
-            listboxView.showImages = true;
             scrolledwindow1 = new ScrolledWindow();
             scrolledwindow1.Add(listboxView.MainWidget);
             vbox.PackStart(buttonPanel, false, true, 0);

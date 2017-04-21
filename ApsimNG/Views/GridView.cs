@@ -112,8 +112,17 @@ namespace UserInterface.Views
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        /// <summary>
+        /// Flag to keep track of whether a cursor move was initiated internally
+        /// </summary>
         private bool selfCursorMove = false;
 
+        /// <summary>
+        /// Repsonds to selection changes in the "fixed" columns area by
+        /// selecting corresponding rows in the main grid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Fixedcolview_CursorChanged(object sender, EventArgs e)
         {
             if (!selfCursorMove)
@@ -130,6 +139,12 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Repsonds to selection changes in the main grid by
+        /// selecting corresponding rows in the "fixed columns" grid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Gridview_CursorChanged(object sender, EventArgs e)
         {
             if (fixedcolview.Visible && !selfCursorMove)
@@ -146,6 +161,11 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Does cleanup when the main widget is destroyed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             if (numberLockedCols > 0)
@@ -186,6 +206,9 @@ namespace UserInterface.Views
             ClearGridColumns();
         }
 
+        /// <summary>
+        /// Removes all grid columns, and cleans up any associated event handlers
+        /// </summary>
         private void ClearGridColumns()
         {
             while (gridview.Columns.Length > 0)
@@ -218,6 +241,7 @@ namespace UserInterface.Views
             }
         }
 
+
         private int numberLockedCols = 0;
 
         /// <summary>
@@ -248,7 +272,9 @@ namespace UserInterface.Views
             // runs a message loop. This is normally desirable, but in this case, we have lots
             // of events associated with the grid data, and it's best to let them be handled in the 
             // main message loop. 
-            mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+
+            if (mainWindow != null)
+               mainWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
             ClearGridColumns();
             fixedcolview.Visible = false;
             colLookup.Clear();
@@ -347,12 +373,14 @@ namespace UserInterface.Views
 
             gridview.Show();
 
-            mainWindow.Cursor = null;
+            if (mainWindow != null)
+                mainWindow.Cursor = null;
         }
 
         private void TextRender_EditingCanceled(object sender, EventArgs e)
         {
             this.userEditingCell = false;
+            this.editControl = null;
         }
 
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
@@ -367,14 +395,9 @@ namespace UserInterface.Views
 
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
-            //TreePath startPath;
-            //TreePath endPath;
             TreePath path = model.GetPath(iter);
             TreeView view = col.TreeView as TreeView;
             int rowNo = path.Indices[0];
-            // This gets called a lot, even when it seemingly isn't necessary.
-            //if (numberLockedCols == 0 && view.GetVisibleRange(out startPath, out endPath) && (rowNo < startPath.Indices[0] || rowNo > endPath.Indices[0]))
-            //    return;
             int colNo;
             string text = String.Empty;
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < this.DataSource.Rows.Count && colNo < this.DataSource.Columns.Count)
@@ -771,7 +794,21 @@ namespace UserInterface.Views
         public void EndEdit()
         {
             if (userEditingCell)
-              ViewBase.SendKeyEvent(MainWidget, Gdk.Key.Return);
+            {
+                // NB - this assumes that the editing control is a Gtk.Entry control
+                // This may change in future versions of Gtk
+                if (editControl != null && editControl is Entry)
+                {
+                    string text = (editControl as Entry).Text;
+                    EditedArgs args = new EditedArgs();
+                    args.Args = new object[2];
+                    args.Args[0] = editPath; // Path
+                    args.Args[1] = text;     // NewText
+                    OnCellValueChanged(editSender, args);
+                }
+                else // A fallback procedure
+                    ViewBase.SendKeyEvent(gridview, Gdk.Key.Return);
+            }
         }
 
         /// <summary>Lock the left most number of columns.</summary>
@@ -828,6 +865,22 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// The edit control currently in use (if any).
+        /// We keep track of this to facilitate handling "partial" edits (e.g., when the user moves to a different component
+        /// </summary>
+        private CellEditable editControl = null;
+
+        /// <summary>
+        /// The tree path for the row currently being edited
+        /// </summary>
+        private string editPath;
+
+        /// <summary>
+        /// The widget which sent the EditingStarted event
+        /// </summary>
+        private object editSender;
+
+        /// <summary>
         /// User is about to edit a cell.
         /// </summary>
         /// <param name="sender">The sender of the event</param>
@@ -835,6 +888,9 @@ namespace UserInterface.Views
         private void OnCellBeginEdit(object sender, EditingStartedArgs e)
         {
             this.userEditingCell = true;
+            this.editPath = e.Path;
+            this.editControl = e.Editable;
+            this.editSender = sender;
             IGridCell where = GetCurrentCell;
             if (where.RowIndex >= DataSource.Rows.Count)
             {

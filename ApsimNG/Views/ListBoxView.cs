@@ -10,7 +10,9 @@ namespace UserInterface.Views
     using System.Collections.Generic;
     using System.Linq;
     using System.IO;
+    using System.Runtime.InteropServices;
     using Gtk;
+    using Interfaces;
 
     /// <summary>An interface for a list box</summary>
     public interface IListBoxView
@@ -31,9 +33,15 @@ namespace UserInterface.Views
         bool IsVisible { get; set; }
 
         /// <summary>
-        /// If true, try to show images; otherwise text only
+        /// If true, we are display a list of models
+        /// This will turn on display of images and drag-drop logic
         /// </summary>
-        bool showImages { get; set; }
+        bool IsModelList { get; set; }
+
+        /// <summary>
+        /// Invoked when a drag operation has commenced. Need to create a DragObject.
+        /// </summary>
+        event EventHandler<DragStartArgs> DragStarted;
     }
 
     public class IkonView : IconView
@@ -48,7 +56,7 @@ namespace UserInterface.Views
     }
 
     /// <summary>A list view.</summary>
-    public class ListBoxView : ViewBase,  IListBoxView
+    public class ListBoxView : ViewBase, IListBoxView
     {
         /// <summary>Invoked when the user changes the selection</summary>
         public event EventHandler Changed;
@@ -58,6 +66,15 @@ namespace UserInterface.Views
 
         public IkonView listview;
         private ListStore listmodel = new ListStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string));
+
+        /// <summary>
+        /// Invoked when a drag operation has commenced. Need to create a DragObject.
+        /// </summary>
+        public event EventHandler<DragStartArgs> DragStarted;
+
+        private const string modelMime = "application/x-model-component";
+        private GCHandle dragSourceHandle;
+        private bool _isModels = false;
 
         /// <summary>Constructor</summary>
         public ListBoxView(ViewBase owner) : base(owner)
@@ -73,11 +90,7 @@ namespace UserInterface.Views
             listview.RowSpacing = 0;
             listview.ColumnSpacing = 0;
             listview.ItemPadding = 0;
-            //CellRendererText textRender = new Gtk.CellRendererText();
-            //TreeViewColumn column = new TreeViewColumn("Values", textRender, "text", 0);
-            //listview.AppendColumn(column);
-            //listview.HeadersVisible = false;
-            //listview.CursorChanged += OnSelectionChanged;
+
             listview.SelectionChanged += OnSelectionChanged;
             listview.ButtonPressEvent += OnDoubleClick;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -89,8 +102,6 @@ namespace UserInterface.Views
             listview.SelectionChanged -= OnSelectionChanged;
             listview.ButtonPressEvent -= OnDoubleClick;
         }
-
-        private bool _showImages;
 
         /// <summary>Get or sets the list of valid values.</summary>
         public string[] Values
@@ -109,21 +120,18 @@ namespace UserInterface.Views
                 {
                     string text = val;
                     Gdk.Pixbuf image = null;
-                    if (showImages)
+                    int posLastSlash = val.LastIndexOfAny("\\/".ToCharArray());
+                    if (posLastSlash != -1)
                     {
-                        int posLastSlash = val.LastIndexOfAny("\\/".ToCharArray());
-                        if (posLastSlash != -1)
-                        {
-                            text = AddFileNameListItem(val, ref image);
-                        }
+                        text = AddFileNameListItem(val, ref image);
+                    }
+                    else if (_isModels)
+                    {
+                        string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + val + ".png";
+                        if (hasResource(resourceNameForImage))
+                            image = new Gdk.Pixbuf(null, resourceNameForImage);
                         else
-                        {
-                            string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + val + ".png";
-                            if (hasResource(resourceNameForImage))
-                                image = new Gdk.Pixbuf(null, resourceNameForImage);
-                            else
-                                image = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
-                        }
+                            image = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
                     }
                     listmodel.AppendValues(text, image, val);
                 }
@@ -155,7 +163,7 @@ namespace UserInterface.Views
                 }
             }
             if (image == null)
-               image = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
+                image = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             return result;
         }
 
@@ -207,16 +215,36 @@ namespace UserInterface.Views
         /// <summary>
         /// If true, try to show images; otherwise text only
         /// </summary>
-        public bool showImages
+        public bool IsModelList
         {
-            get { return _showImages; }
-            set { _showImages = value; }
+            get { return _isModels; }
+            set
+            {
+                bool wasModels = _isModels;
+                _isModels = value;
+                if (value)
+                {
+                    TargetEntry[] target_table = new TargetEntry[] { new TargetEntry(modelMime, TargetFlags.App, 0) };
+
+                    Drag.SourceSet(listview, Gdk.ModifierType.Button1Mask, target_table, Gdk.DragAction.Copy);
+                    listview.DragBegin += OnDragBegin;
+                    listview.DragDataGet += OnDragDataGet;
+                    listview.DragEnd += OnDragEnd;
+                }
+                else if (wasModels)
+                {
+                    Drag.SourceUnset(listview);
+                    listview.DragBegin -= OnDragBegin;
+                    listview.DragDataGet -= OnDragDataGet;
+                    listview.DragEnd -= OnDragEnd;
+                }
+            }
         }
 
         /// <summary>User has changed the selection.</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        
+
         private void OnSelectionChanged(object sender, EventArgs e)
         {
             if (Changed != null)
@@ -231,6 +259,53 @@ namespace UserInterface.Views
         {
             if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1 && DoubleClicked != null)
                 DoubleClicked.Invoke(this, e);
+        }
+
+        /// <summary>Node has begun to be dragged.</summary>
+        /// <param name="sender">Event sender.</param>
+        /// <param name="e">Event data.</param>
+        private void OnDragBegin(object sender, DragBeginArgs e)
+        {
+            DragStartArgs args = new DragStartArgs();
+            args.NodePath = SelectedValue;
+            if (DragStarted != null)
+            {
+                DragStarted(this, args);
+                if (args.DragObject != null)
+                {
+                    dragSourceHandle = GCHandle.Alloc(args.DragObject);
+                }
+            }
+        }
+
+        /// <summary>Get data to be sent to presenter.</summary>
+        /// <param name="sender">Event sender.</param>
+        /// <param name="e">Event data.</param>
+        private void OnDragDataGet(object sender, DragDataGetArgs e)
+        {
+            IntPtr data = (IntPtr)dragSourceHandle;
+            Int64 ptrInt = data.ToInt64();
+            Gdk.Atom target = Drag.DestFindTarget(sender as Widget, e.Context, null);
+            e.SelectionData.Set(target, 8, BitConverter.GetBytes(ptrInt));
+        }
+
+        private void OnDragEnd(object sender, DragEndArgs e)
+        {
+            if (dragSourceHandle.IsAllocated)
+            {
+                dragSourceHandle.Free();
+            }
+        }
+
+        /// <summary>
+        /// Place text on the clipboard
+        /// </summary>
+        /// <param name="text"></param>
+        public void SetClipboardText(string text)
+        {
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
+            cb.Text = text;
         }
     }
 }
