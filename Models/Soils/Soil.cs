@@ -492,9 +492,9 @@ namespace Models.Soils
         }
 
         /// <summary>Standard thicknesses</summary>
-        static double[] StandardThickness = new double[] { 100, 100, 200, 200, 200, 200, 200 };
+        readonly double[] StandardThickness = new double[] { 100, 100, 200, 200, 200, 200, 200 };
         /// <summary>Standard Kls</summary>
-        static double[] StandardKL = new double[] { 0.06, 0.06, 0.04, 0.04, 0.04, 0.04, 0.02 };
+        readonly double[] StandardKL = new double[] { 0.06, 0.06, 0.04, 0.04, 0.04, 0.04, 0.02 };
 
         /// <summary>
         /// Modify the KL values for subsoil constraints.
@@ -828,7 +828,8 @@ namespace Models.Soils
 
                 // Try and find a sample with OC in it.
                 foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                    if (OverlaySampleOnTo(Sample.OCTotal, Sample.Thickness, ref SoilOC, ref SoilOCThickness))
+                    if (MathUtilities.ValuesInArray(Sample.OC) && 
+                        OverlaySampleOnTo(Sample.OCTotal, Sample.Thickness, ref SoilOC, ref SoilOCThickness))
                         break;
                 if (SoilOC == null)
                     return null;
@@ -1051,7 +1052,8 @@ namespace Models.Soils
 
                 // Try and find a sample with PH in it.
                 foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                    if (OverlaySampleOnTo(Sample.PHWater, Sample.Thickness, ref Values, ref Thicknesses))
+                    if (MathUtilities.ValuesInArray(Sample.PH) && 
+                        OverlaySampleOnTo(Sample.PHWater, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
                 if (Values != null)
                     return Map(Values, Thicknesses, Thickness,

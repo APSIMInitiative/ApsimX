@@ -882,7 +882,7 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
         <AppearedCohortNo>0</AppearedCohortNo>
         <PlantAppearedLeafNo>0</PlantAppearedLeafNo>
         <Albedo>0.18</Albedo>
-        <Gsmax>0.015</Gsmax>
+        <Gsmax>0.01</Gsmax>
         <R50>150</R50>
         <LAI>0</LAI>
         <Height>0</Height>

@@ -21,6 +21,8 @@ namespace Models.AgPasture
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Zone))]
+    [ValidParent(ParentType = typeof(Sward))]
     public class PastureSpecies : Model, ICrop, ICrop2, ICanopy, IUptake
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------

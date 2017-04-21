@@ -197,8 +197,9 @@ namespace UserInterface.Forms
 
             try
             {
-                web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
-                HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false);
+                // web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
+                // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
+                HTMLview.SetContents(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
             }
             catch (Exception)
             {

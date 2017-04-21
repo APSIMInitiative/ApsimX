@@ -237,13 +237,17 @@ namespace UserInterface
             native.str = null;
             native.hardware_keycode = (ushort)keymap[0].Keycode;
             native.group = (byte)keymap[0].Group;
-
+            
             IntPtr ptr = GLib.Marshaller.StructureToPtrAlloc(native);
             try
             {
                 Gdk.EventKey evnt = new Gdk.EventKey(ptr);
                 Gdk.EventHelper.Put(evnt);
-                GLib.MainContext.Iteration();
+                // We need to process the event, or we won't be able
+                // to safely free the unmanaged pointer
+                // Using DoEvent for this fails on the Mac
+                while (GLib.MainContext.Iteration())
+                    ;
                 // Gtk.Main.DoEvent(evnt);
             }
             finally
