@@ -74,7 +74,7 @@ namespace Models.WholeFarm.Activities
 		}
 
 		/// <summary>
-		/// res sh
+		/// Resource shortfall event handler
 		/// </summary>
 		public override event EventHandler ResourceShortfallOccurred;
 

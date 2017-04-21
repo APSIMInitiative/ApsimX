@@ -156,12 +156,14 @@
           <Name>GrazeFoodStore</Name>
           <GrazeFoodStoreType>
             <Name>Native Pasture</Name>
-            <DryMatter>0</DryMatter>
-            <Nitrogen>0</Nitrogen>
+            <NToDMDCoefficient>11.03</NToDMDCoefficient>
+            <NToDMDIntercept>41.4</NToDMDIntercept>
+            <GreenNitrogen>2</GreenNitrogen>
+            <GreenDMD>0</GreenDMD>
             <DecayNitrogen>0.35</DecayNitrogen>
-            <MinimumNitrogen>0.4</MinimumNitrogen>
+            <MinimumNitrogen>4</MinimumNitrogen>
             <DecayDMD>0.1</DecayDMD>
-            <MinimumDMD>0.43</MinimumDMD>
+            <MinimumDMD>43</MinimumDMD>
             <DetachRate>0.03</DetachRate>
             <CarryoverDetachRate>0.12</CarryoverDetachRate>
             <IntakeTropicalQualityCoefficient>0.16</IntakeTropicalQualityCoefficient>
@@ -884,67 +886,61 @@
               <Point>
                 <Name>Point</Name>
                 <X>0</X>
-                <Y>-0.5</Y>
+                <Y>-1.5</Y>
               </Point>
               <Point>
                 <Name>Point</Name>
                 <X>15</X>
-                <Y>-0.2</Y>
+                <Y>-0.3</Y>
               </Point>
               <Point>
                 <Name>Point</Name>
                 <X>35</X>
-                <Y>0.5</Y>
+                <Y>0.3</Y>
               </Point>
               <Point>
                 <Name>Point</Name>
                 <X>100</X>
-                <Y>1</Y>
+                <Y>1.5</Y>
               </Point>
-              <Value>0</Value>
               <StartingValue>2</StartingValue>
               <Minumum>0</Minumum>
               <Maximum>11</Maximum>
-              <ExtropolateEquation>false</ExtropolateEquation>
-              <Points />
             </Relationship>
             <Relationship>
               <Name>GrassBasalArea</Name>
               <Point>
                 <Name>Point</Name>
                 <X>0</X>
-                <Y>-0.5</Y>
+                <Y>-0.75</Y>
               </Point>
               <Point>
                 <Name>Point</Name>
                 <X>15</X>
-                <Y>-0.2</Y>
+                <Y>-0.15</Y>
               </Point>
               <Point>
                 <Name>Point</Name>
                 <X>35</X>
-                <Y>0.5</Y>
+                <Y>0.15</Y>
               </Point>
               <Point>
                 <Name>Point</Name>
                 <X>100</X>
-                <Y>1</Y>
+                <Y>0.75</Y>
               </Point>
-              <Value>0</Value>
               <StartingValue>3</StartingValue>
               <Minumum>0</Minumum>
               <Maximum>3</Maximum>
-              <ExtropolateEquation>false</ExtropolateEquation>
-              <Points />
             </Relationship>
             <PerformWithPartialResources>true</PerformWithPartialResources>
             <LandTypeNameToUse>Sandy loam country</LandTypeNameToUse>
             <FeedTypeName>Native Pasture</FeedTypeName>
-            <StartingAmount>0</StartingAmount>
-            <UnitsOfArea>Squarekm</UnitsOfArea>
+            <StartingAmount>2000</StartingAmount>
+            <UnitsOfArea>Hectares</UnitsOfArea>
             <AreaRequested>50</AreaRequested>
-            <EcolCalculationMonth>0</EcolCalculationMonth>
-            <EcolCalculationInterval>0</EcolCalculationInterval>
+            <EcolCalculationMonth>9</EcolCalculationMonth>
+            <EcolCalculationInterval>12</EcolCalculationInterval>
           </PastureActivityManage>
           <PerformWithPartialResources>false</PerformWithPartialResources>
         </ActivityFolder>
@@ -1088,6 +1084,34 @@
           </VariableNames>
           <EventNames>
             <string>[Activities].ResourceShortfallOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>EcologicalCondition</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GrazeFoodStore.LastEcologicalIndicators.ResourceType as Resource</string>
+            <string>[Resources].GrazeFoodStore.LastEcologicalIndicators.LandConditionIndex as LandConditionIndex</string>
+            <string>[Resources].GrazeFoodStore.LastEcologicalIndicators.GrassBasalArea as GrassBasalArea</string>
+            <string>[Resources].GrazeFoodStore.LastEcologicalIndicators.StockingRate as StockingRate</string>
+            <string>[Resources].GrazeFoodStore.LastEcologicalIndicators.Utilisation as Utilisation</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].GrazeFoodStore.EcologicalIndicatorsCalculated</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>Pasture</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GrazeFoodStore.Native Pasture.TonnesPerHectare as NativePasture</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfMonth</string>
           </EventNames>
         </Report>
       </Folder>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.WholeFarm.Activities
 {
@@ -21,6 +22,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Current value
 		/// </summary>
+		[XmlIgnore]
 		public double Value { get; set; }
 
 		/// <summary>
@@ -42,24 +44,42 @@ namespace Models.WholeFarm.Activities
 		public double Maximum { get; set; }
 
 		/// <summary>
-		/// Extrapolate beyond given values
-		/// </summary>
-		[Description("Extrapolate beyond given values")]
-		public bool ExtropolateEquation { get; set; }
-
-		/// <summary>
 		/// List of points to define relationship 
 		/// </summary>
+		[XmlIgnore]
 		public List<Point> Points { get; set; }
 
 		/// <summary>
 		/// Solve equation for y given x
 		/// </summary>
 		/// <param name="X">x value to solve y</param>
+		/// <param name="LinearInterpolation">Use linear interpolation between the nearest point before and after x</param>
 		/// <returns>y value for given x</returns>
-		public double SolveY(double X)
+		public double SolveY(double X, bool LinearInterpolation)
 		{
-			return 0;
+			if (X <= Points[0].X)
+				return Points[0].Y;
+			if (X >= Points.Last().X)
+				return Points.Last().Y;
+
+			int k = 0;
+			for (int i = 0; i < Points.Count; i++)
+			{
+				if (X <= Points[i + 1].X)
+				{
+					k = i;
+					break;
+				}
+			}
+
+			if(LinearInterpolation)
+			{
+				return Points[k].Y + (Points[k + 1].Y - Points[k].Y) / (Points[k + 1].X - Points[k].X) * (X - Points[k].X);
+			}
+			else
+			{
+				return Points[k + 1].Y;
+			}
 		}
 
 		/// <summary>
@@ -68,7 +88,9 @@ namespace Models.WholeFarm.Activities
 		/// <param name="x">x value</param>
 		public void Modify(double x)
 		{
-			Value += SolveY(x);
+			Value += SolveY(x, true);
+			Value = Math.Min(Value, Maximum);
+			Value = Math.Max(Value, Minumum);
 		}
 
 		/// <summary>
@@ -77,7 +99,9 @@ namespace Models.WholeFarm.Activities
 		/// <param name="x">x value</param>
 		public void Calculate(double x)
 		{
-			Value = SolveY(x);
+			Value = SolveY(x, true);
+			Value = Math.Min(Value, Maximum);
+			Value = Math.Max(Value, Minumum);
 		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>

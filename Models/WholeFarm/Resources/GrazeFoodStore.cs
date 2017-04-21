@@ -6,6 +6,7 @@ using System.Collections;  //enumerator
 using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using Models.Core;
+using Models.WholeFarm.Reporting;
 
 namespace Models.WholeFarm.Resources
 {
@@ -40,14 +41,41 @@ namespace Models.WholeFarm.Resources
             {
                 //cast the generic IModel to a specfic model.
                 GrazeFoodStoreType grazefood = childModel as GrazeFoodStoreType;
-//				grazefood.TransactionOccurred += Resource_TransactionOccurred;
+				grazefood.TransactionOccurred += Resource_TransactionOccurred;
+				grazefood.EcologicalIndicatorsCalculated += Resource_EcologicalIndicatorsCalculated;
 				Items.Add(grazefood);
             }
         }
 
+		#region Ecological Indicators calculated
 
+		private void Resource_EcologicalIndicatorsCalculated(object sender, EventArgs e)
+		{
+			LastEcologicalIndicators = (e as EcolIndicatorsEventArgs).Indicators;
+			OnEcologicalIndicatorsCalculated(e);
+		}
 
+		/// <summary>
+		/// Override base event
+		/// </summary>
+		protected void OnEcologicalIndicatorsCalculated(EventArgs e)
+		{
+			EventHandler invoker = EcologicalIndicatorsCalculated;
+			if (invoker != null) invoker(this, e);
+		}
 
+		/// <summary>
+		/// Override base event
+		/// </summary>
+		public event EventHandler EcologicalIndicatorsCalculated;
+
+		/// <summary>
+		/// Last ecological indicators received
+		/// </summary>
+		[XmlIgnore]
+		public EcologicalIndicators LastEcologicalIndicators { get; set; }
+
+		#endregion
 
 		#region Transactions
 

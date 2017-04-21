@@ -148,6 +148,8 @@ namespace Models.WholeFarm.Activities
 				Summary.WriteWarning(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
 			}
 			startingAmount = StartingAmount;
+			LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
+			LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
 		}
 
 		/// <summary>An event handler to allow us to get next supply of pasture</summary>
@@ -157,9 +159,8 @@ namespace Models.WholeFarm.Activities
 		private void OnWFUpdatePasture(object sender, EventArgs e)
 		{
 			//TODO: Get pasture growth from pasture model or GRASP output
-
-			double AmountToAdd = 0;
-			//double AmountToAdd = FileGRASP.GetPasture(Clock.Today, LandConditionIndex, GrassBasalArea, Utilisation);
+			double AmountToAdd = 0; 
+			//double AmountToAdd = FileGRASP.GetPasture(LandConditionIndex.Value, GrassBasalArea.Value, Utilisation);
 
 			if (AmountToAdd> 0)
 			{
@@ -167,8 +168,9 @@ namespace Models.WholeFarm.Activities
 				newPasture.Age = 0;
 				newPasture.Set(AmountToAdd * Area);
 				newPasture.DMD = this.LinkedNativeFoodType.DMD;
-				newPasture.DryMatter = this.LinkedNativeFoodType.DryMatter;
-				newPasture.Nitrogen = this.LinkedNativeFoodType.Nitrogen;
+				newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen;
+				newPasture.DryMatter = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+				newPasture.DryMatter = Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatter);
 				this.LinkedNativeFoodType.Add(newPasture);
 			}
 		}
@@ -185,7 +187,7 @@ namespace Models.WholeFarm.Activities
 			// But before any management, buying and selling of animals.
 			
 			// update monthly stocking rate total
-			StockingRate += Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent);
+			StockingRate += Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent)/Area;
 
 			if (WholeFarm.IsEcologicalIndicatorsCalculationMonth())
 			{
@@ -204,8 +206,8 @@ namespace Models.WholeFarm.Activities
 			// decay N and DMD of pools and age by 1 month
 			foreach (var pool in LinkedNativeFoodType.Pools)
 			{
-				pool.Nitrogen = Math.Min(pool.Nitrogen * (1 - LinkedNativeFoodType.DecayNitrogen), LinkedNativeFoodType.MinimumNitrogen);
-				pool.DMD = Math.Min(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
+				pool.Nitrogen = Math.Max(pool.Nitrogen * (1 - LinkedNativeFoodType.DecayNitrogen), LinkedNativeFoodType.MinimumNitrogen);
+				pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
 
 				double detach = LinkedNativeFoodType.CarryoverDetachRate;
 				if (pool.Age<12)
@@ -213,7 +215,7 @@ namespace Models.WholeFarm.Activities
 					detach = LinkedNativeFoodType.DetachRate;
 					pool.Age++;
 				}
-				pool.Set(pool.Amount * detach);
+				pool.Set(pool.Amount * (1-detach));
 			}
 			// remove all pools with less than 10g of food
 			LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
@@ -228,19 +230,34 @@ namespace Models.WholeFarm.Activities
 			double utilisation = LinkedNativeFoodType.PercentUtilisation;
 
 			LandConditionIndex.Modify(utilisation);
+			LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.Value;
 			GrassBasalArea.Modify(utilisation);
+			LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.Value;
 
 			// Calculate average monthly stocking rate
-			StockingRate /= WholeFarm.EcologicalIndicatorsCalculationInterval;
+			// Check number of months to use
+			int monthdiff = ((WholeFarm.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + WholeFarm.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month;
+			if(monthdiff>=WholeFarm.EcologicalIndicatorsCalculationInterval)
+			{
+				monthdiff = WholeFarm.EcologicalIndicatorsCalculationInterval;
+			}
+			StockingRate /= monthdiff;
+			LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StockingRate;
 
 			//erosion
 			//tree basal area
-
-
+			//perennials
+			//%runoff
+			//methane
+			//soilC
+			//TreeC
+			//Burnkg
+			//methaneFire
+			//NOxFire
+			//%utilisation
+			LinkedNativeFoodType.CurrentEcologicalIndicators.Utilisation = utilisation;
 
 			// Reset all stores
-			// reset utilisation rate for native food store
-//			LinkedNativeFoodType.ResetUtilisation;
 			StockingRate = 0;
 		}
 
@@ -279,18 +296,25 @@ namespace Models.WholeFarm.Activities
 				Area = ResourceRequestList.FirstOrDefault().Available;
 				LinkedNativeFoodType.Area = Area;
 
-				// Set up pasture pools to start run based on month and user defined pasture
-				// the previous five months where growth occurred will be initialised.
+				// Initial biomass
+				double amountToAdd = Area * startingAmount;
+				if (amountToAdd <= 0) return;
+
+				// Set up pasture pools to start run based on month and user defined pasture properties
+				// Locates the previous five months where growth occurred (Nov-Mar) and applies decomposition to current month
 				// This months growth will not be included.
 
 				int month = Clock.Today.Month;
 				int monthCount = 0;
 				int includedMonthCount = 0;
 				double propBiomass = 1.0;
-				double currentN = LinkedNativeFoodType.Nitrogen;
-				double currentDMD = LinkedNativeFoodType.DMD;
-
+				double currentN = LinkedNativeFoodType.GreenNitrogen;
+				// NABSA changes N by 0.8 for particular months. Not needed here as decay included.
+				double currentDMD = currentN * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+				currentDMD = Math.Max(LinkedNativeFoodType.MinimumDMD, currentDMD);
 				LinkedNativeFoodType.Pools.Clear();
+
+				List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
 
 				while (includedMonthCount < 5)
 				{
@@ -298,7 +322,7 @@ namespace Models.WholeFarm.Activities
 					if(month<=3 | month>=11)
 					{
 						// add new pool
-						LinkedNativeFoodType.Pools.Add(new GrazeFoodStorePool()
+						newPools.Add(new GrazeFoodStorePool()
 						{
 							Age = monthCount,
 							Nitrogen = currentN,
@@ -317,29 +341,37 @@ namespace Models.WholeFarm.Activities
 				}
 
 				// assign pasture biomass to pools based on proportion of total
-				double amountToAdd = Area * startingAmount;
-
-				double total = LinkedNativeFoodType.Pools.Sum(a => a.Amount);
-				foreach (var pool in LinkedNativeFoodType.Pools)
+				double total = newPools.Sum(a => a.StartingAmount);
+				foreach (var pool in newPools)
 				{
-					pool.Set(amountToAdd * (pool.Amount / total));
+					pool.Set(amountToAdd * (pool.StartingAmount / total));
 				}
-
 
 				// remove this months growth from pool age 0 to keep biomass at approximately setup.
 				// Get this months growth
+				double growth = 0; // GRASPFile.Get(xxxxxxxxx)
+
 				double thisMonthsGrowth = 0;
 				if (thisMonthsGrowth> 0)
 				{
-					//TODO: remove from pool age 0
+					GrazeFoodStorePool thisMonth = newPools.Where(a => a.Age == 0).FirstOrDefault() as GrazeFoodStorePool;
+					if(thisMonth!=null)
+					{
+						thisMonth.Set(Math.Max(0, thisMonth.Amount - growth));
+					}
 				}
 
+				// Add to pasture. This will add pool to pasture available store.
+				foreach (var pool in newPools)
+				{
+					LinkedNativeFoodType.Add(pool);
+				}
 			}
 			return;
 		}
 
 		/// <summary>
-		/// res sh
+		/// Resource shortfall event handler
 		/// </summary>
 		public override event EventHandler ResourceShortfallOccurred;
 

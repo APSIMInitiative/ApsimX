@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Models.Core;
 using Models.WholeFarm.Activities;
+using Models.WholeFarm.Reporting;
 
 namespace Models.WholeFarm.Resources
 {
@@ -27,16 +28,34 @@ namespace Models.WholeFarm.Resources
 		[XmlIgnore]
 		public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
 
-		/// <summary>
-		/// Dry Matter (%) NOT USED
-		/// </summary>
-		public double DryMatter { get; set; }
+		///// <summary>
+		///// Dry Matter (%) NOT USED
+		///// </summary>
+		//public double DryMatter { get; set; }
 
 		/// <summary>
-		/// Nitrogen (%)
+		/// Coefficient to convert initial N% to DMD%
 		/// </summary>
-		[Description("Initial Nitrogen (%)")]
-		public double Nitrogen { get; set; }
+		[Description("Coefficient to convert initial N% to DMD%")]
+		public double NToDMDCoefficient { get; set; }
+
+		/// <summary>
+		/// Intercept to convert initial N% to DMD%
+		/// </summary>
+		[Description("Intercept to convert initial N% to DMD%")]
+		public double NToDMDIntercept { get; set; }
+
+		/// <summary>
+		/// Nitrogen of new growth (%)
+		/// </summary>
+		[Description("Nitrogen of new growth (%)")]
+		public double GreenNitrogen { get; set; }
+
+		/// <summary>
+		/// DMD of new growth (%)
+		/// </summary>
+		[Description("DMD of new growth (%)")]
+		public double GreenDMD { get; set; }
 
 		/// <summary>
 		/// Proportion Nitrogen loss each month from pools
@@ -102,7 +121,15 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Percent utilisation
 		/// </summary>
-		public double PercentUtilisation { get { return ((biomassAvailable==0)?0:biomassConsumed / biomassAvailable * 100); } }
+		public double PercentUtilisation
+		{
+			get
+			{
+				if (biomassAvailable == 0) return -1;
+				if (biomassConsumed == 0) return 0;
+				return biomassConsumed / biomassAvailable * 100;
+			}
+		}
 
 		/// <summary>
 		/// Calculated total pasture (all pools) Dry Matter Digestibility (%)
@@ -127,6 +154,18 @@ namespace Models.WholeFarm.Resources
 		}
 
 		/// <summary>
+		/// Amount (tonnes per ha)
+		/// </summary>
+		[XmlIgnore]
+		public double TonnesPerHectare
+		{
+			get
+			{
+				return Pools.Sum(a => a.Amount)/1000/Area;
+			}
+		}
+
+		/// <summary>
 		/// Initialise the current state to the starting amount of fodder
 		/// </summary>
 		public void Initialise()
@@ -140,16 +179,19 @@ namespace Models.WholeFarm.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Initialise();
-        }
+			CurrentEcologicalIndicators = new EcologicalIndicators();
+			CurrentEcologicalIndicators.ResourceType = this.Name;
+		}
 
-		/// <summary>Data stores to clear at end of ecological indicators calculation month</summary>
+		/// <summary>Clear data stores for utilisation at end of ecological indicators calculation month</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("EndOfMonth")]
-		private void OnEndOfMonth(object sender, EventArgs e)
+		[EventSubscribe("WFAgeResources")]
+		private void ONWFAgeResources(object sender, EventArgs e)
 		{
 			if (WholeFarm.IsEcologicalIndicatorsCalculationMonth())
 			{
+				OnEcologicalIndicatorsCalculated(new EcolIndicatorsEventArgs() { Indicators = CurrentEcologicalIndicators });
 				biomassAvailable = this.Amount;
 				biomassConsumed = 0;
 			}
@@ -161,10 +203,12 @@ namespace Models.WholeFarm.Resources
 		/// <param name="newpool"></param>
 		public void Add(GrazeFoodStorePool newpool)
 		{
-			Pools.Insert(0, newpool);
-
-			// update biomass available
-			biomassAvailable += newpool.Amount;
+			if (newpool.Amount > 0)
+			{
+				Pools.Insert(0, newpool);
+				// update biomass available
+				biomassAvailable += newpool.Amount;
+			}
 		}
 
 		/// <summary>
@@ -292,6 +336,29 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[XmlIgnore]
 		public ResourceTransaction LastTransaction { get; set; }
+
+		/// <summary>
+		/// Ecological indicators have been calculated
+		/// </summary>
+		public event EventHandler EcologicalIndicatorsCalculated;
+
+		/// <summary>
+		/// Ecological indicators calculated 
+		/// </summary>
+		/// <param name="e"></param>
+		protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
+		{
+			if (EcologicalIndicatorsCalculated != null)
+				EcologicalIndicatorsCalculated(this, e);
+		}
+
+		/// <summary>
+		/// Ecological indicators of this pasture
+		/// </summary>
+		[XmlIgnore]
+		public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
+
+
 	}
 
 }
