@@ -23,7 +23,7 @@ namespace Models.AgPasture
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Sward))]
-    public class PastureSpecies : Model, ICrop, ICrop2, ICanopy, IUptake
+    public class PastureSpecies : Model, ICrop, ICanopy, IUptake
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -44,10 +44,6 @@ namespace Models.AgPasture
         /// <summary>Link to the Soil (provides soil information).</summary>
         [Link]
         private Soil mySoil = null;
-
-        /// <summary>Link to Apsim's Resource Arbitrator module.</summary>
-        [Link(IsOptional = true)]
-        private Arbitrator.Arbitrator apsimArbitrator = null;
 
         /// <summary>Link to Apsim's Resource Arbitrator module.</summary>
         [Link(IsOptional = true)]
@@ -75,9 +71,6 @@ namespace Models.AgPasture
         /// <summary>Invoked for changing soil water due to uptake.</summary>
         /// <param name="Data">The data about changes in the amount of water for each soil layer</param>
         public delegate void WaterChangedDelegate(WaterChangedType Data);
-
-        /// <summary>Occurs when plant takes up water.</summary>
-        public event WaterChangedDelegate WaterChanged;
 
         #endregion  --------------------------------------------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------
 
@@ -271,107 +264,6 @@ namespace Models.AgPasture
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region ICrop2 implementation  -------------------------------------------------------------------------------------
-
-        /// <summary>Generic descriptor for this plant (used by Arbitrator).</summary>
-        [Description("Generic type of crop")]
-        [Units("-")]
-        public string CropType
-        {
-            get { return Name; }
-        }
-
-        /// <summary>Flag signalling whether the plant in the ground.</summary>
-        [XmlIgnore]
-        [Units("true/false")]
-        public bool PlantInGround
-        {
-            get { return isAlive; }
-        }
-
-        /// <summary>Flag whether the plant has emerged.</summary>
-        [XmlIgnore]
-        [Units("true/false")]
-        public bool PlantEmerged
-        {
-            get { return phenologicStage > 0; }
-        }
-
-        /// <summary>Canopy data for this plant.</summary>
-        private CanopyProperties myCanopyProperties = new CanopyProperties();
-
-        /// <summary>Collection of crop canopy properties (used by Arbitrator).</summary>
-        public CanopyProperties CanopyProperties
-        {
-            get { return myCanopyProperties; }
-        }
-
-        /// <summary>Root data for this plant.</summary>
-        RootProperties myRootProperties = new RootProperties();
-
-        /// <summary>Collection of crop root properties (used by Arbitrator).</summary>
-        public RootProperties RootProperties
-        {
-            get { return myRootProperties; }
-        }
-
-        /// <summary> Water demand for this plant (mm).</summary>
-        [XmlIgnore]
-        [Units("mm")]
-        public double demandWater
-        {
-            get { return myWaterDemand; }
-            set { double dummy = value; }
-        }
-
-        /// <summary> The actual supply of water to the plant for each soil layer (mm).</summary>
-        [XmlIgnore]
-        [Units("mm")]
-        public double[] uptakeWater
-        {
-            get { return null; }
-            set { mySoilWaterUptake = value; }
-        }
-
-        /// <summary>Nitrogen demand for this plant (kg/ha).</summary>
-        [XmlIgnore]
-        [Units("kg/ha")]
-        public double demandNitrogen
-        {
-            get
-            {
-                // Pack the soil information
-                ZoneWaterAndN myZone = new ZoneWaterAndN(this.Parent as Zone);
-                myZone.Water = mySoil.Water;
-                myZone.NO3N = mySoil.NO3N;
-                myZone.NH4N = mySoil.NH4N;
-
-                // Get the N amount available in the soil
-                EvaluateSoilNitrogenAvailable(myZone);
-
-                // Get the N amount fixed through symbiosis
-                EvaluateNitrogenFixation();
-
-                // Evaluate the use of N remobilised and get N amount demanded from soil
-                EvaluateSoilNitrogenDemand();
-
-                return mySoilNDemand;
-            }
-            set { double dummy = value; }
-        }
-
-        /// <summary>Actual supply of nitrogen (ammonium and nitrate) to the plant for each soil layer (kg/ha).</summary>
-        [XmlIgnore]
-        [Units("kg/ha")]
-        public double[] uptakeNitrogen { get; set; }
-
-        /// <summary>Proportion of nitrogen uptake from each layer in the form of nitrate (0-1).</summary>
-        [XmlIgnore]
-        [Units("0-1")]
-        public double[] uptakeNitrogenPropNO3 { get; set; }
-
-        #endregion  --------------------------------------------------------------------------------------------------------
-
         #region IUptake implementation  ------------------------------------------------------------------------------------
 
         /// <summary>Gets the potential plant water uptake for each layer (mm).</summary>
@@ -415,7 +307,6 @@ namespace Models.AgPasture
                 // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
                 // to return to caller.
                 List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
-                Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
                 for (int i = 0; i < supplies.Count; i++)
                 {
                     // Just send uptake from my zone
@@ -424,7 +315,6 @@ namespace Models.AgPasture
                     uptake.NO3N = new double[uptake.Water.Length];
                     uptake.NH4N = new double[uptake.Water.Length];
                     ZWNs.Add(uptake);
-                    MathUtilities.Add(mySoilWaterUptake, uptake.Water);
                 }
                 return ZWNs;
             }
@@ -480,15 +370,22 @@ namespace Models.AgPasture
         {
             // Get the zone this plant is in
             Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-            ZoneWaterAndN MyZone = new ZoneWaterAndN(parentZone);
 
-            foreach (ZoneWaterAndN Z in zones)
-                if (Z.Zone.Name == parentZone.Name)
-                    MyZone = Z;
+            foreach (ZoneWaterAndN zone in zones)
+            {
+                // Find the zone in our root zones.
+                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
+                if (root == null)
+                    return;
 
-            // Get the water uptake from each layer
-            for (int layer = 0; layer < nLayers; layer++)
-                mySoilWaterUptake[layer] = MyZone.Water[layer];
+                // Get the water uptake from each layer
+                Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
+                for (int layer = 0; layer < nLayers; layer++)
+                    mySoilWaterUptake[layer] = zone.Water[layer];
+
+                if (mySoilWaterUptake.Sum() > Epsilon)
+                    root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(mySoilWaterUptake, -1.0);
+            }
         }
 
         /// <summary>Sets the amount of N taken up by this plant (kg/ha).</summary>
@@ -3628,13 +3525,6 @@ namespace Models.AgPasture
             InitBiomassRemovals();
 
             // check whether there is a resource arbitrator, it will control the uptake
-            if (apsimArbitrator != null)
-            {
-                MyWaterUptakeSource = "Arbitrator";
-                MyNitrogenUptakeSource = "Arbitrator";
-            }
-
-            // check whether there is a resource arbitrator, it will control the uptake
             if (soilArbitrator != null)
             {
                 MyWaterUptakeSource = "SoilArbitrator";
@@ -3778,8 +3668,6 @@ namespace Models.AgPasture
             for (int layer = 0; layer < nLayers; layer++)
                 plantZoneRoots.Tissue[0].DMLayer[layer] = InitialState.DMWeight[11] * iniRootFraction[layer];
 
-            InitialiseRootsProperties();
-
             // 3. Initialise the N amounts in each pool above-ground (assume to be at optimum concentration)
             leaves.Tissue[0].Namount = InitialState.NAmount[0];
             leaves.Tissue[1].Namount = InitialState.NAmount[1];
@@ -3793,9 +3681,6 @@ namespace Models.AgPasture
             stolons.Tissue[1].Namount = InitialState.NAmount[9];
             stolons.Tissue[2].Namount = InitialState.NAmount[10];
             plantZoneRoots.Tissue[0].Namount = InitialState.NAmount[11];
-
-            // 4. Canopy height and related variables
-            InitialiseCanopyProperties();
 
             // 5. Set initial phenological stage
             phenologicStage = InitialState.PhenoStage;
@@ -3946,49 +3831,6 @@ namespace Models.AgPasture
             stolons.SetRemovalFractions("Cut", removalFractions);
         }
 
-        /// <summary>Initialises the variables in canopy properties.</summary>
-        private void InitialiseCanopyProperties()
-        {
-            // Used in Val's Arbitrator (via ICrop2)
-            myCanopyProperties.Name = Name;
-            myCanopyProperties.CoverGreen = CoverGreen;
-            myCanopyProperties.CoverTot = CoverTotal;
-            myCanopyProperties.CanopyDepth = Depth;
-            myCanopyProperties.CanopyHeight = Height;
-            myCanopyProperties.LAIGreen = LAIGreen;
-            myCanopyProperties.LAItot = LAITotal;
-            myCanopyProperties.MaximumStomatalConductance = myGsmax;
-            myCanopyProperties.HalfSatStomatalConductance = myR50;
-            myCanopyProperties.CanopyEmissivity = 0.96; // TODO: this should be on the UI (maybe)
-            myCanopyProperties.Frgr = FRGR;
-        }
-
-        /// <summary>Initialises the variables in root properties.</summary>
-        private void InitialiseRootsProperties()
-        {
-            // Used in Val's Arbitrator (via ICrop2)
-            SoilCrop soilCrop = this.mySoil.Crop(Name) as SoilCrop;
-
-            myRootProperties.RootDepth = plantZoneRoots.Depth;
-            myRootProperties.KL = soilCrop.KL;
-            myRootProperties.MinNO3ConcForUptake = new double[nLayers];
-            myRootProperties.MinNH4ConcForUptake = new double[nLayers];
-            myRootProperties.KNH4 = KNH4; //TODO: check these coefficients
-            myRootProperties.KNO3 = KNO3;
-            myRootProperties.LowerLimitDep = new double[nLayers];
-            myRootProperties.UptakePreferenceByLayer = new double[nLayers];
-            myRootProperties.RootExplorationByLayer = new double[nLayers];
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                myRootProperties.LowerLimitDep[layer] = soilCrop.LL[layer] * mySoil.Thickness[layer];
-                myRootProperties.MinNH4ConcForUptake[layer] = 0.0;
-                myRootProperties.MinNO3ConcForUptake[layer] = 0.0;
-                myRootProperties.UptakePreferenceByLayer[layer] = 1.0;
-                myRootProperties.RootExplorationByLayer[layer] = FractionLayerWithRoots(layer);
-            }
-            myRootProperties.RootLengthDensityByVolume = RootLengthDensity;
-        }
-
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Daily processes  -------------------------------------------------------------------------------------------
@@ -4071,9 +3913,6 @@ namespace Models.AgPasture
                     // Evaluate potential allocation of today's growth
                     EvaluateAllocationToShoot();
                     EvaluateAllocationToLeaf();
-
-                    // Evaluate the water supply, demand & uptake
-                    DoSoilWaterUptake();
 
                     // Get the potential growth after water limitations
                     CalcGrowthAfterWaterLimitations();
@@ -4664,21 +4503,6 @@ namespace Models.AgPasture
             mySoilWaterUptake = MathUtilities.Multiply_Value(mySoilWaterAvailable, fractionUsed);
         }
 
-        /// <summary>Sends the delta water to the soil module.</summary>
-        private void DoSoilWaterUptake()
-        {
-            if (mySoilWaterUptake.Sum() > Epsilon)
-            {
-                WaterChangedType waterTakenUp = new WaterChangedType();
-                waterTakenUp.DeltaWater = new double[nLayers];
-                for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-                    waterTakenUp.DeltaWater[layer] = -mySoilWaterUptake[layer];
-
-                if (WaterChanged != null)
-                    WaterChanged.Invoke(waterTakenUp);
-            }
-        }
-
         /// <summary>Gets the water uptake for each layer as calculated by an external module (SWIM).</summary>
         /// <param name="SoilWater">The soil water uptake data</param>
         [EventSubscribe("WaterUptakesCalculated")]
@@ -4738,23 +4562,6 @@ namespace Models.AgPasture
 
                 // Send delta N to the soil model
                 DoSoilNitrogenUptake();
-            }
-            else if (MyNitrogenUptakeSource == "Arbitrator")
-            {
-                // Nitrogen uptake was computed by the resource arbitrator
-
-                // gather the uptake values
-                if (MyNitrogenUptakeSource == "Arbitrator")
-                {
-                    for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-                    {
-                        mySoilNH4Uptake[layer] = uptakeNitrogen[layer] * (1.0 - uptakeNitrogenPropNO3[layer]);
-                        mySoilNO3Uptake[layer] = uptakeNitrogen[layer] * uptakeNitrogenPropNO3[layer];
-                    }
-                }
-
-                // Evaluate whether remobilisation of luxury N is needed
-                EvaluateLuxuryNRemobilisation();
             }
             else
             {

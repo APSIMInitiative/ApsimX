@@ -412,7 +412,7 @@ namespace Models.AgPasture
         private int nLayers;
 
         /// <summary>Soil object where these roots are growing.</summary>
-        private Soil mySoil = null;
+        public Soil mySoil = null;
 
         /// <summary>Name of pasture species</summary>
         private string pastureName;

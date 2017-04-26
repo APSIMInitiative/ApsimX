@@ -32,14 +32,6 @@ namespace Models.AgPasture
         [Link]
         private Soil mySoil = null;
 
-        /// <summary>Link to Apsim's Resource Arbitrator module.</summary>
-        [Link(IsOptional = true)]
-        private Arbitrator.Arbitrator apsimArbitrator = null;
-
-        /// <summary>Link to Apsim's Resource Arbitrator module.</summary>
-        [Link(IsOptional = true)]
-        private SoilArbitrator soilArbitrator = null;
-
         /// <summary>Link to Apsim's solute manager module.</summary>
         [Link]
         private SoluteManager solutes = null;
@@ -63,9 +55,6 @@ namespace Models.AgPasture
         /// <summary>Invoked for changing soil water due to uptake.</summary>
         /// <param name="Data">The changes in the amount of water for each soil layer</param>
         public delegate void WaterChangedDelegate(WaterChangedType Data);
-
-        /// <summary>Occurs when plant takes up water.</summary>
-        public event WaterChangedDelegate WaterChanged;
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
@@ -1159,11 +1148,8 @@ namespace Models.AgPasture
         {
 
             // check whether uptake is controlled by the sward or by species
-            if (apsimArbitrator != null || soilArbitrator != null)
-            {
-                myWaterUptakeSource = "species";
-                myNUptakeSource = "species";
-            }
+            myWaterUptakeSource = "species";
+            myNUptakeSource = "species";
 
             foreach (PastureSpecies species in mySpecies)
             {
@@ -1223,9 +1209,6 @@ namespace Models.AgPasture
                     species.GetAllocationFractions();
                 }
 
-                // Get the water demand, supply, and uptake
-                DoWaterCalculations();
-
                 foreach (PastureSpecies species in mySpecies)
                 {
                     // Get the potential growth after water limitations
@@ -1265,42 +1248,6 @@ namespace Models.AgPasture
                 DoAddDetachedRootToSoilFOM(RootDetachedWt, RootDetachedN);
             }
         }
-
-        #region - Water uptake processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Performs the water uptake calculations.</summary>
-        private void DoWaterCalculations()
-        {
-            //water uptake is controlled at species level, get sward totals
-            for (int layer = 0; layer <= RootZoneFrontier; layer++)
-            {
-                foreach (PastureSpecies species in mySpecies)
-                {
-                    swardSoilWaterAvailable[layer] += species.WaterAvailable[layer];
-                    swardSoilWaterUptake[layer] += species.WaterUptake[layer];
-                }
-            }
-
-            // Send the delta water to soil water module
-            DoSoilWaterUptake();
-        }
-
-        /// <summary>Sends the delta water to the soil module.</summary>
-        private void DoSoilWaterUptake()
-        {
-            if (swardSoilWaterUptake.Sum() > Epsilon)
-            {
-                WaterChangedType WaterTakenUp = new WaterChangedType();
-                WaterTakenUp.DeltaWater = new double[nLayers];
-                for (int layer = 0; layer <= RootZoneFrontier; layer++)
-                    WaterTakenUp.DeltaWater[layer] -= swardSoilWaterUptake[layer];
-
-                if (WaterChanged != null)
-                    WaterChanged.Invoke(WaterTakenUp);
-            }
-        }
-
-        #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #region - Nitrogen uptake processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
