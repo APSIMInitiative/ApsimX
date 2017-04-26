@@ -382,28 +382,51 @@ namespace Models.AgPasture
         {
             if (IsAlive)
             {
-                // Get the zone this plant is in
-                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-                ZoneWaterAndN myZone = new ZoneWaterAndN(parentZone);
+                // Get all water supplies.
+                double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+
+                List<double[]> supplies = new List<double[]>();
+                List<Zone> zones = new List<Zone>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
-                    if (zone.Zone.Name == parentZone.Name)
-                        myZone = zone;
+                {
+                    // Find the zone in our root zones.
+                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
+                    if (root == null)
+                        return null;
 
-                // Get the amount of water available for this plant
-                EvaluateSoilWaterAvailable(myZone);
+                    double[] organSupply = root.EvaluateSoilWaterAvailable(zone);
+                    if (organSupply != null)
+                    {
+                        supplies.Add(organSupply);
+                        zones.Add(zone.Zone);
+                        waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
+                    }
+                }
 
-                // Get the amount of water potentially taken up by this plant
-                EvaluateSoilWaterUptake();
+                // 2. Get the amount of soil water demanded NOTE: This is in L, not mm,
+                Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+                double waterDemand = myWaterDemand * parentZone.Area;
 
-                // Pack potential uptake data for this plant
-                ZoneWaterAndN myUptakeDemand = new ZoneWaterAndN(myZone.Zone);
-                myUptakeDemand.Water = mySoilWaterUptake;
-                myUptakeDemand.NO3N = new double[nLayers];
-                myUptakeDemand.NH4N = new double[nLayers];
+                // 3. Estimate fraction of water used up
+                double fractionUsed = 0.0;
+                if (waterSupply > Epsilon)
+                    fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
 
-                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-                zones.Add(myUptakeDemand);
-                return zones;
+                // Apply demand supply ratio to each zone and create a ZoneWaterAndN structure
+                // to return to caller.
+                List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
+                Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
+                for (int i = 0; i < supplies.Count; i++)
+                {
+                    // Just send uptake from my zone
+                    ZoneWaterAndN uptake = new ZoneWaterAndN(zones[i]);
+                    uptake.Water = MathUtilities.Multiply_Value(supplies[i], fractionUsed);
+                    uptake.NO3N = new double[uptake.Water.Length];
+                    uptake.NH4N = new double[uptake.Water.Length];
+                    ZWNs.Add(uptake);
+                    MathUtilities.Add(mySoilWaterUptake, uptake.Water);
+                }
+                return ZWNs;
             }
             else
                 return null;
@@ -3583,7 +3606,9 @@ namespace Models.AgPasture
             leaves = new PastureAboveGroundOrgan(4);
             stems = new PastureAboveGroundOrgan(4);
             stolons = new PastureAboveGroundOrgan(4);
-            plantZoneRoots = new PastureBelowGroundOrgan(2, nLayers);
+            plantZoneRoots = new PastureBelowGroundOrgan(2, nLayers, myWaterAvailableMethod, mySoil, Name,
+                                                         SpecificRootLength, ReferenceRLD, ExponentSoilMoisture,
+                                                         ReferenceKSuptake);
             rootZones = new List<PastureBelowGroundOrgan>();
             rootZones.Add(plantZoneRoots);
 
@@ -4048,7 +4073,7 @@ namespace Models.AgPasture
                     EvaluateAllocationToLeaf();
 
                     // Evaluate the water supply, demand & uptake
-                    DoWaterCalculations();
+                    DoSoilWaterUptake();
 
                     // Get the potential growth after water limitations
                     CalcGrowthAfterWaterLimitations();
@@ -4620,52 +4645,6 @@ namespace Models.AgPasture
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #region - Water uptake processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Performs the water uptake calculations.</summary>
-        internal void DoWaterCalculations()
-        {
-            if (MyWaterUptakeSource == "species")
-            {
-                // this module will compute water uptake
-
-                // Pack the soil information
-                ZoneWaterAndN myZone = new ZoneWaterAndN(this.Parent as Zone);
-                myZone.Water = mySoil.Water;
-                myZone.NO3N = mySoil.NO3N;
-                myZone.NH4N = mySoil.NH4N;
-
-                // Get the amount of soil available water
-                EvaluateSoilWaterAvailable(myZone);
-
-                // Get the amount of water taken up
-                EvaluateSoilWaterUptake();
-
-                // Send the delta water to soil water module
-                DoSoilWaterUptake();
-            }
-            else if ((MyWaterUptakeSource == "SoilArbitrator") || (MyWaterUptakeSource == "Arbitrator"))
-            {
-                // water uptake has been calculated by a resource arbitrator
-                DoSoilWaterUptake();
-            }
-            else
-            {
-                // water uptake is computed by another module (e.g. SWIM) and supplied by OnWaterUptakesCalculated
-                throw new NotImplementedException();
-            }
-        }
-
-
-        /// <summary>Adjusts the values of available water by a given fraction.</summary>
-        /// <remarks>This is needed while using sward to control water processes</remarks>
-        /// <param name="fraction">The fraction to adjust the current values</param>
-        internal void UpdateAvailableWater(double fraction)
-        {
-            for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-            {
-                mySoilWaterAvailable[layer] *= fraction;
-            }
-        }
 
         /// <summary>Computes the potential plant water uptake.</summary>
         internal void EvaluateSoilWaterUptake()

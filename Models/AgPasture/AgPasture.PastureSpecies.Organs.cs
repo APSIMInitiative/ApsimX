@@ -12,7 +12,6 @@ using Models.PMF;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
-using static Models.AgPasture.PastureSpecies;
 
 namespace Models.AgPasture
 {
@@ -407,7 +406,7 @@ namespace Models.AgPasture
     public class PastureBelowGroundOrgan
     {
         /// <summary>Flag which method for computing soil available water will be used.</summary>
-        private PlantAvailableWaterMethod myWaterAvailableMethod;
+        private PastureSpecies.PlantAvailableWaterMethod myWaterAvailableMethod;
 
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
@@ -440,7 +439,7 @@ namespace Models.AgPasture
         /// <param name="referenceRLD">Reference value for root length density for the Water and N availability.</param>
         /// <param name="exponentSoilMoisture">Exponent controlling the effect of soil moisture variations on water extractability</param>
         /// <param name="referenceKSuptake">Reference value of Ksat for water availability function</param>
-        public PastureBelowGroundOrgan(int numTissues, int numLayers, PlantAvailableWaterMethod myWaterAvailableMethod, Soil soil,
+        public PastureBelowGroundOrgan(int numTissues, int numLayers, PastureSpecies.PlantAvailableWaterMethod myWaterAvailableMethod, Soil soil,
                                        string nameOfPasture, double specificRootLength, double referenceRLD, double exponentSoilMoisture,
                                        double referenceKSuptake)
         {
@@ -457,10 +456,17 @@ namespace Models.AgPasture
             ReferenceRLD = referenceRLD;
             ExponentSoilMoisture = exponentSoilMoisture;
             ReferenceKSuptake = referenceKSuptake;
+            Name = soil.Parent.Name;
         }
 
         /// <summary>The collection of tissues for this organ.</summary>
         internal RootTissue[] Tissue { get; set; }
+
+        /// <summary>Amount of plant available water in the soil (mm).</summary>
+        internal double[] mySoilWaterAvailable { get; private set; }
+
+        /// <summary>Name of root zone.</summary>
+        internal string Name { get; private set; }
 
         #region Root specific characteristics  -----------------------------------------------------------------------------
 
@@ -654,11 +660,11 @@ namespace Models.AgPasture
         /// <param name="myZone">The soil information</param>
         internal double[] EvaluateSoilWaterAvailable(ZoneWaterAndN myZone)
         {
-            if (myWaterAvailableMethod == PlantAvailableWaterMethod.DefaultAPSIM)
+            if (myWaterAvailableMethod == PastureSpecies.PlantAvailableWaterMethod.DefaultAPSIM)
                 return PlantAvailableSoilWaterDefault(myZone);
-            else if (myWaterAvailableMethod == PlantAvailableWaterMethod.AlternativeKL)
+            else if (myWaterAvailableMethod == PastureSpecies.PlantAvailableWaterMethod.AlternativeKL)
                 return PlantAvailableSoilWaterAlternativeKL(myZone);
-            else if (myWaterAvailableMethod == PlantAvailableWaterMethod.AlternativeKS)
+            else if (myWaterAvailableMethod == PastureSpecies.PlantAvailableWaterMethod.AlternativeKS)
                 return PlantAvailableSoilWaterAlternativeKS(myZone);
             else
                 throw new Exception("Invalid water uptake method found");

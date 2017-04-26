@@ -1271,95 +1271,18 @@ namespace Models.AgPasture
         /// <summary>Performs the water uptake calculations.</summary>
         private void DoWaterCalculations()
         {
-            if (myWaterUptakeSource == "sward")
-            {
-                // Pack the soil information
-                ZoneWaterAndN myZone = new ZoneWaterAndN(this.Parent as Zone);
-                myZone.Water = mySoil.Water;
-                myZone.NO3N = mySoil.NO3N;
-                myZone.NH4N = mySoil.NH4N;
-
-                // Get the amount of soil available water
-                GetSoilAvailableWater(myZone);
-
-                // Water demand computed by MicroClimate
-
-                // Get the amount of water taken up
-                GetSoilWaterUptake();
-
-                // Send the delta water to soil water module
-                DoSoilWaterUptake();
-            }
-            else
-            {
-                //water uptake is controlled at species level, get sward totals
-                for (int layer = 0; layer <= RootZoneFrontier; layer++)
-                {
-                    foreach (PastureSpecies species in mySpecies)
-                    {
-                        swardSoilWaterAvailable[layer] += species.WaterAvailable[layer];
-                        swardSoilWaterUptake[layer] += species.WaterUptake[layer];
-                    }
-                }
-
-                // Send the delta water to soil water module
-                DoSoilWaterUptake();
-            }
-        }
-
-        /// <summary>Finds out the amount of plant available water in the soil, consider all species.</summary>
-        /// <param name="myZone">The soil information</param>
-        private void GetSoilAvailableWater(ZoneWaterAndN myZone)
-        {
-            double totalPlantWater;
-            double totalSoilWater;
-            double maxPlantWater = 0.0;
-            double waterFraction = 1.0;
-            double layerFraction = 1.0;
-
-            // Get the water available as seen by each species
-            foreach (PastureSpecies species in mySpecies)
-               species.EvaluateSoilWaterAvailable(myZone);
-
-            // Evaluate the available water for whole sward and adjust availability for each species if needed
+            //water uptake is controlled at species level, get sward totals
             for (int layer = 0; layer <= RootZoneFrontier; layer++)
             {
-                // Get total as seen by each species
-                totalPlantWater = 0.0;
-                if (layer == RootZoneFrontier) layerFraction = 0.0;
                 foreach (PastureSpecies species in mySpecies)
                 {
-                    totalPlantWater += species.WaterAvailable[layer];
-                    maxPlantWater = Math.Max(maxPlantWater, species.WaterAvailable[layer]);
-                    if (layer == RootZoneFrontier)
-                        layerFraction = Math.Max(layerFraction, species.FractionLayerWithRoots(layer));
-                }
-
-                // Get total in the soil
-                totalSoilWater = Math.Max(0.0, myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) * layerFraction;
-                totalSoilWater = Math.Max(totalSoilWater, maxPlantWater); //allows for a plant to uptake below LL15 
-
-                // Sward total is the minimum of the two totals
-                swardSoilWaterAvailable[layer] = Math.Min(totalPlantWater, totalSoilWater);
-                if (totalPlantWater > totalSoilWater)
-                {
-                    // adjust the water available for each species
-                    waterFraction = MathUtilities.Divide(totalSoilWater, totalPlantWater, 0.0);
-                    foreach (PastureSpecies species in mySpecies)
-                        species.UpdateAvailableWater(waterFraction);
-                }
-            }
-        }
-
-        /// <summary>Gets the plant water uptake (potential), consider all species.</summary>
-        private void GetSoilWaterUptake()
-        {
-            foreach (PastureSpecies species in mySpecies)
-            {
-                species.EvaluateSoilWaterUptake();
-                for (int layer = 0; layer <= species.plantZoneRoots.BottomLayer; layer++)
+                    swardSoilWaterAvailable[layer] += species.WaterAvailable[layer];
                     swardSoilWaterUptake[layer] += species.WaterUptake[layer];
+                }
             }
+
+            // Send the delta water to soil water module
+            DoSoilWaterUptake();
         }
 
         /// <summary>Sends the delta water to the soil module.</summary>
