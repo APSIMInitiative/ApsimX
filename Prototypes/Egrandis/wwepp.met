@@ -1,6 +1,7 @@
 [weather.met.weather]
 
 latitude = -35.0
+longitude = 147.35  ! approx
 instrum_height = 20.0
 
 measurement_height = 40 (m) !all lies - fix later
