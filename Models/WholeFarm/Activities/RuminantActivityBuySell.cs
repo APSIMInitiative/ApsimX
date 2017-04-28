@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
@@ -92,6 +93,7 @@ namespace Models.WholeFarm.Activities
 		public string BankAccountName { get; set; }
 
 		private FinanceType bankAccount = null;
+		private LabourFilterGroupAnimals labourRequired = null;
 
 		/// <summary>An event handler to allow us to initialise herd pricing.</summary>
 		/// <param name="sender">The sender.</param>
@@ -116,6 +118,9 @@ namespace Models.WholeFarm.Activities
 					}
 				}
 			}
+
+			// check if labour required
+			labourRequired = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupAnimals)).FirstOrDefault() as LabourFilterGroupAnimals;
 		}
 
 		/// <summary>An event handler to call for animal purchases</summary>
@@ -222,8 +227,6 @@ namespace Models.WholeFarm.Activities
 							nonloaded = false;
 							head++;
 							load450kgs += ind.Weight / 450.0;
-//							RuminantValue getvalue = PriceList.Where(a => a.Age < ind.Age).OrderBy(a => a.Age).LastOrDefault();
-//							saleValue += getvalue.SellValue * ((getvalue.Style == Common.PricingStyleType.perKg) ? ind.Weight : 1.0);
 							saleValue += ind.BreedParams.ValueofIndividual(ind, false);
 							saleWeight += ind.Weight;
 							ruminantHerd.RemoveRuminant(ind);
@@ -274,7 +277,28 @@ namespace Models.WholeFarm.Activities
 		/// <returns>List of required resource requests</returns>
 		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
-			return null;
+			ResourceRequestList = null;
+			if(labourRequired!=null)
+			{
+				List<object> LabourFilterList = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupAnimals)).Cast<object>().ToList();
+
+				if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+				// determine head to be mustered
+				RuminantHerd ruminantHerd = Resources.RuminantHerd();
+				List<Ruminant> herd = ruminantHerd.Herd;
+				int head = herd.Where(a => a.SaleFlag != Common.HerdChangeReason.None & a.Breed == BreedName).Count();
+				ResourceRequestList.Add(new ResourceRequest()
+				{
+					AllowTransmutation = true,
+					Required = Math.Ceiling(head / labourRequired.LabourHeadUnit) * labourRequired.LabourRequired,
+					ResourceName = "Labour",
+					ResourceTypeName = "",
+					ActivityName = this.Name,
+					FilterDetails = LabourFilterList
+				}
+				);
+			}
+			return ResourceRequestList;
 		}
 
 		/// <summary>
@@ -282,7 +306,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void PerformActivity()
 		{
-			return; ;
+			return; 
 		}
 
 		/// <summary>

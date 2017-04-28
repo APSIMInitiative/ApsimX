@@ -27,10 +27,10 @@ namespace Models.WholeFarm.Resources
         [Description("Land Area (ha)")]
         public double LandArea { get; set; }
 
-        /// <summary>
-        /// Unusable Portion - Buildings, paths etc. (%)
-        /// </summary>
-        [Description("Buildings - proportion taken up with bldgs, paths (%)")]
+		/// <summary>
+		/// Unusable Portion - Buildings, paths etc. (%)
+		/// </summary>
+		[Description("Buildings - proportion taken up with bldgs, paths (%)")]
         public double UnusablePortion { get; set; }
 
         /// <summary>
@@ -62,15 +62,20 @@ namespace Models.WholeFarm.Resources
         /// Area already used (ha)
         /// </summary>
         [XmlIgnore]
-        public double AreaUsed { get { return this.LandArea - areaAvailable; } }
+        public double AreaUsed { get { return UsableArea - areaAvailable; } }
+
+		/// <summary>
+		/// The total area available 
+		/// </summary>
+		[XmlIgnore]
+		public double UsableArea { get { return this.LandArea * (1.0 - (UnusablePortion / 100)); }  }
 
 		/// <summary>
 		/// Initialise the current state to the starting amount of fodder
 		/// </summary>
 		public void Initialise()
 		{
-			Add(this.LandArea, this.Name, "Initialise");
-//			this.areaAvailable = this.LandArea;
+			Add(UsableArea, this.Name, "Initialise");
 		}
 
 		/// <summary>
@@ -104,14 +109,12 @@ namespace Models.WholeFarm.Resources
 		public void Add(double AddAmount, string ActivityName, string UserName)
 		{
 			double amountAdded = AddAmount;
-			if (this.areaAvailable + AddAmount > this.LandArea)
+			if (this.areaAvailable + AddAmount > this.UsableArea )
 			{
-				amountAdded = this.LandArea - this.areaAvailable;
-				string message = "Tried to add more available land to " + this.Name + " than exists." + Environment.NewLine
-					+ "Current Amount: " + this.areaAvailable + Environment.NewLine
-					+ "Tried to Remove: " + AddAmount;
+				amountAdded = this.UsableArea - this.areaAvailable;
+				string message = "Tried to add more available land to " + this.Name + " than exists.";
 				Summary.WriteWarning(this, message);
-				this.areaAvailable = this.LandArea;
+				this.areaAvailable = this.UsableArea;
 			}
 			else
 			{
@@ -150,65 +153,13 @@ namespace Models.WholeFarm.Resources
 			OnTransactionOccurred(te);
 		}
 
-		///// <summary>
-		///// Remove from food store
-		///// </summary>
-		///// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
-		///// <param name="ActivityName">Name of activity requesting resource</param>
-		///// <param name="UserName">Name of individual requesting resource</param>
-		//public double Remove(double RemoveAmount, string ActivityName, string UserName)
-		//{
-		//	double amountRemoved = RemoveAmount;
-		//	if (this.areaAvailable - RemoveAmount < 0)
-		//	{
-		//		amountRemoved = this.areaAvailable;
-		//		string message = "Tried to remove more available land from " + this.Name + " than exists." + Environment.NewLine
-		//			+ "Current Amount: " + this.areaAvailable + Environment.NewLine
-		//			+ "Tried to Remove: " + RemoveAmount;
-		//		Summary.WriteWarning(this, message);
-		//		this.areaAvailable = 0;
-		//	}
-		//	else
-		//	{
-		//		this.areaAvailable = this.areaAvailable - RemoveAmount;
-		//	}
-		//	ResourceTransaction details = new ResourceTransaction();
-		//	details.ResourceType = this.Name;
-		//	details.Debit = amountRemoved * -1;
-		//	details.Activity = ActivityName;
-		//	details.Reason = UserName;
-		//	LastTransaction = details;
-		//	TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-		//	OnTransactionOccurred(te);
-		//	return amountRemoved;
-		//}
-
-		///// <summary>
-		///// Remove Food
-		///// If this call is reached we are not going through an arbitrator so provide all possible resource to requestor
-		///// </summary>
-		///// <param name="RemoveRequest">A feed request object with required information</param>
-		//public void Remove(object RemoveRequest)
-		//{
-		//	RuminantFeedRequest removeRequest = RemoveRequest as RuminantFeedRequest;
-
-		//	// limit by available
-		//	removeRequest.Amount = Math.Min(removeRequest.Amount, areaAvailable);
-
-		//	// add to intake and update %N and %DMD values
-		//	removeRequest.Requestor.AddIntake(removeRequest);
-
-		//	// Remove from resource
-		//	Remove(removeRequest.Amount, removeRequest.FeedActivity.Name, removeRequest.Requestor.BreedParams.Name);
-		//}
-
 		/// <summary>
-		/// Set amount of animal food available
+		/// Set amount of land available
 		/// </summary>
-		/// <param name="NewValue">New value to set food store to</param>
+		/// <param name="NewValue">New value to set land to</param>
 		public void Set(double NewValue)
 		{
-			if ((NewValue < 0) || (NewValue > this.LandArea))
+			if ((NewValue < 0) || (NewValue > this.UsableArea))
 			{
 				Summary.WriteMessage(this, "Tried to Set Available Land to Invalid New Amount." + Environment.NewLine
 					+ "New Value must be between 0 and the Land Area.");
@@ -239,7 +190,6 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[XmlIgnore]
 		public ResourceTransaction LastTransaction { get; set; }
-
 
 		#endregion
 

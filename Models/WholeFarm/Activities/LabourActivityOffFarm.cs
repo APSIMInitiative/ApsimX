@@ -29,12 +29,6 @@ namespace Models.WholeFarm.Activities
 		[Link]
 		Clock Clock = null;
 
-		///// <summary>
-		///// Amount provided from resource or arbitrator
-		///// </summary>
-		//[XmlIgnore]
-		//public double AmountProvided { get; set; }
-
 		/// <summary>
 		/// Daily labour rate
 		/// </summary>
@@ -61,7 +55,7 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			// locate FeedType resource
+			// locate BankType resource
 			bool resourceAvailable = false;
 			bankType = Resources.GetResourceItem("Finances", BankAccountName, out resourceAvailable) as FinanceType;
 		}
@@ -104,8 +98,11 @@ namespace Models.WholeFarm.Activities
 		public override void PerformActivity()
 		{
 			// days provided from labour set in the only request in the resourceResquestList
-			// receive payment for labour
-			bankType.Add(ResourceRequestList.FirstOrDefault().Available*DailyRate, "Off farm labour", this.Name);
+			// receive payment for labour if bank type exists
+			if (bankType != null)
+			{
+				bankType.Add(ResourceRequestList.FirstOrDefault().Available * DailyRate, "Off farm labour", this.Name);
+			}
 		}
 
 		/// <summary>

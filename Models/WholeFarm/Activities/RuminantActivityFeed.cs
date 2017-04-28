@@ -135,7 +135,7 @@ namespace Models.WholeFarm.Activities
 					}
 					ResourceRequestList.Add(new ResourceRequest()
 					{
-						AllowTransmutation = true,
+						AllowTransmutation = false,
 						Required = Math.Ceiling(head/this.LabourHeadUnit)*this.LabourRequired,
 						ResourceName = "Labour",
 						ResourceTypeName = "",

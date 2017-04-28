@@ -433,6 +433,21 @@ namespace Models.WholeFarm.Resources
 
 		#endregion
 
+		#region other
+
+		/// <summary>
+		/// Methane production from intake intercept
+		/// </summary>
+		[Description("Methane production from intake intercept")]
+		public double MethaneProductionIntercept { get; set; }
+
+		/// <summary>
+		/// Methane production from intake coefficient
+		/// </summary>
+		[Description("Methane production from intake coefficient")]
+		public double MethaneProductionCoefficient { get; set; }
+
+		#endregion
 		/// <summary>
 		/// Create the individual ruminant animals for this Ruminant Type (Breed)
 		/// </summary>

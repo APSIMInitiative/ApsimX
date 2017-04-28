@@ -25,6 +25,11 @@ namespace Models.WholeFarm.Resources
 		///</summary> 
 		public string ActivityName { get; set; }
 		///<summary>
+		/// Unique identifier for instance of activity request
+		/// Used to allow multiple concurrent resource requests i.e labour types.
+		///</summary> 
+		public Guid ActivityID { get; set; }
+		///<summary>
 		/// Reason for requesting resource
 		///</summary> 
 		public string Reason { get; set; }

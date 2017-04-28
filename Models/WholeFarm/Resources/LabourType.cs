@@ -18,17 +18,17 @@ namespace Models.WholeFarm.Resources
     [ValidParent(ParentType = typeof(Labour))]
     public class LabourType : WFModel, IResourceWithTransactionType, IResourceType
 	{
-        /// <summary>
-        /// Get the Clock.
-        /// </summary>
-        [Link]
-        Clock Clock = null;
+  //      /// <summary>
+  //      /// Get the Clock.
+  //      /// </summary>
+  //      [Link]
+  //      Clock Clock = null;
 
-		/// <summary>
-		/// Get the Summary object.
-		/// </summary>
-		[Link]
-        ISummary Summary = null;
+		///// <summary>
+		///// Get the Summary object.
+		///// </summary>
+		//[Link]
+  //      ISummary Summary = null;
 
         /// <summary>
         /// Age in years.
@@ -42,11 +42,11 @@ namespace Models.WholeFarm.Resources
         [Description("Gender")]
         public Sex Gender { get; set; }
 
-        /// <summary>
-        /// Name of each column in the grid. Used as the column header.
-        /// </summary>
-        [Description("Column Names")]
-        public string[] ColumnNames { get; set; }
+        ///// <summary>
+        ///// Name of each column in the grid. Used as the column header.
+        ///// </summary>
+        //[Description("Column Names")]
+        //public string[] ColumnNames { get; set; }
 
         /// <summary>
         /// Maximum Labour Supply (in days) for each month of the year. 
@@ -58,7 +58,13 @@ namespace Models.WholeFarm.Resources
         /// Age in years.
         /// </summary>
         [XmlIgnore]
-        public double Age { get; set; }
+        public double Age { get { return Math.Floor(AgeInMonths/12); } }
+
+		/// <summary>
+		/// Age in months.
+		/// </summary>
+		[XmlIgnore]
+		public double AgeInMonths { get; set; }
 
 		/// <summary>
 		/// Number of individuals
@@ -67,60 +73,84 @@ namespace Models.WholeFarm.Resources
 		public int Individuals { get; set; }
 
 		/// <summary>
+		/// The unique id of the last activity request for this labour type
+		/// </summary>
+		[XmlIgnore]
+		public Guid LastActivityRequestID { get; set; }
+
+		/// <summary>
 		/// Available Labour (in days) in the current month. 
 		/// </summary>
 		[XmlIgnore]
         public double AvailableDays { get { return availableDays; } }
         private double availableDays;
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
+		/// <summary>
+		/// Reset the available days for a given month
+		/// </summary>
+		/// <param name="month"></param>
+		public void SetAvailableDays(int month)
 		{
-			Initialise();
+			availableDays = Math.Min(30.4, this.MaxLabourSupply[month - 1]);
 		}
+
+		///// <summary>An event handler to allow us to initialise ourselves.</summary>
+		///// <param name="sender">The sender.</param>
+		///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		//[EventSubscribe("Commencing")]
+		//private void OnSimulationCommencing(object sender, EventArgs e)
+		//{
+		//	Initialise();
+		//}
 
 		/// <summary>
 		/// Initialise the current state to the starting time available
 		/// </summary>
 		public void Initialise()
 		{
-			this.Age = this.InitialAge;
-			Individuals = Math.Max(Individuals, 1);
-			ResetAvailabilityEachMonth();
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("StartOfMonth")]
-		private void OnStartOfMonth(object sender, EventArgs e)
-		{
-			ResetAvailabilityEachMonth();
-		}
+		///// <summary>An event handler to allow us to initialise ourselves.</summary>
+		///// <param name="sender">The sender.</param>
+		///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		//[EventSubscribe("StartOfMonth")]
+		//private void OnStartOfMonth(object sender, EventArgs e)
+		//{
+		//	ResetAvailabilityEachMonth();
+		//}
 
-		/// <summary>
-		/// Reset the Available Labour (in days) in the current month 
-		/// to the appropriate value for this month.
-		/// </summary>
-		private void ResetAvailabilityEachMonth()
-		{
-			if (MaxLabourSupply.Length != 12)
-			{
-				string message = "Invalid number of values provided for MaxLabourSupply for " + this.Name;
-				Summary.WriteWarning(this, message);
-				throw new Exception("Invalid entry");
-			}
-			int currentmonth = Clock.Today.Month;
-			this.availableDays = Math.Min(30.4, this.MaxLabourSupply[currentmonth - 1])*Individuals;
-		}
+		///// <summary>
+		///// Reset the Available Labour (in days) in the current month 
+		///// to the appropriate value for this month.
+		///// </summary>
+		//public void ResetAvailabilityEachMonth()
+		//{
+		//	if (MaxLabourSupply.Length != 12)
+		//	{
+		//		string message = "Invalid number of values provided for MaxLabourSupply for " + this.Name;
+		//		Summary.WriteWarning(this, message);
+		//		throw new Exception("Invalid entry");
+		//	}
+		//	int currentmonth = Clock.Today.Month;
+		//	this.availableDays = Math.Min(30.4, this.MaxLabourSupply[currentmonth - 1])*Individuals;
+		//}
+
+		///// <summary>Age individuals</summary>
+		///// <param name="sender">The sender.</param>
+		///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		//[EventSubscribe("WFAgeResources")]
+		//private void ONWFAgeResources(object sender, EventArgs e)
+		//{
+		//	if((Parent as Labour).AllowAging)
+		//	{
+		//		AgeInMonths++;
+		//	}
+		//}
 
 		#region Transactions
 
 		/// <summary>
-		/// Add to food store
+		/// Add to labour store of this type
 		/// </summary>
 		/// <param name="AddAmount">Amount to add to resource</param>
 		/// <param name="ActivityName">Name of activity adding resource</param>
@@ -138,39 +168,6 @@ namespace Models.WholeFarm.Resources
 			OnTransactionOccurred(te);
 		}
 
-		///// <summary>
-		///// Remove from food store
-		///// </summary>
-		///// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
-		///// <param name="ActivityName">Name of activity requesting resource</param>
-		///// <param name="UserName">Name of individual requesting resource</param>
-		//public double Remove(double RemoveAmount, string ActivityName, string UserName)
-		//{
-		//	double amountRemoved = RemoveAmount;
-		//	if (this.availableDays - RemoveAmount < 0)
-		//	{
-		//		string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
-		//			+ "Current Amount: " + this.availableDays + Environment.NewLine
-		//			+ "Tried to Remove: " + RemoveAmount;
-		//		Summary.WriteWarning(this, message);
-		//		amountRemoved = this.availableDays;
-		//		this.availableDays = 0;
-		//	}
-		//	else
-		//	{
-		//		this.availableDays = this.availableDays - RemoveAmount;
-		//	}
-		//	ResourceTransaction details = new ResourceTransaction();
-		//	details.ResourceType = this.Name;
-		//	details.Debit = amountRemoved * -1;
-		//	details.Activity = ActivityName;
-		//	details.Reason = UserName;
-		//	LastTransaction = details;
-		//	TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-		//	OnTransactionOccurred(te);
-		//	return amountRemoved;
-		//}
-
 		/// <summary>
 		/// Remove from labour store
 		/// </summary>
@@ -183,6 +180,7 @@ namespace Models.WholeFarm.Resources
 			amountRemoved = Math.Min(this.availableDays, amountRemoved);
 			this.availableDays -= amountRemoved;
 			Request.Provided = amountRemoved;
+			LastActivityRequestID = Request.ActivityID;
 			ResourceTransaction details = new ResourceTransaction();
 			details.ResourceType = this.Name;
 			details.Debit = amountRemoved * -1;
@@ -204,7 +202,7 @@ namespace Models.WholeFarm.Resources
 		}
 
 		/// <summary>
-		/// Back account transaction occured
+		/// Labour type transaction occured
 		/// </summary>
 		public event EventHandler TransactionOccurred;
 

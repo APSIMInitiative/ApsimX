@@ -28,11 +28,6 @@ namespace Models.WholeFarm.Resources
 		[XmlIgnore]
 		public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
 
-		///// <summary>
-		///// Dry Matter (%) NOT USED
-		///// </summary>
-		//public double DryMatter { get; set; }
-
 		/// <summary>
 		/// Coefficient to convert initial N% to DMD%
 		/// </summary>
@@ -51,11 +46,11 @@ namespace Models.WholeFarm.Resources
 		[Description("Nitrogen of new growth (%)")]
 		public double GreenNitrogen { get; set; }
 
-		/// <summary>
-		/// DMD of new growth (%)
-		/// </summary>
-		[Description("DMD of new growth (%)")]
-		public double GreenDMD { get; set; }
+		///// <summary>
+		///// DMD of new growth (%)
+		///// </summary>
+		//[Description("DMD of new growth (%)")]
+		//public double GreenDMD { get; set; }
 
 		/// <summary>
 		/// Proportion Nitrogen loss each month from pools
@@ -108,6 +103,7 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// The area provided for this pasture to grow on
 		/// </summary>
+		[XmlIgnore]
 		public double Area { get; set; }
 
 		/// <summary>

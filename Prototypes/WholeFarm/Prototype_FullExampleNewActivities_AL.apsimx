@@ -159,7 +159,6 @@
             <NToDMDCoefficient>11.03</NToDMDCoefficient>
             <NToDMDIntercept>41.4</NToDMDIntercept>
             <GreenNitrogen>2</GreenNitrogen>
-            <GreenDMD>0</GreenDMD>
             <DecayNitrogen>0.35</DecayNitrogen>
             <MinimumNitrogen>4</MinimumNitrogen>
             <DecayDMD>0.1</DecayDMD>
@@ -168,7 +167,6 @@
             <CarryoverDetachRate>0.12</CarryoverDetachRate>
             <IntakeTropicalQualityCoefficient>0.16</IntakeTropicalQualityCoefficient>
             <IntakeQualityCoefficient>1.7</IntakeQualityCoefficient>
-            <Area>0</Area>
           </GrazeFoodStoreType>
         </GrazeFoodStore>
         <Land>
@@ -211,7 +209,7 @@
               <double>25</double>
               <double>25</double>
             </MaxLabourSupply>
-            <Individuals>0</Individuals>
+            <Individuals>1</Individuals>
           </LabourType>
           <LabourType>
             <Name>Jane D</Name>
@@ -231,7 +229,7 @@
               <double>25</double>
               <double>25</double>
             </MaxLabourSupply>
-            <Individuals>0</Individuals>
+            <Individuals>1</Individuals>
           </LabourType>
           <AllowAging>false</AllowAging>
         </Labour>
@@ -408,6 +406,8 @@
             <MaximumMaleMatingsPerDay>30</MaximumMaleMatingsPerDay>
             <PrenatalMortality>7.9</PrenatalMortality>
             <MaximumConceptionUncontrolledBreeding>0.7</MaximumConceptionUncontrolledBreeding>
+            <MethaneProductionIntercept>-34.8</MethaneProductionIntercept>
+            <MethaneProductionCoefficient>35.16</MethaneProductionCoefficient>
           </RuminantType>
         </RuminantHerd>
         <OtherAnimals>

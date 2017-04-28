@@ -43,18 +43,6 @@ namespace Models.WholeFarm.Resources
 					(child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
 				}
 			}
-
-			//Items = new List<LandType>();
-
-   //         List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
-
-   //         foreach (IModel childModel in childNodes)
-   //         {
-   //             //cast the generic IModel to a specfic model.
-   //             LandType land = childModel as LandType;
-			//	land.TransactionOccurred += Resource_TransactionOccurred;
-			//	Items.Add(land);
-   //         }
         }
 
 		#region Transactions

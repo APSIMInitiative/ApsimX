@@ -28,22 +28,22 @@ namespace Models.WholeFarm.Activities
 
 		/// <summary>
 		/// Current list of activities under this activity
-		/// Set to be performed before 
-		/// Not currently used as I can't create this in a BaseClass Commencing event
 		/// </summary>
 		[XmlIgnore]
 		public List<WFActivityBase> ActivityList { get; set; }
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			// move children to a list of activities
-			// TODO: this does not create a new instance of the activities so changes will be reflected in the apsimx XML file.
-			ActivityList = Apsim.Children(this, typeof(WFActivityBase)).Cast<WFActivityBase>().ToList();
-		}
+		// follwing never reached as it is the base class
+
+		///// <summary>An event handler to allow us to initialise ourselves.</summary>
+		///// <param name="sender">The sender.</param>
+		///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		//[EventSubscribe("Commencing")]
+		//private void OnSimulationCommencing(object sender, EventArgs e)
+		//{
+		//	// move children to a list of activities
+		//	// TODO: this does not create a new instance of the activities so changes will be reflected in the apsimx XML file.
+		//	ActivityList = Apsim.Children(this, typeof(WFActivityBase)).Cast<WFActivityBase>().ToList();
+		//}
 
 		/// <summary>
 		/// Method to cascade calls for resources for all activities in the UI tree. 
@@ -82,9 +82,11 @@ namespace Models.WholeFarm.Activities
 			// no resources required or this is an Activity folder.
 			if (ResourceRequestList == null) return;
 
+			Guid uniqueRequestID = Guid.NewGuid();
 			// check resource amounts available
 			foreach (ResourceRequest request in ResourceRequestList)
 			{
+				request.ActivityID = uniqueRequestID;
 				request.Available = 0;
 				// get resource
 				IResourceType resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
@@ -141,8 +143,8 @@ namespace Models.WholeFarm.Activities
 			// report any resource defecits here
 			foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
 			{
-				ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = item };
-				OnShortfallOccurred(rre);
+				ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
+				OnShortfallOccurred(rrEventArgs);
 			}
 
 			// remove activity resources 
@@ -157,12 +159,8 @@ namespace Models.WholeFarm.Activities
 					IResourceType resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
 					if (resource != null)
 					{
-						// get amount available
-						// no longer needed as provided is supplied in the Remove method
-//						request.Provided = Math.Min(resource.Amount, request.Required);
 						// remove resource
 						resource.Remove(request);
-//						request.Provided = resource.Remove(request.Provided, this.Name, request.Requestor);
 					}
 				}
 				PerformActivity();

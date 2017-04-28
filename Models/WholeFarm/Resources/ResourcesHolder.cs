@@ -71,7 +71,7 @@ namespace Models.WholeFarm.Resources
 			{
 				if (Request.ResourceName == null)
 				{
-					Summary.WriteWarning(this, "ResourceGroup name must be supplied");
+					Summary.WriteWarning(this, String.Format("ResourceGroup name must be supplied in resource request from {0}",Request.ActivityName));
 					return null;
 				}
 
@@ -88,9 +88,11 @@ namespace Models.WholeFarm.Resources
 				switch (resourceGroupObject.GetType().ToString())
 				{
 					case "Models.WholeFarm.Resources.Labour":
-						List<LabourType> items = resourceGroup.Children.Where(a => a.GetType() == typeof(LabourType)).Cast<LabourType>().ToList();
-						// get matching labout types
+						// get matching labour types
+						// use activity uid to ensure unique for this request
+						List<LabourType> items = (resourceGroup as Labour).Items;
 						items = items.Filter(Request.FilterDetails.FirstOrDefault() as Model);
+						items = items.Where(a => a.LastActivityRequestID != Request.ActivityID).ToList();
 						if (items.Where(a => a.Amount >= Request.Required).Count()>0)
 						{
 							// get labour least available but with the amount needed

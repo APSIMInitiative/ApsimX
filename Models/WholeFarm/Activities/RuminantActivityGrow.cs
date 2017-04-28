@@ -426,8 +426,11 @@ namespace Models.WholeFarm.Activities
 
 			// Function to calculate approximate methane produced by animal, based on feed intake
 			// Function based on Freer spreadsheet
-			methaneProduced = 0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
-			methaneProduced = methaneProduced / 55.28 * 1000; // grams per day
+			//methaneProduced = 0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
+			//methaneProduced = methaneProduced / 55.28 * 1000; // grams per day
+
+			// grams per day, Hunter 2007 (35.16 & -34.8)
+			methaneProduced = (ind.BreedParams.MethaneProductionCoefficient * ind.Intake + ind.BreedParams.MethaneProductionIntercept) / 47.62; 
 		}
 
 		/// <summary>

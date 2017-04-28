@@ -490,6 +490,7 @@
     <Compile Include="WholeFarm\Activities\RuminantActivityGrazePastureBreed.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityHerdCost.cs" />
     <Compile Include="WholeFarm\FileAPSIM.cs" />
+    <Compile Include="WholeFarm\Groupings\LabourFilterGroupAnimals.cs" />
     <Compile Include="WholeFarm\Groupings\RuminantFilterGroup.cs" />
     <Compile Include="WholeFarm\Groupings\ActivityLabourRequirement.cs" />
     <Compile Include="WholeFarm\Groupings\ActivityLabourRequirementGroup.cs" />

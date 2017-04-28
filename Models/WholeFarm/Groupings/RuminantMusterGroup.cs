@@ -55,17 +55,17 @@ namespace Models.WholeFarm.Groupings
 		[Description("Move sucklings with mother")]
 		public bool MoveSucklings { get; set; }
 
-		/// <summary>
-		/// Labour required per x head
-		/// </summary>
-		[Description("Labour required per x head")]
-		public double LabourRequired { get; set; }
+		///// <summary>
+		///// Labour required per x head
+		///// </summary>
+		//[Description("Labour required per x head")]
+		//public double LabourRequired { get; set; }
 
-		/// <summary>
-		/// Number of head per labour unit required
-		/// </summary>
-		[Description("Number of head per labour unit required")]
-		public double LabourHeadUnit { get; set; }
+		///// <summary>
+		///// Number of head per labour unit required
+		///// </summary>
+		//[Description("Number of head per labour unit required")]
+		//public double LabourHeadUnit { get; set; }
 
 		/// <summary>
 		/// Labour grouping for breeding
@@ -73,6 +73,7 @@ namespace Models.WholeFarm.Groupings
 		public List<object> LabourFilterList { get; set; }
 
 		private GrazeFoodStoreType pasture { get; set; }
+		private List<LabourFilterGroupAnimals> labourRequired = null;
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -93,26 +94,29 @@ namespace Models.WholeFarm.Groupings
 				throw new Exception(String.Format("Invalid pasture name ({0}) provided for mustering activity {1}", ManagedPastureName, this.Name));
 			}
 
-			if (LabourRequired > 0)
-			{
-				// check for and assign labour filter group
-				LabourFilterList = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).Cast<object>().ToList();
-				// if not present assume can use any labour and report
-				if (LabourFilterList == null)
-				{
-					Summary.WriteWarning(this, String.Format("No labour filter details provided for feeding activity ({0}). Assuming any labour type can be used", this.Name));
-					LabourFilterGroup lfg = new LabourFilterGroup();
-					LabourFilter lf = new LabourFilter()
-					{
-						Operator = FilterOperators.GreaterThanOrEqual,
-						Value = "0",
-						Parameter = LabourFilterParameters.Age
-					};
-					lfg.Children.Add(lf);
-					LabourFilterList = new List<object>();
-					LabourFilterList.Add(lfg);
-				}
-			}
+			// check if labour required
+			labourRequired = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupAnimals)).Cast<LabourFilterGroupAnimals>().ToList();
+
+			//if (labourRequired != null)
+			//{
+			//	// check for and assign labour filter group
+			//	LabourFilterList = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).Cast<object>().ToList();
+			//	// if not present assume can use any labour and report
+			//	if (LabourFilterList == null)
+			//	{
+			//		Summary.WriteWarning(this, String.Format("No labour filter details provided for feeding activity ({0}). Assuming any labour type can be used", this.Name));
+			//		LabourFilterGroup lfg = new LabourFilterGroup();
+			//		LabourFilter lf = new LabourFilter()
+			//		{
+			//			Operator = FilterOperators.GreaterThanOrEqual,
+			//			Value = "0",
+			//			Parameter = LabourFilterParameters.Age
+			//		};
+			//		lfg.Children.Add(lf);
+			//		LabourFilterList = new List<object>();
+			//		LabourFilterList.Add(lfg);
+			//	}
+			//}
 
 			if (PerformAtStartOfSimulation)
 			{
@@ -164,24 +168,28 @@ namespace Models.WholeFarm.Groupings
 			ResourceRequestList = null;
 			if (Clock.Today.Month == Month)
 			{
+				ResourceRequestList = null;
 				// if labour item(s) found labour will be requested for this activity.
-				if (LabourRequired > 0)
+				if (labourRequired != null)
 				{
-					if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-					// determine head to be mustered
-					RuminantHerd ruminantHerd = Resources.RuminantHerd();
-					List<Ruminant> herd = ruminantHerd.Herd;
-					int head = herd.Filter(this).Count();
-					ResourceRequestList.Add(new ResourceRequest()
+					foreach (var item in labourRequired)
 					{
-						AllowTransmutation = true,
-						Required = Math.Ceiling(head / this.LabourHeadUnit) * this.LabourRequired,
-						ResourceName = "Labour",
-						ResourceTypeName = "",
-						ActivityName = this.Name,
-						FilterDetails = LabourFilterList
+						if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+						// determine head to be mustered
+						RuminantHerd ruminantHerd = Resources.RuminantHerd();
+						List<Ruminant> herd = ruminantHerd.Herd;
+						int head = herd.Filter(this).Count();
+						ResourceRequestList.Add(new ResourceRequest()
+						{
+							AllowTransmutation = true,
+							Required = Math.Ceiling(head / item.LabourHeadUnit) * item.LabourRequired,
+							ResourceName = "Labour",
+							ResourceTypeName = "",
+							ActivityName = this.Name,
+							FilterDetails = LabourFilterList
+						}
+						);
 					}
-					);
 				}
 			}
 			return ResourceRequestList;
