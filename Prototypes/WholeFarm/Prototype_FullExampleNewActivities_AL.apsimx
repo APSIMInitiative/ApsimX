@@ -680,8 +680,6 @@
             </LabourFilterGroup>
             <PerformWithPartialResources>false</PerformWithPartialResources>
             <FeedTypeName>Lucerne</FeedTypeName>
-            <LabourRequired>0.2</LabourRequired>
-            <LabourHeadUnit>100</LabourHeadUnit>
             <LabourFilterList />
             <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
           </RuminantActivityFeed>
@@ -705,9 +703,6 @@
               </LabourFilterGroup>
               <BreedInterval>12</BreedInterval>
               <MonthDue>8</MonthDue>
-              <LabourRequired>1</LabourRequired>
-              <LabourBreedersUnit>100</LabourBreedersUnit>
-              <LabourFilterList />
             </ControlledMatingSettings>
             <PerformWithPartialResources>false</PerformWithPartialResources>
             <HerdName>Breeding</HerdName>

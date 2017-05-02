@@ -21,7 +21,7 @@ namespace Models.WholeFarm.Resources
 		/// Style of pricing animals
 		/// </summary>
 		[Description("Style of pricing animals")]
-		public Common.PricingStyleType PricingStyle { get; set; }
+		public PricingStyleType PricingStyle { get; set; }
 	}
 
 	/// <summary>

@@ -28,7 +28,7 @@ namespace Models.WholeFarm.Resources
 		/// Unit of area to be used in this simulation
 		/// </summary>
 		[Description("Unit of area to be used in this simulation")]
-		public Common.UnitsOfAreaType UnitOfArea { get; set; }
+		public UnitsOfAreaType UnitOfArea { get; set; }
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

@@ -58,12 +58,15 @@ namespace Models.WholeFarm.Activities
 				}
 				else
 				{
-					ResourceRequest interestRequest = new ResourceRequest();
-					interestRequest.ActivityName = this.Name;
-					interestRequest.Required = Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200;
-					interestRequest.AllowTransmutation = false;
-					interestRequest.Reason = "Interest charged";
-					bankAccount.Remove(interestRequest);
+					if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
+					{
+						ResourceRequest interestRequest = new ResourceRequest();
+						interestRequest.ActivityName = this.Name;
+						interestRequest.Required = Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200;
+						interestRequest.AllowTransmutation = false;
+						interestRequest.Reason = "Interest charged";
+						bankAccount.Remove(interestRequest);
+					}
 				}
 			}
 		}

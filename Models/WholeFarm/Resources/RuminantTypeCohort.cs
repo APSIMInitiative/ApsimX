@@ -97,7 +97,7 @@ namespace Models.WholeFarm.Resources
 					ruminant.HerdName = parent.Name;
 					ruminant.Gender = Gender;
 					ruminant.Age = StartingAge;
-					ruminant.SaleFlag = Common.HerdChangeReason.None;
+					ruminant.SaleFlag = HerdChangeReason.None;
 					if (Suckling) ruminant.SetUnweaned();
 
 					double u1 = rand.NextDouble();

@@ -56,7 +56,7 @@ namespace Models.WholeFarm.Resources
 				RuminantType ruminantType = childModel as RuminantType;
 				foreach (var ind in ruminantType.CreateIndividuals())
 				{
-					ind.SaleFlag = Common.HerdChangeReason.InitialHerd;
+					ind.SaleFlag = HerdChangeReason.InitialHerd;
 					AddRuminant(ind);
 				}
 			}
@@ -86,7 +86,7 @@ namespace Models.WholeFarm.Resources
 			OnTransactionOccurred(te);
 
 			// remove change flag
-			ind.SaleFlag = Common.HerdChangeReason.None;
+			ind.SaleFlag = HerdChangeReason.None;
 		}
 
 		/// <summary>
@@ -117,7 +117,7 @@ namespace Models.WholeFarm.Resources
 			OnTransactionOccurred(te);
 
 			// remove change flag
-			ind.SaleFlag = Common.HerdChangeReason.None;
+			ind.SaleFlag = HerdChangeReason.None;
 		}
 
 		/// <summary>

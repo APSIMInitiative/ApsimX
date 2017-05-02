@@ -74,11 +74,11 @@ namespace Models.WholeFarm.Resources
 				AnimalPriceValue getvalue = PriceList.Where(a => a.Age < ind.Age).LastOrDefault();
 				if(PurchasePrice)
 				{
-					return getvalue.PurchaseValue * ((getvalue.Style == Common.PricingStyleType.perKg) ? ind.Weight : 1.0);
+					return getvalue.PurchaseValue * ((getvalue.Style == PricingStyleType.perKg) ? ind.Weight : 1.0);
 				}
 				else
 				{
-					return getvalue.SellValue * ((getvalue.Style == Common.PricingStyleType.perKg) ? ind.Weight : 1.0);
+					return getvalue.SellValue * ((getvalue.Style == PricingStyleType.perKg) ? ind.Weight : 1.0);
 				}
 			}
 			else

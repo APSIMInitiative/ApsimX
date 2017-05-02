@@ -107,9 +107,9 @@ namespace Models.WholeFarm.Resources
 		public void UpdateConceptionDetails(bool Twins, double Rate)
 		{
 			// if she was dry breeder remove flag as she has become pregnant.
-			if (SaleFlag == Common.HerdChangeReason.DryBreederSale)
+			if (SaleFlag == HerdChangeReason.DryBreederSale)
 			{
-				SaleFlag = Common.HerdChangeReason.None;
+				SaleFlag = HerdChangeReason.None;
 			}
 			PreviousConceptionRate = Rate;
 			CarryingTwins = Twins;

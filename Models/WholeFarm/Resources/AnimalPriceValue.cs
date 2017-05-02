@@ -39,6 +39,6 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Type of Styling
 		/// </summary>
-		public Common.PricingStyleType Style { get; set; }
+		public PricingStyleType Style { get; set; }
 	}
 }

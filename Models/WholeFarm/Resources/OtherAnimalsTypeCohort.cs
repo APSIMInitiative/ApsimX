@@ -49,7 +49,7 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Flag to identify individual ready for sale
 		/// </summary>
-		public Common.HerdChangeReason SaleFlag { get; set; }
+		public HerdChangeReason SaleFlag { get; set; }
 
 		/// <summary>
 		/// Gender as string for reports

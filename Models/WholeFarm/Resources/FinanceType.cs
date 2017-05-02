@@ -171,6 +171,8 @@ namespace Models.WholeFarm.Resources
 			double amountRemoved = Math.Round(Request.Required, 2, MidpointRounding.ToEven); 
 			// avoid taking too much
 			amountRemoved = Math.Min(this.Amount, amountRemoved);
+			if (amountRemoved == 0) return;
+
 			this.amount -= amountRemoved;
 
 			Request.Provided = amountRemoved;

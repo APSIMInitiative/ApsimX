@@ -133,7 +133,7 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Flag to identify individual ready for sale
 		/// </summary>
-		public Common.HerdChangeReason  SaleFlag { get; set; }
+		public HerdChangeReason SaleFlag { get; set; }
 
 
 		/// <summary>
@@ -145,37 +145,37 @@ namespace Models.WholeFarm.Resources
 			{
 				switch (SaleFlag)
 				{
-					case Common.HerdChangeReason.None:
+					case HerdChangeReason.None:
 						return 0;
-					case Common.HerdChangeReason.Died:
+					case HerdChangeReason.Died:
 						return -1;
-					case Common.HerdChangeReason.Born:
+					case HerdChangeReason.Born:
 						return 1;
-					case Common.HerdChangeReason.TradeSale:
+					case HerdChangeReason.TradeSale:
 						return -1;
-					case Common.HerdChangeReason.DryBreederSale:
+					case HerdChangeReason.DryBreederSale:
 						return -1;
-					case Common.HerdChangeReason.ExcessBreederSale:
+					case HerdChangeReason.ExcessBreederSale:
 						return -1;
-					case Common.HerdChangeReason.ExcessBullSale:
+					case HerdChangeReason.ExcessBullSale:
 						return -1;
-					case Common.HerdChangeReason.MaxAgeSale:
+					case HerdChangeReason.MaxAgeSale:
 						return -1;
-					case Common.HerdChangeReason.AgeWeightSale:
+					case HerdChangeReason.AgeWeightSale:
 						return -1;
-					case Common.HerdChangeReason.TradePurchase:
+					case HerdChangeReason.TradePurchase:
 						return 1;
-					case Common.HerdChangeReason.HeiferPurchase:
+					case HerdChangeReason.HeiferPurchase:
 						return 1;
-					case Common.HerdChangeReason.SirePurchase:
+					case HerdChangeReason.SirePurchase:
 						return 1;
-					case Common.HerdChangeReason.Consumed:
+					case HerdChangeReason.Consumed:
 						return -1;
-					case Common.HerdChangeReason.DestockSale:
+					case HerdChangeReason.DestockSale:
 						return -1;
-					case Common.HerdChangeReason.RestockPurchase:
+					case HerdChangeReason.RestockPurchase:
 						return 1;
-					case Common.HerdChangeReason.InitialHerd:
+					case HerdChangeReason.InitialHerd:
 						return 1;
 					default:
 						return 0;
@@ -191,7 +191,7 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Is the individual currently marked for sale?
 		/// </summary>
-		public bool ReadyForSale { get { return SaleFlag != Common.HerdChangeReason.None; } }
+		public bool ReadyForSale { get { return SaleFlag != HerdChangeReason.None; } }
 
 		/// <summary>
 		/// Energy balance store
@@ -317,7 +317,7 @@ namespace Models.WholeFarm.Resources
 			this.Wool = 0;
 			this.Cashmere = 0;
 			this.weaned = true;
-			this.SaleFlag = Common.HerdChangeReason.None;
+			this.SaleFlag = HerdChangeReason.None;
 		}
 	}
 

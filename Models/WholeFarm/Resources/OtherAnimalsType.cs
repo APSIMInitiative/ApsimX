@@ -54,7 +54,7 @@ namespace Models.WholeFarm.Resources
 			{
 				if (child is OtherAnimalsTypeCohort)
 				{
-					((OtherAnimalsTypeCohort)child).SaleFlag = Common.HerdChangeReason.InitialHerd;
+					((OtherAnimalsTypeCohort)child).SaleFlag = HerdChangeReason.InitialHerd;
 					Add(child, "Setup", this.Name);
 				}
 			}

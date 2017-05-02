@@ -59,7 +59,7 @@ namespace Models.WholeFarm.Resources
 			this.amount = 0;
 			if (StartingAmount > 0)
 			{
-				Add(StartingAmount*GlobalWarmingPotential, this.Name, "Starting value");
+				Add(StartingAmount, this.Name, "Starting value");
 			}
 		}
 

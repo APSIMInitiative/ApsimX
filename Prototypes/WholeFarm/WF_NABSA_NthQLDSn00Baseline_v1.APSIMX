@@ -3,10 +3,6 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>Harwood.met</FileName>
-    </Weather>
     <FileGRASP>
       <Name>File GRASP</Name>
       <ErrorMessage />
@@ -534,21 +530,8 @@
                 <double>1</double>
               </MonthlyValues>
             </RuminantFeedGroup>
-            <LabourFilterGroupAnimals>
-              <Name>Labour details</Name>
-              <LabourFilter>
-                <Name>Filter[Name=Joe B]</Name>
-                <Parameter>Name</Parameter>
-                <Operator>Equal</Operator>
-                <Value>Joe B</Value>
-              </LabourFilter>
-              <LabourRequired>0.2</LabourRequired>
-              <LabourHeadUnit>100</LabourHeadUnit>
-            </LabourFilterGroupAnimals>
             <PerformWithPartialResources>false</PerformWithPartialResources>
             <FeedTypeName>Lucerne</FeedTypeName>
-            <LabourRequired>0</LabourRequired>
-            <LabourHeadUnit>0</LabourHeadUnit>
             <LabourFilterList />
             <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
           </RuminantActivityFeed>
@@ -561,22 +544,8 @@
             <Name>Breed Bos indicus</Name>
             <ControlledMatingSettings>
               <Name>Controlled mating</Name>
-              <LabourFilterGroupAnimals>
-                <Name>Labour details</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <LabourRequired>1</LabourRequired>
-                <LabourHeadUnit>0</LabourHeadUnit>
-              </LabourFilterGroupAnimals>
               <BreedInterval>12</BreedInterval>
               <MonthDue>8</MonthDue>
-              <LabourRequired>0</LabourRequired>
-              <LabourBreedersUnit>0</LabourBreedersUnit>
-              <LabourFilterList />
             </ControlledMatingSettings>
             <PerformWithPartialResources>false</PerformWithPartialResources>
             <HerdName>BosIndicus</HerdName>
