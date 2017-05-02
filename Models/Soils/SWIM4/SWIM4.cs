@@ -175,6 +175,9 @@ namespace Models.Soils.SWIM4
         public double WinterU { get { return 0; } set { } }
         #endregion
 
+     //   [Link]
+     //   Clock Clock = null;
+
         int n = 1;
         int nt = 2;
         int ns = 2; // 1 layers, 2 soil types, 2 solutes
@@ -192,7 +195,7 @@ namespace Models.Soils.SWIM4
         string[] isotype;//(nt)
         double[,] isopar; //2 params (nt,2)
         SolProps solProps;
-        SoilData sd;
+        SoilData sd = new SoilData();
         double[,] wex = new double[1, 1]; //unused option params in FORTRAN... must be a better way of doing this
         double[,,] sex = new double[1, 1, 1];
 
@@ -220,7 +223,7 @@ namespace Models.Soils.SWIM4
             sdrn = new double[ns + 1];
             sinfil = new double[ns + 1];
             bd = Soil.BD.OneBase();
-            sd = new SoilData();
+            SoilData sd = new SoilData();
             Flow.sink = new SinkDripperDrain(); //set the type of sink to use
             jt = new int[n + 1];
             nssteps = new int[ns + 1];
@@ -272,6 +275,9 @@ namespace Models.Soils.SWIM4
             infil = Soil.SoilWater.Infiltration;
             drn = Soil.SoilWater.Drainage;
             qprec = 10; //TODO: precipitation rate in cm/h, need to give this a real value
+            runoff = Soil.SoilWater.Runoff;
+            infil = Soil.SoilWater.Infiltration;
+            drn = Soil.SoilWater.Drainage;
             for (int col = 1; col < sm.GetLength(0); col++)
                 sm[col, 1] = 1000.0 / sd.dx[1];
             //initial solute concn(mass units per cc of soil)
