@@ -585,7 +585,8 @@ namespace Models.Soils.SWIM4
     /// <summary>
     /// 
     /// </summary>
-        public struct PathEnd
+    [Serializable]
+    public struct PathEnd
     {
         // all needed refs to end data
         /// <summary></summary>
@@ -599,6 +600,7 @@ namespace Models.Soils.SWIM4
     /// <summary>
     /// A flux path
     /// </summary>
+    [Serializable]
     public struct FluxPath
     {
         /// <summary></summary>
