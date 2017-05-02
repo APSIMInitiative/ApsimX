@@ -75,6 +75,12 @@ namespace Models.WholeFarm.Activities
 		public double StockingRate { get; set; }
 
 		/// <summary>
+		/// Perennials
+		/// </summary>
+		[XmlIgnore]
+		public double Perennials { get; set; }
+
+		/// <summary>
 		/// Units of erea to use
 		/// </summary>
 		[Description("units of area")]
@@ -247,6 +253,7 @@ namespace Models.WholeFarm.Activities
 			//erosion
 			//tree basal area
 			//perennials
+			Perennials = 92.2 * (1 - Math.Pow(LandConditionIndex.Value,3.35) / Math.Pow(LandConditionIndex.Value,3.35 + 137.7)) - 2.2;
 			//%runoff
 			//methane
 			//soilC
