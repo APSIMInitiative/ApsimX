@@ -73,7 +73,7 @@ namespace Models.WholeFarm.Groupings
 		public List<object> LabourFilterList { get; set; }
 
 		private GrazeFoodStoreType pasture { get; set; }
-		private List<LabourFilterGroupAnimals> labourRequired = null;
+		private List<LabourFilterGroupSpecified> labourRequired = null;
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -95,7 +95,7 @@ namespace Models.WholeFarm.Groupings
 			}
 
 			// check if labour required
-			labourRequired = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupAnimals)).Cast<LabourFilterGroupAnimals>().ToList();
+			labourRequired = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 
 			//if (labourRequired != null)
 			//{

@@ -23,16 +23,6 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		private List<IModel> activities;
 
-		///// <summary>
-		///// Function to return an activity from the list of available activities.
-		///// </summary>
-		///// <param name="Name"></param>
-		///// <returns>Activity with requested name or null</returns>
-		//public IModel GetByName(string Name)
-		//{
-		//	return activities.Find(x => x.Name == Name);
-		//}
-
 		private void BindEvents(List<IModel> root)
 		{
 			foreach (var item in root.Where(a => a.GetType().IsSubclassOf(typeof(WFActivityBase))))

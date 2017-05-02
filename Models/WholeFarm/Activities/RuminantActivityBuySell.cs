@@ -93,7 +93,7 @@ namespace Models.WholeFarm.Activities
 		public string BankAccountName { get; set; }
 
 		private FinanceType bankAccount = null;
-		private LabourFilterGroupAnimals labourRequired = null;
+		private LabourFilterGroupSpecified labourRequired = null;
 
 		/// <summary>An event handler to allow us to initialise herd pricing.</summary>
 		/// <param name="sender">The sender.</param>
@@ -120,7 +120,7 @@ namespace Models.WholeFarm.Activities
 			}
 
 			// check if labour required
-			labourRequired = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupAnimals)).FirstOrDefault() as LabourFilterGroupAnimals;
+			labourRequired = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).FirstOrDefault() as LabourFilterGroupSpecified;
 		}
 
 		/// <summary>An event handler to call for animal purchases</summary>
@@ -280,7 +280,7 @@ namespace Models.WholeFarm.Activities
 			ResourceRequestList = null;
 			if(labourRequired!=null)
 			{
-				List<object> LabourFilterList = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupAnimals)).Cast<object>().ToList();
+				List<object> LabourFilterList = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<object>().ToList();
 
 				if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
 				// determine head to be mustered

@@ -104,7 +104,9 @@ namespace Models.WholeFarm.Resources
 							return items.OrderByDescending(a => a.Amount).FirstOrDefault();
 						}
 					default:
-						throw new Exception("Resource cannot be filtered. Filtering not implemented for "+ resourceGroupObject.GetType().ToString());
+						string errorMsg = "Resource cannot be filtered. Filtering not implemented for " + resourceGroupObject.GetType().ToString() + " from activity (" + Request.ActivityName + ")";
+						Summary.WriteWarning(this, errorMsg);
+						throw new Exception(errorMsg);
 				}
 			}
 			else
@@ -123,17 +125,6 @@ namespace Models.WholeFarm.Resources
 		public Model GetResourceItem(string ResourceGroupName, string ResourceTypeName, out bool ResourceAvailable)
 		{
 			ResourceAvailable = false;
-			if(ResourceGroupName==null)
-			{
-				Summary.WriteWarning(this, "ResourceGroup name must be supplied");
-				throw new Exception("Resource not specified!");
-			}
-			if (ResourceTypeName == null)
-			{
-				Summary.WriteWarning(this, "ResourceType name must be supplied");
-				throw new Exception("Resource group not specified!");
-			}
-
 			// locate specified resource
 			Model resourceGroup = this.Children.Where(a => a.Name == ResourceGroupName).FirstOrDefault();
 			if (resourceGroup != null)
@@ -141,17 +132,49 @@ namespace Models.WholeFarm.Resources
 				Model resource = resourceGroup.Children.Where(a => a.Name == ResourceTypeName).FirstOrDefault();
 				if (resource == null)
 				{
-					Summary.WriteWarning(this, String.Format("Resource of name {0} not found in {1}", ((ResourceTypeName.Length == 0) ? "[Blank]" : ResourceTypeName), ResourceGroupName));
-					throw new Exception("Resource not found!");
+					return null;
 				}
 				ResourceAvailable = true;
 				return resource;
 			}
 			else
 			{
-				Summary.WriteWarning(this, String.Format("No resource group named {0} found in Resources!", ((ResourceGroupName.Length == 0) ? "[Blank]" : ResourceGroupName)));
-				throw new Exception("Resource group not found!");
+				return null;
 			}
+
+
+			// Old method with error reporting removed to allow setup without resources.
+			
+			//ResourceAvailable = false;
+			//if(ResourceGroupName==null)
+			//{
+			//	Summary.WriteWarning(this, "ResourceGroup name must be supplied");
+			//	throw new Exception("Resource not specified!");
+			//}
+			//if (ResourceTypeName == null)
+			//{
+			//	Summary.WriteWarning(this, "ResourceType name must be supplied");
+			//	throw new Exception("Resource group not specified!");
+			//}
+
+			//// locate specified resource
+			//Model resourceGroup = this.Children.Where(a => a.Name == ResourceGroupName).FirstOrDefault();
+			//if (resourceGroup != null)
+			//{
+			//	Model resource = resourceGroup.Children.Where(a => a.Name == ResourceTypeName).FirstOrDefault();
+			//	if (resource == null)
+			//	{
+			//		Summary.WriteWarning(this, String.Format("Resource of name {0} not found in {1}", ((ResourceTypeName.Length == 0) ? "[Blank]" : ResourceTypeName), ResourceGroupName));
+			//		throw new Exception("Resource not found!");
+			//	}
+			//	ResourceAvailable = true;
+			//	return resource;
+			//}
+			//else
+			//{
+			//	Summary.WriteWarning(this, String.Format("No resource group named {0} found in Resources!", ((ResourceGroupName.Length == 0) ? "[Blank]" : ResourceGroupName)));
+			//	throw new Exception("Resource group not found!");
+			//}
 		}
 
 		/// <summary>

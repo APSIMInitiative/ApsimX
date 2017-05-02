@@ -32,19 +32,6 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		public List<WFActivityBase> ActivityList { get; set; }
 
-		// follwing never reached as it is the base class
-
-		///// <summary>An event handler to allow us to initialise ourselves.</summary>
-		///// <param name="sender">The sender.</param>
-		///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		//[EventSubscribe("Commencing")]
-		//private void OnSimulationCommencing(object sender, EventArgs e)
-		//{
-		//	// move children to a list of activities
-		//	// TODO: this does not create a new instance of the activities so changes will be reflected in the apsimx XML file.
-		//	ActivityList = Apsim.Children(this, typeof(WFActivityBase)).Cast<WFActivityBase>().ToList();
-		//}
-
 		/// <summary>
 		/// Method to cascade calls for resources for all activities in the UI tree. 
 		/// Responds to WFGetResourcesRequired in the Activity model holing top level list of activities
@@ -166,7 +153,6 @@ namespace Models.WholeFarm.Activities
 				PerformActivity();
 			}
 		}
-
 
 		/// <summary>
 		/// Allow activity to proceed with less resources than requested

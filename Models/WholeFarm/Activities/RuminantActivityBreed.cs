@@ -118,7 +118,7 @@ namespace Models.WholeFarm.Activities
 					}
 				}
 
-				// assing values for the remaining females who haven't just bred.
+				// assigning values for the remaining females who haven't just bred.
 				foreach (var female in breedFemales)
 				{
 					female.DryBreeder = true;

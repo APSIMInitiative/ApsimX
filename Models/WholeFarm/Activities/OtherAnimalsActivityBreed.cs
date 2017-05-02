@@ -98,8 +98,8 @@ namespace Models.WholeFarm.Activities
 
 			if (BreedingInterval <= 0)
 			{
-				Summary.WriteWarning(this, String.Format("Overhead payment interval must be greater than 1 ({0})", this.Name));
-				throw new Exception(String.Format("Invalid payment interval supplied for overhead {0}", this.Name));
+				Summary.WriteWarning(this, String.Format("Breeding interval must be greater than 0 ({0})", this.Name));
+				throw new Exception(String.Format("Invalid breeding interval supplied for overhead {0}", this.Name));
 			}
 
 			if (StartBreedingMonth >= Clock.StartDate.Month)
@@ -173,7 +173,6 @@ namespace Models.WholeFarm.Activities
 		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
 			// determine labour for animal breeding and request it.
-
 			return null;
 		}
 

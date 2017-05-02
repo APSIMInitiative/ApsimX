@@ -269,7 +269,7 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Resources.Labour))]
         [XmlElement(typeof(Models.WholeFarm.Resources.LabourType))]
 		[XmlElement(typeof(Models.WholeFarm.Groupings.LabourFilter))]
-		[XmlElement(typeof(Models.WholeFarm.Groupings.LabourFilterGroupAnimals))]
+		[XmlElement(typeof(Models.WholeFarm.Groupings.LabourFilterGroupSpecified))]
 		[XmlElement(typeof(Models.WholeFarm.Groupings.LabourFilterGroup))]
 		[XmlElement(typeof(Models.WholeFarm.Groupings.LabourDefineFilterGroup))]
 		[XmlElement(typeof(Models.WholeFarm.LabourOffFarmFilterGroup))]
