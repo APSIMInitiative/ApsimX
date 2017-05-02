@@ -22,6 +22,8 @@ namespace Models.WholeFarm.Activities
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
+		[Link]
+		ISummary Summary = null;
 
 		/// <summary>
 		/// Get the Clock.
@@ -58,6 +60,11 @@ namespace Models.WholeFarm.Activities
 			// locate BankType resource
 			bool resourceAvailable = false;
 			bankType = Resources.GetResourceItem("Finances", BankAccountName, out resourceAvailable) as FinanceType;
+
+			if(this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).Count() > 1)
+			{
+				Summary.WriteWarning(this, String.Format("Only one Labour Filter Group can be provied for off farm labour. The first filter group will be used for {0}", this.Name));
+			}
 		}
 
 		/// <summary>

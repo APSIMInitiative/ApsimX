@@ -49,6 +49,11 @@ namespace Models.WholeFarm.Activities
 		[Description("Feeding style to use")]
 		public OtherAnimalsFeedActivityTypes FeedStyle { get; set; }
 
+		/// <summary>
+		/// Labour settings
+		/// </summary>
+		private List<LabourFilterGroupSpecified> labour { get; set; }
+
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -59,6 +64,10 @@ namespace Models.WholeFarm.Activities
 			bool resourceAvailable = false;
 			FeedType = Resources.GetResourceItem("AnimalFoodStore", FeedTypeName, out resourceAvailable) as IFeedType;
 			FoodSource = FeedType;
+
+			// get labour specifications
+			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 		}
 
 		/// <summary>
@@ -67,11 +76,12 @@ namespace Models.WholeFarm.Activities
 		/// <returns></returns>
 		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
-			ResourceRequestList = new List<ResourceRequest>();
+			ResourceRequestList = null;
 
 			// get feed required
 			// zero based month index for array
 			int month = Clock.Today.Month - 1;
+			double allIndividuals = 0;
 			double amount = 0;
 			foreach (OtherAnimalsFilterGroup child in this.Children.Where(a => a.GetType() == typeof(OtherAnimalsFilterGroup)))
 			{
@@ -80,6 +90,7 @@ namespace Models.WholeFarm.Activities
 				{
 					total += item.Number * ((item.Age < (child as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.AgeWhenAdult)?0.1:1);
 				}
+				allIndividuals += total;
 				switch (FeedStyle)
 				{
 					case OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount:
@@ -94,6 +105,7 @@ namespace Models.WholeFarm.Activities
 
 				if (amount > 0)
 				{
+					if(ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
 					ResourceRequestList.Add(new ResourceRequest()
 					{
 						AllowTransmutation = true,
@@ -108,28 +120,37 @@ namespace Models.WholeFarm.Activities
 				}
 			}
 
-			if (amount > 0)
+			if (amount == 0) return ResourceRequestList;
+
+			// for each labour item specified
+			foreach (var item in labour)
 			{
-				// get labour required
-				double labourneeded = this.Children.Where(a => a.GetType() == typeof(ActivityLabourRequirementGroup)).Cast<ActivityLabourRequirementGroup>().FirstOrDefault().DaysRequired;
-				if (labourneeded > 0)
+				double daysNeeded = 0;
+				switch (item.UnitType)
 				{
+					case LabourUnitType.Fixed:
+						daysNeeded = item.LabourPerUnit;
+						break;
+					case LabourUnitType.perHead:
+						daysNeeded = Math.Ceiling(allIndividuals / item.UnitSize) * item.LabourPerUnit;
+						break;
+					default:
+						throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+				}
+				if (daysNeeded > 0)
+				{
+					if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
 					ResourceRequestList.Add(new ResourceRequest()
 					{
 						AllowTransmutation = false,
-						Required = labourneeded,
+						Required = daysNeeded,
 						ResourceName = "Labour",
 						ResourceTypeName = "",
 						ActivityName = this.Name,
-						FilterDetails = this.Children.Where(a => a.GetType() == typeof(ActivityLabourRequirementGroup)).ToList<object>()
+						FilterDetails = new List<object>() { item }
 					}
 					);
 				}
-			}
-
-			if (ResourceRequestList.Count()==0)
-			{
-				return null;
 			}
 			return ResourceRequestList;
 		}

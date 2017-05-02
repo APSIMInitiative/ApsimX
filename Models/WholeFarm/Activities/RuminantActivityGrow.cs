@@ -473,7 +473,7 @@ namespace Models.WholeFarm.Activities
 			// weight based mortality
 			List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * (1.0 - a.BreedParams.ProportionOfMaxWeightToSurvive))).ToList();
 			// set died flag
-			died.Select(a => { a.SaleFlag = Common.HerdChangeReason.Died; return a; }).ToList();
+			died.Select(a => { a.SaleFlag = HerdChangeReason.Died; return a; }).ToList();
 			ruminantHerd.RemoveRuminant(died);
 
 			// base mortality adjusted for condition
@@ -508,7 +508,7 @@ namespace Models.WholeFarm.Activities
 			}
 
 			died = herd.Where(a => a.Died).ToList();
-			died.Select(a => { a.SaleFlag = Common.HerdChangeReason.Died; return a; }).ToList();
+			died.Select(a => { a.SaleFlag = HerdChangeReason.Died; return a; }).ToList();
 			ruminantHerd.RemoveRuminant(died);
 		}
 

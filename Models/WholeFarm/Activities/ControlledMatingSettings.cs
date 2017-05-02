@@ -44,23 +44,6 @@ namespace Models.WholeFarm.Activities
 		public int MonthDue { get; set; }
 
 		/// <summary>
-		/// Labour required per x breeders
-		/// </summary>
-		[Description("Labour required per x breeders")]
-		public double LabourRequired { get; set; }
-
-		/// <summary>
-		/// Number of breeders per labour unit required
-		/// </summary>
-		[Description("Number of breeders per labour unit required")]
-		public double LabourBreedersUnit { get; set; }
-
-		/// <summary>
-		/// Labour grouping for breeding
-		/// </summary>
-		public List<object> LabourFilterList { get; set; }
-
-		/// <summary>
 		/// Month this overhead is next due.
 		/// </summary>
 		[XmlIgnore]
@@ -90,24 +73,6 @@ namespace Models.WholeFarm.Activities
 				{
 					NextDueDate = NextDueDate.AddMonths(BreedInterval);
 				}
-			}
-
-			// check for and assign labour filter group
-			LabourFilterList = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).Cast<object>().ToList();
-			// if not present assume can use any labour and report
-			if(LabourFilterList==null)
-			{
-				Summary.WriteWarning(this, String.Format("No labour filter details provided for controlled mating settings ({0}). Assuming any labour type can be used", this.Name));
-				LabourFilterGroup lfg = new LabourFilterGroup();
-				LabourFilter lf = new LabourFilter()
-				{
-					Operator = FilterOperators.GreaterThanOrEqual,
-					Value = "0",
-					Parameter = LabourFilterParameters.Age
-				};
-				lfg.Children.Add(lf);
-				LabourFilterList = new List<object>();
-				LabourFilterList.Add(lfg);
 			}
 		}
 

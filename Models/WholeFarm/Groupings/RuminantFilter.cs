@@ -100,6 +100,10 @@ namespace Models.WholeFarm.Groupings
 		/// <summary>
 		/// Age (months) of individuals
 		/// </summary>
-		Age
+		Age,
+		/// <summary>
+		/// Current grazing location
+		/// </summary>
+		Location
 	}
 }

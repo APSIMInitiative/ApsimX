@@ -82,7 +82,7 @@ namespace Models.WholeFarm.Activities
 					if(WholeFarm.RandomGenerator.NextDouble() <= ProportionToRemove)
 					{
 						// flag female ready to transport.
-						female.SaleFlag = Common.HerdChangeReason.DryBreederSale;
+						female.SaleFlag = HerdChangeReason.DryBreederSale;
 					}					
 				}
 

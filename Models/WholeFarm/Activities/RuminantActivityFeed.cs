@@ -38,24 +38,6 @@ namespace Models.WholeFarm.Activities
 		[Description("Feed type name in Animal Food Store")]
 		public string FeedTypeName { get; set; }
 
-		/// <summary>
-		/// Labour required per x head
-		/// </summary>
-		[Description("Labour required per x head")]
-		public double LabourRequired { get; set; }
-
-		/// <summary>
-		/// Number of head per labour unit required
-		/// </summary>
-		[Description("Number of head per labour unit required")]
-		public double LabourHeadUnit { get; set; }
-
-		///// <summary>
-		///// Does labour shortfall limit feeding
-		///// </summary>
-		//[Description("Does labour shortfall limit feeding")]
-		//public bool LabourShortfallLimitsFeeding { get; set; }
-
 		private IResourceType FoodSource { get; set; }
 
 		/// <summary>
@@ -73,7 +55,12 @@ namespace Models.WholeFarm.Activities
 		/// Feeding style to use
 		/// </summary>
 		[Description("Feeding style to use")]
-		public Common.RuminantFeedActivityTypes FeedStyle { get; set; }
+		public RuminantFeedActivityTypes FeedStyle { get; set; }
+
+		/// <summary>
+		/// Labour settings
+		/// </summary>
+		private List<LabourFilterGroupSpecified> labour { get; set; }
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -90,26 +77,9 @@ namespace Models.WholeFarm.Activities
 				Summary.WriteWarning(this, String.Format("Unable to locate feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
 			}
 
-			if (LabourRequired > 0)
-			{
-				// check for and assign labour filter group
-				LabourFilterList = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).Cast<object>().ToList();
-				// if not present assume can use any labour and report
-				if (LabourFilterList == null)
-				{
-					Summary.WriteWarning(this, String.Format("No labour filter details provided for feeding activity ({0}). Assuming any labour type can be used", this.Name));
-					LabourFilterGroup lfg = new LabourFilterGroup();
-					LabourFilter lf = new LabourFilter()
-					{
-						Operator = FilterOperators.GreaterThanOrEqual,
-						Value = "0",
-						Parameter = LabourFilterParameters.Age
-					};
-					lfg.Children.Add(lf);
-					LabourFilterList = new List<object>();
-					LabourFilterList.Add(lfg);
-				}
-			}
+			// get labour specifications
+			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 		}
 
 		/// <summary>
@@ -119,72 +89,92 @@ namespace Models.WholeFarm.Activities
 		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
 			ResourceRequestList = null;
-			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-			List<Ruminant> herd = ruminantHerd.Herd;
-			if (herd != null && herd.Count > 0)
+			List<Ruminant> herd;
+			int head = 0;
+			double AE = 0;
+			foreach (RuminantFeedGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFeedGroup)))
 			{
-				// labour
-				if (LabourRequired > 0)
+				herd = Resources.RuminantHerd().Herd.Filter(child).ToList();
+				head += herd.Count();
+				AE += herd.Sum(a => a.AdultEquivalent);
+			}
+
+			// for each labour item specified
+			foreach (var item in labour)
+			{
+				double daysNeeded = 0;
+				switch (item.UnitType)
+				{
+					case LabourUnitType.Fixed:
+						daysNeeded = item.LabourPerUnit;
+						break;
+					case LabourUnitType.perHead:
+						daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
+						break;
+					case LabourUnitType.perAE:
+						daysNeeded = Math.Ceiling(AE / item.UnitSize) * item.LabourPerUnit;
+						break;
+					default:
+						throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+				}
+				if (daysNeeded > 0)
 				{
 					if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-					// determine head to be fed
-					int head = 0;
-					foreach (RuminantFeedGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFeedGroup)))
-					{
-						head += herd.Filter(child as RuminantFeedGroup).Count();
-					}
 					ResourceRequestList.Add(new ResourceRequest()
 					{
 						AllowTransmutation = false,
-						Required = Math.Ceiling(head/this.LabourHeadUnit)*this.LabourRequired,
+						Required = daysNeeded,
 						ResourceName = "Labour",
 						ResourceTypeName = "",
 						ActivityName = this.Name,
-						FilterDetails = LabourFilterList
+						FilterDetails = new List<object>() { item }
 					}
 					);
 				}
+			}
 
-				// feed
-				double feedRequired = 0;
-				// get zero limited month from clock
-				int month = Clock.Today.Month - 1;
+			herd = Resources.RuminantHerd().Herd.ToList();
 
-				// get list from filters
-				foreach (RuminantFeedGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFeedGroup)))
+			// feed
+			double feedRequired = 0;
+			// get zero limited month from clock
+			int month = Clock.Today.Month - 1;
+
+			// get list from filters
+			foreach (RuminantFeedGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFeedGroup)))
+			{
+				foreach (Ruminant ind in herd.Filter(child as RuminantFeedGroup))
 				{
-					foreach (Ruminant ind in herd.Filter(child as RuminantFeedGroup))
+					switch (FeedStyle)
 					{
-						switch (FeedStyle)
-						{
-							case Common.RuminantFeedActivityTypes.SpecifiedDailyAmount:
-								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
-								break;
-							case Common.RuminantFeedActivityTypes.ProportionOfWeight:
-								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4;
-								break;
-							case Common.RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake;
-								break;
-							case Common.RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-								feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake);
-								break;
-							default:
-								break;
-						}
+						case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+							feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
+							break;
+						case RuminantFeedActivityTypes.ProportionOfWeight:
+							feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4;
+							break;
+						case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+							feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake;
+							break;
+						case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+							feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake);
+							break;
+						default:
+							break;
 					}
 				}
-				if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-				ResourceRequestList.Add(new ResourceRequest()
-				{
-					AllowTransmutation = true,
-					Required = feedRequired,
-					ResourceName = "AnimalFoodStore",
-					ResourceTypeName = this.FeedTypeName,
-					ActivityName = this.Name
-				}
-				);
 			}
+			if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+			ResourceRequestList.Add(new ResourceRequest()
+			{
+				AllowTransmutation = true,
+				Required = feedRequired,
+				ResourceName = "AnimalFoodStore",
+				ResourceTypeName = this.FeedTypeName,
+				ActivityName = this.Name
+			}
+			);
+
 			return ResourceRequestList;
 		}
 
@@ -198,18 +188,9 @@ namespace Models.WholeFarm.Activities
 			if (herd != null && herd.Count > 0)
 			{
 				// calculate labour limit
-				double labourLimit = 1.0;
-
-				// can't limit food here by labour as it has already been taken from stores.
-
-				//if (LabourShortfallLimitsFeeding)
-				//{
-				//	ResourceRequest labourRequest = ResourceRequestList.Where(a => a.ResourceName == "Labour").FirstOrDefault();
-				//	if (labourRequest != null)
-				//	{
-				//		labourLimit = Math.Min(1.0, labourRequest.Provided / labourRequest.Required);
-				//	}
-				//}
+				double labourNeeded = ResourceRequestList.Where(a => a.ResourceName == "Labour").Sum(a => a.Required);
+				double labourProvided = ResourceRequestList.Where(a => a.ResourceName == "Labour").Sum(a => a.Provided);
+				double labourLimit = labourProvided/labourNeeded;
 
 				// calculate feed limit
 				double feedLimit = 0.0;
@@ -231,22 +212,22 @@ namespace Models.WholeFarm.Activities
 					{
 						switch (FeedStyle)
 						{
-							case Common.RuminantFeedActivityTypes.SpecifiedDailyAmount:
+							case RuminantFeedActivityTypes.SpecifiedDailyAmount:
 								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
 								break;
-							case Common.RuminantFeedActivityTypes.ProportionOfWeight:
+							case RuminantFeedActivityTypes.ProportionOfWeight:
 								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
 								break;
-							case Common.RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+							case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
 								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);
 								break;
-							case Common.RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+							case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
 								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
 								details.Supplied *= feedLimit * labourLimit;
 								ind.AddIntake(details);

@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
@@ -84,6 +85,11 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		public DateTime NextDueDate { get; set; }
 
+		/// <summary>
+		/// Labour settings
+		/// </summary>
+		private List<LabourFilterGroupSpecified> labour { get; set; }
+
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -114,6 +120,10 @@ namespace Models.WholeFarm.Activities
 					NextDueDate = NextDueDate.AddMonths(BreedingInterval);
 				}
 			}
+
+			// get labour specifications
+			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 		}
 
 		/// <summary>An event handler to perform herd breeding </summary>
@@ -127,7 +137,7 @@ namespace Models.WholeFarm.Activities
 				double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Male).Sum(b => b.Number);
 				if (!UseLocalMales ^ malebreeders > 0)
 				{
-					// get nuber of females
+					// get number of females
 					double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Female).Sum(b => b.Number);
 					// create new cohorts (male and female)
 					if (breeders > 0)
@@ -139,7 +149,7 @@ namespace Models.WholeFarm.Activities
 							Weight = 0,
 							Gender = Sex.Male,
 							Number = newbysex,
-							SaleFlag = Common.HerdChangeReason.Born
+							SaleFlag = HerdChangeReason.Born
 						};
 						SelectedOtherAnimalsType.Add(newmales, this.Name, SelectedOtherAnimalsType.Name);
 						OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
@@ -148,7 +158,7 @@ namespace Models.WholeFarm.Activities
 							Weight = 0,
 							Gender = Sex.Female,
 							Number = newbysex,
-							SaleFlag = Common.HerdChangeReason.Born
+							SaleFlag = HerdChangeReason.Born
 						};
 						SelectedOtherAnimalsType.Add(newfemales, this.Name, SelectedOtherAnimalsType.Name);
 					}
@@ -172,8 +182,40 @@ namespace Models.WholeFarm.Activities
 		/// <returns></returns>
 		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
-			// determine labour for animal breeding and request it.
-			return null;
+			double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
+			if (breeders == 0) return null;
+
+			// for each labour item specified
+			foreach (var item in labour)
+			{
+				double daysNeeded = 0;
+				switch (item.UnitType)
+				{
+					case LabourUnitType.Fixed:
+						daysNeeded = item.LabourPerUnit;
+						break;
+					case LabourUnitType.perHead:
+						daysNeeded = Math.Ceiling(breeders / item.UnitSize) * item.LabourPerUnit;
+						break;
+					default:
+						throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+				}
+				if (daysNeeded > 0)
+				{
+					if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+					ResourceRequestList.Add(new ResourceRequest()
+					{
+						AllowTransmutation = false,
+						Required = daysNeeded,
+						ResourceName = "Labour",
+						ResourceTypeName = "",
+						ActivityName = this.Name,
+						FilterDetails = new List<object>() { item }
+					}
+					);
+				}
+			}
+			return ResourceRequestList;
 		}
 
 		/// <summary>

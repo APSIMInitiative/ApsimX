@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
 using StdUnits;
 using System;
@@ -36,6 +37,11 @@ namespace Models.WholeFarm.Activities
 		/// The location of controlled mating settings
 		/// </summary>
 		private ControlledMatingSettings ControlledMatings { get; set; }
+
+		/// <summary>
+		/// Labour settings
+		/// </summary>
+		private List<LabourFilterGroupSpecified> labour { get; set; }
 
 		/// <summary>
 		/// Maximum conception rate for uncontrolled matings
@@ -132,6 +138,10 @@ namespace Models.WholeFarm.Activities
 			}
 			// check for controlled mating settings
 			ControlledMatings = this.Children.Where(a => a.GetType() == typeof(ControlledMatingSettings)).Cast<ControlledMatingSettings>().FirstOrDefault();
+
+			// get labour specifications
+			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 		}
 
 		/// <summary>An event handler to perform herd breeding </summary>
@@ -194,7 +204,7 @@ namespace Models.WholeFarm.Activities
 							// calf weight from  Freer
 							newCalfRuminant.Weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
 							newCalfRuminant.HighWeight = newCalfRuminant.Weight;
-							newCalfRuminant.SaleFlag = Common.HerdChangeReason.Born;
+							newCalfRuminant.SaleFlag = HerdChangeReason.Born;
 							ruminantHerd.AddRuminant(newCalfRuminant);
 
 							// add to sucklings
@@ -320,29 +330,49 @@ namespace Models.WholeFarm.Activities
 		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
 			ResourceRequestList = null;
-			if(ControlledMatings!=null)
+
+			if (ControlledMatings != null && ControlledMatings.IsDueDate())
 			{
-				ResourceRequestList = new List<ResourceRequest>();
 				RuminantHerd ruminantHerd = Resources.RuminantHerd();
 				List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
-				int breeders = (from ind in herd
-							   where
-							   (ind.Gender == Sex.Female &
-							   ind.Age >= ind.BreedParams.MinimumAge1stMating &
-							   ind.Weight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
-							   )
-							   select ind).Count();
+				int head = herd.Count();
+				double AE = herd.Sum(a => a.AdultEquivalent);
 
-				ResourceRequestList.Add(new ResourceRequest()
+				if (head == 0) return null;
+
+				// for each labour item specified
+				foreach (var item in labour)
 				{
-					AllowTransmutation = false,
-					Required = Math.Ceiling(breeders/ControlledMatings.LabourBreedersUnit)*ControlledMatings.LabourRequired,
-					ResourceName = "Labour",
-					ResourceTypeName = this.HerdName,
-					ActivityName = this.Name,
-					FilterDetails = ControlledMatings.LabourFilterList
+					double daysNeeded = 0;
+					switch (item.UnitType)
+					{
+						case LabourUnitType.Fixed:
+							daysNeeded = item.LabourPerUnit;
+							break;
+						case LabourUnitType.perHead:
+							daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
+							break;
+						case LabourUnitType.perAE:
+							daysNeeded = Math.Ceiling(AE / item.UnitSize) * item.LabourPerUnit;
+							break;
+						default:
+							throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+					}
+					if (daysNeeded > 0)
+					{
+						if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+						ResourceRequestList.Add(new ResourceRequest()
+						{
+							AllowTransmutation = false,
+							Required = daysNeeded,
+							ResourceName = "Labour",
+							ResourceTypeName = "",
+							ActivityName = this.Name,
+							FilterDetails = new List<object>() { item }
+						}
+						);
+					}
 				}
-				);
 			}
 			return ResourceRequestList;
 		}

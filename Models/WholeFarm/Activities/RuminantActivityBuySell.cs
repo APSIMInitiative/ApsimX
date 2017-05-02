@@ -93,7 +93,11 @@ namespace Models.WholeFarm.Activities
 		public string BankAccountName { get; set; }
 
 		private FinanceType bankAccount = null;
-		private LabourFilterGroupSpecified labourRequired = null;
+
+		/// <summary>
+		/// Labour settings
+		/// </summary>
+		private List<LabourFilterGroupSpecified> labour { get; set; }
 
 		/// <summary>An event handler to allow us to initialise herd pricing.</summary>
 		/// <param name="sender">The sender.</param>
@@ -119,8 +123,9 @@ namespace Models.WholeFarm.Activities
 				}
 			}
 
-			// check if labour required
-			labourRequired = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).FirstOrDefault() as LabourFilterGroupSpecified;
+			// get labour specifications
+			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 		}
 
 		/// <summary>An event handler to call for animal purchases</summary>
@@ -147,7 +152,7 @@ namespace Models.WholeFarm.Activities
 				foreach (var newind in newgroup)
 				{
 					double value = 0;
-					if (newgroup.Key == Common.HerdChangeReason.SirePurchase)
+					if (newgroup.Key == HerdChangeReason.SirePurchase)
 					{
 						value = BreedingSirePrice;
 					}
@@ -208,7 +213,7 @@ namespace Models.WholeFarm.Activities
 			int head = 0;
 
 			// get current untrucked list of animals flagged for sale
-			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.SaleFlag != Common.HerdChangeReason.None & a.Breed == BreedName).OrderByDescending(a => a.Weight).ToList();
+			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.SaleFlag != HerdChangeReason.None & a.Breed == BreedName).OrderByDescending(a => a.Weight).ToList();
 
 			// if sale herd > min loads before allowing sale
 			if (herd.Select(a => a.Weight / 450.0).Sum() / Number450kgPerTruck >= MinimumTrucksBeforeSelling)
@@ -237,7 +242,7 @@ namespace Models.WholeFarm.Activities
 						Summary.WriteWarning(this, String.Format("There was a problem loading the sale truck as sale individuals did not meet the loading criteria for breed {0}", BreedName));
 						break;
 					}
-					herd = ruminantHerd.Herd.Where(a => a.SaleFlag != Common.HerdChangeReason.None & a.Breed == BreedName).OrderByDescending(a => a.Weight).ToList();
+					herd = ruminantHerd.Herd.Where(a => a.SaleFlag != HerdChangeReason.None & a.Breed == BreedName).OrderByDescending(a => a.Weight).ToList();
 				}
 
 				if (trucks > 0 & bankAccount != null)
@@ -278,25 +283,53 @@ namespace Models.WholeFarm.Activities
 		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
 			ResourceRequestList = null;
-			if(labourRequired!=null)
-			{
-				List<object> LabourFilterList = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<object>().ToList();
 
-				if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-				// determine head to be mustered
-				RuminantHerd ruminantHerd = Resources.RuminantHerd();
-				List<Ruminant> herd = ruminantHerd.Herd;
-				int head = herd.Where(a => a.SaleFlag != Common.HerdChangeReason.None & a.Breed == BreedName).Count();
-				ResourceRequestList.Add(new ResourceRequest()
+			for (int i = 0; i < 2; i++)
+			{
+				string BuySellString = (i == 0) ? "Purchase" : "Sell";
+
+				List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => a.SaleFlag.ToString().Contains(BuySellString) & a.Breed == BreedName).ToList();
+				int head = herd.Count();
+				double AE = herd.Sum(a => a.AdultEquivalent);
+
+				if (head > 0)
 				{
-					AllowTransmutation = true,
-					Required = Math.Ceiling(head / labourRequired.LabourHeadUnit) * labourRequired.LabourRequired,
-					ResourceName = "Labour",
-					ResourceTypeName = "",
-					ActivityName = this.Name,
-					FilterDetails = LabourFilterList
+					// for each labour item specified
+					foreach (var item in labour)
+					{
+						double daysNeeded = 0;
+						switch (item.UnitType)
+						{
+							case LabourUnitType.Fixed:
+								daysNeeded = item.LabourPerUnit;
+								break;
+							case LabourUnitType.perHead:
+								daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
+								break;
+							case LabourUnitType.perAE:
+								daysNeeded = Math.Ceiling(AE / item.UnitSize) * item.LabourPerUnit;
+								break;
+							default:
+								throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+						}
+						if (daysNeeded > 0)
+						{
+							if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+							ResourceRequestList.Add(new ResourceRequest()
+							{
+								AllowTransmutation = false,
+								Required = daysNeeded,
+								ResourceName = "Labour",
+								ResourceTypeName = "",
+								ActivityName = this.Name,
+								Reason = BuySellString,
+								FilterDetails = new List<object>() { item }
+							}
+							);
+						}
+					}
 				}
-				);
+
 			}
 			return ResourceRequestList;
 		}
