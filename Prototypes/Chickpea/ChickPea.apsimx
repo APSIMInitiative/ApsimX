@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1255,7 +1255,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <double>0.02</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
@@ -1270,7 +1270,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <double>0</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
@@ -3849,6 +3849,7 @@ A selection of data from Kenya has been included from the work of Keating et al 
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -4023,6 +4024,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -4837,6 +4839,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -5010,6 +5013,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -7163,6 +7167,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -7394,6 +7399,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -8418,6 +8424,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -8591,6 +8598,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -9211,6 +9219,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -9384,6 +9393,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -10011,6 +10021,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -10184,6 +10195,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -10777,6 +10789,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -10950,6 +10963,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -11551,6 +11565,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -11716,6 +11731,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -12641,6 +12657,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -12806,6 +12823,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -13385,6 +13403,7 @@ The data presented for the trials done in Emerald and Biloela were obtained from
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -13558,6 +13577,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -14032,6 +14052,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Report>
               <Name>HarvestReport</Name>
@@ -14205,6 +14226,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -14976,6 +14998,7 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -15083,6 +15106,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -16491,6 +16515,7 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -16598,6 +16623,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -17991,9 +18017,11 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -19445,9 +19473,11 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -20965,6 +20995,7 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -21072,6 +21103,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -21926,6 +21958,7 @@ namespace Models
               <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -22033,6 +22066,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -22774,6 +22808,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Operations>
               <Name>NRateSchedule</Name>
@@ -22891,6 +22926,7 @@ namespace Models
             </Irrigation>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -23816,6 +23852,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -23981,6 +24018,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -24906,6 +24944,7 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Manager>
               <Name>SowingRule</Name>
@@ -25071,6 +25110,7 @@ namespace Models
             </Manager>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -25930,9 +25970,11 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -26655,9 +26697,11 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -27373,9 +27417,11 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -28091,9 +28137,11 @@ namespace Models
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -28884,9 +28932,11 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -29647,9 +29697,11 @@ namespace Models
               <RecordNumber>0</RecordNumber>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -30452,9 +30504,11 @@ namespace Models
               <Longitude>35.842</Longitude>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -31257,9 +31311,11 @@ namespace Models
               <Longitude>35.842</Longitude>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -32062,9 +32118,11 @@ namespace Models
               <Longitude>35.842</Longitude>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -32846,9 +32904,11 @@ namespace Models
               <Longitude>-7.583</Longitude>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -33630,9 +33690,11 @@ namespace Models
               <Longitude>-7.583</Longitude>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -35315,9 +35377,11 @@ namespace Models
               <Longitude>61.433</Longitude>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -37210,9 +37274,11 @@ namespace Models
               <Longitude>61.433</Longitude>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
+              <CERESSoilTemperature />
             </Soil>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -38183,6 +38249,7 @@ namespace Models
               <Longitude>61.433</Longitude>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
+              <CERESSoilTemperature />
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -38293,6 +38360,7 @@ namespace Models
             </Irrigation>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>
@@ -39562,6 +39630,7 @@ namespace Models
               <Longitude>61.433</Longitude>
               <DataSource>Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling &amp; Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.</DataSource>
               <Comments>You will need to add crops to this soil before running simulations.</Comments>
+              <CERESSoilTemperature />
             </Soil>
             <Manager>
               <Name>AutoIrrigate</Name>
@@ -39672,6 +39741,7 @@ namespace Models
             </Irrigation>
             <Area>1</Area>
             <Slope>0</Slope>
+            <SoluteManager />
           </Zone>
         </Simulation>
         <Graph>

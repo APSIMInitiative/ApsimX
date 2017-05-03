@@ -135,8 +135,6 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
-    <Compile Include="Arbitrator\Arbitrator.cs" />
-    <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Core\APSIMFileConverter.cs" />
     <Compile Include="Core\APSIMFileReader.cs" />
     <Compile Include="Core\APSIMFileWriter.cs" />
@@ -233,7 +231,6 @@
     <Compile Include="Core\Attributes\UnitsAttribute.cs" />
     <Compile Include="Core\Attributes\LinkAttribute.cs" />
     <Compile Include="Core\IModel.cs" />
-    <Compile Include="Core\ICrop2.cs" />
     <Compile Include="Plant\CanopyProperties.cs" />
     <Compile Include="Plant\RootProperties.cs" />
     <Compile Include="Core\VariableComposite.cs" />
