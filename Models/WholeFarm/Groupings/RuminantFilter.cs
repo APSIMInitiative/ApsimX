@@ -15,7 +15,6 @@ namespace Models.WholeFarm.Groupings
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantFeedGroup))]
 	[ValidParent(ParentType = typeof(RuminantFilterGroup))]
-	[ValidParent(ParentType = typeof(RuminantMusterGroup))]
 	public class RuminantFilter: WFModel
 	{
 		/// <summary>

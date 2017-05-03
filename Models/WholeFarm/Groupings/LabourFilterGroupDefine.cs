@@ -12,7 +12,7 @@ namespace Models.WholeFarm.Groupings
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class LabourDefineFilterGroup: WFModel
+	public class LabourFilterGroupDefine: WFModel
 	{
 		/// <summary>
 		/// Days per month selected individuals available
@@ -23,7 +23,7 @@ namespace Models.WholeFarm.Groupings
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public LabourDefineFilterGroup()
+		public LabourFilterGroupDefine()
 		{
 			DaysPerMonth = new double[12];
 		}
