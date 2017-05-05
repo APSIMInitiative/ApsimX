@@ -75,7 +75,6 @@
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
             <StartingAmount>10000</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Maize</Name>
@@ -83,7 +82,6 @@
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
             <StartingAmount>100</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>BoughtSupplement_SorghumStraw</Name>
@@ -91,7 +89,6 @@
             <DMD>47</DMD>
             <Nitrogen>0.7</Nitrogen>
             <StartingAmount>100</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
         <RuminantHerd>
@@ -109,7 +106,7 @@
             </RuminantTypeCohort>
             <RuminantTypeCohort>
               <Name>CalfM</Name>
-              <Gender>Female</Gender>
+              <Gender>Male</Gender>
               <StartingAge>5</StartingAge>
               <StartingNumber>200</StartingNumber>
               <StartingWeight>40</StartingWeight>
@@ -127,7 +124,7 @@
             </RuminantTypeCohort>
             <RuminantTypeCohort>
               <Name>WeanerM</Name>
-              <Gender>Female</Gender>
+              <Gender>Male</Gender>
               <StartingAge>5</StartingAge>
               <StartingNumber>500</StartingNumber>
               <StartingWeight>180</StartingWeight>
@@ -504,6 +501,57 @@
           <PerformWithPartialResources>false</PerformWithPartialResources>
         </ActivityFolder>
         <ActivityFolder>
+          <Name>Manage paddocks</Name>
+          <PastureActivityManage>
+            <Name>Native pasture paddock</Name>
+            <Relationship>
+              <Name>LandConditionIndex</Name>
+              <StartingValue>2</StartingValue>
+              <Minumum>0</Minumum>
+              <Maximum>11</Maximum>
+              <XValues>
+                <double>0</double>
+                <double>15</double>
+                <double>35</double>
+                <double>100</double>
+              </XValues>
+              <YValues>
+                <double>-1.5</double>
+                <double>-0.3</double>
+                <double>0.3</double>
+                <double>1.5</double>
+              </YValues>
+            </Relationship>
+            <Relationship>
+              <Name>GrassBasalArea</Name>
+              <StartingValue>3</StartingValue>
+              <Minumum>0</Minumum>
+              <Maximum>3</Maximum>
+              <XValues>
+                <double>0</double>
+                <double>15</double>
+                <double>35</double>
+                <double>100</double>
+              </XValues>
+              <YValues>
+                <double>-0.75</double>
+                <double>-0.15</double>
+                <double>0.15</double>
+                <double>0.75</double>
+              </YValues>
+            </Relationship>
+            <PerformWithPartialResources>true</PerformWithPartialResources>
+            <LandTypeNameToUse>NthQld_NtvPast_SandyCntry</LandTypeNameToUse>
+            <FeedTypeName>Native Pasture</FeedTypeName>
+            <StartingAmount>2000</StartingAmount>
+            <UnitsOfArea>Hectares</UnitsOfArea>
+            <AreaRequested>30000</AreaRequested>
+            <EcolCalculationMonth>9</EcolCalculationMonth>
+            <EcolCalculationInterval>12</EcolCalculationInterval>
+          </PastureActivityManage>
+          <PerformWithPartialResources>false</PerformWithPartialResources>
+        </ActivityFolder>
+        <ActivityFolder>
           <Name>Manage breeding herd</Name>
           <RuminantActivityFeed>
             <Name>Feed Bos indicus lucerne</Name>
@@ -565,6 +613,7 @@
             <MonthlyManagement>false</MonthlyManagement>
             <WeaningAge>9</WeaningAge>
             <WeaningWeight>250</WeaningWeight>
+            <MinimumPastureBeforeRestock>0</MinimumPastureBeforeRestock>
             <SellFemalesLikeMales>false</SellFemalesLikeMales>
           </RuminantActivityManage>
           <RuminantActivityBuySell>
@@ -580,6 +629,7 @@
             <MinimumTrucksBeforeSelling>0</MinimumTrucksBeforeSelling>
             <MinimumLoadBeforeSelling>0</MinimumLoadBeforeSelling>
             <SalesCommission>0</SalesCommission>
+            <BankAccountName>General account</BankAccountName>
           </RuminantActivityBuySell>
           <RuminantActivityHerdCost>
             <Name>Vet costs</Name>
@@ -626,73 +676,6 @@
             <PaymentStyle>perAE</PaymentStyle>
             <AccountName>General account</AccountName>
           </RuminantActivityHerdCost>
-          <PerformWithPartialResources>false</PerformWithPartialResources>
-        </ActivityFolder>
-        <ActivityFolder>
-          <Name>Manage paddocks</Name>
-          <PastureActivityManage>
-            <Name>Native pasture paddock</Name>
-            <Relationship>
-              <Name>LandConditionIndex</Name>
-              <Point>
-                <Name>Point</Name>
-                <X>0</X>
-                <Y>-1.5</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>15</X>
-                <Y>-0.3</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>35</X>
-                <Y>0.3</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>100</X>
-                <Y>1.5</Y>
-              </Point>
-              <StartingValue>2</StartingValue>
-              <Minumum>0</Minumum>
-              <Maximum>11</Maximum>
-            </Relationship>
-            <Relationship>
-              <Name>GrassBasalArea</Name>
-              <Point>
-                <Name>Point</Name>
-                <X>0</X>
-                <Y>-0.75</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>15</X>
-                <Y>-0.15</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>35</X>
-                <Y>0.15</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>100</X>
-                <Y>0.75</Y>
-              </Point>
-              <StartingValue>3</StartingValue>
-              <Minumum>0</Minumum>
-              <Maximum>3</Maximum>
-            </Relationship>
-            <PerformWithPartialResources>true</PerformWithPartialResources>
-            <LandTypeNameToUse>NthQld_NtvPast_SandyCntry</LandTypeNameToUse>
-            <FeedTypeName>Native Pasture</FeedTypeName>
-            <StartingAmount>2000</StartingAmount>
-            <UnitsOfArea>Hectares</UnitsOfArea>
-            <AreaRequested>30000</AreaRequested>
-            <EcolCalculationMonth>9</EcolCalculationMonth>
-            <EcolCalculationInterval>12</EcolCalculationInterval>
-          </PastureActivityManage>
           <PerformWithPartialResources>false</PerformWithPartialResources>
         </ActivityFolder>
         <SummariseRuminantHerd>
@@ -795,8 +778,8 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
             <string>[Activities].LastShortfallResourceRequest.ResourceName as Resource</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
             <string>[Activities].LastShortfallResourceRequest.ActivityName as Activity</string>
             <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
             <string>[Activities].LastShortfallResourceRequest.Available as Available</string>

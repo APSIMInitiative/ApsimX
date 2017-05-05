@@ -141,40 +141,6 @@ namespace Models.WholeFarm.Resources
 			{
 				return null;
 			}
-
-
-			// Old method with error reporting removed to allow setup without resources.
-			
-			//ResourceAvailable = false;
-			//if(ResourceGroupName==null)
-			//{
-			//	Summary.WriteWarning(this, "ResourceGroup name must be supplied");
-			//	throw new Exception("Resource not specified!");
-			//}
-			//if (ResourceTypeName == null)
-			//{
-			//	Summary.WriteWarning(this, "ResourceType name must be supplied");
-			//	throw new Exception("Resource group not specified!");
-			//}
-
-			//// locate specified resource
-			//Model resourceGroup = this.Children.Where(a => a.Name == ResourceGroupName).FirstOrDefault();
-			//if (resourceGroup != null)
-			//{
-			//	Model resource = resourceGroup.Children.Where(a => a.Name == ResourceTypeName).FirstOrDefault();
-			//	if (resource == null)
-			//	{
-			//		Summary.WriteWarning(this, String.Format("Resource of name {0} not found in {1}", ((ResourceTypeName.Length == 0) ? "[Blank]" : ResourceTypeName), ResourceGroupName));
-			//		throw new Exception("Resource not found!");
-			//	}
-			//	ResourceAvailable = true;
-			//	return resource;
-			//}
-			//else
-			//{
-			//	Summary.WriteWarning(this, String.Format("No resource group named {0} found in Resources!", ((ResourceGroupName.Length == 0) ? "[Blank]" : ResourceGroupName)));
-			//	throw new Exception("Resource group not found!");
-			//}
 		}
 
 		/// <summary>
@@ -304,7 +270,9 @@ namespace Models.WholeFarm.Resources
 									labourRequest.FilterDetails = transcost.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>();
 									transResource = this.GetResourceItem(labourRequest, out resourceAvailable) as IResourceType;
 
-									// put group name in the transcost resource type name
+									// TODO: put group name in the transcost resource type name
+									// this still needs to be checked
+									transcost.ResourceTypeName = (transResource as LabourType).Name;
 
 								}
 								else
@@ -324,7 +292,6 @@ namespace Models.WholeFarm.Resources
 									transRequest.ResourceName = transcost.ResourceName;
 
 									// used to pass request, but this is not the transmutation cost
-									//transResource.Remove(request);
 									transResource.Remove(transRequest);
 								}
 								else

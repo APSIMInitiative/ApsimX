@@ -75,8 +75,6 @@ namespace Models.WholeFarm.Resources
 
 			if (StartingNumber > 0)
 			{
-				//TODO: get random generator from global store with seed
-				Random rand = new Random();
 				for (int i = 1; i <= StartingNumber; i++)
 				{
 					object ruminantBase = null;
@@ -100,8 +98,8 @@ namespace Models.WholeFarm.Resources
 					ruminant.SaleFlag = HerdChangeReason.None;
 					if (Suckling) ruminant.SetUnweaned();
 
-					double u1 = rand.NextDouble();
-					double u2 = rand.NextDouble();
+					double u1 = WholeFarm.RandomGenerator.NextDouble();
+					double u2 = WholeFarm.RandomGenerator.NextDouble();
 					double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
 								 Math.Sin(2.0 * Math.PI * u2);
 					ruminant.Weight = StartingWeight + StartingWeightSD * randStdNormal;

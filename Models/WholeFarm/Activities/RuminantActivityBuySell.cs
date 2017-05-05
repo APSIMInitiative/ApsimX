@@ -93,6 +93,7 @@ namespace Models.WholeFarm.Activities
 		public string BankAccountName { get; set; }
 
 		private FinanceType bankAccount = null;
+		private Finance finance = null;
 
 		/// <summary>
 		/// Labour settings
@@ -106,11 +107,21 @@ namespace Models.WholeFarm.Activities
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 			// get account
-			bool tmp = true;
-			bankAccount = Resources.GetResourceItem("Finances", BankAccountName, out tmp) as FinanceType;
+
+			Finance finance = Resources.FinanceResource();
+			if(finance!=null)
+			{
+				bool tmp = true;
+				bankAccount = Resources.GetResourceItem("Finances", BankAccountName, out tmp) as FinanceType;
+				if (!tmp & BankAccountName != "")
+				{
+					Summary.WriteWarning(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
+					throw new Exception(String.Format("Unable to find bank account specified in ({0}).", this.Name));
+				}
+			}
 
 			// check if pricing is present
-			if(bankAccount != null)
+			if (finance != null)
 			{
 				RuminantHerd ruminantHerd = Resources.RuminantHerd();
 				var breeds = ruminantHerd.Herd.Where(a => a.BreedParams.Breed == BreedName).GroupBy(a => a.HerdName);
@@ -141,7 +152,7 @@ namespace Models.WholeFarm.Activities
 			var newRequests = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == BreedName).ToList();
 			foreach (var newgroup in newRequests.GroupBy(a => a.SaleFlag))
 			{
-				double fundsAvailable = 100000000;
+				double fundsAvailable = 0;
 				if (bankAccount != null)
 				{
 					fundsAvailable = bankAccount.FundsAvailable;
@@ -151,24 +162,31 @@ namespace Models.WholeFarm.Activities
 				bool fundsexceeded = false;
 				foreach (var newind in newgroup)
 				{
-					double value = 0;
-					if (newgroup.Key == HerdChangeReason.SirePurchase)
+					if(finance!=null)  // perform with purchasing
 					{
-						value = BreedingSirePrice;
+						double value = 0;
+						if (newgroup.Key == HerdChangeReason.SirePurchase)
+						{
+							value = BreedingSirePrice;
+						}
+						else
+						{
+							value = newind.BreedParams.ValueofIndividual(newind, true);
+						}
+						if (cost + value <= fundsAvailable & fundsexceeded == false)
+						{
+							ruminantHerd.AddRuminant(newind);
+							cost += value;
+						}
+						else
+						{
+							fundsexceeded = true;
+							shortfall += value;
+						}
 					}
-					else
-					{
-						value = newind.BreedParams.ValueofIndividual(newind, true);
-					}
-					if (cost + value <= fundsAvailable & fundsexceeded==false)
+					else // no financial transactions
 					{
 						ruminantHerd.AddRuminant(newind);
-						cost += value;
-					}
-					else
-					{
-						fundsexceeded = true;
-						shortfall += value;
 					}
 				}
 
@@ -203,9 +221,6 @@ namespace Models.WholeFarm.Activities
 		private void OnWFAnimalSell(object sender, EventArgs e)
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-
-			Finance Accounts = Resources.FinanceResource() as Finance;
-			FinanceType bankAccount = Accounts.GetFirst() as FinanceType;
 
 			int trucks = 0;
 			double saleValue = 0;
@@ -250,8 +265,6 @@ namespace Models.WholeFarm.Activities
 					ResourceRequest expenseRequest = new ResourceRequest();
 					expenseRequest.ActivityName = this.Name;
 					expenseRequest.AllowTransmutation = false;
-
-					// TODO: report shortfall before transactions
 
 					// calculate transport costs
 					expenseRequest.Required = trucks * DistanceToMarket * CostPerKmTrucking;

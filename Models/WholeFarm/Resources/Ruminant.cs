@@ -270,7 +270,7 @@ namespace Models.WholeFarm.Resources
 							milk = this.Mother.MilkProduction;
 						}
 					}
-					this.Mother.MilkAmount -= milk;
+//					this.Mother.MilkAmount -= milk;
 				}
 				return milk;
 			}

@@ -44,10 +44,22 @@ namespace Models.WholeFarm.Activities
 		public double Maximum { get; set; }
 
 		/// <summary>
-		/// List of points to define relationship 
+		/// X values of relationship
 		/// </summary>
-		[XmlIgnore]
-		public List<Point> Points { get; set; }
+		[Description("X values of relationship")]
+		public double[] XValues { get; set; }
+
+		/// <summary>
+		/// Y values of relationship
+		/// </summary>
+		[Description("Y values of relationship")]
+		public double[] YValues { get; set; }
+
+		///// <summary>
+		///// List of points to define relationship 
+		///// </summary>
+		//[XmlIgnore]
+		//public List<Point> Points { get; set; }
 
 		/// <summary>
 		/// Solve equation for y given x
@@ -57,15 +69,15 @@ namespace Models.WholeFarm.Activities
 		/// <returns>y value for given x</returns>
 		public double SolveY(double X, bool LinearInterpolation)
 		{
-			if (X <= Points[0].X)
-				return Points[0].Y;
-			if (X >= Points.Last().X)
-				return Points.Last().Y;
+			if (X <= XValues[0])
+				return YValues[0];
+			if (X >= XValues[XValues.Length-1])
+				return YValues[YValues.Length - 1];
 
 			int k = 0;
-			for (int i = 0; i < Points.Count; i++)
+			for (int i = 0; i < XValues.Length; i++)
 			{
-				if (X <= Points[i + 1].X)
+				if (X <= XValues[i + 1])
 				{
 					k = i;
 					break;
@@ -74,11 +86,11 @@ namespace Models.WholeFarm.Activities
 
 			if(LinearInterpolation)
 			{
-				return Points[k].Y + (Points[k + 1].Y - Points[k].Y) / (Points[k + 1].X - Points[k].X) * (X - Points[k].X);
+				return YValues[k] + (YValues[k + 1] - YValues[k]) / (XValues[k + 1] - XValues[k]) * (X - YValues[k]);
 			}
 			else
 			{
-				return Points[k + 1].Y;
+				return YValues[k + 1];
 			}
 		}
 
@@ -111,39 +123,53 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			Value = StartingValue;
-
-			// Get points from children
-			Points = this.Children.Where(a => a.GetType() == typeof(Point)).Cast<Point>().ToList();
-			if(Points.Count == 0)
+			if(XValues == null)
+			{
+				Summary.WriteWarning(this, String.Format("X values are required for relationship ({0})", this.Name));
+				throw new Exception(String.Format("X values are required for relationship ({0})", this.Name));
+			}
+			if (YValues == null)
+			{
+				Summary.WriteWarning(this, String.Format("Y values are required for relationship ({0})", this.Name));
+				throw new Exception(String.Format("Y values are required for relationship ({0})", this.Name));
+			}
+			if (XValues.Length != YValues.Length)
+			{
+				Summary.WriteWarning(this, String.Format("The same number of X and Y values are required for relationship ({0})", this.Name));
+				throw new Exception(String.Format("The same number of X and Y values are required for relationship ({0})", this.Name));
+			}
+			if (XValues.Length == 0)
 			{
 				Summary.WriteWarning(this, String.Format("No data points were provided for relationship ({0})", this.Name));
+				throw new Exception(String.Format("No data points were provided for relationship ({0})", this.Name));
 			}
-			if (Points.Count < 2)
+			if (XValues.Length < 2)
 			{
-				Summary.WriteWarning(this, String.Format("Tow or more data points required for relationship ({0})", this.Name));
+				Summary.WriteWarning(this, String.Format("At least two data points are required for relationship ({0})", this.Name));
+				throw new Exception(String.Format("At least two data points are required for relationship ({0})", this.Name));
 			}
 		}
 	}
 
-	/// <summary>
-	/// Point for relationship
-	/// </summary>
-	[Serializable]
-	[ViewName("UserInterface.Views.GridView")]
-	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	public class Point: Model
-	{
-		/// <summary>
-		/// X value
-		/// </summary>
-		[Description("x value")]
-		public double X { get; set; }
+	///// <summary>
+	///// Point for relationship
+	///// </summary>
+	//[Serializable]
+	//[ViewName("UserInterface.Views.GridView")]
+	//[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+	//public class Point: Model
+	//{
+	//	/// <summary>
+	//	/// X value
+	//	/// </summary>
+	//	[Description("x value")]
+	//	public double X { get; set; }
 
-		/// <summary>
-		/// Y value
-		/// </summary>
-		[Description("y value")]
-		public double Y { get; set; }
+	//	/// <summary>
+	//	/// Y value
+	//	/// </summary>
+	//	[Description("y value")]
+	//	public double Y { get; set; }
 
-	}
+	//}
 }

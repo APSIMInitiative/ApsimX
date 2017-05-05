@@ -92,6 +92,9 @@ namespace Models.WholeFarm.Activities
 
 						//Initialise female milk production in at birth so ready for sucklings to consume
 						double milkTime = 15; // equivalent to mid month production
+
+						// need t calculate normalised animal weight here for milk production
+						breedFemales[0].NormalisedAnimalWeight = breedFemales[0].StandardReferenceWeight - ((1 - breedFemales[0].BreedParams.SRWBirth) * breedFemales[0].StandardReferenceWeight) * Math.Exp(-(breedFemales[0].BreedParams.AgeGrowthRateCoefficient * (breedFemales[0].Age * 30.4)) / (Math.Pow(breedFemales[0].StandardReferenceWeight, breedFemales[0].BreedParams.SRWGrowthScalar)));
 						double milkProduction = breedFemales[0].BreedParams.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay), breedFemales[0].BreedParams.MilkCurveSuckling)) * Math.Exp(breedFemales[0].BreedParams.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay));
 						breedFemales[0].MilkProduction = Math.Max(milkProduction, 0.0);
 						breedFemales[0].MilkAmount = milkProduction * 30.4;

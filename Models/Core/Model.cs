@@ -281,7 +281,6 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Resources.OtherAnimalsType))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.OtherAnimalsTypeCohort))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.PastureActivityManage))]
-		[XmlElement(typeof(Models.WholeFarm.Activities.Point))]
 		[XmlElement(typeof(Models.WholeFarm.FileGRASP))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.Relationship))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.ResourcesHolder))]

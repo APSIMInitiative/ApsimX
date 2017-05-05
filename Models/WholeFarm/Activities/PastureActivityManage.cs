@@ -93,15 +93,15 @@ namespace Models.WholeFarm.Activities
 		public double AreaRequested { get; set; }
 
 		/// <summary>
-		/// Month for ecological indicators calulation (end of month)
+		/// Month for ecological indicators calculation (end of month)
 		/// </summary>
-		[Description("Month for ecological indicators calulation (end of month)")]
+		[Description("Month for ecological indicators calculation (end of month)")]
 		public int EcolCalculationMonth { get; set; }
 
 		/// <summary>
-		/// Ecological indicators calulation interval (months)
+		/// Ecological indicators calculation interval (months)
 		/// </summary>
-		[Description("Ecological indicators calulation interval (months)")]
+		[Description("Ecological indicators calculation interval (months)")]
 		public int EcolCalculationInterval { get; set; }
 
 		/// <summary>
@@ -154,6 +154,7 @@ namespace Models.WholeFarm.Activities
 				Summary.WriteWarning(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
 			}
 			startingAmount = StartingAmount;
+
 			LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
 			LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
 		}
@@ -186,10 +187,10 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAnimalMilking")]
-		private void OnWFAnimalMilking(object sender, EventArgs e)
+		[EventSubscribe("WFCalculateEcologicalState")]
+		private void OnWFCalculateEcologicalState(object sender, EventArgs e)
 		{
-			// Using the milking event as it happens after growth and pasture consumption and animal death
+			// This event happens after growth and pasture consumption and animal death
 			// But before any management, buying and selling of animals.
 			
 			// update monthly stocking rate total

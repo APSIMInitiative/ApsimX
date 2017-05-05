@@ -77,7 +77,10 @@ namespace Models.WholeFarm.Resources
 		public void Initialise()
 		{
 			this.amount = 0;
-			Add(OpeningBalance, "Bank", "Opening balance");
+			if (OpeningBalance > 0)
+			{
+				Add(OpeningBalance, "Bank", "Opening balance");
+			}
 		}
 
 		#region transactions

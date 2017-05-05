@@ -70,15 +70,18 @@ namespace Models.WholeFarm.Resources
 		public void Initialise()
 		{
 			this.Age = this.StartingAge;
-			this.amount = this.StartingAmount;
+			this.amount = 0;
+			if (StartingAmount > 0)
+			{
+				Add(StartingAmount, this.Name, "Starting value");
+			}
 		}
-
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 			Initialise();
 		}

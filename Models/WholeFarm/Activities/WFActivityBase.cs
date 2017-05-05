@@ -155,8 +155,9 @@ namespace Models.WholeFarm.Activities
 		}
 
 		/// <summary>
-		/// Allow activity to proceed with less resources than requested
+		/// Perform Activity with partial resources available
 		/// </summary>
+		[Description("Perform Activity with partial resources available")]
 		public bool PerformWithPartialResources { get; set; }
 
 		/// <summary>

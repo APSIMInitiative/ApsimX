@@ -153,12 +153,12 @@ namespace Models.WholeFarm.Resources
 		}
 
 		/// <summary>
-		/// Amount of milk available in the month
+		/// Amount of milk available in the month (L)
 		/// </summary>
 		public double MilkAmount;
 
 		/// <summary>
-		/// Amount of milk available in the month
+		/// Amount of milk produced (L/day)
 		/// </summary>
 		public double MilkProduction;
 

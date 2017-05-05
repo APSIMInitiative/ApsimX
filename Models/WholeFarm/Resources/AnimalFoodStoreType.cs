@@ -45,11 +45,11 @@ namespace Models.WholeFarm.Resources
         [Description("Starting Amount (kg)")]
         public double StartingAmount { get; set; }
 
-		/// <summary>
-		/// Determine if this feed is purchased as needed
-		/// </summary>
-		[Description("Purchase as needed")]
-		public bool PurchaseAsNeeded { get; set; }
+		///// <summary>
+		///// Determine if this feed is purchased as needed
+		///// </summary>
+		//[Description("Purchase as needed")]
+		//public bool PurchaseAsNeeded { get; set; }
 
 		///// <summary>
 		///// Weight (kg) per unit purchased
@@ -87,14 +87,18 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		public void Initialise()
 		{
-			this.amount = this.StartingAmount;
+			this.amount = 0;
+			if (StartingAmount > 0)
+			{
+				Add(StartingAmount, "Starting value", this.Name);
+			}
 		}
 
-		/// <summary>An event handler to allow us to initialise an animal food store.</summary>
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
+		[EventSubscribe("StartOfSimulation")]
+		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 			Initialise();
 		}

@@ -75,7 +75,10 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		public void Initialise()
 		{
-			Add(UsableArea, this.Name, "Initialise");
+			if (UsableArea > 0)
+			{
+				Add(UsableArea, this.Name, "Initialise");
+			}
 		}
 
 		/// <summary>

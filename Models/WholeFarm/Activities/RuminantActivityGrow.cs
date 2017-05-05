@@ -64,7 +64,8 @@ namespace Models.WholeFarm.Activities
 			}
 
 			// Calculate potential intake and reset stores
-			foreach (var ind in herd)
+			// Order age descending so breeder females calculate milkproduction before suckings grow
+			foreach (var ind in herd.OrderByDescending(a => a.Age))
 			{
 				// reset tallies at start of the month
 				ind.DietDryMatterDigestibility = 0;
@@ -253,7 +254,7 @@ namespace Models.WholeFarm.Activities
 
 				if (methaneEmissions != null)
 				{
-					methaneEmissions.Add(totalMethane * 30.4 / 1000, "Ruminants", breed);
+					methaneEmissions.Add(totalMethane * 30.4 / 1000, this.Name, breed);
 				}
 			}
 		}
@@ -361,6 +362,11 @@ namespace Models.WholeFarm.Activities
 								ind.EnergyBalance = (-0.5936 / 0.322 * energyMilk);
 							}
 							milkProduction = Math.Max(0.0, milkProduction * (0.5936 + 0.322 * ind.EnergyBalance / energyMilk));
+
+							// set milk production in lactating females for consumption.
+							femaleind.MilkProduction = milkProduction;
+							femaleind.MilkAmount = femaleind.MilkProduction * 30.4;
+
 							// Reference: Adjusted milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
 							energyMilk = milkProduction * 3.2 / kl;
 						}
@@ -379,7 +385,7 @@ namespace Models.WholeFarm.Activities
 					}
 				}
 
-				//TODO: add draft energy requirement
+				//TODO: add draft individual energy requirement
 
 				// set maintenance age to maximum of 6 years
 				double maintenanceAge = Math.Min(ind.Age * 30.4, 2190);

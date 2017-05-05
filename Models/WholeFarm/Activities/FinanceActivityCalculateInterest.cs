@@ -42,30 +42,46 @@ namespace Models.WholeFarm.Activities
 			return;
 		}
 
+		/// <summary>
+		/// test for whether finances are included.
+		/// </summary>
+		private bool financesExist = false;
+
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			financesExist = ((Resources.FinanceResource() != null));
+		}
+
 		/// <summary>An event handler to allow us to make all payments when needed</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("EndOfMonth")]
 		private void OnEndOfMonth(object sender, EventArgs e)
 		{
-			FinanceType bankAccount = Resources.FinanceResource().GetFirst() as FinanceType;
-			// make interest payments on bank accounts
-			foreach (FinanceType accnt in Resources.FinanceResource().Children.Where(a => a.GetType() == typeof(FinanceType)))
+			if (financesExist)
 			{
-				if(accnt.Balance >0)
+				// make interest payments on bank accounts
+				foreach (FinanceType accnt in Resources.FinanceResource().Children.Where(a => a.GetType() == typeof(FinanceType)))
 				{
-					bankAccount.Add(accnt.Balance*accnt.InterestRatePaid/1200, this.Name, "Interest earned");
-				}
-				else
-				{
-					if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
+					if (accnt.Balance > 0)
 					{
-						ResourceRequest interestRequest = new ResourceRequest();
-						interestRequest.ActivityName = this.Name;
-						interestRequest.Required = Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200;
-						interestRequest.AllowTransmutation = false;
-						interestRequest.Reason = "Interest charged";
-						bankAccount.Remove(interestRequest);
+						accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this.Name, "Interest earned");
+					}
+					else
+					{
+						if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
+						{
+							ResourceRequest interestRequest = new ResourceRequest();
+							interestRequest.ActivityName = this.Name;
+							interestRequest.Required = Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200;
+							interestRequest.AllowTransmutation = false;
+							interestRequest.Reason = "Interest charged";
+							accnt.Remove(interestRequest);
+						}
 					}
 				}
 			}

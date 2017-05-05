@@ -3,10 +3,6 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>Harwood.met</FileName>
-    </Weather>
     <FileAPSIM>
       <Name>File APSIM</Name>
       <ErrorMessage />

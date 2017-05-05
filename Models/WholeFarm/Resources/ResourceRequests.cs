@@ -13,6 +13,10 @@ namespace Models.WholeFarm.Resources
 	public class ResourceRequest
 	{
 		///<summary>
+		/// Link to resource being requested 
+		///</summary> 
+		public IResourceType Resource { get; set; }
+		///<summary>
 		/// Name of resource being requested 
 		///</summary> 
 		public string ResourceName { get; set; }

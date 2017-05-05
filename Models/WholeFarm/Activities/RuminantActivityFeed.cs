@@ -188,9 +188,13 @@ namespace Models.WholeFarm.Activities
 			if (herd != null && herd.Count > 0)
 			{
 				// calculate labour limit
+				double labourLimit = 1;
 				double labourNeeded = ResourceRequestList.Where(a => a.ResourceName == "Labour").Sum(a => a.Required);
 				double labourProvided = ResourceRequestList.Where(a => a.ResourceName == "Labour").Sum(a => a.Provided);
-				double labourLimit = labourProvided/labourNeeded;
+				if(labourNeeded>0)
+				{
+					labourLimit = labourProvided / labourNeeded;
+				}
 
 				// calculate feed limit
 				double feedLimit = 0.0;

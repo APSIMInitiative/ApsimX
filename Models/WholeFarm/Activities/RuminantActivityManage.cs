@@ -99,10 +99,21 @@ namespace Models.WholeFarm.Activities
 		public string GrazeFoodStoreName { get; set; }
 
 		/// <summary>
+		/// Minimum pasture (kg/ga) before restocking if placed in paddock
+		/// </summary>
+		[Description("Minimum pasture (kg/ga) before restocking if placed in paddock")]
+		public double MinimumPastureBeforeRestock { get; set; }
+
+		/// <summary>
 		/// Perform selling of young females the same as males
 		/// </summary>
 		[Description("Perform selling of young females the same as males")]
 		public bool SellFemalesLikeMales { get; set; }
+
+		/// <summary>
+		/// Store graze 
+		/// </summary>
+		private GrazeFoodStoreType foodStore;
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -115,7 +126,7 @@ namespace Models.WholeFarm.Activities
 			if(GrazeFoodStoreName!="")
 			{
 				bool resourceAvailable = false;
-				Resources.GetResourceItem("GrazeFoodStore", GrazeFoodStoreName, out resourceAvailable);
+				foodStore = Resources.GetResourceItem("GrazeFoodStore", GrazeFoodStoreName, out resourceAvailable) as GrazeFoodStoreType;
 				if(!resourceAvailable)
 				{
 					Summary.WriteWarning(this, String.Format("Could not find graze food store named {0} in which to place new purchases for {1}", GrazeFoodStoreName, this.Name));
@@ -169,6 +180,12 @@ namespace Models.WholeFarm.Activities
 			// if management month
 			if ((Clock.Today.Month == ManagementMonth) ^ MonthlyManagement)
 			{
+				bool sufficientFood = true;
+				if(foodStore != null)
+				{
+					sufficientFood = (foodStore.TonnesPerHectare * 1000) > MinimumPastureBeforeRestock;
+				}
+
 				// Perform weaning
 				foreach (var ind in herd.Where(a => a.Weaned == false))
 				{
@@ -250,7 +267,9 @@ namespace Models.WholeFarm.Activities
 					// What rule? oldest first as they may be lost soonest
 					// should keep pregnant females... and young...
 					// this will currently remove pregnant females and females with suckling calf
-					int numberToRemove = MaximumBreedersKept - numberFemaleinherd;
+
+					//add 5% extra to the number of breeders to sell.
+					int numberToRemove = Convert.ToInt32((numberFemaleinherd-MaximumBreedersKept)*1.05);
 					foreach (var female in herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating).OrderByDescending(a => a.Age).Take(numberToRemove))
 					{
 						female.SaleFlag = HerdChangeReason.ExcessBreederSale;
@@ -267,13 +286,11 @@ namespace Models.WholeFarm.Activities
 					}
 
 					// if still insufficient buy breeders.
-					if (numberFemaleinherd < MaximumBreedersKept)
+					if (numberFemaleinherd < MaximumBreedersKept & sufficientFood)
 					{
 						int ageOfHeifer = 12;
 						double weightOfHeifer = 260;
 
-
-						//TODO: add 5% extra to the number of breeders to sell.
 						int numberToBuy = Convert.ToInt32((MaximumBreedersKept - numberFemaleinherd));
 
 						for (int i = 0; i < numberToBuy; i++)
