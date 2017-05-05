@@ -59,6 +59,16 @@ namespace Models.WholeFarm.Resources
 		}
 
 		/// <summary>
+		/// Get resource by name
+		/// </summary>
+		/// <param name="Name"></param>
+		/// <returns></returns>
+		public object GetResourceByName(string Name)
+		{
+			return ResourceTypeList.Find(x => x.Name == Name);
+		}
+
+		/// <summary>
 		/// Retrieve a ResourceType from a ResourceGroup based on a request item including filter and sort options
 		/// </summary>
 		/// <param name="Request">A resource request item</param>
@@ -69,13 +79,13 @@ namespace Models.WholeFarm.Resources
 			ResourceAvailable = false;
 			if (Request.FilterDetails != null)
 			{
-				if (Request.ResourceName == null)
+				if (Request.ResourceType == null)
 				{
-					Summary.WriteWarning(this, String.Format("ResourceGroup name must be supplied in resource request from {0}",Request.ActivityName));
+					Summary.WriteWarning(this, String.Format("Resource type must be supplied in resource request from {0}",Request.ActivityName));
 					return null;
 				}
 
-				IModel resourceGroup = this.GetByName(Request.ResourceName);
+				IModel resourceGroup = this.GetByType(Request.ResourceType);
 				if(resourceGroup== null)
 				{
 					return null;
@@ -111,22 +121,23 @@ namespace Models.WholeFarm.Resources
 			}
 			else
 			{
-				return GetResourceItem(Request.ResourceName, Request.ResourceTypeName, out ResourceAvailable);
+				return GetResourceItem(Request.ResourceType, Request.ResourceTypeName, out ResourceAvailable);
+//				return GetResourceItem(Request.ResourceName, Request.ResourceTypeName, out ResourceAvailable);
 			}
 		}
 
 		/// <summary>
 		/// Retrieve a ResourceType from a ResourceGroup with specified names
 		/// </summary>
-		/// <param name="ResourceGroupName">Name of the resource group</param>
+		/// <param name="ResourceType">Type of the resource group</param>
 		/// <param name="ResourceTypeName">Name of the resource item</param>
 		/// <param name="ResourceAvailable">Determines whether the resource was found successfully. An empty return is therefore a real lack of resource such as no labour found</param>
 		/// <returns>A reference to the item of type object</returns>
-		public Model GetResourceItem(string ResourceGroupName, string ResourceTypeName, out bool ResourceAvailable)
+		public Model GetResourceItem(Type ResourceType, string ResourceTypeName, out bool ResourceAvailable)
 		{
 			ResourceAvailable = false;
 			// locate specified resource
-			Model resourceGroup = this.Children.Where(a => a.Name == ResourceGroupName).FirstOrDefault();
+			Model resourceGroup = this.Children.Where(a => a.GetType() == ResourceType).FirstOrDefault();
 			if (resourceGroup != null)
 			{
 				Model resource = resourceGroup.Children.Where(a => a.Name == ResourceTypeName).FirstOrDefault();
@@ -142,6 +153,34 @@ namespace Models.WholeFarm.Resources
 				return null;
 			}
 		}
+
+		///// <summary>
+		///// Retrieve a ResourceType from a ResourceGroup with specified names
+		///// </summary>
+		///// <param name="ResourceGroupName">Name of the resource group</param>
+		///// <param name="ResourceTypeName">Name of the resource item</param>
+		///// <param name="ResourceAvailable">Determines whether the resource was found successfully. An empty return is therefore a real lack of resource such as no labour found</param>
+		///// <returns>A reference to the item of type object</returns>
+		//public Model GetResourceItem(string ResourceGroupName, string ResourceTypeName, out bool ResourceAvailable)
+		//{
+		//	ResourceAvailable = false;
+		//	// locate specified resource
+		//	Model resourceGroup = this.Children.Where(a => a.Name == ResourceGroupName).FirstOrDefault();
+		//	if (resourceGroup != null)
+		//	{
+		//		Model resource = resourceGroup.Children.Where(a => a.Name == ResourceTypeName).FirstOrDefault();
+		//		if (resource == null)
+		//		{
+		//			return null;
+		//		}
+		//		ResourceAvailable = true;
+		//		return resource;
+		//	}
+		//	else
+		//	{
+		//		return null;
+		//	}
+		//}
 
 		/// <summary>
 		/// Get the Resource Group for Fodder
@@ -248,7 +287,7 @@ namespace Models.WholeFarm.Resources
 				{
 					// get resource type
 					bool resourceAvailable = false;
-					IModel model = this.GetResourceItem(request.ResourceName, request.ResourceTypeName, out resourceAvailable) as IModel;
+					IModel model = this.GetResourceItem(request.ResourceType, request.ResourceTypeName, out resourceAvailable) as IModel;
 					if (model != null)
 					{
 						// check if transmutations provided
@@ -266,7 +305,7 @@ namespace Models.WholeFarm.Resources
 								{
 									// get by labour group filter under the transmutation cost
 									ResourceRequest labourRequest = new ResourceRequest();
-									labourRequest.ResourceName = "Labour";
+									labourRequest.ResourceType = typeof(Labour);
 									labourRequest.FilterDetails = transcost.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>();
 									transResource = this.GetResourceItem(labourRequest, out resourceAvailable) as IResourceType;
 
@@ -277,7 +316,7 @@ namespace Models.WholeFarm.Resources
 								}
 								else
 								{
-									transResource = this.GetResourceItem(transcost.ResourceName, transcost.ResourceTypeName, out resourceAvailable) as IResourceType;
+									transResource = this.GetResourceItem(transcost.ResourceType, transcost.ResourceTypeName, out resourceAvailable) as IResourceType;
 								}
 
 								if (!QueryOnly)
@@ -289,14 +328,14 @@ namespace Models.WholeFarm.Resources
 									transRequest.Reason = trans.Name + " " + trans.Parent.Name;
 									transRequest.ActivityName = trans.Name + " " + trans.Parent.Name;
 									transRequest.Required = transmutationCost;
-									transRequest.ResourceName = transcost.ResourceName;
+									transRequest.ResourceType = transcost.ResourceType;
 
 									// used to pass request, but this is not the transmutation cost
 									transResource.Remove(transRequest);
 								}
 								else
 								{
-									double activityCost = requests.Where(a => a.ResourceName == transcost.ResourceName & a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
+									double activityCost = requests.Where(a => a.ResourceType == transcost.ResourceType & a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
 									if (transmutationCost + activityCost <= transResource.Amount)
 									{
 										request.TransmutationPossible = true;

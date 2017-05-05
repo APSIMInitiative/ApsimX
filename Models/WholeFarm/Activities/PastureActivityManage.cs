@@ -148,7 +148,7 @@ namespace Models.WholeFarm.Activities
 			}
 			// locate Pasture Type resource
 			bool resourceAvailable = false;
-			LinkedNativeFoodType = Resources.GetResourceItem("GrazeFoodStore", FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
+			LinkedNativeFoodType = Resources.GetResourceItem(typeof(GrazeFoodStore), FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
 			if (LinkedNativeFoodType == null)
 			{
 				Summary.WriteWarning(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
@@ -282,7 +282,7 @@ namespace Models.WholeFarm.Activities
 				{
 					AllowTransmutation = false,
 					Required = AreaRequested*((UnitsOfArea == UnitsOfAreaTypes.Hectares)?1:100),
-					ResourceName = "Land",
+					ResourceType = typeof(Land),
 					ResourceTypeName = LandTypeNameToUse,
 					ActivityName = this.Name,
 					Reason = "Assign",

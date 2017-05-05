@@ -144,7 +144,7 @@ namespace Models.WholeFarm.Activities
 					{
 						AllowTransmutation = true,
 						Required = amount,
-						ResourceName = "GrazeFoodStore",
+						ResourceType = typeof(GrazeFoodStore),
 						ResourceTypeName = this.GrazeFoodStoreModel.Name,
 						ActivityName = this.Name,
 						AdditionalDetails = this

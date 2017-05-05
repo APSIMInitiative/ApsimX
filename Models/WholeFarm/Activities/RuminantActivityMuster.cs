@@ -68,7 +68,7 @@ namespace Models.WholeFarm.Activities
 
 			if (ManagedPastureName != "")
 			{
-				pasture = Resources.GetResourceItem("GrazeFoodStore", ManagedPastureName, out resavailable) as GrazeFoodStoreType;
+				pasture = Resources.GetResourceItem(typeof(GrazeFoodStore), ManagedPastureName, out resavailable) as GrazeFoodStoreType;
 			}
 			if (!resavailable)
 			{
@@ -170,7 +170,7 @@ namespace Models.WholeFarm.Activities
 						{
 							AllowTransmutation = false,
 							Required = daysNeeded,
-							ResourceName = "Labour",
+							ResourceType = typeof(Labour),
 							ResourceTypeName = "",
 							ActivityName = this.Name,
 							FilterDetails = new List<object>() { item }

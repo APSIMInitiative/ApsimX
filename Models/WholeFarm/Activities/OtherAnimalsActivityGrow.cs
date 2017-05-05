@@ -37,7 +37,7 @@ namespace Models.WholeFarm.Activities
 		{
 			// locate OtherAnimalsType resource
 			bool resourceAvailable = false;
-			animalType = Resources.GetResourceItem("OtherAnimals", OtherAnimalType, out resourceAvailable) as OtherAnimalsType;
+			animalType = Resources.GetResourceItem(typeof(OtherAnimals), OtherAnimalType, out resourceAvailable) as OtherAnimalsType;
 		}
 
 		/// <summary>

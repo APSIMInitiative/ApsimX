@@ -59,7 +59,7 @@ namespace Models.WholeFarm.Activities
 		{
 			// locate BankType resource
 			bool resourceAvailable = false;
-			bankType = Resources.GetResourceItem("Finances", BankAccountName, out resourceAvailable) as FinanceType;
+			bankType = Resources.GetResourceItem(typeof(Finance), BankAccountName, out resourceAvailable) as FinanceType;
 
 			if(this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).Count() > 1)
 			{
@@ -84,7 +84,7 @@ namespace Models.WholeFarm.Activities
 				{
 					AllowTransmutation = false,
 					Required = DaysWorkAvailableEachMonth[month],
-					ResourceName = "Labour",
+					ResourceType = typeof(Labour),
 					ResourceTypeName = "",
 					ActivityName = this.Name,
 					Reason = this.Name,

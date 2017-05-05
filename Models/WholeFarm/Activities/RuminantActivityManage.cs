@@ -126,7 +126,7 @@ namespace Models.WholeFarm.Activities
 			if(GrazeFoodStoreName!="")
 			{
 				bool resourceAvailable = false;
-				foodStore = Resources.GetResourceItem("GrazeFoodStore", GrazeFoodStoreName, out resourceAvailable) as GrazeFoodStoreType;
+				foodStore = Resources.GetResourceItem(typeof(GrazeFoodStore), GrazeFoodStoreName, out resourceAvailable) as GrazeFoodStoreType;
 				if(!resourceAvailable)
 				{
 					Summary.WriteWarning(this, String.Format("Could not find graze food store named {0} in which to place new purchases for {1}", GrazeFoodStoreName, this.Name));
@@ -151,7 +151,7 @@ namespace Models.WholeFarm.Activities
 			if (herd.Count() == 0)
 			{
 				bool resourceAvailable = false;
-				breedParams = Resources.GetResourceItem("Ruminants", HerdName, out resourceAvailable) as RuminantType;
+				breedParams = Resources.GetResourceItem(typeof(RuminantHerd), HerdName, out resourceAvailable) as RuminantType;
 			}
 			else
 			{

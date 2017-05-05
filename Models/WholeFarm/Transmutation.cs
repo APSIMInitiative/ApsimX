@@ -1,9 +1,11 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.WholeFarm
 {
@@ -47,11 +49,20 @@ namespace Models.WholeFarm
 	[ValidParent(ParentType = typeof(Transmutation))]
 	public class TransmutationCost : WFModel
 	{
+		[XmlIgnore]
+		[Link]
+		private ResourcesHolder Resources = null;
+
 		/// <summary>
 		/// Name of resource to use
 		/// </summary>
 		[Description("Name of Resource to use")]
 		public string ResourceName { get; set; }
+
+		/// <summary>
+		/// Type of resource to use
+		/// </summary>
+		public Type ResourceType { get; set; }
 
 		/// <summary>
 		/// Name of resource type to use
@@ -64,7 +75,22 @@ namespace Models.WholeFarm
 		/// </summary>
 		[Description("Cost per unit")]
 		public double CostPerUnit { get; set; }
-	}
 
+
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			// determine resource type from name
+			object result = Resources.GetResourceByName(ResourceName);
+			if(result==null)
+			{
+				throw new Exception("Could not find resource " + this.ResourceName + " in transmutation " + this.Name);
+			}
+			ResourceType = result.GetType();
+		}
+	}
 
 }

@@ -62,7 +62,7 @@ namespace Models.WholeFarm.Activities
 		{
 			// locate FeedType resource
 			bool resourceAvailable = false;
-			FeedType = Resources.GetResourceItem("AnimalFoodStore", FeedTypeName, out resourceAvailable) as IFeedType;
+			FeedType = Resources.GetResourceItem(typeof(AnimalFoodStore), FeedTypeName, out resourceAvailable) as IFeedType;
 			FoodSource = FeedType;
 
 			// get labour specifications
@@ -110,7 +110,7 @@ namespace Models.WholeFarm.Activities
 					{
 						AllowTransmutation = true,
 						Required = amount,
-						ResourceName = "AnimalFoodStore",
+						ResourceType = typeof(AnimalFoodStore),
 						ResourceTypeName = FeedTypeName,
 						ActivityName = "Feed "+(child as OtherAnimalsFilterGroup).AnimalType,
 						Reason = "oops",
@@ -144,7 +144,7 @@ namespace Models.WholeFarm.Activities
 					{
 						AllowTransmutation = false,
 						Required = daysNeeded,
-						ResourceName = "Labour",
+						ResourceType = typeof(Labour),
 						ResourceTypeName = "",
 						ActivityName = this.Name,
 						FilterDetails = new List<object>() { item }

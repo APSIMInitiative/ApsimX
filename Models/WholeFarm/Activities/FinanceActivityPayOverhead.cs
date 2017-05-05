@@ -26,10 +26,12 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		[Link]
 		Clock Clock = null;
-
 		[XmlIgnore]
 		[Link]
 		ISummary Summary = null;
+		[XmlIgnore]
+		[Link]
+		private ResourcesHolder Resources = null;
 
 		/// <summary>
 		/// The payment interval (in months, 1 monthly, 12 annual)
@@ -61,6 +63,11 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		public DateTime NextDueDate { get; set; }
 
+		/// <summary>
+		/// Store finance type to use
+		/// </summary>
+		private FinanceType bankAccount;
+
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -86,6 +93,18 @@ namespace Models.WholeFarm.Activities
 					NextDueDate = NextDueDate.AddMonths(PaymentInterval);
 				}
 			}
+
+			Finance finance = Resources.FinanceResource();
+			if (finance != null)
+			{
+				bool tmp = true;
+				bankAccount = Resources.GetResourceItem(typeof(Finance), AccountName, out tmp) as FinanceType;
+				if (!tmp & AccountName != "")
+				{
+					Summary.WriteWarning(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
+					throw new Exception(String.Format("Unable to find bank account specified in ({0}).", this.Name));
+				}
+			}
 		}
 
 		/// <summary>
@@ -100,9 +119,10 @@ namespace Models.WholeFarm.Activities
 			{
 				ResourceRequestList.Add(new ResourceRequest()
 				{
+					Resource = bankAccount,
+					ResourceType = typeof(Finance),
 					AllowTransmutation = false,
 					Required = this.Amount,
-					ResourceName = "Finances",
 					ResourceTypeName = this.AccountName,
 					ActivityName = "Overheads",
 					Reason = this.Name

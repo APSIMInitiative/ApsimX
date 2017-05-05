@@ -90,7 +90,7 @@ namespace Models.WholeFarm.Activities
 				{
 					AllowTransmutation = true,
 					Required = amount,
-					ResourceName = "GrazeFoodStore",
+					ResourceType = typeof(GrazeFoodStore),
 					ResourceTypeName = this.grazeType.Name,
 					ActivityName = this.Name
 				}

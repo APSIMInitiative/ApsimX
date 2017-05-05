@@ -70,7 +70,7 @@ namespace Models.WholeFarm.Activities
 		{
 			// locate FeedType resource
 			bool resourceAvailable = false;
-			FeedType = Resources.GetResourceItem("AnimalFoodStore",FeedTypeName, out resourceAvailable) as IFeedType;
+			FeedType = Resources.GetResourceItem(typeof(AnimalFoodStore),FeedTypeName, out resourceAvailable) as IFeedType;
 			FoodSource = FeedType;
 			if(FeedType==null)
 			{
@@ -124,7 +124,7 @@ namespace Models.WholeFarm.Activities
 					{
 						AllowTransmutation = false,
 						Required = daysNeeded,
-						ResourceName = "Labour",
+						ResourceType = typeof(Labour),
 						ResourceTypeName = "",
 						ActivityName = this.Name,
 						FilterDetails = new List<object>() { item }
@@ -169,7 +169,7 @@ namespace Models.WholeFarm.Activities
 			{
 				AllowTransmutation = true,
 				Required = feedRequired,
-				ResourceName = "AnimalFoodStore",
+				ResourceType = typeof(AnimalFoodStore),
 				ResourceTypeName = this.FeedTypeName,
 				ActivityName = this.Name
 			}
@@ -189,8 +189,8 @@ namespace Models.WholeFarm.Activities
 			{
 				// calculate labour limit
 				double labourLimit = 1;
-				double labourNeeded = ResourceRequestList.Where(a => a.ResourceName == "Labour").Sum(a => a.Required);
-				double labourProvided = ResourceRequestList.Where(a => a.ResourceName == "Labour").Sum(a => a.Provided);
+				double labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
+				double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
 				if(labourNeeded>0)
 				{
 					labourLimit = labourProvided / labourNeeded;
@@ -198,7 +198,7 @@ namespace Models.WholeFarm.Activities
 
 				// calculate feed limit
 				double feedLimit = 0.0;
-				ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceName == "AnimalFoodStore").FirstOrDefault();
+				ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(AnimalFoodStore)).FirstOrDefault();
 				AnimalFoodResourceRequestDetails details = new AnimalFoodResourceRequestDetails();
 				if (feedRequest != null)
 				{

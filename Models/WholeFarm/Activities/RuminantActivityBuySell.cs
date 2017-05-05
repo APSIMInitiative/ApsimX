@@ -112,7 +112,7 @@ namespace Models.WholeFarm.Activities
 			if(finance!=null)
 			{
 				bool tmp = true;
-				bankAccount = Resources.GetResourceItem("Finances", BankAccountName, out tmp) as FinanceType;
+				bankAccount = Resources.GetResourceItem(typeof(Finance), BankAccountName, out tmp) as FinanceType;
 				if (!tmp & BankAccountName != "")
 				{
 					Summary.WriteWarning(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
@@ -205,7 +205,7 @@ namespace Models.WholeFarm.Activities
 						purchaseRequest.Available = bankAccount.Amount;
 						purchaseRequest.Required = cost + shortfall;
 						purchaseRequest.Provided = cost;
-						purchaseRequest.ResourceName = "Finances";
+						purchaseRequest.ResourceType = typeof(Finance);
 						purchaseRequest.ResourceTypeName = BankAccountName;
 						ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
 						OnShortfallOccurred(rre);
@@ -332,7 +332,7 @@ namespace Models.WholeFarm.Activities
 							{
 								AllowTransmutation = false,
 								Required = daysNeeded,
-								ResourceName = "Labour",
+								ResourceType = typeof(Labour),
 								ResourceTypeName = "",
 								ActivityName = this.Name,
 								Reason = BuySellString,

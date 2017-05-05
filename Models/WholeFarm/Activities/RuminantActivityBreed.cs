@@ -368,7 +368,7 @@ namespace Models.WholeFarm.Activities
 						{
 							AllowTransmutation = false,
 							Required = daysNeeded,
-							ResourceName = "Labour",
+							ResourceType = typeof(Labour),
 							ResourceTypeName = "",
 							ActivityName = this.Name,
 							FilterDetails = new List<object>() { item }

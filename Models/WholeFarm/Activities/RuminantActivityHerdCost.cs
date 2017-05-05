@@ -149,7 +149,7 @@ namespace Models.WholeFarm.Activities
 				{
 					AllowTransmutation = false,
 					Required = amountNeeded,
-					ResourceName = "Finances",
+					ResourceType = typeof(Finance),
 					ResourceTypeName = this.AccountName,
 					ActivityName = this.Name,
 					Reason = BreedName

@@ -76,11 +76,15 @@ namespace Models.WholeFarm.Activities
 				request.ActivityID = uniqueRequestID;
 				request.Available = 0;
 				// get resource
-				IResourceType resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
-				if (resource != null)
+				if (request.Resource == null)
+				{
+					//If it hasn't been assigned try and find it now.
+					request.Resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
+				}
+				if (request.Resource != null)
 				{
 					// get amount available
-					request.Available = Math.Min(resource.Amount, request.Required);
+					request.Available = Math.Min(request.Resource.Amount, request.Required);
 				}
 				else
 				{
@@ -115,14 +119,12 @@ namespace Models.WholeFarm.Activities
 				// recheck resource amounts now that resources have been topped up
 				foreach (ResourceRequest request in ResourceRequestList)
 				{
-					resourceAvailable = false;
 					// get resource
 					request.Available = 0;
-					IResourceType resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
-					if (resource != null)
+					if (request.Resource != null)
 					{
 						// get amount available
-						request.Available = Math.Max(resource.Amount, request.Required);
+						request.Available = Math.Min(request.Resource.Amount, request.Required);
 					}
 				}
 			}
@@ -140,14 +142,12 @@ namespace Models.WholeFarm.Activities
 			{
 				foreach (ResourceRequest request in ResourceRequestList)
 				{
-					resourceAvailable = false;
 					// get resource
 					request.Provided = 0;
-					IResourceType resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
-					if (resource != null)
+					if (request.Resource != null)
 					{
 						// remove resource
-						resource.Remove(request);
+						request.Resource.Remove(request);
 					}
 				}
 				PerformActivity();

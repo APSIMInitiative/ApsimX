@@ -42,7 +42,7 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			bool resourceAvailable = false;
-			methaneEmissions = Resources.GetResourceItem("GreenhouseGases", "Methane", out resourceAvailable) as GreenhouseGasesType;
+			methaneEmissions = Resources.GetResourceItem(typeof(GreenhouseGases), "Methane", out resourceAvailable) as GreenhouseGasesType;
 		}
 
 		/// <summary>Function to determine all individuals potnetial intake and suckling intake after milk consumption from mother</summary>

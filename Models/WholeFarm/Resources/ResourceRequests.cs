@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Models.WholeFarm.Resources
 {
@@ -15,11 +16,17 @@ namespace Models.WholeFarm.Resources
 		///<summary>
 		/// Link to resource being requested 
 		///</summary> 
+		[XmlIgnore]
 		public IResourceType Resource { get; set; }
 		///<summary>
-		/// Name of resource being requested 
+		/// Link to resource being requested 
 		///</summary> 
-		public string ResourceName { get; set; }
+		[XmlIgnore]
+		public Type ResourceType { get; set; }
+//		///<summary>
+//		/// Name of resource being requested 
+//		///</summary> 
+//		public string ResourceName { get; set; }
 		///<summary>
 		/// Name of resource type being requested 
 		///</summary> 
