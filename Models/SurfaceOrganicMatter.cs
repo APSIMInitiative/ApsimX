@@ -1551,6 +1551,8 @@
             MetData.Rain = weather.Rain;
             MetData.VP = weather.VP;
             MetData.Wind = weather.Wind;
+
+            dlayer = soil.Thickness;
         }
 
         /// <summary>The initialised</summary>
@@ -1808,7 +1810,6 @@
         private void GetOtherVariables()
         {
             eos = soil.SoilWater.Eos;
-            dlayer = soil.Thickness;
 
             CheckPond();
         }

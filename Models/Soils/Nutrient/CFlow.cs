@@ -18,10 +18,10 @@ namespace Models.Soils.Nutrient
         private NutrientPool source = null;
         private NutrientPool destination = null;
 
-        [Link]
-        private IFunction rate = null;
+        [ChildLinkByName]
+        private IFunction Rate = null;
 
-        [Link]
+        [ChildLinkByName]
         private IFunction CO2Efficiency = null;
 
         [Link]
@@ -64,7 +64,7 @@ namespace Models.Soils.Nutrient
         {
             for (int i= 0; i < source.C.Length; i++)
             {
-                double carbonFlow = rate.Value(i) * source.C[i];
+                double carbonFlow = Rate.Value(i) * source.C[i];
                 double nitrogenFlow = MathUtilities.Divide(carbonFlow, source.CNRatio[i],0);
                 double carbonFlowToDestination = carbonFlow * CO2Efficiency.Value(i);
                 double nitrogenFlowToDestination = carbonFlowToDestination / destination.CNRatio[i];
