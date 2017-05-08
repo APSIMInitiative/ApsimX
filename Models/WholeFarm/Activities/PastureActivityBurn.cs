@@ -41,17 +41,17 @@ namespace Models.WholeFarm.Activities
 		[Description("Month to perform burn")]
 		public int BurnMonth { get; set; }
 
-		/// <summary>
-		/// Amount payable
-		/// </summary>
-		[Description("Amount payable")]
-		public double Amount { get; set; }
+		///// <summary>
+		///// Amount payable
+		///// </summary>
+		//[Description("Amount payable")]
+		//public double Amount { get; set; }
 
 		/// <summary>
-		/// Maximum proportion green for fire to carry
+		/// Minimum proportion green for fire to carry
 		/// </summary>
-		[Description("Maximum proportion green for fire to carry")]
-		public double MaximumProportionGreen { get; set; }
+		[Description("Minimum proportion green for fire to carry")]
+		public double MinimumProportionGreen { get; set; }
 
 		/// <summary>
 		/// Name of graze food store/paddock to burn
@@ -176,7 +176,7 @@ namespace Models.WholeFarm.Activities
 			double total = pasture.Amount;
 			if (total>0)
 			{
-				if(green / total <= MaximumProportionGreen)
+				if(green / total <= MinimumProportionGreen)
 				{
 					// TODO add weather to calculate fire intensity
 					// TODO calculate patchiness from intensity
