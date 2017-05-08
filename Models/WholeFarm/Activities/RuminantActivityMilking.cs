@@ -16,7 +16,7 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	class RuminantActivityMilking: WFActivityBase
+	public class RuminantActivityMilking: WFActivityBase
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
@@ -65,18 +65,20 @@ namespace Models.WholeFarm.Activities
 			// take all milk
 			List<RuminantFemale> herd = Resources.RuminantHerd().Herd.Where(a => a.HerdName == HerdName & a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
 			double milkTotal = herd.Sum(a => a.MilkAmount);
-
-			// only provide what labour would allow
-			// calculate labour limit
-			double labourLimit = 1;
-			double labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
-			double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
-			if (labourNeeded > 0)
+			if (milkTotal > 0)
 			{
-				labourLimit = labourProvided / labourNeeded;
-			}
+				// only provide what labour would allow
+				// calculate labour limit
+				double labourLimit = 1;
+				double labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
+				double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
+				if (labourNeeded > 0)
+				{
+					labourLimit = labourProvided / labourNeeded;
+				}
 
-			milkStore.Add(milkTotal * labourLimit, this.Name, HerdName);
+				milkStore.Add(milkTotal * labourLimit, this.Name, HerdName);
+			}
 		}
 
 		/// <summary>

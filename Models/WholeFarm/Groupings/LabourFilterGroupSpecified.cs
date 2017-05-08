@@ -17,6 +17,7 @@ namespace Models.WholeFarm.Groupings
 	[ValidParent(ParentType = typeof(RuminantActivityMuster))]
 	[ValidParent(ParentType = typeof(RuminantActivityFeed))]
 	[ValidParent(ParentType = typeof(RuminantActivityHerdCost))]
+	[ValidParent(ParentType = typeof(RuminantActivityMilking))]
 	[ValidParent(ParentType = typeof(ControlledMatingSettings))]
 	[ValidParent(ParentType = typeof(OtherAnimalsActivityBreed))]
 	[ValidParent(ParentType = typeof(OtherAnimalsActivityFeed))]

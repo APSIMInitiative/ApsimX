@@ -730,6 +730,23 @@
             <SalesCommission>0</SalesCommission>
             <BankAccountName>General account</BankAccountName>
           </RuminantActivityBuySell>
+					<RuminantActivityMilking>
+            <Name>Milking</Name>
+            <PerformWithPartialResources>false</PerformWithPartialResources>
+						<HerdName>Breeding</HerdName>
+						<LabourFilterGroupSpecified>
+							<UnitType>perHead</UnitType>
+							<UnitSize>300</UnitSize>
+							<LabourPerUnit>0.5</LabourPerUnit>
+              <Name>Labour details</Name>
+              <LabourFilter>
+                <Name>Filter[Name=Joe B]</Name>
+                <Parameter>Name</Parameter>
+                <Operator>Equal</Operator>
+                <Value>Joe B</Value>
+              </LabourFilter>
+						</LabourFilterGroupSpecified>
+					</RuminantActivityMilking>
           <RuminantActivityPredictiveStocking>
             <Name>Dry season stocking</Name>
             <PerformWithPartialResources>false</PerformWithPartialResources>
