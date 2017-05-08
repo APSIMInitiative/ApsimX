@@ -9,11 +9,9 @@ using System.Xml.Serialization;
 
 namespace Models.WholeFarm.Activities
 {
-	/// <summary>Ruminant breeding activity</summary>
-	/// <summary>This activity provides all functionality for ruminant breeding up until natural weaning</summary>
-	/// <summary>It will be applied to the supplied herd if males and females are located together</summary>
-	/// <version>1.0</version>
-	/// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+	/// <summary>Contorlled mating settings for Ruminant Breeding</summary>
+	/// <summary>If this model is provided within RuminantActivityBreeding, controlled mating will occur</summary>
+	/// <summary>It will use the setting sprovided.</summary>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]

@@ -57,16 +57,22 @@ namespace Models.WholeFarm.Activities
 		public double MaximumBullAge { get; set; }
 
 		/// <summary>
-		/// Selling age (months)
+		/// Allow natural herd replacement of sires
 		/// </summary>
-		[Description("Selling age (months)")]
-		public double SellingAge { get; set; }
+		[Description("Allow sire replacement from herd")]
+		public bool AllowSireReplacement { get; set; }
 
 		/// <summary>
-		/// Selling weight (kg)
+		/// Male selling age (months)
 		/// </summary>
-		[Description("Selling weight (kg)")]
-		public double SellingWeight { get; set; }
+		[Description("male selling age (months)")]
+		public double MaleSellingAge { get; set; }
+
+		/// <summary>
+		/// Male selling weight (kg)
+		/// </summary>
+		[Description("Male selling weight (kg)")]
+		public double MaleSellingWeight { get; set; }
 
 		/// <summary>
 		/// Month to undertake management (1-12) and assign costs
@@ -93,13 +99,13 @@ namespace Models.WholeFarm.Activities
 		public double WeaningWeight { get; set; }
 
 		/// <summary>
-		/// Name of GrazeFoodStore (paddock) to place purchases in for grazing/ (leave blank for general yards)
+		/// Name of GrazeFoodStore (paddock) to place purchases in for grazing (leave blank for general yards)
 		/// </summary>
 		[Description("Name of GrazeFoodStore (paddock) to place purchases in (leave blank for general yards)")]
 		public string GrazeFoodStoreName { get; set; }
 
 		/// <summary>
-		/// Minimum pasture (kg/ga) before restocking if placed in paddock
+		/// Minimum pasture (kg/ha) before restocking if placed in paddock
 		/// </summary>
 		[Description("Minimum pasture (kg/ga) before restocking if placed in paddock")]
 		public double MinimumPastureBeforeRestock { get; set; }
@@ -163,7 +169,7 @@ namespace Models.WholeFarm.Activities
 			// NABSA MALES - weaners, 1-2, 2-3 and 3-4 yo, we check for any male weaned and not a breeding sire.
 			// check for sell age/weight of young males
 			// if SellYoungFemalesLikeMales then all apply to both sexes else only males.
-			foreach (var ind in herd.Where(a => a.Weaned & (SellFemalesLikeMales ? true : (a.Gender == Sex.Male)) & (a.Age >= SellingAge ^ a.Weight >= SellingWeight)))
+			foreach (var ind in herd.Where(a => a.Weaned & (SellFemalesLikeMales ? true : (a.Gender == Sex.Male)) & (a.Age >= MaleSellingAge ^ a.Weight >= MaleSellingWeight)))
 			{
 				bool sell = true;
 				if (ind.GetType() == typeof(RuminantMale))
@@ -203,57 +209,63 @@ namespace Models.WholeFarm.Activities
 
 				// MALES
 				// check for breeder bulls after sale of old individuals and buy/sell
-				int numberMaleinherd = herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.BreedingSire).Count();
+				int numberMaleInHerd = herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.BreedingSire).Count();
 
 				// Number of females
-				int numberFemaleinherd = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating & a.SaleFlag == HerdChangeReason.None).Count();
+				int numberFemaleInHerd = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating & a.SaleFlag == HerdChangeReason.None).Count();
 
-				if (numberMaleinherd > MaximumSiresKept)
+				if (numberMaleInHerd > MaximumSiresKept)
 				{
 					// sell bulls
 					// What rule? oldest first as they may be lost soonest
-					int numberToRemove = MaximumSiresKept - numberMaleinherd;
+					int numberToRemove = MaximumSiresKept - numberMaleInHerd;
 					foreach (var male in herd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire).OrderByDescending(a => a.Age).Take(numberToRemove))
 					{
 						male.SaleFlag = HerdChangeReason.ExcessBullSale;
 					}
 				}
-				else if(numberMaleinherd < MaximumSiresKept)
+				else if(numberMaleInHerd < MaximumSiresKept)
 				{
-					// remove young bulls from sale herd to replace breed bulls (not those sold because too old)
-					foreach (RuminantMale male in herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
+					if ((foodStore == null) || ((foodStore.TonnesPerHectare * 1000) > MinimumPastureBeforeRestock))
 					{
-						male.SaleFlag = HerdChangeReason.None;
-						male.BreedingSire = true;
-						numberMaleinherd++;
-						if (numberMaleinherd >= MaximumSiresKept) break;
-					}
-
-					// if still insufficient buy bulls.
-					if (numberMaleinherd < MaximumSiresKept)
-					{
-						// limit by breeders as proportion of max breeders so we don't spend alot on sires when building the herd and females more valuable
-						double propOfBreeders = numberFemaleinherd / MaximumBreedersKept;
-						int sires = Convert.ToInt32(Math.Ceiling(MaximumSiresKept * propOfBreeders));
-						int numberToBuy = Math.Max(0, sires - numberMaleinherd);
-
-						for (int i = 0; i < numberToBuy; i++)
+						if (AllowSireReplacement)
 						{
-							RuminantMale newbull = new RuminantMale();
-							newbull.Location = GrazeFoodStoreName;
-							newbull.Age = 48;
-							newbull.Breed = breedParams.Breed;
-							newbull.HerdName = HerdName;
-							newbull.BreedingSire = true;
-							newbull.BreedParams = breedParams;
-							newbull.Gender = Sex.Male;
-							newbull.ID = 0; // ruminantHerd.NextUniqueID;
-							newbull.Weight = 450;
-							newbull.HighWeight = newbull.Weight;
-							newbull.SaleFlag = HerdChangeReason.SirePurchase;
+							// remove young bulls from sale herd to replace breed bulls (not those sold because too old)
+							foreach (RuminantMale male in herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
+							{
+								male.SaleFlag = HerdChangeReason.None;
+								male.BreedingSire = true;
+								numberMaleInHerd++;
+								if (numberMaleInHerd >= MaximumSiresKept) break;
+							}
+						}
 
-							// add to purchase request list and await purchase in Buy/ Sell
-							ruminantHerd.PurchaseIndividuals.Add(newbull);
+						// if still insufficient buy bulls.
+						if (numberMaleInHerd < MaximumSiresKept)
+						{
+							// limit by breeders as proportion of max breeders so we don't spend alot on sires when building the herd and females more valuable
+							double propOfBreeders = numberFemaleInHerd / MaximumBreedersKept;
+							int sires = Convert.ToInt32(Math.Ceiling(MaximumSiresKept * propOfBreeders));
+							int numberToBuy = Math.Max(0, sires - numberMaleInHerd);
+
+							for (int i = 0; i < numberToBuy; i++)
+							{
+								RuminantMale newbull = new RuminantMale();
+								newbull.Location = GrazeFoodStoreName;
+								newbull.Age = 48;
+								newbull.Breed = breedParams.Breed;
+								newbull.HerdName = HerdName;
+								newbull.BreedingSire = true;
+								newbull.BreedParams = breedParams;
+								newbull.Gender = Sex.Male;
+								newbull.ID = 0; // ruminantHerd.NextUniqueID;
+								newbull.Weight = 450;
+								newbull.HighWeight = newbull.Weight;
+								newbull.SaleFlag = HerdChangeReason.SirePurchase;
+
+								// add to purchase request list and await purchase in Buy/ Sell
+								ruminantHerd.PurchaseIndividuals.Add(newbull);
+							}
 						}
 					}
 				}
@@ -261,7 +273,7 @@ namespace Models.WholeFarm.Activities
 				// FEMALES
 				// check for maximum number of breeders remaining after sale and buy/sell
 
-				if (numberFemaleinherd > MaximumBreedersKept)
+				if (numberFemaleInHerd > MaximumBreedersKept)
 				{
 					// sell breeders
 					// What rule? oldest first as they may be lost soonest
@@ -269,7 +281,7 @@ namespace Models.WholeFarm.Activities
 					// this will currently remove pregnant females and females with suckling calf
 
 					//add 5% extra to the number of breeders to sell.
-					int numberToRemove = Convert.ToInt32((numberFemaleinherd-MaximumBreedersKept)*1.05);
+					int numberToRemove = Convert.ToInt32((numberFemaleInHerd-MaximumBreedersKept)*1.05);
 					foreach (var female in herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating).OrderByDescending(a => a.Age).Take(numberToRemove))
 					{
 						female.SaleFlag = HerdChangeReason.ExcessBreederSale;
@@ -277,41 +289,43 @@ namespace Models.WholeFarm.Activities
 				}
 				else
 				{
-					// remove young females from sale herd to replace breeders (not those sold because too old)
-					foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
+					if ((foodStore == null) || ((foodStore.TonnesPerHectare * 1000) > MinimumPastureBeforeRestock))
 					{
-						female.SaleFlag = HerdChangeReason.None;
-						numberFemaleinherd++;
-						if (numberFemaleinherd >= MaximumBreedersKept) break;
-					}
-
-					// if still insufficient buy breeders.
-					if (numberFemaleinherd < MaximumBreedersKept & sufficientFood)
-					{
-						int ageOfHeifer = 12;
-						double weightOfHeifer = 260;
-
-						int numberToBuy = Convert.ToInt32((MaximumBreedersKept - numberFemaleinherd));
-
-						for (int i = 0; i < numberToBuy; i++)
+						// remove young females from sale herd to replace breeders (not those sold because too old)
+						foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
 						{
-							RuminantFemale newheifer = new RuminantFemale();
-							newheifer.Location = GrazeFoodStoreName;
-							newheifer.Age = ageOfHeifer;
-							newheifer.Breed = breedParams.Breed;
-							newheifer.HerdName = HerdName;
-							newheifer.BreedParams = breedParams;
-							newheifer.Gender = Sex.Female;
-							newheifer.ID = 0;// ruminantHerd.NextUniqueID;
-							newheifer.Weight = weightOfHeifer;
-							newheifer.HighWeight = newheifer.Weight;
-							newheifer.SaleFlag = HerdChangeReason.HeiferPurchase;
+							female.SaleFlag = HerdChangeReason.None;
+							numberFemaleInHerd++;
+							if (numberFemaleInHerd >= MaximumBreedersKept) break;
+						}
 
-							// add to purchase request list and await purchase in Buy/ Sell
-							ruminantHerd.PurchaseIndividuals.Add(newheifer);
+						// if still insufficient buy breeders.
+						if (numberFemaleInHerd < MaximumBreedersKept & sufficientFood)
+						{
+							int ageOfHeifer = 12;
+							double weightOfHeifer = 260;
+
+							int numberToBuy = Convert.ToInt32((MaximumBreedersKept - numberFemaleInHerd));
+
+							for (int i = 0; i < numberToBuy; i++)
+							{
+								RuminantFemale newheifer = new RuminantFemale();
+								newheifer.Location = GrazeFoodStoreName;
+								newheifer.Age = ageOfHeifer;
+								newheifer.Breed = breedParams.Breed;
+								newheifer.HerdName = HerdName;
+								newheifer.BreedParams = breedParams;
+								newheifer.Gender = Sex.Female;
+								newheifer.ID = 0;// ruminantHerd.NextUniqueID;
+								newheifer.Weight = weightOfHeifer;
+								newheifer.HighWeight = newheifer.Weight;
+								newheifer.SaleFlag = HerdChangeReason.HeiferPurchase;
+
+								// add to purchase request list and await purchase in Buy/ Sell
+								ruminantHerd.PurchaseIndividuals.Add(newheifer);
+							}
 						}
 					}
-
 				}
 			}
 		}

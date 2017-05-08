@@ -484,11 +484,13 @@
     <Compile Include="WholeFarm\Activities\GrazeBreedPoolLimit.cs" />
     <Compile Include="WholeFarm\Activities\LabourActivityOffFarm.cs" />
     <Compile Include="WholeFarm\Activities\OtherAnimalsActivityGrow.cs" />
+    <Compile Include="WholeFarm\Activities\PastureActivityBurn.cs" />
     <Compile Include="WholeFarm\Activities\Relationship.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityGrazeAll.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityGrazePasture.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityGrazePastureBreed.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityHerdCost.cs" />
+    <Compile Include="WholeFarm\Activities\RuminantActivityPredictiveStockingENSO.cs" />
     <Compile Include="WholeFarm\FileAPSIM.cs" />
     <Compile Include="WholeFarm\Groupings\LabourFilterGroupSpecified.cs" />
     <Compile Include="WholeFarm\Groupings\RuminantFilterGroup.cs" />

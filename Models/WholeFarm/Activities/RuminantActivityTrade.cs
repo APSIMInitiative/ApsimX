@@ -43,7 +43,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Trade price (purchase/sell price /kg LWT)
 		/// </summary>
-		[Description("trade price (purchase/sell price /kg LWT)")]
+		[Description("Trade price (purchase/sell price /kg LWT)")]
 		public double TradePrice { get; set; }
 
 		/// <summary>
@@ -69,8 +69,6 @@ namespace Models.WholeFarm.Activities
 		// fixed number
 
 
-
-
 		/// <summary>An event handler to call for all herd management activities</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -89,7 +87,6 @@ namespace Models.WholeFarm.Activities
 		public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
 			// check for labour
-
 			return null;
 		}
 
@@ -98,7 +95,7 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void PerformActivity()
 		{
-			return; ;
+			return;
 		}
 
 		/// <summary>
