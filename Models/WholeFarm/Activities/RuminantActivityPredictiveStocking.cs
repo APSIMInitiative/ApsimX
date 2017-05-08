@@ -25,8 +25,6 @@ namespace Models.WholeFarm.Activities
 		Clock Clock = null;
 		[Link]
 		private ResourcesHolder Resources = null;
-		[Link]
-		ISummary Summary = null;
 
 		/// <summary>
 		/// Herd to manage for dry season pasture availability
@@ -90,7 +88,7 @@ namespace Models.WholeFarm.Activities
 			// this event happens after management has marked individuals for purchase or sale.
 			if (Clock.Today.Month == AssessmentMonth)
 			{
-				// calculate dry season pasture available for each managed paddock holding stock
+				// calculate dry season pasture available for each managed paddock holding stock not flagged for sale
 				RuminantHerd ruminantHerd = Resources.RuminantHerd();
 				foreach (var newgroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
 				{
@@ -103,6 +101,7 @@ namespace Models.WholeFarm.Activities
 					double ShortfallAE = 0;
 					// Determine total feed requirements for dry season for all ruminants on the pasture
 					// We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
+					bool available = false;
 					ShortfallAE = 0;
 					GrazeFoodStoreType pasture = Resources.GetResourceItem(typeof(GrazeFoodStoreType), newgroup.Key, out available) as GrazeFoodStoreType;
 					double pastureBiomass = pasture.Amount;

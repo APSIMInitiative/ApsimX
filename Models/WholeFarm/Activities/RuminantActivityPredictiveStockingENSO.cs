@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.WholeFarm.Resources;
 using System;
 using System.Collections.Generic;
@@ -40,12 +41,6 @@ namespace Models.WholeFarm.Activities
 		public int AssessmentMonth { get; set; }
 
 		/// <summary>
-		/// Number of months to assess
-		/// </summary>
-		[Description("Number of months to assess")]
-		public int DrySeasonLength { get; set; }
-
-		/// <summary>
 		/// Minimum estimated feed (kg/ha) before restocking
 		/// </summary>
 		[Description("Minimum estimated feed (kg/ha) before restocking")]
@@ -77,8 +72,10 @@ namespace Models.WholeFarm.Activities
 		/// Year Jan Feb Mar.....
 		/// 1876 11  0.2 -3  +ve LaNina -ve El Nino
 		/// </summary>
-		[Description("ENSO forecast file")]
-		public string ENSOForecastFile { get; set; }
+		[Description("SOI monthly data file")]
+		public string MonthlySIOFile { get; set; }
+
+		private string fullFilename;
 
 		/// <summary>
 		/// Name of GrazeFoodStore (paddock) to place purchases in for grazing (leave blank for general yards)
@@ -100,11 +97,17 @@ namespace Models.WholeFarm.Activities
 		[Description("Minimum mean SOI (absolute) for El Nino")]
 		public double MeanSOIForElNino { get; set; }
 
-		///// <summary>
-		///// The relationship to convert last 6 months SOI to stock rate change proportion
-		///// </summary>
-		//[Description("The relationship to convert last 6 months SOI to stock rate change proportion")]
-		//public Relationship EndOfDryPastureToStockingChange { get; set; }
+		/// <summary>
+		/// The relationship to convert pasture biomass to stock rate change for El Nino
+		/// </summary>
+		[Description("The relationship to convert last 6 months SOI to stock rate change proportion")]
+		public Relationship PastureToStockingChangeElNino { get; set; }
+
+		/// <summary>
+		/// The relationship to convert pasture biomass to stock rate change for La Nina
+		/// </summary>
+		[Description("The relationship to convert last 6 months SOI to stock rate change proportion")]
+		public Relationship PastureToStockingChangeLaNina { get; set; }
 
 		/// <summary>
 		/// Store graze 
@@ -120,14 +123,20 @@ namespace Models.WholeFarm.Activities
 			ForecastSequence = new Dictionary<DateTime, double>();
 			// load ENSO file into memory
 
+			Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+			if (simulation != null)
+				fullFilename = PathUtilities.GetAbsolutePath(this.MonthlySIOFile, simulation.FileName);
+			else
+				fullFilename = this.MonthlySIOFile;
+
 			//check file exists
-			if(!File.Exists(ENSOForecastFile))
+			if (!File.Exists(fullFilename))
 			{
-				Summary.WriteWarning(this, String.Format("Could not find ENSO SIO datafile {0} for {1}", ENSOForecastFile, this.Name));
+				Summary.WriteWarning(this, String.Format("Could not find ENSO SIO datafile {0} for {1}", MonthlySIOFile, this.Name));
 			}
 
 			// load data
-			using (StreamReader ensoStream = new StreamReader(ENSOForecastFile))
+			using (StreamReader ensoStream = new StreamReader(MonthlySIOFile))
 			{
 				string line = "";
 				while((line = ensoStream.ReadLine())!=null)
@@ -209,55 +218,83 @@ namespace Models.WholeFarm.Activities
 					double AEmarkedForSale = newgroup.Where(a => a.ReadyForSale & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
 					double AEPurchase = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
 
-					double ShortfallAE = 0;
-					// determine next year's prediction
+//					double ShortfallAE = 0;
 					bool available;
+					double herdChange = 1.0;
 					switch (ForecastEnsoState)
 					{
 						case ENSOState.Neutral:
 							break;
-						case ENSOState.LaNina:
-							double AEtoBuy = 0;
+						case ENSOState.ElNino:
 							GrazeFoodStoreType pasture = Resources.GetResourceItem(typeof(GrazeFoodStoreType), newgroup.Key, out available) as GrazeFoodStoreType;
 							double kgha = pasture.TonnesPerHectare * 1000;
-							if (kgha > 3000)
-							{
-								AEtoBuy = AETotal * 0.2; //Buy 20% of Total Animal Equivalents
-							}
-							else if (kgha < 1000)
-							{
-								AEtoBuy = 0; //Don't buy any nore
-							}
-							else
-							{
-								AEtoBuy = AETotal * 0.1; //Buy 10 % of Total Animal Equivalents
-							}
-							// adjust for the AE already marked for purchase if any
-							AEtoBuy = Math.Max(0, AEtoBuy - AEPurchase);
-							HandleRestocking(AEtoBuy, newgroup.Key, newgroup.FirstOrDefault());
+							herdChange = this.PastureToStockingChangeElNino.SolveY(kgha, false);
 							break;
-						case ENSOState.ElNino:
+						case ENSOState.LaNina:
 							pasture = Resources.GetResourceItem(typeof(GrazeFoodStoreType), newgroup.Key, out available) as GrazeFoodStoreType;
 							kgha = pasture.TonnesPerHectare * 1000;
-							if (kgha > 3000)
-							{
-								ShortfallAE = AETotal * 0.1; //Sell 10% of Total Animal Equivalents
-							}
-							else if (kgha < 1000)
-							{
-								ShortfallAE = AETotal * 0.3; //Sell 30% of Total Animal Equivalents
-							}
-							else
-							{
-								ShortfallAE = AETotal * 0.2; //Sell 20 % of Total Animal Equivalents
-							}
-							// Adjust for AE already flagged for sale if any
-							ShortfallAE = Math.Max(0, ShortfallAE - AEmarkedForSale);
-							HandleDestocking(ShortfallAE, newgroup.Key);
+							herdChange = this.PastureToStockingChangeLaNina.SolveY(kgha, false);
 							break;
 						default:
 							break;
 					}
+					if(herdChange> 1.0)
+					{
+						double AEtoBuy = Math.Max(0, (AETotal*herdChange) - AEPurchase);
+						HandleRestocking(AEtoBuy, newgroup.Key, newgroup.FirstOrDefault());
+					}
+					else if(herdChange < 1.0)
+					{
+						double AEtoSell = Math.Max(0, (AETotal*(1-herdChange)) - AEmarkedForSale);
+						HandleDestocking(AEtoSell, newgroup.Key);
+					}
+
+					//switch (ForecastEnsoState)
+					//{
+					//	case ENSOState.Neutral:
+					//		break;
+					//	case ENSOState.LaNina:
+					//		double AEtoBuy = 0;
+					//		GrazeFoodStoreType pasture = Resources.GetResourceItem(typeof(GrazeFoodStoreType), newgroup.Key, out available) as GrazeFoodStoreType;
+					//		double kgha = pasture.TonnesPerHectare * 1000;
+					//		if (kgha > 3000)
+					//		{
+					//			AEtoBuy = AETotal * 0.2; //Buy 20% of Total Animal Equivalents
+					//		}
+					//		else if (kgha < 1000)
+					//		{
+					//			AEtoBuy = 0; //Don't buy any nore
+					//		}
+					//		else
+					//		{
+					//			AEtoBuy = AETotal * 0.1; //Buy 10 % of Total Animal Equivalents
+					//		}
+					//		// adjust for the AE already marked for purchase if any
+					//		AEtoBuy = Math.Max(0, AEtoBuy - AEPurchase);
+					//		HandleRestocking(AEtoBuy, newgroup.Key, newgroup.FirstOrDefault());
+					//		break;
+					//	case ENSOState.ElNino:
+					//		pasture = Resources.GetResourceItem(typeof(GrazeFoodStoreType), newgroup.Key, out available) as GrazeFoodStoreType;
+					//		kgha = pasture.TonnesPerHectare * 1000;
+					//		if (kgha > 3000)
+					//		{
+					//			ShortfallAE = AETotal * 0.1; //Sell 10% of Total Animal Equivalents
+					//		}
+					//		else if (kgha < 1000)
+					//		{
+					//			ShortfallAE = AETotal * 0.3; //Sell 30% of Total Animal Equivalents
+					//		}
+					//		else
+					//		{
+					//			ShortfallAE = AETotal * 0.2; //Sell 20 % of Total Animal Equivalents
+					//		}
+					//		// Adjust for AE already flagged for sale if any
+					//		ShortfallAE = Math.Max(0, ShortfallAE - AEmarkedForSale);
+					//		HandleDestocking(ShortfallAE, newgroup.Key);
+					//		break;
+					//	default:
+					//		break;
+					//}
 				}
 			}
 		}
@@ -359,7 +396,7 @@ namespace Models.WholeFarm.Activities
 			// ensure min pasture for restocking
 			if ((foodStore == null) || ((foodStore.TonnesPerHectare * 1000) > MinimumFeedBeforeRestock))
 			{
-				double weight = exampleRuminant.StandardReferenceWeight - ((1 - exampleRuminant.BreedParams.SRWBirth) * exampleRuminant.StandardReferenceWeight) * Math.Exp(-(growth_coeff1 * Rum_Age(k, x + 2)) / (exampleRuminant.StandardReferenceWeight ^ exampleRuminant.BreedParams. growth_coeff2));
+				double weight = exampleRuminant.StandardReferenceWeight - ((1 - exampleRuminant.BreedParams.SRWBirth) * exampleRuminant.StandardReferenceWeight) * Math.Exp(-(exampleRuminant.BreedParams.AgeGrowthRateCoefficient * (exampleRuminant.Age * 30.4)) / (Math.Pow(exampleRuminant.StandardReferenceWeight, exampleRuminant.BreedParams.SRWGrowthScalar)));
 				double numberToBuy = AEtoBuy * Math.Pow(weight, 0.75) / Math.Pow(exampleRuminant.BreedParams.BaseAnimalEquivalent, 0.75); // convert to AE
 
 				for (int i = 0; i < Convert.ToInt32(numberToBuy); i++)

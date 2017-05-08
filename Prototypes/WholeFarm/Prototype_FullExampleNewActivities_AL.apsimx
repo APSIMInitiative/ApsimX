@@ -95,7 +95,6 @@
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
             <StartingAmount>1000</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Maize</Name>
@@ -103,7 +102,6 @@
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
             <StartingAmount>100</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>CutGrass</Name>
@@ -111,7 +109,6 @@
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
             <StartingAmount>100</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>BoughtSupplement</Name>
@@ -119,7 +116,6 @@
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
             <StartingAmount>100</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Chicken pellets</Name>
@@ -137,7 +133,6 @@
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
             <StartingAmount>20</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Household scraps</Name>
@@ -145,7 +140,6 @@
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
             <StartingAmount>5</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
         <GrazeFoodStore>
@@ -484,7 +478,6 @@
             <DMD>0</DMD>
             <Nitrogen>0</Nitrogen>
             <StartingAmount>0</StartingAmount>
-            <PurchaseAsNeeded>false</PurchaseAsNeeded>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
       </ResourcesHolder>
@@ -712,12 +705,14 @@
             <MaximumBreederAge>120</MaximumBreederAge>
             <MaximumSiresKept>5</MaximumSiresKept>
             <MaximumBullAge>96</MaximumBullAge>
-            <SellingAge>42</SellingAge>
-            <SellingWeight>580</SellingWeight>
+            <AllowSireReplacement>true</AllowSireReplacement>
+            <MaleSellingAge>0</MaleSellingAge>
+            <MaleSellingWeight>0</MaleSellingWeight>
             <ManagementMonth>10</ManagementMonth>
             <MonthlyManagement>false</MonthlyManagement>
             <WeaningAge>9</WeaningAge>
             <WeaningWeight>250</WeaningWeight>
+            <MinimumPastureBeforeRestock>0</MinimumPastureBeforeRestock>
             <SellFemalesLikeMales>false</SellFemalesLikeMales>
           </RuminantActivityManage>
           <RuminantActivityBuySell>
@@ -735,6 +730,68 @@
             <SalesCommission>0</SalesCommission>
             <BankAccountName>General account</BankAccountName>
           </RuminantActivityBuySell>
+          <RuminantActivityPredictiveStocking>
+            <Name>Dry season stocking</Name>
+            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <HerdName>Breeding</HerdName>
+            <AssessmentMonth>5</AssessmentMonth>
+            <DrySeasonLength>6</DrySeasonLength>
+            <FeedLowLimit>500</FeedLowLimit>
+            <MinimumBreederAgeLimit>48</MinimumBreederAgeLimit>
+            <SellDryCows>false</SellDryCows>
+            <SellWetCows>false</SellWetCows>
+            <SellSteers>true</SellSteers>
+          </RuminantActivityPredictiveStocking>
+          <RuminantActivityPredictiveStockingENSO>
+            <Name>ENSO stocking</Name>
+            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <HerdName>Breeding</HerdName>
+            <AssessmentMonth>5</AssessmentMonth>
+            <MinimumFeedBeforeRestock>1500</MinimumFeedBeforeRestock>
+            <SellDryCows>false</SellDryCows>
+            <SellWetCows>false</SellWetCows>
+            <SellSteers>true</SellSteers>
+            <MonthlySIOFile>ENSO.txt</MonthlySIOFile>
+            <MeanSOIForLaNina>7</MeanSOIForLaNina>
+            <MeanSOIForElNino>7</MeanSOIForElNino>
+						<GrazeFoodStoreName>Native pasture</GrazeFoodStoreName>
+						<MeanSOIForLaNina>
+							<Name>LaNina pasture to herd change</Name>
+              <StartingValue>0</StartingValue>
+              <Minumum>1.0</Minumum>
+              <Maximum>1.2</Maximum>
+              <XValues>
+                <double>1000</double>
+                <double>1000.5</double>
+                <double>3000</double>
+                <double>3000.5</double>
+              </XValues>
+              <YValues>
+                <double>1.0</double>
+                <double>1.1</double>
+                <double>1.1</double>
+                <double>1.2</double>
+              </YValues>							
+						</MeanSOIForLaNina>
+						<MeanSOIForElNino>
+							<Name>ElNino pasture to herd change</Name>
+              <StartingValue>0</StartingValue>
+              <Minumum>0.7</Minumum>
+              <Maximum>0.9</Maximum>
+              <XValues>
+                <double>1000</double>
+                <double>1000.5</double>
+                <double>3000</double>
+                <double>3000.5</double>
+              </XValues>
+              <YValues>
+                <double>0.7</double>
+                <double>0.8</double>
+                <double>0.8</double>
+                <double>0.9</double>
+              </YValues>							
+						</MeanSOIForElNino>
+					</RuminantActivityPredictiveStockingENSO>
           <RuminantActivityHerdCost>
             <Name>Vet costs</Name>
             <RuminantFilterGroup>
@@ -810,16 +867,6 @@
               </MonthlyValues>
               <AnimalType>Chickens</AnimalType>
             </OtherAnimalsFilterGroup>
-            <ActivityLabourRequirementGroup>
-              <Name>ActivityLabourRequirementGroup</Name>
-              <LabourFilter>
-                <Name>Filter[Name=Joe B]</Name>
-                <Parameter>Name</Parameter>
-                <Operator>Equal</Operator>
-                <Value>Joe B</Value>
-              </LabourFilter>
-              <DaysRequired>0.2</DaysRequired>
-            </ActivityLabourRequirementGroup>
             <PerformWithPartialResources>false</PerformWithPartialResources>
             <FeedTypeName>Chicken pellets</FeedTypeName>
             <FeedStyle>SpecifiedDailyAmount</FeedStyle>
@@ -848,55 +895,39 @@
             <Name>Native pasture paddock</Name>
             <Relationship>
               <Name>LandConditionIndex</Name>
-              <Point>
-                <Name>Point</Name>
-                <X>0</X>
-                <Y>-1.5</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>15</X>
-                <Y>-0.3</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>35</X>
-                <Y>0.3</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>100</X>
-                <Y>1.5</Y>
-              </Point>
               <StartingValue>2</StartingValue>
               <Minumum>0</Minumum>
               <Maximum>11</Maximum>
+              <XValues>
+                <double>0</double>
+                <double>15</double>
+                <double>35</double>
+                <double>100</double>
+              </XValues>
+              <YValues>
+                <double>-1.5</double>
+                <double>-0.3</double>
+                <double>0.3</double>
+                <double>1.5</double>
+              </YValues>
             </Relationship>
             <Relationship>
               <Name>GrassBasalArea</Name>
-              <Point>
-                <Name>Point</Name>
-                <X>0</X>
-                <Y>-0.75</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>15</X>
-                <Y>-0.15</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>35</X>
-                <Y>0.15</Y>
-              </Point>
-              <Point>
-                <Name>Point</Name>
-                <X>100</X>
-                <Y>0.75</Y>
-              </Point>
               <StartingValue>3</StartingValue>
               <Minumum>0</Minumum>
               <Maximum>3</Maximum>
+              <XValues>
+                <double>0</double>
+                <double>15</double>
+                <double>35</double>
+                <double>100</double>
+              </XValues>
+              <YValues>
+                <double>-0.75</double>
+                <double>-0.15</double>
+                <double>0.15</double>
+                <double>0.75</double>
+              </YValues>
             </Relationship>
             <PerformWithPartialResources>true</PerformWithPartialResources>
             <LandTypeNameToUse>Sandy loam country</LandTypeNameToUse>
@@ -907,6 +938,14 @@
             <EcolCalculationMonth>9</EcolCalculationMonth>
             <EcolCalculationInterval>12</EcolCalculationInterval>
           </PastureActivityManage>
+          <PastureActivityBurn>
+            <Name>Burn native pasture</Name>
+            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <BurnInterval>12</BurnInterval>
+            <BurnMonth>11</BurnMonth>
+            <MinimumProportionGreen>0.5</MinimumProportionGreen>
+            <PaddockName>Native Pasture</PaddockName>
+          </PastureActivityBurn>
           <PerformWithPartialResources>false</PerformWithPartialResources>
         </ActivityFolder>
         <SummariseRuminantHerd>
