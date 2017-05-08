@@ -491,7 +491,7 @@ namespace Models.WholeFarm.Activities
 					mortalityRate = 0;
 					if((ind.Mother == null) || (ind.Mother.Weight < ind.BreedParams.CriticalCowWeight * ind.StandardReferenceWeight))
 					{
-						// if no mohter assigned or mother's weight is < CriticalCowWeight * SFR
+						// if no mother assigned or mother's weight is < CriticalCowWeight * SFR
 						mortalityRate = ind.BreedParams.JuvenileMortalityMaximum;
 					}
 					else
@@ -515,6 +515,35 @@ namespace Models.WholeFarm.Activities
 
 			died = herd.Where(a => a.Died).ToList();
 			died.Select(a => { a.SaleFlag = HerdChangeReason.Died; return a; }).ToList();
+
+			// TODO: separate foster from real mother for genetics
+			// check for death of mother with sucklings and try foster sucklings
+			List<RuminantFemale> mothersWithCalf = died.Cast<RuminantFemale>().Where(a => a.SucklingOffspring.Count() > 0).ToList();
+			List<RuminantFemale> wetMothersAvailable = died.Cast<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspring.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
+			int wetMothersAssigned = 0;
+			if (wetMothersAvailable.Count() > 0)
+			{
+				if(mothersWithCalf.Count() > 0)
+				{
+					foreach (var deadMother in mothersWithCalf)
+					{
+						foreach (var calf in deadMother.SucklingOffspring)
+						{
+							if(wetMothersAssigned < wetMothersAvailable.Count())
+							{
+								calf.Mother = wetMothersAvailable[wetMothersAssigned];
+								wetMothersAssigned++;
+							}
+							else
+							{
+								break;
+							}
+						}
+
+					}
+				}
+			}
+
 			ruminantHerd.RemoveRuminant(died);
 		}
 
