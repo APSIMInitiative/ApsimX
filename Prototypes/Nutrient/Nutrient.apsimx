@@ -401,7 +401,7 @@
           <Name>CO2Efficiency</Name>
           <FixedValue>0.4</FixedValue>
         </Constant>
-        <sourceName>FOMCellulose</sourceName>
+        <sourceName>FOMCarbohydrate</sourceName>
         <destinationName>Humic</destinationName>
       </CarbonFlow>
       <NFlow>
