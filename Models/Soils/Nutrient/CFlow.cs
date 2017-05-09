@@ -10,12 +10,11 @@ namespace Models.Soils.Nutrient
     /// Encapsulates a carbon flow between pools.
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(Nutrient))]
+    [ValidParent(ParentType = typeof(NutrientPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
     public class CarbonFlow : Model
     {
-        private NutrientPool source = null;
         private NutrientPool destination = null;
 
         [ChildLinkByName]
@@ -26,12 +25,6 @@ namespace Models.Soils.Nutrient
 
         [Link]
         private SoluteManager solutes = null;
-
-        /// <summary>
-        /// Name of source pool
-        /// </summary>
-        [Description("Name of source pool")]
-        public string sourceName { get; set; }
 
         /// <summary>
         /// Name of destination pool
@@ -45,10 +38,6 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            source = Apsim.Find(this, sourceName) as NutrientPool;
-            if (source == null)
-                throw new Exception("Cannot find source pool with name: " + sourceName);
-
             destination = Apsim.Find(this, destinationName) as NutrientPool;
             if (destination == null)
                 throw new Exception("Cannot find destination pool with name: " + destinationName);
@@ -62,6 +51,7 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
+            NutrientPool source = Parent as NutrientPool;
             for (int i= 0; i < source.C.Length; i++)
             {
                 double carbonFlow = Rate.Value(i) * source.C[i];

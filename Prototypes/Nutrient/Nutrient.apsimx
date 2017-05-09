@@ -84,17 +84,6 @@
         <Expression>[FOMLignin].N+[FOMCellulose].N+[FOMCarbohydrate].N</Expression>
       </ExpressionFunction>
       <NutrientPool>
-        <Name>SurfaceResidue</Name>
-        <Constant>
-          <Name>InitialiseCarbon</Name>
-          <FixedValue>0</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>InitialiseNitrogen</Name>
-          <FixedValue>0</FixedValue>
-        </Constant>
-      </NutrientPool>
-      <NutrientPool>
         <Name>Inert</Name>
         <ExpressionFunction>
           <Name>InitialiseCarbon</Name>
@@ -104,6 +93,41 @@
           <Name>InitialiseNitrogen</Name>
           <Expression>[Inert].C / [Soil].SoilOrganicMatter.SoilCN</Expression>
         </ExpressionFunction>
+      </NutrientPool>
+      <NutrientPool>
+        <Name>SurfaceResidue</Name>
+        <Constant>
+          <Name>InitialiseCarbon</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>InitialiseNitrogen</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <CarbonFlow>
+          <Name>ToBiomass</Name>
+          <Constant>
+            <Name>Rate</Name>
+            <FixedValue>0.9</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Biomass</destinationName>
+        </CarbonFlow>
+        <CarbonFlow>
+          <Name>ToHumic</Name>
+          <Constant>
+            <Name>Rate</Name>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Humic</destinationName>
+        </CarbonFlow>
       </NutrientPool>
       <NutrientPool>
         <Name>Biomass</Name>
@@ -119,6 +143,52 @@
           <Name>CNRatio</Name>
           <FixedValue>8</FixedValue>
         </Constant>
+        <CarbonFlow>
+          <Name>ToHumic</Name>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <FixedValue>0.00324</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Humic</destinationName>
+        </CarbonFlow>
+        <CarbonFlow>
+          <Name>ToBiomass</Name>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <FixedValue>0.00486</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Biomass</destinationName>
+        </CarbonFlow>
       </NutrientPool>
       <NutrientPool>
         <Name>Humic</Name>
@@ -130,6 +200,224 @@
           <Name>InitialiseNitrogen</Name>
           <Expression>[Humic].C / [Soil].SoilOrganicMatter.SoilCN</Expression>
         </ExpressionFunction>
+        <CarbonFlow>
+          <Name>ToBiomass</Name>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <FixedValue>0.00015</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Biomass</destinationName>
+        </CarbonFlow>
+      </NutrientPool>
+      <NutrientPool>
+        <Name>FOMLignin</Name>
+        <Constant>
+          <Name>InitialiseCarbon</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>InitialiseNitrogen</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <CarbonFlow>
+          <Name>ToBiomass</Name>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <FixedValue>0.00855</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>CNRF</Name>
+              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Biomass</destinationName>
+        </CarbonFlow>
+        <CarbonFlow>
+          <Name>ToHumic</Name>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <FixedValue>0.00095</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>CNRF</Name>
+              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Humic</destinationName>
+        </CarbonFlow>
+      </NutrientPool>
+      <NutrientPool>
+        <Name>FOMCellulose</Name>
+        <Constant>
+          <Name>InitialiseCarbon</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>InitialiseNitrogen</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <CarbonFlow>
+          <Name>ToBiomass</Name>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <FixedValue>0.045</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>CNRF</Name>
+              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Biomass</destinationName>
+        </CarbonFlow>
+        <CarbonFlow>
+          <Name>ToHumic</Name>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <FixedValue>0.005</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>CNRF</Name>
+              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Humic</destinationName>
+        </CarbonFlow>
+      </NutrientPool>
+      <NutrientPool>
+        <Name>FOMCarbohydrate</Name>
+        <Constant>
+          <Name>InitialiseCarbon</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>InitialiseNitrogen</Name>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <CarbonFlow>
+          <Name>ToBiomass</Name>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <FixedValue>0.18</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>CNRF</Name>
+              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Biomass</destinationName>
+        </CarbonFlow>
+        <CarbonFlow>
+          <Name>ToHumic</Name>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <Constant>
+              <Name>PotentialRate</Name>
+              <FixedValue>0.02</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>TF</Name>
+              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>WF</Name>
+              <VariableName>[WaterFactorForMineralisation]</VariableName>
+            </VariableReference>
+            <VariableReference>
+              <Name>CNRF</Name>
+              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
+            </VariableReference>
+          </MultiplyFunction>
+          <Constant>
+            <Name>CO2Efficiency</Name>
+            <FixedValue>0.4</FixedValue>
+          </Constant>
+          <destinationName>Humic</destinationName>
+        </CarbonFlow>
       </NutrientPool>
       <NutrientPool>
         <Name>Biochar</Name>
@@ -142,305 +430,6 @@
           <FixedValue>0</FixedValue>
         </Constant>
       </NutrientPool>
-      <NutrientPool>
-        <Name>FOMLignin</Name>
-        <Constant>
-          <Name>InitialiseCarbon</Name>
-          <FixedValue>0</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>InitialiseNitrogen</Name>
-          <FixedValue>0</FixedValue>
-        </Constant>
-      </NutrientPool>
-      <NutrientPool>
-        <Name>FOMCellulose</Name>
-        <Constant>
-          <Name>InitialiseCarbon</Name>
-          <FixedValue>0</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>InitialiseNitrogen</Name>
-          <FixedValue>0</FixedValue>
-        </Constant>
-      </NutrientPool>
-      <NutrientPool>
-        <Name>FOMCarbohydrate</Name>
-        <Constant>
-          <Name>InitialiseCarbon</Name>
-          <FixedValue>0</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>InitialiseNitrogen</Name>
-          <FixedValue>0</FixedValue>
-        </Constant>
-      </NutrientPool>
-      <CarbonFlow>
-        <Name>SurfaceResidueToBiomass</Name>
-        <Constant>
-          <Name>Rate</Name>
-          <FixedValue>0.9</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>SurfaceResidue</sourceName>
-        <destinationName>Biomass</destinationName>
-      </CarbonFlow>
-      <CarbonFlow>
-        <Name>SurfaceResidueToHumic</Name>
-        <Constant>
-          <Name>Rate</Name>
-          <FixedValue>1</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>SurfaceResidue</sourceName>
-        <destinationName>Humic</destinationName>
-      </CarbonFlow>
-      <CarbonFlow>
-        <Name>HumicToBiomass</Name>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <Constant>
-            <Name>PotentialRate</Name>
-            <FixedValue>0.00015</FixedValue>
-          </Constant>
-          <VariableReference>
-            <Name>TF</Name>
-            <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>WF</Name>
-            <VariableName>[WaterFactorForMineralisation]</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>Humic</sourceName>
-        <destinationName>Biomass</destinationName>
-      </CarbonFlow>
-      <CarbonFlow>
-        <Name>BiomassToHumic</Name>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <Constant>
-            <Name>PotentialRate</Name>
-            <FixedValue>0.00324</FixedValue>
-          </Constant>
-          <VariableReference>
-            <Name>TF</Name>
-            <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>WF</Name>
-            <VariableName>[WaterFactorForMineralisation]</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>Biomass</sourceName>
-        <destinationName>Humic</destinationName>
-      </CarbonFlow>
-      <CarbonFlow>
-        <Name>BiomassToBiomass</Name>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <Constant>
-            <Name>PotentialRate</Name>
-            <FixedValue>0.00486</FixedValue>
-          </Constant>
-          <VariableReference>
-            <Name>TF</Name>
-            <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>WF</Name>
-            <VariableName>[WaterFactorForMineralisation]</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>Biomass</sourceName>
-        <destinationName>Biomass</destinationName>
-      </CarbonFlow>
-      <CarbonFlow>
-        <Name>FOMLigninToBiomass</Name>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <Constant>
-            <Name>PotentialRate</Name>
-            <FixedValue>0.00855</FixedValue>
-          </Constant>
-          <VariableReference>
-            <Name>TF</Name>
-            <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>WF</Name>
-            <VariableName>[WaterFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>CNRF</Name>
-            <VariableName>[CNRatioFactorForMineralisation]</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>FOMLignin</sourceName>
-        <destinationName>Biomass</destinationName>
-      </CarbonFlow>
-      <CarbonFlow>
-        <Name>FOMLigninToHumic</Name>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <Constant>
-            <Name>PotentialRate</Name>
-            <FixedValue>0.00095</FixedValue>
-          </Constant>
-          <VariableReference>
-            <Name>TF</Name>
-            <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>WF</Name>
-            <VariableName>[WaterFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>CNRF</Name>
-            <VariableName>[CNRatioFactorForMineralisation]</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>FOMLignin</sourceName>
-        <destinationName>Humic</destinationName>
-      </CarbonFlow>
-      <CarbonFlow>
-        <Name>FOMCelluloseToBiomass</Name>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <Constant>
-            <Name>PotentialRate</Name>
-            <FixedValue>0.045</FixedValue>
-          </Constant>
-          <VariableReference>
-            <Name>TF</Name>
-            <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>WF</Name>
-            <VariableName>[WaterFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>CNRF</Name>
-            <VariableName>[CNRatioFactorForMineralisation]</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>FOMCellulose</sourceName>
-        <destinationName>Biomass</destinationName>
-      </CarbonFlow>
-      <CarbonFlow>
-        <Name>FOMCelluloseToHumic</Name>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <Constant>
-            <Name>PotentialRate</Name>
-            <FixedValue>0.005</FixedValue>
-          </Constant>
-          <VariableReference>
-            <Name>TF</Name>
-            <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>WF</Name>
-            <VariableName>[WaterFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>CNRF</Name>
-            <VariableName>[CNRatioFactorForMineralisation]</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>FOMCellulose</sourceName>
-        <destinationName>Humic</destinationName>
-      </CarbonFlow>
-      <CarbonFlow>
-        <Name>FOMCarbohydrateToBiomass</Name>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <Constant>
-            <Name>PotentialRate</Name>
-            <FixedValue>0.18</FixedValue>
-          </Constant>
-          <VariableReference>
-            <Name>TF</Name>
-            <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>WF</Name>
-            <VariableName>[WaterFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>CNRF</Name>
-            <VariableName>[CNRatioFactorForMineralisation]</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>FOMCarbohydrate</sourceName>
-        <destinationName>Biomass</destinationName>
-      </CarbonFlow>
-      <CarbonFlow>
-        <Name>FOMCarbohydrateToHumic</Name>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <Constant>
-            <Name>PotentialRate</Name>
-            <FixedValue>0.02</FixedValue>
-          </Constant>
-          <VariableReference>
-            <Name>TF</Name>
-            <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>WF</Name>
-            <VariableName>[WaterFactorForMineralisation]</VariableName>
-          </VariableReference>
-          <VariableReference>
-            <Name>CNRF</Name>
-            <VariableName>[CNRatioFactorForMineralisation]</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
-        <Constant>
-          <Name>CO2Efficiency</Name>
-          <FixedValue>0.4</FixedValue>
-        </Constant>
-        <sourceName>FOMCarbohydrate</sourceName>
-        <destinationName>Humic</destinationName>
-      </CarbonFlow>
       <NFlow>
         <Name>Hydrolysis</Name>
         <Constant>
@@ -2900,7 +2889,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <sourceName>Humic</sourceName>
                 <destinationName>Biomass</destinationName>
               </CarbonFlow>
               <CarbonFlow>
@@ -2924,7 +2912,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <sourceName>Biomass</sourceName>
                 <destinationName>Humic</destinationName>
               </CarbonFlow>
               <CarbonFlow>
@@ -2948,7 +2935,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <sourceName>Biomass</sourceName>
                 <destinationName>Biomass</destinationName>
               </CarbonFlow>
               <NFlow>
@@ -5278,7 +5264,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <sourceName>Humic</sourceName>
                 <destinationName>Biomass</destinationName>
               </CarbonFlow>
               <CarbonFlow>
@@ -5302,7 +5287,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <sourceName>Biomass</sourceName>
                 <destinationName>Humic</destinationName>
               </CarbonFlow>
               <CarbonFlow>
@@ -5326,7 +5310,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <sourceName>Biomass</sourceName>
                 <destinationName>Biomass</destinationName>
               </CarbonFlow>
               <NFlow>
