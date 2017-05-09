@@ -69,8 +69,6 @@ namespace Models.Core
         [XmlElement(typeof(Irrigation))]
         [XmlElement(typeof(Manager))]
         [XmlElement(typeof(MicroClimate))]
-        [XmlElement(typeof(Arbitrator.Arbitrator))]
-        [XmlElement(typeof(ArbitratorGod.ArbitratorGod))]
         [XmlElement(typeof(Operations))]
         [XmlElement(typeof(Models.Report.Report))]
         [XmlElement(typeof(Summary))]
