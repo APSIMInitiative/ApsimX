@@ -1706,6 +1706,7 @@
         public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
             GetOtherVariables();
+
             return Process();
         }
 
@@ -1810,6 +1811,7 @@
         private void GetOtherVariables()
         {
             eos = soil.SoilWater.Eos;
+            dlayer = soil.Thickness;
 
             CheckPond();
         }
