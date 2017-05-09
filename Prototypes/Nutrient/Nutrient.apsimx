@@ -105,19 +105,7 @@
           <FixedValue>0</FixedValue>
         </Constant>
         <CarbonFlow>
-          <Name>ToBiomass</Name>
-          <Constant>
-            <Name>Rate</Name>
-            <FixedValue>0.9</FixedValue>
-          </Constant>
-          <Constant>
-            <Name>CO2Efficiency</Name>
-            <FixedValue>0.4</FixedValue>
-          </Constant>
-          <destinationName>Biomass</destinationName>
-        </CarbonFlow>
-        <CarbonFlow>
-          <Name>ToHumic</Name>
+          <Name>Decomposition</Name>
           <Constant>
             <Name>Rate</Name>
             <FixedValue>1</FixedValue>
@@ -126,7 +114,14 @@
             <Name>CO2Efficiency</Name>
             <FixedValue>0.4</FixedValue>
           </Constant>
-          <destinationName>Humic</destinationName>
+          <destinationNames>
+            <string>Biomass</string>
+            <string>Humic</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>0.9</double>
+            <double>0.1</double>
+          </destinationFraction>
         </CarbonFlow>
       </NutrientPool>
       <NutrientPool>
@@ -144,12 +139,12 @@
           <FixedValue>8</FixedValue>
         </Constant>
         <CarbonFlow>
-          <Name>ToHumic</Name>
+          <Name>Decomposition</Name>
           <MultiplyFunction>
             <Name>Rate</Name>
             <Constant>
               <Name>PotentialRate</Name>
-              <FixedValue>0.00324</FixedValue>
+              <FixedValue>0.0081</FixedValue>
             </Constant>
             <VariableReference>
               <Name>TF</Name>
@@ -164,30 +159,14 @@
             <Name>CO2Efficiency</Name>
             <FixedValue>0.4</FixedValue>
           </Constant>
-          <destinationName>Humic</destinationName>
-        </CarbonFlow>
-        <CarbonFlow>
-          <Name>ToBiomass</Name>
-          <MultiplyFunction>
-            <Name>Rate</Name>
-            <Constant>
-              <Name>PotentialRate</Name>
-              <FixedValue>0.00486</FixedValue>
-            </Constant>
-            <VariableReference>
-              <Name>TF</Name>
-              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>WF</Name>
-              <VariableName>[WaterFactorForMineralisation]</VariableName>
-            </VariableReference>
-          </MultiplyFunction>
-          <Constant>
-            <Name>CO2Efficiency</Name>
-            <FixedValue>0.4</FixedValue>
-          </Constant>
-          <destinationName>Biomass</destinationName>
+          <destinationNames>
+            <string>Biomass</string>
+            <string>Humic</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>0.6</double>
+            <double>0.4</double>
+          </destinationFraction>
         </CarbonFlow>
       </NutrientPool>
       <NutrientPool>
@@ -201,7 +180,7 @@
           <Expression>[Humic].C / [Soil].SoilOrganicMatter.SoilCN</Expression>
         </ExpressionFunction>
         <CarbonFlow>
-          <Name>ToBiomass</Name>
+          <Name>Decomposition</Name>
           <MultiplyFunction>
             <Name>Rate</Name>
             <Constant>
@@ -221,7 +200,12 @@
             <Name>CO2Efficiency</Name>
             <FixedValue>0.4</FixedValue>
           </Constant>
-          <destinationName>Biomass</destinationName>
+          <destinationNames>
+            <string>Biomass</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>1</double>
+          </destinationFraction>
         </CarbonFlow>
       </NutrientPool>
       <NutrientPool>
@@ -235,12 +219,12 @@
           <FixedValue>0</FixedValue>
         </Constant>
         <CarbonFlow>
-          <Name>ToBiomass</Name>
+          <Name>Decomposition</Name>
           <MultiplyFunction>
             <Name>Rate</Name>
             <Constant>
               <Name>PotentialRate</Name>
-              <FixedValue>0.00855</FixedValue>
+              <FixedValue>0.0095</FixedValue>
             </Constant>
             <VariableReference>
               <Name>TF</Name>
@@ -259,34 +243,14 @@
             <Name>CO2Efficiency</Name>
             <FixedValue>0.4</FixedValue>
           </Constant>
-          <destinationName>Biomass</destinationName>
-        </CarbonFlow>
-        <CarbonFlow>
-          <Name>ToHumic</Name>
-          <MultiplyFunction>
-            <Name>Rate</Name>
-            <Constant>
-              <Name>PotentialRate</Name>
-              <FixedValue>0.00095</FixedValue>
-            </Constant>
-            <VariableReference>
-              <Name>TF</Name>
-              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>WF</Name>
-              <VariableName>[WaterFactorForMineralisation]</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>CNRF</Name>
-              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
-            </VariableReference>
-          </MultiplyFunction>
-          <Constant>
-            <Name>CO2Efficiency</Name>
-            <FixedValue>0.4</FixedValue>
-          </Constant>
-          <destinationName>Humic</destinationName>
+          <destinationNames>
+            <string>Biomass</string>
+            <string>Humic</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>0.9</double>
+            <double>0.1</double>
+          </destinationFraction>
         </CarbonFlow>
       </NutrientPool>
       <NutrientPool>
@@ -300,12 +264,12 @@
           <FixedValue>0</FixedValue>
         </Constant>
         <CarbonFlow>
-          <Name>ToBiomass</Name>
+          <Name>Decomposition</Name>
           <MultiplyFunction>
             <Name>Rate</Name>
             <Constant>
               <Name>PotentialRate</Name>
-              <FixedValue>0.045</FixedValue>
+              <FixedValue>0.05</FixedValue>
             </Constant>
             <VariableReference>
               <Name>TF</Name>
@@ -324,34 +288,14 @@
             <Name>CO2Efficiency</Name>
             <FixedValue>0.4</FixedValue>
           </Constant>
-          <destinationName>Biomass</destinationName>
-        </CarbonFlow>
-        <CarbonFlow>
-          <Name>ToHumic</Name>
-          <MultiplyFunction>
-            <Name>Rate</Name>
-            <Constant>
-              <Name>PotentialRate</Name>
-              <FixedValue>0.005</FixedValue>
-            </Constant>
-            <VariableReference>
-              <Name>TF</Name>
-              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>WF</Name>
-              <VariableName>[WaterFactorForMineralisation]</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>CNRF</Name>
-              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
-            </VariableReference>
-          </MultiplyFunction>
-          <Constant>
-            <Name>CO2Efficiency</Name>
-            <FixedValue>0.4</FixedValue>
-          </Constant>
-          <destinationName>Humic</destinationName>
+          <destinationNames>
+            <string>Biomass</string>
+            <string>Humic</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>0.9</double>
+            <double>0.1</double>
+          </destinationFraction>
         </CarbonFlow>
       </NutrientPool>
       <NutrientPool>
@@ -365,12 +309,12 @@
           <FixedValue>0</FixedValue>
         </Constant>
         <CarbonFlow>
-          <Name>ToBiomass</Name>
+          <Name>Decomposition</Name>
           <MultiplyFunction>
             <Name>Rate</Name>
             <Constant>
               <Name>PotentialRate</Name>
-              <FixedValue>0.18</FixedValue>
+              <FixedValue>0.2</FixedValue>
             </Constant>
             <VariableReference>
               <Name>TF</Name>
@@ -389,34 +333,14 @@
             <Name>CO2Efficiency</Name>
             <FixedValue>0.4</FixedValue>
           </Constant>
-          <destinationName>Biomass</destinationName>
-        </CarbonFlow>
-        <CarbonFlow>
-          <Name>ToHumic</Name>
-          <MultiplyFunction>
-            <Name>Rate</Name>
-            <Constant>
-              <Name>PotentialRate</Name>
-              <FixedValue>0.02</FixedValue>
-            </Constant>
-            <VariableReference>
-              <Name>TF</Name>
-              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>WF</Name>
-              <VariableName>[WaterFactorForMineralisation]</VariableName>
-            </VariableReference>
-            <VariableReference>
-              <Name>CNRF</Name>
-              <VariableName>[CNRatioFactorForMineralisation]</VariableName>
-            </VariableReference>
-          </MultiplyFunction>
-          <Constant>
-            <Name>CO2Efficiency</Name>
-            <FixedValue>0.4</FixedValue>
-          </Constant>
-          <destinationName>Humic</destinationName>
+          <destinationNames>
+            <string>Biomass</string>
+            <string>Humic</string>
+          </destinationNames>
+          <destinationFraction>
+            <double>0.9</double>
+            <double>0.1</double>
+          </destinationFraction>
         </CarbonFlow>
       </NutrientPool>
       <NutrientPool>
@@ -2889,7 +2813,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <destinationName>Biomass</destinationName>
               </CarbonFlow>
               <CarbonFlow>
                 <Name>BiomassToHumic</Name>
@@ -2912,7 +2835,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <destinationName>Humic</destinationName>
               </CarbonFlow>
               <CarbonFlow>
                 <Name>BiomassToBiomass</Name>
@@ -2935,7 +2857,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <destinationName>Biomass</destinationName>
               </CarbonFlow>
               <NFlow>
                 <Name>Hydrolysis</Name>
@@ -5264,7 +5185,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <destinationName>Biomass</destinationName>
               </CarbonFlow>
               <CarbonFlow>
                 <Name>BiomassToHumic</Name>
@@ -5287,7 +5207,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <destinationName>Humic</destinationName>
               </CarbonFlow>
               <CarbonFlow>
                 <Name>BiomassToBiomass</Name>
@@ -5310,7 +5229,6 @@
                   <Name>CO2Efficiency</Name>
                   <FixedValue>0.4</FixedValue>
                 </Constant>
-                <destinationName>Biomass</destinationName>
               </CarbonFlow>
               <NFlow>
                 <Name>Hydrolysis</Name>

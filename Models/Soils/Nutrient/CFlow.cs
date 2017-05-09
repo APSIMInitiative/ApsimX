@@ -5,6 +5,7 @@ namespace Models.Soils.Nutrient
     using Models.PMF.Functions;
     using System;
     using APSIM.Shared.Utilities;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Encapsulates a carbon flow between pools.
@@ -15,7 +16,7 @@ namespace Models.Soils.Nutrient
     [ViewName("UserInterface.Views.GridView")]
     public class CarbonFlow : Model
     {
-        private NutrientPool destination = null;
+        private List<NutrientPool> destinations = new List<NutrientPool>();
 
         [ChildLinkByName]
         private IFunction Rate = null;
@@ -29,8 +30,13 @@ namespace Models.Soils.Nutrient
         /// <summary>
         /// Name of destination pool
         /// </summary>
-        [Description("Name of destination pool")]
-        public string destinationName { get; set; }
+        [Description("Names of destination pools (CSV)")]
+        public string[] destinationNames { get; set; }
+        /// <summary>
+        /// Fractions for each destination pool
+        /// </summary>
+        [Description("Fractions of flow to each pool (CSV)")]
+        public double[] destinationFraction { get; set; }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -38,9 +44,13 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            destination = Apsim.Find(this, destinationName) as NutrientPool;
-            if (destination == null)
-                throw new Exception("Cannot find destination pool with name: " + destinationName);
+            foreach (string destinationName in destinationNames)
+            {
+                NutrientPool destination = Apsim.Find(this, destinationName) as NutrientPool;
+                if (destination == null)
+                    throw new Exception("Cannot find destination pool with name: " + destinationName);
+                destinations.Add(destination);
+            }
         }
 
         /// <summary>
@@ -52,20 +62,31 @@ namespace Models.Soils.Nutrient
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
             NutrientPool source = Parent as NutrientPool;
-            for (int i= 0; i < source.C.Length; i++)
+            for (int i = 0; i < source.C.Length; i++)
             {
                 double carbonFlow = Rate.Value(i) * source.C[i];
-                double nitrogenFlow = MathUtilities.Divide(carbonFlow, source.CNRatio[i],0);
-                double carbonFlowToDestination = carbonFlow * CO2Efficiency.Value(i);
-                double nitrogenFlowToDestination = carbonFlowToDestination / destination.CNRatio[i];
+                double nitrogenFlow = MathUtilities.Divide(carbonFlow, source.CNRatio[i], 0);
+
+                double[] carbonFlowToDestination = new double [destinations.Count];
+                double[] nitrogenFlowToDestination = new double[destinations.Count];
+
+                for (int j = 0; j < destinations.Count; j++)
+                {
+
+                    carbonFlowToDestination[j] = carbonFlow * CO2Efficiency.Value(i) * destinationFraction[j];
+                    nitrogenFlowToDestination[j] = carbonFlowToDestination[j] / destinations[j].CNRatio[i];
+                    destinations[j].C[i] += carbonFlowToDestination[j];
+                    destinations[j].N[i] += nitrogenFlowToDestination[j];
+                }
+
                 source.C[i] -= carbonFlow;
                 source.N[i] -= nitrogenFlow;
-                destination.C[i] += carbonFlowToDestination;
-                destination.N[i] += nitrogenFlowToDestination;
-                if (nitrogenFlowToDestination <= nitrogenFlow)
-                    solutes.AddToLayer(i, "NH4", nitrogenFlow - nitrogenFlowToDestination);
-                else
-                    throw new NotImplementedException();
+                double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
+                if (TotalNitrogenFlowToDestinations <= nitrogenFlow)
+                        solutes.AddToLayer(i, "NH4", nitrogenFlow - TotalNitrogenFlowToDestinations);
+                    else
+                        throw new NotImplementedException();
+                
             }
         }
 
