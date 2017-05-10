@@ -62,6 +62,9 @@ namespace Models.Soils.Nutrient
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
             NutrientPool source = Parent as NutrientPool;
+            double[] NH4 = solutes.GetSolute("NH4");
+            double[] NO3 = solutes.GetSolute("NO3");
+
             for (int i = 0; i < source.C.Length; i++)
             {
                 double carbonFlow = Rate.Value(i) * source.C[i];
@@ -72,22 +75,51 @@ namespace Models.Soils.Nutrient
 
                 for (int j = 0; j < destinations.Count; j++)
                 {
-
                     carbonFlowToDestination[j] = carbonFlow * CO2Efficiency.Value(i) * destinationFraction[j];
                     nitrogenFlowToDestination[j] = carbonFlowToDestination[j] / destinations[j].CNRatio[i];
-                    destinations[j].C[i] += carbonFlowToDestination[j];
-                    destinations[j].N[i] += nitrogenFlowToDestination[j];
                 }
 
-                source.C[i] -= carbonFlow;
-                source.N[i] -= nitrogenFlow;
                 double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
-                if (TotalNitrogenFlowToDestinations <= nitrogenFlow)
-                        solutes.AddToLayer(i, "NH4", nitrogenFlow - TotalNitrogenFlowToDestinations);
-                    else
-                        throw new NotImplementedException();
-                
+                double NSupply = nitrogenFlow + NO3[i] + NH4[i];
+                double NSupplyFactor = 1.0;
+                if (TotalNitrogenFlowToDestinations > NSupply)
+                   NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(NO3[i] + NH4[i], TotalNitrogenFlowToDestinations - nitrogenFlow, 1.0),0.0,1.0);
+
+                for (int j = 0; j < destinations.Count; j++)
+                {
+                    carbonFlowToDestination[j] *= NSupplyFactor;
+                    nitrogenFlowToDestination[j] *= NSupplyFactor;
+                }
+
+                source.C[i] -= carbonFlow * NSupplyFactor;
+                source.N[i] -= nitrogenFlow * NSupplyFactor;
+
+                for (int j = 0; j < destinations.Count; j++)
+                {
+                    destinations[j].C[i] += carbonFlowToDestination[j] * NSupplyFactor;
+                    destinations[j].N[i] += nitrogenFlowToDestination[j] * NSupplyFactor;
+                }
+
+                if (TotalNitrogenFlowToDestinations * NSupplyFactor <= nitrogenFlow)
+                    NH4[i] += nitrogenFlow - TotalNitrogenFlowToDestinations * NSupplyFactor;
+                else
+                {
+                    double NDeficit = TotalNitrogenFlowToDestinations * NSupplyFactor - nitrogenFlow;
+                    double NH4Immobilisation = Math.Min(NH4[i], NDeficit);
+                    NH4[i] -= NH4Immobilisation;
+                    NDeficit -= NH4Immobilisation;
+
+                    double NO3Immobilisation = Math.Min(NO3[i], NDeficit);
+                    NO3[i] -= NO3Immobilisation;
+                    NDeficit -= NO3Immobilisation;
+
+                    if (MathUtilities.IsGreaterThan(NDeficit, 0.0))
+                        throw new Exception("Insufficient mineral N for immobilisation demand for C flow " + Name);
+                }
+
             }
+            solutes.SetSolute("NH4", NH4);
+            solutes.SetSolute("NO3", NO3);
         }
 
 
