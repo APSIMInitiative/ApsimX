@@ -78,7 +78,25 @@
         /// </summary>
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
-            return PotentialSOMDecomp;
+            SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
+            ActualSOMDecomp = ReflectionUtilities.Clone(PotentialSOMDecomp) as SurfaceOrganicMatterDecompType;
+
+            double InitialResidueC = 0;  // Potential residue decomposition provided by surfaceorganicmatter model
+            double FinalResidueC = 0;    // How much is left after decomposition
+            double FractionDecomposed;
+
+            for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
+                InitialResidueC += PotentialSOMDecomp.Pool[i].FOM.C;
+            FinalResidueC = SurfaceResidue.C[0];
+            FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC,InitialResidueC,0);
+            if (FractionDecomposed <1)
+            { }
+            for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
+            {
+                ActualSOMDecomp.Pool[i].FOM.C = PotentialSOMDecomp.Pool[i].FOM.C * FractionDecomposed;
+                ActualSOMDecomp.Pool[i].FOM.N = PotentialSOMDecomp.Pool[i].FOM.N * FractionDecomposed;
+            }
+            return ActualSOMDecomp;
         }
 
         /// <summary>
