@@ -26,7 +26,8 @@
         NutrientPool FOMLignin = null;
         [ChildLinkByName]
         NutrientPool SurfaceResidue = null;
-
+        [Link]
+        private SoluteManager solutes = null;
         /// <summary>
         /// 
         /// </summary>
@@ -34,10 +35,13 @@
         {
             get
             {
+                double[] NH4 = solutes.GetSolute("NH4");
+                double[] NO3 = solutes.GetSolute("NO3");
+
                 double[] values = new double[FOMLignin.C.Length];
                 for (int i = 0; i < FOMLignin.C.Length; i++)
                     values[i] = MathUtilities.Divide(FOMCarbohydrate.C[i] + FOMCellulose.C[i] + FOMLignin.C[i],
-                               FOMCarbohydrate.N[i] + FOMCellulose.N[i] + FOMLignin.N[i], 0.0);
+                               FOMCarbohydrate.N[i] + FOMCellulose.N[i] + FOMLignin.N[i] + NH4[i] + NO3[i], 0.0);
 
                 return values;
             }
