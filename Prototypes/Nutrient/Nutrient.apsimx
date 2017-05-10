@@ -7433,7 +7433,7 @@
               <string>[Soil].Nutrient.FOMC</string>
               <string>[Soil].Nutrient.FOMN</string>
               <string>[Soil].Nutrient.FOMCNR</string>
-              <string>[Soil].Nutrient.CNRatioFactorForMineralisation.CNRF.Value(1)</string>
+              <string>[Soil].Nutrient.CNRatioFactorForMineralisation.Value</string>
               <string>[Soil].Nutrient.TemperatureFactorForMineralisation.Value</string>
             </VariableNames>
             <EventNames>
