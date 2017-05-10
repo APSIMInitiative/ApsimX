@@ -24,7 +24,7 @@ namespace Models.Soils
     // RJM public partial class SoilNitrogen
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public partial class SoilNitrogen : Model
+    public partial class SoilNitrogen : Model, ISolute
     {
         /// <summary>Initializes a new instance of the <see cref="SoilNitrogen"/> class.</summary>
         public SoilNitrogen()
@@ -1575,13 +1575,18 @@ namespace Models.Soils
         /// <param name="dltC">C changes</param>
         private void SendExternalMassFlowC(double dltC)
         {
-            ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
-            if (Math.Abs(dltC) < epsilon)
-                dltC = 0.0;  // don't bother with values that are too small
-            massBalanceChange.FlowType = dltC >= epsilon ? "gain" : "loss";
-            massBalanceChange.PoolClass = "soil";
-            massBalanceChange.N = (float)Math.Abs(dltC);
-            ExternalMassFlow.Invoke(massBalanceChange);
+
+            if (ExternalMassFlow != null)
+            {
+                ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
+                if (Math.Abs(dltC) <= EPSILON)
+                    dltC = 0.0;
+                massBalanceChange.FlowType = dltC >= 0 ? "gain" : "loss";
+                massBalanceChange.PoolClass = "soil";
+                massBalanceChange.N = (float)Math.Abs(dltC);
+                ExternalMassFlow.Invoke(massBalanceChange);
+            }
+
         }
 
         /// <summary>
