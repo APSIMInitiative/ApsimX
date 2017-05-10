@@ -50,6 +50,11 @@
         /// <summary>Link to Apsim's solute manager module.</summary>
         [Link]
         private SoluteManager solutes = null;
+        /// <summary>
+        /// Link to the soil N model
+        /// </summary>
+        [Link]
+        private INutrient SoilNitrogen = null;
 
         #endregion
 
@@ -1712,8 +1717,7 @@
 
         /// <summary>Actual surface organic matter decomposition. Calculated by SoilNitrogen.</summary>
         /// <value>The actual som decomp.</value>
-        [XmlIgnore]
-        public SurfaceOrganicMatterDecompType ActualSOMDecomp { get; set; }
+        private SurfaceOrganicMatterDecompType ActualSOMDecomp { get; set; }
 
         /// <summary>Do the daily residue decomposition for today.</summary>
         /// <param name="sender">The sender.</param>
@@ -1721,6 +1725,7 @@
         [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
         private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs args)
         {
+            ActualSOMDecomp = SoilNitrogen.CalculateActualSOMDecomp();
             if (ActualSOMDecomp != null)
                 DecomposeSurfom(ActualSOMDecomp);
         }

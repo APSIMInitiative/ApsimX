@@ -5,13 +5,14 @@
     using System;
     using APSIM.Shared.Utilities;
     using Models.SurfaceOM;
+    using Models.Soils;
 
     /// <summary>
     /// Soil carbon model
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Nutrient : Model
+    public class Nutrient : Model, INutrient
     {
 
         /// <summary>The surface organic matter</summary>
@@ -28,6 +29,9 @@
         NutrientPool SurfaceResidue = null;
         [Link]
         private SoluteManager solutes = null;
+
+        private SurfaceOrganicMatterDecompType PotentialSOMDecomp = null;
+
         /// <summary>
         /// 
         /// </summary>
@@ -70,6 +74,14 @@
 
 
         /// <summary>
+        /// Calculate actual decomposition
+        /// </summary>
+        public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
+        {
+            return PotentialSOMDecomp;
+        }
+
+        /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -78,16 +90,17 @@
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
             // Get potential residue decomposition from surfaceom.
-            SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp = SurfaceOrganicMatter.PotentialDecomposition();
+            PotentialSOMDecomp = SurfaceOrganicMatter.PotentialDecomposition();
+
             SurfaceResidue.C[0] = 0;
             SurfaceResidue.N[0] = 0;
-            for (int i = 0; i < SurfaceOrganicMatterDecomp.Pool.Length; i++)
+            for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
             {
-                SurfaceResidue.C[0] += SurfaceOrganicMatterDecomp.Pool[i].FOM.C;
-                SurfaceResidue.N[0] += SurfaceOrganicMatterDecomp.Pool[i].FOM.N;
+                SurfaceResidue.C[0] += PotentialSOMDecomp.Pool[i].FOM.C;
+                SurfaceResidue.N[0] += PotentialSOMDecomp.Pool[i].FOM.N;
             }
 
-            SurfaceOrganicMatter.ActualSOMDecomp = SurfaceOrganicMatterDecomp;
+            
         }
     }
 }

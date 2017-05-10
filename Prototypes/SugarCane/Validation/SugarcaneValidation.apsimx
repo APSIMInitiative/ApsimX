@@ -92463,16 +92463,16 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RegrStats>
             <Name>biomass</Name>
             <n>189</n>
-            <Slope>0.97831489015223272</Slope>
-            <Intercept>29.845892046837434</Intercept>
-            <SEslope>0.026917354849741223</SEslope>
-            <SEintercept>113.98850143504097</SEintercept>
-            <R2>0.87599213115205987</R2>
-            <RMSE>928.87001013085307</RMSE>
-            <NSE>0.86373405192904806</NSE>
-            <ME>-44.015542320171384</ME>
-            <MAE>651.794071237271</MAE>
-            <RSR>0.36816431687322</RSR>
+            <Slope>0.97831486946438106</Slope>
+            <Intercept>29.845909601468065</Intercept>
+            <SEslope>0.026917354446617428</SEslope>
+            <SEintercept>113.988499727909</SEintercept>
+            <R2>0.87599212981155328</R2>
+            <RMSE>928.87000186426928</RMSE>
+            <NSE>0.86373405435447648</NSE>
+            <ME>-44.015595230224307</ME>
+            <MAE>651.79401832721817</MAE>
+            <RSR>0.3681643135967</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cab_N</Name>
@@ -92491,16 +92491,16 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RegrStats>
             <Name>cane_dmc</Name>
             <n>188</n>
-            <Slope>-0.51951813987707229</Slope>
-            <Intercept>0.45137367658514749</Intercept>
-            <SEslope>0.10718174901782408</SEslope>
-            <SEintercept>0.023514880981938012</SEintercept>
-            <R2>0.11214704930677322</R2>
-            <RMSE>0.28699971696919951</RMSE>
-            <NSE>-5.614744726698027</NSE>
-            <ME>0.16434639911886653</ME>
-            <MAE>0.16491648848945209</MAE>
-            <RSR>2.5650652846120652</RSR>
+            <Slope>-0.51144950855245164</Slope>
+            <Intercept>0.44931766169160892</Intercept>
+            <SEslope>0.10782475906357263</SEslope>
+            <SEintercept>0.023655952618056333</SEintercept>
+            <R2>0.10791057030185458</R2>
+            <RMSE>0.28672280245782766</RMSE>
+            <NSE>-5.601986281169312</NSE>
+            <ME>0.16381449718009153</ME>
+            <MAE>0.16438458677942594</MAE>
+            <RSR>2.5625903560392209</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_N</Name>
@@ -92519,30 +92519,30 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RegrStats>
             <Name>cane_wt</Name>
             <n>196</n>
-            <Slope>1.0439804410423614</Slope>
-            <Intercept>15.46721962306583</Intercept>
-            <SEslope>0.030239506829830533</SEslope>
-            <SEintercept>95.821722261862249</SEintercept>
-            <R2>0.86001751201945043</R2>
-            <RMSE>868.35061781013678</RMSE>
-            <NSE>0.81702671431309892</NSE>
-            <ME>122.47658482609886</ME>
-            <MAE>596.1773984122766</MAE>
-            <RSR>0.42666116358889417</RSR>
+            <Slope>1.0439804411663218</Slope>
+            <Intercept>15.467168301047877</Intercept>
+            <SEslope>0.030239509392049797</SEslope>
+            <SEintercept>95.8217303809187</SEintercept>
+            <R2>0.860017491646986</R2>
+            <RMSE>868.35068197441967</RMSE>
+            <NSE>0.8170266872725237</NSE>
+            <ME>122.47653380569068</ME>
+            <MAE>596.17744943268485</MAE>
+            <RSR>0.42666119511579936</RSR>
           </RegrStats>
           <RegrStats>
             <Name>canefw</Name>
             <n>188</n>
-            <Slope>0.86024982869622413</Slope>
-            <Intercept>-5.090524378416589</Intercept>
-            <SEslope>0.0317843012063707</SEslope>
-            <SEintercept>3.9538884620195445</SEintercept>
-            <R2>0.79750195067542751</R2>
-            <RMSE>38.16515310045763</RMSE>
-            <NSE>0.72199152328828964</NSE>
-            <ME>-19.229078943298603</ME>
-            <MAE>28.627479526849616</MAE>
-            <RSR>0.5258609209844014</RSR>
+            <Slope>0.86024981250435273</Slope>
+            <Intercept>-5.0905257889217665</Intercept>
+            <SEslope>0.03178430357502756</SEslope>
+            <SEintercept>3.9538887566745995</SEintercept>
+            <R2>0.79750192052632862</R2>
+            <RMSE>38.165156869489756</RMSE>
+            <NSE>0.72199146837836026</NSE>
+            <ME>-19.229081991938855</ME>
+            <MAE>28.627482504219735</MAE>
+            <RSR>0.52586097291624356</RSR>
           </RegrStats>
           <RegrStats>
             <Name>das</Name>
@@ -92561,16 +92561,16 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RegrStats>
             <Name>green_biomass</Name>
             <n>182</n>
-            <Slope>1.0072249380025549</Slope>
-            <Intercept>-30.635496387422791</Intercept>
-            <SEslope>0.030300283590945824</SEslope>
-            <SEintercept>113.42767139752154</SEintercept>
-            <R2>0.85992142331092558</R2>
-            <RMSE>882.06673775685249</RMSE>
-            <NSE>0.83467281408840543</NSE>
-            <ME>-8.5936754205733052</ME>
-            <MAE>638.177960801596</MAE>
-            <RSR>0.40548587494537</RSR>
+            <Slope>1.0072249246202343</Slope>
+            <Intercept>-30.635510505730963</Intercept>
+            <SEslope>0.030300288067295563</SEslope>
+            <SEintercept>113.427688154524</SEintercept>
+            <R2>0.85992138451926858</R2>
+            <RMSE>882.06686803311072</RMSE>
+            <NSE>0.8346727652526249</NSE>
+            <ME>-8.59373036562826</ME>
+            <MAE>638.17801574665089</MAE>
+            <RSR>0.40548593483333573</RSR>
           </RegrStats>
           <RegrStats>
             <Name>green_biomass_n</Name>
@@ -92589,16 +92589,16 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RegrStats>
             <Name>lai</Name>
             <n>185</n>
-            <Slope>0.77033833714688971</Slope>
-            <Intercept>0.77107574020668812</Intercept>
-            <SEslope>0.04406441028044495</SEslope>
-            <SEintercept>0.20671140343568004</SEintercept>
-            <R2>0.62547870356019941</R2>
-            <RMSE>1.294324542434512</RMSE>
-            <NSE>0.581600390832943</NSE>
-            <ME>-0.20336628162570269</ME>
-            <MAE>0.97945801505316954</MAE>
-            <RSR>0.64508758293587221</RSR>
+            <Slope>0.77033844935005236</Slope>
+            <Intercept>0.77107523422893776</Intercept>
+            <SEslope>0.044064398898899446</SEslope>
+            <SEintercept>0.20671135004349281</SEintercept>
+            <R2>0.62547889281383884</R2>
+            <RMSE>1.2943241834998336</RMSE>
+            <NSE>0.5816006228892836</NSE>
+            <ME>-0.20336631153149548</ME>
+            <MAE>0.97945781171281121</MAE>
+            <RSR>0.64508740404387366</RSR>
           </RegrStats>
           <RegrStats>
             <Name>leaf_N</Name>
@@ -92617,44 +92617,44 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RegrStats>
             <Name>scmst</Name>
             <n>143</n>
-            <Slope>0.9457806030908269</Slope>
-            <Intercept>-0.01191514948334077</Intercept>
-            <SEslope>0.044858446594445905</SEslope>
-            <SEintercept>0.016844119601623971</SEintercept>
-            <R2>0.75918885129476865</R2>
-            <RMSE>0.10563839751969287</RMSE>
-            <NSE>0.68909517716877988</NSE>
-            <ME>-0.029492850503819872</ME>
-            <MAE>0.071174201383232508</MAE>
-            <RSR>0.55563536895251886</RSR>
+            <Slope>0.94578069219631267</Slope>
+            <Intercept>-0.011915161581070921</Intercept>
+            <SEslope>0.044858446307232569</SEslope>
+            <SEintercept>0.016844119493776819</SEintercept>
+            <R2>0.75918888808435825</R2>
+            <RMSE>0.10563839057337821</RMSE>
+            <NSE>0.68909521805623586</NSE>
+            <ME>-0.029492833713925394</ME>
+            <MAE>0.07117418914634055</MAE>
+            <RSR>0.55563533241639</RSR>
           </RegrStats>
           <RegrStats>
             <Name>scmstf</Name>
             <n>143</n>
-            <Slope>0.99560555409012863</Slope>
-            <Intercept>0.010679889475466081</Intercept>
-            <SEslope>0.047905623882179171</SEslope>
-            <SEintercept>0.00486043391885188</SEintercept>
-            <R2>0.75389161732174292</R2>
-            <RMSE>0.034106122677909911</RMSE>
-            <NSE>0.64383721155838558</NSE>
-            <ME>0.010311493547736661</ME>
-            <MAE>0.023411324562906326</MAE>
-            <RSR>0.59470340470808913</RSR>
+            <Slope>0.99560571425352928</Slope>
+            <Intercept>0.01067988166861078</Intercept>
+            <SEslope>0.047905614054218809</SEslope>
+            <SEintercept>0.0048604329217215216</SEintercept>
+            <R2>0.75389175314479151</R2>
+            <RMSE>0.034106117952627316</RMSE>
+            <NSE>0.6438373102485665</NSE>
+            <ME>0.010311499167726482</ME>
+            <MAE>0.023411326366439503</MAE>
+            <RSR>0.59470332231403711</RSR>
           </RegrStats>
           <RegrStats>
             <Name>sucrose_wt</Name>
             <n>152</n>
-            <Slope>1.0820363276117802</Slope>
-            <Intercept>-108.10054563214681</Intercept>
-            <SEslope>0.047387059519087268</SEslope>
-            <SEintercept>76.338310446229812</SEintercept>
-            <R2>0.77658349539102789</R2>
-            <RMSE>586.76328786467877</RMSE>
-            <NSE>0.6564193164625286</NSE>
-            <ME>-4.5558578732149746</ME>
+            <Slope>1.0820364287932198</Slope>
+            <Intercept>-108.10054176248218</Intercept>
+            <SEslope>0.047387063995862733</SEslope>
+            <SEintercept>76.33831765810325</SEintercept>
+            <R2>0.77658349505709789</R2>
+            <RMSE>586.76335536252952</RMSE>
+            <NSE>0.6564192374154596</NSE>
+            <ME>-4.5557262942676031</ME>
             <MAE>388.71098621970782</MAE>
-            <RSR>0.58422622699060012</RSR>
+            <RSR>0.5842262941966021</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
