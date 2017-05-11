@@ -7115,6 +7115,8 @@ namespace Models.Soils
     /// <param name="Data">The data.</param>
     public delegate void SoilOrganicMaterialDelegate(SoilOrganicMaterialType Data);
 
+    /*  RJM
+    
     /// <summary>
     /// NewSoluteType
     /// </summary>
@@ -7125,6 +7127,9 @@ namespace Models.Soils
         /// <summary>The solutes</summary>
         public string[] solutes;
     }
+    */
+
+
     /// <summary>
     /// ExternalMassFlowType
     /// </summary>

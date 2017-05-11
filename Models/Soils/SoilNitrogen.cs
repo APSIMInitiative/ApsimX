@@ -49,6 +49,8 @@ namespace Models.Soils
         public event ExternalMassFlowDelegate ExternalMassFlow;
 
 
+        /* RJM
+        
         /// <summary>
         /// Event to communicate other modules that solutes have been added to the simulation (owned by SoilNitrogen)
         /// </summary>
@@ -56,6 +58,8 @@ namespace Models.Soils
         public delegate void NewSoluteDelegate(NewSoluteType Data);
         /// <summary>Occurs when [new solute].</summary>
         public event NewSoluteDelegate NewSolute;
+
+            */
 
         /// <summary>
         /// Event to comunicate other modules (SurfaceOM) that residues have been decomposed
@@ -98,7 +102,7 @@ namespace Models.Soils
             NH4ppm = Soil.InitialNH4N;
             ureappm = new double[Soil.Thickness.Length];
             
-            Tsoil = null;
+            // Tsoil = null;  RJM
             // simpleST = null;  //RJM removed - deprecated
 
             fbiom = Soil.FBiom;
@@ -188,7 +192,7 @@ namespace Models.Soils
             }*/
 
             // notify apsim about solutes
-            AdvertiseMySolutes();
+            // RJM AdvertiseMySolutes();
 
             // print SoilN report
             WriteSummaryReport();
@@ -538,6 +542,8 @@ namespace Models.Soils
                 Patch[k].ClearDeltaVariables();
         }
 
+
+        /* RJM 
         /// <summary>
         /// Notifies any interested module about this module's ownership of solute information.
         /// </summary>
@@ -565,6 +571,8 @@ namespace Models.Soils
                 NewSolute.Invoke(SoluteData);
             }
         }
+
+        */
 
         /// <summary>
         /// Store today's initial N amounts
