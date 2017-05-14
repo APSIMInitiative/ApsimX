@@ -1606,32 +1606,6 @@ namespace Models.Soils
                     canopy.NumberOfCrops += 1;     //increment number of crops ready for next array resize in next iteration.
                 }
 
-
-            //foreach crop2 model in the simulation
-            List<IModel> models2 = Apsim.FindAll(paddock, typeof(ICrop2));
-
-            foreach (Model m in models2)
-                {
-                Array.Resize(ref canopy.cover_green, canopy.NumberOfCrops + 1);
-                Array.Resize(ref canopy.cover_tot, canopy.NumberOfCrops + 1);
-                Array.Resize(ref canopy.canopy_height, canopy.NumberOfCrops + 1);
-
-                ICrop2 Crop2 = m as ICrop2;
-                if (Crop2.CanopyProperties != null)
-                    {
-                    canopy.cover_green[canopy.NumberOfCrops] = Crop2.CanopyProperties.CoverGreen;
-                    canopy.cover_tot[canopy.NumberOfCrops] = Crop2.CanopyProperties.CoverTot;
-                    canopy.canopy_height[canopy.NumberOfCrops] = Crop2.CanopyProperties.CanopyHeight;
-                    }
-                else
-                    {
-                    canopy.cover_green[canopy.NumberOfCrops] = 0;
-                    canopy.cover_tot[canopy.NumberOfCrops] = 0;
-                    canopy.canopy_height[canopy.NumberOfCrops] = 0;
-                    }
-                canopy.NumberOfCrops += 1;
-                }
-
             canopy.interception = interception;
          }
 
