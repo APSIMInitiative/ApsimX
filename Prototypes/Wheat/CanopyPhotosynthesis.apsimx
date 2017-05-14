@@ -3628,58 +3628,58 @@ namespace Models
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
             <n>16</n>
-            <Slope>0.98956789706507609</Slope>
-            <Intercept>-0.44818604965367825</Intercept>
-            <SEslope>0.10560728737940808</SEslope>
-            <SEintercept>1.6209613929753672</SEintercept>
-            <R2>0.86247787397750508</R2>
-            <RMSE>2.4046726943329739</RMSE>
-            <NSE>0.83352272537690986</NSE>
-            <ME>-0.59603372448602143</ME>
-            <MAE>2.0755533809402129</MAE>
-            <RSR>0.395060052345396</RSR>
+            <Slope>0.96500753080953916</Slope>
+            <Intercept>-1.7283197431629667</Intercept>
+            <SEslope>0.095153992982896674</SEslope>
+            <SEintercept>1.4605142584393216</SEintercept>
+            <R2>0.88018902203236737</R2>
+            <RMSE>3.0647519190693684</RMSE>
+            <NSE>0.72958320261049125</NSE>
+            <ME>-2.2242461387061279</ME>
+            <MAE>2.6914106250336531</MAE>
+            <RSR>0.50350347322800515</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.AboveGround.Wt</Name>
             <n>23</n>
-            <Slope>1.0588063384712949</Slope>
-            <Intercept>120.03501471005552</Intercept>
-            <SEslope>0.12502019059491579</SEslope>
-            <SEintercept>189.37565602576038</SEintercept>
-            <R2>0.77352474620877887</R2>
-            <RMSE>311.14137854280057</RMSE>
-            <NSE>0.41002884613048396</NSE>
-            <ME>205.86827180992592</ME>
-            <MAE>251.68770559322783</MAE>
-            <RSR>0.75121250930482963</RSR>
+            <Slope>0.66792803963899416</Slope>
+            <Intercept>545.22180997638679</Intercept>
+            <SEslope>0.1726037909420966</SEslope>
+            <SEintercept>261.45341793713459</SEintercept>
+            <R2>0.41625673824586418</R2>
+            <RMSE>352.73159757589281</RMSE>
+            <NSE>0.24176475943675913</NSE>
+            <ME>60.532256260380592</ME>
+            <MAE>241.48562560795281</MAE>
+            <RSR>0.85162696703048024</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Number</Name>
             <n>23</n>
-            <Slope>0.69918007114785641</Slope>
-            <Intercept>5672.5766768875983</Intercept>
-            <SEslope>0.094359527063716878</SEslope>
-            <SEintercept>1739.178713532817</SEintercept>
-            <R2>0.72333592985307238</R2>
-            <RMSE>2715.2095434058488</RMSE>
-            <NSE>0.7179593140622309</NSE>
-            <ME>345.62265233441354</ME>
-            <MAE>2320.1756315643524</MAE>
-            <RSR>0.51940162438977378</RSR>
+            <Slope>0.46757604200277381</Slope>
+            <Intercept>7613.0261998033311</Intercept>
+            <SEslope>0.13384434627583991</SEslope>
+            <SEintercept>2466.9394306360864</SEintercept>
+            <R2>0.36754727776859708</R2>
+            <RMSE>4531.9364697388</RMSE>
+            <NSE>0.21427117531366835</NSE>
+            <ME>-1815.198707516163</ME>
+            <MAE>3917.4852113240408</MAE>
+            <RSR>0.86692946764652234</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Wheat.Grain.Wt</Name>
             <n>23</n>
-            <Slope>0.91763391696080876</Slope>
-            <Intercept>25.266279537402397</Intercept>
-            <SEslope>0.18465305463745141</SEslope>
-            <SEintercept>111.74950664004267</SEintercept>
-            <R2>0.54044077918940148</R2>
-            <RMSE>155.59025184383953</RMSE>
-            <NSE>0.26203021899964307</NSE>
-            <ME>-22.295876198131349</ME>
-            <MAE>127.50087684669364</MAE>
-            <RSR>0.84016911294582086</RSR>
+            <Slope>0.604183043179175</Slope>
+            <Intercept>184.14552709330087</Intercept>
+            <SEslope>0.25150152158638922</SEslope>
+            <SEintercept>152.20528580846306</SEintercept>
+            <R2>0.21557093800217986</R2>
+            <RMSE>225.13628077663208</RMSE>
+            <NSE>-0.54512914843209659</NSE>
+            <ME>-44.418307053326743</ME>
+            <MAE>193.34950704509487</MAE>
+            <RSR>1.2157095130989954</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
