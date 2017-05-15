@@ -190,6 +190,20 @@ namespace Models.AgPasture
                 myLightProfile = value;
                 foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
                     InterceptedRadn += canopyLayer.amount;
+
+                // (RCichota, May-2017) Made intercepted radiation equal to solar radiation and implemented the variable 'effective cover'.
+                // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate passes the value of  total intercepted
+                //  radiation (over all canopy). We here assume that solar radiation is the best value for AgPasture (agrees with Ecomod).
+                // The 'effective cover' is computed using an 'effective light extinction coefficient' which is based on the value for intercepted
+                //  radiation supplied by MicroClimate. This is the light extinction coefficient that result in the same total intercepted radiation,
+                //  but using solar radiation on top of canopy (this value is only used in the calcualtion of photosynthesis).
+                // TODO: this approach may have to be amended when multi-layer canopies are used (the thought behind the approach here is that
+                //  things like shading (which would reduce Radn on top of canopy) are irrelevant).
+                RadiationTopOfCanopy = myMetData.Radn;
+                double myEffectiveLightExtinctionCoefficient = -Math.Log(1.0 - InterceptedRadn / myMetData.Radn) / greenLAI;
+                effectiveGreenCover = 0.0;
+                if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
+                    effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
             }
         }
 
@@ -1804,9 +1818,6 @@ namespace Models.AgPasture
         private double cumulativeDDGermination;
 
         ////- Photosynthesis, growth, and turnover >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Irradiance on top of canopy (J/m^2 leaf/s).</summary>
-        private double irradianceTopOfCanopy;
         
         /// <summary>Base gross photosynthesis rate, before damages (kg C/ha/day).</summary>
         private double basePhotosynthesis;
@@ -1917,6 +1928,9 @@ namespace Models.AgPasture
 
         /// <summary>LAI of dead plant tissues (m^2/m^2).</summary>
         private double deadLAI;
+
+        /// <summary>Effective cover for computing photosynthesis (0-1).</summary>
+        private double effectiveGreenCover;
 
         ////- Root depth and distribution >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2190,6 +2204,11 @@ namespace Models.AgPasture
         [XmlIgnore]
         [Units("MJ/m^2/day")]
         public double InterceptedRadn { get; set; }
+
+        /// <summary>Gets or sets the radiance on top of the plant's canopy (MJ/m^2/day).</summary>
+        [XmlIgnore]
+        [Units("MJ/m^2/day")]
+        public double RadiationTopOfCanopy { get; set; }
 
         ////- DM and C outputs >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -3601,6 +3620,9 @@ namespace Models.AgPasture
                     InitialState.DMWeight[pool] = initialDMFractions[pool] * myInitialShootDM;
                 InitialState.DMWeight[11] = myInitialRootDM;
                 InitialState.RootDepth = myInitialRootDepth;
+                if (myInitialRootDepth > RootDepthMaximum)
+                    throw new ApsimXException(this, "The value for the initial root depth is greater than the value set for maximum depth");
+
                 // assume N concentration is at optimum for green pools and minimum for dead pools
                 InitialState.NAmount[0] = InitialState.DMWeight[0] * leaves.NConcOptimum;
                 InitialState.NAmount[1] = InitialState.DMWeight[1] * leaves.NConcOptimum;
@@ -4074,14 +4096,14 @@ namespace Models.AgPasture
             double myDayLength = 3600 * myMetData.CalculateDayLength(-6);
 
             // Photosynthetically active radiation, converted from MJ/m2.day to J/m2.s
-            double interceptedPAR = FractionPAR * InterceptedRadn * 1000000.0 / myDayLength;
+            double interceptedPAR = FractionPAR * RadiationTopOfCanopy * 1000000.0 / myDayLength;
 
-            // Irradiance at top of canopy in the middle of the day (J/m2 leaf/s)
-            irradianceTopOfCanopy = interceptedPAR * myLightExtinctionCoefficient * (4.0 / 3.0);
+            // Photosynthetically active radiation, for the middle of the day (J/m2 leaf/s)
+            interceptedPAR *= myLightExtinctionCoefficient * (4.0 / 3.0);
 
             //Photosynthesis per leaf area under full irradiance at the top of the canopy (mg CO2/m^2 leaf/s)
-            double Pl1 = SingleLeafPhotosynthesis(0.5 * irradianceTopOfCanopy, Pmax1);
-            double Pl2 = SingleLeafPhotosynthesis(irradianceTopOfCanopy, Pmax2);
+            double Pl1 = SingleLeafPhotosynthesis(0.5 * interceptedPAR, Pmax1);
+            double Pl2 = SingleLeafPhotosynthesis(interceptedPAR, Pmax2);
 
             // Photosynthesis per leaf area for the day (mg CO2/m^2 leaf/day)
             double Pl_Daily = myDayLength * (Pl1 + Pl2) * 0.5;
@@ -4090,7 +4112,7 @@ namespace Models.AgPasture
             glfRadn = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0);
 
             // Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
-            double Pc_Daily = Pl_Daily * CoverGreen / myLightExtinctionCoefficient;
+            double Pc_Daily = Pl_Daily * effectiveGreenCover / myLightExtinctionCoefficient;
 
             //  Carbon assimilation per leaf area (g C/m^2/day)
             double carbonAssimilation = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert from mgCO2 to gC           
