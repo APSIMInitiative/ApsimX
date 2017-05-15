@@ -107,7 +107,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Emerging</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[ Plantain has small seeds and emergence is best when seeds are sown at depth <10mm, deeper seed may stay dormant for years in the soil.  The variation in germination due to depth is not explicitly simulated by the model in the current version.
+            <MemoText><![CDATA[ Plantain has small seeds and emergence is best when seeds are sown at depth <10mm, deeper seed may stay dormant for years in the soil.  Variations in germination rate due to depth are not explicitly simulated by the plantain model in the current version, however the sowing depth does affect timing of emergence.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).
 ]]></MemoText>
           </Memo>
           <VariableReference>
@@ -116,14 +116,15 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
-          <ShootLag>75</ShootLag>
+          <ShootLag>15</ShootLag>
           <ShootRate>10</ShootRate>
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase start after emergence but also after the end of the reproductive phase (phenology reset).  It ends when the reproductive phase starts, which is triggered by the accumulation of long days (Sussex, 1956; Rowarth, 1990; Case et al., 1995; Lacey et al., 2003; Gonzalez-Parado et al., 2015).  Stalk development starts in October in NZ and May in the USA (Rowarth, 1990; Lacey et al., 2003), with data suggesting a minimum of 25-30 day (non consecutive) of daylight period greater than darkness (Sussex, 1956; Fajer et al., 1991; Case et al., 1995).]]></MemoText>
+            <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase starts when plants emerge from the ground, but it is also triggered after the end of the reproductive phase (phenology reset).  It ends when the reproductive phase starts, which is triggered by the accumulation of days with long sunlight (Sussex, 1956; Rowarth, 1990; Case et al., 1995; Lacey et al., 2003; Gonzalez-Parado et al., 2015).  Stalk development have been recorded to start in October in NZ and in May in the USA (Rowarth, 1990; Lacey et al., 2003), with data suggesting a minimum of 25-30 days (non consecutive) with long daylight periods (Sussex, 1956; Fajer et al., 1991; Case et al., 1995).  The literature does not provide an indication of how long the sunlight period should be to trigger the reproductive phase (14-16 hours been used in growth chambers), but it is clear that daylight should be grater that the period in darkness.
+]]></MemoText>
           </Memo>
           <Constant>
             <Name>Target</Name>
@@ -156,7 +157,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Reproductive</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (flowers and seed). Flower stages and seeds development are not explicitly described in the current model, only a generic organ refered to as inflorescence is defined.  This was done partly due to lack of data and partly because of the complex phenology of plantain.  There is a lot of variability among plantain plants on when flowering occurs and how long it lasts, plus even the same plant can have flowering stalks, stalks with young seeds as well as stalks with ripen seed at the same time (Rowarth, 1990; Rumball et al., 1997; Lacey et al., 2003; Gonzalez-Parado et al., 2015).  Seed ripenning is reached some 8-10 weeks after flowering, with commercial cultivars closer to the low end of the range. Available data suggest an accumulation of 450oCd for the flowering period, with base temperature between 5 and 9oC (Rowarth, 1990; Rumball et al., 1997, Gonzalez-Parado et al., 2015). Howerver flowering continues throughout the summer into autumn and seem to be curtailed only by frosts (Rowarth, 1990).  The plantain model uses photoperiod to trigger flowering and this is used to stop it too.
+            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (stems, flowers, and seeds). Flower stages and seeds development are not explicitly described in the current model, only a generic organ refered to as _inflorescence_ is defined.  This was done partly due to lack of data and partly because of the variability and complex phenology of plantain.  There is a lot of variability among plantain plants regarding when flowering occurs and how long it lasts, plus even the same plant can have flowering stalks, stalks with young seeds, as well as stalks with ripen seed at the same time (Rowarth, 1990; Rumball et al., 1997; Lacey et al., 2003; Gonzalez-Parado et al., 2015).  Seed ripenning is reached some 8-10 weeks after flowering, with commercial cultivars closer to the low end of the range. Available data suggest an accumulation of 450oCd for the flowering period, with base temperature between 5 and 9oC (Rowarth, 1990; Rumball et al., 1997, Gonzalez-Parado et al., 2015). Howerver flowering continues throughout the summer into autumn and seem to be curtailed only by frosts (Rowarth, 1990).  The plantain model uses photoperiod to trigger the start of reproductive phase, so this approach is used to also end this phase (thus ensuring phenology reset even in warmer climates).
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -714,58 +715,33 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Description</Name>
           <MemoText><![CDATA[Represents all the stems in the plant.]]></MemoText>
         </Memo>
-        <Constant>
+        <MultiplyFunction>
           <Name>InitialWtFunction</Name>
-          <FixedValue>0</FixedValue>
-          <Units>g/m^2</Units>
-        </Constant>
+          <Constant>
+            <Name>InitialPlantWt</Name>
+            <FixedValue>1E-06</FixedValue>
+            <Units>g/plant</Units>
+          </Constant>
+          <VariableReference>
+            <Name>Population</Name>
+            <VariableName>[Plant].Population</VariableName>
+          </VariableReference>
+        </MultiplyFunction>
         <Constant>
           <Name>StructuralFraction</Name>
           <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
-        <LinearInterpolationFunction>
+        <Constant>
           <Name>MinimumNConc</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>5</double>
-              <double>5.5</double>
-              <double>6</double>
-              <double>6.5</double>
-              <double>7</double>
-            </X>
-            <Y>
-              <double>0.01</double>
-              <double>0.01</double>
-              <double>0.008</double>
-              <double>0.007</double>
-              <double>0.007</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
+          <FixedValue>0.01</FixedValue>
+          <Units>gN/gDM</Units>
+        </Constant>
+        <Constant>
           <Name>MaximumNConc</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>5</double>
-              <double>5.5</double>
-              <double>6</double>
-              <double>6.5</double>
-              <double>7</double>
-            </X>
-            <Y>
-              <double>0.025</double>
-              <double>0.025</double>
-              <double>0.02</double>
-              <double>0.015</double>
-              <double>0.015</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Phenology].Stage</XProperty>
-        </LinearInterpolationFunction>
+          <FixedValue>0.02</FixedValue>
+          <Units>gN/gDM</Units>
+        </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -1042,7 +1018,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <FixedValue>0.075</FixedValue>
+          <FixedValue>0.07</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PartitionFractionDemandFunction>
@@ -1320,7 +1296,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <FixedValue>0.015</FixedValue>
+          <FixedValue>0.025</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PartitionFractionDemandFunction>
@@ -1528,12 +1504,12 @@ The root organ demands and is partitioned N and DM and its depth increases throu
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.007</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <FixedValue>0.017</FixedValue>
+          <FixedValue>0.025</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -1952,10 +1928,11 @@ No effect of soil water content on root growth is currently captured in the mode
               <Name>PlusTarget</Name>
               <SubtractFunction>
                 <Name>DeltaTarget</Name>
-                <VariableReference>
+                <Constant>
                   <Name>MaxTargetSR</Name>
-                  <VariableName>[TargetShootRootRatio].InductiveElongation.TargetSR.Value()</VariableName>
-                </VariableReference>
+                  <FixedValue>2</FixedValue>
+                  <Units>g/g</Units>
+                </Constant>
                 <VariableReference>
                   <Name>MinTargetSR</Name>
                   <VariableName>[TargetShootRootRatio].Vegetative.TargetSR.Value()</VariableName>
@@ -1966,25 +1943,23 @@ No effect of soil water content on root growth is currently captured in the mode
                 <XYPairs>
                   <Name>XYPairs</Name>
                   <X>
-                    <double>6</double>
-                    <double>6.25</double>
-                    <double>6.4</double>
-                    <double>6.6</double>
-                    <double>6.8</double>
-                    <double>6.9</double>
-                    <double>7</double>
+                    <double>11</double>
+                    <double>12</double>
+                    <double>13</double>
+                    <double>14</double>
+                    <double>15</double>
+                    <double>16</double>
                   </X>
                   <Y>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0.95</double>
-                    <double>0.75</double>
-                    <double>0.25</double>
-                    <double>0.05</double>
                     <double>0</double>
+                    <double>0</double>
+                    <double>0.1</double>
+                    <double>0.75</double>
+                    <double>1</double>
+                    <double>1</double>
                   </Y>
                 </XYPairs>
-                <XProperty>[Phenology].Stage</XProperty>
+                <XProperty>[Phenology].Photoperiod.Value()</XProperty>
               </LinearInterpolationFunction>
             </MultiplyFunction>
           </AddFunction>
@@ -2060,39 +2035,31 @@ No effect of soil water content on root growth is currently captured in the mode
             <Name>TargetSL</Name>
             <Constant>
               <Name>MaximumSL</Name>
-              <FixedValue>1.5</FixedValue>
+              <FixedValue>0.25</FixedValue>
               <Units>g/g</Units>
             </Constant>
-            <VariableReference>
-              <Name>VernalisationEffect</Name>
-              <VariableName>[TargetShootRootRatio].InductiveElongation.TargetSR.DeltaTarget.VernalisationEffect.Value()</VariableName>
-            </VariableReference>
             <LinearInterpolationFunction>
               <Name>StageEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>5</double>
-                  <double>5.1</double>
-                  <double>5.25</double>
-                  <double>5.4</double>
-                  <double>5.5</double>
-                  <double>6.5</double>
-                  <double>6.75</double>
-                  <double>7</double>
+                  <double>11</double>
+                  <double>12</double>
+                  <double>13</double>
+                  <double>14</double>
+                  <double>15</double>
+                  <double>16</double>
                 </X>
                 <Y>
+                  <double>0</double>
+                  <double>0</double>
                   <double>0.1</double>
-                  <double>0.45</double>
-                  <double>0.8</double>
-                  <double>0.97</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>0.9</double>
                   <double>0.5</double>
+                  <double>1</double>
+                  <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Phenology].Stage</XProperty>
+              <XProperty>[Phenology].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
           <Start>Flowering</Start>
@@ -2123,10 +2090,10 @@ No effect of soil water content on root growth is currently captured in the mode
         <PhaseLookupValue>
           <Name>Reproductive</Name>
           <MultiplyFunction>
-            <Name>TargetSL</Name>
+            <Name>TargetFS</Name>
             <Constant>
               <Name>MaximumFS</Name>
-              <FixedValue>0.1</FixedValue>
+              <FixedValue>0.25</FixedValue>
               <Units>g/g</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -2134,23 +2101,23 @@ No effect of soil water content on root growth is currently captured in the mode
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
-                  <double>6</double>
-                  <double>6.1</double>
-                  <double>6.25</double>
-                  <double>6.4</double>
-                  <double>6.5</double>
-                  <double>7</double>
+                  <double>11</double>
+                  <double>12</double>
+                  <double>13</double>
+                  <double>14</double>
+                  <double>15</double>
+                  <double>16</double>
                 </X>
                 <Y>
-                  <double>0.05</double>
-                  <double>0.4</double>
-                  <double>0.75</double>
-                  <double>0.96</double>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0.1</double>
+                  <double>0.5</double>
                   <double>1</double>
                   <double>1</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Phenology].Stage</XProperty>
+              <XProperty>[Phenology].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
           </MultiplyFunction>
           <Start>Flowering</Start>
@@ -2184,7 +2151,7 @@ No effect of soil water content on root growth is currently captured in the mode
             <Name>TargetTR</Name>
             <Constant>
               <Name>MaximumTR</Name>
-              <FixedValue>2</FixedValue>
+              <FixedValue>1</FixedValue>
               <Units>g/g</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -2938,8 +2905,9 @@ namespace Models
         <string>[Plantain].Root.LengthDensity</string>
         <string>[Plantain].Leaf.ExtinctionCoefficientFunction.Value()</string>
         <string />
-        <string>([Plantain].Leaf.Live.Wt / ([Plantain].AboveGroundLive.Wt + 0.000001)) as Plantain.LeafFraction</string>
-        <string>([Plantain].Stem.Live.Wt / ([Plantain].AboveGroundLive.Wt + 0.000001)) as Plantain.StemFraction</string>
+        <string>[Plantain].AboveGroundLive.Wt</string>
+        <string>([Plantain].Leaf.Live.Wt / ([Plantain].AboveGroundLive.Wt + 0.000001)) as LeafFraction</string>
+        <string>([Plantain].Stem.Live.Wt / ([Plantain].AboveGroundLive.Wt + 0.000001)) as StemFraction</string>
         <string>([Plantain].Inflorescence.Live.Wt / ([Plantain].AboveGroundLive.Wt + 0.000001)) as FlowerFraction</string>
         <string>([Plantain].Taproot.Live.Wt / ([Plantain].BelowGround.Wt + 0.000001)) as TaprootFraction</string>
         <string>([Plantain].Root.Live.Wt / ([Plantain].BelowGround.Wt + 0.000001)) as RootFraction</string>
@@ -3634,7 +3602,7 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
               <Operations>
                 <Name>Sowing</Name>
                 <Operation>
-                  <Date>2019-03-20</Date>
+                  <Date>2014-03-20</Date>
                   <Action> [Plantain].Sow(population: 200, cultivar: "Tonic", depth: 10, rowSpacing: 150)</Action>
                 </Operation>
               </Operations>
@@ -4292,10 +4260,6 @@ namespace Models
               </Manager>
               <Operations>
                 <Name>DefoliationSchedule</Name>
-                <Operation>
-                  <Date>2014-10-08</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
-                </Operation>
                 <Operation>
                   <Date>2014-10-30</Date>
                   <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 40, amountType: "ResidualDM", duration: 1)</Action>
@@ -5932,76 +5896,6 @@ namespace Models
             </Axis>
             <Axis>
               <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </Graph>
-          <Graph>
-            <Name>Vernalisation</Name>
-            <Series>
-              <Name>TodaysVernalisation</Name>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-2793984</ColourArgb>
-              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Report</TableName>
-              <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.Phenology.Vernalisation.TodaysVernalisation</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>DaysVernalised</Name>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Right</YAxis>
-              <ColourArgb>-11094807</ColourArgb>
-              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Report</TableName>
-              <XFieldName>Date</XFieldName>
-              <YFieldName>Plantain.Phenology.Vernalisation.DaysVernalised</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Axis>
-              <Type>Left</Type>
-              <Title>Phenology Stage</Title>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Right</Type>
               <Inverted>false</Inverted>
               <Minimum>NaN</Minimum>
               <Maximum>NaN</Maximum>
