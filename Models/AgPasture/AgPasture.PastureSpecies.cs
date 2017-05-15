@@ -1949,10 +1949,24 @@ namespace Models.AgPasture
         private double mySoilNDemand;
 
         /// <summary>Amount of NH4-N in the soil available to the plant (kg/ha).</summary>
-        private double[] mySoilNH4Available;
+        [XmlIgnore]
+        private double[] mySoilNH4Available
+        {
+            get
+            {
+                return plantZoneRoots.mySoilNH4Available;
+            }
+        }
 
         /// <summary>Amount of NO3-N in the soil available to the plant (kg/ha).</summary>
-        private double[] mySoilNO3Available;
+        [XmlIgnore]
+        private double[] mySoilNO3Available
+        {
+            get
+            {
+                return plantZoneRoots.mySoilNO3Available;
+            }
+        }
 
         /// <summary>Amount of soil NH4-N taken up by the plant (kg/ha).</summary>
         private double[] mySoilNH4Uptake;
@@ -3544,8 +3558,6 @@ namespace Models.AgPasture
         {
             mySoilWaterAvailable = new double[nLayers];
             mySoilWaterUptake = new double[nLayers];
-            mySoilNH4Available = new double[nLayers];
-            mySoilNO3Available = new double[nLayers];
             mySoilNH4Uptake = new double[nLayers];
             mySoilNO3Uptake = new double[nLayers];
         }
@@ -3876,8 +3888,6 @@ namespace Models.AgPasture
 
             mySoilWaterAvailable = new double[nLayers];
             mySoilWaterUptake = new double[nLayers];
-            mySoilNH4Available = new double[nLayers];
-            mySoilNO3Available = new double[nLayers];
             mySoilNH4Uptake = new double[nLayers];
             mySoilNO3Uptake = new double[nLayers];
 
@@ -4656,19 +4666,6 @@ namespace Models.AgPasture
                 stems.Tissue[stems.TissueCount - 1].DoRemobiliseN(fracRemobilised);
                 stolons.Tissue[stolons.TissueCount - 1].DoRemobiliseN(fracRemobilised);
                 plantZoneRoots.Tissue[plantZoneRoots.TissueCount - 1].DoRemobiliseN(fracRemobilised);
-            }
-        }
-
-        /// <summary>Adjusts the values of available NH4 and NO3 by a given fraction.</summary>
-        /// <remarks>This is needed while using sward to control N processes</remarks>
-        /// <param name="nh4Fraction">The fraction to adjust the current NH4 values</param>
-        /// <param name="no3Fraction">The fraction to adjust the current NO3 values</param>
-        internal void UpdateAvailableNitrogen(double nh4Fraction, double no3Fraction)
-        {
-            for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-            {
-                mySoilNH4Available[layer] *= nh4Fraction;
-                mySoilNO3Available[layer] *= no3Fraction;
             }
         }
 

@@ -492,6 +492,8 @@ namespace Models.AgPasture
             ExponentSoilMoisture = exponentSoilMoisture;
             ReferenceKSuptake = referenceKSuptake;
             Name = soil.Parent.Name;
+            mySoilNH4Available = new double[nLayers];
+            mySoilNO3Available = new double[nLayers];
         }
 
         /// <summary>The collection of tissues for this organ.</summary>
