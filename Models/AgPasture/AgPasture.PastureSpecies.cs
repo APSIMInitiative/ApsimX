@@ -49,9 +49,6 @@ namespace Models.AgPasture
         [Link(IsOptional = true)]
         private SoilArbitrator soilArbitrator = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
-        [Link]
-        private SoluteManager solutes = null;
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Invoked for incorporating soil FOM.</summary>
@@ -297,15 +294,15 @@ namespace Models.AgPasture
                 {
                     // Find the zone in our root zones.
                     PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
-                    if (root == null)
-                        return null;
-
-                    double[] organSupply = root.EvaluateSoilWaterAvailable(zone);
-                    if (organSupply != null)
+                    if (root != null)
                     {
-                        supplies.Add(organSupply);
-                        zones.Add(zone.Zone);
-                        waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
+                        double[] organSupply = root.EvaluateSoilWaterAvailable(zone);
+                        if (organSupply != null)
+                        {
+                            supplies.Add(organSupply);
+                            zones.Add(zone.Zone);
+                            waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
+                        }
                     }
                 }
 
@@ -344,33 +341,55 @@ namespace Models.AgPasture
         {
             if (IsAlive)
             {
+                double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+
                 // Get the zone this plant is in
                 Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-                ZoneWaterAndN myZone = new ZoneWaterAndN(parentZone);
                 foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Zone.Name == parentZone.Name)
-                        myZone = Z;
+                {
+                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
+                    if (root != null)
+                    {
+                        ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(Z.Zone);
+                        zones.Add(UptakeDemands);
 
-                // Get the N amount available in the soil
-                EvaluateSoilNitrogenAvailable(myZone);
+                        // Get the N amount available in the soil
+                        root.EvaluateSoilNitrogenAvailable(Z, mySoilWaterUptake);
 
-                // Get the N amount fixed through symbiosis
+                        UptakeDemands.NO3N = root.mySoilNO3Available;
+                        UptakeDemands.NH4N = root.mySoilNH4Available;
+                        UptakeDemands.Water = new double[Z.NO3N.Length];
+
+                        NSupply += (MathUtilities.Sum(root.mySoilNH4Available) + MathUtilities.Sum(root.mySoilNO3Available)) * Z.Zone.Area;
+                    }
+                }
+
+                // Get the N amount fixed through symbiosis - calculates fixedN
                 EvaluateNitrogenFixation();
 
                 // Evaluate the use of N remobilised and get N amount demanded from soil
                 EvaluateSoilNitrogenDemand();
 
-                // Get N amount take up from the soil
-                EvaluateSoilNitrogenUptake();
+                // 2. Get the amount of soil N demanded
+                double NDemand = mySoilNDemand * parentZone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
-                //Pack results into uptake structure
-                ZoneWaterAndN myUptakeDemand = new ZoneWaterAndN(myZone.Zone);
-                myUptakeDemand.NH4N = mySoilNH4Uptake;
-                myUptakeDemand.NO3N = mySoilNO3Uptake;
-                myUptakeDemand.Water = new double[nLayers];
+                // 3. Estimate fraction of N used up
+                double fractionUsed = 0.0;
+                if (NSupply > Epsilon)
+                    fractionUsed = Math.Min(1.0, NDemand / NSupply);
 
-                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-                zones.Add(myUptakeDemand);
+                mySoilNH4Uptake = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
+                mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
+
+                //Reduce the PotentialUptakes that we pass to the soil arbitrator
+                foreach (ZoneWaterAndN UptakeDemands in zones)
+                {
+                    UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, fractionUsed);
+                    UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, fractionUsed);
+                }
+
                 return zones;
             }
             else
@@ -389,16 +408,16 @@ namespace Models.AgPasture
             {
                 // Find the zone in our root zones.
                 PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
-                if (root == null)
-                    return;
+                if (root != null)
+                {
+                    // Get the water uptake from each layer
+                    Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
+                    for (int layer = 0; layer < nLayers; layer++)
+                        mySoilWaterUptake[layer] = zone.Water[layer];
 
-                // Get the water uptake from each layer
-                Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
-                for (int layer = 0; layer < nLayers; layer++)
-                    mySoilWaterUptake[layer] = zone.Water[layer];
-
-                if (mySoilWaterUptake.Sum() > Epsilon)
-                    root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(mySoilWaterUptake, -1.0);
+                    if (mySoilWaterUptake.Sum() > Epsilon)
+                        root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(mySoilWaterUptake, -1.0);
+                }
             }
         }
 
@@ -409,17 +428,25 @@ namespace Models.AgPasture
         {
             // Get the zone this plant is in
             Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-            ZoneWaterAndN MyZone = new ZoneWaterAndN(parentZone);
 
             foreach (ZoneWaterAndN Z in zones)
-                if (Z.Zone.Name == parentZone.Name)
-                    MyZone = Z;
-
-            // Get the N uptake from each layer
-            for (int layer = 0; layer < nLayers; layer++)
             {
-                mySoilNH4Uptake[layer] = MyZone.NH4N[layer];
-                mySoilNO3Uptake[layer] = MyZone.NO3N[layer];
+                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
+                if (root != null)
+                {
+                    root.solutes.Subtract("NO3", Z.NO3N);
+                    root.solutes.Subtract("NH4", Z.NH4N);
+
+                    Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
+                    Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
+
+                    // Get the N uptake from each layer
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        mySoilNH4Uptake[layer] += Z.NH4N[layer];
+                        mySoilNO3Uptake[layer] += Z.NO3N[layer];
+                    }
+                }
             }
         }
 
@@ -1959,10 +1986,24 @@ namespace Models.AgPasture
         private double mySoilNDemand;
 
         /// <summary>Amount of NH4-N in the soil available to the plant (kg/ha).</summary>
-        private double[] mySoilNH4Available;
+        [XmlIgnore]
+        private double[] mySoilNH4Available
+        {
+            get
+            {
+                return plantZoneRoots.mySoilNH4Available;
+            }
+        }
 
         /// <summary>Amount of NO3-N in the soil available to the plant (kg/ha).</summary>
-        private double[] mySoilNO3Available;
+        [XmlIgnore]
+        private double[] mySoilNO3Available
+        {
+            get
+            {
+                return plantZoneRoots.mySoilNO3Available;
+            }
+        }
 
         /// <summary>Amount of soil NH4-N taken up by the plant (kg/ha).</summary>
         private double[] mySoilNH4Uptake;
@@ -3522,7 +3563,10 @@ namespace Models.AgPasture
             leaves = new PastureAboveGroundOrgan(4);
             stems = new PastureAboveGroundOrgan(4);
             stolons = new PastureAboveGroundOrgan(4);
-            plantZoneRoots = new PastureBelowGroundOrgan(2, nLayers, myWaterAvailableMethod, mySoil, Name,
+            plantZoneRoots = new PastureBelowGroundOrgan(2, nLayers, 
+                                                         myWaterAvailableMethod, myNitrogenAvailableMethod,
+                                                         KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
+                                                         mySoil, Name,
                                                          SpecificRootLength, ReferenceRLD, ExponentSoilMoisture,
                                                          ReferenceKSuptake);
             rootZones = new List<PastureBelowGroundOrgan>();
@@ -3556,8 +3600,6 @@ namespace Models.AgPasture
         {
             mySoilWaterAvailable = new double[nLayers];
             mySoilWaterUptake = new double[nLayers];
-            mySoilNH4Available = new double[nLayers];
-            mySoilNO3Available = new double[nLayers];
             mySoilNH4Uptake = new double[nLayers];
             mySoilNO3Uptake = new double[nLayers];
         }
@@ -3891,8 +3933,6 @@ namespace Models.AgPasture
 
             mySoilWaterAvailable = new double[nLayers];
             mySoilWaterUptake = new double[nLayers];
-            mySoilNH4Available = new double[nLayers];
-            mySoilNO3Available = new double[nLayers];
             mySoilNH4Uptake = new double[nLayers];
             mySoilNO3Uptake = new double[nLayers];
 
@@ -4549,31 +4589,7 @@ namespace Models.AgPasture
         {
             if (MyNitrogenUptakeSource == "species")
             {
-                // this module will compute nitrogen uptake
-
-                // Pack the soil information
-                ZoneWaterAndN myZone = new ZoneWaterAndN(this.Parent as Zone);
-                myZone.Water = mySoil.Water;
-                myZone.NO3N = mySoil.NO3N;
-                myZone.NH4N = mySoil.NH4N;
-
-                // Get the N amount available in the soil
-                EvaluateSoilNitrogenAvailable(myZone);
-
-                // Get the N amount fixed through symbiosis
-                EvaluateNitrogenFixation();
-
-                // Evaluate the use of N remobilised and get N amount demanded from soil
-                EvaluateSoilNitrogenDemand();
-
-                // Get N amount take up from the soil
-                EvaluateSoilNitrogenUptake();
-
-                // Evaluate whether remobilisation of luxury N is needed
-                EvaluateLuxuryNRemobilisation();
-
-                // Send delta N to the soil model
-                DoSoilNitrogenUptake();
+                throw new NotImplementedException();
             }
             else if (MyNitrogenUptakeSource == "SoilArbitrator")
             {
@@ -4581,9 +4597,6 @@ namespace Models.AgPasture
 
                 // Evaluate whether remobilisation of luxury N is needed
                 EvaluateLuxuryNRemobilisation();
-
-                // Send delta N to the soil model
-                DoSoilNitrogenUptake();
             }
             else
             {
@@ -4698,209 +4711,6 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
-        /// <param name="myZone">The soil information</param>
-        internal void EvaluateSoilNitrogenAvailable(ZoneWaterAndN myZone)
-        {
-            if (myNitrogenAvailableMethod == PlantAvailableNitrogenMethod.BasicAgPasture)
-                PlantAvailableSoilNBasicAgPasture(myZone);
-            else if (myNitrogenAvailableMethod == PlantAvailableNitrogenMethod.DefaultAPSIM)
-                PlantAvailableSoilNDefaultAPSIM(myZone);
-            else if (myNitrogenAvailableMethod == PlantAvailableNitrogenMethod.AlternativeRLD)
-                PlantAvailableSoilNAlternativeRLD(myZone);
-            else if (myNitrogenAvailableMethod == PlantAvailableNitrogenMethod.AlternativeWup)
-                PlantAvailableSoilNAlternativeWup(myZone);
-        }
-
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
-        /// <remarks>This is a basic method, used as default in old AgPasture, all N in the root zone is available</remarks>
-        /// <param name="myZone">The soil information</param>
-        private void PlantAvailableSoilNBasicAgPasture(ZoneWaterAndN myZone)
-        {
-            double layerFrac; // the fraction of layer within the root zone
-            for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-            {
-                layerFrac = FractionLayerWithRoots(layer);
-                mySoilNH4Available[layer] = myZone.NH4N[layer] * layerFrac;
-                mySoilNO3Available[layer] = myZone.NO3N[layer] * layerFrac;
-            }
-        }
-
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
-        /// <remarks>
-        /// This method approximates the default approach in APSIM plants (method 3 in Plant1 models)
-        /// Soil water status and uptake coefficient control the availability, which is a square function of N content.
-        /// Uptake is capped for a maximum value plants can take in one day.
-        /// </remarks>
-        /// <param name="myZone">The soil information</param>
-        private void PlantAvailableSoilNDefaultAPSIM(ZoneWaterAndN myZone)
-        {
-            double layerFrac; // the fraction of layer within the root zone
-            double swFac;  // the soil water factor
-            double bdFac;  // the soil density factor
-            double potAvailableN; // potential available N
-            for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-            {
-                layerFrac = FractionLayerWithRoots(layer);
-                bdFac = 100.0 / (mySoil.Thickness[layer] * mySoil.BD[layer]);
-                if (myZone.Water[layer] >= mySoil.SoilWater.DULmm[layer])
-                    swFac = 1.0;
-                else if (myZone.Water[layer] <= mySoil.SoilWater.LL15mm[layer])
-                    swFac = 0.0;
-                else
-                {
-                    double waterRatio = (myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) /
-                                        (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]);
-                    waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
-                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
-                }
-
-                // get NH4 available
-                potAvailableN = Math.Pow(myZone.NH4N[layer] * layerFrac, 2.0) * swFac * bdFac * KNH4;
-                mySoilNH4Available[layer] = Math.Min(myZone.NH4N[layer] * layerFrac, potAvailableN);
-
-                // get NO3 available
-                potAvailableN = Math.Pow(myZone.NO3N[layer] * layerFrac, 2.0) * swFac * bdFac * KNO3;
-                mySoilNO3Available[layer] = Math.Min(myZone.NO3N[layer] * layerFrac, potAvailableN);
-            }
-
-            // check for maximum uptake
-            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > MaximumNUptake)
-            {
-                double upFraction = MaximumNUptake / potAvailableN;
-                for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-                {
-                    mySoilNH4Available[layer] *= upFraction;
-                    mySoilNO3Available[layer] *= upFraction;
-                }
-            }
-        }
-
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
-        /// <remarks>
-        /// This method considers soil water status and root length density to define factors controlling N availability.
-        /// Soil water status is used to define a factor that varies from zero at LL, below which no uptake can happen, 
-        ///  to one at DUL, above which no restrictions to uptake exist.
-        /// Root length density is used to define a factor varying from zero if there are no roots to one when root length
-        ///  density is equal to a ReferenceRLD, above which there are no restrictions for uptake.
-        /// Factors for each N form can also alter the amount available.
-        /// Uptake is caped for a maximum value plants can take in one day.
-        /// </remarks>
-        /// <param name="myZone">The soil information</param>
-        private void PlantAvailableSoilNAlternativeRLD(ZoneWaterAndN myZone)
-        {
-            double layerFrac; // the fraction of layer within the root zone
-            double swFac;  // the soil water factor
-            double rldFac;  // the root density factor
-            double potAvailableN; // potential available N
-            for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-            {
-                layerFrac = FractionLayerWithRoots(layer);
-                rldFac = Math.Min(1.0, MathUtilities.Divide(RootLengthDensity[layer], ReferenceRLD, 1.0));
-                if (myZone.Water[layer] >= mySoil.SoilWater.DULmm[layer])
-                    swFac = 1.0;
-                else if (myZone.Water[layer] <= mySoil.SoilWater.LL15mm[layer])
-                    swFac = 0.0;
-                else
-                {
-                    double waterRatio = (myZone.Water[layer] - mySoil.SoilWater.LL15mm[layer]) /
-                                        (mySoil.SoilWater.DULmm[layer] - mySoil.SoilWater.LL15mm[layer]);
-                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
-                }
-
-                // get NH4 available
-                potAvailableN = myZone.NH4N[layer] * layerFrac;
-                mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * kuNH4);
-
-                // get NO3 available
-                potAvailableN = myZone.NO3N[layer] * layerFrac;
-                mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swFac * rldFac * kuNO3);
-            }
-
-            // check for maximum uptake
-            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > MaximumNUptake)
-            {
-                double upFraction = MaximumNUptake / potAvailableN;
-                for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-                {
-                    mySoilNH4Available[layer] *= upFraction;
-                    mySoilNO3Available[layer] *= upFraction;
-                }
-            }
-        }
-
-        /// <summary>Estimates the amount of plant available nitrogen in each soil layer of the root zone.</summary>
-        /// <remarks>
-        /// This method considers soil water as the main factor controlling N availability/uptake.
-        /// Availability is given by the proportion of water taken up in each layer, further modified by uptake factors
-        /// Uptake is caped for a maximum value plants can take in one day.
-        /// </remarks>
-        /// <param name="myZone">The soil information</param>
-        private void PlantAvailableSoilNAlternativeWup(ZoneWaterAndN myZone)
-        {
-            double layerFrac; // the fraction of layer within the root zone
-            double potAvailableN; // potential available N
-            for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-            {
-                layerFrac = FractionLayerWithRoots(layer);
-                double swuFac = MathUtilities.Divide(mySoilWaterUptake[layer], myZone.Water[layer], 0.0);
-
-                // get NH4 available
-                potAvailableN = myZone.NH4N[layer] * layerFrac;
-                mySoilNH4Available[layer] = potAvailableN * Math.Min(1.0, swuFac * kuNH4);
-
-                // get NO3 available
-                potAvailableN = myZone.NO3N[layer] * layerFrac;
-                mySoilNO3Available[layer] = potAvailableN * Math.Min(1.0, swuFac * kuNO3);
-            }
-
-            // check for maximum uptake
-            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > MaximumNUptake)
-            {
-                double upFraction = MaximumNUptake / potAvailableN;
-                for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-                {
-                    mySoilNH4Available[layer] *= upFraction;
-                    mySoilNO3Available[layer] *= upFraction;
-                }
-            }
-        }
-
-        /// <summary>Adjusts the values of available NH4 and NO3 by a given fraction.</summary>
-        /// <remarks>This is needed while using sward to control N processes</remarks>
-        /// <param name="nh4Fraction">The fraction to adjust the current NH4 values</param>
-        /// <param name="no3Fraction">The fraction to adjust the current NO3 values</param>
-        internal void UpdateAvailableNitrogen(double nh4Fraction, double no3Fraction)
-        {
-            for (int layer = 0; layer <= plantZoneRoots.BottomLayer; layer++)
-            {
-                mySoilNH4Available[layer] *= nh4Fraction;
-                mySoilNO3Available[layer] *= no3Fraction;
-            }
-        }
-
-        /// <summary>Computes the potential amount of nitrogen taken up by the plant.</summary>
-        internal void EvaluateSoilNitrogenUptake()
-        {
-            // 1. Get the amount of soil N available
-            double supply = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-
-            // 2. Get the amount of soil N demanded
-            double demand = mySoilNDemand;
-
-            // 3. Estimate fraction of N used up
-            double fractionUsed = 0.0;
-            if (supply > Epsilon)
-                fractionUsed = Math.Min(1.0, demand / supply);
-
-            // 4. Get the amount of N actually taken up
-            mySoilNH4Uptake = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
-            mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
-        }
-
         /// <summary>Computes the amount of luxury nitrogen remobilised into new growth.</summary>
         internal void EvaluateLuxuryNRemobilisation()
         {
@@ -4953,16 +4763,6 @@ namespace Models.AgPasture
                         if (Nmissing <= Epsilon) tissue = 0;
                     }
                 }
-            }
-        }
-
-        /// <summary>Sends the delta nitrogen to the soil module.</summary>
-        private void DoSoilNitrogenUptake()
-        {
-            if ((mySoilNH4Uptake.Sum() + mySoilNO3Uptake.Sum()) > Epsilon)
-            {
-                solutes.Subtract("NO3", mySoilNO3Uptake);
-                solutes.Subtract("NH4", mySoilNH4Uptake);
             }
         }
 
