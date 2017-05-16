@@ -42,23 +42,6 @@ namespace Models.Core
                 throw new Exception("Zone area must be greater than zero.  See Zone: " + Name);
         }
 
-        /// <summary>Gets an array of plant models that are in scope.</summary>
-        /// <value>The plants.</value>
-        [XmlIgnore]
-        public List<ICrop2> Plants
-        {
-            get
-            {
-                var plants = new List<ICrop2>();
-                foreach (var plant in Apsim.FindAll(this, typeof(ICrop2)))
-                {
-                    plants.Add(plant as ICrop2);
-                }
-
-                return plants;
-            }
-        }
-
         /// <summary>Gets the value of a variable or model.</summary>
         /// <param name="namePath">The name of the object to return</param>
         /// <returns>The found object or null if not found</returns>
