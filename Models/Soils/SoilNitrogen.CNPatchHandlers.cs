@@ -771,9 +771,9 @@ namespace Models.Soils
                 double[][] existingSoluteAmount = new double[nPatches][];
                 for (int k = 0; k < nPatches; k++)
                 {
-                    switch (SoluteName)
+                    switch (SoluteName.ToUpper())
                     {
-                        case "Urea":
+                        case "UREA":
                             existingSoluteAmount[k] = Patch[k].urea;
                             break;
                         case "NH4":

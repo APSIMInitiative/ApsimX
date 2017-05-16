@@ -2809,7 +2809,7 @@ namespace Models.Soils
                 {
                     double[] delta = MathUtilities.Subtract(value, urea);
                     // 3.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(delta, "urea", NPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(delta, "Urea", NPartitionApproach.ToLower());
                     // 3.2- send dlt's to each patch
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_urea = newDelta[k];
