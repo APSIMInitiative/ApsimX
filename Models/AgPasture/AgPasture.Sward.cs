@@ -32,10 +32,6 @@ namespace Models.AgPasture
         [Link]
         private Soil mySoil = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
-        [Link]
-        private SoluteManager solutes = null;
-
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Invoked for incorporating soil FOM.</summary>
@@ -1271,19 +1267,6 @@ namespace Models.AgPasture
                         swardSoilNO3Uptake[layer] += species.SoilNO3Uptake[layer];
                     }
                 }
-
-                // Send delta N to the soil model
-                DoSoilNitrogenUptake();
-            }
-        }
-
-        /// <summary>Sends the delta nitrogen to the soil module.</summary>
-        private void DoSoilNitrogenUptake()
-        {
-            if ((swardSoilNH4Uptake.Sum() + swardSoilNO3Uptake.Sum()) > Epsilon)
-            {
-                solutes.Subtract("NO3", swardSoilNO3Uptake);
-                solutes.Subtract("NH4", swardSoilNH4Uptake);
             }
         }
 

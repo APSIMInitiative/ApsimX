@@ -12,6 +12,7 @@ using Models.PMF;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
+using Models.Core;
 
 namespace Models.AgPasture
 {
@@ -411,6 +412,9 @@ namespace Models.AgPasture
         /// <summary>Flag which method for computing available soil nitrogen will be used.</summary>
         private PastureSpecies.PlantAvailableNitrogenMethod myNitrogenAvailableMethod = PastureSpecies.PlantAvailableNitrogenMethod.BasicAgPasture;
 
+        /// <summary>The solute manager in this zone</summary>
+        public SoluteManager solutes = null;
+
         /// <summary>Ammonium uptake coefficient.</summary>
         private double KNH4 = 1.0;
 
@@ -494,6 +498,9 @@ namespace Models.AgPasture
             Name = soil.Parent.Name;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
+            solutes = Apsim.Find(soil, typeof(SoluteManager)) as SoluteManager;
+            if (solutes == null)
+                throw new Exception("Cannot find solute manager in zone");
         }
 
         /// <summary>The collection of tissues for this organ.</summary>

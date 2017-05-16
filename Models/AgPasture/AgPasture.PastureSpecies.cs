@@ -49,9 +49,6 @@ namespace Models.AgPasture
         [Link(IsOptional = true)]
         private SoilArbitrator soilArbitrator = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
-        [Link]
-        private SoluteManager solutes = null;
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Invoked for incorporating soil FOM.</summary>
@@ -344,37 +341,55 @@ namespace Models.AgPasture
         {
             if (IsAlive)
             {
+                double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+
                 // Get the zone this plant is in
                 Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-                ZoneWaterAndN myZone = new ZoneWaterAndN(parentZone);
                 foreach (ZoneWaterAndN Z in soilstate.Zones)
-                    if (Z.Zone.Name == parentZone.Name)
-                        myZone = Z;
+                {
+                    PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
+                    if (root != null)
+                    {
+                        ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(Z.Zone);
+                        zones.Add(UptakeDemands);
 
-                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == myZone.Zone.Name);
-                if (root == null)
-                    return null;
+                        // Get the N amount available in the soil
+                        root.EvaluateSoilNitrogenAvailable(Z, mySoilWaterUptake);
 
-                // Get the N amount available in the soil
-                root.EvaluateSoilNitrogenAvailable(myZone, mySoilWaterUptake);
+                        UptakeDemands.NO3N = root.mySoilNO3Available;
+                        UptakeDemands.NH4N = root.mySoilNH4Available;
+                        UptakeDemands.Water = new double[Z.NO3N.Length];
 
-                // Get the N amount fixed through symbiosis
+                        NSupply += (MathUtilities.Sum(root.mySoilNH4Available) + MathUtilities.Sum(root.mySoilNO3Available)) * Z.Zone.Area;
+                    }
+                }
+
+                // Get the N amount fixed through symbiosis - calculates fixedN
                 EvaluateNitrogenFixation();
 
                 // Evaluate the use of N remobilised and get N amount demanded from soil
                 EvaluateSoilNitrogenDemand();
 
-                // Get N amount take up from the soil
-                EvaluateSoilNitrogenUptake();
+                // 2. Get the amount of soil N demanded
+                double NDemand = mySoilNDemand * parentZone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
-                //Pack results into uptake structure
-                ZoneWaterAndN myUptakeDemand = new ZoneWaterAndN(myZone.Zone);
-                myUptakeDemand.NH4N = mySoilNH4Uptake;
-                myUptakeDemand.NO3N = mySoilNO3Uptake;
-                myUptakeDemand.Water = new double[nLayers];
+                // 3. Estimate fraction of N used up
+                double fractionUsed = 0.0;
+                if (NSupply > Epsilon)
+                    fractionUsed = Math.Min(1.0, NDemand / NSupply);
 
-                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
-                zones.Add(myUptakeDemand);
+                mySoilNH4Uptake = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
+                mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
+
+                //Reduce the PotentialUptakes that we pass to the soil arbitrator
+                foreach (ZoneWaterAndN UptakeDemands in zones)
+                {
+                    UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, fractionUsed);
+                    UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, fractionUsed);
+                }
+
                 return zones;
             }
             else
@@ -393,16 +408,16 @@ namespace Models.AgPasture
             {
                 // Find the zone in our root zones.
                 PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
-                if (root == null)
-                    return;
+                if (root != null)
+                {
+                    // Get the water uptake from each layer
+                    Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
+                    for (int layer = 0; layer < nLayers; layer++)
+                        mySoilWaterUptake[layer] = zone.Water[layer];
 
-                // Get the water uptake from each layer
-                Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
-                for (int layer = 0; layer < nLayers; layer++)
-                    mySoilWaterUptake[layer] = zone.Water[layer];
-
-                if (mySoilWaterUptake.Sum() > Epsilon)
-                    root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(mySoilWaterUptake, -1.0);
+                    if (mySoilWaterUptake.Sum() > Epsilon)
+                        root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(mySoilWaterUptake, -1.0);
+                }
             }
         }
 
@@ -413,17 +428,25 @@ namespace Models.AgPasture
         {
             // Get the zone this plant is in
             Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
-            ZoneWaterAndN MyZone = new ZoneWaterAndN(parentZone);
 
             foreach (ZoneWaterAndN Z in zones)
-                if (Z.Zone.Name == parentZone.Name)
-                    MyZone = Z;
-
-            // Get the N uptake from each layer
-            for (int layer = 0; layer < nLayers; layer++)
             {
-                mySoilNH4Uptake[layer] = MyZone.NH4N[layer];
-                mySoilNO3Uptake[layer] = MyZone.NO3N[layer];
+                PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == Z.Zone.Name);
+                if (root != null)
+                {
+                    root.solutes.Subtract("NO3", Z.NO3N);
+                    root.solutes.Subtract("NH4", Z.NH4N);
+
+                    Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
+                    Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
+
+                    // Get the N uptake from each layer
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        mySoilNH4Uptake[layer] += Z.NH4N[layer];
+                        mySoilNO3Uptake[layer] += Z.NO3N[layer];
+                    }
+                }
             }
         }
 
@@ -4574,9 +4597,6 @@ namespace Models.AgPasture
 
                 // Evaluate whether remobilisation of luxury N is needed
                 EvaluateLuxuryNRemobilisation();
-
-                // Send delta N to the soil model
-                DoSoilNitrogenUptake();
             }
             else
             {
@@ -4691,25 +4711,6 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Computes the potential amount of nitrogen taken up by the plant.</summary>
-        internal void EvaluateSoilNitrogenUptake()
-        {
-            // 1. Get the amount of soil N available
-            double supply = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-
-            // 2. Get the amount of soil N demanded
-            double demand = mySoilNDemand;
-
-            // 3. Estimate fraction of N used up
-            double fractionUsed = 0.0;
-            if (supply > Epsilon)
-                fractionUsed = Math.Min(1.0, demand / supply);
-
-            // 4. Get the amount of N actually taken up
-            mySoilNH4Uptake = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
-            mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
-        }
-
         /// <summary>Computes the amount of luxury nitrogen remobilised into new growth.</summary>
         internal void EvaluateLuxuryNRemobilisation()
         {
@@ -4762,16 +4763,6 @@ namespace Models.AgPasture
                         if (Nmissing <= Epsilon) tissue = 0;
                     }
                 }
-            }
-        }
-
-        /// <summary>Sends the delta nitrogen to the soil module.</summary>
-        private void DoSoilNitrogenUptake()
-        {
-            if ((mySoilNH4Uptake.Sum() + mySoilNO3Uptake.Sum()) > Epsilon)
-            {
-                solutes.Subtract("NO3", mySoilNO3Uptake);
-                solutes.Subtract("NH4", mySoilNH4Uptake);
             }
         }
 
