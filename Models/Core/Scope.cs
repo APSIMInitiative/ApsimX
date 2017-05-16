@@ -42,6 +42,7 @@ namespace Models.Core
             while (parentZone.Parent != null)
             {
                 parentZone = parentZone.Parent;
+                modelsInScope.Add(parentZone);
                 foreach (IModel child in parentZone.Children)
                 {
                     if (!modelsInScope.Contains(child))
