@@ -297,15 +297,15 @@ namespace Models.AgPasture
                 {
                     // Find the zone in our root zones.
                     PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
-                    if (root == null)
-                        return null;
-
-                    double[] organSupply = root.EvaluateSoilWaterAvailable(zone);
-                    if (organSupply != null)
+                    if (root != null)
                     {
-                        supplies.Add(organSupply);
-                        zones.Add(zone.Zone);
-                        waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
+                        double[] organSupply = root.EvaluateSoilWaterAvailable(zone);
+                        if (organSupply != null)
+                        {
+                            supplies.Add(organSupply);
+                            zones.Add(zone.Zone);
+                            waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
+                        }
                     }
                 }
 
