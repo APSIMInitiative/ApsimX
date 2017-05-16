@@ -979,8 +979,9 @@ namespace Models.Soils
             private double SoilTempFactor(int layer, int index, BentStickData Parameters)
             {
                 // + Assumptions
-                //   index = 0 for aerobic conditions, 1 for anaerobic
+                //     index = 0 for aerobic conditions, 1 for anaerobic
 
+                // RJM ouch index -= 1;  // use this untill can change the whole code. (index used to be [1-2]
                 if (index > Parameters.xValueForOptimum.Length - 1)
                     throw new Exception("SoilNitrogen.SoilTempFactor - invalid value for \"index\" parameter");
 
@@ -991,7 +992,7 @@ namespace Models.Soils
                 double Tzero = Toptimum * AuxV / (AuxV - 1);
                 double beta = 1 / (Toptimum - Tzero);
 
-                return Math.Min(1.0, Math.Pow(beta * Math.Max(0.0, g.Tsoil[layer] - Tzero), CurveN));
+                return Math.Min(1.0, Math.Pow(beta * Math.Max(0.0, g.Soil.Temperature[layer] - Tzero), CurveN));
             }
 
             /// <summary>

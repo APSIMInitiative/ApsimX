@@ -196,6 +196,7 @@ namespace Models.Soils
 
             // print SoilN report
             WriteSummaryReport();
+            
         }
 
         /* /// <summary>
@@ -579,8 +580,8 @@ namespace Models.Soils
         /// </summary>
         private void StoreStatus()
         {
-            TodaysInitialN = SumDoubleArray(nit_tot);
-            TodaysInitialC = SumDoubleArray(carbon_tot);
+            TodaysInitialN = SumDoubleArray(TotalN);
+            TodaysInitialC = SumDoubleArray(TotalC);
 
             for (int k = 0; k < Patch.Count; k++)
                 Patch[k].StoreStatus();
@@ -591,8 +592,8 @@ namespace Models.Soils
         /// </summary>
         private void SendDeltaState()
         {
-            double dltN = SumDoubleArray(nit_tot) - TodaysInitialN;
-            double dltC = SumDoubleArray(carbon_tot) - TodaysInitialC;
+            double dltN = SumDoubleArray(TotalN) - TodaysInitialN;
+            double dltC = SumDoubleArray(TotalC) - TodaysInitialC;
 
             SendExternalMassFlowN(dltN);
             SendExternalMassFlowC(dltC);
@@ -633,14 +634,14 @@ namespace Models.Soils
             double TotalFomC = 0.0;
             for (int layer = 0; layer < dlayer.Length; ++layer)
             {
-                TotalFomC += fom_c[layer];
+                TotalFomC += FOMC[layer];
                 Console.WriteLine("          {0,4:d1}   {1,10:F1}{2,8:F1}{3,8:F1}{4,8:F1}{5,8:F1}{6,8:F1}",
-                layer + 1, hum_c[layer], hum_n[layer], biom_c[layer], biom_n[layer], fom_c[layer], fom_n[layer]);
+                layer + 1, HumicC[layer], HumicN[layer], MicrobialC[layer], MicrobialN[layer], FOMC[layer], FOMN[layer]);
             }
             Console.WriteLine("          ---------------------------------------------------------");
             Console.WriteLine("           Totals{0,10:F1}{1,8:F1}{2,8:F1}{3,8:F1}{4,8:F1}{5,8:F1}",
-                SumDoubleArray(hum_c), SumDoubleArray(hum_n), SumDoubleArray(biom_c),
-                SumDoubleArray(biom_n), TotalFomC, SumDoubleArray(fom_n));
+                SumDoubleArray(HumicC), SumDoubleArray(HumicN), SumDoubleArray(MicrobialC),
+                SumDoubleArray(MicrobialN), TotalFomC, SumDoubleArray(FOMN));
             Console.WriteLine("          ---------------------------------------------------------");
             Console.WriteLine();
         }
@@ -704,7 +705,7 @@ namespace Models.Soils
                 Tsoil = simpleST.SoilTemperature(Clock.Today, MetFile.MinT, MetFile.MaxT, MetFile.Radn, salb, dlayer, SoilDensity, ll15_dep, sw_dep);
             else
             */
-            Tsoil = ave_soil_temp;
+            // RJM not used? Tsoil = ave_soil_temp;
 
             // calculate C and N processes
             EvaluateProcesses();
@@ -1609,7 +1610,10 @@ namespace Models.Soils
             massBalanceChange.FlowType = dltN >= epsilon ? "gain" : "loss";
             massBalanceChange.PoolClass = "soil";
             massBalanceChange.N = (float)Math.Abs(dltN);
-            ExternalMassFlow.Invoke(massBalanceChange);
+            if (ExternalMassFlow != null)
+            {
+                ExternalMassFlow.Invoke(massBalanceChange);
+            }
         }
 
         #endregion sporadic processes
