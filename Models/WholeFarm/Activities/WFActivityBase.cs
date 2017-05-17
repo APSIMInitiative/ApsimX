@@ -138,7 +138,7 @@ namespace Models.WholeFarm.Activities
 
 			// remove activity resources 
 			// check if deficit and performWithPartial
-			if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) | PerformWithPartialResources)
+			if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || PerformWithPartialResources)
 			{
 				foreach (ResourceRequest request in ResourceRequestList)
 				{
