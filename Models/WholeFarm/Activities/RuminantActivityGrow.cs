@@ -518,8 +518,8 @@ namespace Models.WholeFarm.Activities
 
 			// TODO: separate foster from real mother for genetics
 			// check for death of mother with sucklings and try foster sucklings
-			List<RuminantFemale> mothersWithCalf = died.Cast<RuminantFemale>().Where(a => a.SucklingOffspring.Count() > 0).ToList();
-			List<RuminantFemale> wetMothersAvailable = died.Cast<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspring.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
+			List<RuminantFemale> mothersWithCalf = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.SucklingOffspring.Count() > 0).ToList();
+			List<RuminantFemale> wetMothersAvailable = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspring.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
 			int wetMothersAssigned = 0;
 			if (wetMothersAvailable.Count() > 0)
 			{
