@@ -658,25 +658,25 @@ namespace Models.WholeFarm
             { 
                 PastureDataType pasturepdata = new PastureDataType();
 
-                pasturepdata.Region   =  (int)dr["Region"];
-                pasturepdata.Soil     =  (int)dr["Soil"];
-                pasturepdata.ForageNo =  (int)dr["ForageNo"];
-                pasturepdata.GrassBA  =  (int)dr["GrassBA"];
-                pasturepdata.LandCon  =  (int)dr["LandCon"];
-                pasturepdata.StkRate  =  (double)dr["StkRate"];
-                pasturepdata.YearNum  =  (int)dr["YearNum"];
-                pasturepdata.Year     =  (int)dr["Year"];
-                pasturepdata.CutNum   =  (int)dr["CutNum"];
-                pasturepdata.Month    =  (int)dr["Month"];
-                pasturepdata.Growth   = (double)dr["Growth"];
-                pasturepdata.BP1      = (double)dr["BP1"];
-                pasturepdata.BP2      = (double)dr["BP2"];
-                pasturepdata.Utilisn  = (double)dr["Utilisn"];
-                pasturepdata.SoilLoss = (double)dr["SoilLoss"];
-                pasturepdata.Cover    = (double)dr["Cover"];
-                pasturepdata.TreeBA   = (double)dr["TreeBA"];
-                pasturepdata.Rainfall = (double)dr["Rainfall"];
-                pasturepdata.Runoff   = (double)dr["Runoff"];
+                pasturepdata.Region   = int.Parse(dr["Region"].ToString());
+                pasturepdata.Soil     = int.Parse(dr["Soil"].ToString());
+                pasturepdata.ForageNo = int.Parse(dr["ForageNo"].ToString());
+                pasturepdata.GrassBA  = int.Parse(dr["GrassBA"].ToString());
+                pasturepdata.LandCon  = int.Parse(dr["LandCon"].ToString());
+                pasturepdata.StkRate  = double.Parse(dr["StkRate"].ToString());
+                pasturepdata.YearNum  = int.Parse(dr["YearNum"].ToString());
+                pasturepdata.Year     = int.Parse(dr["Year"].ToString());
+                pasturepdata.CutNum   = int.Parse(dr["CutNum"].ToString());
+                pasturepdata.Month    = int.Parse(dr["Month"].ToString());
+                pasturepdata.Growth   = double.Parse(dr["Growth"].ToString());
+                pasturepdata.BP1      = double.Parse(dr["BP1"].ToString());
+                pasturepdata.BP2      = double.Parse(dr["BP2"].ToString());
+                pasturepdata.Utilisn  = double.Parse(dr["Utilisn"].ToString());
+                pasturepdata.SoilLoss = double.Parse(dr["SoilLoss"].ToString());
+                pasturepdata.Cover    = double.Parse(dr["Cover"].ToString());
+                pasturepdata.TreeBA   = double.Parse(dr["TreeBA"].ToString());
+                pasturepdata.Rainfall = double.Parse(dr["Rainfall"].ToString());
+                pasturepdata.Runoff   = double.Parse(dr["Runoff"].ToString());
 
 
                 return pasturepdata;
@@ -1115,109 +1115,110 @@ namespace Models.WholeFarm
         //    public double Wind;
         //}
 
+    }
+
+
+    /// <summary>
+    /// A structure containing the commonly used weather data.
+    /// </summary>
+    [Serializable]
+    public struct PastureDataType
+    {
+        /// <summary>
+        /// Climatic Region Number
+        /// </summary>
+        public int Region;
 
         /// <summary>
-        /// A structure containing the commonly used weather data.
+        /// Soil Number
         /// </summary>
-        [Serializable]
-        public struct PastureDataType
-        {
-            /// <summary>
-            /// Climatic Region Number
-            /// </summary>
-            public int Region;
+        public int Soil;
 
-            /// <summary>
-            /// Soil Number
-            /// </summary>
-            public int Soil;
+        /// <summary>
+        /// Forage Number 
+        /// </summary>
+        public int ForageNo;
 
-            /// <summary>
-            /// Forage Number 
-            /// </summary>
-            public int ForageNo;
+        /// <summary>
+        /// Grass Basal Area
+        /// </summary>
+        public int GrassBA;
 
-            /// <summary>
-            /// Grass Basal Area
-            /// </summary>
-            public int GrassBA;
-            
-            /// <summary>
-            /// Land Condition
-            /// </summary>
-            public int LandCon;
+        /// <summary>
+        /// Land Condition
+        /// </summary>
+        public int LandCon;
 
-            /// <summary>
-            /// Stocking Rate
-            /// </summary>
-            public double StkRate;
+        /// <summary>
+        /// Stocking Rate
+        /// </summary>
+        public double StkRate;
 
-            /// <summary>
-            /// Year Number (counting from start of simulation ?)
-            /// </summary>
-            public int YearNum;
+        /// <summary>
+        /// Year Number (counting from start of simulation ?)
+        /// </summary>
+        public int YearNum;
 
-            /// <summary>
-            /// Year (eg. 2017)
-            /// </summary>
-            public int Year;
+        /// <summary>
+        /// Year (eg. 2017)
+        /// </summary>
+        public int Year;
 
-            /// <summary>
-            /// Cut Number in this year
-            /// </summary>
-            public int CutNum;
+        /// <summary>
+        /// Cut Number in this year
+        /// </summary>
+        public int CutNum;
 
-            /// <summary>
-            /// Month (eg. 1 is Jan, 2 is Feb)
-            /// </summary>
-            public int Month;
+        /// <summary>
+        /// Month (eg. 1 is Jan, 2 is Feb)
+        /// </summary>
+        public int Month;
 
-            /// <summary>
-            /// Amout in Kg of Biomass of the pasture
-            /// </summary>
-            public double Growth;
+        /// <summary>
+        /// Amout in Kg of Biomass of the pasture
+        /// </summary>
+        public double Growth;
 
-            /// <summary>
-            /// Amount in Kg of By Product 1 of the production of this pasture
-            /// </summary>
-            public double BP1;
+        /// <summary>
+        /// Amount in Kg of By Product 1 of the production of this pasture
+        /// </summary>
+        public double BP1;
 
-            /// <summary>
-            /// Amount in Kg of By Product 2 of the production of this pasture
-            /// </summary>
-            public double BP2;
+        /// <summary>
+        /// Amount in Kg of By Product 2 of the production of this pasture
+        /// </summary>
+        public double BP2;
 
-            /// <summary>
-            /// Utilisation
-            /// </summary>
-            public double Utilisn;
+        /// <summary>
+        /// Utilisation
+        /// </summary>
+        public double Utilisn;
 
-            /// <summary>
-            /// Soil Loss
-            /// </summary>
-            public double SoilLoss;
+        /// <summary>
+        /// Soil Loss
+        /// </summary>
+        public double SoilLoss;
 
-            /// <summary>
-            /// Cover
-            /// </summary>
-            public double Cover;
+        /// <summary>
+        /// Cover
+        /// </summary>
+        public double Cover;
 
-            /// <summary>
-            /// Tree Basal Area
-            /// </summary>
-            public double TreeBA;
+        /// <summary>
+        /// Tree Basal Area
+        /// </summary>
+        public double TreeBA;
 
-            /// <summary>
-            /// Rainfall
-            /// </summary>
-            public double Rainfall;
+        /// <summary>
+        /// Rainfall
+        /// </summary>
+        public double Rainfall;
 
-            /// <summary>
-            /// Runoff
-            /// </summary>
-            public double Runoff;
-
-        }
+        /// <summary>
+        /// Runoff
+        /// </summary>
+        public double Runoff;
 
     }
+
 }

@@ -27,13 +27,28 @@ namespace Models.WholeFarm.Activities
 		Clock Clock = null;
 		[Link]
 		ISummary Summary = null;
-		[Link]
+        [Link]
+        FileGRASP FileGRASP = null;
+        [Link]
 		WholeFarm WholeFarm = null;
 
-		/// <summary>
-		/// Name of land type where pasture is located
-		/// </summary>
-		[Description("Land type where pasture is located")]
+
+        /// <summary>
+        /// Number for the Climate Region for the pasture.
+        /// </summary>
+        [Description("Climate Region Number")]
+        public int Region { get; set; }
+
+        /// <summary>
+        /// Number for the Soil Type for the pasture.
+        /// </summary>
+        [Description("Soil Type")]
+        public int Soil { get; set; }
+
+        /// <summary>
+        /// Name of land type where pasture is located
+        /// </summary>
+        [Description("Land type where pasture is located")]
 		public string LandTypeNameToUse { get; set; }
 
 		/// <summary>
@@ -166,10 +181,18 @@ namespace Models.WholeFarm.Activities
 		private void OnWFUpdatePasture(object sender, EventArgs e)
 		{
 			//TODO: Get pasture growth from pasture model or GRASP output
-			double AmountToAdd = 0; 
-			//double AmountToAdd = FileGRASP.GetPasture(LandConditionIndex.Value, GrassBasalArea.Value, Utilisation);
+			double AmountToAdd = 0;
+            //double AmountToAdd = FileGRASP.GetPasture(LandConditionIndex.Value, GrassBasalArea.Value, Utilisation);
+            int GrassBA = (int)Math.Ceiling(GrassBasalArea.Value);
+            int LandCon = (int)Math.Ceiling(LandConditionIndex.Value);
 
-			if (AmountToAdd> 0)
+
+            PastureDataType pasturedata = FileGRASP.GetMonthsCropData(Region, Soil, 1,
+               GrassBA, LandCon, StockingRate, Clock.Today.Year, Clock.Today.Month);
+
+            AmountToAdd = pasturedata.Growth;
+
+            if (AmountToAdd> 0)
 			{
 				GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
 				newPasture.Age = 0;
