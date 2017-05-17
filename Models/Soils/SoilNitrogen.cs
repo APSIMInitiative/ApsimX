@@ -21,7 +21,6 @@ namespace Models.Soils
     /// Based on a more-or-less direct port of the Fortran SoilN model  -  Ported by Eric Zurcher Sept/Oct 2010
     /// Code tidied up by RCichota initially on Aug/Sep-2012 (updates in Feb-Mar/2014)
     /// </remarks>
-    // RJM public partial class SoilNitrogen
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
     public partial class SoilNitrogen : Model, ISolute
@@ -43,32 +42,14 @@ namespace Models.Soils
         /// Event to communicate other modules of C and/or N changes to/from outside the simulation
         /// </summary>
         /// <param name="Data">The data.</param>
-        // RJM [Event]        
         public delegate void ExternalMassFlowDelegate(ExternalMassFlowType Data);
         /// <summary>Occurs when [external mass flow].</summary>
         public event ExternalMassFlowDelegate ExternalMassFlow;
 
-
-        /* RJM
-        
-        /// <summary>
-        /// Event to communicate other modules that solutes have been added to the simulation (owned by SoilNitrogen)
-        /// </summary>
-        /// <param name="Data">The data.</param>        
-        public delegate void NewSoluteDelegate(NewSoluteType Data);
-        /// <summary>Occurs when [new solute].</summary>
-        public event NewSoluteDelegate NewSolute;
-
-            */
-
         /// <summary>
         /// Event to comunicate other modules (SurfaceOM) that residues have been decomposed
         /// </summary>
-        // RJM [Event]
         public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
-
-        // <summary>Occurs when [actualresiduedecompositioncalculated].</summary>
-        // RJM public event SurfaceOrganicMatterDecompDelegate actualresiduedecompositioncalculated;
 
         #endregion events published
 
@@ -81,7 +62,7 @@ namespace Models.Soils
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
 
-            Patch = new List<soilCNPatch>();  // Section RJM Copied from X
+            Patch = new List<soilCNPatch>();  
             soilCNPatch newPatch = new soilCNPatch(this);
             Patch.Add(newPatch);
             Patch[0].RelativeArea = 1.0;
@@ -102,9 +83,6 @@ namespace Models.Soils
             NH4ppm = Soil.InitialNH4N;
             ureappm = new double[Soil.Thickness.Length];
             
-            // Tsoil = null;  RJM
-            // simpleST = null;  //RJM removed - deprecated
-
             fbiom = Soil.FBiom;
             finert = Soil.FInert;
 
@@ -147,8 +125,6 @@ namespace Models.Soils
             Nitrification_swy = new double[] { 0, 0, 1, 1, 0 };
             Nitritation_phx = new double[] { 0, 4.5, 6, 8, 9, 14 };
             Nitritation_phy = new double[] { 0, 0, 1, 1, 0, 0 };
-            //Nitratation_NIFx = new double[] { 0, 5, 20, 25 };
-            //Nitratation_NIFy = new double[] { 0.5, 0.5, 1, 1 };
 
             TOptmimunCodenitrififaction = new double[] { 50.056, 50.056 };
             FactorZeroCodenitrification = new double[] { 0.1, 0.1 };
@@ -182,27 +158,11 @@ namespace Models.Soils
 
             // set the variables up with their the initial values
             SetInitialValues();
-
-            /* RJM removed - deprecated
-            // initialise soil temperature
-            if (usingSimpleSoilTemp)
-            {
-                simpleST = new simpleSoilTemp(MetFile.Latitude, MetFile.Tav, MetFile.Amp, MetFile.MinT, MetFile.MaxT);
-                Tsoil = simpleST.SoilTemperature(Clock.Today, MetFile.MinT, MetFile.MaxT, MetFile.Radn, salb, dlayer, SoilDensity, ll15_dep, sw_dep);
-            }*/
-
-            // notify apsim about solutes
-            // RJM AdvertiseMySolutes();
-
+            
             // print SoilN report
             WriteSummaryReport();
             
         }
-
-        /* /// <summary>
-        /// Sets the commands for resetting the module to the initial setup
-        /// </summary>
-        // RJM [EventHandler(EventName = "reset")] */
 
         /// <summary>Reset the state values to those set during the initialisation</summary>
         public void Reset()
@@ -217,17 +177,6 @@ namespace Models.Soils
 
             // reset C and N variables, i.e. redo initialisation and setup
             SetInitialValues();
-
-            // RJM // Save the present C and N status
-            // RJM StoreStatus();  // RJM
-
-            // reset soil temperature
-            /* RJM removed - deprecated
-            if (usingSimpleSoilTemp)
-            {
-                simpleST = new simpleSoilTemp(MetFile.Latitude, MetFile.Tav, MetFile.Amp, MetFile.MinT, MetFile.MaxT);
-                Tsoil = simpleST.SoilTemperature(Clock.Today, MetFile.MinT, MetFile.MaxT, MetFile.Radn, salb, dlayer, SoilDensity, ll15_dep, sw_dep);
-            } */
 
             // get the changes of state and publish (let other component to know)
             SendDeltaState();
@@ -543,38 +492,6 @@ namespace Models.Soils
                 Patch[k].ClearDeltaVariables();
         }
 
-
-        /* RJM 
-        /// <summary>
-        /// Notifies any interested module about this module's ownership of solute information.
-        /// </summary>
-        private void AdvertiseMySolutes()
-        {
-
-            if (NewSolute != null)
-            {
-                string[] solute_names;
-                if (useOrganicSolutes)
-                {
-                    // RJM solute_names = new string[7] { "urea", "nh4", "no3", "org_c_pool1", "org_c_pool2", "org_c_pool3", "org_n" };
-                    solute_names = new string[7] { "urea", "NH4", "NO3", "org_c_pool1", "org_c_pool2", "org_c_pool3", "org_n" };
-                }
-                else
-                { // don't publish the organic solutes
-                    // RJM solute_names = new string[3] { "urea", "nh4", "no3" };
-                    solute_names = new string[3] { "urea", "NH4", "NO3" };
-                }
-
-                NewSoluteType SoluteData = new NewSoluteType();
-                SoluteData.OwnerFullPath = Apsim.FullPath(this);
-                SoluteData.solutes = solute_names;
-
-                NewSolute.Invoke(SoluteData);
-            }
-        }
-
-        */
-
         /// <summary>
         /// Store today's initial N amounts
         /// </summary>
@@ -655,9 +572,7 @@ namespace Models.Soils
         /// <summary>
         /// Sets the commands for each timestep - at very beginning of of it
         /// </summary>
-        // RJM [EventHandler(EventName = "tick")]
-        // RJM public void OnTick(TimeType time)
-        [EventSubscribe("tick")]  // RJM TODO Check
+        [EventSubscribe("tick")]  // RJM TODO Check this is still the right name
         
         private void OnTick(object sender, EventArgs e)        
         {
@@ -681,46 +596,27 @@ namespace Models.Soils
         /// <summary>
         /// Sets the commands for each timestep - at the main process phase
         /// </summary>
-        // RJM TODO Check
-        // RJM [EventHandler(EventName = "process")]
-        [EventSubscribe("DoSoilOrganicMatter")]  // RJM TODO Check
+        [EventSubscribe("DoSoilOrganicMatter")]  
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
 
             // Get potential residue decomposition from surfaceom.
             SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp = SurfaceOrganicMatter.PotentialDecomposition();
 
-            // RJM
-            //foreach (soilCNPatch aPatch in Patch)
-            //    aPatch.OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
             OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
 
             num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
 
             sw_dep = Soil.Water;
 
-            /* RJM removed - deprecated
-            // update soil temperature
-            if (usingSimpleSoilTemp)
-                Tsoil = simpleST.SoilTemperature(Clock.Today, MetFile.MinT, MetFile.MaxT, MetFile.Radn, salb, dlayer, SoilDensity, ll15_dep, sw_dep);
-            else
-            */
-            // RJM not used? Tsoil = ave_soil_temp;
-
             // calculate C and N processes
             EvaluateProcesses();
 
             // send actual decomposition back to surface OM
-            //if (!isPondActive || SumDoubleArray(pot_c_decomp) > epsilon)   RJM
             if (!isPondActive) 
                 SendActualResidueDecompositionCalculated();
         }
 
-        // RJM /// <summary>
-        // RJM /// Sets the commands for each timestep - end of day processes
-        // RJM /// </summary>
-        // RJM [EventHandler(EventName = "post")]
-        // RJM public void OnPost()
         /// <summary>Performs every-day calculations - end of day processes</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -793,27 +689,13 @@ namespace Models.Soils
 
         #region »   Sporadic processes (not necessarily every timestep)
 
-        
-        /* // RJM 
-        
         /// <summary>
-        /// Set the commands for writing a summary report to the summaryfile
+        /// Passes the information about the potential decomposition of surface residues
         /// </summary>
-        [EventHandler(EventName = "sum_report")]
-        public void OnSum_report()
-        {
-            WriteSummaryReport();
-        } 
-        */
-
-            /// <summary>
-            /// Passes the information about the potential decomposition of surface residues
-            /// </summary>
-            /// <remarks>
-            /// This information is passed by a residue/SurfaceOM module
-            /// </remarks>
-            /// <param name="SurfaceOrganicMatterDecomp">Data about the potential decomposition of each residue type on soil surface</param>
-            //RJM [EventHandler(EventName = "PotentialResidueDecompositionCalculated")]
+        /// <remarks>
+        /// This information is passed by a residue/SurfaceOM module
+        /// </remarks>
+        /// <param name="SurfaceOrganicMatterDecomp">Data about the potential decomposition of each residue type on soil surface</param>
         [EventSubscribe("PotentialResidueDecompositionCalculated")]
         public void OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp)
         {
@@ -852,8 +734,6 @@ namespace Models.Soils
             //      - Now we explicitly tell the sender module the actual decomposition rate for each of its residues.
             //    - If there wasn't enough mineral N to decompose, the rate will be reduced to zero !!  - MUST CHECK THE VALIDITY OF THIS
 
-            //if (actualResidueDecompositionCalculated != null && SumDoubleArray(pot_c_decomp) >= epsilon) RJM
-            // if (SumDoubleArray(pot_c_decomp) >= epsilon)  // RJM remoevd
             {
                 int nLayers = dlayer.Length;
                 num_residues = residueName.Length;
@@ -891,7 +771,6 @@ namespace Models.Soils
 
                 }
                 // raise the event
-                // RJM actualResidueDecompositionCalculated.Invoke(SurfOMDecomposed);
                 SurfaceOrganicMatter.ActualSOMDecomp = ActualSOMDecomp;
             }
         }
@@ -906,8 +785,6 @@ namespace Models.Soils
         ///  - if both CNR and N values are given, CNR is used and N is overwritten
         /// </remarks>
         /// <param name="inFOMdata">Data about the FOM to be added to the soil</param>
-        
-        // RJM [EventHandler(EventName = "IncorpFOM")]
         [EventSubscribe("IncorpFOM")]
         private void OnIncorpFOM(FOMLayerType inFOMdata)
         {
@@ -1015,7 +892,6 @@ namespace Models.Soils
         /// In this event, the FOM amount is given already partitioned by pool
         /// </remarks>
         /// <param name="inFOMPoolData">Data about the FOM to be added to the soil</param>
-        // RJM [EventHandler(EventName = "IncorpFOMPool")]
         [EventSubscribe("IncorpFOMPool")]
         public void OnIncorpFOMPool(FOMPoolType inFOMPoolData)
         {
@@ -1100,7 +976,6 @@ namespace Models.Soils
         ///  this will be done by setting both 'soil_loss' and 'n_reduction' (ProfileReductionAllowed) to a non-default value
         /// </remarks>
         /// <param name="NewProfile">Data about the new soil profile</param>
-        // RJM [EventHandler(EventName = "new_profile")]
         [EventSubscribe("NewProfile")]
         public void OnNew_profile(NewProfileType NewProfile)
         {
@@ -1181,7 +1056,6 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="NitrogenChanges">The variation (delta) for each mineral N form</param>
         /// 
-        // RJM [EventHandler(EventName = "NitrogenChanged")]
         [EventSubscribe("NitrogenChanged")]
         public void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
         {
@@ -1248,15 +1122,6 @@ namespace Models.Soils
             // else{}  No values, no action needed
         }
 
-        /* /// <summary>
-        /// Get the information about urine being added
-        /// </summary>
-        /// <param name="UrineAdded">Urine deposition data (includes urea N amount, volume, area affected, etc)</param>         */
-        // RJM [EventHandler(EventName = "AddUrine")]
-        /*[EventSubscribe("AddUrine")]
-        public void OnAddUrine(AddUrineType UrineAdded)*/
-
-
         /// <summary>
         /// Get the information about urine being added
         /// </summary>
@@ -1270,8 +1135,7 @@ namespace Models.Soils
         /// <summary>
         /// Passes and handles the information about new patch and add it to patch list
         /// </summary>
-        /// <param name="PatchtoAdd">Patch data</param>
-        // RJM [EventHandler]
+        /// <param name="PatchtoAdd">Patch data</param>        
         [EventSubscribe("AddSoilCNPatc")]
         public void OnAddSoilCNPatch_old(AddSoilCNPatchType PatchtoAdd)
         {
@@ -1380,8 +1244,7 @@ namespace Models.Soils
         /// Passes and handles the information about new patch and add it to patch list
         /// </summary>
         /// <param name="PatchtoAdd">Patch data</param>
-        // RJM [EventHandler]
-        [EventSubscribe("AddSoilCNPatch")]  // RJM TODO check
+        [EventSubscribe("AddSoilCNPatch")]  // RJM TODO check name
         public void OnAddSoilCNPatch(AddSoilCNPatchType PatchtoAdd)
         {
             // data passed with this event:
@@ -1441,8 +1304,7 @@ namespace Models.Soils
         /// Passes and handles the information about new patch and add it to patch list
         /// </summary>
         /// <param name="PatchtoAdd">Patch data</param>
-        // RJM [EventHandler]
-        [EventSubscribe("AddSoilCNPatchwithFOM")]  // RJM TODO check
+        [EventSubscribe("AddSoilCNPatchwithFOM")]  // RJM TODO check name
         public void OnAddSoilCNPatchwithFOM(AddSoilCNPatchwithFOMType PatchtoAdd)
         {
             // data passed with this event:
@@ -1557,7 +1419,6 @@ namespace Models.Soils
         /// Passes the list of patches that will be merged into one, as defined by user
         /// </summary>
         /// <param name="MergeCNPatch">The list of CNPatches to merge</param>
-        // RJM [EventHandler]
         [EventSubscribe("MergeSoilCNPatch")]
         public void OnMergeSoilCNPatch(MergeSoilCNPatchType MergeCNPatch)
         {
@@ -1621,8 +1482,6 @@ namespace Models.Soils
         #endregion processes events
 
         #region >>  Auxiliary functions
-
-
 
         /// <summary>
         /// Print a message to the summaryfile
@@ -1777,13 +1636,4 @@ namespace Models.Soils
         #endregion Aux functions
     }
 
-
-    /* // RJM
-    public class SoilTypeDefinition
-    {
-        [Param]
-        protected XmlNode SoilTypeDefinitionXML;
-    }
-    */
-
-    }
+}

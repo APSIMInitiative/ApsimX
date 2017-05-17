@@ -46,14 +46,6 @@ namespace Models.Soils
         [Link]
         private SoilOrganicMatter SoilOrganicMatter = null;
 
-        /*
-        /// <summary>
-        /// Link to container paddock
-        /// </summary>
-        [Link]
-        public Paddock Paddock;     // not sure why it is here
-        */
-
         #endregion
 
         #region Parameters and inputs provided by the user or APSIM
@@ -68,9 +60,7 @@ namespace Models.Soils
         /// <remarks>
         /// Used to determine which node of xml file will be used to overwrite some [Param]'s
         /// </remarks>
-        //RJM [Param(IsOptional = true)]
         [Units("")]
-        // RJM [Description("Soil parameterisation set to use")]
         [XmlIgnore]
         public string SoilNParameterSet = "standard";
 
@@ -81,9 +71,7 @@ namespace Models.Soils
         /// <remarks>
         /// When 'yes', nitrification is computed using nitritation + nitratation, and codenitrification is also computed
         /// </remarks>
-        // RJM [Param]
         [Units("yes/no")]
-        // RJM [Description("flag whether routines for nitrification and codenitrification are to be used")]
         [XmlIgnore]
         public string UseCodenitrification
         {
@@ -98,9 +86,7 @@ namespace Models.Soils
         /// When 'yes', soil temperature may be computed internally, if an external value is not supplied.
         /// If 'no', a value for soil temperature must be supplied or an fatal error will occur.
         /// </remarks>
-        // RJM [Param]
         [Units("yes/no")]
-        // RJM [Description("Indicates whether simpleSoilTemp is allowed")]
         [XmlIgnore]
         public string allowSimpleSoilTemp
         {
@@ -111,9 +97,7 @@ namespace Models.Soils
         /// <summary>
         /// Indicates whether soil profile reduction is allowed ('on')
         /// </summary>
-        // RJM [Param]
         [Units("yes/no")]
-        // RJM [Description("Indicates whether soil profile reduction is allowed")]
         [XmlIgnore]
         public string allowProfileReduction
         {
@@ -127,9 +111,7 @@ namespace Models.Soils
         /// <remarks>
         /// It should always be false, as organic solutes are not implemented yet
         /// </remarks>
-        // RJM [Param(IsOptional = true)]
         [Units("yes/no")]
-        // RJM [Description("Indicates whether organic solutes are to be simulated")]
         [XmlIgnore]
         public string allowOrganicSolutes
         {
