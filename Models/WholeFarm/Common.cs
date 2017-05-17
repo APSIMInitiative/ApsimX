@@ -172,4 +172,22 @@ namespace Models.WholeFarm
 		ProportionOfRemainingIntakeRequired
 	}
 
+	/// <summary>
+	/// Partial resources available option
+	/// </summary>
+	public enum OnPartialResourcesActionTypes
+	{
+		/// <summary>
+		/// Report error and stop simulation
+		/// </summary>
+		ReportErrorAndStop,
+		/// <summary>
+		/// Do not perform activity in this time step
+		/// </summary>
+		SkipActivity,
+		/// <summary>
+		/// Receive resources available and perform activity
+		/// </summary>
+		UseResourcesAvailable
+	}
 }
