@@ -10,9 +10,9 @@ namespace UserInterface.Presenters
     /// <summary>
     /// Attaches an Input model to an Input View.
     /// </summary>
-    public class WFFileAPSIMPresenter : IPresenter
+    public class WFFileForagePresenter : IPresenter
     {
-        private Models.WholeFarm.FileAPSIM FileAPSIM;
+        private Models.WholeFarm.FileAPSIMForage FileAPSIM;
         private IWFFileView View;
         private ExplorerPresenter ExplorerPresenter;
 
@@ -21,7 +21,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            FileAPSIM = model as Models.WholeFarm.FileAPSIM;
+            FileAPSIM = model as Models.WholeFarm.FileAPSIMForage;
             View = view as IWFFileView;
             ExplorerPresenter = explorerPresenter;
 
