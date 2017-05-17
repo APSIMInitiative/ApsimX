@@ -183,7 +183,16 @@ namespace Models.WholeFarm.Resources
 		//}
 
 		/// <summary>
-		/// Get the Resource Group for Fodder
+		/// Get the Resource Group for Products
+		/// </summary>
+		/// <returns></returns>
+		public ProductStore Products()
+		{
+			return GetByType(typeof(ProductStore)) as ProductStore;
+		}
+
+		/// <summary>
+		/// Get the Resource Group for Animal Feed
 		/// </summary>
 		/// <returns></returns>
 		public AnimalFoodStore AnimalFoodStore()
