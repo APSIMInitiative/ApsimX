@@ -401,8 +401,7 @@ namespace Models.AgPasture
         /// <param name="zones">The water uptake from each layer (mm), by zone</param>
         public void SetSWUptake(List<ZoneWaterAndN> zones)
         {
-            // Get the zone this plant is in
-            Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
 
             foreach (ZoneWaterAndN zone in zones)
             {
@@ -410,13 +409,10 @@ namespace Models.AgPasture
                 PastureBelowGroundOrgan root = rootZones.Find(rootZone => rootZone.Name == zone.Zone.Name);
                 if (root != null)
                 {
-                    // Get the water uptake from each layer
-                    Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
-                    for (int layer = 0; layer < nLayers; layer++)
-                        mySoilWaterUptake[layer] = zone.Water[layer];
+                    mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
 
                     if (mySoilWaterUptake.Sum() > Epsilon)
-                        root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(mySoilWaterUptake, -1.0);
+                        root.mySoil.SoilWater.dlt_sw_dep = MathUtilities.Multiply_Value(zone.Water, -1.0);
                 }
             }
         }
@@ -426,8 +422,8 @@ namespace Models.AgPasture
         /// <param name="zones">The N uptake from each layer (kg/ha), by zone</param>
         public void SetNUptake(List<ZoneWaterAndN> zones)
         {
-            // Get the zone this plant is in
-            Zone parentZone = Apsim.Parent(this, typeof(Zone)) as Zone;
+            Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
+            Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
 
             foreach (ZoneWaterAndN Z in zones)
             {
@@ -437,15 +433,8 @@ namespace Models.AgPasture
                     root.solutes.Subtract("NO3", Z.NO3N);
                     root.solutes.Subtract("NH4", Z.NH4N);
 
-                    Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
-                    Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
-
-                    // Get the N uptake from each layer
-                    for (int layer = 0; layer < nLayers; layer++)
-                    {
-                        mySoilNH4Uptake[layer] += Z.NH4N[layer];
-                        mySoilNO3Uptake[layer] += Z.NO3N[layer];
-                    }
+                    mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, Z.NH4N);
+                    mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, Z.NO3N);
                 }
             }
         }
@@ -3550,6 +3539,24 @@ namespace Models.AgPasture
 
         #region Initialisation methods  ------------------------------------------------------------------------------------
 
+        [Serializable]
+        class RootZone
+        {
+            public string ZoneName;
+            public double RootDepth;
+            public double SpecificRootLength;
+            public double RootDM;
+        }
+        private List<RootZone> RootZonesInitialisations = new List<RootZone>();
+
+        /// <summary>
+        /// Add a zone where roots are to grow.
+        /// </summary>
+        public void AddZone(string zoneName, double rootDepth, double rootDM, double specificRootLength)
+        {
+            RootZonesInitialisations.Add(new RootZone() { ZoneName = zoneName, RootDepth = rootDepth, RootDM = rootDM, SpecificRootLength = specificRootLength });
+        }
+
         /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc.).</summary>
         /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
@@ -3563,14 +3570,34 @@ namespace Models.AgPasture
             leaves = new PastureAboveGroundOrgan(4);
             stems = new PastureAboveGroundOrgan(4);
             stolons = new PastureAboveGroundOrgan(4);
+            rootZones = new List<PastureBelowGroundOrgan>();
             plantZoneRoots = new PastureBelowGroundOrgan(2, nLayers, 
                                                          myWaterAvailableMethod, myNitrogenAvailableMethod,
                                                          KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
                                                          mySoil, Name,
-                                                         SpecificRootLength, ReferenceRLD, ExponentSoilMoisture,
-                                                         ReferenceKSuptake);
-            rootZones = new List<PastureBelowGroundOrgan>();
+                                                         InitialRootDepth, myInitialRootDM, SpecificRootLength, 
+                                                         ReferenceRLD, ExponentSoilMoisture, ReferenceKSuptake,
+                                                         myRootDepthMaximum, myRootDistributionDepthParam, rootBottomDistributionFactor,
+                                                         myRootDistributionExponent);
             rootZones.Add(plantZoneRoots);
+
+            foreach (RootZone rootZone in RootZonesInitialisations)
+            {
+                Zone zone = Apsim.Find(this, rootZone.ZoneName) as Zone;
+                if (zone == null)
+                    throw new Exception("Cannot find zone: " + rootZone.ZoneName);
+                Soil soil = Apsim.Child(zone, typeof(Soil)) as Soil;
+                if (soil == null)
+                    throw new Exception("Cannot find a soil in zone : " + rootZone.ZoneName);
+                rootZones.Add(new PastureBelowGroundOrgan(2, nLayers,
+                                                          myWaterAvailableMethod, myNitrogenAvailableMethod,
+                                                          KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
+                                                          soil, Name,
+                                                          rootZone.RootDepth, rootZone.RootDM, rootZone.SpecificRootLength, 
+                                                          ReferenceRLD, ExponentSoilMoisture, ReferenceKSuptake,
+                                                          myRootDepthMaximum, myRootDistributionDepthParam, rootBottomDistributionFactor,
+                                                          myRootDistributionExponent));
+            }
 
             // initialise soil water and N variables
             InitiliaseSoilArrays();
@@ -3724,14 +3751,6 @@ namespace Models.AgPasture
             stolons.Tissue[1].DM = InitialState.DMWeight[9];
             stolons.Tissue[2].DM = InitialState.DMWeight[10];
 
-            // 2. Initialise root DM, N, depth, and distribution
-            plantZoneRoots.Depth = InitialState.RootDepth;
-            plantZoneRoots.BottomLayer = RootZoneBottomLayer();
-            plantZoneRoots.TargetDistribution = RootDistributionTarget();
-            double[] iniRootFraction = CurrentRootDistributionTarget();
-            for (int layer = 0; layer < nLayers; layer++)
-                plantZoneRoots.Tissue[0].DMLayer[layer] = InitialState.DMWeight[11] * iniRootFraction[layer];
-
             // 3. Initialise the N amounts in each pool above-ground (assume to be at optimum concentration)
             leaves.Tissue[0].Namount = InitialState.NAmount[0];
             leaves.Tissue[1].Namount = InitialState.NAmount[1];
@@ -3770,9 +3789,8 @@ namespace Models.AgPasture
             stolons.Tissue[2].DM = myMinimumGreenWt * emergenceDMFractions[10];
 
             // 2. Set root depth and DM (root DM equals shoot)
-            plantZoneRoots.Depth = myRootDepthMinimum;
-            plantZoneRoots.BottomLayer = RootZoneBottomLayer();
-            double[] rootFractions = CurrentRootDistributionTarget();
+            plantZoneRoots.Depth = myRootDepthMinimum;            
+            double[] rootFractions = plantZoneRoots.CurrentRootDistributionTarget(myRootDepthMaximum);
             for (int layer = 0; layer < nLayers; layer++)
                 plantZoneRoots.Tissue[0].DMLayer[layer] = plantZoneRoots.MinimumLiveDM * rootFractions[layer];
 
@@ -4460,7 +4478,7 @@ namespace Models.AgPasture
             {
                 // root DM is changing due to growth, check potential changes in distribution
                 double[] growthRootFraction;
-                double[] currentRootTarget = CurrentRootDistributionTarget();
+                double[] currentRootTarget = plantZoneRoots.CurrentRootDistributionTarget(myRootDepthMaximum);
                 if (MathUtilities.AreEqual(plantZoneRoots.Tissue[0].FractionWt, currentRootTarget))
                 {
                     // no need to change the distribution
@@ -4935,7 +4953,6 @@ namespace Models.AgPasture
                     double tempFactor = TemperatureLimitingFactor(Tmean(0.5));
                     dRootDepth = myRootElongationRate * tempFactor;
                     plantZoneRoots.Depth = Math.Min(myRootDepthMaximum, Math.Max(myRootDepthMinimum, plantZoneRoots.Depth + dRootDepth));
-                    plantZoneRoots.BottomLayer = RootZoneBottomLayer();
                 }
                 else
                 {
@@ -5839,95 +5856,6 @@ namespace Models.AgPasture
         {
             if (givenLAI < Epsilon) return 0.0;
             return (1.0 - Math.Exp(-myLightExtinctionCoefficient * givenLAI));
-        }
-
-        /// <summary>Computes the target (or ideal) distribution of roots in the soil profile.</summary>
-        /// <remarks>
-        /// This distribution is solely based on root parameters (maximum depth and distribution parameters)
-        /// These values will be used to allocate initial rootDM as well as any growth over the profile
-        /// </remarks>
-        /// <returns>A weighting factor for each soil layer (mm equivalent)</returns>
-        private double[] RootDistributionTarget()
-        {
-            // 1. Base distribution calculated using a combination of linear and power functions:
-            //  It considers homogeneous distribution from surface down to a fraction of root depth (DepthForConstantRootProportion),
-            //   below this depth the proportion of root decrease following a power function (with exponent ExponentRootDistribution),
-            //   it reaches zero slightly below the MaximumRootDepth (defined by rootBottomDistributionFactor), but the function is
-            //   truncated at MaximumRootDepth. The values are not normalised.
-            //  The values are further adjusted using the values of XF (so there will be less roots in those layers)
-
-            double[] result = new double[nLayers];
-            SoilCrop soilCropData = (SoilCrop)mySoil.Crop(Name);
-            double depthTop = 0.0;
-            double depthBottom = 0.0;
-            double depthFirstStage = Math.Min(myRootDepthMaximum, myRootDistributionDepthParam);
-
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                depthBottom += mySoil.Thickness[layer];
-                if (depthTop >= myRootDepthMaximum)
-                {
-                    // totally out of root zone
-                    result[layer] = 0.0;
-                }
-                else if (depthBottom <= depthFirstStage)
-                {
-                    // totally in the first stage
-                    result[layer] = mySoil.Thickness[layer] * soilCropData.XF[layer];
-                }
-                else
-                {
-                    // at least partially on second stage
-                    double maxRootDepth = myRootDepthMaximum * rootBottomDistributionFactor;
-                    result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), myRootDistributionExponent + 1)
-                                  - Math.Pow(maxRootDepth - Math.Min(depthBottom, myRootDepthMaximum), myRootDistributionExponent + 1);
-                    result[layer] /= (myRootDistributionExponent + 1) * Math.Pow(maxRootDepth - depthFirstStage, myRootDistributionExponent);
-                    if (depthTop < depthFirstStage)
-                    {
-                        // partially in first stage
-                        result[layer] += depthFirstStage - depthTop;
-                    }
-
-                    result[layer] *= soilCropData.XF[layer];
-                }
-
-                depthTop += mySoil.Thickness[layer];
-            }
-
-            return result;
-        }
-
-        /// <summary>Computes the current target distribution of roots in the soil profile.</summary>
-        /// <remarks>
-        /// This distribution is a correction of the target distribution, taking into account the depth of soil
-        /// as well as the current rooting depth
-        /// </remarks>
-        /// <returns>The proportion of root mass expected in each soil layer (0-1)</returns>
-        private double[] CurrentRootDistributionTarget()
-        {
-            double cumProportion = 0.0;
-            double topLayersDepth = 0.0;
-            double[] result = new double[nLayers];
-
-            // Get the total weight over the root zone, first layers totally within the root zone
-            for (int layer = 0; layer < plantZoneRoots.BottomLayer; layer++)
-            {
-                cumProportion += plantZoneRoots.TargetDistribution[layer];
-                topLayersDepth += mySoil.Thickness[layer];
-            }
-            // Then consider layer at the bottom of the root zone
-            double layerFrac = Math.Min(1.0, (myRootDepthMaximum - topLayersDepth) / (plantZoneRoots.Depth - topLayersDepth));
-            cumProportion += plantZoneRoots.TargetDistribution[plantZoneRoots.BottomLayer] * layerFrac;
-
-            // Normalise the weights to be a fraction, adds up to one
-            if (cumProportion > Epsilon)
-            {
-                for (int layer = 0; layer < plantZoneRoots.BottomLayer; layer++)
-                    result[layer] = plantZoneRoots.TargetDistribution[layer] / cumProportion;
-                result[plantZoneRoots.BottomLayer] = plantZoneRoots.TargetDistribution[plantZoneRoots.BottomLayer] * layerFrac / cumProportion;
-            }
-
-            return result;
         }
 
         /// <summary>Computes how much of the layer is actually explored by roots (considering depth only).</summary>
