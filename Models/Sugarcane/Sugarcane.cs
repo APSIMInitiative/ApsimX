@@ -12344,20 +12344,24 @@ namespace Models
                 o_no3gsm[layer] = Soil.SoilNitrogen.NO3[layer] * kg2gm / ha2sm;
                 }
 
+            /* RJM Not used
             for (int layer = 0; layer < num_layers; layer++)
                 {
-                // RJM Not used o_no3gsm_min[layer] = Soil.SoilNitrogen.no3_min[layer] * kg2gm / ha2sm;
+                o_no3gsm_min[layer] = Soil.SoilNitrogen.no3_min[layer] * kg2gm / ha2sm;
                 }
+            */
 
             for (int layer = 0; layer < num_layers; layer++)
                 {
                 o_nh4gsm[layer] = Soil.SoilNitrogen.NH4[layer] * kg2gm / ha2sm;
                 }
 
+            /* RJM Not used
             for (int layer = 0; layer < num_layers; layer++)
                 {
-                // RJM Not used o_nh4gsm_min[layer] = Soil.SoilNitrogen.nh4_min[layer] * kg2gm / ha2sm;
+                o_nh4gsm_min[layer] = Soil.SoilNitrogen.nh4_min[layer] * kg2gm / ha2sm;
             }
+            */
         }
 
 

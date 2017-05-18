@@ -816,7 +816,7 @@ namespace Models.Soils
                 soilp_dlt_org_p = new double[nLayers];
 
                 //if (g.SumDoubleArray(g.pot_c_decomp) >= g.epsilon)  // RJM removed
-                {
+                //{
                     int nResidues = g.residueName.Length;    // number of residues in the simulation
                     double soilp_cpr = MathUtilities.Divide(g.SumDoubleArray(g.pot_p_decomp), g.SumDoubleArray(g.pot_c_decomp), 0.0);  // C:P ratio for potential decomposition
 
@@ -853,7 +853,7 @@ namespace Models.Soils
                         act_c_decomp = dlt_c_res_to_biom[layer] + dlt_c_res_to_hum[layer] + dlt_c_res_to_atm[layer];
                         soilp_dlt_org_p[layer] = tot_pot_p_decomp * MathUtilities.Divide(act_c_decomp, tot_pot_c_decomp, 0.0);
                     }
-                }
+               // }
             }
 
             /// <summary>

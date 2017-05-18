@@ -122,9 +122,7 @@ namespace Models.Soils
         /// <summary>
         /// factor to convert organic carbon to organic matter
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 3.0)]
-        [Units("")]
-        // RJM [Description("Factor to convert from OC to OM")]
+        [Bounds(Lower = 0.0, Upper = 3.0)]
         public double defaultCarbonInSoilOM = 0.588;
 
         /// <summary>
@@ -161,20 +159,7 @@ namespace Models.Soils
         #endregion general settings
 
         #region Parameters for setting up soil organic matter
-
-        /*
-        /// <summary>
-        /// The C:N ratio of the soil humus (active + inert)
-        /// </summary>
-        /// <remarks>
-        /// Remains fixed throughout the simulation
-        /// </remarks>
-        // RJM [Param(MinVal = 1.0, MaxVal = 25.0)]
-        [Units("")]
-        // RJM [Description("The C:N ratio of the soil OM (humus)")]
-        [XmlIgnore]
-        public double HumusCNr = 12.5; */
-
+        
         /// <summary>The C:N ratio of the soil humus (active + inert)</summary>
         /// <remarks>Remains fixed throughout the simulation</remarks>
         private double hum_cn = 0.0;
@@ -193,27 +178,21 @@ namespace Models.Soils
         /// <remarks>
         /// Remains fixed throughout the simulation
         /// </remarks>
-        // RJM [Param(IsOptional = true, MinVal = 1.0, MaxVal = 50.0)]
-        [Units("")]
-        // RJM [Description("The C:N ratio of microbial biomass")]
+        [Bounds(Lower=1, Upper = 50)]
         [XmlIgnore]
         public double MBiomassCNr = 8.0;
 
         /// <summary>
         /// Proportion of biomass-C in the initial mineralizable humic-C (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
-        [Units("0-1")]
-        // RJM [Description("Fraction of biomass in the active humus")]
+        [Bounds(Lower = 0, Upper = 1)]
         [XmlIgnore]
         public double[] fbiom = { 0.05, 0.01 };
 
         /// <summary>
         /// Proportion of the initial total soil C that is inert, not subject to mineralisation (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
-        [Units("0-1")]
-        // RJM [Description("Fraction humus that is inert")]
+        [Bounds(Lower = 0, Upper = 1)]
         [XmlIgnore]
         public double[] finert = { 0.5, 0.95 };
 
@@ -224,16 +203,11 @@ namespace Models.Soils
         /// <summary>
         /// Initial amount of FOM in the soil (kgDM/ha)
         /// </summary>
-        // RJM [Input(IsOptional = true)]
-        // RJM [Param(IsOptional = true, MinVal = 0.0, MaxVal = 100000.0)]
+        [Bounds(Lower = 0, Upper = 100000)]
         [Units("kg/ha")]
-        // RJM [Description("Initial amount of FOM in the soil")]
         [XmlIgnore]
         public double iniFomWt = 2000;
 
-
-        /*/// <summary>Initial weight of fom in the soil (kgDM/ha)</summary>
-        //private double iniFomWt = 0.0;*/
         /// <summary>Gets or sets the root_wt.</summary>
         /// <value>The root_wt.</value>
         private double root_wt
@@ -242,7 +216,6 @@ namespace Models.Soils
             set { iniFomWt = value; }
         }
 
-
         /// <summary>
         /// Initial depth over which FOM is distributed within the soil profile (mm)
         /// </summary>
@@ -250,10 +223,7 @@ namespace Models.Soils
         /// If not given fom will be distributed over the whole soil profile
         /// Distribution follows an exponential function
         /// </remarks>
-        // RJM [Input(IsOptional = true)]
-        // RJM [Param(IsOptional = true)]
         [Units("mm")]
-        // RJM [Description("Initial depth over which FOM is distributed in the soil")]
         [XmlIgnore]
         public double iniFomDepth = -99.0;
 
@@ -283,9 +253,7 @@ namespace Models.Soils
         /// <remarks>
         /// If not given, a default value  might be considered (3.0)
         /// </remarks>
-        // RJM [Param(IsOptional = true, MinVal = 0.01, MaxVal = 10.0)]
-        [Units("")]
-        // RJM [Description("Exponent for the FOM distribution in soil")]
+        [Bounds(Lower = 0.01, Upper = 10.0)]
         [XmlIgnore]
         public double FOMDistributionCoefficient = 3.0;
 
@@ -300,9 +268,6 @@ namespace Models.Soils
         /// This sets the partition of FOM C between the different pools (carbohydrate, cellulose, lignine)
         /// A default value (0) is always assumed
         /// </remarks>
-        // RJM [Param(IsOptional = true)]
-        [Units("")]
-        // RJM [Description("FOM type to be used on initialisation")]
         [XmlIgnore]
         public string InitialFOMType
         {
@@ -330,7 +295,6 @@ namespace Models.Soils
             }
         }
 
-        // RJM [Param(Name = "fom_type")]
         /// <summary>List of available FOM types names</summary>
         [XmlArray("fom_type")]
         public String[] fom_types = { "default", "manure", "mucuna", "lablab", "shemp", "stable" };
@@ -352,9 +316,7 @@ namespace Models.Soils
         /// <summary>
         /// Fraction of residue C mineralised retained in the soil OM (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
-        [Units("0-1")]
-        // RJM [Description("Fraction of residue C mineralised retained in the soil OM")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double ResiduesRespirationFactor = 0.6;
 
@@ -364,18 +326,16 @@ namespace Models.Soils
         /// <remarks>
         /// Remaining will got into humus
         /// </remarks>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Fraction of retained residue C transferred to biomass")]
         [XmlIgnore]
         public double ResiduesFractionIntoBiomass = 0.9;
 
         /// <summary>
         /// Depth from which mineral N can be immobilised when decomposing surface residues (mm)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1000.0)]
+        [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
-        // RJM [Description("Depth from which mineral N can be immobilised when decomposing surface residues")]
         [XmlIgnore]
         public double ImmobilisationDepth = 100;
 
@@ -386,45 +346,39 @@ namespace Models.Soils
         /// <summary>
         /// Optimum rate for decomposition of FOM pools [carbohydrate component] (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
-        [Units("0-1")]
-        // RJM [Description("Optimum decomposition rate of FOM carbohydrate")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double[] FOMCarbTurnOverRate = { 0.2, 0.1 };
 
         /// <summary>
         /// Optimum rate for decomposition of FOM pools [cellulose component] (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Optimum decomposition rate of FOM cellulose")]
         [XmlIgnore]
         public double[] FOMCellTurnOverRate = { 0.05, 0.25 };
 
         /// <summary>
         /// Optimum rate for decomposition of FOM pools [lignin component] (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Optimum decomposition rate of FOM lignine")]
         [XmlIgnore]
         public double[] FOMLignTurnOverRate = { 0.0095, 0.003 };
 
         /// <summary>
         /// Fraction of the FOM C decomposed retained in the soil OM (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Fraction of the FOM C decomposed retained in the soil OM")]
         [XmlIgnore]
         public double FOMRespirationFactor = 0.6;
 
         /// <summary>
         /// Fraction of the retained FOM C transferred to biomass (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Fraction of the retained FOM C transferred to biomass")]
         [XmlIgnore]
         public double FOMFractionIntoBiomass = 0.9;
 
@@ -433,14 +387,14 @@ namespace Models.Soils
         /// <summary>
         /// Coeff. to determine the magnitude of C:N effects on decomposition of FOM
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 10.0)]
+        [Bounds(Lower = 0.0, Upper = 10.0)]
         [XmlIgnore]
         public double cnrf_ReductionCoeff = 0.693;
 
         /// <summary>
         /// C:N above which decomposition rate of FOM declines
         /// </summary>
-        // RJM [Param(MinVal = 5.0, MaxVal = 100.0)]
+        [Bounds(Lower = 5.0, Upper = 100.0)]
         [XmlIgnore]
         public double cnrf_CNthreshold = 25.0;
 
@@ -453,7 +407,6 @@ namespace Models.Soils
         /// <summary>
         /// parameters for the temperature factor, optimum temperature (aerobic and anaerobic conditions)
         /// </summary>
-        // RJM [Param]
         [Units("oC")]
         [XmlIgnore]
         public double[] stf_DecompFOM_Topt
@@ -465,9 +418,7 @@ namespace Models.Soils
         /// <summary>
         /// Temperature factor for decomposition of FOM at zero degrees
         /// </summary>
-        // RJM [Param]
-        [Units("0-1")]
-        // RJM [Description("Temperature factor for decomposition of FOM at zero degrees")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double[] stf_DecompFOM_FctrZero
         {
@@ -478,9 +429,6 @@ namespace Models.Soils
         /// <summary>
         /// Curve exponent for temperature factor for decomposition of FOM
         /// </summary>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("Curve exponent for temperature factor")]
         [XmlIgnore]
         public double[] stf_DecompFOM_CvExp
         {
@@ -496,18 +444,21 @@ namespace Models.Soils
         /// <summary>
         /// Values of modified soil water content at which the moisture factor is given
         /// </summary>
-        // RJM [Param]
-        [Units("0-3")]
-        // RJM [Description("X values for the moisture factor function")]
+        /// <remarks>
+        /// X values for the moisture factor function
+        /// </remarks>
+        [Bounds(Lower = 0.0, Upper = 3.0)]
         public double[] swf_DecompFOM_swx
         { set { MoistFactorData_DecompFOM.xVals = value; } }
 
         /// <summary>
         /// Moiture factor values for the given modified soil water content
         /// </summary>
-        // RJM [Param]
+        /// <remarks>
+        /// Y values for the moisture factor function
+        /// </remarks>
         [Units("0-1")]
-        // RJM [Description("Y values for the moisture factor function")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] swf_DecompFOM_y
         { set { MoistFactorData_DecompFOM.yVals = value; } }
 
@@ -522,45 +473,40 @@ namespace Models.Soils
         /// <summary>
         /// Potential rate of soil biomass mineralisation (fraction per day) (aerobic and anaerobic conditions)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Potential rate of soil biomass mineralisation")]
         [XmlIgnore]
         public double[] MBiomassTurnOverRate = { 0.0081, 0.004};
 
         /// <summary>
         /// Fraction of biomass C mineralised retained in soil OM (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Fraction of biomass C mineralised retained in soil OM")]
         [XmlIgnore]
         public double MBiomassRespirationFactor = 0.6;
 
         /// <summary>
         /// Fraction of retained biomass C returned to biomass (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Fraction of retained biomass C returned to biomass")]
         [XmlIgnore]
         public double MBiomassFractionIntoBiomass = 0.6;
 
         /// <summary>
         /// potential daily rate of humus mineralization (aerobic and anaerobic conditions)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Potential rate of humus mineralisation")]
         [XmlIgnore]
         public double[] AHumusTurnOverRate = { 0.00015, 0.00007 };
 
         /// <summary>
         /// fraction of humic C mineralized retained in system (0-1)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Fraction of humic C mineralised retained in soil OM")]
         [XmlIgnore]
         public double AHumusRespirationFactor = 0.6;
 
@@ -574,9 +520,7 @@ namespace Models.Soils
         /// <summary>
         /// Optimum temperature for soil OM mineralisation
         /// </summary>
-        // RJM [Param]
         [Units("oC")]
-        // RJM [Description("Optimum temperature for mineralisation of soil OM")]
         [XmlIgnore]
         public double[] stf_MinerSOM_Topt
         {
@@ -587,9 +531,8 @@ namespace Models.Soils
         /// <summary>
         /// Temperature factor for soil OM mineralisation at zero degree
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Temperature factor for mineralisation of soil OM at zero degrees")]
         [XmlIgnore]
         public double[] stf_MinerSOM_FctrZero
         {
@@ -600,9 +543,6 @@ namespace Models.Soils
         /// <summary>
         /// Curve exponent to calculate temperature factor for soil OM mineralisation
         /// </summary>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("Curve exponent for temperature factor")]
         [XmlIgnore]
         public double[] stf_MinerSOM_CvExp
         {
@@ -619,11 +559,10 @@ namespace Models.Soils
         private BrokenStickData MoistFactorData_MinerSOM = new BrokenStickData();
 
         /// <summary>
-        /// Values of the modified soil water content at which misture factor is know
+        /// Values of the modified soil water content at which misture factor is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 3.0)]
+        [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
-        // RJM [Description("X values for the moisture factor function")]
         [XmlIgnore]
         public double[] swf_MinerSOM_swx
         {
@@ -634,9 +573,11 @@ namespace Models.Soils
         /// <summary>
         /// Values of the moisture factor at the given modified water content
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        /// <remarks>
+        /// Y values for the moisture factor function
+        /// </remarks>
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Y values for the moisture factor function")]
         [XmlIgnore]
         public double[] swf_MinerSOM_y
         {
@@ -658,9 +599,8 @@ namespace Models.Soils
         /// <summary>
         /// Optimum temperature for urea hydrolisys
         /// </summary>
-        // RJM [Param(MinVal = 5.0, MaxVal = 100.0)]
+        [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
-        // RJM [Description("Optimum temperature for urea hydrolysis")]
         [XmlIgnore]
         public double[] stf_Hydrol_Topt
         {
@@ -671,9 +611,8 @@ namespace Models.Soils
         /// <summary>
         /// Temperature factor for urea hydrolisys at zero degrees
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Temperature factor for urea hydrolisys at zero degrees")]
         [XmlIgnore]
         public double[] stf_Hydrol_FctrZero
         {
@@ -684,9 +623,6 @@ namespace Models.Soils
         /// <summary>
         /// Curve exponent to calculate the temperature factor for urea hydrolisys
         /// </summary>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("Curve exponent for temperature factor")]
         [XmlIgnore]
         public double[] stf_Hydrol_CvExp
         {
@@ -702,9 +638,11 @@ namespace Models.Soils
         /// <summary>
         /// Values of the modified soil water content at which factor is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 3.0)]
+        /// <remarks>
+        /// X values for the moisture factor function
+        /// </remarks>
+        [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
-        // RJM [Description("X values for the moisture factor function")]
         [XmlIgnore]
         public double[] swf_Hydrol_swx
         {
@@ -715,9 +653,11 @@ namespace Models.Soils
         /// <summary>
         /// Values of the modified moisture factor at given water content
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        /// <remarks>
+        /// Y values for the moisture factor function
+        /// </remarks>
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Y values for the moisture factor function")]
         [XmlIgnore]
         public double[] swf_Hydrol_y
         {
@@ -730,7 +670,7 @@ namespace Models.Soils
         /// <summary>
         /// minimum potential hydrolysis rate for urea (/day)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [XmlIgnore]
         public double potHydrol_min = 0.25;
@@ -738,7 +678,6 @@ namespace Models.Soils
         /// <summary>
         /// parameter A for potential urea hydrolysis function
         /// </summary>
-        // RJM [Param]
         [Units("")]
         [XmlIgnore]
         public double potHydrol_parmA = -1.12;
@@ -746,7 +685,6 @@ namespace Models.Soils
         /// <summary>
         /// parameter B for potential urea hydrolysis function
         /// </summary>
-        // RJM [Param]
         [Units("")]
         [XmlIgnore]
         public double potHydrol_parmB = 1.31;
@@ -754,7 +692,6 @@ namespace Models.Soils
         /// <summary>
         /// parameter C for potential urea hydrolysis function
         /// </summary>
-        // RJM [Param]
         [Units("")]
         [XmlIgnore]
         public double potHydrol_parmC = 0.203;
@@ -762,7 +699,6 @@ namespace Models.Soils
         /// <summary>
         /// parameter D for potential urea hydrolysis function
         /// </summary>
-        // RJM [Param]
         [Units("")]
         [XmlIgnore]
         public double potHydrol_parmD = -0.155;
@@ -789,7 +725,7 @@ namespace Models.Soils
         /// This is the parameter k on Michaelis-Menten equation
         /// r = MC/(k+C)
         /// </remarks>
-        // RJM [Param(MinVal = 0.0, MaxVal = 200.0)]
+        [Bounds(Lower = 0.0, Upper = 200.0)]
         [Units("ppm")]
         [XmlIgnore]
         public double nh4_at_half_pot = 90;
@@ -802,9 +738,8 @@ namespace Models.Soils
         /// <summary>
         /// Optimum temperature for nitrification
         /// </summary>
-        // RJM [Param(MinVal = 5.0, MaxVal = 100.0)]
+        [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
-        // RJM [Description("Optimum temperature for nitrification")]
         [XmlIgnore]
         public double[] stf_Nitrif_Topt
         {
@@ -815,9 +750,8 @@ namespace Models.Soils
         /// <summary>
         /// Temperature factor for nitrification at zero degrees
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Temperature factor for nitrification at zero degrees")]
         [XmlIgnore]
         public double[] stf_Nitrif_FctrZero
         {
@@ -828,9 +762,7 @@ namespace Models.Soils
         /// <summary>
         /// Curve exponent for calculating the temperature factor for nitrification
         /// </summary>
-        // RJM [Param]
         [Units("")]
-        // RJM [Description("Curve exponent for temperature factor")]
         [XmlIgnore]
         public double[] stf_Nitrif_CvExp
         {
@@ -846,9 +778,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of the modified soil water content at which the moisture factor is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 3.0)]
+        [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
-        // RJM [Description("X values for the moisture factor function")]
         [XmlIgnore]
         public double[] swf_Nitrif_swx
         {
@@ -859,9 +790,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of the moisture factor at given water content
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Y values for the moisture factor function")]
         [XmlIgnore]
         public double[] swf_Nitrif_y
         {
@@ -877,9 +807,7 @@ namespace Models.Soils
         /// <summary>
         /// Values of pH at which factors is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 14.0)]
-        [Units("")]
-        // RJM [Description("X values of pH factor function")]
+        [Bounds(Lower = 0.0, Upper = 14.0)]
         [XmlIgnore]
         public double[] phf_Nitrif_phx
         {
@@ -890,9 +818,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of pH factor at given pH values
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Y values of pH factor function")]
         [XmlIgnore]
         public double[] phf_Nitrif_y
         {
@@ -908,9 +835,8 @@ namespace Models.Soils
         /// <remarks>
         /// This is the parameter M on Michaelis-Menten equation, r = MC/(k+C)
         /// </remarks>
-        // RJM [Param(MinVal = 0.0, MaxVal = 200.0)]
+        [Bounds(Lower = 0.0, Upper = 200.0)]
         [Units("ppm/day")]
-        // RJM [Description("Maximum soil potential nitritation rate")]
         [XmlIgnore]
         public double NitritationPotential = 40;
 
@@ -920,9 +846,8 @@ namespace Models.Soils
         /// <remarks>
         /// This is the parameter k on Michaelis-Menten equation, r = MC/(k+C)
         /// </remarks>
-        // RJM [Param(MinVal = 0.0, MaxVal = 200.0)]
         [Units("ppm")]
-        // RJM [Description("NH4 concentration when nitritation is half of potential")]
+        [Bounds(Lower = 0.0, Upper = 200.0)]
         [XmlIgnore]
         public double NH4AtHalfNitritationPot = 90;
 
@@ -932,9 +857,8 @@ namespace Models.Soils
         /// <remarks>
         /// This is the parameter M on Michaelis-Menten equation, r = MC/(k+C)
         /// </remarks>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1000.0)]
+        [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("ppm/day")]
-        // RJM [Description("Maximum soil potential nitratation rate")]
         [XmlIgnore]
         public double NitratationPotential = 400;
 
@@ -944,27 +868,24 @@ namespace Models.Soils
         /// <remarks>
         /// This is the parameter k on Michaelis-Menten equation, r = MC/(k+C)
         /// </remarks>
-        // RJM [Param(MinVal = 0.0, MaxVal = 500.0)]
+        [Bounds(Lower = 0.0, Upper = 500.0)]
         [Units("ppm")]
-        // RJM [Description("NO2 concentration when nitratation is half of potential")]
         [XmlIgnore]
         public double NO2AtHalfNitratationPot = 90;
 
         /// <summary>
         /// Parameter to determine the base fraction of ammonia oxidate lost as N2O
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        // RJM [Description("Minimum fraction of ammonia oxidated lost as N2O")]
         [XmlIgnore]
         public double AmmoxLossParam1 = 0.0025;
 
         /// <summary>
         /// Parameter to determine the changes in fraction of ammonia oxidate lost as N2O
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        // RJM [Description("Variation rate of fraction of ammonia oxidated lost as N2O")]
         [XmlIgnore]
         public double AmmoxLossParam2 = 0.45;
 
@@ -976,9 +897,8 @@ namespace Models.Soils
         /// <summary>
         /// Optimum temperature for nitrification (Nitrition + Nitration)
         /// </summary>
-        // RJM [Param(MinVal = 5.0, MaxVal = 100.0)]
+        [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
-        // RJM [Description("Optimum temperature for nitrification")]
         [XmlIgnore]
         public double[] TOptmimunNitrififaction
         {
@@ -989,9 +909,7 @@ namespace Models.Soils
         /// <summary>
         /// Temperature factor for nitrification (Nitrition + Nitration) at zero degrees
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
-        [Units("0-1")]
-        // RJM [Description("Temperature factor for nitrification at zero degrees")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double[] FactorZeroNitrification
         {
@@ -1002,9 +920,7 @@ namespace Models.Soils
         /// <summary>
         /// Curve exponent for calculating the temperature factor for nitrification (Nitrition + Nitration)
         /// </summary>
-        // RJM [Param]
         [Units("")]
-        // RJM [Description("Curve exponent for temperature factor")]
         [XmlIgnore]
         public double[] ExponentNitrification
         {
@@ -1020,9 +936,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of the modified soil water content at which the moisture factor is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 3.0)]
+        [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
-        // RJM [Description("X values for the moisture factor function")]
         [XmlIgnore]
         public double[] Nitrification_swx
         {
@@ -1033,9 +948,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of the moisture factor at given water content
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Y values for the moisture factor function")]
         [XmlIgnore]
         public double[] Nitrification_swy
         {
@@ -1051,9 +965,7 @@ namespace Models.Soils
         /// <summary>
         /// Values of pH at which factors is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 14.0)]
-        [Units("")]
-        // RJM [Description("X values of pH factor function")]
+        [Bounds(Lower = 0.0, Upper = 14.0)]
         [XmlIgnore]
         public double[] Nitritation_phx
         {
@@ -1064,9 +976,7 @@ namespace Models.Soils
         /// <summary>
         /// Values of pH factor at given pH values
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
-        [Units("0-1")]
-        // RJM [Description("Y values of pH factor function")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double[] Nitritation_phy
         {
@@ -1082,9 +992,7 @@ namespace Models.Soils
         /// <summary>
         /// Values of pH at which factors is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 14.0)]
-        [Units("")]
-        // RJM [Description("X values of pH factor function")]
+        [Bounds(Lower = 0.0, Upper = 14.0)]
         [XmlIgnore]
         public double[] Nitratation_phx
         {
@@ -1095,9 +1003,7 @@ namespace Models.Soils
         /// <summary>
         /// Values of pH factor at given pH values
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
-        [Units("0-1")]
-        // RJM [Description("Y values of pH factor function")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double[] Nitratation_phy
         {
@@ -1114,9 +1020,8 @@ namespace Models.Soils
         /// <summary>
         /// denitrification rate coefficient (kg soil/mg C per day)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        // RJM [Description("Codenitrification rate coefficient")]
         [XmlIgnore]
         public double CodenitRateCoefficient = 0.0006;
 
@@ -1128,9 +1033,8 @@ namespace Models.Soils
         /// <summary>
         /// Optimum temperature for codenitrification
         /// </summary>
-        // RJM [Param(MinVal = 5.0, MaxVal = 100.0)]
+        [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
-        // RJM [Description("Optimum temperature for denitrification")]
         [XmlIgnore]
         public double[] TOptmimunCodenitrififaction
         {
@@ -1141,9 +1045,8 @@ namespace Models.Soils
         /// <summary>
         /// Temperature factor for codenitrification at zero degrees
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Temperature factor for denitrification at zero degrees")]
         [XmlIgnore]
         public double[] FactorZeroCodenitrification
         {
@@ -1154,9 +1057,7 @@ namespace Models.Soils
         /// <summary>
         /// Curve exponent for calculating the temperature factor for codenitrification
         /// </summary>
-        // RJM [Param]
         [Units("")]
-        // RJM [Description("Curve exponent for temperature factor")]
         [XmlIgnore]
         public double[] ExponentCodenitrification
         {
@@ -1172,9 +1073,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of modified soil water content at which the moisture factor is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 3.0)]
+        [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
-        // RJM [Description("X values for the moisture factor function")]
         [XmlIgnore]
         public double[] Codenitrification_swx
         {
@@ -1185,9 +1085,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of the moisture factor at given water content values
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Y values for the moisture factor function")]
         [XmlIgnore]
         public double[] Codenitrification_swy
         {
@@ -1203,9 +1102,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of soil pH at which the pH factor is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 3.0)]
+        [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
-        // RJM [Description("X values for the pH factor function")]
         [XmlIgnore]
         public double[] Codenitrification_phx
         {
@@ -1216,9 +1114,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of the pH factor at given pH values
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Y values for the pH factor function")]
         [XmlIgnore]
         public double[] Codenitrification_phy
         {
@@ -1234,9 +1131,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of soil NH3+NO2 at which the N2 fraction is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 100.0)]
+        [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("ppm")]
-        // RJM [Description("X values for the NH3NO2 factor function")]
         [XmlIgnore]
         public double[] Codenitrification_NHNOx
         {
@@ -1247,9 +1143,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of the N2 fraction at given NH3+NO2 values
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Y values for the NH3NO2 factor function")]
         [XmlIgnore]
         public double[] Codenitrification_NHNOy
         {
@@ -1264,45 +1159,36 @@ namespace Models.Soils
         /// <summary>
         /// Denitrification rate coefficient (kg/mg)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
-        [Units("")]
-        // RJM [Description("")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("kg/mg")]
         [XmlIgnore]
         public double DenitRateCoefficient = 0.0006;
 
         /// <summary>
         /// Fraction of nitrification lost as denitrification
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
-        // RJM [Description("")]
         [XmlIgnore]
         public double n2oLossFactor =  0;
 
         /// <summary>
         /// Parameter k1 from Thorburn et al (2010) for N2O model
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 100.0)]
+        [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("")]
-        // RJM [Description("")]
         [XmlIgnore]
         public double dnit_k1 = 25.1;
 
         /// <summary>
         /// parameter A in the equation computing the N2:N2O ratio
         /// </summary>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("Parameter A in the function computing the N2:N2O ratio")]
         [XmlIgnore]
         public double N2N2O_parmA = 0.16;
 
         /// <summary>
         /// parameter B in the equation computing the N2:N2O ratio
         /// </summary>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("Parameter B in the function computing the N2:N2O ratio")]
         [XmlIgnore]
         public double N2N2O_parmB = -0.80;
 
@@ -1313,9 +1199,6 @@ namespace Models.Soils
         /// Classic definition uses all humus and all FOM
         /// New definition uses active humus, biomass and pool1 of FOM (carbohydrate)
         /// </remarks>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("")]
         [XmlIgnore]
         public string allowNewPools
         {
@@ -1330,9 +1213,6 @@ namespace Models.Soils
         /// Classic approach is a linear function (soluble carbon is not zero when total C is zero)
         /// New exponential function is quite similar, but ensures zero soluble C
         /// </remarks>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("")]
         [XmlIgnore]
         public string allowExpFunction
         {
@@ -1343,36 +1223,24 @@ namespace Models.Soils
         /// <summary>
         /// parameter A to compute active carbon
         /// </summary>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("")]
         [XmlIgnore]
         public double actC_parmA = 24.5;
 
         /// <summary>
         /// parameter B to compute active carbon
         /// </summary>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("")]
         [XmlIgnore]
         public double actC_parmB = 0.0031;
 
         /// <summary>
         /// parameter A of exponential function to compute active carbon
         /// </summary>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("")]
         [XmlIgnore]
         public double actCExp_parmA = 0.011;
 
         /// <summary>
         /// parameter B of exponential function to compute active carbon
         /// </summary>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("")]
         [XmlIgnore]
         public double actCExp_parmB = 0.895;
 
@@ -1384,9 +1252,8 @@ namespace Models.Soils
         /// <summary>
         /// Optimum temperature for denitrification
         /// </summary>
-        // RJM [Param(MinVal = 5.0, MaxVal = 100.0)]
+        [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
-        // RJM [Description("Optimum temperature for denitrification")]
         [XmlIgnore]
         public double[] stf_dnit_Topt
         {
@@ -1397,9 +1264,7 @@ namespace Models.Soils
         /// <summary>
         /// Temperature factor for denitrification at zero degrees
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
-        [Units("0-1")]
-        // RJM [Description("Temperature factor for denitrification at zero degrees")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double[] stf_dnit_FctrZero
         {
@@ -1410,9 +1275,6 @@ namespace Models.Soils
         /// <summary>
         /// Curve exponent for calculating the temperature factor for denitrification
         /// </summary>
-        // RJM [Param]
-        [Units("")]
-        // RJM [Description("Curve exponent for temperature factor")]
         [XmlIgnore]
         public double[] stf_dnit_CvExp
         {
@@ -1428,9 +1290,7 @@ namespace Models.Soils
         /// <summary>
         /// Values of modified soil water content at which the moisture factor is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 3.0)]
-        [Units("0-3")]
-        // RJM [Description("X values for the moisture factor function")]
+        [Bounds(Lower = 0.0, Upper = 3.0)]
         [XmlIgnore]
         public double[] swf_dnit_swx
         {
@@ -1441,9 +1301,7 @@ namespace Models.Soils
         /// <summary>
         /// Values of the moisture factor at given water content values
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
-        [Units("0-1")]
-        // RJM [Description("Y values for the moisture factor function")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double[] swf_dnit_y
         {
@@ -1459,9 +1317,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of soil water filled pore sapce at which the WFPS factor is known
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 100.0)]
+        [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("%")]
-        // RJM [Description("X values for the WFPS factor function")]
         [XmlIgnore]
         public double[] swpsf_dnit_swpx
         {
@@ -1472,9 +1329,8 @@ namespace Models.Soils
         /// <summary>
         /// Values of the WFPS factor at given water fille pore space values
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 1.0)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Y values for the WFPS factor function")]
         [XmlIgnore]
         public double[] swpsf_dnit_y
         {
@@ -1489,18 +1345,12 @@ namespace Models.Soils
         /// <summary>
         /// coefficient A for erosion enrichment function
         /// </summary>
-        // RJM [Param()]
-        [Units("")]
-        // RJM [Description("Erosion enrichment coefficient A")]
         [XmlIgnore]
         public double enr_a_coeff = 7.4;
 
         /// <summary>
         /// coefficient A for erosion enrichment function
         /// </summary>
-        // RJM [Param()]
-        [Units("")]
-        // RJM [Description("Erosion enrichment coefficient B")]
         [XmlIgnore]
         public double enr_b_coeff = 0.2;
 
@@ -1515,10 +1365,6 @@ namespace Models.Soils
         /// <summary>
         /// The approach used for partitioning the N between patches
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
-        [Units("")]
-        // RJM [Description("Approach used for partitioning N between patches")]
         [XmlIgnore]
         public string NPartitionApproach
         {
@@ -1531,10 +1377,7 @@ namespace Models.Soils
         /// <summary>
         /// Layer thickness to consider when N partiton is BasedOnSoilConcentration (mm)
         /// </summary>
-        // RJM [Param(IsOptional = true)]
-        // RJM [Output]
         [Units("mm")]
-        // RJM [Description("Layer thickness to use when N partiton is BasedOnSoilConcentration")]
         [XmlIgnore]
         public double LayerNPartition
         {
@@ -1545,10 +1388,8 @@ namespace Models.Soils
         /// <summary>
         /// Minimum relative area (fraction of paddock) for any patch
         /// </summary>
-        // RJM [Param(IsOptional = true, MinVal = 0.0, MaxVal = 1.0)]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Minimum allowable relative area for a CNpatch")]
         [XmlIgnore]
         public double MininumRelativeAreaCNPatch
         {
@@ -1559,10 +1400,8 @@ namespace Models.Soils
         /// <summary>
         /// Maximum NH4 uptake rate for plants (ppm/day)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 10000.0)]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("ppm/day")]
-        // RJM [Description("Maximum NH4 uptake rate for plants")]
         [XmlIgnore]
         public double MaximumUptakeRateNH4
         {
@@ -1584,10 +1423,8 @@ namespace Models.Soils
         /// <summary>
         /// Maximum NO3 uptake rate for plants (ppm/day)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 10000.0)]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("ppm/day")]
-        // RJM [Description("Maximum NO3 uptake rate for plants")]
         [XmlIgnore]
         public double MaximumUptakeRateNO3
         {
@@ -1609,10 +1446,8 @@ namespace Models.Soils
         /// <summary>
         /// The maximum amount of N that is made available to plants in one day (kg/ha/day)
         /// </summary>
-        // RJM [Param(MinVal = 0.0, MaxVal = 10000.0)]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("kg/ha/day")]
-        // RJM [Description("Maximum amount of N that is made available to plants in one day")]
         [XmlIgnore]
         public double MaximumNitrogenAvailableToPlants
         {
@@ -1628,10 +1463,7 @@ namespace Models.Soils
         /// <summary>
         /// whether auto amalgamation of CN patches is allowed (yes/no)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("yes/no")]
-        // RJM [Description("whether auto amalgamation of CN patches is allowed")]
         [XmlIgnore]
         public string AllowPatchAutoAmalgamation
         {
@@ -1648,9 +1480,6 @@ namespace Models.Soils
         ///  - CompareBase: All patches are compare to base first, then merged, then compared again
         ///  - CompareMerge: Patches are compare and merged at once if deemed equal, then compare to next
         /// </remarks>
-        // RJM [Param]
-        // RJM [Output]
-        [Units("")]
         [XmlIgnore]
         public string AutoAmalgamationApproach
         {
@@ -1668,9 +1497,6 @@ namespace Models.Soils
         ///  - IDBased: the patch with lowest ID (=0) is used as the base
         ///  - AreaBased: The [first] patch with the biggest area is used as base
         /// </remarks>
-        // RJM [Param]
-        // RJM [Output]
-        [Units("")]
         [XmlIgnore]
         public string basePatchApproach
         {
@@ -1681,10 +1507,7 @@ namespace Models.Soils
         /// <summary>
         /// Should an age check be used to force amalgamation of patches? (yes/no)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("yes/no")]
-        // RJM [Description("Allow age-based merging of patches")]
         [XmlIgnore]
         public string AllowPatchAmalgamationByAge
         {
@@ -1695,10 +1518,10 @@ namespace Models.Soils
         /// <summary>
         /// Patch age for forced merging (years)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
+        /// <remarks>
+        /// Age in years after which to merge the patch back into the paddock base
+        /// </remarks>
         [Units("years")]
-        // RJM [Description("Age in years after which to merge the patch back into the paddock base")]
         [XmlIgnore]
         public double PatchAgeForForcedMerge
         {
@@ -1709,244 +1532,165 @@ namespace Models.Soils
         /// <summary>
         /// Relative difference in total organic carbon (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
-        [Units("0-1")]
-        // RJM [Description("Relative difference in total organic carbon")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double relativeDiff_TotalOrgC = 0.02;
-        // RJM { get; set; }
 
         /// <summary>
         /// Relative difference in total organic nitrogen (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
-        [Units("0-1")]
-        // RJM [Description("Relative difference in total organic nitrogen")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double relativeDiff_TotalOrgN = 0.02;
-        // RJM { get; set; }
 
         /// <summary>
         /// Relative difference in total organic nitrogen (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Relative difference in total organic nitrogen")]
         [XmlIgnore]
         public double relativeDiff_TotalBiomC = 0.02;
-        // RJM { get; set; }
 
         /// <summary>
         /// Relative difference in total urea N amount (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Relative difference in total urea N amount")]
         [XmlIgnore]
         public double relativeDiff_TotalUrea = 0.02;
-        // RJM { get; set; }
 
         /// <summary>
         /// Relative difference in total NH4 N amount (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Relative difference in total NH4 N amount")]
         [XmlIgnore]
         public double relativeDiff_TotalNH4 = 0.02;
-        // RJM { get; set; } 
 
         /// <summary>
         /// Relative difference in total NO3 N amount (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Relative difference in total NO3 N amount")]
         [XmlIgnore]
         public double relativeDiff_TotalNO3 = 0.02;
-        // RJM { get; set; }
 
         /// <summary>
         /// Relative difference in urea N amount at any layer (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Relative difference in urea N amount at any layer")]
         [XmlIgnore]
         public double relativeDiff_LayerBiomC = 0.02;
-        // RJM { get; set; }
 
         /// <summary>
         /// Relative difference in urea N amount at any layer (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Relative difference in urea N amount at any layer")]
         [XmlIgnore]
         public double relativeDiff_LayerUrea = 0.02;
-        // RJM { get; set; }
 
         /// <summary>
         /// Relative difference in NH4 N amount at any layer (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Relative difference in NH4 N amount at any layer")]
         [XmlIgnore]
         public double relativeDiff_LayerNH4 = 0.02;
-        // RJM { get; set; }
 
         /// <summary>
         /// Relative difference in NO3 N amount at any layer (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Relative difference in NO3 N amount at any layer")]
         [XmlIgnore]
         public double relativeDiff_LayerNO3 = 0.02;
-        // RJM { get; set; }
 
         /// <summary>
         /// Absolute difference in total organic carbon (kg/ha)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Absolute difference in total organic carbon")]
         [XmlIgnore]
         public double absoluteDiff_TotalOrgC = 500;
-        // RJM { get; set; }
 
         /// <summary>
         /// Absolute difference in total organic nitrogen (kg/ha)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Absolute difference in total organic nitrogen")]
         [XmlIgnore]
         public double absoluteDiff_TotalOrgN = 50;
-        // RJM { get; set; }
 
         /// <summary>
         /// Absolute difference in total organic nitrogen (kg/ha)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Absolute difference in total organic nitrogen")]
         [XmlIgnore]
         public double absoluteDiff_TotalBiomC = 50;
-        // RJM { get; set; }
 
         /// <summary>
         /// Absolute difference in total urea N amount (kg/ha)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Absolute difference in total urea N amount")]
         [XmlIgnore]
         public double absoluteDiff_TotalUrea = 2;
-        // RJM { get; set; }
 
         /// <summary>
         /// Absolute difference in total NH4 N amount (kg/ha)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Absolute difference in total NH4 N amount")]
         [XmlIgnore]
         public double absoluteDiff_TotalNH4 = 5;
-        // RJM { get; set; }
 
         /// <summary>
         /// Absolute difference in total NO3 N amount (kg/ha)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Absolute difference in total NO3 N amount")]
         [XmlIgnore]
         public double absoluteDiff_TotalNO3 = 5;
-        // RJM { get; set; }
 
         /// <summary>
         /// Absolute difference in urea N amount at any layer (kg/ha)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Absolute difference in urea N amount at any layer")]
         [XmlIgnore]
         public double absoluteDiff_LayerBiomC = 1;
-        // RJM { get; set; }
 
         /// <summary>
         /// Absolute difference in urea N amount at any layer (kg/ha)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Absolute difference in urea N amount at any layer")]
         [XmlIgnore]
         public double absoluteDiff_LayerUrea = 1;
-        // RJM { get; set; }
 
         /// <summary>
         /// Absolute difference in NH4 N amount at any layer (kg/ha)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Absolute difference in NH4 N amount at any layer")]
         [XmlIgnore]
         public double absoluteDiff_LayerNH4 = 1;
-        // RJM { get; set; }
 
         /// <summary>
         /// Absolute difference in NO3 N amount at any layer (kg/ha)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Absolute difference in NO3 N amount at any layer")]
         [XmlIgnore]
         public double absoluteDiff_LayerNO3 = 1;
-        // RJM { get; set; }
 
         /// <summary>
         /// Depth to consider when testing diffs by layer, if -ve soil depth is used (mm)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("mm")]
-        // RJM [Description("Depth to consider when testing diffs by layer, if -ve soil depth is used")]
         [XmlIgnore]
         public double DepthToTestByLayer = 99;
-        // RJM { get; set; }
 
         /// <summary>
         /// Factor to adjust the tests between patches other than base (0-1)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("factor to adjust the tests between patches other than base")]
         [XmlIgnore]
         public double DiffAdjustFactor = 0.5;
-        // RJM { get; set; }
 
         #endregion amalgamating patches
 
@@ -1957,27 +1701,22 @@ namespace Models.Soils
         /// <summary>
         /// Today's soil water amount (mm)
         /// </summary>
-        // RJM [Input]
         [Units("mm")]
-        //// RJM [Description("Soil water amount")]
         [XmlIgnore]
         public double[] sw_dep;
 
         /// <summary>
         /// Soil albedo (0-1)
         /// </summary>
-        // RJM [Input]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        //// RJM [Description("Soil albedo")]
         [XmlIgnore]
         public double salb;
 
         /// <summary>
         /// Soil temperature (oC), as computed by an external module (SoilTemp)
         /// </summary>
-        // RJM [Input(IsOptional = true)]
         [Units("oC")]
-        //// RJM [Description("Soil temperature")]
         [XmlIgnore]
         public double[] ave_soil_temp;
 
@@ -1988,9 +1727,7 @@ namespace Models.Soils
         /// <summary>
         /// pH of soil (assumed equivalent to a 1:1 soil-water slurry)
         /// </summary>
-        // RJM [Param(IsOptional = true, MinVal = 3.5, MaxVal = 11.0)]
-        // RJM [Input(IsOptional = true)]
-        // RJM [Description("Soil pH")]
+        [Bounds(Lower = 3.5, Upper = 11.0)]
         [XmlIgnore]
         public double[] ph = { 6, 6 };
 
@@ -2001,10 +1738,7 @@ namespace Models.Soils
         /// <summary>
         /// Total soil organic carbon content (%)
         /// </summary>
-        // RJM [Param]
-        // RJM [Output]
         [Units("%")]
-        // RJM [Description("Soil organic carbon (exclude FOM)")]
         [XmlIgnore]
         public double[] oc
         {
@@ -2047,10 +1781,8 @@ namespace Models.Soils
         /// <summary>
         /// Soil urea nitrogen content (ppm)
         /// </summary>
-        // RJM [Param(IsOptional = true, MinVal = 0.0, MaxVal = 10000.0)]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
-        // RJM [Description("Soil urea nitrogen content")]
         [XmlIgnore]
         public double[] ureappm
         {
@@ -2079,10 +1811,8 @@ namespace Models.Soils
         /// <summary>
         /// Soil ammonium nitrogen content (ppm)
         /// </summary>
-        // RJM [Param(IsOptional = true, MinVal = 0.0, MaxVal = 10000.0)]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
-        // RJM [Description("Soil ammonium nitrogen content")]
         [XmlIgnore]
         public double[] NH4ppm
         {
@@ -2111,10 +1841,8 @@ namespace Models.Soils
         /// <summary>
         /// Soil nitrate nitrogen content (ppm)
         /// </summary>
-        // RJM [Param(IsOptional = true, MinVal = 0.0, MaxVal = 10000.0)]
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mg/kg")]
-        // RJM [Description("Soil nitrate nitrogen content")]
         [XmlIgnore]
         public double[] NO3ppm
         {
@@ -2148,20 +1876,16 @@ namespace Models.Soils
         // this should be done via an event (RCichota)
 
         /// <summary>
-        /// 
+        /// Define whether soil profile reduction is on
         /// </summary>
-        // RJM [Output]
         [Units("on/off")]
-        //// RJM [Description("Define whether soil profile reduction is on")]
-        public  string n_reduction
+        public string n_reduction
         { set { ProfileReductionAllowed = value.StartsWith("on"); } }
 
         /// <summary>
         /// Soil loss due to erosion (t/ha)
         /// </summary>
-        // RJM [Input(IsOptional = true)]
         [Units("t/ha")]
-        //// RJM [Description("Soil loss due to erosion")]
         [XmlIgnore]
         public double soil_loss;
 
@@ -2176,27 +1900,21 @@ namespace Models.Soils
         /// If there is a pond, the decomposition of surface OM will be done by that model
         /// </remarks>
         private bool isPondActive = false;
-        // RJM [Input(IsOptional = true)]
         [Units("yes/no")]
-        // RJM [Description("Indicates whether pond is active or not")]
         private string pond_active
         { set { isPondActive = (value == "yes"); } }
 
         /// <summary>
         /// Amount of C decomposed in pond that is added to soil m. biomass
         /// </summary>
-        // RJM [Input(IsOptional = true)]
         [Units("kg/ha")]
-        //// RJM [Description("Amount of C decomposed in pond being acced to Biom")]
         [XmlIgnore]
         public double pond_biom_C;
 
         /// <summary>
         /// Amount of C decomposed in pond that is added to soil humus
         /// </summary>  
-        // RJM [Input(IsOptional = true)]
         [Units("kg/ha")]
-        //// RJM [Description("Amount of C decomposed in pond being acced to Humus")]
         [XmlIgnore]
         public double pond_hum_C;
 
@@ -2207,9 +1925,8 @@ namespace Models.Soils
         /// <summary>
         /// Factor reducing nitrification due to the presence of a inhibitor
         /// </summary>
-        // RJM [Input(IsOptional = true)]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Factor reducing nitrification rate")]
         private double[] nitrification_inhibition
         {
             set
@@ -2247,10 +1964,7 @@ namespace Models.Soils
         /// <summary>
         /// Depth of root zone  (mm)
         /// </summary>
-        // RJM [Input(IsOptional = true)]
-        // RJM [Param(IsOptional = true)]
         [Units("mm")]
-        // RJM [Description("Depth of root zone")]
         [XmlIgnore]
         public double RootingDepth
         {
@@ -2275,9 +1989,7 @@ namespace Models.Soils
         /// <summary>
         /// N carried out in sediment via runoff/erosion
         /// </summary>
-        // RJM [Output]
         [Units("kg")]
-        // RJM // RJM [Description("N loss carried in sediment")]
         public double dlt_n_loss_in_sed
         {
             get
@@ -2292,9 +2004,7 @@ namespace Models.Soils
         /// <summary>
         /// Net nh4 change today
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM // RJM [Description("Net NH4 change today")]
         public double[] dlt_nh4_net
         {
             get
@@ -2310,9 +2020,7 @@ namespace Models.Soils
         /// <summary>
         /// Net NH4 transformation today
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net NH4 transformation")]
         public double[] nh4_transform_net
         {
             get
@@ -2335,9 +2043,7 @@ namespace Models.Soils
         /// <summary>
         /// Net no3 change today
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net NO3 change today")]
         public double[] dlt_no3_net
         {
             get
@@ -2353,9 +2059,7 @@ namespace Models.Soils
         /// <summary>
         /// Net NO3 transformation today
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net NO3 transformation")]
         public double[] no3_transform_net
         {
             get
@@ -2376,9 +2080,7 @@ namespace Models.Soils
         /// <summary>
         /// Net mineralisation today
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net N mineralised in soil")]
         public double[] MineralisedN
         {
             get
@@ -2397,9 +2099,7 @@ namespace Models.Soils
         /// <summary>
         /// Net N mineralisation from residue decomposition
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net N mineralisation from residue decomposition")]
         public double[] dlt_n_min_res
         {
             get
@@ -2415,9 +2115,7 @@ namespace Models.Soils
         /// <summary>
         /// Net NH4 mineralisation from residue decomposition
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net convertion of NH4 for residue mineralisation/immobilisation")]
         public double[] dlt_res_nh4_min
         {
             get
@@ -2433,9 +2131,10 @@ namespace Models.Soils
         /// <summary>
         /// Net NO3 mineralisation from residue decomposition
         /// </summary>
-        // RJM [Output]
+        /// <remarks>
+        /// Net convertion of NO3 for residue mineralisation/immobilisation
+        /// </remarks>
         [Units("kg/ha")]
-        // RJM [Description("Net convertion of NO3 for residue mineralisation/immobilisation")]
         public double[] dlt_res_no3_min
         {
             get
@@ -2452,9 +2151,7 @@ namespace Models.Soils
         /// <summary>
         /// Net FOM N mineralised (negative for immobilisation)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net FOM N mineralised, negative for immobilisation")]
         public double[] dlt_fom_n_min
         {
             get
@@ -2470,9 +2167,10 @@ namespace Models.Soils
         /// <summary>
         /// Net N mineralised for humic pool
         /// </summary>
-        // RJM [Output]
+        /// <remarks>
+        /// Net humic N mineralised, negative for immobilisation
+        /// </remarks>
         [Units("kg/ha")]
-        // RJM [Description("Net humic N mineralised, negative for immobilisation")]
         public double[] dlt_hum_n_min
         {
             get
@@ -2488,9 +2186,7 @@ namespace Models.Soils
         /// <summary>
         /// Net N mineralised from m. biomass pool
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net biomass N mineralised")]
         public double[] dlt_biom_n_min
         {
             get
@@ -2506,9 +2202,7 @@ namespace Models.Soils
         /// <summary>
         /// Total net N mineralised (residues plus soil OM)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total net N mineralised (soil plus residues)")]
         public double[] dlt_n_min_tot
         {
             get
@@ -2529,9 +2223,7 @@ namespace Models.Soils
         /// <summary>
         /// Nitrogen coverted by hydrolysis (from urea to NH4)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen coverted by hydrolysis")]
         public double[] dlt_urea_hydrol
         {
             get
@@ -2547,9 +2239,7 @@ namespace Models.Soils
         /// <summary>
         /// Nitrogen coverted by nitrification (from NH4 to either NO3 or N2O)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen coverted by nitrification")]
         public double[] dlt_rntrf
         {
             get
@@ -2565,9 +2255,7 @@ namespace Models.Soils
         /// <summary>
         /// Nitrogen coverted by nitrification (from NH4 to either NO3 or N2O)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen coverted by nitrification")]
         public double[] Nitrification
         {
             get
@@ -2583,9 +2271,7 @@ namespace Models.Soils
         /// <summary>
         /// Effective, or net, nitrogen coverted by nitrification (from NH4 to NO3)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Effective nitrogen coverted by nitrification")]
         public double[] effective_nitrification
         {
             get
@@ -2601,9 +2287,7 @@ namespace Models.Soils
         /// <summary>
         /// N2O N produced during nitrification
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("N2O N produced during nitrification")]
         public double[] dlt_n2o_nitrif
         {
             get
@@ -2619,27 +2303,21 @@ namespace Models.Soils
         /// <summary>
         /// N2O N produced during nitrification
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("NH4 N denitrified")]
         public double[] dlt_nh4_dnit
         { get { return dlt_n2o_nitrif; } }
 
         /// <summary>
         /// N2O N produced during nitrification
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("NH4 N denitrified")]
         public double[] n2o_atm_nitrification
         { get { return dlt_n2o_nitrif; } }
 
         /// <summary>
         /// NO3 N denitrified
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("NO3 N denitrified")]
         public double[] dlt_no3_dnit
         {
             get
@@ -2655,9 +2333,7 @@ namespace Models.Soils
         /// <summary>
         /// N2O N produced during denitrification
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("N2O N produced during denitrification")]
         public double[] dlt_n2o_dnit
         {
             get
@@ -2673,9 +2349,7 @@ namespace Models.Soils
         /// <summary>
         /// N2O N produced during denitrification
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("N2O N produced during denitrification")]
         public double[] n2o_atm_denitrification
         {
             get
@@ -2691,9 +2365,7 @@ namespace Models.Soils
         /// <summary>
         /// Total N2O amount produced today
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of N2O produced")]
         public double[] n2o_atm
         {
             get
@@ -2709,9 +2381,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of N2 produced
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of N2 produced")]
         public double[] n2_atm
         {
             get
@@ -2727,9 +2397,7 @@ namespace Models.Soils
         /// <summary>
         /// N converted by denitrification
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("N converted by denitrification")]
         public double[] Denitrification
         {
             get
@@ -2745,9 +2413,7 @@ namespace Models.Soils
         /// <summary>
         /// Excess N required above NH4 supply (for immobilisation)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("NH4 deficit for immobilisation")]
         public double[] nh4_deficit_immob
         {
             get
@@ -2767,9 +2433,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil urea nitrogen amount (kgN/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil urea nitrogen amount")]
         [Solute]
         public double[] urea
         {
@@ -2801,9 +2465,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil ammonium nitrogen amount (kgN/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        //// RJM [Description("Soil ammonium nitrogen amount")]
         [XmlIgnore]
         [Solute]
         public double[] NH4
@@ -2830,9 +2492,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil nitrate nitrogen amount (kgN/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil nitrate nitrogen amount")]
         [XmlIgnore]
         [Solute]
         public double[] NO3
@@ -2867,9 +2527,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil ammonium nitrogen amount available to plants, limited per patch (kgN/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil ammonium nitrogen amount available to plants, limited per patch")]
         public double[] nh4_PlantAvailable
         {
             get
@@ -2895,9 +2553,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil nitrate nitrogen amount available to plants, limited per patch (kgN/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil nitrate nitrogen amount available to plants, limited per patch")]
         public double[] no3_PlantAvailable
         {
             get
@@ -2923,9 +2579,7 @@ namespace Models.Soils
         /// <summary>
         /// Total nitrogen in FOM
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen in FOM")]
         public double[] FOMN
         {
             get
@@ -2942,9 +2596,7 @@ namespace Models.Soils
         /// <summary>
         /// Nitrogen in FOM pool 1
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen in FOM pool 1")]
         public double[] fom_n_pool1
         {
             get
@@ -2960,9 +2612,7 @@ namespace Models.Soils
         /// <summary>
         /// Nitrogen in FOM pool 2
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen in FOM pool 2")]
         public double[] fom_n_pool2
         {
             get
@@ -2978,9 +2628,7 @@ namespace Models.Soils
         /// <summary>
         /// Nitrogen in FOM pool 3
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen in FOM pool 3")]
         public double[] fom_n_pool3
         {
             get
@@ -2996,9 +2644,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil humic N
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil humic nitrogen")]
         public double[] HumicN
         {
             get
@@ -3014,9 +2660,7 @@ namespace Models.Soils
         /// <summary>
         /// Inactive soil humic N
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Inert soil humic nitrogen")]
         public double[] IntertN
         {
             get
@@ -3032,9 +2676,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil biomass nitrogen
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil biomass nitrogen")]
         public double[] MicrobialN
         {
             get
@@ -3050,9 +2692,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil mineral nitrogen
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil mineral nitrogen")]
         public double[] mineral_n
         {
             get
@@ -3068,9 +2708,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil organic nitrogen, old style
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil organic nitrogen")]
         public double[] organic_n
         {
             get
@@ -3091,9 +2729,7 @@ namespace Models.Soils
         /// <summary>
         /// Total N in soil
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total N in soil")]
         public double[] TotalN
         {
             get
@@ -3117,9 +2753,7 @@ namespace Models.Soils
         /// <summary>
         /// SoilN balance for nitrogen: deltaN - losses
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen balance in SoilN")]
         public double nitrogenbalance
         {
             get
@@ -3145,27 +2779,24 @@ namespace Models.Soils
         /// <summary>
         /// Carbohydrate fraction of FOM (0-1)
         /// </summary>
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Fraction of carbohydrate in FOM")]
         public double fr_carb
         { get { return fract_carb[fom_type]; } }
 
         /// <summary>
         /// Cellulose fraction of FOM (0-1)
         /// </summary>
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Fraction of cellulose in FOM")]
         public double fr_cell
         { get { return fract_cell[fom_type]; } }
 
         /// <summary>
         /// Lignin fraction of FOM (0-1)
         /// </summary>
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Fraction of lignin in FOM")]
         public double fr_lign
         { get { return fract_lign[fom_type]; } }
 
@@ -3176,9 +2807,7 @@ namespace Models.Soils
         /// <summary>
         /// Carbon loss in sediment, via runoff/erosion
         /// </summary>
-        // RJM [Output]
         [Units("kg")]
-        // RJM [Description("Carbon loss in sediment")]
         public double dlt_c_loss_in_sed
         {
             get
@@ -3193,9 +2822,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C converted from FOM to humic (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("FOM C converted to humic")]
         public double[] dlt_fom_c_hum
         {
             get
@@ -3212,9 +2839,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C converted from FOM to m. biomass (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("FOM C converted to biomass")]
         public double[] dlt_fom_c_biom
         {
             get
@@ -3231,9 +2856,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C lost to atmosphere from FOM
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("FOM C lost to atmosphere")]
         public double[] dlt_fom_c_atm
         {
             get
@@ -3250,9 +2873,7 @@ namespace Models.Soils
         /// <summary>
         /// Humic C converted to biomass
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Humic C converted to biomass")]
         public double[] dlt_hum_c_biom
         {
             get
@@ -3268,9 +2889,7 @@ namespace Models.Soils
         /// <summary>
         /// Humic C lost to atmosphere
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Humic C lost to atmosphere")]
         public double[] dlt_hum_c_atm
         {
             get
@@ -3286,9 +2905,7 @@ namespace Models.Soils
         /// <summary>
         /// Biomass C converted to humic
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Biomass C converted to humic")]
         public double[] dlt_biom_c_hum
         {
             get
@@ -3304,9 +2921,7 @@ namespace Models.Soils
         /// <summary>
         /// Biomass C lost to atmosphere
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Biomass C lost to atmosphere")]
         public double[] dlt_biom_c_atm
         {
             get
@@ -3322,9 +2937,7 @@ namespace Models.Soils
         /// <summary>
         /// Carbon from residues converted to biomass C
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon from residues converted to biomass")]
         public double[] dlt_res_c_biom
         {
             get
@@ -3340,9 +2953,7 @@ namespace Models.Soils
         /// <summary>
         /// Carbon from residues converted to humic C
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon from residues converted to humus")]
         public double[] dlt_res_c_hum
         {
             get
@@ -3356,11 +2967,9 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Carbon from residues lost to atmosphere
+        /// Carbon from residues lost to atmosphere during decomposition
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon from residues lost to atmosphere during decomposition")]
         public double dlt_res_c_atm
         {
             get
@@ -3377,9 +2986,7 @@ namespace Models.Soils
         /// <summary>
         /// Delta C in pool 1 of FOM - needed by SoilP
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Delta FOM C due to decomposition in fraction 1")]
         public double[] dlt_fom_c_pool1
         {
             get
@@ -3398,9 +3005,7 @@ namespace Models.Soils
         /// <summary>
         /// Delta C in pool 2 of FOM - needed by SoilP
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Delta FOM C due to decomposition in fraction 2")]
         public double[] dlt_fom_c_pool2
         {
             get
@@ -3419,9 +3024,7 @@ namespace Models.Soils
         /// <summary>
         /// Delta C in pool 3 of FOM - needed by SoilP
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Delta FOM C due to decomposition in fraction 3")]
         public double[] dlt_fom_c_pool3
         {
             get
@@ -3440,9 +3043,7 @@ namespace Models.Soils
         /// <summary>
         /// Carbon from all residues to m. biomass
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon from all residues to biomass")]
         public double[] soilp_dlt_res_c_biom
         {
             get
@@ -3458,9 +3059,7 @@ namespace Models.Soils
         /// <summary>
         /// Carbon from all residues to humic pool
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon from all residues to humic")]
         public double[] soilp_dlt_res_c_hum
         {
             get
@@ -3476,9 +3075,7 @@ namespace Models.Soils
         /// <summary>
         /// Carbon lost from all residues to atmosphere
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon from all residues to atmosphere")]
         public double[] soilp_dlt_res_c_atm
         {
             get
@@ -3492,11 +3089,9 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Total CO2 amount produced today
+        /// Total CO2 amount produced today in the soil
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of co2 produced in the soil")]
         public double[] co2_atm
         {
             get
@@ -3516,9 +3111,7 @@ namespace Models.Soils
         /// <summary>
         /// Fresh organic C - FOM
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil FOM C")]
         public double[] FOMC
         {
             get
@@ -3535,9 +3128,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C in pool 1 of FOM
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("FOM C in pool 1")]
         public double[] fom_c_pool1
         {
             get
@@ -3553,9 +3144,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C in pool 2 of FOM
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("FOM C in pool 2")]
         public double[] fom_c_pool2
         {
             get
@@ -3571,9 +3160,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C in pool 3 of FOM
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("FOM C in pool 3")]
         public double[] fom_c_pool3
         {
             get
@@ -3589,9 +3176,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C in humic pool
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil humic C")]
         public double[] HumicC
         {
             get
@@ -3607,9 +3192,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C in inert humic pool
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil humic inert C")]
         public double[] InertC
         {
             get
@@ -3625,9 +3208,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C in m. biomass pool
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil biomass C")]
         public double[] MicrobialC
         {
             get
@@ -3643,9 +3224,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of water soluble C
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil water soluble C")]
         public double[] waterSoluble_c
         {
             get
@@ -3661,9 +3240,7 @@ namespace Models.Soils
         /// <summary>
         /// Total carbon amount in the soil
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total soil carbon")]
         public double[] TotalC
         {
             get
@@ -3683,9 +3260,7 @@ namespace Models.Soils
         /// <summary>
         /// Balance of C in soil: deltaC - losses
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon balance")]
         public double carbonbalance
         {
             get
@@ -3712,11 +3287,9 @@ namespace Models.Soils
         #region Factors and other outputs
 
         /// <summary>
-        /// amount of P coverted by residue mineralisation
+        /// amount of P coverted by residue mineralisation (needed by SoilP)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("P coverted by residue mineralisation (needed by SoilP)")]
         public double[] soilp_dlt_org_p
         {
             get
@@ -3729,33 +3302,6 @@ namespace Models.Soils
             }
         }
 
-        /* RJM not needed
-        /// <summary>
-        /// Soil temperature (oC), values actually used in the model
-        /// </summary>
-        [XmlIgnore]
-        public double[] Tsoil;
-        */
-
-
-        /* RJM not needed ?
-        /// <summary>
-        /// SoilN's simple soil temperature
-        /// </summary>
-        // RJM [Output]
-        [Units("oC")]
-        //// RJM [Description("Soil temperature")]
-        public  double[] st
-        {
-            get
-            {
-                double[] result = new double[0];
-                // if (usingSimpleSoilTemp)   // this should limit the output to only the variable calculated here. However the plant modules still look for 'st' instead of 'ave_soil_temp'
-                //  result = Tsoil;
-                return Tsoil;
-            }
-        } */
-
         #endregion
 
         #region Outputs related to internal patches    * * * * * * * * * * * * * * 
@@ -3765,18 +3311,14 @@ namespace Models.Soils
         /// <summary>
         /// Number of internal patches
         /// </summary>
-        // RJM [Output]
-        [Units("")]
-        // RJM [Description("Number of internal patches")]
         public int PatchCount
         { get { return Patch.Count; } }
 
         /// <summary>
         /// Relative area of each internal patch
         /// </summary>
-        // RJM [Output]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
-        // RJM [Description("Relative area of each internal patch")]
         public double[] PatchArea
         {
             get
@@ -3791,9 +3333,6 @@ namespace Models.Soils
         /// <summary>
         /// Name of each internal patch
         /// </summary>
-        // RJM [Output]
-        [Units("")]
-        // RJM [Description("Name of each internal patch")]
         public string[] PatchName
         {
             get
@@ -3808,9 +3347,7 @@ namespace Models.Soils
         /// <summary>
         /// Age of each existing internal patch
         /// </summary>
-        // RJM [Output]
         [Units("days")]
-        // RJM [Description("Age of each existing internal patch")]
         public double[] PatchAge
         {
             get
@@ -3833,9 +3370,7 @@ namespace Models.Soils
         /// <summary>
         /// N carried out for each patch in sediment via runoff/erosion
         /// </summary>
-        // RJM [Output]
         [Units("kg")]
-        // RJM [Description("N loss carried in sediment for each patch")]
         public double[] PatchNLostInSediment
         {
             get
@@ -3853,9 +3388,7 @@ namespace Models.Soils
         /// <summary>
         /// Total net N mineralisation from residue decomposition, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total net N mineralisation from residue decomposition, for each patch")]
         public double[] PatchTotalNMineralisedFromResidues
         {
             get
@@ -3872,9 +3405,7 @@ namespace Models.Soils
         /// <summary>
         /// Total net FOM N mineralised, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total net FOM N mineralised, for each patch")]
         public double[] PatchTotalNMineralisedFromFOM
         {
             get
@@ -3891,9 +3422,7 @@ namespace Models.Soils
         /// <summary>
         /// Total net humic N mineralised, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total net humic N mineralised, for each patch")]
         public double[] PatchTotalNMineralisedFromHumus
         {
             get
@@ -3910,9 +3439,7 @@ namespace Models.Soils
         /// <summary>
         /// Total net biomass N mineralised, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total net biomass N mineralised, for each patch")]
         public double[] PatchTotalNMineralisedFromMBiomass
         {
             get
@@ -3929,9 +3456,7 @@ namespace Models.Soils
         /// <summary>
         /// Total net N mineralised, for each patch (residues plus soil OM)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total net N mineralised, for each patch")]
         public double[] PatchTotalNMineralised
         {
             get
@@ -3948,9 +3473,7 @@ namespace Models.Soils
         /// <summary>
         /// Total nitrogen coverted by hydrolysis, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total nitrogen coverted by hydrolysis, for each patch")]
         public double[] PatchTotalUreaHydrolysis
         {
             get
@@ -3967,9 +3490,7 @@ namespace Models.Soils
         /// <summary>
         /// Total nitrogen coverted by nitrification, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total nitrogen coverted by nitrification, for each patch")]
         public double[] PatchTotalNitrification
         {
             get
@@ -3986,9 +3507,7 @@ namespace Models.Soils
         /// <summary>
         /// Total effective amount of NH4-N coverted into NO3 by nitrification, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total effective amount of NH4-N coverted into NO3 by nitrification, for each patch")]
         public double[] PatchTotalEffectiveNitrification
         {
             get
@@ -4005,9 +3524,7 @@ namespace Models.Soils
         /// <summary>
         /// Total N2O N produced during nitrification, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total N2O N produced during nitrification, for each patch")]
         public double[] PatchTotalN2O_Nitrification
         {
             get
@@ -4024,9 +3541,7 @@ namespace Models.Soils
         /// <summary>
         /// Total NO3 N denitrified, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total NO3 N denitrified, for each patch")]
         public double[] PatchTotalNO3_Denitrification
         {
             get
@@ -4043,9 +3558,7 @@ namespace Models.Soils
         /// <summary>
         /// Total N2O N produced during denitrification, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total N2O N produced during denitrification, for each patch")]
         public double[] PatchTotalN2O_Denitrification
         {
             get
@@ -4062,9 +3575,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of N2O N produced, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of N2O N produced, for each patch")]
         public double[] PatchTotalN2OLostToAtmosphere
         {
             get
@@ -4081,9 +3592,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of N2 produced, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of N2 produced, for each patch")]
         public double[] PatchTotalN2LostToAtmosphere
         {
             get
@@ -4100,9 +3609,7 @@ namespace Models.Soils
         /// <summary>
         /// Total N converted by denitrification (all forms), for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total N converted by denitrification (all forms), for each patch")]
         public double[] PatchTotalDenitrification
         {
             get
@@ -4119,9 +3626,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of urea changed by the soil water module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of urea changed by the soil water module, for each patch")]
         public double[] PatchTotalUreaLeached
         {
             get
@@ -4137,9 +3642,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of NH4 changed by the soil water module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of NH4 changed by the soil water module, for each patch")]
         public double[] PatchTotalNH4Leached
         {
             get
@@ -4155,9 +3658,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of NO3 changed by the soil water module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of NO3 changed by the soil water module, for each patch")]
         public double[] PatchTotalNO3Leached
         {
             get
@@ -4173,9 +3674,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of urea taken up by any plant module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of urea taken up by any plant module, for each patch")]
         public double[] PatchTotalUreaUptake
         {
             get
@@ -4192,9 +3691,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of NH4 taken up by any plant module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of NH4 taken up by any plant module, for each patch")]
         public double[] PatchTotalNH4Uptake
         {
             get
@@ -4211,9 +3708,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of NO3 taken up by any plant module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of NO3 taken up by any plant module, for each patch")]
         public double[] PatchTotalNO3Uptake
         {
             get
@@ -4230,9 +3725,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of urea added by the fertiliser module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of urea added by the fertiliser module, for each patch")]
         public double[] PatchTotalUreaFertiliser
         {
             get
@@ -4249,9 +3742,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of NH4 added by the fertiliser module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of NH4 added by the fertiliser module, for each patch")]
         public double[] PatchTotalNH4Fertiliser
         {
             get
@@ -4268,9 +3759,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of NO3 added by the fertiliser module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of NO3 added by the fertiliser module, for each patch")]
         public double[] PatchTotalNO3Fertiliser
         {
             get
@@ -4287,9 +3776,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of urea changed by the any other module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of urea changed by the any other module, for each patch")]
         public double[] PatchTotalUreaChangedOther
         {
             get
@@ -4306,9 +3793,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of NH4 changed by the any other module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of NH4 changed by the any other module, for each patch")]
         public double[] PatchTotalNH4ChangedOther
         {
             get
@@ -4325,9 +3810,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of NO3 changed by the any other module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of NO3 changed by the any other module, for each patch")]
         public double[] PatchTotalNO3ChangedOther
         {
             get
@@ -4349,9 +3832,7 @@ namespace Models.Soils
         /// <summary>
         /// Net N mineralisation from residue decomposition for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net N mineralisation from residue decomposition in each patch")]
         public CNPatchVariableType PatchNMineralisedFromResidues
         {
             get
@@ -4374,9 +3855,7 @@ namespace Models.Soils
         /// <summary>
         /// Net FOM N mineralised for each patch (negative for immobilisation)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net FOM N mineralised for each patch, negative for immobilisation")]
         public CNPatchVariableType PatchNMineralisedFromFOM
         {
             get
@@ -4397,11 +3876,9 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Net N mineralised for humic pool for each patch
+        /// Net N mineralised for humic pool for each patch (negative for immobilisation)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net humic N mineralised for each patch, negative for immobilisation")]
         public CNPatchVariableType PatchNMineralisedFromHumus
         {
             get
@@ -4424,9 +3901,7 @@ namespace Models.Soils
         /// <summary>
         /// Net N mineralised from m. biomass pool for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net biomass N mineralised for each patch")]
         public CNPatchVariableType PatchNMineralisedFromMBiomass
         {
             get
@@ -4449,9 +3924,7 @@ namespace Models.Soils
         /// <summary>
         /// Net total N mineralised for each patch (residues plus soil OM)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Net total N mineralised for each patch (soil OM plus residues)")]
         public CNPatchVariableType PatchNMineralisedTotal
         {
             get
@@ -4478,9 +3951,7 @@ namespace Models.Soils
         /// <summary>
         /// Nitrogen coverted by hydrolysis (from urea to NH4) for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen coverted by hydrolysis for each patch")]
         public CNPatchVariableType PatchDltUreaHydrolysis
         {
             get
@@ -4503,9 +3974,7 @@ namespace Models.Soils
         /// <summary>
         /// Nitrogen coverted by nitrification (from NH4 to either NO3 or N2O) for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen coverted by nitrification (into either NO3 or N2O) for each patch")]
         public CNPatchVariableType PatchDltNitrification
         {
             get
@@ -4528,9 +3997,7 @@ namespace Models.Soils
         /// <summary>
         /// Effective, or net, nitrogen coverted by nitrification for each patch (from NH4 to NO3)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Effective amount of NH4-N coverted into NO3 by nitrification for each patch")]
         public CNPatchVariableType PatchEffectiveDltNitrification
         {
             get
@@ -4553,9 +4020,7 @@ namespace Models.Soils
         /// <summary>
         /// N2O N produced during nitrification for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("N2O N produced during nitrification for each patch")]
         public CNPatchVariableType PatchDltN2O_Nitrification
         {
             get
@@ -4578,9 +4043,7 @@ namespace Models.Soils
         /// <summary>
         /// NO3 N denitrified for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("NO3 N denitrified for each patch")]
         public CNPatchVariableType PatchDltNO3_Denitrification
         {
             get
@@ -4603,9 +4066,7 @@ namespace Models.Soils
         /// <summary>
         /// N2O N produced during denitrification for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("N2O N produced during denitrification for each patch")]
         public CNPatchVariableType PatchDltN2O_Denitrification
         {
             get
@@ -4628,9 +4089,7 @@ namespace Models.Soils
         /// <summary>
         /// Total N2O amount produced for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of N2O produced for each patch")]
         public CNPatchVariableType PatchN2OLostToAtmosphere
         {
             get
@@ -4653,9 +4112,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of N2 produced for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of N2 produced for each patch")]
         public CNPatchVariableType PatchN2LostToAtmosphere
         {
             get
@@ -4678,9 +4135,7 @@ namespace Models.Soils
         /// <summary>
         /// N converted by all forms of denitrification for each patch (to be deleted?)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("N converted by denitrification (all forms) for each patch")]
         public CNPatchVariableType Patch_dnit
         {
             get
@@ -4703,9 +4158,7 @@ namespace Models.Soils
         /// <summary>
         /// N converted by all forms of denitrification for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("N converted by denitrification (all forms) for each patch")]
         public CNPatchVariableType PatchDltDenitrification
         {
             get
@@ -4732,9 +4185,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of urea changed by the soil water module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of urea changed by the soil water module, for each patch")]
         public CNPatchVariableType Patch_UreaFlow
         {
             get
@@ -4757,9 +4208,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of NH4 changed by the soil water module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of NH4 changed by the soil water module, for each patch")]
         public CNPatchVariableType Patch_NH4Flow
         {
             get
@@ -4782,9 +4231,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of NO3 changed by the soil water module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of NO3 changed by the soil water module, for each patch")]
         public CNPatchVariableType Patch_NO3Flow
         {
             get
@@ -4807,9 +4254,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of urea taken up by any plant module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of urea taken up by any plant module, for each patch")]
         public CNPatchVariableType Patch_UreaUptake
         {
             get
@@ -4832,9 +4277,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of NH4 taken up by any plant module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of NH4 taken up by any plant module, for each patch")]
         public CNPatchVariableType Patch_NH4Uptake
         {
             get
@@ -4857,9 +4300,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of NO3 taken up by any plant module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of NO3 taken up by any plant module, for each patch")]
         public CNPatchVariableType Patch_NO3Uptake
         {
             get
@@ -4882,9 +4323,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of urea added by the fertiliser module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of urea added by the fertiliser module, for each patch")]
         public CNPatchVariableType Patch_UreaFertiliser
         {
             get
@@ -4907,9 +4346,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of NH4 added by the fertiliser module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of NH4 added by the fertiliser module, for each patch")]
         public CNPatchVariableType Patch_NH4Fertiliser
         {
             get
@@ -4932,9 +4369,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of NO3 added by the fertiliser module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of NO3 added by the fertiliser module, for each patch")]
         public CNPatchVariableType Patch_NO3Fertiliser
         {
             get
@@ -4957,9 +4392,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of urea changed by the any other module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of urea changed by the any other module, for each patch")]
         public CNPatchVariableType Patch_UreaChangedOther
         {
             get
@@ -4982,9 +4415,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of NH4 changed by the any other module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of NH4 changed by the any other module, for each patch")]
         private CNPatchVariableType Patch_NH4ChangedOther
         {
             get
@@ -5007,9 +4438,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of NO3 changed by the any other module, for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of NO3 changed by the any other module, for each patch")]
         public CNPatchVariableType Patch_NO3ChangedOther
         {
             get
@@ -5040,9 +4469,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of urea N in each internal patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of N as urea in each patch")]
         public CNPatchVariableType PatchUrea
         {
             get
@@ -5069,9 +4496,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of NH4 N in each internal patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of N as NH4 in each patch")]
         public CNPatchVariableType PatchNH4
         {
             get
@@ -5094,9 +4519,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of NO3 N in each internal patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of N as NO3 in each patch")]
         public CNPatchVariableType PatchNO3
         {
             get
@@ -5119,9 +4542,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of N as NH4 available to plants, in each internal patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of N as NH4 available to plants, in each patch")]
         public CNPatchVariableType PatchPlantAvailableNH4
         {
             get
@@ -5148,9 +4569,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of N as NO3 available to plants, in each internal patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of N as NO3 available to plants, in each patch")]
         public CNPatchVariableType PatchPlantAvailableNO3
         {
             get
@@ -5177,9 +4596,7 @@ namespace Models.Soils
         /// <summary>
         /// Total urea N in each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total urea N in each patch")]
         public double[] PatchTotalUrea
         {
             get
@@ -5196,9 +4613,7 @@ namespace Models.Soils
         /// <summary>
         /// Total NH4 N in each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total NH4 N in each patch")]
         public double[] PatchTotalNH4
         {
             get
@@ -5215,9 +4630,7 @@ namespace Models.Soils
         /// <summary>
         /// Total NO3 N in each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total NO3 N in each patch")]
         public double[] PatchTotalNO3
         {
             get
@@ -5234,9 +4647,7 @@ namespace Models.Soils
         /// <summary>
         /// Total NH4 N available to plants in each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total NH4 N available to plants in each patch")]
         public double[] PatchTotalNH4_PlantAvailable
         {
             get
@@ -5259,9 +4670,7 @@ namespace Models.Soils
         /// <summary>
         /// Total NO3 N available to plants in each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total NO3 N available to plants in each patch")]
         public double[] PatchTotalNO3_PlantAvailable
         {
             get
@@ -5288,9 +4697,7 @@ namespace Models.Soils
         /// <summary>
         /// Total nitrogen in FOM for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen in FOM for each Patch")]
         public CNPatchPoolVariableType PatchFOM_N
         {
             get
@@ -5319,9 +4726,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil humic N for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil humic nitrogen for each patch")]
         public CNPatchVariableType PatchHum_N
         {
             get
@@ -5344,9 +4749,7 @@ namespace Models.Soils
         /// <summary>
         /// Inactive soil humic N for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Inert soil humic nitrogen for each patch")]
         public CNPatchVariableType PatchInert_N
         {
             get
@@ -5369,9 +4772,7 @@ namespace Models.Soils
         /// <summary>
         /// Soil biomass nitrogen for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil biomass nitrogen for each patch")]
         public CNPatchVariableType PatchBiom_N
         {
             get
@@ -5394,9 +4795,7 @@ namespace Models.Soils
         /// <summary>
         /// Total mineral N in soil for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total mineral N in soil for each patch")]
         public CNPatchVariableType PatchSoilMineralN
         {
             get
@@ -5419,9 +4818,7 @@ namespace Models.Soils
         /// <summary>
         /// Total organic N in soil for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total organic N in soil for each patch")]
         public CNPatchVariableType PatchSoilOrganicN
         {
             get
@@ -5448,9 +4845,7 @@ namespace Models.Soils
         /// <summary>
         /// Total N in soil for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total N in soil for each patch")]
         public CNPatchVariableType PatchTotalN
         {
             get
@@ -5473,9 +4868,7 @@ namespace Models.Soils
         /// <summary>
         /// Total FOM N in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total FOM N in the whole profile for each patch")]
         public double[] PatchTotalFOM_N
         {
             get
@@ -5492,9 +4885,7 @@ namespace Models.Soils
         /// <summary>
         /// Total Humic N in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total humic N in the whole profile for each patch")]
         public double[] PatchTotalHum_N
         {
             get
@@ -5511,9 +4902,7 @@ namespace Models.Soils
         /// <summary>
         /// Total inert N in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total inert N in the whole profile for each patch")]
         public double[] PatchTotalInert_N
         {
             get
@@ -5530,9 +4919,7 @@ namespace Models.Soils
         /// <summary>
         /// Total biomass N in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total biomass N in the whole profile for each patch")]
         public double[] PatchTotalBiom_N
         {
             get
@@ -5549,9 +4936,7 @@ namespace Models.Soils
         /// <summary>
         /// Total mineral N in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total mineral N in the whole profile for each patch")]
         public double[] PatchTotalSoilMineralN
         {
             get
@@ -5569,9 +4954,7 @@ namespace Models.Soils
         /// <summary>
         /// Total organic N in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total organic N in the whole profile for each patch")]
         public double[] PatchTotalSoilOrganicN
         {
             get
@@ -5589,9 +4972,7 @@ namespace Models.Soils
         /// <summary>
         /// Total N in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total N in the whole profile for each patch")]
         public double[] PatchTotalSoilN
         {
             get
@@ -5612,9 +4993,7 @@ namespace Models.Soils
         /// <summary>
         /// SoilN balance for nitrogen, for each patch: deltaN - losses
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Nitrogen balance in SoilN for each patch")]
         public double[] PatchNitrogenBalance
         {
             get
@@ -5645,9 +5024,7 @@ namespace Models.Soils
         /// <summary>
         /// Carbon loss in sediment for each patch, via runoff/erosion
         /// </summary>
-        // RJM [Output]
         [Units("kg")]
-        // RJM [Description("Carbon loss in sediment for each patch")]
         public double[] PatchCLostInSediment
         {
             get
@@ -5663,9 +5040,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C converted from FOM to humic for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("FOM C converted to humic for each patch")]
         public CNPatchVariableType PatchDltCFromFOMToHumus
         {
             get
@@ -5689,9 +5064,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C converted from FOM to m. biomass for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("FOM C converted to biomass for each patch")]
         public CNPatchVariableType PatchDltCFromFOMToMBiomass
         {
             get
@@ -5715,9 +5088,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C lost to atmosphere from FOM for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("FOM C lost to atmosphere for each patch")]
         public CNPatchVariableType PatchDltCFromFOMToAtmosphere
         {
             get
@@ -5741,9 +5112,7 @@ namespace Models.Soils
         /// <summary>
         /// Humic C converted to biomass for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Humic C converted to biomass for each patch")]
         public CNPatchVariableType PatchDltCFromHumusToMBiomass
         {
             get
@@ -5766,9 +5135,7 @@ namespace Models.Soils
         /// <summary>
         /// Humic C lost to atmosphere for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Humic C lost to atmosphere for each patch")]
         public CNPatchVariableType PatchDltCFromHumusToAtmosphere
         {
             get
@@ -5791,9 +5158,7 @@ namespace Models.Soils
         /// <summary>
         /// Biomass C converted to humic for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Biomass C converted to humic for each patch")]
         public CNPatchVariableType PatchDltCFromMBiomassToHumus
         {
             get
@@ -5816,9 +5181,7 @@ namespace Models.Soils
         /// <summary>
         /// Biomass C lost to atmosphere for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Biomass C lost to atmosphere for each patch")]
         public CNPatchVariableType PatchDltCFromMBiomassToAtmosphere
         {
             get
@@ -5841,9 +5204,7 @@ namespace Models.Soils
         /// <summary>
         /// Carbon from residues converted to biomass C for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon from residues converted to biomass for each patch")]
         public CNPatchVariableType PatchDltCFromResiduesToMBiomass
         {
             get
@@ -5866,9 +5227,7 @@ namespace Models.Soils
         /// <summary>
         /// Carbon from residues converted to humic C for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon from residues converted to humus for each patch")]
         public CNPatchVariableType PatchDltCFromResiduesToHumus
         {
             get
@@ -5891,9 +5250,7 @@ namespace Models.Soils
         /// <summary>
         /// Carbon from residues lost to atmosphere for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon from residues lost to atmosphere during decomposition for each patch")]
         public CNPatchVariableType PatchDltCFromResiduesToAtmosphere
         {
             get
@@ -5916,9 +5273,7 @@ namespace Models.Soils
         /// <summary>
         /// Total CO2 amount produced in the soil for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of co2 produced in the soil for each patch")]
         public CNPatchVariableType PatchCO2Produced
         {
             get
@@ -5941,9 +5296,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of C converted from FOM to humic for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of C converted from FOM to humic for each patch")]
         public double[] PatchTotalDltCFromFOMToHumus
         {
             get
@@ -5961,9 +5314,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of C converted from FOM to m. biomass for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of C converted from FOM to m. biomass for each patch")]
         public double[] PatchTotalDltCFromFOMToMBiomass
         {
             get
@@ -5981,9 +5332,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of FOM C lost to atmosphere for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of FOM C lost to atmosphere for each patch")]
         public double[] PatchTotalDltCFromFOMToAtmosphere
         {
             get
@@ -6001,9 +5350,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of humic C converted to m. biomass for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of humic C converted to m. biomass for each patch")]
         public double[] PatchTotalDltCFromHumusToMBiomass
         {
             get
@@ -6020,9 +5367,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of humic C lost to atmosphere for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of humic C lost to atmosphere for each patch")]
         public double[] PatchTotalDltCFromHumusToAtmosphere
         {
             get
@@ -6039,9 +5384,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of biomass C converted to humus for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of biomass C converted to humus for each patch")]
         public double[] PatchTotalDltCFromMBiomassToHumus
         {
             get
@@ -6058,9 +5401,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of biomass C lost to atmosphere for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of biomass C lost to atmosphere for each patch")]
         public double[] PatchTotalDltCFromMBiomassToAtmosphere
         {
             get
@@ -6077,9 +5418,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of C from residues converted to m. biomass for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of C from residues converted to m. biomass for each patch")]
         public double[] PatchTotalDltCFromResiduesToMBiomass
         {
             get
@@ -6096,9 +5435,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of C from residues converted to humus for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of C from residues converted to humus for each patch")]
         public double[] PatchTotalDltCFromResiduesToHumus
         {
             get
@@ -6115,9 +5452,7 @@ namespace Models.Soils
         /// <summary>
         /// Total amount of C from residues lost to atmosphere for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total amount of C from residues lost to atmosphere for each patch")]
         public double[] PatchTotalDltCFromResiduesToAtmosphere
         {
             get
@@ -6134,9 +5469,7 @@ namespace Models.Soils
         /// <summary>
         /// Total CO2 amount produced in the soil for each patch (kg/ha)
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total CO2 amount produced in the soil for each patch")]
         public double[] PatchTotalCO2Produced
         {
             get
@@ -6157,9 +5490,7 @@ namespace Models.Soils
         /// <summary>
         /// Fresh organic C - FOM for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil FOM C for each patch")]
         public CNPatchPoolVariableType PatchFOM_C
         {
             get
@@ -6188,9 +5519,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C in humic pool for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil humic C for each patch")]
         public CNPatchVariableType PatchHum_C
         {
             get
@@ -6213,9 +5542,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C in inert humic pool for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil humic inert C for each patch")]
         public CNPatchVariableType PatchInert_C
         {
             get
@@ -6238,9 +5565,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of C in m. biomass pool for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Soil biomass C for each patch")]
         public CNPatchVariableType PatchBiom_C
         {
             get
@@ -6263,9 +5588,7 @@ namespace Models.Soils
         /// <summary>
         /// Amount of water soluble C for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Amount of water soluble C for each patch")]
         public CNPatchVariableType PatchWaterSolubleC
         {
             get
@@ -6288,9 +5611,7 @@ namespace Models.Soils
         /// <summary>
         /// Total carbon amount in the soil for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total soil carbon for each patch")]
         public CNPatchVariableType PatchTotalC
         {
             get
@@ -6313,9 +5634,7 @@ namespace Models.Soils
         /// <summary>
         /// Total FOM C in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total FOM C in the whole profile for each patch")]
         public double[] PatchTotalFOM_C
         {
             get
@@ -6332,9 +5651,7 @@ namespace Models.Soils
         /// <summary>
         /// Total Humic C in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total humic C in the whole profile for each patch")]
         public double[] PatchTotalHum_C
         {
             get
@@ -6351,9 +5668,7 @@ namespace Models.Soils
         /// <summary>
         /// Total inert C in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total inert C in the whole profile for each patch")]
         public double[] PatchTotalInert_C
         {
             get
@@ -6370,9 +5685,7 @@ namespace Models.Soils
         /// <summary>
         /// Total biomass C in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total biomass C in the whole profile for each patch")]
         public double[] PatchTotalBiom_C
         {
             get
@@ -6389,9 +5702,7 @@ namespace Models.Soils
         /// <summary>
         /// Total water soluble C in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total water soluble C in the whole profile for each patch")]
         public double[] PatchTotalWaterSolubleC
         {
             get
@@ -6408,9 +5719,7 @@ namespace Models.Soils
         /// <summary>
         /// Total C in the whole profile for each patch
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Total C in the whole profile for each patch")]
         public double[] PatchTotalSoilC
         {
             get
@@ -6431,9 +5740,7 @@ namespace Models.Soils
         /// <summary>
         /// Balance of C in soil,  for each patch: deltaC - losses
         /// </summary>
-        // RJM [Output]
         [Units("kg/ha")]
-        // RJM [Description("Carbon balance for each patch")]
         public double[] PatchCarbonBalance
         {
             get
@@ -6485,13 +5792,6 @@ namespace Models.Soils
         /// </summary>
         [XmlIgnore]
         public List<soilCNPatch> Patch;
-
-        /* RJM removed - deprecated
-        /// <summary>
-        /// The SoilN internal soil temperature module - to be avoided (deprecated)
-        /// </summary>
-        // private simpleSoilTemp simpleST;
-        */
 
         #endregion components
 
@@ -6896,8 +6196,7 @@ namespace Models.Soils
 
     /// <summary>
     /// CNPatchPoolVariablePatch
-    /// </summary>    
-    
+    /// </summary>       
     public class CNPatchPoolVariablePatchType
     {
         /// <summary>The Pool</summary>
@@ -6905,7 +6204,7 @@ namespace Models.Soils
     }
 
     /// <summary>
-    /// 
+    /// CNPatchPoolVariableType
     /// </summary>    
     public class CNPatchPoolVariableType
     {
@@ -6914,7 +6213,7 @@ namespace Models.Soils
     }
 
     /// <summary>
-    /// 
+    /// CNPatchVariablePatchType
     /// </summary>    
     public class CNPatchVariablePatchType
     {
@@ -6923,12 +6222,12 @@ namespace Models.Soils
     }
 
     /// <summary>
-    /// 
+    /// CNPatchVariablePatchDelegate
     /// </summary>    
     public delegate void CNPatchVariablePatchDelegate(CNPatchVariablePatchType Data);
 
     /// <summary>
-    /// 
+    /// CNPatchVariableType
     /// </summary>
     public class CNPatchVariableType
     {
@@ -6953,6 +6252,7 @@ namespace Models.Soils
         /// <summary>The ash alk</summary>
         public double AshAlk;
     }
+
     /// <summary>
     /// FOMPoolType
     /// </summary>
@@ -6962,6 +6262,7 @@ namespace Models.Soils
         /// <summary>The layer</summary>
         public FOMPoolLayerType[] Layer;
     }
+    
     /// <summary>
     /// FOMPoolLayerType
     /// </summary>
@@ -6979,6 +6280,7 @@ namespace Models.Soils
         /// <summary>The pool</summary>
         public FOMType[] Pool;
     }
+    
     /// <summary>
     /// FOMLayerType
     /// </summary>
@@ -6990,6 +6292,7 @@ namespace Models.Soils
         /// <summary>The layer</summary>
         public FOMLayerLayerType[] Layer;
     }
+    
     /// <summary>
     /// SurfaceOrganicMatterDecompPoolType
     /// </summary>
@@ -7003,6 +6306,7 @@ namespace Models.Soils
         /// <summary>The fom</summary>
         public FOMType FOM;
     }
+    
     /// <summary>
     /// SurfaceOrganicMatterDecompType
     /// </summary>
@@ -7043,11 +6347,13 @@ namespace Models.Soils
         /// <summary>The delta urea</summary>
         public double[] DeltaUrea;
     }
+    
     /// <summary>
     /// NitrogenChangedDelegate
     /// </summary>
     /// <param name="Data">The data.</param>
     public delegate void NitrogenChangedDelegate(NitrogenChangedType Data);
+    
     /// <summary>
     /// AddUrineType
     /// </summary>
@@ -7097,21 +6403,6 @@ namespace Models.Soils
     /// </summary>
     /// <param name="Data">The data.</param>
     public delegate void SoilOrganicMaterialDelegate(SoilOrganicMaterialType Data);
-
-    /*  RJM
-    
-    /// <summary>
-    /// NewSoluteType
-    /// </summary>
-    public class NewSoluteType
-    {
-        /// <summary>The owner full path</summary>
-        public string OwnerFullPath;
-        /// <summary>The solutes</summary>
-        public string[] solutes;
-    }
-    */
-
 
     /// <summary>
     /// ExternalMassFlowType
@@ -7163,6 +6454,7 @@ namespace Models.Soils
         /// <summary>The SoilOrganicMaterialType</summary>
         public SoilOrganicMaterialType[] Pool;
     }
+
     /// <summary>
     /// AddSoilCNPatchwithFOMFOMDelegate
     /// </summary>
@@ -7205,6 +6497,7 @@ namespace Models.Soils
         /// <summary>The AddSoilCNPatchwithFOMFOMType</summary>
         public AddSoilCNPatchwithFOMFOMType FOM;
     }
+
     /// <summary>
     /// AddSoilCNPatchwithFOMDelegate
     /// </summary>
@@ -7256,6 +6549,7 @@ namespace Models.Soils
         /// <summary>The FOM_N</summary>
         public Double[] FOM_N;
     }
+    
     /// <summary>
     /// AddSoilCNPatchDelegate
     /// </summary>

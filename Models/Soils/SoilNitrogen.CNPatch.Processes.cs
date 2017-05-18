@@ -34,7 +34,7 @@ namespace Models.Soils
             /// </remarks>
             public void DecomposeResidues()
             {
-                if (g.residueName.Length == 0) return;  // RJM
+                if (g.residueName.Length == 0) return;  
 
                 int nLayers = g.dlayer.Length;          // number of layers in the soil
                 int nResidues = 1;                    // number of residues being considered
@@ -69,7 +69,7 @@ namespace Models.Soils
                 {
                     // Without a pond, decomposition of surface residues is done in tandem by SurfaceOM and SoilN
                     // check whether there is any potential residue decomposition
-                    if (g.SumDoubleArray(g.pot_c_decomp) > -g.epsilon) // RJM TEST (-)
+                    if (g.SumDoubleArray(g.pot_c_decomp) > -g.epsilon) 
                     {
                         // Surface OM sent some potential decomposition, here we verify the C-N balance over the immobilisation layer
 
@@ -881,8 +881,9 @@ namespace Models.Soils
             /// <summary>
             /// Calculate the amount of N2O produced during nitritation
             /// </summary>
-            // RJM /// <param name="layer">the node number representing soil layer for which calculations will be made</param>
-            // RJM /// <returns>delta N coverted from NH2OH into N2O</returns>
+            // <param name="deltaNH3Oxidation">the deltaNH3Oxidation</param>
+            // <param name="layer">the node number representing soil layer for which calculations will be made</param>
+            // <returns>delta N coverted from NH2OH into N2O</returns>
             private double N2OProducedDuringNitritation(double deltaNH3Oxidation, int layer)
             {
                 double result = g.AmmoxLossParam1 * (Math.Exp(deltaNH3Oxidation * g.AmmoxLossParam2) - 1.0);
@@ -981,7 +982,6 @@ namespace Models.Soils
                 // + Assumptions
                 //     index = 0 for aerobic conditions, 1 for anaerobic
 
-                // RJM ouch index -= 1;  // use this untill can change the whole code. (index used to be [1-2]
                 if (index > Parameters.xValueForOptimum.Length - 1)
                     throw new Exception("SoilNitrogen.SoilTempFactor - invalid value for \"index\" parameter");
 
