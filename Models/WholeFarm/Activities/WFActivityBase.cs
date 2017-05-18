@@ -19,6 +19,8 @@ namespace Models.WholeFarm.Activities
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
+		[Link]
+		ISummary Summary = null;
 
 		/// <summary>
 		/// Current list of resources requested by this activity
@@ -67,7 +69,7 @@ namespace Models.WholeFarm.Activities
 			ResourceRequestList = DetermineResourcesNeeded();
 
 			// no resources required or this is an Activity folder.
-			if (ResourceRequestList == null) return;
+			if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return;
 
 			Guid uniqueRequestID = Guid.NewGuid();
 			// check resource amounts available
@@ -111,7 +113,7 @@ namespace Models.WholeFarm.Activities
 			bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false & a.AllowTransmutation).Count() == 0);
 
 			// OR at least one transmutation successful and PerformWithPartialResources
-			if (((countShortfallRequests > 0) & (countShortfallRequests == countTransmutationsSuccessful)) ^ (countTransmutationsSuccessful > 0 & PerformWithPartialResources))
+			if (((countShortfallRequests > 0) & (countShortfallRequests == countTransmutationsSuccessful)) ^ (countTransmutationsSuccessful > 0 & OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
 			{
 				// do transmutations.
 				Resources.TransmutateShortfall(shortfallRequests, false);
@@ -138,8 +140,20 @@ namespace Models.WholeFarm.Activities
 
 			// remove activity resources 
 			// check if deficit and performWithPartial
-			if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || PerformWithPartialResources)
+			if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
 			{
+				if(OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+				{
+					string resourcelist = "";
+					foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
+					{
+						Summary.WriteWarning(this, String.Format("Insufficient ({0}) resource of type ({1}) for activity ({2})", item.ResourceType, item.ResourceTypeName, this.Name));
+						resourcelist += ((resourcelist.Length >0)?",":"")+item.ResourceType.Name;
+					}
+					Summary.WriteWarning(this, String.Format("Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity ({0}) to handle previous error", this.Name));
+					throw new Exception(String.Format("Insufficient resources ({0}) for activity ({1}) (see Summary for details)", resourcelist, this.Name));
+				}
+
 				foreach (ResourceRequest request in ResourceRequestList)
 				{
 					// get resource
@@ -158,7 +172,7 @@ namespace Models.WholeFarm.Activities
 		/// Perform Activity with partial resources available
 		/// </summary>
 		[Description("Perform Activity with partial resources available")]
-		public bool PerformWithPartialResources { get; set; }
+		public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
 		/// <summary>
 		/// Abstract method to determine list of resources and amounts needed. 

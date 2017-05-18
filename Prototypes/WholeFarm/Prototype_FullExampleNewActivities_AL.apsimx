@@ -487,11 +487,11 @@
           <Name>Cash flow</Name>
           <FinanceActivityCalculateInterest>
             <Name>Bank interest</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           </FinanceActivityCalculateInterest>
           <FinanceActivityPayOverhead>
             <Name>General farm maintenance</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>3333.33</Amount>
@@ -499,7 +499,7 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Fuel costs</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>2500</Amount>
@@ -507,7 +507,7 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Pest control</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>12</MonthDue>
             <Amount>5000</Amount>
@@ -515,7 +515,7 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Contractors</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>10</MonthDue>
             <Amount>30000</Amount>
@@ -523,7 +523,7 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Administration</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>1666.67</Amount>
@@ -531,7 +531,7 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Rates and Fees</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>7</MonthDue>
             <Amount>15000</Amount>
@@ -539,7 +539,7 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Insurance</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>12</MonthDue>
             <Amount>20000</Amount>
@@ -547,7 +547,7 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Electricity</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>3</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>2000</Amount>
@@ -555,13 +555,13 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Living costs</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>6</PaymentInterval>
             <MonthDue>6</MonthDue>
             <Amount>1000</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayOverhead>
-          <PerformWithPartialResources>false</PerformWithPartialResources>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
         <ActivityFolder>
           <Name>Off farm labour</Name>
@@ -576,7 +576,7 @@
                 <Value>Joe B</Value>
               </LabourFilter>
             </LabourFilterGroup>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <DailyRate>100</DailyRate>
             <DaysWorkAvailableEachMonth>
               <double>2</double>
@@ -605,7 +605,7 @@
                 <Value>Joe B</Value>
               </LabourFilter>
             </LabourFilterGroup>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <DailyRate>100</DailyRate>
             <DaysWorkAvailableEachMonth>
               <double>2</double>
@@ -623,7 +623,7 @@
             </DaysWorkAvailableEachMonth>
             <BankAccountName>General account</BankAccountName>
           </LabourActivityOffFarm>
-          <PerformWithPartialResources>false</PerformWithPartialResources>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
         <ActivityFolder>
           <Name>Manage breeding herd</Name>
@@ -667,14 +667,14 @@
                 <Value>Joe B</Value>
               </LabourFilter>
             </LabourFilterGroup>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <FeedTypeName>Lucerne</FeedTypeName>
             <LabourFilterList />
             <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
           </RuminantActivityFeed>
           <RuminantActivityGrow>
             <Name>Grow all ruminants</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <EnergyGross>18.4</EnergyGross>
           </RuminantActivityGrow>
           <RuminantActivityBreed>
@@ -693,13 +693,13 @@
               <BreedInterval>12</BreedInterval>
               <MonthDue>8</MonthDue>
             </ControlledMatingSettings>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>Breeding</HerdName>
             <MaximumConceptionRateUncontrolled>0.8</MaximumConceptionRateUncontrolled>
           </RuminantActivityBreed>
           <RuminantActivityManage>
             <Name>Manage Bos indicus herd</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>Breeding</HerdName>
             <MaximumBreedersKept>60</MaximumBreedersKept>
             <MaximumBreederAge>120</MaximumBreederAge>
@@ -717,7 +717,7 @@
           </RuminantActivityManage>
           <RuminantActivityBuySell>
             <Name>Buy and sell Bos indicus</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <BreedName>Bos indicus</BreedName>
             <BreedingSirePrice>4500</BreedingSirePrice>
             <DistanceToMarket>200</DistanceToMarket>
@@ -732,7 +732,7 @@
           </RuminantActivityBuySell>
 					<RuminantActivityMilking>
             <Name>Milking</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
 						<HerdName>Breeding</HerdName>
 						<LabourFilterGroupSpecified>
 							<UnitType>perHead</UnitType>
@@ -749,7 +749,7 @@
 					</RuminantActivityMilking>
           <RuminantActivityPredictiveStocking>
             <Name>Dry season stocking</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>Breeding</HerdName>
             <AssessmentMonth>5</AssessmentMonth>
             <DrySeasonLength>6</DrySeasonLength>
@@ -761,7 +761,7 @@
           </RuminantActivityPredictiveStocking>
           <RuminantActivityPredictiveStockingENSO>
             <Name>ENSO stocking</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>Breeding</HerdName>
             <AssessmentMonth>5</AssessmentMonth>
             <MinimumFeedBeforeRestock>1500</MinimumFeedBeforeRestock>
@@ -820,7 +820,7 @@
                 <Value>Breeding</Value>
               </RuminantFilter>
             </RuminantFilterGroup>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>6</PaymentInterval>
             <MonthDue>2</MonthDue>
             <Amount>2</Amount>
@@ -829,7 +829,7 @@
           </RuminantActivityHerdCost>
           <RuminantActivityHerdCost>
             <Name>Vaccines and drenches</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>5</PaymentInterval>
             <MonthDue>7</MonthDue>
             <Amount>200</Amount>
@@ -847,14 +847,14 @@
                 <Value>Breeding</Value>
               </RuminantFilter>
             </RuminantFilterGroup>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>5</MonthDue>
             <Amount>5</Amount>
             <PaymentStyle>perAE</PaymentStyle>
             <AccountName>General account</AccountName>
           </RuminantActivityHerdCost>
-          <PerformWithPartialResources>false</PerformWithPartialResources>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
         <ActivityFolder>
           <Name>Chooks</Name>
@@ -884,13 +884,13 @@
               </MonthlyValues>
               <AnimalType>Chickens</AnimalType>
             </OtherAnimalsFilterGroup>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <FeedTypeName>Chicken pellets</FeedTypeName>
             <FeedStyle>SpecifiedDailyAmount</FeedStyle>
           </OtherAnimalsActivityFeed>
           <OtherAnimalsActivityBreed>
             <Name>Breed chooks</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <AnimalType>Chickens</AnimalType>
             <OffspringPerBreeder>2</OffspringPerBreeder>
             <StartBreedingMonth>1</StartBreedingMonth>
@@ -901,10 +901,10 @@
           </OtherAnimalsActivityBreed>
           <OtherAnimalsActivityGrow>
             <Name>Grow chickens</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <OtherAnimalType>Chickens</OtherAnimalType>
           </OtherAnimalsActivityGrow>
-          <PerformWithPartialResources>false</PerformWithPartialResources>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
         <ActivityFolder>
           <Name>Manage paddocks</Name>
@@ -946,8 +946,8 @@
                 <double>0.75</double>
               </YValues>
             </Relationship>
-            <PerformWithPartialResources>true</PerformWithPartialResources>
-            <LandTypeNameToUse>Sandy loam country</LandTypeNameToUse>
+						<OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+						<LandTypeNameToUse>Sandy loam country</LandTypeNameToUse>
             <FeedTypeName>Native Pasture</FeedTypeName>
             <StartingAmount>2000</StartingAmount>
             <UnitsOfArea>Hectares</UnitsOfArea>
@@ -957,13 +957,13 @@
           </PastureActivityManage>
           <PastureActivityBurn>
             <Name>Burn native pasture</Name>
-            <PerformWithPartialResources>false</PerformWithPartialResources>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <BurnInterval>12</BurnInterval>
             <BurnMonth>11</BurnMonth>
             <MinimumProportionGreen>0.5</MinimumProportionGreen>
             <PaddockName>Native Pasture</PaddockName>
           </PastureActivityBurn>
-          <PerformWithPartialResources>false</PerformWithPartialResources>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
         <SummariseRuminantHerd>
           <Name>SummariseHerd</Name>

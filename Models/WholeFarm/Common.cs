@@ -173,9 +173,9 @@ namespace Models.WholeFarm
 	}
 
 	/// <summary>
-	/// Partial resources available option
+	/// Possible actions when only partial requested resources are available
 	/// </summary>
-	public enum OnPartialResourcesActionTypes
+	public enum OnPartialResourcesAvailableActionTypes
 	{
 		/// <summary>
 		/// Report error and stop simulation
