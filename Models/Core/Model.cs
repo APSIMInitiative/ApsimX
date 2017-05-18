@@ -198,6 +198,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.SubtractFunction))]
         [XmlElement(typeof(Models.PMF.Functions.VariableReference))]
         [XmlElement(typeof(Models.PMF.Functions.WeightedTemperatureFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.WangEngelTempFunction))]
         [XmlElement(typeof(Models.PMF.Functions.XYPairs))]
         [XmlElement(typeof(Models.PMF.Functions.Zadok))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.CanopyPhotosynthesis))]
