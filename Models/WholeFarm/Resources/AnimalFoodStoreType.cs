@@ -110,7 +110,7 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		/// <param name="AddAmount">Amount to add to resource</param>
 		/// <param name="ActivityName">Name of activity adding resource</param>
-		/// <param name="UserName">Name of individual radding resource</param>
+		/// <param name="UserName">Name of individual adding resource</param>
 		public void Add(double AddAmount, string ActivityName, string UserName)
         {
             this.amount = this.amount + AddAmount;
