@@ -48,7 +48,7 @@ namespace Models.Interfaces
         ///<summary> Who knows</summary>
         double Es { get; }
         ///<summary> Who knows</summary>
-        double ESW { get; }
+        double[] ESW { get; }
         ///<summary> Who knows</summary>
         double[] flow { get; }
         ///<summary> Who knows</summary>
