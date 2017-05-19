@@ -620,17 +620,24 @@
           </RuminantActivityManage>
           <RuminantActivityBuySell>
             <Name>Buy and sell Bos indicus</Name>
+            <RuminantSaleFee>
+              <Name>MLA Fee</Name>
+              <PaymentStyle>perHead</PaymentStyle>
+              <Amount>2</Amount>
+            </RuminantSaleFee>
+            <RuminantSaleFee>
+              <Name>Yard Fees</Name>
+              <PaymentStyle>perHead</PaymentStyle>
+              <Amount>2</Amount>
+            </RuminantSaleFee>
+            <RuminantSaleFee>
+              <Name>Sales commission</Name>
+              <PaymentStyle>ProportionOfTotalSales</PaymentStyle>
+              <Amount>0.02</Amount>
+            </RuminantSaleFee>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <BreedName>Bos indicus</BreedName>
             <BreedingSirePrice>4500</BreedingSirePrice>
-            <DistanceToMarket>200</DistanceToMarket>
-            <CostPerKmTrucking>1.9</CostPerKmTrucking>
-            <Number450kgPerTruck>20</Number450kgPerTruck>
-            <YardFees>0</YardFees>
-            <MLAFees>5</MLAFees>
-            <MinimumTrucksBeforeSelling>0</MinimumTrucksBeforeSelling>
-            <MinimumLoadBeforeSelling>0</MinimumLoadBeforeSelling>
-            <SalesCommission>0</SalesCommission>
             <BankAccountName>General account</BankAccountName>
           </RuminantActivityBuySell>
           <RuminantActivityHerdCost>
