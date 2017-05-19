@@ -540,11 +540,9 @@ namespace Models.PMF
                     PropnMortality = BranchMortality.Value();
                     {
                         double DeltaPopn = Math.Min(PropnMortality * (TotalStemPopn - MainStemPopn), TotalStemPopn - Plant.Population);
-                        // TotalStemPopn -= DeltaPopn;
+                        TotalStemPopn -= DeltaPopn;
                         ProportionBranchMortality = PropnMortality;
                     }
-                    double br = BranchingRate.Value();
-                    
                 }
             }
         }
