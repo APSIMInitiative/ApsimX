@@ -37692,7 +37692,7 @@ namespace Models
 			
 			if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
 			    Maize.IsAlive == false &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.SumSoil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			    || (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) && Maize.IsAlive == false && MustSow == true))
 			{
@@ -37774,7 +37774,7 @@ namespace Models
 			
 			if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
 			    Maize.IsAlive == false &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.SumSoil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			    || (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) && Maize.IsAlive == false && MustSow == true))
 			{

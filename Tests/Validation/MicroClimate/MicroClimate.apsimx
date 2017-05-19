@@ -573,7 +573,7 @@ namespace Models
 			
 			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.SumSoil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
@@ -1139,7 +1139,7 @@ namespace Models
 			
 			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.SumSoil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
@@ -1705,7 +1705,7 @@ namespace Models
 			
 			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.SumSoil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
@@ -2327,7 +2327,7 @@ namespace Models
 			
 			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.SumSoil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
@@ -2876,7 +2876,7 @@ namespace Models
 			
 			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.SumSoil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
@@ -3425,7 +3425,7 @@ namespace Models
 			
 			if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&
 			    Wheat.plant_status=="out" &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.SumSoil.SoilWater.ESW > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 			   Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);	
