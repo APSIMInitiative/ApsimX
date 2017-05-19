@@ -93,7 +93,7 @@ namespace Models.WholeFarm
 	}
 
 	/// <summary>
-	/// Animal pyament style
+	/// Animal payment style
 	/// </summary>
 	public enum HerdPaymentStyleType
 	{
@@ -109,6 +109,10 @@ namespace Models.WholeFarm
 		/// Amount per adult equivilant
 		/// </summary>
 		perAE,
+		/// <summary>
+		/// Proportion of total sales
+		/// </summary>
+		ProportionOfTotalSales
 	}
 
 	/// <summary>
