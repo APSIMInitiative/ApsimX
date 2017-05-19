@@ -42,12 +42,12 @@ namespace UnitTests
             Assert.AreEqual(inScopeOfLeaf1[0].Name, "Plant");
             Assert.AreEqual(inScopeOfLeaf1[1].Name, "leaf1");
             Assert.AreEqual(inScopeOfLeaf1[2].Name, "stem1");
-            Assert.AreEqual(inScopeOfLeaf1[3].Name, "Soil");
-            Assert.AreEqual(inScopeOfLeaf1[4].Name, "Plant");
-            Assert.AreEqual(inScopeOfLeaf1[5].Name, "Clock");
-            Assert.AreEqual(inScopeOfLeaf1[6].Name, "zone1");
-            Assert.AreEqual(inScopeOfLeaf1[7].Name, "zone2");
-            Assert.AreEqual(inScopeOfLeaf1[8].Name, "Simulation");
+            Assert.AreEqual(inScopeOfLeaf1[3].Name, "zone1");
+            Assert.AreEqual(inScopeOfLeaf1[4].Name, "Soil");
+            Assert.AreEqual(inScopeOfLeaf1[5].Name, "Plant");
+            Assert.AreEqual(inScopeOfLeaf1[6].Name, "Simulation");
+            Assert.AreEqual(inScopeOfLeaf1[7].Name, "Clock");
+            Assert.AreEqual(inScopeOfLeaf1[8].Name, "zone2");
 
             // Ensure correct scoping from soil
             List<IModel> inScopeOfSoil = Apsim.FindAll(simulation.Children[2].Children[0].Model as IModel);
@@ -60,9 +60,9 @@ namespace UnitTests
             Assert.AreEqual(inScopeOfSoil[5].Name, "Plant");
             Assert.AreEqual(inScopeOfSoil[6].Name, "leaf2");
             Assert.AreEqual(inScopeOfSoil[7].Name, "stem2");
-            Assert.AreEqual(inScopeOfSoil[8].Name, "Clock");
-            Assert.AreEqual(inScopeOfSoil[9].Name, "zone2");
-            Assert.AreEqual(inScopeOfSoil[10].Name, "Simulation");
+            Assert.AreEqual(inScopeOfSoil[8].Name, "Simulation");
+            Assert.AreEqual(inScopeOfSoil[9].Name, "Clock");
+            Assert.AreEqual(inScopeOfSoil[10].Name, "zone2");
         }
 
 
