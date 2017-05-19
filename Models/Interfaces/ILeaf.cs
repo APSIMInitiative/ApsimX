@@ -41,6 +41,10 @@ namespace Models.Interfaces
         /// </summary>
         /// <param name="ProportionRemoved"></param>
         void DoThin(double ProportionRemoved);
+
+        /// <summary>Apex number by age</summary>
+        /// <param name="age">Threshold age</param>
+        double ApexNumByAge(double age);
     }
 }
 

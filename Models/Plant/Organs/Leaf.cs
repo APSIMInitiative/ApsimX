@@ -482,6 +482,29 @@ namespace Models.PMF.Organs
             }
         }
 
+
+        /// <summary>Gets the cohort population.</summary>
+        [XmlIgnore]
+        [Units("mm3")]
+        public double[] CohortPopulation
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.IsAppeared)
+                        values[i] = L.CohortPopulation;
+                    else values[i] = 0;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
         /// <summary>Gets the size of the cohort.</summary>
         [XmlIgnore]
         [Units("mm3")]
@@ -575,6 +598,28 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets the live stem  number.</summary>
+        /// <value>Stem number.</value>
+        [Units("0-1")]
+        [XmlIgnore]
+        [Description("Live stem number")]
+        public double LiveStemNumber
+        {
+            get
+            {
+                double sn = 0;
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    if (L.LiveArea > 0)
+                    {
+                        sn = Math.Max(sn, L.CohortPopulation);
+                    }
+                }
+                return sn;
+
+            }
+        }
 
         /// <summary>Gets the live n conc.</summary>
         [Units("g/g")]
@@ -621,11 +666,29 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Apex number by age</summary>
+        /// <param name="age">Threshold age</param>
+        public double ApexNumByAge(double age)
+        {
+            double num = 0;
+            for (int i = 0; i < apexGroupAge.Count; i++)
+            {
+                if (apexGroupAge[i] <= age)
+                {
+                    num += apexGroupSize[i++];
+                }
+            }
+
+            return num;
+      
+        }
+
+        
         #endregion
 
         #region Functions
 
-         /// <summary>1 based rank of the current leaf.</summary>
+        /// <summary>1 based rank of the current leaf.</summary>
         private int CurrentRank { get; set; }
 
         /// <summary>Counts cohorts with a given condition.</summary>
@@ -785,7 +848,16 @@ namespace Models.PMF.Organs
             if (CohortParams.CohortToAppear > InitialisedCohortNo)
                 throw new Exception("MainStemNodeNumber exceeds the number of leaf cohorts initialised.  Check primordia parameters to make sure primordia are being initiated fast enough and for long enough");
             int i = CohortParams.CohortToAppear - 1;
-            Leaves[i].CohortPopulation = CohortParams.TotalStemPopn;
+            bool isApexModel = Structure.IsApexModel;
+            if (isApexModel)
+            {
+                Leaves[i].CohortPopulation = Structure.ApexNum * Plant.Population;
+            }
+            else
+            {
+                Leaves[i].CohortPopulation = CohortParams.TotalStemPopn;
+            }
+
             Leaves[i].Age = CohortParams.CohortAge;
             Leaves[i].DoAppearance(CohortParams.FinalFraction, CohortParameters);
             if (NewLeaf != null)

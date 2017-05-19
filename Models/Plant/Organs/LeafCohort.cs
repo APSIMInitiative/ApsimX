@@ -729,8 +729,19 @@ namespace Models.PMF.Organs
         {
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
+            bool isApexModel = Structure.IsApexModel;
             if (CohortPopulation == 0)
-                CohortPopulation = Structure.TotalStemPopn;
+            {
+                if (isApexModel)
+                {
+                    CohortPopulation = Structure.ApexNum * Plant.Population;
+                }
+                else
+                {
+                    CohortPopulation = Structure.TotalStemPopn;
+                }
+            }
+                
             MaxArea = leafCohortParameterseafCohortParameters.MaxArea.Value() * CellDivisionStressFactor*leafFraction;
             //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
             GrowthDuration = leafCohortParameterseafCohortParameters.GrowthDuration.Value() * leafFraction;
@@ -775,13 +786,20 @@ namespace Models.PMF.Organs
         {
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
-            if (Structure.ProportionPlantMortality > 0)
-                CohortPopulation -= CohortPopulation*Structure.ProportionPlantMortality;
+            bool isApexModel = Structure.IsApexModel;
+            if (!isApexModel)
+            {
+                if (Structure.ProportionPlantMortality > 0)
+                    CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
 
-            //Reduce leaf Population in Cohort  due to branch mortality
-            if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
-                //Ensure we there are some branches.
-                CohortPopulation -= CohortPopulation*Structure.ProportionBranchMortality;
+                //Reduce leaf Population in Cohort  due to branch mortality
+                if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
+                    //Ensure we there are some branches.
+                    CohortPopulation -= CohortPopulation * Structure.ProportionBranchMortality;
+
+            }
+
+
 
             double propnStemMortality = (startPopulation - CohortPopulation)/startPopulation;
 
