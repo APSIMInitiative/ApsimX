@@ -32,10 +32,6 @@ namespace Models.AgPasture
         [Link]
         private Soil mySoil = null;
 
-        /// <summary>Link to Apsim's solute manager module.</summary>
-        [Link]
-        private SoluteManager solutes = null;
-
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Invoked for incorporating soil FOM.</summary>
@@ -1256,37 +1252,7 @@ namespace Models.AgPasture
         {
             if (myNUptakeSource.ToLower() == "sward")
             {
-                // Pack the soil information
-                ZoneWaterAndN myZone = new ZoneWaterAndN(this.Parent as Zone);
-                myZone.Water = mySoil.Water;
-                myZone.NO3N = mySoil.NO3N;
-                myZone.NH4N = mySoil.NH4N;
-
-                // Get the N amount available in the soil
-                GetSoilAvailableN(myZone);
-
-                foreach (PastureSpecies species in mySpecies)
-                {
-                    // Get the N amount fixed through symbiosis
-                    species.EvaluateNitrogenFixation();
-
-                    // Evaluate the use of N remobilised and get N amount demanded from soil
-                    species.EvaluateSoilNitrogenDemand();
-
-                    // Get N amount taken up from the soil
-                    species.EvaluateSoilNitrogenUptake();
-                    for (int layer = 0; layer < RootZoneFrontier; layer++)
-                    {
-                        swardSoilNH4Uptake[layer] += species.SoilNH4Uptake[layer];
-                        swardSoilNO3Uptake[layer] += species.SoilNO3Uptake[layer];
-                    }
-
-                    // Evaluate whether remobilisation of luxury N is needed
-                    species.EvaluateLuxuryNRemobilisation();
-                }
-
-                // Send delta N to the soil model
-                DoSoilNitrogenUptake();
+                throw new NotImplementedException();
             }
             else
             {
@@ -1301,70 +1267,6 @@ namespace Models.AgPasture
                         swardSoilNO3Uptake[layer] += species.SoilNO3Uptake[layer];
                     }
                 }
-
-                // Send delta N to the soil model
-                DoSoilNitrogenUptake();
-            }
-        }
-
-        /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil, consider all species.</summary>
-        /// <param name="myZone">The soil information</param>
-        private void GetSoilAvailableN(ZoneWaterAndN myZone)
-        {
-            double totalSoilNH4;
-            double totalSoilNO3;
-            double totalPlantNH4;
-            double totalPlantNO3;
-            double nh4Fraction = 1.0;
-            double no3Fraction = 1.0;
-            double layerFraction = 1.0;
-
-            // Get the N available as seen by each species
-            foreach (PastureSpecies species in mySpecies)
-                species.EvaluateSoilNitrogenAvailable(myZone);
-
-            // Evaluate the available N for whole sward and adjust availability for each species if needed
-                for (int layer = 0; layer <= RootZoneFrontier; layer++)
-            {
-                // Get total as seen by each species
-                totalPlantNH4 = 0.0;
-                totalPlantNO3 = 0.0;
-                if (layer == RootZoneFrontier) layerFraction = 0.0;
-                    foreach (PastureSpecies species in mySpecies)
-                {
-                    totalPlantNH4 += species.SoilNH4Available[layer];
-                    totalPlantNO3 += species.SoilNO3Available[layer];
-                    if (layer == RootZoneFrontier)
-                        layerFraction = Math.Max(layerFraction, species.FractionLayerWithRoots(layer));
-                }
-
-                // Get total in the soil
-                totalSoilNH4 = myZone.NH4N[layer] * layerFraction;
-                totalSoilNO3 = myZone.NO3N[layer] * layerFraction;
-
-                // Sward total is the minimum of the two totals
-                swardSoilNH4Available[layer] = Math.Min(totalPlantNH4, totalSoilNH4);
-                swardSoilNO3Available[layer] = Math.Min(totalPlantNO3, totalSoilNO3);
-                if ((totalPlantNH4 > totalSoilNH4) || (totalPlantNO3 > totalSoilNO3))
-                {
-                    // adjust the N available for each species
-                    nh4Fraction = Math.Min(1.0, MathUtilities.Divide(totalSoilNH4, totalPlantNH4, 0.0));
-                    no3Fraction = Math.Min(1.0, MathUtilities.Divide(totalSoilNO3, totalPlantNO3, 0.0));
-                    foreach (PastureSpecies species in mySpecies)
-                    {
-                        species.UpdateAvailableNitrogen(nh4Fraction, no3Fraction);
-                    }
-                }
-            }
-        }
-
-        /// <summary>Sends the delta nitrogen to the soil module.</summary>
-        private void DoSoilNitrogenUptake()
-        {
-            if ((swardSoilNH4Uptake.Sum() + swardSoilNO3Uptake.Sum()) > Epsilon)
-            {
-                solutes.Subtract("NO3", swardSoilNO3Uptake);
-                solutes.Subtract("NH4", swardSoilNH4Uptake);
             }
         }
 
