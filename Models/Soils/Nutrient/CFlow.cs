@@ -67,44 +67,51 @@ namespace Models.Soils.Nutrient
 
             for (int i = 0; i < source.C.Length; i++)
             {
-                double carbonFlow = Rate.Value(i) * source.C[i];
-                double nitrogenFlow = MathUtilities.Divide(carbonFlow, source.CNRatio[i], 0);
+                double carbonFlowFromSource = Rate.Value(i) * source.C[i];
+                double nitrogenFlowFromSource = MathUtilities.Divide(carbonFlowFromSource, source.CNRatio[i], 0);
 
-                double[] carbonFlowToDestination = new double [destinations.Count];
+                double[] carbonFlowToDestination = new double[destinations.Count];
                 double[] nitrogenFlowToDestination = new double[destinations.Count];
 
                 for (int j = 0; j < destinations.Count; j++)
                 {
-                    carbonFlowToDestination[j] = carbonFlow * CO2Efficiency.Value(i) * destinationFraction[j];
+                    carbonFlowToDestination[j] = carbonFlowFromSource * CO2Efficiency.Value(i) * destinationFraction[j];
                     nitrogenFlowToDestination[j] = carbonFlowToDestination[j] / destinations[j].CNRatio[i];
                 }
 
                 double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
-                double NSupply = nitrogenFlow + NO3[i] + NH4[i];
-                double NSupplyFactor = 1.0;
-                if (TotalNitrogenFlowToDestinations > NSupply)
-                   NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(NO3[i] + NH4[i], TotalNitrogenFlowToDestinations - nitrogenFlow, 1.0),0.0,1.0);
+                double NSupply = nitrogenFlowFromSource + NO3[i] + NH4[i];
 
-                for (int j = 0; j < destinations.Count; j++)
+                if (MathUtilities.Sum(nitrogenFlowToDestination) > NSupply)
                 {
-                    carbonFlowToDestination[j] *= NSupplyFactor;
-                    nitrogenFlowToDestination[j] *= NSupplyFactor;
+                    double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(NO3[i] + NH4[i], TotalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
+
+                    for (int j = 0; j < destinations.Count; j++)
+                    {
+                        carbonFlowToDestination[j] *= NSupplyFactor;
+                        nitrogenFlowToDestination[j] *= NSupplyFactor;
+                    }
+                    TotalNitrogenFlowToDestinations *= NSupplyFactor;
+
+                    carbonFlowFromSource *= NSupplyFactor;
+                    nitrogenFlowFromSource *= NSupplyFactor;
+
                 }
 
-                source.C[i] -= carbonFlow * NSupplyFactor;
-                source.N[i] -= nitrogenFlow * NSupplyFactor;
-
+                source.C[i] -= carbonFlowFromSource;
+                source.N[i] -= nitrogenFlowFromSource;
                 for (int j = 0; j < destinations.Count; j++)
                 {
-                    destinations[j].C[i] += carbonFlowToDestination[j] * NSupplyFactor;
-                    destinations[j].N[i] += nitrogenFlowToDestination[j] * NSupplyFactor;
+                    destinations[j].C[i] += carbonFlowToDestination[j];
+                    destinations[j].N[i] += nitrogenFlowToDestination[j];
                 }
 
-                if (TotalNitrogenFlowToDestinations * NSupplyFactor <= nitrogenFlow)
-                    NH4[i] += nitrogenFlow - TotalNitrogenFlowToDestinations * NSupplyFactor;
+
+                if (TotalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
+                    NH4[i] += nitrogenFlowFromSource - TotalNitrogenFlowToDestinations;
                 else
                 {
-                    double NDeficit = TotalNitrogenFlowToDestinations * NSupplyFactor - nitrogenFlow;
+                    double NDeficit = TotalNitrogenFlowToDestinations - nitrogenFlowFromSource;
                     double NH4Immobilisation = Math.Min(NH4[i], NDeficit);
                     NH4[i] -= NH4Immobilisation;
                     NDeficit -= NH4Immobilisation;
