@@ -76,7 +76,7 @@ namespace Models.Soils.Nutrient
                 for (int j = 0; j < destinations.Count; j++)
                 {
                     carbonFlowToDestination[j] = carbonFlowFromSource * CO2Efficiency.Value(i) * destinationFraction[j];
-                    nitrogenFlowToDestination[j] = carbonFlowToDestination[j] / destinations[j].CNRatio[i];
+                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j],destinations[j].CNRatio[i],0.0);
                 }
 
                 double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
@@ -90,6 +90,8 @@ namespace Models.Soils.Nutrient
                     {
                         carbonFlowToDestination[j] *= NSupplyFactor;
                         nitrogenFlowToDestination[j] *= NSupplyFactor;
+                        if (nitrogenFlowToDestination[j] > 0.5)
+                        { }
                     }
                     TotalNitrogenFlowToDestinations *= NSupplyFactor;
 

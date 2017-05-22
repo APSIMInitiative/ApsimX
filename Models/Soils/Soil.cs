@@ -131,7 +131,7 @@ namespace Models.Soils
         [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
 
         /// <summary>Gets the soil nitrogen.</summary>
-        [XmlIgnore] public SoilNitrogen SoilNitrogen { get; private set; }
+        private SoluteManager SoluteManager;
 
         /// <summary>Gets the soil nitrogen.</summary>
         private ISoilTemperature temperatureModel;
@@ -160,7 +160,7 @@ namespace Models.Soils
             structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
-            SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
+            SoluteManager = Apsim.Find(this, typeof(SoluteManager)) as SoluteManager;
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
             }
 
@@ -950,11 +950,11 @@ namespace Models.Soils
 
         /// <summary>Gets or sets the nitrate N for each layer (kg/ha)</summary>
         [XmlIgnore]
-        public double[] NO3N { get { return SoilNitrogen.NO3; } set { SoilNitrogen.NO3 = value; } }
+        public double[] NO3N { get { return SoluteManager.GetSolute("NO3"); } set { SoluteManager.SetSolute("NO3",value); } }
 
         /// <summary>Gets the ammonia N for each layer (kg/ha)</summary>
         [XmlIgnore]
-        public double[] NH4N { get { return SoilNitrogen.NH4; } }
+        public double[] NH4N { get { return SoluteManager.GetSolute("NH4"); } set { SoluteManager.SetSolute("NH4", value); } }
 
         /// <summary>Gets the temperature of each layer</summary>
         public double[] Temperature { get { return temperatureModel.Value; } }
@@ -1699,9 +1699,22 @@ namespace Models.Soils
         /// <returns></returns>
         public double[] kgha2ppm(double[] values)
         {
+            double[] ppm = new double[values.Length];
             for (int i = 0; i < values.Length; i++)
-                values[i] *= MathUtilities.Divide(100.0, BD[i] * Thickness[i], 0.0);
-            return values;
+                ppm[i] = values[i] * MathUtilities.Divide(100.0, BD[i] * Thickness[i], 0.0);
+            return ppm;
+        }
+        /// <summary>
+        /// Calculate conversion factor from ppm to kg/ha
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public double[] ppm2kgha(double[] values)
+        {
+            double[] kgha = new double[values.Length];
+            for (int i = 0; i < values.Length; i++)
+                kgha[i] = values[i] * MathUtilities.Divide(BD[i] * Thickness[i], 100, 0.0);
+            return kgha;
         }
         #endregion
 

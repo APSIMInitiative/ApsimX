@@ -15,6 +15,12 @@
     public class Nutrient : Model, INutrient
     {
 
+        /// <summary>
+        /// Summary file Link
+        /// </summary>
+        [Link]
+        Summary Summary = null;
+
         /// <summary>The surface organic matter</summary>
         [Link]
         private SurfaceOrganicMatter SurfaceOrganicMatter = null;
@@ -29,6 +35,9 @@
         NutrientPool SurfaceResidue = null;
         [Link]
         private SoluteManager solutes = null;
+
+        // Carbon content of FOM
+        private double CinFOM = 0.4;
 
         private SurfaceOrganicMatterDecompType PotentialSOMDecomp = null;
 
@@ -51,6 +60,78 @@
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double[] FOMN
+        {
+            get
+            {
+
+                double[] values = new double[FOMLignin.C.Length];
+                for (int i = 0; i < FOMLignin.C.Length; i++)
+                    values[i] = FOMCarbohydrate.N[i] + FOMCellulose.N[i] + FOMLignin.N[i];
+
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double[] FOMC
+        {
+            get
+            {
+
+                double[] values = new double[FOMLignin.C.Length];
+                for (int i = 0; i < FOMLignin.C.Length; i++)
+                    values[i] = FOMCarbohydrate.C[i] + FOMCellulose.C[i] + FOMLignin.C[i];
+
+                return values;
+            }
+        }
+        /// <summary>Partition the given FOM C and N into fractions in each layer (one FOM)</summary>
+        /// <param name="FOMdata">The in fo mdata.</param>
+        [EventSubscribe("IncorpFOM")]
+        private void OnIncorpFOM(FOMLayerType FOMdata)
+        {
+            // +  Purpose:
+            //      Partition the given FOM C and N into fractions in each layer.
+            //      It will be assumed that the CN ratios of all fractions are equal
+
+            bool nSpecified = false;
+            for (int layer = 0; layer < FOMdata.Layer.Length; layer++)
+            {
+                // If the caller specified CNR values then use them to calculate N from Amount.
+                if (FOMdata.Layer[layer].CNR > 0.0)
+                    FOMdata.Layer[layer].FOM.N = (FOMdata.Layer[layer].FOM.amount * CinFOM) / FOMdata.Layer[layer].CNR;
+                // Was any N specified?
+                nSpecified |= FOMdata.Layer[layer].FOM.N != 0.0;
+            }
+
+            if (nSpecified)
+            {
+
+                // Now convert the IncorpFOM.DeltaWt and IncorpFOM.DeltaN arrays to include fraction information and add to pools.
+                for (int layer = 0; layer < FOMdata.Layer.Length; layer++)
+                {
+                    if (layer < FOMCarbohydrate.C.Length)
+                    {
+                        FOMCarbohydrate.C[layer] += FOMdata.Layer[layer].FOM.amount * 0.2 * CinFOM;
+                        FOMCellulose.C[layer] += FOMdata.Layer[layer].FOM.amount * 0.7 * CinFOM;
+                        FOMLignin.C[layer] += FOMdata.Layer[layer].FOM.amount * 0.1 * CinFOM;
+
+                        FOMCarbohydrate.N[layer] += FOMdata.Layer[layer].FOM.N * 0.2;
+                        FOMCellulose.N[layer] += FOMdata.Layer[layer].FOM.N * 0.7;
+                        FOMLignin.N[layer] += FOMdata.Layer[layer].FOM.N * 0.1;
+                    }
+                    else
+                        Summary.WriteMessage(this, " Number of FOM values given is larger than the number of layers, extra values will be ignored");
+                }
+            }
+        }
         /// <summary>Partition the given FOM C and N into fractions in each layer (FOM pools)</summary>
         /// <param name="FOMPoolData">The in fom pool data.</param>
         [EventSubscribe("IncorpFOMPool")]
