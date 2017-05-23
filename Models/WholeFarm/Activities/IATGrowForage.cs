@@ -26,8 +26,8 @@ namespace Models.WholeFarm.Activities
 		private ResourcesHolder Resources = null;
 		[Link]
 		Clock Clock = null;
-		[Link]
-		ISummary Summary = null;
+		//[Link]
+		//ISummary Summary = null;
         [Link]
         FileAPSIMForage FileForage = null;
 
@@ -130,7 +130,7 @@ namespace Models.WholeFarm.Activities
             LinkedLandType = Resources.GetResourceItem(typeof(Land), LandTypeNameToUse, out resourceAvailable) as LandType;
             if (LinkedLandType == null)
             {
-                Summary.WriteWarning(this, String.Format("Unable to locate land type {0} in Land for {1}", this.LandTypeNameToUse, this.Name));
+                throw new ApsimXException(this, String.Format("Unable to locate land type {0} in Land for {1}", this.LandTypeNameToUse, this.Name));
             }
 
 
@@ -140,7 +140,7 @@ namespace Models.WholeFarm.Activities
 			LinkedAnimalFoodType = Resources.GetResourceItem(typeof(AnimalFoodStore), FeedTypeName, out resourceAvailable) as AnimalFoodStoreType;
 			if (LinkedAnimalFoodType == null)
 			{
-				Summary.WriteWarning(this, String.Format("Unable to locate forage feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
+                throw new ApsimXException(this, String.Format("Unable to locate forage feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
 			}
 
 
@@ -149,7 +149,7 @@ namespace Models.WholeFarm.Activities
                                                                Clock.StartDate, Clock.EndDate);
             if (HarvestData == null)
             {
-                Summary.WriteWarning(this, String.Format("Unable to locate in forage file {0} any harvest data for Region {1} , SoilType {2}, ForageName {3} between the dates {4} and {5}", 
+                throw new ApsimXException(this, String.Format("Unable to locate in forage file {0} any harvest data for Region {1} , SoilType {2}, ForageName {3} between the dates {4} and {5}", 
                     FileForage.FileName, Region, LinkedLandType.SoilType, FeedTypeName, Clock.StartDate, Clock.EndDate));
             }
 
@@ -197,6 +197,8 @@ namespace Models.WholeFarm.Activities
 
 
         //TODO: turn this into WFDoCutAndCarry event handler instead of start of month
+        //      need to do your own resource stuff that is done in the WFActivityBase class.
+        //      extract out the GetResourcesRequired() 
 
         /// <summary>An event handler for Start of Month</summary>
         /// <param name="sender">The sender.</param>

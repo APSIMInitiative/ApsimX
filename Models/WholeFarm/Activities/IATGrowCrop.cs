@@ -26,8 +26,8 @@ namespace Models.WholeFarm.Activities
 		private ResourcesHolder Resources = null;
 		[Link]
 		Clock Clock = null;
-		[Link]
-		ISummary Summary = null;
+		//[Link]
+		//ISummary Summary = null;
         [Link]
         FileAPSIMCrop FileCrop = null;
 
@@ -135,7 +135,7 @@ namespace Models.WholeFarm.Activities
             LinkedLandType = Resources.GetResourceItem(typeof(Land), LandTypeNameToUse, out resourceAvailable) as LandType;
             if (LinkedLandType == null)
             {
-                Summary.WriteWarning(this, String.Format("Unable to locate land type {0} in Land for {1}", this.LandTypeNameToUse, this.Name));
+                throw new ApsimXException(this, String.Format("Unable to locate land type {0} in Land for {1}", this.LandTypeNameToUse, this.Name));
             }
 
             // locate AnimalFoodStore Type resource for this forage.
@@ -143,7 +143,7 @@ namespace Models.WholeFarm.Activities
             LinkedHumanFoodType = Resources.GetResourceItem(typeof(HumanFoodStore), FeedTypeName, out resourceAvailable) as HumanFoodStoreType;
             if (LinkedHumanFoodType == null)
             {
-                Summary.WriteWarning(this, String.Format("Unable to locate crop type {0} in HumanFoodStore for {1}", this.FeedTypeName, this.Name));
+                throw new ApsimXException(this, String.Format("Unable to locate crop type {0} in HumanFoodStore for {1}", this.FeedTypeName, this.Name));
             }
 
 
@@ -152,7 +152,7 @@ namespace Models.WholeFarm.Activities
             LinkedAnimalFoodType = Resources.GetResourceItem(typeof(AnimalFoodStore), FeedTypeName, out resourceAvailable) as AnimalFoodStoreType;
 			if (LinkedAnimalFoodType == null)
 			{
-				Summary.WriteWarning(this, String.Format("Unable to locate crop feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
+                throw new ApsimXException(this, String.Format("Unable to locate crop feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
 			}
 
 
@@ -161,7 +161,7 @@ namespace Models.WholeFarm.Activities
                                                                Clock.StartDate, Clock.EndDate);
             if (HarvestData == null)
             {
-                Summary.WriteWarning(this, String.Format("Unable to locate in crop file {0} any harvest data for Region {1} , SoilType {2}, CropName {3} between the dates {4} and {5}", 
+                throw new ApsimXException(this, String.Format("Unable to locate in crop file {0} any harvest data for Region {1} , SoilType {2}, CropName {3} between the dates {4} and {5}", 
                     FileCrop.FileName, Region, LinkedLandType.SoilType, FeedTypeName, Clock.StartDate, Clock.EndDate));
             }
 
