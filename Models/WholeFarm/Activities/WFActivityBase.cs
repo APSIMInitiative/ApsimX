@@ -60,104 +60,123 @@ namespace Models.WholeFarm.Activities
 		/// Method to get this time steps current required resources for this activity. 
 		/// </summary>
 		public void GetResourcesRequired()
-		{
-			bool resourceAvailable = false;
+        {
 
-			// determine what resources are needed
-			ResourceRequestList = DetermineResourcesNeeded();
+            // determine what resources are needed
+            ResourceRequestList = DetermineResourcesNeeded();
 
-			// no resources required or this is an Activity folder.
-			if (ResourceRequestList == null) return;
+            bool tookRequestedResources = TakeResources(ResourceRequestList);
 
-			Guid uniqueRequestID = Guid.NewGuid();
-			// check resource amounts available
-			foreach (ResourceRequest request in ResourceRequestList)
-			{
-				request.ActivityID = uniqueRequestID;
-				request.Available = 0;
-				// get resource
-				if (request.Resource == null)
-				{
-					//If it hasn't been assigned try and find it now.
-					request.Resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
-				}
-				if (request.Resource != null)
-				{
-					// get amount available
-					request.Available = Math.Min(request.Resource.Amount, request.Required);
-				}
-				else
-				{
-					if (!resourceAvailable)
-					{
-						// if resource does not exist in simulation assume unlimited resource available
-						// otherwise 0 will be assigned to available when no resouces match request
-						request.Available = request.Required;
-					}
-				}
-			}
+            if (tookRequestedResources)
+                PerformActivity();
+        }
 
-			// are all resources available
-			List<ResourceRequest> shortfallRequests = ResourceRequestList.Where(a => a.Required > a.Available).ToList();
-			int countShortfallRequests = shortfallRequests.Count();
-			if (countShortfallRequests > 0)
-			{
-				// check what transmutations can occur
-				Resources.TransmutateShortfall(shortfallRequests, true);
-			}
+        /// <summary>
+        /// Try to take the Resources based on Resource Request List provided.
+        /// Returns true if it was able to take the resources it needed.
+        /// Returns false if it was unable to take the resources it needed.
+        /// </summary>
+        /// <param name="ResourceRequestList"></param>
+        public bool TakeResources(List<ResourceRequest> ResourceRequestList)
+        {
+            bool resourceAvailable = false;
 
-			// check if need to do transmutations
-			int countTransmutationsSuccessful = shortfallRequests.Where(a => a.TransmutationPossible == true & a.AllowTransmutation).Count();
-			bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false & a.AllowTransmutation).Count() == 0);
+            // no resources required or this is an Activity folder.
+            if (ResourceRequestList == null) return true;
 
-			// OR at least one transmutation successful and PerformWithPartialResources
-			if (((countShortfallRequests > 0) & (countShortfallRequests == countTransmutationsSuccessful)) ^ (countTransmutationsSuccessful > 0 & PerformWithPartialResources))
-			{
-				// do transmutations.
-				Resources.TransmutateShortfall(shortfallRequests, false);
+            Guid uniqueRequestID = Guid.NewGuid();
+            // check resource amounts available
+            foreach (ResourceRequest request in ResourceRequestList)
+            {
+                request.ActivityID = uniqueRequestID;
+                request.Available = 0;
+                // get resource
+                if (request.Resource == null)
+                {
+                    //If it hasn't been assigned try and find it now.
+                    request.Resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
+                }
+                if (request.Resource != null)
+                {
+                    // get amount available
+                    request.Available = Math.Min(request.Resource.Amount, request.Required);
+                }
+                else
+                {
+                    if (!resourceAvailable)
+                    {
+                        // if resource does not exist in simulation assume unlimited resource available
+                        // otherwise 0 will be assigned to available when no resouces match request
+                        request.Available = request.Required;
+                    }
+                }
+            }
 
-				// recheck resource amounts now that resources have been topped up
-				foreach (ResourceRequest request in ResourceRequestList)
-				{
-					// get resource
-					request.Available = 0;
-					if (request.Resource != null)
-					{
-						// get amount available
-						request.Available = Math.Min(request.Resource.Amount, request.Required);
-					}
-				}
-			}
+            // are all resources available
+            List<ResourceRequest> shortfallRequests = ResourceRequestList.Where(a => a.Required > a.Available).ToList();
+            int countShortfallRequests = shortfallRequests.Count();
+            if (countShortfallRequests > 0)
+            {
+                // check what transmutations can occur
+                Resources.TransmutateShortfall(shortfallRequests, true);
+            }
 
-			// report any resource defecits here
-			foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
-			{
-				ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
-				OnShortfallOccurred(rrEventArgs);
-			}
+            // check if need to do transmutations
+            int countTransmutationsSuccessful = shortfallRequests.Where(a => a.TransmutationPossible == true & a.AllowTransmutation).Count();
+            bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false & a.AllowTransmutation).Count() == 0);
 
-			// remove activity resources 
-			// check if deficit and performWithPartial
-			if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || PerformWithPartialResources)
-			{
-				foreach (ResourceRequest request in ResourceRequestList)
-				{
-					// get resource
-					request.Provided = 0;
-					if (request.Resource != null)
-					{
-						// remove resource
-						request.Resource.Remove(request);
-					}
-				}
-				PerformActivity();
-			}
-		}
+            // OR at least one transmutation successful and PerformWithPartialResources
+            if (((countShortfallRequests > 0) & (countShortfallRequests == countTransmutationsSuccessful)) ^ (countTransmutationsSuccessful > 0 & PerformWithPartialResources))
+            {
+                // do transmutations.
+                Resources.TransmutateShortfall(shortfallRequests, false);
 
-		/// <summary>
-		/// Perform Activity with partial resources available
-		/// </summary>
-		[Description("Perform Activity with partial resources available")]
+                // recheck resource amounts now that resources have been topped up
+                foreach (ResourceRequest request in ResourceRequestList)
+                {
+                    // get resource
+                    request.Available = 0;
+                    if (request.Resource != null)
+                    {
+                        // get amount available
+                        request.Available = Math.Min(request.Resource.Amount, request.Required);
+                    }
+                }
+            }
+
+            // report any resource defecits here
+            foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
+            {
+                ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
+                OnShortfallOccurred(rrEventArgs);
+            }
+
+            // remove activity resources 
+            // check if deficit and performWithPartial
+            if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || PerformWithPartialResources)
+            {
+                foreach (ResourceRequest request in ResourceRequestList)
+                {
+                    // get resource
+                    request.Provided = 0;
+                    if (request.Resource != null)
+                    {
+                        // remove resource
+                        request.Resource.Remove(request);
+                    }
+                }
+                return true; //could take all the resources it needed or is able to do with partial amounts
+            }
+            else
+            {
+                return false;  //could not take all the resources it needed.
+            }
+        }
+
+        /// <summary>
+        /// Perform Activity with partial resources available
+        /// </summary>
+        [Description("Perform Activity with partial resources available")]
 		public bool PerformWithPartialResources { get; set; }
 
 		/// <summary>
