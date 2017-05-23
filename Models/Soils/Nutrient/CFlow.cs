@@ -25,6 +25,9 @@ namespace Models.Soils.Nutrient
         private IFunction CO2Efficiency = null;
 
         [Link]
+        private Clock Clock = null;
+
+        [Link]
         private SoluteManager solutes = null;
 
         /// <summary>
@@ -61,6 +64,9 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
+            if (DateUtilities.DatesEqual("01-Oct",Clock.Today))
+            { }
+
             NutrientPool source = Parent as NutrientPool;
             double[] NH4 = solutes.GetSolute("NH4");
             double[] NO3 = solutes.GetSolute("NO3");
