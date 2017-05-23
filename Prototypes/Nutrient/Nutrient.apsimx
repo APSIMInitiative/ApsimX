@@ -354,46 +354,36 @@
           <FixedValue>0</FixedValue>
         </Constant>
       </NutrientPool>
-      <NFlow>
-        <Name>Hydrolysis</Name>
-        <Constant>
-          <Name>NLoss</Name>
-          <FixedValue>0</FixedValue>
-        </Constant>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <BoundFunction>
-            <Name>PotentialRate</Name>
+      <Solute>
+        <Name>NO3</Name>
+        <NFlow>
+          <Name>Denitrification</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[References: 
+
+Rolston DE, Rao PSC, Davidson JM, Jessup RE (1984). "Simulation of denitrification losses of Nitrate fertiliser applied to uncropped, cropped, and manure-amended field plots". Soil Science Vol 137, No 4, pp 270-278.
+             
+Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "Carbon transformations in land areas receiving organic wastes in relation to nonpoint source pollution: A conceptual model".  J.Environ. Qual. 9:434-442.]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>NLoss</Name>
+            <FixedValue>1</FixedValue>
+          </Constant>
+          <MultiplyFunction>
+            <Name>Rate</Name>
             <Constant>
-              <Name>Upper</Name>
-              <FixedValue>1</FixedValue>
-            </Constant>
-            <Constant>
-              <Name>Lower</Name>
-              <FixedValue>0.25</FixedValue>
+              <Name>Constant</Name>
+              <FixedValue>0.0006</FixedValue>
             </Constant>
             <ExpressionFunction>
-              <Name>Rate</Name>
-              <Expression> -1.12 + 1.31 * [Soil].OC + 0.203 * [Soil].PH - 0.155 * [Soil].OC * [Soil].PH</Expression>
-            </ExpressionFunction>
-          </BoundFunction>
-          <MinimumFunction>
-            <Name>PNI</Name>
-            <BoundFunction>
-              <Name>WF</Name>
-              <Constant>
-                <Name>Upper</Name>
-                <FixedValue>1</FixedValue>
-              </Constant>
-              <Constant>
-                <Name>Lower</Name>
-                <FixedValue>0</FixedValue>
-              </Constant>
+              <Name>ActiveC</Name>
               <ExpressionFunction>
-                <Name>Wfactor</Name>
-                <Expression>[WaterFactorForMineralisation]+0.2</Expression>
+                <Name>TotalCppm</Name>
+                <Expression>([Humic].C+[Inert].C+[FOMCarbohydrate].C+[FOMCellulose].C+[FOMLignin].C)/[ppm2kgha]</Expression>
               </ExpressionFunction>
-            </BoundFunction>
+              <Expression>0.0031 * [TotalCppm] + 24.5</Expression>
+            </ExpressionFunction>
             <BoundFunction>
               <Name>TF</Name>
               <Constant>
@@ -406,28 +396,9 @@
               </Constant>
               <ExpressionFunction>
                 <Name>Tfactor</Name>
-                <Expression>([Soil].Temperature/40)+0.2</Expression>
+                <Expression>0.1*Exp(0.046*[Soil].Temperature)</Expression>
               </ExpressionFunction>
             </BoundFunction>
-          </MinimumFunction>
-        </MultiplyFunction>
-        <sourceName>Urea</sourceName>
-        <destinationName>NH4</destinationName>
-      </NFlow>
-      <NFlow>
-        <Name>Nitrification</Name>
-        <Constant>
-          <Name>NLoss</Name>
-          <FixedValue>0</FixedValue>
-        </Constant>
-        <MultiplyFunction>
-          <Name>Rate</Name>
-          <ExpressionFunction>
-            <Name>MichaelisMenton</Name>
-            <Expression>40/([Soil].Nutrient.NH4.ppm+90)</Expression>
-          </ExpressionFunction>
-          <MinimumFunction>
-            <Name>PNI</Name>
             <LinearInterpolationFunction>
               <Name>WF</Name>
               <SoilWaterScale>
@@ -437,55 +408,150 @@
                 <Name>XYPairs</Name>
                 <X>
                   <double>0</double>
-                  <double>0.25</double>
                   <double>1</double>
                   <double>2</double>
                 </X>
                 <Y>
                   <double>0</double>
-                  <double>1</double>
-                  <double>1</double>
                   <double>0</double>
+                  <double>1</double>
                 </Y>
               </XYPairs>
               <XProperty>[SoilWaterScale]</XProperty>
             </LinearInterpolationFunction>
-            <VariableReference>
-              <Name>TF</Name>
-              <VariableName>[TemperatureFactorForMineralisation]</VariableName>
-            </VariableReference>
-            <LinearInterpolationFunction>
-              <Name>pHF</Name>
-              <XYPairs>
-                <Name>XYPairs</Name>
-                <X>
-                  <double>4.5</double>
-                  <double>6</double>
-                  <double>8</double>
-                  <double>9</double>
-                </X>
-                <Y>
-                  <double>0</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>0</double>
-                </Y>
-              </XYPairs>
-              <XProperty>[Soil].PH</XProperty>
-            </LinearInterpolationFunction>
-          </MinimumFunction>
-        </MultiplyFunction>
-        <sourceName>NH4</sourceName>
-        <destinationName>NO3</destinationName>
-      </NFlow>
-      <Solute>
-        <Name>NO3</Name>
+          </MultiplyFunction>
+          <sourceName>NO3</sourceName>
+        </NFlow>
       </Solute>
       <Solute>
         <Name>NH4</Name>
+        <NFlow>
+          <Name>Nitrification</Name>
+          <Constant>
+            <Name>NLoss</Name>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <ExpressionFunction>
+              <Name>MichaelisMenton</Name>
+              <Expression>40/([Soil].Nutrient.NH4.ppm+90)</Expression>
+            </ExpressionFunction>
+            <MinimumFunction>
+              <Name>PNI</Name>
+              <LinearInterpolationFunction>
+                <Name>WF</Name>
+                <SoilWaterScale>
+                  <Name>SoilWaterScale</Name>
+                </SoilWaterScale>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.25</double>
+                    <double>1</double>
+                    <double>2</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[SoilWaterScale]</XProperty>
+              </LinearInterpolationFunction>
+              <VariableReference>
+                <Name>TF</Name>
+                <VariableName>[TemperatureFactorForMineralisation]</VariableName>
+              </VariableReference>
+              <LinearInterpolationFunction>
+                <Name>pHF</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>4.5</double>
+                    <double>6</double>
+                    <double>8</double>
+                    <double>9</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Soil].PH</XProperty>
+              </LinearInterpolationFunction>
+            </MinimumFunction>
+          </MultiplyFunction>
+          <sourceName>NH4</sourceName>
+          <destinationName>NO3</destinationName>
+        </NFlow>
       </Solute>
       <Solute>
         <Name>Urea</Name>
+        <NFlow>
+          <Name>Hydrolysis</Name>
+          <Constant>
+            <Name>NLoss</Name>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <MultiplyFunction>
+            <Name>Rate</Name>
+            <BoundFunction>
+              <Name>PotentialRate</Name>
+              <Constant>
+                <Name>Upper</Name>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>Lower</Name>
+                <FixedValue>0.25</FixedValue>
+              </Constant>
+              <ExpressionFunction>
+                <Name>Rate</Name>
+                <Expression> -1.12 + 1.31 * [Soil].OC + 0.203 * [Soil].PH - 0.155 * [Soil].OC * [Soil].PH</Expression>
+              </ExpressionFunction>
+            </BoundFunction>
+            <MinimumFunction>
+              <Name>PNI</Name>
+              <BoundFunction>
+                <Name>WF</Name>
+                <Constant>
+                  <Name>Upper</Name>
+                  <FixedValue>1</FixedValue>
+                </Constant>
+                <Constant>
+                  <Name>Lower</Name>
+                  <FixedValue>0</FixedValue>
+                </Constant>
+                <ExpressionFunction>
+                  <Name>Wfactor</Name>
+                  <Expression>[WaterFactorForMineralisation]+0.2</Expression>
+                </ExpressionFunction>
+              </BoundFunction>
+              <BoundFunction>
+                <Name>TF</Name>
+                <Constant>
+                  <Name>Upper</Name>
+                  <FixedValue>1</FixedValue>
+                </Constant>
+                <Constant>
+                  <Name>Lower</Name>
+                  <FixedValue>0</FixedValue>
+                </Constant>
+                <ExpressionFunction>
+                  <Name>Tfactor</Name>
+                  <Expression>([Soil].Temperature/40)+0.2</Expression>
+                </ExpressionFunction>
+              </BoundFunction>
+            </MinimumFunction>
+          </MultiplyFunction>
+          <sourceName>Urea</sourceName>
+          <destinationName>NH4</destinationName>
+        </NFlow>
       </Solute>
     </Nutrient>
   </Replacements>
@@ -4979,6 +5045,7 @@
               <string>[Soil].Nutrient.FOMCNR</string>
               <string>[Soil].Nutrient.CNRatioFactorForMineralisation.Value</string>
               <string>[Soil].Nutrient.TemperatureFactorForMineralisation.Value</string>
+              <string>sum([Soil].Nutrient.Biomass.N) as BiomassN</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -5572,6 +5639,7 @@
               <string>[Soil].SoilNitrogen.NO3</string>
               <string>[Soil].SoilNitrogen.urea</string>
               <string>[Soil].SoilNitrogen.urea</string>
+              <string>sum([Soil].SoilNitrogen.MicrobialN) as BiomassN</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -7336,14 +7404,14 @@
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>SoilWater</Name>
+        <Name>BiomassN</Name>
         <Series>
-          <Name>Layer1</Name>
+          <Name>total</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -7352,49 +7420,7 @@
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(1)</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Layer2</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(2)</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Layer3</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-11094807</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.SW(3)</YFieldName>
+          <YFieldName>BiomassN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -12378,6 +12404,7 @@
               <string>[Soil].Nutrient.FOMN</string>
               <string>[Soil].Nutrient.Humic.CNRatio[1]</string>
               <string>[Soil].Nutrient.Biomass.CNRatio[1]</string>
+              <string>sum([Soil].Nutrient.NO3.Denitrification.Loss) as Dnit</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -13244,6 +13271,7 @@ namespace Models
               <string>[SurfaceOrganicMatter].N as SOMN</string>
               <string>[SurfaceOrganicMatter].C as SOMC</string>
               <string>[Soil].SoilNitrogen.NO3</string>
+              <string>sum([Soil].SoilNitrogen.Denitrification) as Dnit</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -14373,6 +14401,49 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Dnit</Name>
+        <Series>
+          <Name>Humic</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Dnit</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title>Date</Title>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
