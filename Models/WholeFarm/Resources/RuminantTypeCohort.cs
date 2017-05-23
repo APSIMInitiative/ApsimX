@@ -8,6 +8,31 @@ using Models.Core;
 
 namespace Models.WholeFarm.Resources
 {
+	/// <summary>
+	/// Holder for all initial ruminant cohorts
+	/// </summary>
+	[Serializable]
+	[ViewName("UserInterface.Views.GridView")]
+	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+	[ValidParent(ParentType = typeof(RuminantType))]
+	public class RuminantInitialCohorts : Model
+	{
+		/// <summary>
+		/// Create the individual ruminant animals for this Ruminant Type (Breed)
+		/// </summary>
+		/// <returns></returns>
+		public List<Ruminant> CreateIndividuals()
+		{
+			List<Ruminant> Individuals = new List<Ruminant>();
+
+			List<RuminantTypeCohort> childNodes = this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().ToList();
+			foreach (RuminantTypeCohort cohort in childNodes)
+			{
+				Individuals.AddRange(cohort.CreateIndividuals());
+			}
+			return Individuals;
+		}
+	}
 
 	/// <summary>
 	/// This stores the initialisation parameters for a Cohort of a specific Ruminant Type.
@@ -15,7 +40,7 @@ namespace Models.WholeFarm.Resources
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(RuminantType))]
+	[ValidParent(ParentType = typeof(RuminantInitialCohorts))]
 	public class RuminantTypeCohort : WFModel
 	{
 		[Link]

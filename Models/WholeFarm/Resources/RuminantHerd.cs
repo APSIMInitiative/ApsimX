@@ -48,18 +48,28 @@ namespace Models.WholeFarm.Resources
 			PurchaseIndividuals = new List<Ruminant>();
 			LastIndividualChanged = new Ruminant();
 
-            List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
-
-            foreach (IModel childModel in childNodes)
-            {
-				//cast the generic IModel to a specfic model.
-				RuminantType ruminantType = childModel as RuminantType;
-				foreach (var ind in ruminantType.CreateIndividuals())
+			// for each Ruminant type 
+			foreach (RuminantInitialCohorts ruminantCohorts in this.Children.Where(a => a.GetType() == typeof(RuminantInitialCohorts)).Cast<RuminantInitialCohorts>().ToList())
+			{
+				foreach (var ind in ruminantCohorts.CreateIndividuals())
 				{
 					ind.SaleFlag = HerdChangeReason.InitialHerd;
 					AddRuminant(ind);
 				}
 			}
+
+			//List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
+
+   //         foreach (IModel childModel in childNodes)
+   //         {
+			//	//cast the generic IModel to a specfic model.
+			//	RuminantType ruminantType = childModel as RuminantType;
+			//	foreach (var ind in ruminantType.CreateIndividuals())
+			//	{
+			//		ind.SaleFlag = HerdChangeReason.InitialHerd;
+			//		AddRuminant(ind);
+			//	}
+			//}
         }
 
 		/// <summary>

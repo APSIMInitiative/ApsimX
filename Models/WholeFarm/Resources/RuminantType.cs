@@ -448,25 +448,6 @@ namespace Models.WholeFarm.Resources
 		public double MethaneProductionCoefficient { get; set; }
 
 		#endregion
-		/// <summary>
-		/// Create the individual ruminant animals for this Ruminant Type (Breed)
-		/// </summary>
-		/// <returns></returns>
-		public List<Ruminant> CreateIndividuals()
-		{
-			List<Ruminant> Individuals = new List<Ruminant>();
-
-			List<RuminantTypeCohort> childNodes = this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().ToList();
-			foreach (RuminantTypeCohort childModel in childNodes)
-			{
-				//cast the generic IModel to a specfic model.
-				RuminantTypeCohort cohort = childModel as RuminantTypeCohort;
-				Individuals.AddRange(cohort.CreateIndividuals());
-			}
-
-			return Individuals;
-		}
-
 
 		////Ruminant Coefficients
 		////---------------------
