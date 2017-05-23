@@ -32,6 +32,14 @@ namespace Models.Soils
         /// <summary>Gets the water.</summary>
         private Water waterNode;
 
+
+        /// <summary>
+        /// Soil Nitrogen model
+        /// </summary>
+        [XmlIgnore]
+        public SoilNitrogen SoilNitrogen { get; private set; }
+
+
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
         /// </summary>
@@ -161,6 +169,7 @@ namespace Models.Soils
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             SoluteManager = Apsim.Find(this, typeof(SoluteManager)) as SoluteManager;
+            SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
             }
 
