@@ -617,7 +617,54 @@ namespace Models.WholeFarm
             }
         }
 
+        /// <summary>
+        /// Searches the DataTable created from the GRASP File using the specified parameters.
+        /// </summary>
+        /// <param name="Region"></param>
+        /// <param name="Soil"></param>
+        /// <param name="ForageNo"></param>
+        /// <param name="GrassBA"></param>
+        /// <param name="LandCon"></param>
+        /// <param name="StkRate"></param>
+        /// <param name="EcolCalculationDate"></param>
+        /// <param name="EcolCalculationInterval"></param>
+        /// <returns></returns>
+        public List<PastureDataType> GetIntervalsPastureData(int Region, int Soil, int ForageNo, int GrassBA, int LandCon, int StkRate,
+                                         DateTime EcolCalculationDate, int EcolCalculationInterval)
+        {
 
+            int startYear = EcolCalculationDate.Year;
+            int startMonth = EcolCalculationDate.Month;
+            DateTime EndDate = EcolCalculationDate.AddMonths(EcolCalculationInterval);
+            int endYear = EndDate.Year;
+            int endMonth = EndDate.Month;
+
+            //http://www.csharp-examples.net/dataview-rowfilter/
+
+            string filter = "( Region = " + Region
+                + ") AND (Soil = " + Soil + ") AND (ForageNo = " + "'" + ForageNo + "'"
+                + ") AND (GrassBA = " + GrassBA + ") AND (LandCon = " + LandCon + ") AND (StkRate = " + StkRate 
+                + ") AND ("
+                + "( Year = " + startYear + " AND Month >= " + startMonth + ")"
+                + " OR  ( Year > " + startYear + " AND Year < " + endYear + ")"
+                + " OR  ( Year = " + endYear + " AND Month <= " + endMonth + ")"
+                + ")";
+
+
+            DataRow[] foundRows = this.PastureFileAsTable.Select(filter);
+
+            List<PastureDataType> filtered = new List<PastureDataType>();
+
+            foreach (DataRow dr in foundRows)
+            {
+                filtered.Add(DataRow2PastureDataType(dr));
+            }
+
+            filtered.Sort((r, s) => DateTime.Compare(r.CutDate, s.CutDate));
+
+            return filtered;
+
+        }
 
         /// <summary>
         /// Searches the DataTable created from the PastureFile using the specified parameters.
@@ -631,10 +678,9 @@ namespace Models.WholeFarm
         /// <param name="Year"></param>
         /// <param name="Month"></param>
         /// <returns>CropDataType containg the crop data for this month</returns>
-        public PastureDataType GetMonthsCropData(int Region, int Soil, int ForageNo, int GrassBA, int LandCon, double StkRate, 
+        public PastureDataType GetMonthsPastureData(int Region, int Soil, int ForageNo, int GrassBA, int LandCon, int StkRate, 
                                          int Year, int Month)
         {
-
             //string climRegion = ClimRegion.ToString(); //' Climatic region
             //string soil = Native_land.ToString();  //' soil
             //string grassBA = Grass_BA.ToString(); //' Grass Basal area
@@ -655,31 +701,10 @@ namespace Models.WholeFarm
             DataRow dr = this.PastureFileAsTable.Rows.Find(keyVals);
 
             if (dr != null)
-            { 
-                PastureDataType pasturepdata = new PastureDataType();
+            {
+                PastureDataType pasturedata = DataRow2PastureDataType(dr);
 
-                pasturepdata.Region   = int.Parse(dr["Region"].ToString());
-                pasturepdata.Soil     = int.Parse(dr["Soil"].ToString());
-                pasturepdata.ForageNo = int.Parse(dr["ForageNo"].ToString());
-                pasturepdata.GrassBA  = int.Parse(dr["GrassBA"].ToString());
-                pasturepdata.LandCon  = int.Parse(dr["LandCon"].ToString());
-                pasturepdata.StkRate  = double.Parse(dr["StkRate"].ToString());
-                pasturepdata.YearNum  = int.Parse(dr["YearNum"].ToString());
-                pasturepdata.Year     = int.Parse(dr["Year"].ToString());
-                pasturepdata.CutNum   = int.Parse(dr["CutNum"].ToString());
-                pasturepdata.Month    = int.Parse(dr["Month"].ToString());
-                pasturepdata.Growth   = double.Parse(dr["Growth"].ToString());
-                pasturepdata.BP1      = double.Parse(dr["BP1"].ToString());
-                pasturepdata.BP2      = double.Parse(dr["BP2"].ToString());
-                pasturepdata.Utilisn  = double.Parse(dr["Utilisn"].ToString());
-                pasturepdata.SoilLoss = double.Parse(dr["SoilLoss"].ToString());
-                pasturepdata.Cover    = double.Parse(dr["Cover"].ToString());
-                pasturepdata.TreeBA   = double.Parse(dr["TreeBA"].ToString());
-                pasturepdata.Rainfall = double.Parse(dr["Rainfall"].ToString());
-                pasturepdata.Runoff   = double.Parse(dr["Runoff"].ToString());
-
-
-                return pasturepdata;
+                return pasturedata;
             }
             else
             {
@@ -696,6 +721,35 @@ namespace Models.WholeFarm
             }
 
         }
+
+        private static PastureDataType DataRow2PastureDataType(DataRow dr)
+        {
+            PastureDataType pasturedata = new PastureDataType();
+
+            pasturedata.Region = int.Parse(dr["Region"].ToString());
+            pasturedata.Soil = int.Parse(dr["Soil"].ToString());
+            pasturedata.ForageNo = int.Parse(dr["ForageNo"].ToString());
+            pasturedata.GrassBA = int.Parse(dr["GrassBA"].ToString());
+            pasturedata.LandCon = int.Parse(dr["LandCon"].ToString());
+            pasturedata.StkRate = int.Parse(dr["StkRate"].ToString());
+            pasturedata.YearNum = int.Parse(dr["YearNum"].ToString());
+            pasturedata.Year = int.Parse(dr["Year"].ToString());
+            pasturedata.CutNum = int.Parse(dr["CutNum"].ToString());
+            pasturedata.Month = int.Parse(dr["Month"].ToString());
+            pasturedata.Growth = double.Parse(dr["Growth"].ToString());
+            pasturedata.BP1 = double.Parse(dr["BP1"].ToString());
+            pasturedata.BP2 = double.Parse(dr["BP2"].ToString());
+            pasturedata.Utilisn = double.Parse(dr["Utilisn"].ToString());
+            pasturedata.SoilLoss = double.Parse(dr["SoilLoss"].ToString());
+            pasturedata.Cover = double.Parse(dr["Cover"].ToString());
+            pasturedata.TreeBA = double.Parse(dr["TreeBA"].ToString());
+            pasturedata.Rainfall = double.Parse(dr["Rainfall"].ToString());
+            pasturedata.Runoff = double.Parse(dr["Runoff"].ToString());
+            pasturedata.CutDate = new DateTime(pasturedata.Year, pasturedata.Month, 1);
+            return pasturedata;
+        }
+
+
 
 
 
@@ -1152,7 +1206,7 @@ namespace Models.WholeFarm
         /// <summary>
         /// Stocking Rate
         /// </summary>
-        public double StkRate;
+        public int StkRate;
 
         /// <summary>
         /// Year Number (counting from start of simulation ?)
@@ -1218,6 +1272,13 @@ namespace Models.WholeFarm
         /// Runoff
         /// </summary>
         public double Runoff;
+
+
+        /// <summary>
+        /// Combine Year and Month to create a DateTime. 
+        /// Day is set to the 1st of the month.
+        /// </summary>
+        public DateTime CutDate;
 
     }
 

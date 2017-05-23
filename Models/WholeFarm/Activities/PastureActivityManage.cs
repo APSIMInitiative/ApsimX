@@ -43,7 +43,7 @@ namespace Models.WholeFarm.Activities
         /// Number for the Soil Type for the pasture.
         /// </summary>
         [Description("Soil Type")]
-        public int Soil { get; set; }
+        public int SoilNumber { get; set; }
 
         /// <summary>
         /// Name of land type where pasture is located
@@ -58,17 +58,21 @@ namespace Models.WholeFarm.Activities
 		public string FeedTypeName { get; set; }
 
 		/// <summary>
-		/// Starting Amount (kg)
+		/// Starting amount (kg)
 		/// </summary>
 		[Description("Starting Amount (kg/ha)")]
 		public double StartingAmount { get; set; }
 
-		private double startingAmount = 0;
+        /// <summary>
+        /// Starting stocking rate (Adult Equivalents/square km)
+        /// </summary>
+        [Description("Starting stocking rate (Adult Equivalents/sqkm)")]
+        public double StartingStockingRate { get; set; }
 
-		/// <summary>
-		/// Area of pasture
-		/// </summary>
-		[XmlIgnore]
+        /// <summary>
+        /// Area of pasture
+        /// </summary>
+        [XmlIgnore]
 		public double Area { get; set; }
 
 		/// <summary>
@@ -76,23 +80,24 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[XmlIgnore]
 		public Relationship LandConditionIndex { get; set; }
+        private int pkLandCon = 0; //rounded integer value used as primary key in GRASP file.
 
-		/// <summary>
-		/// Grass basal area
-		/// </summary>
-		[XmlIgnore]
+        /// <summary>
+        /// Grass basal area
+        /// </summary>
+        [XmlIgnore]
 		public Relationship GrassBasalArea { get; set; }
+        private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
 
-		/// <summary>
-		/// Stocking Rate (#/ha)
-		/// </summary>
-		[XmlIgnore]
-		public double StockingRate { get; set; }
 
-		/// <summary>
-		/// Perennials
-		/// </summary>
-		[XmlIgnore]
+        private double StockingRateSummed;  //summed since last Ecological Calculation.
+        private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
+
+
+        /// <summary>
+        /// Perennials
+        /// </summary>
+        [XmlIgnore]
 		public double Perennials { get; set; }
 
 		/// <summary>
@@ -143,10 +148,18 @@ namespace Models.WholeFarm.Activities
 			}
 		}
 
-		/// <summary>An event handler to allow us to initialise ourselves.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("Commencing")]
+        private double ha2sqkm = 0.01; //convert ha to square km
+
+        private bool gotLandRequested = false; //was this pasture able to get the land it requested ?
+
+        //EcologicalCalculationIntervals worth of data read from GRASP file 
+        private List<PastureDataType> PastureDataList;
+
+
+     /// <summary>An event handler to allow us to initialise ourselves.</summary>
+     /// <param name="sender">The sender.</param>
+     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+       [EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			// Get Land condition relationship from children
@@ -166,154 +179,311 @@ namespace Models.WholeFarm.Activities
 			LinkedNativeFoodType = Resources.GetResourceItem(typeof(GrazeFoodStore), FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
 			if (LinkedNativeFoodType == null)
 			{
-				Summary.WriteWarning(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
+				throw new ApsimXException(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
 			}
-			startingAmount = StartingAmount;
 
-			LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
-			LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
+
 		}
 
-		/// <summary>An event handler to allow us to get next supply of pasture</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFUpdatePasture")]
+
+
+
+        /// <summary>An event handler to allow us to get next supply of pasture</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+
+            if (Area == 0 & AreaRequested > 0)
+            {
+                ResourceRequestList = new List<ResourceRequest>();
+                ResourceRequestList.Add(new ResourceRequest()
+                {
+                    AllowTransmutation = false,
+                    Required = AreaRequested * ((UnitsOfArea == UnitsOfAreaTypes.Hectares) ? 1 : 100),
+                    ResourceType = typeof(Land),
+                    ResourceTypeName = LandTypeNameToUse,
+                    ActivityName = this.Name,
+                    Reason = "Assign",
+                    FilterDetails = null
+                }
+                );
+            }
+
+            if (ResourceRequestList.Count() > 0)
+            {
+                gotLandRequested = TakeResources(ResourceRequestList);
+            }
+
+            //Now the Land has been allocated we have an Area 
+            if (gotLandRequested)
+            {
+                //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
+                Area = ResourceRequestList.FirstOrDefault().Available; 
+                LinkedNativeFoodType.Area = Area;
+
+                SetupStartingPasturePools(StartingAmount);
+
+                LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
+                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
+                LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StartingStockingRate;
+                StockingRateSummed = StartingStockingRate;
+
+                //Now we have a stocking rate and we have starting values for Land Condition and Grass Basal Area
+                //get the starting pasture data list from GRASP
+                GetPastureDataList_TodayToNextEcolCalculation();
+            }
+
+        }
+
+        /// <summary>An event handler to allow us to get next supply of pasture</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("WFUpdatePasture")]
 		private void OnWFUpdatePasture(object sender, EventArgs e)
 		{
-			//TODO: Get pasture growth from pasture model or GRASP output
-			double AmountToAdd = 0;
-            //double AmountToAdd = FileGRASP.GetPasture(LandConditionIndex.Value, GrassBasalArea.Value, Utilisation);
-            int GrassBA = (int)Math.Ceiling(GrassBasalArea.Value);
-            int LandCon = (int)Math.Ceiling(LandConditionIndex.Value);
+            if (PastureDataList != null)
+            {            
+			    double growth = 0;
 
+                int year = Clock.Today.Year;
+                int month = Clock.Today.Month;
 
-            PastureDataType pasturedata = FileGRASP.GetMonthsCropData(Region, Soil, 1,
-               GrassBA, LandCon, StockingRate, Clock.Today.Year, Clock.Today.Month);
+                //Get this months pasture data from the pasture data list
+                PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
 
-            AmountToAdd = pasturedata.Growth;
-
-            if (AmountToAdd> 0)
-			{
-				GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
-				newPasture.Age = 0;
-				newPasture.Set(AmountToAdd * Area);
-				newPasture.DMD = this.LinkedNativeFoodType.DMD;
-				newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen;
-				newPasture.DryMatter = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
-				newPasture.DryMatter = Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatter);
-				this.LinkedNativeFoodType.Add(newPasture);
-			}
-		}
+                growth = pasturedata.Growth;
+           
+                if (growth > 0)
+			    {
+				    GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
+				    newPasture.Age = 0;
+				    newPasture.Set(growth * Area);  //TODO: should this add and not set the amount?
+				    newPasture.DMD = this.LinkedNativeFoodType.DMD;
+				    newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen;
+				    newPasture.DryMatter = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+				    newPasture.DryMatter = Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatter);
+				    this.LinkedNativeFoodType.Add(newPasture);
+			    }
+            }
+        }
 
 		/// <summary>
-		/// Function to calculate ecological indicators
+		/// Function to calculate ecological indicators. 
+        /// By summing the monthly stocking rates so when you do yearly ecological calculation 
+        /// you can get average monthly stocking rate for the whole year.
 		/// </summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("WFCalculateEcologicalState")]
 		private void OnWFCalculateEcologicalState(object sender, EventArgs e)
-		{
-			// This event happens after growth and pasture consumption and animal death
-			// But before any management, buying and selling of animals.
-			
-			// update monthly stocking rate total
-			StockingRate += Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent)/Area;
+        {
+            // This event happens after growth and pasture consumption and animal death
+            // But before any management, buying and selling of animals.
 
-			if (WholeFarm.IsEcologicalIndicatorsCalculationMonth())
-			{
-				CalculateEcologicalIndicators();
-			}
-		}
+            // add this months stocking rate to running total 
+            StockingRateSummed += CalculateStockingRateRightNow();
 
-		/// <summary>
-		/// Function to age resource pools
-		/// </summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFAgeResources")]
-		private void OnWFAgeResources(object sender, EventArgs e)
-		{
-			// decay N and DMD of pools and age by 1 month
-			foreach (var pool in LinkedNativeFoodType.Pools)
-			{
-				pool.Nitrogen = Math.Max(pool.Nitrogen * (1 - LinkedNativeFoodType.DecayNitrogen), LinkedNativeFoodType.MinimumNitrogen);
-				pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
+            CalculateEcologicalIndicators();
+        }
 
-				double detach = LinkedNativeFoodType.CarryoverDetachRate;
-				if (pool.Age<12)
-				{
-					detach = LinkedNativeFoodType.DetachRate;
-					pool.Age++;
-				}
-				pool.Set(pool.Amount * (1-detach));
-			}
-			// remove all pools with less than 10g of food
-			LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
-		}
+
+
+        /// <summary>
+        /// Function to age resource pools
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("WFAgeResources")]
+        private void OnWFAgeResources(object sender, EventArgs e)
+        {
+            // decay N and DMD of pools and age by 1 month
+            foreach (var pool in LinkedNativeFoodType.Pools)
+            {
+                pool.Nitrogen = Math.Max(pool.Nitrogen * (1 - LinkedNativeFoodType.DecayNitrogen), LinkedNativeFoodType.MinimumNitrogen);
+                pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
+
+                double detach = LinkedNativeFoodType.CarryoverDetachRate;
+                if (pool.Age < 12)
+                {
+                    detach = LinkedNativeFoodType.DetachRate;
+                    pool.Age++;
+                }
+                pool.Set(pool.Amount * (1 - detach));
+            }
+            // remove all pools with less than 10g of food
+            LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
+        }
+
+
+
+        private void SetupStartingPasturePools(double StartingGrowth)
+        {
+            // Initial biomass
+            double amountToAdd = Area * StartingGrowth;
+            if (amountToAdd <= 0) return;
+
+            // Set up pasture pools to start run based on month and user defined pasture properties
+            // Locates the previous five months where growth occurred (Nov-Mar) and applies decomposition to current month
+            // This months growth will not be included.
+
+            int month = Clock.Today.Month;
+            int monthCount = 0;
+            int includedMonthCount = 0;
+            double propBiomass = 1.0;
+            double currentN = LinkedNativeFoodType.GreenNitrogen;
+            // NABSA changes N by 0.8 for particular months. Not needed here as decay included.
+            double currentDMD = currentN * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+            currentDMD = Math.Max(LinkedNativeFoodType.MinimumDMD, currentDMD);
+            LinkedNativeFoodType.Pools.Clear();
+
+            List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
+
+            while (includedMonthCount < 5)
+            {
+                if (month == 0) month = 12;
+                if (month <= 3 | month >= 11)
+                {
+                    // add new pool
+                    newPools.Add(new GrazeFoodStorePool()
+                    {
+                        Age = monthCount,
+                        Nitrogen = currentN,
+                        DMD = currentDMD,
+                        StartingAmount = propBiomass
+                    });
+                    includedMonthCount++;
+                }
+                propBiomass *= 1 - LinkedNativeFoodType.DetachRate;
+                currentN *= 1 - LinkedNativeFoodType.DecayNitrogen;
+                currentN = Math.Max(currentN, LinkedNativeFoodType.MinimumNitrogen);
+                currentDMD *= 1 - LinkedNativeFoodType.DecayDMD;
+                currentDMD = Math.Max(currentDMD, LinkedNativeFoodType.MinimumDMD);
+                monthCount++;
+                month--;
+            }
+
+            // assign pasture biomass to pools based on proportion of total
+            double total = newPools.Sum(a => a.StartingAmount);
+            foreach (var pool in newPools)
+            {
+                pool.Set(amountToAdd * (pool.StartingAmount / total));
+            }
+
+            // remove this months growth from pool age 0 to keep biomass at approximately setup.
+            // Get this months growth
+            double growth = 0; // GRASPFile.Get(xxxxxxxxx)
+
+            double thisMonthsGrowth = 0;
+            if (thisMonthsGrowth > 0)
+            {
+                GrazeFoodStorePool thisMonth = newPools.Where(a => a.Age == 0).FirstOrDefault() as GrazeFoodStorePool;
+                if (thisMonth != null)
+                {
+                    thisMonth.Set(Math.Max(0, thisMonth.Amount - growth));
+                }
+            }
+
+            // Add to pasture. This will add pool to pasture available store.
+            foreach (var pool in newPools)
+            {
+                LinkedNativeFoodType.Add(pool);
+            }
+
+        }
+
+
+        private double CalculateStockingRateRightNow()
+        {
+            return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * ha2sqkm);
+
+        }
+
+
 
 		/// <summary>
 		/// Method to perform calculation of all ecological indicators.
 		/// </summary>
 		private void CalculateEcologicalIndicators()
 		{
-			// Calculate change in Land Condition index and Grass basal area
-			double utilisation = LinkedNativeFoodType.PercentUtilisation;
 
-			LandConditionIndex.Modify(utilisation);
-			LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.Value;
-			GrassBasalArea.Modify(utilisation);
-			LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.Value;
+            //If it is time to do yearly calculation
+            if (WholeFarm.IsEcologicalIndicatorsCalculationMonth())
+            {
+                // Calculate change in Land Condition index and Grass basal area
+                double utilisation = LinkedNativeFoodType.PercentUtilisation;
 
-			// Calculate average monthly stocking rate
-			// Check number of months to use
-			int monthdiff = ((WholeFarm.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + WholeFarm.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month;
-			if(monthdiff>=WholeFarm.EcologicalIndicatorsCalculationInterval)
-			{
-				monthdiff = WholeFarm.EcologicalIndicatorsCalculationInterval;
-			}
-			StockingRate /= monthdiff;
-			LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StockingRate;
+                LandConditionIndex.Modify(utilisation);
+                LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.Value;
+                GrassBasalArea.Modify(utilisation);
+                //TODO: should line below be GrassBasalArea instead of LandConditionIndex again ?
+                LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.Value;
 
-			//erosion
-			//tree basal area
-			//perennials
-			Perennials = 92.2 * (1 - Math.Pow(LandConditionIndex.Value,3.35) / Math.Pow(LandConditionIndex.Value,3.35 + 137.7)) - 2.2;
-			//%runoff
-			//methane
-			//soilC
-			//TreeC
-			//Burnkg
-			//methaneFire
-			//NOxFire
-			//%utilisation
-			LinkedNativeFoodType.CurrentEcologicalIndicators.Utilisation = utilisation;
+                // Calculate average monthly stocking rate
+                // Check number of months to use
+                int monthdiff = ((WholeFarm.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + WholeFarm.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month;
+                if (monthdiff >= WholeFarm.EcologicalIndicatorsCalculationInterval)
+                {
+                    monthdiff = WholeFarm.EcologicalIndicatorsCalculationInterval;
+                }
+                LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StockingRateSummed / monthdiff;
 
-			// Reset all stores
-			StockingRate = 0;
+                //erosion
+                //tree basal area
+                //perennials
+                Perennials = 92.2 * (1 - Math.Pow(LandConditionIndex.Value, 3.35) / Math.Pow(LandConditionIndex.Value, 3.35 + 137.7)) - 2.2;
+                //%runoff
+                //methane
+                //soilC
+                //TreeC
+                //Burnkg
+                //methaneFire
+                //NOxFire
+                //%utilisation
+                LinkedNativeFoodType.CurrentEcologicalIndicators.Utilisation = utilisation;
+
+                // Reset running total for stocking rate
+                StockingRateSummed = 0;
+
+                GetPastureDataList_TodayToNextEcolCalculation();
+            }
 		}
 
-		/// <summary>
-		/// Method to determine resources required for this activity in the current month
-		/// </summary>
-		/// <returns>A list of resource requests</returns>
-		public override List<ResourceRequest> DetermineResourcesNeeded()
+
+        /// <summary>
+        /// From GRASP File get all the Pasture Data from today to the next Ecological Calculation
+        /// </summary>
+        private void GetPastureDataList_TodayToNextEcolCalculation()
+        {
+            //In IAT it only updates the GrassBA, LandCon and StockingRate once a year not every month.
+            //And the month they are updated on each year is whatever the starting month was for the run.
+
+            //round the doubles to nearest integers so can be used as primary key
+            double landConditionIndex = LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex;
+            double grassBasalArea = LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea;
+            pkGrassBA = (int)(Math.Round(grassBasalArea / 2, 0) * 2); //weird way but this is how NABSA does it.
+            pkLandCon = (int)(Math.Round((landConditionIndex - 1.1) / 2, 0) * 2 + 1);
+            double stockingRate = LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate;
+            pkStkRate = (int)Math.Round(stockingRate);
+
+
+            PastureDataList = FileGRASP.GetIntervalsPastureData(Region, SoilNumber, 1,
+               pkGrassBA, pkLandCon, pkStkRate, Clock.Today, EcolCalculationInterval);
+        }
+
+
+
+
+
+
+
+        /// <summary>
+        /// Method to determine resources required for this activity in the current month
+        /// </summary>
+        /// <returns>A list of resource requests</returns>
+        public override List<ResourceRequest> DetermineResourcesNeeded()
 		{
-			if(Area==0 & AreaRequested>0)
-			{
-				ResourceRequestList = new List<ResourceRequest>();
-				ResourceRequestList.Add(new ResourceRequest()
-				{
-					AllowTransmutation = false,
-					Required = AreaRequested*((UnitsOfArea == UnitsOfAreaTypes.Hectares)?1:100),
-					ResourceType = typeof(Land),
-					ResourceTypeName = LandTypeNameToUse,
-					ActivityName = this.Name,
-					Reason = "Assign",
-					FilterDetails = null
-				}
-				);
-				return ResourceRequestList;
-			}
 			return null;
 		}
 
@@ -322,82 +492,6 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public override void PerformActivity()
 		{
-			if(ResourceRequestList.Count() > 0)
-			{
-				Area = ResourceRequestList.FirstOrDefault().Available;
-				LinkedNativeFoodType.Area = Area;
-
-				// Initial biomass
-				double amountToAdd = Area * startingAmount;
-				if (amountToAdd <= 0) return;
-
-				// Set up pasture pools to start run based on month and user defined pasture properties
-				// Locates the previous five months where growth occurred (Nov-Mar) and applies decomposition to current month
-				// This months growth will not be included.
-
-				int month = Clock.Today.Month;
-				int monthCount = 0;
-				int includedMonthCount = 0;
-				double propBiomass = 1.0;
-				double currentN = LinkedNativeFoodType.GreenNitrogen;
-				// NABSA changes N by 0.8 for particular months. Not needed here as decay included.
-				double currentDMD = currentN * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
-				currentDMD = Math.Max(LinkedNativeFoodType.MinimumDMD, currentDMD);
-				LinkedNativeFoodType.Pools.Clear();
-
-				List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
-
-				while (includedMonthCount < 5)
-				{
-					if (month == 0) month = 12;
-					if(month<=3 | month>=11)
-					{
-						// add new pool
-						newPools.Add(new GrazeFoodStorePool()
-						{
-							Age = monthCount,
-							Nitrogen = currentN,
-							DMD = currentDMD,
-							StartingAmount = propBiomass
-						});
-						includedMonthCount++;
-					}
-					propBiomass *= 1 - LinkedNativeFoodType.DetachRate;
-					currentN *= 1 - LinkedNativeFoodType.DecayNitrogen;
-					currentN = Math.Max(currentN, LinkedNativeFoodType.MinimumNitrogen);
-					currentDMD *= 1 - LinkedNativeFoodType.DecayDMD;
-					currentDMD = Math.Max(currentDMD, LinkedNativeFoodType.MinimumDMD);
-					monthCount++;
-					month--;
-				}
-
-				// assign pasture biomass to pools based on proportion of total
-				double total = newPools.Sum(a => a.StartingAmount);
-				foreach (var pool in newPools)
-				{
-					pool.Set(amountToAdd * (pool.StartingAmount / total));
-				}
-
-				// remove this months growth from pool age 0 to keep biomass at approximately setup.
-				// Get this months growth
-				double growth = 0; // GRASPFile.Get(xxxxxxxxx)
-
-				double thisMonthsGrowth = 0;
-				if (thisMonthsGrowth> 0)
-				{
-					GrazeFoodStorePool thisMonth = newPools.Where(a => a.Age == 0).FirstOrDefault() as GrazeFoodStorePool;
-					if(thisMonth!=null)
-					{
-						thisMonth.Set(Math.Max(0, thisMonth.Amount - growth));
-					}
-				}
-
-				// Add to pasture. This will add pool to pasture available store.
-				foreach (var pool in newPools)
-				{
-					LinkedNativeFoodType.Add(pool);
-				}
-			}
 			return;
 		}
 

@@ -542,10 +542,11 @@
             </Relationship>
             <PerformWithPartialResources>true</PerformWithPartialResources>
             <Region>1</Region>
-            <Soil>1</Soil>
+            <SoilNumber>1</SoilNumber>
             <LandTypeNameToUse>NthQld_NtvPast_SandyCntry</LandTypeNameToUse>
             <FeedTypeName>Native Pasture</FeedTypeName>
             <StartingAmount>2000</StartingAmount>
+            <StartingStockingRate>1</StartingStockingRate>
             <UnitsOfArea>Hectares</UnitsOfArea>
             <AreaRequested>30000</AreaRequested>
             <EcolCalculationMonth>9</EcolCalculationMonth>
