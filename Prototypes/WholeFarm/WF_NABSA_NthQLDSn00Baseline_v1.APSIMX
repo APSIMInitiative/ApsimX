@@ -541,6 +541,8 @@
               </YValues>
             </Relationship>
             <PerformWithPartialResources>true</PerformWithPartialResources>
+            <Region>1</Region>
+            <Soil>1</Soil>
             <LandTypeNameToUse>NthQld_NtvPast_SandyCntry</LandTypeNameToUse>
             <FeedTypeName>Native Pasture</FeedTypeName>
             <StartingAmount>2000</StartingAmount>
