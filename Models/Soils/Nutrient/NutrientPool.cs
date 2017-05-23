@@ -22,7 +22,7 @@
         IFunction InitialiseNitrogen = null;
 
         /// <summary>Initial carbon/nitrogen ratio</summary>
-        public double[] CNRatio { get { return MathUtilities.Divide(C, N); } }
+        public double[] CNRatio { get { return MathUtilities.Divide(C, N, 0); } }
 
         /// <summary>Amount of carbon (kg/ha)</summary>
         public double[] C { get; set; }
