@@ -38,53 +38,23 @@ namespace Models.WholeFarm.Activities
 		[Description("Price of breeding sire")]
 		public double BreedingSirePrice { get; set; }
 
-		/// <summary>
-		/// Distance to market
-		/// </summary>
-		[Description("Distance to market (km)")]
-		public double DistanceToMarket { get; set; }
+		///// <summary>
+		///// Yard fees when sold ($/head)
+		///// </summary>
+		//[Description("Yard fees when sold ($/head)")]
+		//public double YardFees { get; set; }
 
-		/// <summary>
-		/// Cost of trucking ($/km/truck)
-		/// </summary>
-		[Description("Cost of trucking ($/km/truck)")]
-		public double CostPerKmTrucking { get; set; }
+		///// <summary>
+		///// MLA fees when sold ($/head)
+		///// </summary>
+		//[Description("MLA fees when sold ($/head)")]
+		//public double MLAFees { get; set; }
 
-		/// <summary>
-		/// Number of 450kg animals per truck load
-		/// </summary>
-		[Description("Number of 450kg animals per truck load")]
-		public double Number450kgPerTruck { get; set; }
-
-		/// <summary>
-		/// Yard fees when sold ($/head)
-		/// </summary>
-		[Description("Yard fees when sold ($/head)")]
-		public double YardFees { get; set; }
-
-		/// <summary>
-		/// MLA fees when sold ($/head)
-		/// </summary>
-		[Description("MLA fees when sold ($/head)")]
-		public double MLAFees { get; set; }
-
-		/// <summary>
-		/// Minimum number of truck loads before selling (0 continuous sales)
-		/// </summary>
-		[Description("Minimum number of truck loads before selling (0 continuous sales)")]
-		public double MinimumTrucksBeforeSelling { get; set; }
-
-		/// <summary>
-		/// Minimum proportion of truck load before selling (0 continuous sales)
-		/// </summary>
-		[Description("Minimum proportion of truck load before selling (0 continuous sales)")]
-		public double MinimumLoadBeforeSelling { get; set; }
-
-		/// <summary>
-		/// Sales commission to agent (%)
-		/// </summary>
-		[Description("Sales commission to agent (%)")]
-		public double SalesCommission { get; set; }
+		///// <summary>
+		///// Sales commission to agent (%)
+		///// </summary>
+		//[Description("Sales commission to agent (%)")]
+		//public double SalesCommission { get; set; }
 
 		/// <summary>
 		/// name of account to use
@@ -94,11 +64,8 @@ namespace Models.WholeFarm.Activities
 
 		private FinanceType bankAccount = null;
 		private Finance finance = null;
-
-		/// <summary>
-		/// Labour settings
-		/// </summary>
-		private List<LabourFilterGroupSpecified> labour { get; set; }
+		private List<LabourFilterGroupSpecified> labour = null;
+		private TruckingSetings trucking = null;
 
 		/// <summary>An event handler to allow us to initialise herd pricing.</summary>
 		/// <param name="sender">The sender.</param>
@@ -107,7 +74,6 @@ namespace Models.WholeFarm.Activities
 		private void OnStartOfSimulation(object sender, EventArgs e)
 		{
 			// get account
-
 			Finance finance = Resources.FinanceResource();
 			if(finance!=null)
 			{
@@ -115,8 +81,9 @@ namespace Models.WholeFarm.Activities
 				bankAccount = Resources.GetResourceItem(typeof(Finance), BankAccountName, out tmp) as FinanceType;
 				if (!tmp & BankAccountName != "")
 				{
-					Summary.WriteWarning(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
-					throw new Exception(String.Format("Unable to find bank account specified in ({0}).", this.Name));
+					string error = String.Format("Unable to find bank account specified in ({0}).", this.Name);
+					Summary.WriteWarning(this, error);
+					throw new Exception(error);
 				}
 			}
 
@@ -137,6 +104,9 @@ namespace Models.WholeFarm.Activities
 			// get labour specifications
 			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+
+			// get trucking settings
+			trucking = this.Children.Where(a => a.GetType() == typeof(TruckingSetings)).Cast<TruckingSetings>().FirstOrDefault();
 		}
 
 		/// <summary>An event handler to call for animal purchases</summary>
@@ -145,73 +115,83 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("WFAnimalBuy")]
 		private void OnWFAnimalBuy(object sender, EventArgs e)
 		{
-			// This activity will purchase animals based on available funds.
-
-			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-
-			var newRequests = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == BreedName).ToList();
-			foreach (var newgroup in newRequests.GroupBy(a => a.SaleFlag))
+			if(trucking==null)
 			{
-				double fundsAvailable = 0;
-				if (bankAccount != null)
-				{
-					fundsAvailable = bankAccount.FundsAvailable;
-				}
-				double cost = 0;
-				double shortfall = 0;
-				bool fundsexceeded = false;
-				foreach (var newind in newgroup)
-				{
-					if(finance!=null)  // perform with purchasing
-					{
-						double value = 0;
-						if (newgroup.Key == HerdChangeReason.SirePurchase)
-						{
-							value = BreedingSirePrice;
-						}
-						else
-						{
-							value = newind.BreedParams.ValueofIndividual(newind, true);
-						}
-						if (cost + value <= fundsAvailable & fundsexceeded == false)
-						{
-							ruminantHerd.AddRuminant(newind);
-							cost += value;
-						}
-						else
-						{
-							fundsexceeded = true;
-							shortfall += value;
-						}
-					}
-					else // no financial transactions
-					{
-						ruminantHerd.AddRuminant(newind);
-					}
-				}
-
-				if (bankAccount != null)
-				{
-					ResourceRequest purchaseRequest = new ResourceRequest();
-					purchaseRequest.ActivityName = this.Name;
-					purchaseRequest.Required = cost;
-					purchaseRequest.AllowTransmutation = false;
-					purchaseRequest.Reason = newgroup.Key.ToString();
-					bankAccount.Remove(purchaseRequest);
-
-					// report any financial shortfall in purchases
-					if (shortfall > 0)
-					{
-						purchaseRequest.Available = bankAccount.Amount;
-						purchaseRequest.Required = cost + shortfall;
-						purchaseRequest.Provided = cost;
-						purchaseRequest.ResourceType = typeof(Finance);
-						purchaseRequest.ResourceTypeName = BankAccountName;
-						ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
-						OnShortfallOccurred(rre);
-					}
-				}
+				BuyWithoutTrucking();
 			}
+			else
+			{
+				BuyWithTrucking();
+			}
+
+			// old code with finances broken down and reported by purchase reason
+
+			//// This activity will purchase animals based on available funds.
+			//RuminantHerd ruminantHerd = Resources.RuminantHerd();
+
+			//var newRequests = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == BreedName).ToList();
+			//foreach (var newgroup in newRequests.GroupBy(a => a.SaleFlag))
+			//{
+			//	double fundsAvailable = 0;
+			//	if (bankAccount != null)
+			//	{
+			//		fundsAvailable = bankAccount.FundsAvailable;
+			//	}
+			//	double cost = 0;
+			//	double shortfall = 0;
+			//	bool fundsexceeded = false;
+			//	foreach (var newind in newgroup)
+			//	{
+			//		if(finance!=null)  // perform with purchasing
+			//		{
+			//			double value = 0;
+			//			if (newgroup.Key == HerdChangeReason.SirePurchase)
+			//			{
+			//				value = BreedingSirePrice;
+			//			}
+			//			else
+			//			{
+			//				value = newind.BreedParams.ValueofIndividual(newind, true);
+			//			}
+			//			if (cost + value <= fundsAvailable & fundsexceeded == false)
+			//			{
+			//				ruminantHerd.AddRuminant(newind);
+			//				cost += value;
+			//			}
+			//			else
+			//			{
+			//				fundsexceeded = true;
+			//				shortfall += value;
+			//			}
+			//		}
+			//		else // no financial transactions
+			//		{
+			//			ruminantHerd.AddRuminant(newind);
+			//		}
+			//	}
+
+			//	if (bankAccount != null)
+			//	{
+			//		ResourceRequest purchaseRequest = new ResourceRequest();
+			//		purchaseRequest.ActivityName = this.Name;
+			//		purchaseRequest.Required = cost;
+			//		purchaseRequest.AllowTransmutation = false;
+			//		purchaseRequest.Reason = newgroup.Key.ToString();
+			//		bankAccount.Remove(purchaseRequest);
+
+			//		// report any financial shortfall in purchases
+			//		if (shortfall > 0)
+			//		{
+			//			purchaseRequest.Available = bankAccount.Amount;
+			//			purchaseRequest.Required = cost + shortfall;
+			//			purchaseRequest.Provided = cost;
+			//			purchaseRequest.ResourceType = typeof(Finance);
+			//			purchaseRequest.ResourceTypeName = BankAccountName;
+			//			ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
+			//			OnShortfallOccurred(rre);
+			//		}
+			//	}
+			//}
 		}
 
 		/// <summary>An event handler to call for animal sales</summary>
@@ -226,15 +206,189 @@ namespace Models.WholeFarm.Activities
 			double saleValue = 0;
 			double saleWeight = 0;
 			int head = 0;
+			double AESum = 0;
 
 			// get current untrucked list of animals flagged for sale
 			List<Ruminant> herd = ruminantHerd.Herd.Where(a => a.SaleFlag != HerdChangeReason.None & a.Breed == BreedName).OrderByDescending(a => a.Weight).ToList();
 
+			if (trucking == null)
+			{
+				// no trucking just sell
+				head = herd.Count();
+				foreach (var ind in herd)
+				{
+					AESum += ind.AdultEquivalent;
+					saleValue += ind.BreedParams.ValueofIndividual(ind, false);
+					saleWeight += ind.Weight;
+					ruminantHerd.RemoveRuminant(ind);
+				}
+			}
+			else
+			{
+				// if sale herd > min loads before allowing sale
+				if (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck >= trucking.MinimumTrucksBeforeSelling)
+				{
+					// while truck to fill
+					while (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck > trucking.MinimumLoadBeforeSelling)
+					{
+						bool nonloaded = true;
+						trucks++;
+						double load450kgs = 0;
+						// while truck below carrying capacity load individuals
+						foreach (var ind in herd)
+						{
+							if (load450kgs + (ind.Weight / 450.0) <= trucking.Number450kgPerTruck)
+							{
+								nonloaded = false;
+								head++;
+								AESum += ind.AdultEquivalent;
+								load450kgs += ind.Weight / 450.0;
+								saleValue += ind.BreedParams.ValueofIndividual(ind, false);
+								saleWeight += ind.Weight;
+								ruminantHerd.RemoveRuminant(ind);
+							}
+						}
+						if (nonloaded)
+						{
+							Summary.WriteWarning(this, String.Format("There was a problem loading the sale truck as sale individuals did not meet the loading criteria for breed {0}", BreedName));
+							break;
+						}
+						herd = ruminantHerd.Herd.Where(a => a.SaleFlag != HerdChangeReason.None & a.Breed == BreedName).OrderByDescending(a => a.Weight).ToList();
+					}
+
+					if (bankAccount != null && (trucks > 0 || trucking == null))
+					{
+						ResourceRequest expenseRequest = new ResourceRequest();
+						expenseRequest.ActivityName = this.Name;
+						expenseRequest.AllowTransmutation = false;
+
+						// calculate transport costs
+						if (trucking != null)
+						{
+							expenseRequest.Required = trucks * trucking.DistanceToMarket * trucking.CostPerKmTrucking;
+							expenseRequest.Reason = "Transport";
+							bankAccount.Remove(expenseRequest);
+						}
+
+						foreach (RuminantSaleFee item in this.Children.Where(a => a.GetType() == typeof(RuminantSaleFee)).Cast<RuminantSaleFee>().ToList())
+						{
+							switch (item.PaymentStyle)
+							{
+								case HerdPaymentStyleType.Fixed:
+									expenseRequest.Required = item.Amount;
+									break;
+								case HerdPaymentStyleType.perHead:
+									expenseRequest.Required = head * item.Amount;
+									break;
+								case HerdPaymentStyleType.perAE:
+									expenseRequest.Required = AESum * item.Amount;
+									break;
+								case HerdPaymentStyleType.ProportionOfTotalSales:
+									expenseRequest.Required = saleValue * item.Amount;
+									break;
+								default:
+									throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
+							}
+							expenseRequest.Reason = item.Name;
+							bankAccount.Remove(expenseRequest);
+						}
+
+						// add and remove from bank
+						bankAccount.Add(saleValue, this.Name, "Sales");
+					}
+				}
+			}
+		}
+
+
+		private void BuyWithoutTrucking()
+		{
+			// This activity will purchase animals based on available funds.
+			RuminantHerd ruminantHerd = Resources.RuminantHerd();
+
+			// get current untrucked list of animal purchases
+			List<Ruminant> herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == BreedName).ToList();
+
+			double fundsAvailable = 0;
+			if (bankAccount != null)
+			{
+				fundsAvailable = bankAccount.FundsAvailable;
+			}
+			double cost = 0;
+			double shortfall = 0;
+			bool fundsexceeded = false;
+			foreach (var newind in herd)
+			{
+				if (finance != null)  // perform with purchasing
+				{
+					double value = 0;
+					if (newind.SaleFlag == HerdChangeReason.SirePurchase)
+					{
+						value = BreedingSirePrice;
+					}
+					else
+					{
+						value = newind.BreedParams.ValueofIndividual(newind, true);
+					}
+					if (cost + value <= fundsAvailable & fundsexceeded == false)
+					{
+						ruminantHerd.AddRuminant(newind);
+						cost += value;
+					}
+					else
+					{
+						fundsexceeded = true;
+						shortfall += value;
+					}
+				}
+				else // no financial transactions
+				{
+					ruminantHerd.AddRuminant(newind);
+				}
+			}
+
+			if (bankAccount != null)
+			{
+				ResourceRequest purchaseRequest = new ResourceRequest();
+				purchaseRequest.ActivityName = this.Name;
+				purchaseRequest.Required = cost;
+				purchaseRequest.AllowTransmutation = false;
+				purchaseRequest.Reason = "Purchases";
+				bankAccount.Remove(purchaseRequest);
+
+				// report any financial shortfall in purchases
+				if (shortfall > 0)
+				{
+					purchaseRequest.Available = bankAccount.Amount;
+					purchaseRequest.Required = cost + shortfall;
+					purchaseRequest.Provided = cost;
+					purchaseRequest.ResourceType = typeof(Finance);
+					purchaseRequest.ResourceTypeName = BankAccountName;
+					ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
+					OnShortfallOccurred(rre);
+				}
+			}
+		}
+
+		private void BuyWithTrucking()
+		{
+			// This activity will purchase animals based on available funds.
+			RuminantHerd ruminantHerd = Resources.RuminantHerd();
+
+			int trucks = 0;
+			double saleValue = 0;
+			double saleWeight = 0;
+			int head = 0;
+			double AESum = 0;
+
+			// get current untrucked list of animal purchases
+			List<Ruminant> herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == BreedName).OrderByDescending(a => a.Weight).ToList();
+
 			// if sale herd > min loads before allowing sale
-			if (herd.Select(a => a.Weight / 450.0).Sum() / Number450kgPerTruck >= MinimumTrucksBeforeSelling)
+			if (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck >= trucking.MinimumTrucksBeforeSelling)
 			{
 				// while truck to fill
-				while (herd.Select(a => a.Weight / 450.0).Sum() / Number450kgPerTruck > MinimumLoadBeforeSelling)
+				while (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck > trucking.MinimumLoadBeforeSelling)
 				{
 					bool nonloaded = true;
 					trucks++;
@@ -242,46 +396,62 @@ namespace Models.WholeFarm.Activities
 					// while truck below carrying capacity load individuals
 					foreach (var ind in herd)
 					{
-						if(load450kgs + (ind.Weight / 450.0) <= Number450kgPerTruck)
+						if (load450kgs + (ind.Weight / 450.0) <= trucking.Number450kgPerTruck)
 						{
 							nonloaded = false;
 							head++;
+							AESum += ind.AdultEquivalent;
 							load450kgs += ind.Weight / 450.0;
+
 							saleValue += ind.BreedParams.ValueofIndividual(ind, false);
 							saleWeight += ind.Weight;
 							ruminantHerd.RemoveRuminant(ind);
 						}
 					}
-					if(nonloaded)
+					if (nonloaded)
 					{
-						Summary.WriteWarning(this, String.Format("There was a problem loading the sale truck as sale individuals did not meet the loading criteria for breed {0}", BreedName));
+						Summary.WriteWarning(this, String.Format("There was a problem loading the purchase truck as purchase individuals did not meet the loading criteria for breed {0}", BreedName));
 						break;
 					}
 					herd = ruminantHerd.Herd.Where(a => a.SaleFlag != HerdChangeReason.None & a.Breed == BreedName).OrderByDescending(a => a.Weight).ToList();
 				}
 
-				if (trucks > 0 & bankAccount != null)
+				if (bankAccount != null && (trucks > 0 || trucking == null))
 				{
 					ResourceRequest expenseRequest = new ResourceRequest();
 					expenseRequest.ActivityName = this.Name;
 					expenseRequest.AllowTransmutation = false;
 
 					// calculate transport costs
-					expenseRequest.Required = trucks * DistanceToMarket * CostPerKmTrucking;
-					expenseRequest.Reason = "Transport";
-					bankAccount.Remove(expenseRequest);
-					// calculate MLA fees
-					expenseRequest.Required = head * MLAFees;
-					expenseRequest.Reason = "R&D Fee";
-					bankAccount.Remove(expenseRequest);
-					// calculate yard fees
-					expenseRequest.Required = head * YardFees;
-					expenseRequest.Reason = "Yard costs";
-					bankAccount.Remove(expenseRequest);
-					// calculate commission
-					expenseRequest.Required = saleValue * SalesCommission;
-					expenseRequest.Reason = "Sales commission";
-					bankAccount.Remove(expenseRequest);
+					if (trucking != null)
+					{
+						expenseRequest.Required = trucks * trucking.DistanceToMarket * trucking.CostPerKmTrucking;
+						expenseRequest.Reason = "Transport";
+						bankAccount.Remove(expenseRequest);
+					}
+
+					foreach (RuminantSaleFee item in this.Children.Where(a => a.GetType() == typeof(RuminantSaleFee)).Cast<RuminantSaleFee>().ToList())
+					{
+						switch (item.PaymentStyle)
+						{
+							case HerdPaymentStyleType.Fixed:
+								expenseRequest.Required = item.Amount;
+								break;
+							case HerdPaymentStyleType.perHead:
+								expenseRequest.Required = head * item.Amount;
+								break;
+							case HerdPaymentStyleType.perAE:
+								expenseRequest.Required = AESum * item.Amount;
+								break;
+							case HerdPaymentStyleType.ProportionOfTotalSales:
+								expenseRequest.Required = saleValue * item.Amount;
+								break;
+							default:
+								throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
+						}
+						expenseRequest.Reason = item.Name;
+						bankAccount.Remove(expenseRequest);
+					}
 
 					// add and remove from bank
 					bankAccount.Add(saleValue, this.Name, "Sales");
