@@ -412,6 +412,9 @@ namespace Models.AgPasture
         /// <summary>Flag which method for computing available soil nitrogen will be used.</summary>
         private PastureSpecies.PlantAvailableNitrogenMethod myNitrogenAvailableMethod = PastureSpecies.PlantAvailableNitrogenMethod.BasicAgPasture;
 
+        /// <summary>Soil nitrogen model.</summary>
+        private SoilNitrogen SoilNitrogen;
+
         /// <summary>The solute manager in this zone</summary>
         public SoluteManager solutes = null;
 
@@ -511,6 +514,10 @@ namespace Models.AgPasture
             solutes = Apsim.Find(soil, typeof(SoluteManager)) as SoluteManager;
             if (solutes == null)
                 throw new Exception("Cannot find solute manager in zone");
+
+            SoilNitrogen = Apsim.Find(soil, typeof(SoilNitrogen)) as SoilNitrogen;
+            if (SoilNitrogen == null)
+                throw new Exception("Cannot find SoilNitrogen in zone");
 
             // Initialise root DM, N, depth, and distribution
             this.Depth = initialRootDepth;
@@ -1110,6 +1117,36 @@ namespace Models.AgPasture
                     Tissue[t].Namount = 0.0;
                 }
             }
+        }
+
+        /// <summary>Adds root material (DM and N) to the soil's FOM pool.</summary>
+        public void DoEndOrgan(double CarbonFractionInDM)
+        {
+            FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
+
+            double amountDM = DMTotal;
+            double amountN = NTotal;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                FOMType fomData = new FOMType();
+                fomData.amount = amountDM * Tissue[0].FractionWt[layer];
+                fomData.N = amountN * Tissue[0].FractionWt[layer];
+                fomData.C = amountDM * CarbonFractionInDM * Tissue[0].FractionWt[layer];
+                fomData.P = 0.0; // P not considered here
+                fomData.AshAlk = 0.0; // Ash not considered here
+
+                FOMLayerLayerType layerData = new FOMLayerLayerType();
+                layerData.FOM = fomData;
+                layerData.CNR = 0.0; // not used here
+                layerData.LabileP = 0; // not used here
+
+                FOMdataLayer[layer] = layerData;
+            }
+
+            FOMLayerType FOMData = new FOMLayerType();
+            FOMData.Type = pastureName;
+            FOMData.Layer = FOMdataLayer;
+            SoilNitrogen.OnIncorpFOM(FOMData);
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>

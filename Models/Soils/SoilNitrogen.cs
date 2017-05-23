@@ -596,7 +596,7 @@ namespace Models.Soils
         /// <summary>Partition the given FOM C and N into fractions in each layer (one FOM)</summary>
         /// <param name="inFOMdata">The in fo mdata.</param>
         [EventSubscribe("IncorpFOM")]
-        private void OnIncorpFOM(FOMLayerType inFOMdata)
+        public void OnIncorpFOM(FOMLayerType inFOMdata)
         {
             // Note: In this event all FOM is given as one, so it will be assumed that the CN ratios of all fractions are equal
 

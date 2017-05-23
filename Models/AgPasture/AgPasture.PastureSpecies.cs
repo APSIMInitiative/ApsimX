@@ -260,7 +260,9 @@ namespace Models.AgPasture
             DoAddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // Incorporate all root mass to soil fresh organic matter
-            DoAddDetachedRootToSoilFOM(BelowGroundWt, BelowGroundN);
+            plantZoneRoots.DoEndOrgan(CarbonFractionInDM);
+            foreach (PastureBelowGroundOrgan root in rootZones)
+                root.DoEndOrgan(CarbonFractionInDM);
 
             // zero all variables
             RefreshVariables();
@@ -2270,6 +2272,13 @@ namespace Models.AgPasture
         public double BelowGroundWt
         {
             get { return plantZoneRoots.DMTotal; }
+
+            //    get
+            //    {
+            //        double dmTotal = plantZoneRoots.DMTotal;
+            //            dmTotal += zone.DMTotal;
+            //        return dmTotal;
+            //    }
         }
 
         /// <summary>Gets the dry matter weight of standing herbage (kgDM/ha).</summary>
@@ -2358,6 +2367,14 @@ namespace Models.AgPasture
         public double RootWt
         {
             get { return plantZoneRoots.DMTotal; }
+
+//            get
+//            {
+//                double rootWt = plantZoneRoots.DMTotal;
+//                foreach (PastureBelowGroundOrgan zone in rootZones)
+//                    rootWt += zone.DMTotal;
+//                return rootWt;
+//            }
         }
 
         /// <summary>Gets the dry matter weight of roots in each soil layer ().</summary>
@@ -2366,6 +2383,14 @@ namespace Models.AgPasture
         public double[] RootLayerWt
         {
             get { return plantZoneRoots.Tissue[0].DMLayer; }
+
+            //get
+            //{
+            //    double[] rootLayerWt = plantZoneRoots.Tissue[0].DMLayer;
+            //    foreach (PastureBelowGroundOrgan zone in rootZones)
+            //        rootLayerWt = MathUtilities.Add(rootLayerWt, zone.Tissue[0].DMLayer);
+            //    return rootLayerWt;
+            //}
         }
 
         ////- N amount outputs >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2408,6 +2433,14 @@ namespace Models.AgPasture
         public double BelowGroundN
         {
             get { return plantZoneRoots.NTotal; }
+
+            //get
+            //{
+            //    double nTotal = plantZoneRoots.NTotal;
+            //    foreach (PastureBelowGroundOrgan zone in rootZones)
+            //        nTotal += zone.NTotal;
+            //    return nTotal;
+            //}
         }
 
         /// <summary>Gets the amount of N in standing herbage (kgN/ha).</summary>
@@ -2495,7 +2528,13 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double RootN
         {
-            get { return plantZoneRoots.NTotal; }
+            get
+            {
+                double nTotal = plantZoneRoots.NTotal;
+                foreach (PastureBelowGroundOrgan zone in rootZones)
+                    nTotal += zone.NTotal;
+                return nTotal;
+            }
         }
 
         ////- N concentration outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
