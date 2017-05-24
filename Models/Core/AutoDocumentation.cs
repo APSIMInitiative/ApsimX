@@ -83,15 +83,20 @@ namespace Models.Core
                 string line = reader.ReadLine();
                 while (line != null)
                 {
-                    if (numSpacesStartOfLine == -1)
+                    line = line.Trim();
+                    if (line != string.Empty)
                     {
-                        int preLineLength = line.Length;
-                        line = line.TrimStart();
-                        numSpacesStartOfLine = preLineLength - line.Length - 1;
+                        {
+                            if (numSpacesStartOfLine == -1)
+                            {
+                                int preLineLength = line.Length;
+                                line = line.TrimStart();
+                                numSpacesStartOfLine = preLineLength - line.Length - 1;
+                            }
+                            else
+                                line = line.Remove(0, numSpacesStartOfLine);
+                        }
                     }
-                    else
-                        line = line.Remove(0, numSpacesStartOfLine);
-
                     string heading;
                     int headingLevel;
                     if (GetHeadingFromLine(line, out heading, out headingLevel))
