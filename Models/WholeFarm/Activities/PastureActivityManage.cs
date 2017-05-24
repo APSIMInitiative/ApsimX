@@ -188,11 +188,11 @@ namespace Models.WholeFarm.Activities
 
 
 
-        /// <summary>An event handler to allow us to get next supply of pasture</summary>
+        /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("WFInitialiseResource")]
+        private void OnWFInitialiseResource(object sender, EventArgs e)
         {
 
             if (Area == 0 & AreaRequested > 0)
