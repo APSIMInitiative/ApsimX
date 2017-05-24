@@ -220,7 +220,7 @@ namespace Models.WholeFarm.Activities
             if (gotLandRequested)
             {
                 //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
-                Area = ResourceRequestList.FirstOrDefault().Available; 
+                Area = ResourceRequestList.FirstOrDefault().Available; //TODO: should this be supplied not available ?
                 LinkedNativeFoodType.Area = Area;
 
                 SetupStartingPasturePools(StartingAmount);
@@ -254,14 +254,15 @@ namespace Models.WholeFarm.Activities
                 PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
 
                 growth = pasturedata.Growth;
+  
            
                 if (growth > 0)
 			    {
 				    GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
 				    newPasture.Age = 0;
-				    newPasture.Set(growth * Area);  //TODO: should this add and not set the amount?
+				    newPasture.Set(growth * Area);  
 				    newPasture.DMD = this.LinkedNativeFoodType.DMD;
-				    newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen;
+				    newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
 				    newPasture.DryMatter = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
 				    newPasture.DryMatter = Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatter);
 				    this.LinkedNativeFoodType.Add(newPasture);
