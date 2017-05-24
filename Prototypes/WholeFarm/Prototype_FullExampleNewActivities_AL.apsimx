@@ -227,33 +227,36 @@
           <Name>Ruminants</Name>
           <RuminantType>
             <Name>Breeding</Name>
-            <RuminantTypeCohort>
-              <Name>CalfF</Name>
-              <Gender>Female</Gender>
-              <StartingAge>0</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>40</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>true</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>WeanerF</Name>
-              <Gender>Female</Gender>
-              <StartingAge>8</StartingAge>
-              <StartingNumber>0</StartingNumber>
-              <StartingWeight>0</StartingWeight>
-              <StartingWeightSD>180</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
-            <RuminantTypeCohort>
-              <Name>Female1_2</Name>
-              <Gender>Female</Gender>
-              <StartingAge>18</StartingAge>
-              <StartingNumber>1</StartingNumber>
-              <StartingWeight>270</StartingWeight>
-              <StartingWeightSD>0</StartingWeightSD>
-              <Suckling>false</Suckling>
-            </RuminantTypeCohort>
+						<RuminantInitialCohorts>
+							<Name>Initial cohorts</Name>
+							<RuminantTypeCohort>
+								<Name>CalfF</Name>
+								<Gender>Female</Gender>
+								<StartingAge>0</StartingAge>
+								<StartingNumber>1</StartingNumber>
+								<StartingWeight>40</StartingWeight>
+								<StartingWeightSD>0</StartingWeightSD>
+								<Suckling>true</Suckling>
+							</RuminantTypeCohort>
+							<RuminantTypeCohort>
+								<Name>WeanerF</Name>
+								<Gender>Female</Gender>
+								<StartingAge>8</StartingAge>
+								<StartingNumber>0</StartingNumber>
+								<StartingWeight>0</StartingWeight>
+								<StartingWeightSD>180</StartingWeightSD>
+								<Suckling>false</Suckling>
+							</RuminantTypeCohort>
+							<RuminantTypeCohort>
+								<Name>Female1_2</Name>
+								<Gender>Female</Gender>
+								<StartingAge>18</StartingAge>
+								<StartingNumber>1</StartingNumber>
+								<StartingWeight>270</StartingWeight>
+								<StartingWeightSD>0</StartingWeightSD>
+								<Suckling>false</Suckling>
+							</RuminantTypeCohort>
+						</RuminantInitialCohorts>	
             <AnimalPricing>
               <Name>Prices</Name>
               <AnimalPriceEntry>

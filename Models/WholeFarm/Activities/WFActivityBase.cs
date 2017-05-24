@@ -29,7 +29,7 @@ namespace Models.WholeFarm.Activities
 		public List<ResourceRequest> ResourceRequestList { get; set; }
 
 		/// <summary>
-		/// Current list of activities under this activity
+		/// List of code added activities under this activity
 		/// </summary>
 		[XmlIgnore]
 		public List<WFActivityBase> ActivityList { get; set; }
@@ -169,7 +169,8 @@ namespace Models.WholeFarm.Activities
 		}
 
 		/// <summary>
-		/// Perform Activity with partial resources available
+		/// Action to do when partial resources available
+		/// Actions are: report error and stop, skip activity, use available resources
 		/// </summary>
 		[Description("Perform Activity with partial resources available")]
 		public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }

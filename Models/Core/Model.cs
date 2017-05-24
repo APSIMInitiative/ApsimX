@@ -253,7 +253,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.WholeFarm.FileAPSIMCrop))]
         [XmlElement(typeof(Models.WholeFarm.FileAPSIMForage))]
         [XmlElement(typeof(Models.WholeFarm.FileGRASP))]
-
 		[XmlElement(typeof(Models.WholeFarm.Resources.Finance))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.FinanceActivityCalculateInterest))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.FinanceActivityPayOverhead))]
@@ -305,6 +304,7 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Groupings.RuminantFilter))]
 		[XmlElement(typeof(Models.WholeFarm.Groupings.RuminantFilterGroup))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.RuminantHerd))]
+		[XmlElement(typeof(Models.WholeFarm.Resources.RuminantInitialCohorts))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantSaleFee))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.RuminantType))]
         [XmlElement(typeof(Models.WholeFarm.Resources.RuminantTypeCohort))]
