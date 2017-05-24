@@ -1146,7 +1146,7 @@ namespace Models.AgPasture
             FOMLayerType FOMData = new FOMLayerType();
             FOMData.Type = pastureName;
             FOMData.Layer = FOMdataLayer;
-            SoilNitrogen.OnIncorpFOM(FOMData);
+            SoilNitrogen.DoIncorpFOM(FOMData);
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
