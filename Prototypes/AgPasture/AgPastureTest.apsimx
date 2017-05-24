@@ -7427,8 +7427,6 @@ namespace Models
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			Debugger.Break();
-		    
 			foreach (AgPasture.PastureSpecies species in Apsim.Children(myZone, typeof(AgPasture.PastureSpecies)))
 			{
 				Pasture.Add(species);
