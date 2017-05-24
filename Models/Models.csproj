@@ -174,6 +174,7 @@
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
     <Compile Include="Interfaces\ISolute.cs" />
+    <Compile Include="Interfaces\INutrient.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Lifecycle\Cohort.cs" />
     <Compile Include="Lifecycle\Lifecycle.cs" />

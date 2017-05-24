@@ -12341,28 +12341,24 @@ namespace Models
             //todays value of NO3, NO3_min, NH4, NH4_min should have been read in from the SoilN module before the Prepare Event is fired.
             for (int layer = 0; layer < num_layers; layer++)
                 {
-                o_no3gsm[layer] = Soil.SoilNitrogen.NO3[layer] * kg2gm / ha2sm;
+                o_no3gsm[layer] = Soil.NO3N[layer] * kg2gm / ha2sm;
                 }
-
-            /* RJM Not used
-            for (int layer = 0; layer < num_layers; layer++)
-                {
-                o_no3gsm_min[layer] = Soil.SoilNitrogen.no3_min[layer] * kg2gm / ha2sm;
-                }
-            */
 
             for (int layer = 0; layer < num_layers; layer++)
                 {
-                o_nh4gsm[layer] = Soil.SoilNitrogen.NH4[layer] * kg2gm / ha2sm;
+                o_no3gsm_min[layer] = 0.0;
                 }
 
-            /* RJM Not used
             for (int layer = 0; layer < num_layers; layer++)
                 {
-                o_nh4gsm_min[layer] = Soil.SoilNitrogen.nh4_min[layer] * kg2gm / ha2sm;
+                o_nh4gsm[layer] = Soil.NH4N[layer] * kg2gm / ha2sm; ;
+                }
+
+            for (int layer = 0; layer < num_layers; layer++)
+                {
+                o_nh4gsm_min[layer] = 0.0;
+                }
             }
-            */
-        }
 
 
 
