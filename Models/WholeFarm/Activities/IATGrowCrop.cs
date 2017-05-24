@@ -207,15 +207,12 @@ namespace Models.WholeFarm.Activities
 		}
 
 
-        //TODO: turn this into WFDoCutAndCarry event handler instead of start of month
-        //      need to do your own resource stuff that is done in the WFActivityBase class.
-        //      extract out the GetResourcesRequired() 
 
-        /// <summary>An event handler for Start of Month</summary>
+        /// <summary>An event handler for a Cut and Carry</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfMonth")]
-        private void OnStartOfMonth(object sender, EventArgs e)
+        [EventSubscribe("WFDoCutAndCarry")]
+        private void OnWFDoCutAndCarry(object sender, EventArgs e)
         {
             int year = Clock.Today.Year;
             int month = Clock.Today.Month;
