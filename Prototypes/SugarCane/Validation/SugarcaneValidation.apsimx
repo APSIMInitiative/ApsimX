@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="4">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
@@ -364,6 +364,9 @@ However we have to report daily because we have observation data during the crop
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Site>Harwood Sugar Mill</Site>
           <State>NSW</State>
@@ -4403,6 +4406,9 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -7630,6 +7636,9 @@ nb. irrigation amounts and depths are in (mm)
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -10851,6 +10860,9 @@ They are missing the word "tillage". This means these tillage events won't occur
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -14041,6 +14053,9 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -17311,6 +17326,9 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -20470,6 +20488,9 @@ However Automatic Irrigations are not possible in ApsimX yet.
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -23670,6 +23691,9 @@ All operation irrigations are Overhead, high pressure gun
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -26874,6 +26898,9 @@ All operation irrigations are Overhead, high pressure gun
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -30062,6 +30089,9 @@ All operation irrigations are Overhead, high pressure gun
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -33303,6 +33333,9 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -36512,6 +36545,9 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -39732,6 +39768,9 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -42561,6 +42600,9 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -45486,6 +45528,9 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -48395,6 +48440,9 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -51312,6 +51360,9 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -54074,6 +54125,9 @@ Dataset 10 also has only one observation (which was at harvesting), therefore Bi
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -57562,6 +57616,9 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -60680,6 +60737,9 @@ However Automatic Irrigations are not possible in ApsimX yet.
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -64172,6 +64232,9 @@ Likewise fertiliser applications are subsurface fertigations except the followin
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -67545,6 +67608,9 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -70825,6 +70891,9 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -74137,6 +74206,9 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -77457,6 +77529,9 @@ All operation irrigations are subsurface trickle irrigation except for the follo
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -80918,6 +80993,9 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <FractionFull>0</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -83925,6 +84003,9 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <FractionFull>0</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -86832,6 +86913,9 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <FractionFull>0</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -89807,6 +89891,9 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
             <FractionFull>0</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
@@ -92376,86 +92463,86 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RegrStats>
             <Name>biomass</Name>
             <n>189</n>
-            <Slope>0.97829376330572815</Slope>
-            <Intercept>29.856899605098533</Intercept>
-            <SEslope>0.026917586551168843</SEslope>
-            <SEintercept>113.9894826346671</SEintercept>
-            <R2>0.87598556905685143</R2>
-            <RMSE>928.88397487767952</RMSE>
-            <NSE>0.863729954619953</NSE>
-            <ME>-44.07649470112375</ME>
-            <MAE>651.81100245420225</MAE>
-            <RSR>0.36816985190117824</RSR>
+            <Slope>0.97831489015223272</Slope>
+            <Intercept>29.845892046837434</Intercept>
+            <SEslope>0.026917354849741223</SEslope>
+            <SEintercept>113.98850143504097</SEintercept>
+            <R2>0.87599213115205987</R2>
+            <RMSE>928.87001013085307</RMSE>
+            <NSE>0.86373405192904806</NSE>
+            <ME>-44.015542320171384</ME>
+            <MAE>651.794071237271</MAE>
+            <RSR>0.36816431687322</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cab_N</Name>
             <n>158</n>
-            <Slope>0.29488006717648413</Slope>
-            <Intercept>0.27618628604386497</Intercept>
-            <SEslope>0.035215683687928878</SEslope>
-            <SEintercept>0.088212860606658353</SEintercept>
-            <R2>0.31008934262623178</R2>
-            <RMSE>1.6327456031222751</RMSE>
-            <NSE>-0.65732279233776381</NSE>
-            <ME>-1.2469620226922475</ME>
-            <MAE>1.2781012612067255</MAE>
-            <RSR>1.2832900714866193</RSR>
+            <Slope>0.29486943349061739</Slope>
+            <Intercept>0.27633583842982634</Intercept>
+            <SEslope>0.035209188570968268</SEslope>
+            <SEintercept>0.088196590786309356</SEintercept>
+            <R2>0.31015283901631741</R2>
+            <RMSE>1.6326211671441828</RMSE>
+            <NSE>-0.657070183819219</NSE>
+            <ME>-1.2468354404137665</ME>
+            <MAE>1.2779746789282447</MAE>
+            <RSR>1.2831922684639585</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_dmc</Name>
             <n>188</n>
-            <Slope>-0.51951727533192937</Slope>
-            <Intercept>0.45137371215437233</Intercept>
-            <SEslope>0.1071817463605854</SEslope>
-            <SEintercept>0.023514880398959551</SEintercept>
-            <R2>0.1121467228490538</R2>
-            <RMSE>0.28699977155627643</RMSE>
-            <NSE>-5.6147472429347483</NSE>
-            <ME>0.16434659799515045</ME>
-            <MAE>0.164916687365736</MAE>
-            <RSR>2.5650657724850756</RSR>
+            <Slope>-0.51951813987707229</Slope>
+            <Intercept>0.45137367658514749</Intercept>
+            <SEslope>0.10718174901782408</SEslope>
+            <SEintercept>0.023514880981938012</SEintercept>
+            <R2>0.11214704930677322</R2>
+            <RMSE>0.28699971696919951</RMSE>
+            <NSE>-5.614744726698027</NSE>
+            <ME>0.16434639911886653</ME>
+            <MAE>0.16491648848945209</MAE>
+            <RSR>2.5650652846120652</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_N</Name>
             <n>168</n>
-            <Slope>0.889662794518304</Slope>
-            <Intercept>1.4782983959230975</Intercept>
-            <SEslope>0.046350905387043888</SEslope>
-            <SEintercept>0.4969403736333049</SEintercept>
-            <R2>0.68937855127699965</R2>
-            <RMSE>4.3920251629356564</RMSE>
-            <NSE>0.62421743774987071</NSE>
-            <ME>0.59827380132107244</ME>
-            <MAE>3.1347023724658154</MAE>
-            <RSR>0.61118390136222889</RSR>
+            <Slope>0.88974465311742335</Slope>
+            <Intercept>1.4781217007276775</Intercept>
+            <SEslope>0.046340161516999531</SEslope>
+            <SEintercept>0.49682518574755535</SEintercept>
+            <R2>0.68951722041809149</R2>
+            <RMSE>4.391018352838123</RMSE>
+            <NSE>0.62438970375443936</NSE>
+            <ME>0.59874999179726274</ME>
+            <MAE>3.1341071343705771</MAE>
+            <RSR>0.61104379603484271</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_wt</Name>
             <n>196</n>
-            <Slope>1.0439602401995261</Slope>
-            <Intercept>15.472186874806539</Intercept>
-            <SEslope>0.030240155651205657</SEslope>
-            <SEintercept>95.823778220709542</SEintercept>
-            <R2>0.86000768670653593</R2>
-            <RMSE>868.35823562025939</RMSE>
-            <NSE>0.8170235039466105</NSE>
-            <ME>122.43240115262945</ME>
-            <MAE>596.18954126941946</MAE>
-            <RSR>0.42666490657434758</RSR>
+            <Slope>1.0439804410423614</Slope>
+            <Intercept>15.46721962306583</Intercept>
+            <SEslope>0.030239506829830533</SEslope>
+            <SEintercept>95.821722261862249</SEintercept>
+            <R2>0.86001751201945043</R2>
+            <RMSE>868.35061781013678</RMSE>
+            <NSE>0.81702671431309892</NSE>
+            <ME>122.47658482609886</ME>
+            <MAE>596.1773984122766</MAE>
+            <RSR>0.42666116358889417</RSR>
           </RegrStats>
           <RegrStats>
             <Name>canefw</Name>
             <n>188</n>
-            <Slope>0.86023373203775511</Slope>
-            <Intercept>-5.0903851651209067</Intercept>
-            <SEslope>0.031784503762218613</SEslope>
-            <SEintercept>3.9539136594660693</SEintercept>
-            <R2>0.79749384860351258</R2>
-            <RMSE>38.16637669514413</RMSE>
-            <NSE>0.72197369680940626</NSE>
-            <ME>-19.230568232365055</ME>
-            <MAE>28.628968815916068</MAE>
-            <RSR>0.52587778035941979</RSR>
+            <Slope>0.86024982869622413</Slope>
+            <Intercept>-5.090524378416589</Intercept>
+            <SEslope>0.0317843012063707</SEslope>
+            <SEintercept>3.9538884620195445</SEintercept>
+            <R2>0.79750195067542751</R2>
+            <RMSE>38.16515310045763</RMSE>
+            <NSE>0.72199152328828964</NSE>
+            <ME>-19.229078943298603</ME>
+            <MAE>28.627479526849616</MAE>
+            <RSR>0.5258609209844014</RSR>
           </RegrStats>
           <RegrStats>
             <Name>das</Name>
@@ -92474,100 +92561,100 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
           <RegrStats>
             <Name>green_biomass</Name>
             <n>182</n>
-            <Slope>1.0071985460680208</Slope>
-            <Intercept>-30.615089836317111</Intercept>
-            <SEslope>0.03030081175793976</SEslope>
-            <SEintercept>113.42964856555864</SEintercept>
-            <R2>0.85991091099991712</R2>
-            <RMSE>882.08167904049185</RMSE>
-            <NSE>0.83466721310336967</NSE>
-            <ME>-8.6537853106831673</ME>
-            <MAE>638.19389486753</MAE>
-            <RSR>0.40549274344999664</RSR>
+            <Slope>1.0072249380025549</Slope>
+            <Intercept>-30.635496387422791</Intercept>
+            <SEslope>0.030300283590945824</SEslope>
+            <SEintercept>113.42767139752154</SEintercept>
+            <R2>0.85992142331092558</R2>
+            <RMSE>882.06673775685249</RMSE>
+            <NSE>0.83467281408840543</NSE>
+            <ME>-8.5936754205733052</ME>
+            <MAE>638.177960801596</MAE>
+            <RSR>0.40548587494537</RSR>
           </RegrStats>
           <RegrStats>
             <Name>green_biomass_n</Name>
             <n>166</n>
-            <Slope>0.79063548024656538</Slope>
-            <Intercept>1.9048010904044119</Intercept>
-            <SEslope>0.044974470617609383</SEslope>
-            <SEintercept>0.85225681787414342</SEintercept>
-            <R2>0.65330929084941269</R2>
-            <RMSE>6.292235717428416</RMSE>
-            <NSE>0.60284877757250432</NSE>
-            <ME>-1.4672289080863989</ME>
-            <MAE>4.6910843475827253</MAE>
-            <RSR>0.62829829315696584</RSR>
+            <Slope>0.79070558613290076</Slope>
+            <Intercept>1.9045153368043017</Intercept>
+            <SEslope>0.044964315483150059</SEslope>
+            <SEintercept>0.85206438019871267</SEintercept>
+            <R2>0.65345173855536509</R2>
+            <RMSE>6.2906198258372523</RMSE>
+            <NSE>0.60305273398676218</NSE>
+            <ME>-1.4663855345924228</ME>
+            <MAE>4.6902409740887485</MAE>
+            <RSR>0.628136941616075</RSR>
           </RegrStats>
           <RegrStats>
             <Name>lai</Name>
             <n>185</n>
-            <Slope>0.77031071520782135</Slope>
-            <Intercept>0.77107972461851659</Intercept>
-            <SEslope>0.044063262485778763</SEslope>
-            <SEintercept>0.20670601899402311</SEintercept>
-            <R2>0.62547410789265112</R2>
-            <RMSE>1.2943333293545911</RMSE>
-            <NSE>0.58159470994490359</NSE>
-            <ME>-0.20347949560832329</ME>
-            <MAE>0.979447981121949</MAE>
-            <RSR>0.64509196231125243</RSR>
+            <Slope>0.77033833714688971</Slope>
+            <Intercept>0.77107574020668812</Intercept>
+            <SEslope>0.04406441028044495</SEslope>
+            <SEintercept>0.20671140343568004</SEintercept>
+            <R2>0.62547870356019941</R2>
+            <RMSE>1.294324542434512</RMSE>
+            <NSE>0.581600390832943</NSE>
+            <ME>-0.20336628162570269</ME>
+            <MAE>0.97945801505316954</MAE>
+            <RSR>0.64508758293587221</RSR>
           </RegrStats>
           <RegrStats>
             <Name>leaf_N</Name>
             <n>170</n>
-            <Slope>0.84031455710371783</Slope>
-            <Intercept>0.0047121118214956681</Intercept>
-            <SEslope>0.054309481216372205</SEslope>
-            <SEintercept>0.35579333521365347</SEintercept>
-            <R2>0.58763350796654623</R2>
-            <RMSE>2.1636816435281405</RMSE>
-            <NSE>0.3549145141216743</NSE>
-            <ME>-0.94888239329176871</ME>
-            <MAE>1.6652353087751308</MAE>
-            <RSR>0.80080638444830032</RSR>
+            <Slope>0.84037568474858326</Slope>
+            <Intercept>0.0046411931496708192</Intercept>
+            <SEslope>0.054307653538316278</SEslope>
+            <SEintercept>0.35578136169343838</SEintercept>
+            <R2>0.58768507021342153</R2>
+            <RMSE>2.1634640024330274</RMSE>
+            <NSE>0.35504428372142449</NSE>
+            <ME>-0.94858827564470982</ME>
+            <MAE>1.6649411911280723</MAE>
+            <RSR>0.80072583268182118</RSR>
           </RegrStats>
           <RegrStats>
             <Name>scmst</Name>
             <n>143</n>
-            <Slope>0.94580717501213074</Slope>
-            <Intercept>-0.011917566964840642</Intercept>
-            <SEslope>0.044858733605640529</SEslope>
-            <SEintercept>0.016844227372874568</SEintercept>
-            <R2>0.75919678443660144</R2>
-            <RMSE>0.10563679497922746</RMSE>
-            <NSE>0.68910460998472622</NSE>
-            <ME>-0.029486653479905679</ME>
-            <MAE>0.07117005632147913</MAE>
-            <RSR>0.55562693993254442</RSR>
+            <Slope>0.9457806030908269</Slope>
+            <Intercept>-0.01191514948334077</Intercept>
+            <SEslope>0.044858446594445905</SEslope>
+            <SEintercept>0.016844119601623971</SEintercept>
+            <R2>0.75918885129476865</R2>
+            <RMSE>0.10563839751969287</RMSE>
+            <NSE>0.68909517716877988</NSE>
+            <ME>-0.029492850503819872</ME>
+            <MAE>0.071174201383232508</MAE>
+            <RSR>0.55563536895251886</RSR>
           </RegrStats>
           <RegrStats>
             <Name>scmstf</Name>
             <n>143</n>
-            <Slope>0.99563869237338876</Slope>
-            <Intercept>0.010679212792293197</Intercept>
-            <SEslope>0.047905528844168571</SEslope>
-            <SEintercept>0.0048604242764355441</SEintercept>
-            <R2>0.75390470421673361</R2>
-            <RMSE>0.034106682691529722</RMSE>
-            <NSE>0.64382551526257448</NSE>
-            <ME>0.010313594918692845</ME>
-            <MAE>0.023411564514009036</MAE>
-            <RSR>0.5947131695825526</RSR>
+            <Slope>0.99560555409012863</Slope>
+            <Intercept>0.010679889475466081</Intercept>
+            <SEslope>0.047905623882179171</SEslope>
+            <SEintercept>0.00486043391885188</SEintercept>
+            <R2>0.75389161732174292</R2>
+            <RMSE>0.034106122677909911</RMSE>
+            <NSE>0.64383721155838558</NSE>
+            <ME>0.010311493547736661</ME>
+            <MAE>0.023411324562906326</MAE>
+            <RSR>0.59470340470808913</RSR>
           </RegrStats>
           <RegrStats>
             <Name>sucrose_wt</Name>
             <n>152</n>
-            <Slope>1.0820453306773969</Slope>
-            <Intercept>-108.10960649824392</Intercept>
-            <SEslope>0.047386604832495814</SEslope>
-            <SEintercept>76.337577967647562</SEintercept>
-            <R2>0.7765897121192683</R2>
-            <RMSE>586.75901193707637</RMSE>
-            <NSE>0.65642432400409034</NSE>
-            <ME>-4.5535552416360368</ME>
-            <MAE>388.709078324971</MAE>
-            <RSR>0.58422196955135386</RSR>
+            <Slope>1.0820363276117802</Slope>
+            <Intercept>-108.10054563214681</Intercept>
+            <SEslope>0.047387059519087268</SEslope>
+            <SEintercept>76.338310446229812</SEintercept>
+            <R2>0.77658349539102789</R2>
+            <RMSE>586.76328786467877</RMSE>
+            <NSE>0.6564193164625286</NSE>
+            <ME>-4.5558578732149746</ME>
+            <MAE>388.71098621970782</MAE>
+            <RSR>0.58422622699060012</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
