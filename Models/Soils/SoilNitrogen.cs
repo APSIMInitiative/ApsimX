@@ -23,7 +23,7 @@ namespace Models.Soils
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public partial class SoilNitrogen : Model, ISolute
+    public partial class SoilNitrogen : Model, ISolute, INutrient
     {
         /// <summary>Initializes a new instance of the <see cref="SoilNitrogen"/> class.</summary>
         public SoilNitrogen()
@@ -611,10 +611,6 @@ namespace Models.Soils
 
             // calculate C and N processes
             EvaluateProcesses();
-
-            // send actual decomposition back to surface OM
-            if (!isPondActive) 
-                SendActualResidueDecompositionCalculated();
         }
 
         /// <summary>Performs every-day calculations - end of day processes</summary>
@@ -726,7 +722,7 @@ namespace Models.Soils
         /// <summary>
         /// Sends back to SurfaceOM the information about residue decomposition
         /// </summary>
-        private void SendActualResidueDecompositionCalculated()
+        public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
             // Note:
             //    - Potential decomposition was given to this module by a residue/surfaceOM module. This module evaluated
@@ -771,7 +767,7 @@ namespace Models.Soils
 
                 }
                 // raise the event
-                SurfaceOrganicMatter.ActualSOMDecomp = ActualSOMDecomp;
+                return ActualSOMDecomp;
             }
         }
 
