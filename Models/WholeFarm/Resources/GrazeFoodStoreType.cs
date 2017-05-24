@@ -216,12 +216,13 @@ namespace Models.WholeFarm.Resources
 		}
 
 		/// <summary>
-		/// 
+		/// Graze food add method.
+		/// This style is not supported in GrazeFoodStoreType
 		/// </summary>
-		/// <param name="AddAmount"></param>
+		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
 		/// <param name="ActivityName"></param>
 		/// <param name="UserName"></param>
-		public void Add(double AddAmount, string ActivityName, string UserName)
+		public void Add(object ResourceAmount, string ActivityName, string UserName)
 		{
 			throw new NotImplementedException();
 		}

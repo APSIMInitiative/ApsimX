@@ -39,10 +39,16 @@ namespace Models.WholeFarm.Resources
         [Description("Nitrogen (%)")]
         public double Nitrogen { get; set; }
 
-        /// <summary>
-        /// Starting Age of the Fodder (Months)
-        /// </summary>
-        [Description("Starting Age of Human Food (Months)")]
+		/// <summary>
+		/// Current store nitrogen (%)
+		/// </summary>
+		[Description("Current store nitrogen (%)")]
+		public double CurrentStoreNitrogen { get; set; }
+
+		/// <summary>
+		/// Starting Age of the Fodder (Months)
+		/// </summary>
+		[Description("Starting Age of Human Food (Months)")]
         public double StartingAge { get; set; }
 
         /// <summary>
@@ -91,14 +97,33 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Add to food store
 		/// </summary>
-		/// <param name="AddAmount">Amount to add to resource</param>
+		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen in a Res) of food being added</param>
 		/// <param name="ActivityName">Name of activity adding resource</param>
 		/// <param name="UserName">Name of individual radding resource</param>
-		public void Add(double AddAmount, string ActivityName, string UserName)
+		public void Add(object ResourceAmount, string ActivityName, string UserName)
 		{
-			this.amount = this.amount + AddAmount;
+			double addAmount = 0;
+			double nAdded = 0;
+			switch (ResourceAmount.GetType().ToString())
+			{
+				case "System.Double":
+					addAmount = (double)ResourceAmount;
+					nAdded = Nitrogen;
+					break;
+				case "Models.WholeFarm.Resources.FoodResourcePacket":
+					addAmount = ((FoodResourcePacket)ResourceAmount).Amount;
+					nAdded = ((FoodResourcePacket)ResourceAmount).PercentN;
+					break;
+				default:
+					throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+			}
+
+			// update N based on new input added
+			CurrentStoreNitrogen = ((Nitrogen / 100 * Amount) + (nAdded / 100 * addAmount)) / (Amount + addAmount) * 100;
+
+			this.amount = this.amount + addAmount;
 			ResourceTransaction details = new ResourceTransaction();
-			details.Credit = AddAmount;
+			details.Credit = addAmount;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			details.ResourceType = this.Name;

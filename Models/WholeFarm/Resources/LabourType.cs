@@ -152,14 +152,19 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Add to labour store of this type
 		/// </summary>
-		/// <param name="AddAmount">Amount to add to resource</param>
-		/// <param name="ActivityName">Name of activity adding resource</param>
-		/// <param name="UserName">Name of individual radding resource</param>
-		public void Add(double AddAmount, string ActivityName, string UserName)
+		/// <param name="ResourceAmount"></param>
+		/// <param name="ActivityName"></param>
+		/// <param name="UserName"></param>
+		public void Add(object ResourceAmount, string ActivityName, string UserName)
 		{
-			this.availableDays = this.availableDays + AddAmount;
+			if (ResourceAmount.GetType().ToString() != "System.Double")
+			{
+				throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+			}
+			double addAmount = (double)ResourceAmount;
+			this.availableDays = this.availableDays + addAmount;
 			ResourceTransaction details = new ResourceTransaction();
-			details.Credit = AddAmount;
+			details.Credit = addAmount;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			details.ResourceType = this.Name;

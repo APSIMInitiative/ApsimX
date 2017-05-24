@@ -280,15 +280,15 @@ namespace Models.WholeFarm.Resources
 		/// A funtion to add intake and track changes in %N and DietDryMatterDigestibility
 		/// </summary>
 		/// <param name="intake">Feed request contianing intake information kg, %n, DMD</param>
-		public void AddIntake(AnimalFoodResourceRequestDetails intake)
+		public void AddIntake(FoodResourcePacket intake)
 		{
-			if (intake.Supplied > 0)
+			if (intake.Amount > 0)
 			{
 				// determine the adjusted DMD of all intake
-				this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility / 100.0) + (intake.DMD / 100.0 * intake.Supplied)) / (this.Intake + intake.Supplied) * 100.0;
+				this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility / 100.0) + (intake.DMD / 100.0 * intake.Amount)) / (this.Intake + intake.Amount) * 100.0;
 				// determine the adjusted percentage N of all intake
-				this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake / 100.0) + (intake.PercentN / 100.0 * intake.Supplied)) / (this.Intake + intake.Supplied) * 100.0; ;
-				this.Intake += intake.Supplied;
+				this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake / 100.0) + (intake.PercentN / 100.0 * intake.Amount)) / (this.Intake + intake.Amount) * 100.0; ;
+				this.Intake += intake.Amount;
 			}
 		}
 

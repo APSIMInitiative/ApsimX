@@ -39,41 +39,17 @@ namespace Models.WholeFarm.Resources
 		[Description("Nitrogen (%)")]
         public double Nitrogen { get; set; }
 
-        /// <summary>
-        /// Starting Amount (kg)
-        /// </summary>
-        [Description("Starting Amount (kg)")]
+		/// <summary>
+		/// Current store nitrogen (%)
+		/// </summary>
+		[Description("Current store nitrogen (%)")]
+		public double CurrentStoreNitrogen { get; set; }
+
+		/// <summary>
+		/// Starting Amount (kg)
+		/// </summary>
+		[Description("Starting Amount (kg)")]
         public double StartingAmount { get; set; }
-
-		///// <summary>
-		///// Determine if this feed is purchased as needed
-		///// </summary>
-		//[Description("Purchase as needed")]
-		//public bool PurchaseAsNeeded { get; set; }
-
-		///// <summary>
-		///// Weight (kg) per unit purchased
-		///// </summary>
-		//[Description("Weight (kg) per unit purchased")]
-		//public double KgPerUnitPurchased { get; set; }
-
-		///// <summary>
-		///// Cost per unit purchased
-		///// </summary>
-		//[Description("Cost per unit purchased")]
-		//public double CostPerUnitPurchased { get; set; }
-
-		///// <summary>
-		///// Labour required per unit purchase
-		///// </summary>
-		//[Description("Labour required per unit purchase")]
-		//public double LabourPerUnitPurchased { get; set; }
-
-		///// <summary>
-		///// Other costs per unit purchased
-		///// </summary>
-		//[Description("Other costs per unit purchased")]
-		//public double OtherCosts { get; set; }
 
         /// <summary>
         /// Amount currently available (kg dry)
@@ -108,15 +84,34 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Add to food store
 		/// </summary>
-		/// <param name="AddAmount">Amount to add to resource</param>
+		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
 		/// <param name="ActivityName">Name of activity adding resource</param>
 		/// <param name="UserName">Name of individual adding resource</param>
-		public void Add(double AddAmount, string ActivityName, string UserName)
+		public void Add(object ResourceAmount, string ActivityName, string UserName)
         {
-            this.amount = this.amount + AddAmount;
+			double addAmount = 0;
+			double nAdded = 0;
+			switch (ResourceAmount.GetType().ToString())
+			{
+				case "System.Double":
+					addAmount = (double)ResourceAmount;
+					nAdded = Nitrogen;
+					break;
+				case "Models.WholeFarm.Resources.FoodResourcePacket":
+					addAmount = ((FoodResourcePacket)ResourceAmount).Amount;
+					nAdded = ((FoodResourcePacket)ResourceAmount).PercentN;
+					break;
+				default:
+					throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+			}
+
+			// update N based on new input added
+			CurrentStoreNitrogen = ((Nitrogen/100*Amount) + (nAdded/100 * addAmount)) / (Amount + addAmount)*100;
+
+			this.amount = this.amount + addAmount;
 
 			ResourceTransaction details = new ResourceTransaction();
-			details.Credit = AddAmount;
+			details.Credit = addAmount;
 			details.Activity = ActivityName;
 			details.Reason = UserName;
 			details.ResourceType = this.Name;
@@ -137,7 +132,7 @@ namespace Models.WholeFarm.Resources
 			amountRemoved = Math.Min(this.amount, amountRemoved);
 			this.amount -= amountRemoved;
 
-			AnimalFoodResourceRequestDetails additionalDetails = new AnimalFoodResourceRequestDetails();
+			FoodResourcePacket additionalDetails = new FoodResourcePacket();
 			additionalDetails.DMD = this.DMD;
 			additionalDetails.PercentN = this.Nitrogen;
 			Request.AdditionalDetails = additionalDetails;
@@ -153,60 +148,6 @@ namespace Models.WholeFarm.Resources
 			OnTransactionOccurred(te);
 			return;
 		}
-
-		///// <summary>
-		///// Remove from food store
-		///// </summary>
-		///// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
-		///// <param name="ActivityName">Name of activity requesting resource</param>
-		///// <param name="UserName">Name of individual requesting resource</param>
-		//public double Remove(double RemoveAmount, string ActivityName, string UserName)
-  //      {
-		//	double amountRemoved = RemoveAmount;
-  //          if (this.amount - RemoveAmount < 0)
-  //          {
-		//		amountRemoved = this.amount;
-  //              string message = "Tried to remove more " + this.Name + " than exists." + Environment.NewLine
-  //                  + "Current Amount: " + this.amount + Environment.NewLine
-  //                  + "Tried to Remove: " + RemoveAmount;
-  //              Summary.WriteWarning(this, message);
-  //              this.amount = 0;
-  //          }
-  //          else
-  //          {
-  //              this.amount = this.amount - RemoveAmount;
-  //          }
-
-		//	ResourceTransaction details = new ResourceTransaction();
-		//	details.ResourceType = this.Name;
-		//	details.Debit = amountRemoved*-1;
-		//	details.Activity = ActivityName;
-		//	details.Reason = UserName;
-		//	LastTransaction = details;
-		//	TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-		//	OnTransactionOccurred(te);
-
-		//	return amountRemoved;
-		//}
-
-		///// <summary>
-		///// Remove Food
-		///// If this call is reached we are not going through an arbitrator so provide all possible resource to requestor
-		///// </summary>
-		///// <param name="RemoveRequest">A feed request object with required information</param>
-		//public void Remove(object RemoveRequest)
-		//{
-		//	RuminantFeedRequest removeRequest = RemoveRequest as RuminantFeedRequest;
-
-		//	// limit by available
-		//	removeRequest.Amount = Math.Min(removeRequest.Amount, amount);
-
-		//	// add to intake and update %N and %DMD values
-		//	removeRequest.Requestor.AddIntake(removeRequest);
-
-		//	// Remove from resource
-		//	Remove(removeRequest.Amount, removeRequest.FeedActivity.Name, removeRequest.Requestor.BreedParams.Name);
-		//}
 
 		/// <summary>
 		/// Set amount of animal food available

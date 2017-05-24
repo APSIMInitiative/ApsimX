@@ -240,27 +240,26 @@ namespace Models.WholeFarm.Activities
                         stover = nextHarvest.StoverWt * AreaRequested;
                     }
 
-                    if (grain > 0)
-                        LinkedHumanFoodType.Add(grain, this.Name, "Harvest was Cut and Carried");
+					if (grain > 0)
+					{
+						//TODO: check that there is no N provided with grain
+						LinkedHumanFoodType.Add(grain, this.Name, "Harvest");
+					}
 
-                    if (stover > 0)
-                        LinkedAnimalFoodType.Add(stover, this.Name, "Harvest was Cut and Carried");
+					if (stover > 0)
+					{
+						FoodResourcePacket packet = new FoodResourcePacket()
+						{
+							Amount = grain,
+							PercentN = nextHarvest.StoverNpc
+						};
+						LinkedAnimalFoodType.Add(packet, this.Name, "Harvest");
+					}
 
-                    //TOD0: need to add in % residue retained as a multiplier to the stover here.
+					//TOD0: need to add in % residue retained as a multiplier to the stover here.
 
-                    //now remove the first item from the harvest data list because it has happened
-                    HarvestData.RemoveAt(0);  
-
-                    //TODO: Find out if we should make the assumption that the Nitrogen percentage for a 
-                    //      given AnimalFoodStore type is a fixed value that never changes.
-                    //      If so, we don't need to read this in from the forages file. 
-                    //      You can just specify it in the simulation tree. 
-                    //      Otherwise will need to calculate new N Percentage such as below,
-
-                    ////Calculate new Nitrogen Percentage 
-                    //double oldNkg = LinkedAnimalFoodType.Amount * LinkedAnimalFoodType.Nitrogen;
-                    //double addNkg = nextHarvest.Growth * nextHarvest.NPerCent;
-                    //double newNPCent = (oldNkg + addNkg) / (LinkedAnimalFoodType.Amount + nextHarvest.Growth);
+					//now remove the first item from the harvest data list because it has happened
+					HarvestData.RemoveAt(0);  
                 }
             }
         }
@@ -283,22 +282,4 @@ namespace Models.WholeFarm.Activities
 		}
 	}
 
-
-    //TODO: sv- don't need this declaration here. It is done already in PastureActivityManage.cs
-    //    but sure really move it from there to a common location.
-     
-	///// <summary>
-	///// Types of units of erea to use.
-	///// </summary>
-	//public enum UnitsOfAreaTypes
-	//{
-	//	/// <summary>
-	//	/// Square km
-	//	/// </summary>
-	//	Squarekm,
-	//	/// <summary>
-	//	/// Hectares
-	//	/// </summary>
-	//	Hectares
-	//}
 }

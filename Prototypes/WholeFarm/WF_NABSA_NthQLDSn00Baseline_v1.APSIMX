@@ -74,6 +74,7 @@
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>10000</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -81,6 +82,7 @@
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -88,6 +90,7 @@
             <DryMatter>80</DryMatter>
             <DMD>47</DMD>
             <Nitrogen>0.7</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
         </AnimalFoodStore>

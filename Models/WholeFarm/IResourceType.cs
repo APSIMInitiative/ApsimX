@@ -15,10 +15,10 @@ namespace Models.WholeFarm
 		/// <summary>
 		/// Add this Amount to the existing Amount.
 		/// </summary>
-		/// <param name="AddAmount">Amount to add</param>
+		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
 		/// <param name="ActivityName">Name of activity requesting resource</param>
 		/// <param name="Reason">Name of individual requesting resource</param>
-		void Add(double AddAmount, string ActivityName, string Reason);
+		void Add(object ResourceAmount, string ActivityName, string Reason);
 
 		/// <summary>
 		/// Remove this Amount from the existing Amount

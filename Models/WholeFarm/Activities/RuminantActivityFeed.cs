@@ -207,10 +207,10 @@ namespace Models.WholeFarm.Activities
 				double wastage = 1.0 - this.ProportionTramplingWastage;
 
 				ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(AnimalFoodStore)).FirstOrDefault();
-				AnimalFoodResourceRequestDetails details = new AnimalFoodResourceRequestDetails();
+				FoodResourcePacket details = new FoodResourcePacket();
 				if (feedRequest != null)
 				{
-					details = feedRequest.AdditionalDetails as AnimalFoodResourceRequestDetails;
+					details = feedRequest.AdditionalDetails as FoodResourcePacket;
 					feedLimit = Math.Min(1.0, feedRequest.Provided / feedRequest.Required);
 				}
 
@@ -225,23 +225,23 @@ namespace Models.WholeFarm.Activities
 						switch (FeedStyle)
 						{
 							case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
-								details.Supplied *= feedLimit * labourLimit * wastage;
+								details.Amount = (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
+								details.Amount *= feedLimit * labourLimit * wastage;
 								ind.AddIntake(details);
 								break;
 							case RuminantFeedActivityTypes.ProportionOfWeight:
-								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
-								details.Supplied *= feedLimit * labourLimit * wastage;
+								details.Amount = (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
+								details.Amount *= feedLimit * labourLimit * wastage;
 								ind.AddIntake(details);
 								break;
 							case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
-								details.Supplied *= feedLimit * labourLimit * wastage;
+								details.Amount = (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
+								details.Amount *= feedLimit * labourLimit * wastage;
 								ind.AddIntake(details);
 								break;
 							case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-								details.Supplied = (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
-								details.Supplied *= feedLimit * labourLimit * wastage;
+								details.Amount = (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
+								details.Amount *= feedLimit * labourLimit * wastage;
 								ind.AddIntake(details);
 								break;
 							default:

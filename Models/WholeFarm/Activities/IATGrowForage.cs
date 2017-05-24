@@ -224,23 +224,18 @@ namespace Models.WholeFarm.Activities
                         amount = nextHarvest.Growth * AreaRequested;
 
 
-                    if (amount > 0)
-                        LinkedAnimalFoodType.Add(amount, this.Name, "This months growth was Cut and Carried");
-
+					if (amount > 0)
+					{
+						FoodResourcePacket packet = new FoodResourcePacket()
+						{
+							Amount = amount,
+							PercentN = nextHarvest.NPerCent
+						};
+						LinkedAnimalFoodType.Add(amount, this.Name, "Harvest");
+					}
 
                     //now remove the first item from the harvest data list because it has happened
                     HarvestData.RemoveAt(0);  
-
-                    //TODO: Find out if we should make the assumption that the Nitrogen percentage for a 
-                    //      given AnimalFoodStore type is a fixed value that never changes.
-                    //      If so, we don't need to read this in from the forages file. 
-                    //      You can just specify it in the simulation tree. 
-                    //      Otherwise will need to calculate new N Percentage such as below,
-
-                    ////Calculate new Nitrogen Percentage 
-                    //double oldNkg = LinkedAnimalFoodType.Amount * LinkedAnimalFoodType.Nitrogen;
-                    //double addNkg = nextHarvest.Growth * nextHarvest.NPerCent;
-                    //double newNPCent = (oldNkg + addNkg) / (LinkedAnimalFoodType.Amount + nextHarvest.Growth);
                 }
             }
         }

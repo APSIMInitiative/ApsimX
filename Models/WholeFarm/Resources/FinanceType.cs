@@ -109,18 +109,23 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Add money to account
 		/// </summary>
-		/// <param name="AddAmount"></param>
+		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
 		/// <param name="ActivityName"></param>
 		/// <param name="UserName"></param>
-		public void Add(double AddAmount, string ActivityName, string UserName)
+		public void Add(object ResourceAmount, string ActivityName, string UserName)
 		{
-			if(AddAmount>0)
+			if(ResourceAmount.GetType().ToString()!="System.Double")
 			{
-				AddAmount = Math.Round(AddAmount, 2, MidpointRounding.ToEven);
-				amount += AddAmount;
+				throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+			}
+			double addAmount = (double)ResourceAmount;
+			if (addAmount>0)
+			{
+				addAmount = Math.Round(addAmount, 2, MidpointRounding.ToEven);
+				amount += addAmount;
 
 				ResourceTransaction details = new ResourceTransaction();
-				details.Credit = AddAmount;
+				details.Credit = addAmount;
 				details.Activity = ActivityName;
 				details.Reason = UserName;
 				details.ResourceType = this.Name;

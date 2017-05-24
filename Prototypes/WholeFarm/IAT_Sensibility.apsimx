@@ -62,6 +62,7 @@
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAge>0</StartingAge>
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
@@ -73,6 +74,7 @@
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>10000</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -80,6 +82,7 @@
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -87,6 +90,7 @@
             <DryMatter>80</DryMatter>
             <DMD>47</DMD>
             <Nitrogen>0.7</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -94,6 +98,7 @@
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>10000</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -101,6 +106,7 @@
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
@@ -108,162 +114,162 @@
           <Name>Ruminants</Name>
           <RuminantType>
             <Name>BosIndicus</Name>
-						<RuminantInitialCohorts>
-							<Name>Initial cohorts</Name>
-							<RuminantTypeCohort>
-								<Name>CalfF</Name>
-								<Gender>Female</Gender>
-								<StartingAge>5</StartingAge>
-								<StartingNumber>200</StartingNumber>
-								<StartingWeight>40</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>true</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>CalfM</Name>
-								<Gender>Male</Gender>
-								<StartingAge>5</StartingAge>
-								<StartingNumber>200</StartingNumber>
-								<StartingWeight>40</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>true</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>WeanerF</Name>
-								<Gender>Female</Gender>
-								<StartingAge>5</StartingAge>
-								<StartingNumber>500</StartingNumber>
-								<StartingWeight>180</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>WeanerM</Name>
-								<Gender>Male</Gender>
-								<StartingAge>5</StartingAge>
-								<StartingNumber>500</StartingNumber>
-								<StartingWeight>180</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Female1_2</Name>
-								<Gender>Female</Gender>
-								<StartingAge>18</StartingAge>
-								<StartingNumber>200</StartingNumber>
-								<StartingWeight>270</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Female2_3</Name>
-								<Gender>Female</Gender>
-								<StartingAge>30</StartingAge>
-								<StartingNumber>200</StartingNumber>
-								<StartingWeight>400</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Female3_4</Name>
-								<Gender>Female</Gender>
-								<StartingAge>42</StartingAge>
-								<StartingNumber>200</StartingNumber>
-								<StartingWeight>450</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Female4_5</Name>
-								<Gender>Female</Gender>
-								<StartingAge>54</StartingAge>
-								<StartingNumber>180</StartingNumber>
-								<StartingWeight>460</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Female5_6</Name>
-								<Gender>Female</Gender>
-								<StartingAge>66</StartingAge>
-								<StartingNumber>180</StartingNumber>
-								<StartingWeight>470</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Female6_7</Name>
-								<Gender>Female</Gender>
-								<StartingAge>78</StartingAge>
-								<StartingNumber>150</StartingNumber>
-								<StartingWeight>480</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Female7_8</Name>
-								<Gender>Female</Gender>
-								<StartingAge>90</StartingAge>
-								<StartingNumber>150</StartingNumber>
-								<StartingWeight>480</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Female8_9</Name>
-								<Gender>Female</Gender>
-								<StartingAge>102</StartingAge>
-								<StartingNumber>150</StartingNumber>
-								<StartingWeight>490</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Female9_10</Name>
-								<Gender>Female</Gender>
-								<StartingAge>114</StartingAge>
-								<StartingNumber>150</StartingNumber>
-								<StartingWeight>500</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Male1_2</Name>
-								<Gender>Male</Gender>
-								<StartingAge>18</StartingAge>
-								<StartingNumber>200</StartingNumber>
-								<StartingWeight>350</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Male2_3</Name>
-								<Gender>Male</Gender>
-								<StartingAge>30</StartingAge>
-								<StartingNumber>200</StartingNumber>
-								<StartingWeight>520</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Male3_4</Name>
-								<Gender>Male</Gender>
-								<StartingAge>42</StartingAge>
-								<StartingNumber>0</StartingNumber>
-								<StartingWeight>610</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Breeding_sires</Name>
-								<Gender>Male</Gender>
-								<StartingAge>36</StartingAge>
-								<StartingNumber>60</StartingNumber>
-								<StartingWeight>720</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-						</RuminantInitialCohorts>
+            <RuminantInitialCohorts>
+              <Name>Initial cohorts</Name>
+              <RuminantTypeCohort>
+                <Name>CalfF</Name>
+                <Gender>Female</Gender>
+                <StartingAge>5</StartingAge>
+                <StartingNumber>200</StartingNumber>
+                <StartingWeight>40</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>true</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>CalfM</Name>
+                <Gender>Male</Gender>
+                <StartingAge>5</StartingAge>
+                <StartingNumber>200</StartingNumber>
+                <StartingWeight>40</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>true</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>WeanerF</Name>
+                <Gender>Female</Gender>
+                <StartingAge>5</StartingAge>
+                <StartingNumber>500</StartingNumber>
+                <StartingWeight>180</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>WeanerM</Name>
+                <Gender>Male</Gender>
+                <StartingAge>5</StartingAge>
+                <StartingNumber>500</StartingNumber>
+                <StartingWeight>180</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Female1_2</Name>
+                <Gender>Female</Gender>
+                <StartingAge>18</StartingAge>
+                <StartingNumber>200</StartingNumber>
+                <StartingWeight>270</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Female2_3</Name>
+                <Gender>Female</Gender>
+                <StartingAge>30</StartingAge>
+                <StartingNumber>200</StartingNumber>
+                <StartingWeight>400</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Female3_4</Name>
+                <Gender>Female</Gender>
+                <StartingAge>42</StartingAge>
+                <StartingNumber>200</StartingNumber>
+                <StartingWeight>450</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Female4_5</Name>
+                <Gender>Female</Gender>
+                <StartingAge>54</StartingAge>
+                <StartingNumber>180</StartingNumber>
+                <StartingWeight>460</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Female5_6</Name>
+                <Gender>Female</Gender>
+                <StartingAge>66</StartingAge>
+                <StartingNumber>180</StartingNumber>
+                <StartingWeight>470</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Female6_7</Name>
+                <Gender>Female</Gender>
+                <StartingAge>78</StartingAge>
+                <StartingNumber>150</StartingNumber>
+                <StartingWeight>480</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Female7_8</Name>
+                <Gender>Female</Gender>
+                <StartingAge>90</StartingAge>
+                <StartingNumber>150</StartingNumber>
+                <StartingWeight>480</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Female8_9</Name>
+                <Gender>Female</Gender>
+                <StartingAge>102</StartingAge>
+                <StartingNumber>150</StartingNumber>
+                <StartingWeight>490</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Female9_10</Name>
+                <Gender>Female</Gender>
+                <StartingAge>114</StartingAge>
+                <StartingNumber>150</StartingNumber>
+                <StartingWeight>500</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Male1_2</Name>
+                <Gender>Male</Gender>
+                <StartingAge>18</StartingAge>
+                <StartingNumber>200</StartingNumber>
+                <StartingWeight>350</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Male2_3</Name>
+                <Gender>Male</Gender>
+                <StartingAge>30</StartingAge>
+                <StartingNumber>200</StartingNumber>
+                <StartingWeight>520</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Male3_4</Name>
+                <Gender>Male</Gender>
+                <StartingAge>42</StartingAge>
+                <StartingNumber>0</StartingNumber>
+                <StartingWeight>610</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Breeding_sires</Name>
+                <Gender>Male</Gender>
+                <StartingAge>36</StartingAge>
+                <StartingNumber>60</StartingNumber>
+                <StartingWeight>720</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+            </RuminantInitialCohorts>
             <AnimalPricing>
               <Name>Prices</Name>
               <AnimalPriceEntry>

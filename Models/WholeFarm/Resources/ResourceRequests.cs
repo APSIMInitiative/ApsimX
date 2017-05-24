@@ -86,12 +86,12 @@ namespace Models.WholeFarm.Resources
 	///<summary>
 	/// Additional information for animal food requests
 	///</summary> 
-	public class AnimalFoodResourceRequestDetails
+	public class FoodResourcePacket
 	{
 		///<summary>
 		/// Amount of food supplied
 		///</summary> 
-		public double Supplied { get; set; }
+		public double Amount { get; set; }
 		///<summary>
 		/// DMD of food supplied
 		///</summary> 

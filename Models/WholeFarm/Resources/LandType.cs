@@ -106,13 +106,18 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Add to food store
 		/// </summary>
-		/// <param name="AddAmount">Amount to add to resource</param>
-		/// <param name="ActivityName">Name of activity adding resource</param>
-		/// <param name="UserName">Name of individual radding resource</param>
-		public void Add(double AddAmount, string ActivityName, string UserName)
+		/// <param name="ResourceAmount"></param>
+		/// <param name="ActivityName"></param>
+		/// <param name="UserName"></param>
+		public void Add(object ResourceAmount, string ActivityName, string UserName)
 		{
-			double amountAdded = AddAmount;
-			if (this.areaAvailable + AddAmount > this.UsableArea )
+			if (ResourceAmount.GetType().ToString() != "System.Double")
+			{
+				throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", ResourceAmount.GetType().ToString(), this.Name));
+			}
+			double addAmount = (double)ResourceAmount;
+			double amountAdded = addAmount;
+			if (this.areaAvailable + addAmount > this.UsableArea )
 			{
 				amountAdded = this.UsableArea - this.areaAvailable;
 				string message = "Tried to add more available land to " + this.Name + " than exists.";
@@ -121,7 +126,7 @@ namespace Models.WholeFarm.Resources
 			}
 			else
 			{
-				this.areaAvailable = this.areaAvailable + AddAmount;
+				this.areaAvailable = this.areaAvailable + addAmount;
 			}
 			ResourceTransaction details = new ResourceTransaction();
 			details.Credit = amountAdded;

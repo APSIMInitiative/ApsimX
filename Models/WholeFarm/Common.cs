@@ -194,4 +194,19 @@ namespace Models.WholeFarm
 		/// </summary>
 		UseResourcesAvailable
 	}
+
+	/// <summary>
+	/// Types of units of erea to use.
+	/// </summary>
+	public enum UnitsOfAreaTypes
+	{
+		/// <summary>
+		/// Square km
+		/// </summary>
+		Squarekm,
+		/// <summary>
+		/// Hectares
+		/// </summary>
+		Hectares
+	}
 }
