@@ -104,6 +104,10 @@ namespace Models
         public event EventHandler DoLifecycle;
 
 		/// <summary>WholeFarm update pasture</summary>
+		public event EventHandler WFInitialiseResource;
+		/// <summary>WholeFarm update pasture</summary>
+		public event EventHandler WFInitialiseActivity;
+		/// <summary>WholeFarm update pasture</summary>
 		public event EventHandler WFUpdatePasture;
 		/// <summary>WholeFarm cut and carry</summary>
 		public event EventHandler WFDoCutAndCarry;
@@ -171,7 +175,13 @@ namespace Models
             if (StartOfSimulation != null)
                 StartOfSimulation.Invoke(this, args);
 
-            while (Today <= EndDate)
+			if (WFInitialiseResource != null)
+				WFInitialiseResource.Invoke(this, args);
+
+			if (WFInitialiseActivity != null)
+				WFInitialiseActivity.Invoke(this, args);
+
+			while (Today <= EndDate)
             {
                 // If this is being run on a background worker thread then check for cancellation
                 if (e != null && e.workerThread != null && e.workerThread.CancellationPending)
