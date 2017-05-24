@@ -53,7 +53,7 @@ namespace Models.WholeFarm.Resources
 		public double Limit { get; set; }
 
 		/// <summary>
-		/// Amount to set at start
+		/// Amount to set at start (kg)
 		/// </summary>
 		public double StartingAmount { get; set; }
 

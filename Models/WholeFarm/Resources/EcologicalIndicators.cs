@@ -27,21 +27,21 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		public double GrassBasalArea { get; set; }
 
-		//erosion
-		//tree basal area
-		//perennials
-		//%runoff
-		//methane
-		//soilC
-		//TreeC
-		//Burnkg
-		//methaneFire
-		//NOxFire
+        //erosion
+        //tree basal area
+        //perennials
+        //%runoff
+        //methane
+        //soilC
+        //TreeC
+        //Burnkg
+        //methaneFire
+        //NOxFire
 
-		/// <summary>
-		/// Average monthly stocking rate (AE)
-		/// </summary>
-		public double StockingRate { get; set; }
+        /// <summary>
+        /// Average monthly stocking rate (Adult Equivalents/square km)
+        /// </summary>
+        public double StockingRate { get; set; }
 
 		/// <summary>
 		/// Utilisation percentage

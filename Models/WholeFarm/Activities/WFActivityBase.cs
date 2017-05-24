@@ -29,7 +29,7 @@ namespace Models.WholeFarm.Activities
 		public List<ResourceRequest> ResourceRequestList { get; set; }
 
 		/// <summary>
-		/// List of code added activities under this activity
+		/// Current list of activities under this activity
 		/// </summary>
 		[XmlIgnore]
 		public List<WFActivityBase> ActivityList { get; set; }
@@ -62,91 +62,106 @@ namespace Models.WholeFarm.Activities
 		/// Method to get this time steps current required resources for this activity. 
 		/// </summary>
 		public void GetResourcesRequired()
-		{
-			bool resourceAvailable = false;
+        {
 
-			// determine what resources are needed
-			ResourceRequestList = DetermineResourcesNeeded();
+            // determine what resources are needed
+            ResourceRequestList = DetermineResourcesNeeded();
 
-			// no resources required or this is an Activity folder.
-			if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return;
+            bool tookRequestedResources = TakeResources(ResourceRequestList);
 
-			Guid uniqueRequestID = Guid.NewGuid();
-			// check resource amounts available
-			foreach (ResourceRequest request in ResourceRequestList)
-			{
-				request.ActivityID = uniqueRequestID;
-				request.Available = 0;
-				// get resource
-				if (request.Resource == null)
-				{
-					//If it hasn't been assigned try and find it now.
-					request.Resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
-				}
-				if (request.Resource != null)
-				{
-					// get amount available
-					request.Available = Math.Min(request.Resource.Amount, request.Required);
-				}
-				else
-				{
-					if (!resourceAvailable)
-					{
-						// if resource does not exist in simulation assume unlimited resource available
-						// otherwise 0 will be assigned to available when no resouces match request
-						request.Available = request.Required;
-					}
-				}
-			}
+            if (tookRequestedResources)
+                PerformActivity();
+        }
 
-			// are all resources available
-			List<ResourceRequest> shortfallRequests = ResourceRequestList.Where(a => a.Required > a.Available).ToList();
-			int countShortfallRequests = shortfallRequests.Count();
-			if (countShortfallRequests > 0)
-			{
-				// check what transmutations can occur
-				Resources.TransmutateShortfall(shortfallRequests, true);
-			}
+        /// <summary>
+        /// Try to take the Resources based on Resource Request List provided.
+        /// Returns true if it was able to take the resources it needed.
+        /// Returns false if it was unable to take the resources it needed.
+        /// </summary>
+        /// <param name="ResourceRequestList"></param>
+        public bool TakeResources(List<ResourceRequest> ResourceRequestList)
+        {
+            bool resourceAvailable = false;
 
-			// check if need to do transmutations
-			int countTransmutationsSuccessful = shortfallRequests.Where(a => a.TransmutationPossible == true & a.AllowTransmutation).Count();
-			bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false & a.AllowTransmutation).Count() == 0);
+            // no resources required or this is an Activity folder.
+				if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return false;
 
-			// OR at least one transmutation successful and PerformWithPartialResources
+            Guid uniqueRequestID = Guid.NewGuid();
+            // check resource amounts available
+            foreach (ResourceRequest request in ResourceRequestList)
+            {
+                request.ActivityID = uniqueRequestID;
+                request.Available = 0;
+                // get resource
+                if (request.Resource == null)
+                {
+                    //If it hasn't been assigned try and find it now.
+                    request.Resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
+                }
+                if (request.Resource != null)
+                {
+                    // get amount available
+                    request.Available = Math.Min(request.Resource.Amount, request.Required);
+                }
+                else
+                {
+                    if (!resourceAvailable)
+                    {
+                        // if resource does not exist in simulation assume unlimited resource available
+                        // otherwise 0 will be assigned to available when no resouces match request
+                        request.Available = request.Required;
+                    }
+                }
+            }
+
+            // are all resources available
+            List<ResourceRequest> shortfallRequests = ResourceRequestList.Where(a => a.Required > a.Available).ToList();
+            int countShortfallRequests = shortfallRequests.Count();
+            if (countShortfallRequests > 0)
+            {
+                // check what transmutations can occur
+                Resources.TransmutateShortfall(shortfallRequests, true);
+            }
+
+            // check if need to do transmutations
+            int countTransmutationsSuccessful = shortfallRequests.Where(a => a.TransmutationPossible == true & a.AllowTransmutation).Count();
+            bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false & a.AllowTransmutation).Count() == 0);
+
+            // OR at least one transmutation successful and PerformWithPartialResources
 			if (((countShortfallRequests > 0) & (countShortfallRequests == countTransmutationsSuccessful)) ^ (countTransmutationsSuccessful > 0 & OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
-			{
-				// do transmutations.
-				Resources.TransmutateShortfall(shortfallRequests, false);
+            {
+                // do transmutations.
+                Resources.TransmutateShortfall(shortfallRequests, false);
 
-				// recheck resource amounts now that resources have been topped up
-				foreach (ResourceRequest request in ResourceRequestList)
-				{
-					// get resource
-					request.Available = 0;
-					if (request.Resource != null)
-					{
-						// get amount available
-						request.Available = Math.Min(request.Resource.Amount, request.Required);
-					}
-				}
-			}
+                // recheck resource amounts now that resources have been topped up
+                foreach (ResourceRequest request in ResourceRequestList)
+                {
+                    // get resource
+                    request.Available = 0;
+                    if (request.Resource != null)
+                    {
+                        // get amount available
+                        request.Available = Math.Min(request.Resource.Amount, request.Required);
+                    }
+                }
+            }
 
-			// report any resource defecits here
-			foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
-			{
-				ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
-				OnShortfallOccurred(rrEventArgs);
-			}
+            // report any resource defecits here
+            foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
+            {
+                ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
+                OnShortfallOccurred(rrEventArgs);
+            }
 
-			// remove activity resources 
-			// check if deficit and performWithPartial
+            // remove activity resources 
+            // check if deficit and performWithPartial
 			if ((ResourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
 			{
 				if(OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
 				{
 					string resourcelist = "";
 					foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
-					{
+			{
 						Summary.WriteWarning(this, String.Format("Insufficient ({0}) resource of type ({1}) for activity ({2})", item.ResourceType, item.ResourceTypeName, this.Name));
 						resourcelist += ((resourcelist.Length >0)?",":"")+item.ResourceType.Name;
 					}
@@ -154,25 +169,28 @@ namespace Models.WholeFarm.Activities
 					throw new Exception(String.Format("Insufficient resources ({0}) for activity ({1}) (see Summary for details)", resourcelist, this.Name));
 				}
 
-				foreach (ResourceRequest request in ResourceRequestList)
-				{
-					// get resource
-					request.Provided = 0;
-					if (request.Resource != null)
-					{
-						// remove resource
-						request.Resource.Remove(request);
-					}
-				}
-				PerformActivity();
-			}
-		}
+                foreach (ResourceRequest request in ResourceRequestList)
+                {
+                    // get resource
+                    request.Provided = 0;
+                    if (request.Resource != null)
+                    {
+                        // remove resource
+                        request.Resource.Remove(request);
+                    }
+                }
+                return true; //could take all the resources it needed or is able to do with partial amounts
+            }
+            else
+            {
+                return false;  //could not take all the resources it needed.
+            }
+        }
 
-		/// <summary>
-		/// Action to do when partial resources available
-		/// Actions are: report error and stop, skip activity, use available resources
-		/// </summary>
-		[Description("Perform Activity with partial resources available")]
+        /// <summary>
+        /// Perform Activity with partial resources available
+        /// </summary>
+        [Description("Perform Activity with partial resources available")]
 		public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
 		/// <summary>
