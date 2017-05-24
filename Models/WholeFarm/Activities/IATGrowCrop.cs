@@ -52,12 +52,17 @@ namespace Models.WholeFarm.Activities
 		[Description("Name of crop")]
 		public string FeedTypeName { get; set; }
 
+        /// <summary>
+        /// Percentage of the residue (stover) that is kept
+        /// </summary>
+        [Description("Proportion of Residue (stover) Kept (%)")]
+        public double ResidueKept { get; set; }
 
 
-		/// <summary>
-		/// Area of forage paddock
-		/// </summary>
-		[XmlIgnore]
+        /// <summary>
+        /// Area of forage paddock
+        /// </summary>
+        [XmlIgnore]
 		public double Area { get; set; }
 
 
@@ -73,7 +78,6 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[Description("Area requested")]
 		public double AreaRequested { get; set; }
-
 
 
         /// <summary>
@@ -207,15 +211,12 @@ namespace Models.WholeFarm.Activities
 		}
 
 
-        //TODO: turn this into WFDoCutAndCarry event handler instead of start of month
-        //      need to do your own resource stuff that is done in the WFActivityBase class.
-        //      extract out the GetResourcesRequired() 
 
-        /// <summary>An event handler for Start of Month</summary>
+        /// <summary>An event handler for a Cut and Carry</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfMonth")]
-        private void OnStartOfMonth(object sender, EventArgs e)
+        [EventSubscribe("WFDoCutAndCarry")]
+        private void OnWFDoCutAndCarry(object sender, EventArgs e)
         {
             int year = Clock.Today.Year;
             int month = Clock.Today.Month;
@@ -232,12 +233,12 @@ namespace Models.WholeFarm.Activities
                     if (UnitsOfArea == UnitsOfAreaTypes.Squarekm)
                     {
                         grain = nextHarvest.GrainWt * AreaRequested * ConvertToHectares;
-                        stover = nextHarvest.StoverWt * AreaRequested * ConvertToHectares;
+                        stover = nextHarvest.StoverWt * AreaRequested * ConvertToHectares * (ResidueKept / 100);
                     }
                     else
                     {
                         grain = nextHarvest.GrainWt * AreaRequested;
-                        stover = nextHarvest.StoverWt * AreaRequested;
+                        stover = nextHarvest.StoverWt * AreaRequested * (ResidueKept/100);
                     }
 
 					if (grain > 0)
