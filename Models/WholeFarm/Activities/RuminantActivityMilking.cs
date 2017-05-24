@@ -39,8 +39,8 @@ namespace Models.WholeFarm.Activities
 		/// <summary>An event handler to allow us to initialise herd pricing.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
+		[EventSubscribe("WFInitialiseActivity")]
+		private void OnWFInitialiseActivity(object sender, EventArgs e)
 		{
 			// get labour specifications
 			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();

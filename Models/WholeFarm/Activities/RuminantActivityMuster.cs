@@ -56,11 +56,11 @@ namespace Models.WholeFarm.Activities
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
+		[EventSubscribe("WFInitialiseActivity")]
+		private void OnWFInitialiseActivity(object sender, EventArgs e)
 		{
 			// This needs to happen after all manage pasture activities have been initialised on commencing
-			// Therefore we use StartOfSimulation event
+			// Therefore we use WFInitialiseActivity event
 
 			// link to graze food store type pasture to muster to
 			// blank is general yards.

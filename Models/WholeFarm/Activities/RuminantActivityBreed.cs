@@ -51,8 +51,8 @@ namespace Models.WholeFarm.Activities
 		/// <summary>An event handler to allow us to initialise herd breeding status.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
+		[EventSubscribe("WFInitialiseActivity")]
+		private void OnWFInitialiseActivity(object sender, EventArgs e)
 		{
 			// This needs to happen after all herd creation has been performed
 			// Therefore we use StartOfSimulation event
