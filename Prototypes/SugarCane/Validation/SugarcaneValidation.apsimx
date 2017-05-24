@@ -39331,15 +39331,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
   </Folder>
   <Folder>
     <Name>Dataset 10 La Mercy South Africa</Name>
-    <Memo>
-      <Name>Memo</Name>
-      <MemoText><![CDATA[
-### Time Series Graph
-
-Dataset 10 has no Observed LAI data therefore there are no LAI Time Series graphs.
-
-Dataset 10 also has only one observation (which was at harvesting), therefore Biomass Time Series and Nitrogen Accumulation Time Series graphs are also pointless.]]></MemoText>
-    </Memo>
     <Simulation>
       <Name>10a La Mercy 1994_95 NCo376 1R Rainfed</Name>
       <Weather>
@@ -80582,15 +80573,6 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
   </Folder>
   <Folder>
     <Name>Dataset 19 Simunye Swaziland</Name>
-    <Memo>
-      <Name>Memo</Name>
-      <MemoText><![CDATA[
-### Time Series Graph
-
-Dataset 19 has no Observed LAI data therefore there are no LAI Time Series graphs.
-
-Dataset 19 also has only one observation (which was at harvesting), therefore Biomass Time Series and Nitrogen Accumulation Time Series graphs are also pointless.]]></MemoText>
-    </Memo>
     <Simulation>
       <Name>19a Simunye 1994_95 NCo376 1R Irrigation Treatment 1</Name>
       <Weather>
@@ -92671,475 +92653,478 @@ Dataset 19 also has only one observation (which was at harvesting), therefore Bi
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
-  <Graph>
-    <Name>Cane fresh weight</Name>
-    <Series>
-      <Name>Observed</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>PredictedObserved</TableName>
-      <XFieldName>Observed.canefw</XFieldName>
-      <YFieldName>Predicted.canefw</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Observed (t/ha)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Predicted (t/ha)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>Cane dry weight aka Millstalk</Name>
-    <Series>
-      <Name>Observed</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>PredictedObserved</TableName>
-      <XFieldName>Observed.cane_wt</XFieldName>
-      <YFieldName>Predicted.cane_wt</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Observed (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Predicted (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>Sucrose concentration in fresh millable stalk</Name>
-    <Series>
-      <Name>Observed</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>PredictedObserved</TableName>
-      <XFieldName>Observed.scmstf</XFieldName>
-      <YFieldName>Predicted.scmstf</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Observed (g/g)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Predicted (g/g)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>Sucrose weight</Name>
-    <Series>
-      <Name>Observed</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>PredictedObserved</TableName>
-      <XFieldName>Observed.sucrose_wt</XFieldName>
-      <YFieldName>Predicted.sucrose_wt</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Observed (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Predicted (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>Biomass</Name>
-    <Series>
-      <Name>Observed</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>PredictedObserved</TableName>
-      <XFieldName>Observed.biomass</XFieldName>
-      <YFieldName>Predicted.biomass</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Observed (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Predicted (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>Green biomass</Name>
-    <Series>
-      <Name>Observed</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>PredictedObserved</TableName>
-      <XFieldName>Observed.green_biomass</XFieldName>
-      <YFieldName>Predicted.green_biomass</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Observed (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Predicted (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>Leaf Area Index</Name>
-    <Series>
-      <Name>Observed</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>PredictedObserved</TableName>
-      <XFieldName>Observed.lai</XFieldName>
-      <YFieldName>Predicted.lai</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Observed (m^2/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Predicted (m^2/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>Green biomass nitrogen</Name>
-    <Series>
-      <Name>Observed</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>PredictedObserved</TableName>
-      <XFieldName>Observed.green_biomass_n</XFieldName>
-      <YFieldName>Predicted.green_biomass_n</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Observed (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Predicted (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>Leaf nitrogen</Name>
-    <Series>
-      <Name>Observed</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>PredictedObserved</TableName>
-      <XFieldName>Observed.leaf_N</XFieldName>
-      <YFieldName>Predicted.leaf_N</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Observed (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Predicted (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
-  <Graph>
-    <Name>Cane nitrogen</Name>
-    <Series>
-      <Name>Observed</Name>
-      <Regression>
-        <Name>Regression</Name>
-        <ForEachSeries>false</ForEachSeries>
-      </Regression>
-      <Type>Scatter</Type>
-      <XAxis>Bottom</XAxis>
-      <YAxis>Left</YAxis>
-      <ColourArgb>-32768</ColourArgb>
-      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-      <Marker>FilledCircle</Marker>
-      <MarkerSize>Normal</MarkerSize>
-      <Line>None</Line>
-      <LineThickness>Normal</LineThickness>
-      <TableName>PredictedObserved</TableName>
-      <XFieldName>Observed.cane_N</XFieldName>
-      <YFieldName>Predicted.cane_N</YFieldName>
-      <ShowInLegend>false</ShowInLegend>
-      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-      <Cumulative>false</Cumulative>
-      <CumulativeX>false</CumulativeX>
-    </Series>
-    <Axis>
-      <Type>Bottom</Type>
-      <Title>Observed (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <Axis>
-      <Type>Left</Type>
-      <Title>Predicted (g/m^2)</Title>
-      <Inverted>false</Inverted>
-      <Minimum>NaN</Minimum>
-      <Maximum>NaN</Maximum>
-      <Interval>NaN</Interval>
-    </Axis>
-    <LegendPosition>BottomRight</LegendPosition>
-    <DisabledSeries />
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Graph>
+  <Folder>
+    <Name>Validation</Name>
+    <Graph>
+      <Name>Cane fresh weight</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.canefw</XFieldName>
+        <YFieldName>Predicted.canefw</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed (t/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted (t/ha)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Cane dry weight aka Millstalk</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.cane_wt</XFieldName>
+        <YFieldName>Predicted.cane_wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Sucrose concentration in fresh millable stalk</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.scmstf</XFieldName>
+        <YFieldName>Predicted.scmstf</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed (g/g)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted (g/g)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Sucrose weight</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.sucrose_wt</XFieldName>
+        <YFieldName>Predicted.sucrose_wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Biomass</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.biomass</XFieldName>
+        <YFieldName>Predicted.biomass</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Green biomass</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.green_biomass</XFieldName>
+        <YFieldName>Predicted.green_biomass</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Leaf Area Index</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.lai</XFieldName>
+        <YFieldName>Predicted.lai</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed (m^2/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted (m^2/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Green biomass nitrogen</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.green_biomass_n</XFieldName>
+        <YFieldName>Predicted.green_biomass_n</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Leaf nitrogen</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.leaf_N</XFieldName>
+        <YFieldName>Predicted.leaf_N</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>Cane nitrogen</Name>
+      <Series>
+        <Name>Observed</Name>
+        <Regression>
+          <Name>Regression</Name>
+          <ForEachSeries>false</ForEachSeries>
+        </Regression>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>FilledCircle</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>None</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>PredictedObserved</TableName>
+        <XFieldName>Observed.cane_N</XFieldName>
+        <YFieldName>Predicted.cane_N</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title>Observed (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title>Predicted (g/m^2)</Title>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>BottomRight</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Graph>
+  </Folder>
   <ExplorerWidth>281</ExplorerWidth>
 </Simulations>
