@@ -84,7 +84,7 @@ namespace Models.WholeFarm.Activities
             bool resourceAvailable = false;
 
             // no resources required or this is an Activity folder.
-				if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return true;
+				if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return false;
 
             Guid uniqueRequestID = Guid.NewGuid();
             // check resource amounts available
