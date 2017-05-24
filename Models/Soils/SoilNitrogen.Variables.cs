@@ -2451,15 +2451,8 @@ namespace Models.Soils
             }
             set
             {
-                if (hasValues(value, EPSILON))
-                {
-                    double[] delta = MathUtilities.Subtract(value, urea);
-                    // 3.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(delta, "Urea", NPartitionApproach.ToLower());
-                    // 3.2- send dlt's to each patch
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].dlt_urea = newDelta[k];
-                }
+                for (int k = 0; k < Patch.Count; k++)
+                    Patch[k].urea = value;
             }
         }
         /// <summary>
@@ -2511,15 +2504,8 @@ namespace Models.Soils
             }
             set
             {
-                if (hasValues(value, EPSILON))
-                {
-                    double[] delta = MathUtilities.Subtract(value, NO3);
-                    // 3.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(delta, "NO3", NPartitionApproach.ToLower());
-                    // 3.2- send dlt's to each patch
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].dlt_no3 = newDelta[k];
-                }
+                for (int k = 0; k < Patch.Count; k++)
+                    Patch[k].no3 = value;
             }
         }
 
