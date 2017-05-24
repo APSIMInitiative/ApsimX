@@ -42,12 +42,12 @@ namespace Models
     ///
     ///In APSIM-Sugarcane, thermal time is calculated using a base temperature of 9 oC, optimum temperature of 32 oC, and maximum temperature of 45 oC.
     ///
-    ///The optimum and maximum temperatures were taken from those used for maize (Jones and Kiniry, 1986). 
+    ///The optimum and maximum temperatures were taken from those used for maize [jones_ceres-maize:_1986]. 
     ///
-    ///Base temperatures for sugarcane have been variously reported between 8 oC and 15 oC (Inman-Bamber 1994b, Robertson et al, 1998). 
-    ///The base of 9 oC used in APSIM sugarcane was chosen to be consistent with those studies which sampled the greatest temperature range, namely Inman-Bamber 1994b and Robertson et al (1998) who identified base temperatures of 10 oC and 8 oC respectively. 
+    ///Base temperatures for sugarcane have been variously reported between 8 oC and 15 oC [inman-bamber_temperature_1994][robertson_simulating_1998]. 
+    ///The base of 9 oC used in APSIM sugarcane was chosen to be consistent with those studies which sampled the greatest temperature range, namely [inman-bamber_temperature_1994][robertson_simulating_1998] who identified base temperatures of 10 oC and 8 oC respectively. 
     ///
-    ///For thermal time calculations in the model, temperature is estimated every three hours from a sine function fitted to daily maximum and minimum temperatures, using the method described by Jones and Kiniry (1986). 
+    ///For thermal time calculations in the model, temperature is estimated every three hours from a sine function fitted to daily maximum and minimum temperatures, using the method described by [jones_ceres-maize:_1986]. 
     ///
     ///###Phenology
     ///
@@ -76,17 +76,17 @@ namespace Models
     ///
     ///###Canopy expansion
     ///
-    ///The experimental basis for the canopy expansion model is described by Robertson et al (in press).
+    ///The experimental basis for the canopy expansion model is described by [robertson_simulation_2016].
     ///
     ///Briefly, green leaf area index is the product of ***green leaf area per stalk*** and the ***number of stalks per unit ground area***. 
     ///
     ///***Green leaf area per stalk*** is simulated by summing the fully-expanded area of successive leaves that appear on each stalk, and adding a correction factor for the area of expanding leaves (set to 1.6 leaves per stalk).
     ///Profiles of leaf area per leaf are input as genotype coefficients. 
-    ///Robertson et al (in press) found leaf appearance rates declined as a continuous function of cumulative thermal time, so that at emergence leaves took 80 oCd to appear while leaf 40 required 150 oCd.
+    ///[robertson_simulation_2016] found leaf appearance rates declined as a continuous function of cumulative thermal time, so that at emergence leaves took 80 oCd to appear while leaf 40 required 150 oCd.
     ///These responses are reproduced in the model (via a series of linear interpolations) in both plant and ratoon crops.
     ///
-    ///***Stalk number*** rises rapidly to a peak during the first 1400 oCdays from emergence, thereafter declining to reach a stable stalk number (e.g. Inman-Bamber, 1994b). 
-    ///Ratoon crops commonly reach an earlier peak stalk number than plant crops, with consequently faster early canopy expansion in ratoons (Robertson et al., 1996).
+    ///***Stalk number*** rises rapidly to a peak during the first 1400 oCdays from emergence, thereafter declining to reach a stable stalk number (e.g. [inman-bamber_temperature_1994]). 
+    ///Ratoon crops commonly reach an earlier peak stalk number than plant crops, with consequently faster early canopy expansion in ratoons [robertson_growth_1996].
     ///In the model, the complexity of simulating the dynamics of tillering in order to predict LAI during early growth is avoided. 
     ///Instead, the crop is conceived to have a notional constant stalk number throughout growth, usually set at 10 stalks m-2 , although this value can be varied as an input. 
     ///The additional leaf area associated with tillers that appear and subsequently die, is captured via a calibrated tillering factor, that effectively increases the area of the leaves that are produced over the early tillering period.
@@ -113,9 +113,9 @@ namespace Models
     ///The proportion decreases from a maximum of 0.30 at emergence and asymptotes to 0.20 at flowering. 
     ///
     ///Root biomass is converted to root length via a specific root length of 18000 mm g-1 . 
-    ///The depth of the root front in plant crops increases by 1.5 cm day-1 (Glover, 1967) from emergence, with the maximum depth of rooting set by the user.
+    ///The depth of the root front in plant crops increases by 1.5 cm day-1 [_glover_proceedings_nodate] from emergence, with the maximum depth of rooting set by the user.
     ///
-    ///At harvest, 17% of roots in all the occupied soil layer die (Ball-Coelho et al., 1992). 
+    ///At harvest, 17% of roots in all the occupied soil layer die [ball-coelho_root_1992]. 
     ///
     ///
     ///
@@ -132,23 +132,23 @@ namespace Models
     ///|Sucrose    |Sucrose content of millable stalk        |
     ///
     ///In addition to the five live biomass pools outlined above, senescent leaf and cabbage is maintained as trash on the plant or progressively detached to become residues on the soil surface. 
-    ///In APSIM, the RESIDUE module (Probert et al., 1996) takes on the role of decomposition of crop residues. 
+    ///In APSIM, the RESIDUE module [probert_apsim_1996] takes on the role of decomposition of crop residues. 
     ///
-    ///LAI is used in the model to intercept incident solar radiation following Beer's Law, using a radiation extinction coefficient of 0.38, determined by Muchow et al. (1994b) and Robertson et al. (1996).
+    ///LAI is used in the model to intercept incident solar radiation following Beer's Law, using a radiation extinction coefficient of 0.38, determined by [muchow_radiation_1994][robertson_growth_1996].
     ///Intercepted radiation is used to produce daily biomass production using a radiation-use efficiency (RUE) of 1.80 g MJ-1 for plant crops and 1.65 g MJ-1 for ratoon crops. 
-    ///The values of RUE used in the model are those adjusted upwards from field-measured values (Muchow et al. 1994b; Robertson et al., 1996a) due to the underestimate of biomass production caused by incomplete recovery of senesced leaf material (Evenson et al., 1995; Robertson et al., 1996). 
+    ///The values of RUE used in the model are those adjusted upwards from field-measured values [muchow_radiation_1994][robertson_growth_1996] due to the underestimate of biomass production caused by incomplete recovery of senesced leaf material [robertson_growth_1996]. 
     ///In the model, RUE is reduced if the mean daily temperature falls below 15 oC or exceeds 35 oC, and becomes zero if the mean temperature reaches 5 or 50 oC, respectively. 
-    ///These effects are similar to those used in other models of C4 crop species (e.g. Hammer and Muchow, 1994). 
+    ///These effects are similar to those used in other models of C4 crop species [hammer_assessing_1994]. 
     ///
     ///
     ///
     ///Four above-ground biomass pools are modelled: **leaf**, **cabbage**, **structural stem**, **stem sucrose**, 
     ///(and an additional pool for **roots** that is simulated separately from above-ground production). 
     ///
-    ///Between emergence and the beginning of stalk growth, above-ground biomass is partitioned between leaf and cabbage in the ratio 1.7:1 (Robertson et al., 1996a).
+    ///Between emergence and the beginning of stalk growth, above-ground biomass is partitioned between leaf and cabbage in the ratio 1.7:1 [robertson_growth_1996].
     ///
-    ///After the beginning of stem growth 0.7 of above-ground biomass is partitioned to the stem (Robertson et al., 1996a), with the remainder partitioned between leaf and cabbage in the ratio 1.7:1. 
-    ///After a minimum amount of stem biomass has accumulated, the daily biomass partitioned to stem is divided between structural and sucrose pools, following the framework developed by Muchow et al. (1996a) and Robertson et al. (1996a). Thereafter, the stem biomass is equal to the sum of structural and sucrose pools.
+    ///After the beginning of stem growth 0.7 of above-ground biomass is partitioned to the stem robertson_growth_1996, with the remainder partitioned between leaf and cabbage in the ratio 1.7:1. 
+    ///After a minimum amount of stem biomass has accumulated, the daily biomass partitioned to stem is divided between structural and sucrose pools, following the framework developed by [muchow_effect_1996] and [robertson_growth_1996]. Thereafter, the stem biomass is equal to the sum of structural and sucrose pools.
     ///
     ///If biomass partitioned to leaf is insufficient for growth of the leaf area, as determined by a maximum specific leaf area, then daily leaf area expansion is reduced. 
     ///If biomass partitioned to leaf is in excess of that required to grow the leaf area on that day, then specific leaf area is permitted to decrease to a lower limit, beyond which the “excess” biomass is partitioned to sucrose and structural stem. 
@@ -175,7 +175,7 @@ namespace Models
     ///
     ///* Firstly, Inman-Bamber (1991) found that varieties in South Africa differed in the fully-expanded area of individual leaves. 
     ///The distributions for NCo376 and N14 were taken from Inman-Bamber and Thompson (1989), while that for Q117 and Q96 was those assigned values that gave best fit to the time-course of LAI during the model calibration stage. 
-    ///* Secondly, Robertson et al. (1996a) found that varieties from South Africa and Australia differed in terms of partitioning of biomass to sucrose in the stem. 
+    ///* Secondly, [robertson_growth_1996] found that varieties from South Africa and Australia differed in terms of partitioning of biomass to sucrose in the stem. 
     ///There is scope for incorporating other varietal differences as new knowledge becomes available.
     ///
     ///
@@ -183,22 +183,22 @@ namespace Models
     ///
     ///##Water deficit limitation
     ///
-    ///Soil water infiltration and redistribution, evaporation and drainage is simulated by other modules in the APSIM framework (Probert et al., 1996, Verburg et al, 1997). 
+    ///Soil water infiltration and redistribution, evaporation and drainage is simulated by other modules in the APSIM framework [probert_apsim_1996] and (Verburg et al, 1997). 
     ///
     ///Water stress in the model reduces the rate of leaf area expansion and radiation-use efficiency, via two soil water deficit factors, which vary from zero to 1.0, following the concepts embodied in the CERES models (Ritchie, 1986). 
     ///Soil water deficit factor 1 (SWDEF1), which is less sensitive to soil drying, reduces the radiation-use efficiency (i.e. net photosynthesis) and hence transpiration, below its maximum. 
     ///Soil water deficit factor 2 (SWDEF2), which is more sensitive to soil drying, reduces the rate of processes governed primarily by cell expansion, i.e. daily leaf expansion rate. 
     ///
     ///SWDEF1 and 2 are calculated as a function of the ratio of (potential soil water supply from the root system) and the (transpiration demand). 
-    ///Following Sinclair (1986) and Monteith (1986), transpiration demand is modelled as a function of the (current day's crop growth rate), divided by the transpiration-use efficiency.
+    ///Following [sinclair_water_1986 and Monteith (1986), transpiration demand is modelled as a function of the (current day's crop growth rate), divided by the transpiration-use efficiency.
     ///When soil water supply exceeds transpiration demand, assimilate fixation is a function of radiation interception and radiation use efficiency. 
     ///When soil water supply is less than transpiration demand, assimilate fixation is a function of water supply and transpiration efficiency and the vapour pressure deficit (VPD). 
     ///
     ///Transpiration-use efficiency has not been directly measured for sugarcane, but calibration of the current model on datasets exhibiting water deficits (Robertson et al, unpubl. data) resulted in the use of a transpiration-use efficiency of 8 g kg-1 at a VPD of 1 kPa.
     ///This efficiency declines linearly as a function of VPD (Tanner and Sinclair, 1983). 
-    ///This compares with reported values of 9 g kg-1 kPa-1 for other C 4 species (Tanner and Sinclair 1983), a value that has been used in the models of sorghum (Hammer and Muchow, 1994) and maize (Muchow and Sinclair, 1991). 
+    ///This compares with reported values of 9 g kg-1 kPa-1 for other C 4 species (Tanner and Sinclair 1983), a value that has been used in the models of sorghum (Hammer and Muchow, 1994) and maize [muchow_tailoring_1991]. 
     ///
-    ///Potential soil water uptake is calculated using the approach first advocated by Monteith (1986) and subsequently tested for sunflower (Meinke et al., 1993) and grain sorghum (Robertson et al., 1994). 
+    ///Potential soil water uptake is calculated using the approach first advocated by Monteith (1986) and subsequently tested for sunflower [meinke_sunflower_1993] and grain sorghum (Robertson et al., 1994). 
     ///It is the sum of root water uptake from each profile layer occupied by roots. 
     ///The potential rate of extraction in a layer is calculated using a rate constant, which defines the fraction of available water able to be extracted per day. 
     ///The actual rate of water extraction is the lesser of the potential extraction rate and the transpiration demand. 
@@ -216,26 +216,26 @@ namespace Models
     ///
     ///
     ///##Nitrogen limitation
-    ///N supply from the soil is simulated in other modules in the APSIM framework (Probert et al., 1996). 
+    ///N supply from the soil is simulated in other modules in the APSIM framework [probert_apsim_1996]. 
     ///
-    ///Crop nitrogen demand is simulated using an approach similar to that used in the CERES models (Godwin and Vlek 1984). 
+    ///Crop nitrogen demand is simulated using an approach similar to that used in the CERES models [godwin_simulation_1985]. 
     ///Crop N demand is calculated as the product of maximum tissue N concentration and the increment in tissue weight. 
     ///
     ///Separate N pools are described for green leaf, cabbage, millable stalk and dead leaf. The sucrose pool is assumed to have no nitrogen associated with it. 
     ///Only the leaf N concentrations influence crop growth processes. Growth is unaffected until leaf N concentrations fall below a critical concentration. 
-    ///Sugarcane has been shown to exhibit luxury N uptake (Muchow and Robertson 1994 ; Catchpoole and Keating 1995) and the difference between the maximum and critical N concentrations is intended to simulate this phenomenon. 
+    ///Sugarcane has been shown to exhibit luxury N uptake [muchow_radiation_1994](Catchpoole and Keating 1995) and the difference between the maximum and critical N concentrations is intended to simulate this phenomenon. 
     ///Nitrogen stress is proportional to the extent to which leaf N falls between the critical and the minimum N concentration. 
     ///
     ///Senescing leaves (and the associated leaf sheaths contained in the cabbage pool) are assumed to die at their minimum N concentrations and the balance of the N in these tissues is retranslocated to the green leaf and cabbage pools. 
     ///
-    ///Maximum, critical and minimum N concentrations are all functions of thermal time, and were chosen on the basis of the findings of Catchpoole and Keating (1995) and Muchow and Robertson (1994) and subsequently refined during the model calibration.
+    ///Maximum, critical and minimum N concentrations are all functions of thermal time, and were chosen on the basis of the findings of Catchpoole and Keating (1995) and [muchow_radiation_1994] and subsequently refined during the model calibration.
     ///Critical green leaf concentrations used in the model differ between photosynthetic, leaf expansion and stem growth processes. 
     ///For photosynthesis they begin at 1.2% N at emergence or ratooning and asymptote towards 0.5%N at flowering. 
     ///For leaf area expansion they are 1.3 and 0.5% N 
     ///and stem growth, 1.5 and 0.5%N. 
     ///
     ///N uptake cannot exceed N demand by the crop and is simulated to take place by mass flow in the water that is used for transpiration. 
-    ///Should mass flow not meet crop demand and nitrate be available in soil layers, the approach of van Keulen and Seligman (1987) is used to simulate the uptake of nitrate over and above that which can be accounted for by mass flow. 
+    ///Should mass flow not meet crop demand and nitrate be available in soil layers, the approach of [van_keulen_simulation_1987] is used to simulate the uptake of nitrate over and above that which can be accounted for by mass flow. 
     ///While van Keulen and Seligman (1987) referred to this approach as “diffusion”, the routine more realistically serves as a surrogate for a number of sources of uncertainty in nitrate uptake. 
     ///
     ///Nitrogen stress also influences biomass partitioning in the stem, in a similar fashion to that described above for water stress.
@@ -256,16 +256,16 @@ namespace Models
     ///APSIM-Sugarcane responds to a management event of hilling-up by removal of lower leaf area and stem from the biomass pools. 
     ///
     ///Lodging is a widespread phenomenon in high-yielding sugarcane crops. 
-    ///The APSIM-MANAGER (McCown et al 1996) can initiate a lodging event in response to any aspect of the system state (eg crop size, time of year and weather). 
+    ///The APSIM-MANAGER [mccown_apsim:_1996] can initiate a lodging event in response to any aspect of the system state (eg crop size, time of year and weather). 
     ///APSIM SUGARCANE responds to lodging via four effects:
     ///
-    ///A low rate of stalk death which has been widely observed in heavily lodged crops (Muchow et al., 1995; Robertson et al., 1996; Singh et al., 2002);
+    ///A low rate of stalk death which has been widely observed in heavily lodged crops (Muchow et al., 1995; Robertson et al., 1996)[singh_lodging_2002];
     ///
-    ///A reduction in radiation use efficiency (Singh et al., 1999; Singh et al., 2002)
+    ///A reduction in radiation use efficiency (Singh et al., 1999)[singh_lodging_2002]
     ///
-    ///A reduction in the proportion of daily biomass that is partitioned as sucrose (Singh et al., 2002); and
+    ///A reduction in the proportion of daily biomass that is partitioned as sucrose [singh_lodging_2002]; and
     ///
-    ///A reduction in the maximum number of green leaves, to capture the reported reduction in leaf appearance rate and increase in leaf senescence (Singh, 2002; Singh et al., 2002).
+    ///A reduction in the maximum number of green leaves, to capture the reported reduction in leaf appearance rate and increase in leaf senescence [singh_lodging_2002]
     ///
     /// 
     ///##Parameterisation
@@ -345,73 +345,6 @@ namespace Models
     /// |swdef_photo    | 0-1        | Soil water stress factor for photosynthesis                               |
     /// |swdef_expan    | 0-1        | Soil water stress factor for cell expansion                               |
     /// |swdef_phen     | 0-1        | Soil water stress factor for phenology                                    |
-    ///
-    ///
-    ///
-    ///##REFERENCES
-    ///
-    ///Ball-Coelho, B. Sampaio, E. V. S. B.; Tiessen, H.; Stewart, J. W. B. (1992). Root dynamics in plant and ratoon crops of sugar cane. Plant and Soil 142:297-305.
-    ///
-    ///Evenson, C. I., Muchow, R. C., El-Swaify, S. A., and Osgood, R. V. (1995). Yield accumulation in irrigated sugarcane. I. Effect of crop age and variety. (in press).
-    ///
-    ///Glover, J. (1967). The simultaneous growth of sugarcane roots and tops in relation to soil and climate. Proc. S. Afr. Sugar Technol. Assoc., 143-159.
-    ///
-    ///Godwin, D.C. and Vlek, P.L.G. (1984). Simulation of nitrogen dynamics in wheat cropping systems. In : Day, W. and Atkin, R.K. (eds), Wheat growth and modelling. Plenum Press, New York, pp 311-332.
-    ///
-    ///Hammer, G. L. and Muchow, R. C. (1994). Assessing climatic risk to sorghum production in water-limited subtropical environments I. Development and testing of a simulation model. Field Crops Research, 36: 221-234.
-    ///
-    ///Inman-Bamber NG and Thompson GD (1989). Models of dry matter accumulation by sugarcane. Proc. S. Afr. Sugar Technol. Assoc., 212-216 .
-    ///
-    ///Inman-Bamber NG (1994b) Temperature and seasonal effects on canopy development and light interception of sugarcane. Field Crops Research, 36: 41-51.
-    ///
-    ///Jones, C. A., Kiniry, J. R. (1986) (ors), CERES-Maize: A simulation model of maize growth and development., Texas A&amp;M University Press, PP. 37-48.
-    ///
-    ///Catchpoole, V.R. and Keating, B.A. (1995) Sugarcane yield and nitrogen uptake in relation to profiles of mineral-nitrogen in the soil. Proc. 17th Aust. Soc. Sugarcane Technol. , pp 187-192.
-    ///
-    ///McCown RL, Hammer GL, Hargreaves JNG, Holzworth DP and Freebairn DM (1995). APSIM: A novel software system for model development, model testing, and simulation in agricultural systems research. Agric. Syst. 50, 255-271
-    ///
-    ///Monteith, J. L. (1986). How do crops manipulate water supply and demand? Phil. Trans. Royal Soc. Lond. A , 316: 245-289.
-    ///
-    ///Muchow RC, Robertson MJ, Wood AW, Spillman M F (1994a) Effect of soil fumigation on sugarcane productivity under high-yielding conditions in north Queensland.Proc. Aust. Soc. Sugar Cane Technol. , 1994 Conf., 187-92.
-    ///
-    ///Muchow RC, Robertson MJ &amp; Wood AW (1996a) Growth of sugarcane under high input conditions in tropical Australia. II. Sucrose accumulation and partitioning, and commercial yield. Field Crops Research 48:27-36.
-    ///
-    ///Muchow, R. C. and Robertson, M. J. (1994). Relating crop nitrogen uptake to sugarcane yield. Proc.Aust. Soc. Sugarcane Technol., 1994, 122 - 130.
-    ///
-    ///Muchow RC, Robertson MJ,Wood AW &amp; Keating BA (1996b) Effect of nitrogen on the time-course of sucrose accumulation in. Field Crops Research 47: 143-153.
-    ///
-    ///Muchow RC, Spillman MF, Wood AW &amp; Thomas MR (1994b) Radiation interception and biomass accumulation in a sugarcane crop grown under irrigated tropical conditions. Aust. J. Agric. Research 45, 37-49.
-    ///
-    ///Muchow, R. C., Wood, A. W. and Robertson, M. J. (1995) Does stalk death set the yield ceiling in high yielding sugarcane crops? Proc. Aust. Soc. Sugar Cane Technol. 17, 142 - 148.
-    ///
-    ///Muchow RC, Wood AW, Spillman MF, Robertson M J &amp; Thomas MR (1993) Field techniques to quantify the yield-determining processes in sugarcane. I. Methodology. Proc. Aust. Soc. Sugar Cane Technol. , 1993 Conf., 336-343.
-    ///
-    ///Probert ME, Dimes JP, Keating BA, Dalal RC, Strong WM (1997). APSIM's water and nitrogen modules and simulation of the dynamics of water and nitrogen in fallow systems. Agric. Syst. (in press).
-    ///
-    ///Ritchie, J. T. (1986). In: Jones, C. A., Kiniry, J. R. (1986) (ors), CERES-Maize: A simulation model of maize growth and development., Texas A&amp;M University Press, PP. 37-48.
-    ///
-    ///Robertson MJ, Muchow RC, Inman-Bamber, NG, Wood AW (1996) Relationship between biomass and sucrose accumulation in sugarcane. in “Sugarcane: Research Towards Efficient and Sustainable Production” Wilson JR, Hogarth DM, Campbell JA and Garside AL (eds). CSIRO Division of Tropical Crops and Pastures, Brisbane. 1996, pp 84-86.
-    ///
-    ///Robertson, M.J. Bonnett, G.D. and Campbell. J.A. (1998).Temperature and leaf area expansion of sugarcane: integration of controlled-environment, field and model studies. Australian Journal of Plant Physiology. 25, 819-828.
-    ///
-    ///Robertson, M. J., Wood, A. W., and Muchow, R. C. (1996) Growth of sugarcane under high input conditions in tropical Australia. I. Radiation use, biomass accumulation and partitioning. Field Crops Res . 48, 11 – 25.
-    ///
-    ///Sinclair, T. R. (1986). Water and nitrogen limitations in soybean grain production. I Model development. Field Crops Research , 15: 125-141.
-    ///
-    ///Singh, G. (2002) Constraints to High Yield and CCS in Large and Lodged Cane Crops. Ph D Thesis (submitted to James Cook University).
-    ///
-    ///Singh, G., Chapman, S. C., Jackson, P. A. and Lawn, R. J. (1999) Yield accumulation in sugarcane under wet tropical conditions - effect of lodging and crop age. Proc. Aust. Soc. Sugar Cane Technol. 21, 241 - 245.
-    ///
-    ///Singh, G., Chapman, S. C., Jackson, P. A. and Lawn, R. J. (2002) Lodging reduces sucrose accumulation of sugarcane in the wet and dry tropics. Aust. J. Agric. Res. 53, 1183 – 1195.
-    ///
-    ///Tanner, C. B. and Sinclair, T. R. (1983). Efficient water use in crop production: research or re-search? in "Limitations to Efficient Water use in Crop Production" (Eds. H. M. Taylor, W. R. Jordan, T. R. Sinclair). pp.1-27. ASA, Madison, Wisconsin.
-    ///
-    ///Van Keulen, H. and Seligman, N.G. (1987). Simulation of water use, nitrogen nutrition and growth of a spring wheat crop. Pudoc Wageningen, 310pp.
-    ///
-    ///Verburg, K., Ross, P.J. and Bristow, K.L. (1997) SWIMv2 Manual. CSIRO Division of Soils Divisional Report, CSIRO, Australia, 93 pp. (in press). 
-    /// 
-    ///
-    ///
     ///
     /// </summary>
     [Serializable]
