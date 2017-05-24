@@ -419,6 +419,7 @@
           <Region>1</Region>
           <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
           <FeedTypeName>Maize_local</FeedTypeName>
+          <ResidueKept>20</ResidueKept>
           <UnitsOfArea>Hectares</UnitsOfArea>
           <AreaRequested>50</AreaRequested>
         </IATGrowCrop>
@@ -428,6 +429,7 @@
           <Region>1</Region>
           <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
           <FeedTypeName>Brachiaria</FeedTypeName>
+          <ResidueKept>90</ResidueKept>
           <UnitsOfArea>Hectares</UnitsOfArea>
           <AreaRequested>200</AreaRequested>
         </IATGrowForage>

@@ -52,12 +52,17 @@ namespace Models.WholeFarm.Activities
 		[Description("Name of crop")]
 		public string FeedTypeName { get; set; }
 
+        /// <summary>
+        /// Percentage of the residue (stover) that is kept
+        /// </summary>
+        [Description("Proportion of Residue (stover) Kept (%)")]
+        public double ResidueKept { get; set; }
 
 
-		/// <summary>
-		/// Area of forage paddock
-		/// </summary>
-		[XmlIgnore]
+        /// <summary>
+        /// Area of forage paddock
+        /// </summary>
+        [XmlIgnore]
 		public double Area { get; set; }
 
 
@@ -73,7 +78,6 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[Description("Area requested")]
 		public double AreaRequested { get; set; }
-
 
 
         /// <summary>
@@ -229,12 +233,12 @@ namespace Models.WholeFarm.Activities
                     if (UnitsOfArea == UnitsOfAreaTypes.Squarekm)
                     {
                         grain = nextHarvest.GrainWt * AreaRequested * ConvertToHectares;
-                        stover = nextHarvest.StoverWt * AreaRequested * ConvertToHectares;
+                        stover = nextHarvest.StoverWt * AreaRequested * ConvertToHectares * (ResidueKept / 100);
                     }
                     else
                     {
                         grain = nextHarvest.GrainWt * AreaRequested;
-                        stover = nextHarvest.StoverWt * AreaRequested;
+                        stover = nextHarvest.StoverWt * AreaRequested * (ResidueKept/100);
                     }
 
                     if (grain > 0)
