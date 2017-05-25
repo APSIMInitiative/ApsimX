@@ -60,7 +60,6 @@ namespace Models.WholeFarm.Activities
 			{
 				animalType.Remove(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).FirstOrDefault(), this.Name, "Died");
 			}
-
 		}
 
 		/// <summary>
