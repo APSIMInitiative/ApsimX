@@ -26,8 +26,6 @@ namespace Models.WholeFarm.Activities
 		private ResourcesHolder Resources = null;
 		[Link]
 		ISummary Summary = null;
-		[Link]
-		Clock Clock = null;
 
 		/// <summary>
 		/// Name of herd to breed

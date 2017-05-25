@@ -49,19 +49,22 @@ namespace Models.WholeFarm.Resources
 			LastIndividualChanged = new Ruminant();
 
 			// for each Ruminant type 
-			foreach (RuminantInitialCohorts ruminantCohorts in this.Children.Where(a => a.GetType() == typeof(RuminantInitialCohorts)).Cast<RuminantInitialCohorts>().ToList())
+			foreach (RuminantType rType in this.Children.Where(a => a.GetType() == typeof(RuminantType)).Cast<RuminantType>().ToList())
 			{
-				foreach (var ind in ruminantCohorts.CreateIndividuals())
+				foreach (RuminantInitialCohorts ruminantCohorts in rType.Children.Where(a => a.GetType() == typeof(RuminantInitialCohorts)).Cast<RuminantInitialCohorts>().ToList())
 				{
-					ind.SaleFlag = HerdChangeReason.InitialHerd;
-					AddRuminant(ind);
+					foreach (var ind in ruminantCohorts.CreateIndividuals())
+					{
+						ind.SaleFlag = HerdChangeReason.InitialHerd;
+						AddRuminant(ind);
+					}
 				}
 			}
 
 			//List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
 
-   //         foreach (IModel childModel in childNodes)
-   //         {
+			//         foreach (IModel childModel in childNodes)
+			//         {
 			//	//cast the generic IModel to a specfic model.
 			//	RuminantType ruminantType = childModel as RuminantType;
 			//	foreach (var ind in ruminantType.CreateIndividuals())
@@ -70,7 +73,7 @@ namespace Models.WholeFarm.Resources
 			//		AddRuminant(ind);
 			//	}
 			//}
-        }
+		}
 
 		/// <summary>
 		/// Add individual/cohort to the the herd

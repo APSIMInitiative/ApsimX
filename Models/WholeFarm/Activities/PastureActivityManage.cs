@@ -468,8 +468,7 @@ namespace Models.WholeFarm.Activities
             double stockingRate = LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate;
             pkStkRate = (int)Math.Round(stockingRate);
 
-
-            PastureDataList = FileGRASP.GetIntervalsPastureData(Region, SoilNumber, 1,
+			PastureDataList = FileGRASP.GetIntervalsPastureData(Region, SoilNumber, 1,
                pkGrassBA, pkLandCon, pkStkRate, Clock.Today, EcolCalculationInterval);
         }
 

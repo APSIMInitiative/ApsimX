@@ -229,7 +229,7 @@
             <Name>Breeding</Name>
 						<RuminantInitialCohorts>
 							<Name>Initial cohorts</Name>
-							<RuminantTypeCohort>
+								<RuminantTypeCohort>
 								<Name>CalfF</Name>
 								<Gender>Female</Gender>
 								<StartingAge>0</StartingAge>
