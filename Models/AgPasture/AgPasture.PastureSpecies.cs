@@ -260,7 +260,9 @@ namespace Models.AgPasture
             DoAddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // Incorporate all root mass to soil fresh organic matter
-            DoAddDetachedRootToSoilFOM(BelowGroundWt, BelowGroundN);
+            plantZoneRoots.DoEndOrgan(CarbonFractionInDM);
+            foreach (PastureBelowGroundOrgan root in rootZones)
+                root.DoEndOrgan(CarbonFractionInDM);
 
             // zero all variables
             RefreshVariables();
@@ -1980,7 +1982,10 @@ namespace Models.AgPasture
         {
             get
             {
-                return plantZoneRoots.mySoilNH4Available;
+                double[] available = plantZoneRoots.mySoilNH4Available;
+                foreach (PastureBelowGroundOrgan root in rootZones)
+                    available = MathUtilities.Add(available, root.mySoilNH4Available);
+                return available;
             }
         }
 
@@ -1990,7 +1995,10 @@ namespace Models.AgPasture
         {
             get
             {
-                return plantZoneRoots.mySoilNO3Available;
+                double[] available = plantZoneRoots.mySoilNO3Available;
+                foreach (PastureBelowGroundOrgan root in rootZones)
+                    available = MathUtilities.Add(available, root.mySoilNO3Available);
+                return available;
             }
         }
 
@@ -2269,7 +2277,13 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double BelowGroundWt
         {
-            get { return plantZoneRoots.DMTotal; }
+            get
+            {
+                double dmTotal = plantZoneRoots.DMTotal;
+                foreach (PastureBelowGroundOrgan root in rootZones)
+                    dmTotal += root.DMTotal;
+                return dmTotal;
+            }
         }
 
         /// <summary>Gets the dry matter weight of standing herbage (kgDM/ha).</summary>
@@ -2357,7 +2371,13 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double RootWt
         {
-            get { return plantZoneRoots.DMTotal; }
+            get
+            {
+                double rootWt = plantZoneRoots.DMTotal;
+                foreach (PastureBelowGroundOrgan zone in rootZones)
+                    rootWt += zone.DMTotal;
+                return rootWt;
+            }
         }
 
         /// <summary>Gets the dry matter weight of roots in each soil layer ().</summary>
@@ -2365,7 +2385,13 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double[] RootLayerWt
         {
-            get { return plantZoneRoots.Tissue[0].DMLayer; }
+            get
+            {
+                double[] rootLayerWt = plantZoneRoots.Tissue[0].DMLayer;
+                foreach (PastureBelowGroundOrgan zone in rootZones)
+                    rootLayerWt = MathUtilities.Add(rootLayerWt, zone.Tissue[0].DMLayer);
+                return rootLayerWt;
+            }
         }
 
         ////- N amount outputs >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2407,7 +2433,13 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double BelowGroundN
         {
-            get { return plantZoneRoots.NTotal; }
+            get
+            {
+                double nTotal = plantZoneRoots.NTotal;
+                foreach (PastureBelowGroundOrgan zone in rootZones)
+                    nTotal += zone.NTotal;
+                return nTotal;
+            }
         }
 
         /// <summary>Gets the amount of N in standing herbage (kgN/ha).</summary>
@@ -2495,7 +2527,13 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double RootN
         {
-            get { return plantZoneRoots.NTotal; }
+            get
+            {
+                double nTotal = plantZoneRoots.NTotal;
+                foreach (PastureBelowGroundOrgan zone in rootZones)
+                    nTotal += zone.NTotal;
+                return nTotal;
+            }
         }
 
         ////- N concentration outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4436,8 +4474,8 @@ namespace Models.AgPasture
             dGrowthNet = (dGrowthShootDM - detachedShootDM) + (dGrowthRootDM - detachedRootDM);
 
             // Save some variables for mass balance check
-            double preTotalWt = TotalWt;
-            double preTotalN = TotalN;
+            double preTotalWt = AboveGroundWt + plantZoneRoots.DMTotal;
+            double preTotalN = AboveGroundN + plantZoneRoots.NTotal;
 
             // Update each organ, returns test for mass balance
             if (leaves.DoOrganUpdate() == false)
@@ -4452,11 +4490,14 @@ namespace Models.AgPasture
             if (plantZoneRoots.DoOrganUpdate() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
 
+            double postTotalWt = AboveGroundWt + plantZoneRoots.DMTotal;
+            double postTotalN = AboveGroundN + plantZoneRoots.NTotal;
+
             // Check for loss of mass balance in the whole plant
-            if (Math.Abs(preTotalWt + dGrowthAfterNutrient - detachedShootDM - detachedRootDM - TotalWt) > Epsilon)
+            if (Math.Abs(preTotalWt + dGrowthAfterNutrient - detachedShootDM - detachedRootDM - postTotalWt) > Epsilon)
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
-            if (Math.Abs(preTotalN + dNewGrowthN - senescedNRemobilised - luxuryNRemobilised - detachedShootN - detachedRootN - TotalN) > Epsilon)
+            if (Math.Abs(preTotalN + dNewGrowthN - senescedNRemobilised - luxuryNRemobilised - detachedShootN - detachedRootN - postTotalN) > Epsilon)
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             // Update LAI
