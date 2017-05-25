@@ -86,8 +86,8 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
 		/// <param name="ActivityName">Name of activity adding resource</param>
-		/// <param name="UserName">Name of individual adding resource</param>
-		public void Add(object ResourceAmount, string ActivityName, string UserName)
+		/// <param name="Reason">Name of individual adding resource</param>
+		public void Add(object ResourceAmount, string ActivityName, string Reason)
         {
 			double addAmount = 0;
 			double nAdded = 0;
@@ -113,7 +113,7 @@ namespace Models.WholeFarm.Resources
 			ResourceTransaction details = new ResourceTransaction();
 			details.Credit = addAmount;
 			details.Activity = ActivityName;
-			details.Reason = UserName;
+			details.Reason = Reason;
 			details.ResourceType = this.Name;
 			LastTransaction = details;
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };

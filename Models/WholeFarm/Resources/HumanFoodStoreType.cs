@@ -99,8 +99,8 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen in a Res) of food being added</param>
 		/// <param name="ActivityName">Name of activity adding resource</param>
-		/// <param name="UserName">Name of individual radding resource</param>
-		public void Add(object ResourceAmount, string ActivityName, string UserName)
+		/// <param name="Reason">Name of individual radding resource</param>
+		public void Add(object ResourceAmount, string ActivityName, string Reason)
 		{
 			double addAmount = 0;
 			double nAdded = 0;
@@ -125,7 +125,7 @@ namespace Models.WholeFarm.Resources
 			ResourceTransaction details = new ResourceTransaction();
 			details.Credit = addAmount;
 			details.Activity = ActivityName;
-			details.Reason = UserName;
+			details.Reason = Reason;
 			details.ResourceType = this.Name;
 			LastTransaction = details;
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -160,8 +160,8 @@ namespace Models.WholeFarm.Resources
 		///// </summary>
 		///// <param name="RemoveAmount">Amount to remove. NOTE: This is a positive value not a negative value.</param>
 		///// <param name="ActivityName">Name of activity requesting resource</param>
-		///// <param name="UserName">Name of individual requesting resource</param>
-		//public double Remove(double RemoveAmount, string ActivityName, string UserName)
+		///// <param name="Reason">Name of individual requesting resource</param>
+		//public double Remove(double RemoveAmount, string ActivityName, string Reason)
 		//{
 		//	double amountRemoved = RemoveAmount;
 		//	if (this.amount - RemoveAmount < 0)
@@ -181,7 +181,7 @@ namespace Models.WholeFarm.Resources
 		//	details.ResourceType = this.Name;
 		//	details.Debit = amountRemoved * -1;
 		//	details.Activity = ActivityName;
-		//	details.Reason = UserName;
+		//	details.Reason = Reason;
 		//	LastTransaction = details;
 		//	TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 		//	OnTransactionOccurred(te);

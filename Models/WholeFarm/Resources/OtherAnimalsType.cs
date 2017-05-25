@@ -45,6 +45,12 @@ namespace Models.WholeFarm.Resources
 		public double AgeWhenAdult { get; set; }
 
 		/// <summary>
+		/// Age when individuals die
+		/// </summary>
+		[Description("Maximum age before death (months)")]
+		public double MaxAge { get; set; }
+
+		/// <summary>
 		/// Initialise resource type
 		/// </summary>
 		public void Initialise()
@@ -87,8 +93,8 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		/// <param name="AddIndividuals"></param>
 		/// <param name="ActivityName"></param>
-		/// <param name="UserName"></param>
-		public void Add(object AddIndividuals, string ActivityName, string UserName)
+		/// <param name="Reason"></param>
+		public void Add(object AddIndividuals, string ActivityName, string Reason)
 		{
 			OtherAnimalsTypeCohort cohortToAdd = AddIndividuals as OtherAnimalsTypeCohort;
 
@@ -108,7 +114,7 @@ namespace Models.WholeFarm.Resources
 			ResourceTransaction details = new ResourceTransaction();
 			details.Credit = cohortToAdd.Number;
 			details.Activity = ActivityName;
-			details.Reason = UserName;
+			details.Reason = Reason;
 			details.ResourceType = this.Name;
 			details.ExtraInformation = cohortToAdd;
 			LastTransaction = details;
@@ -131,11 +137,11 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		/// <param name="RemoveIndividuals"></param>
 		/// <param name="ActivityName"></param>
-		/// <param name="UserName"></param>
-		public void Remove(object RemoveIndividuals, string ActivityName, string UserName)
+		/// <param name="Reason"></param>
+		public void Remove(object RemoveIndividuals, string ActivityName, string Reason)
 		{
-			OtherAnimalsTypeCohort cohortToAdd = RemoveIndividuals as OtherAnimalsTypeCohort;
-			OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age & a.Gender == cohortToAdd.Gender).First();
+			OtherAnimalsTypeCohort cohortToRemove = RemoveIndividuals as OtherAnimalsTypeCohort;
+			OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToRemove.Age & a.Gender == cohortToRemove.Gender).First();
 
 			if (cohortexists == null)
 			{
@@ -144,17 +150,17 @@ namespace Models.WholeFarm.Resources
 			}
 			else
 			{
-				cohortexists.Number -= cohortToAdd.Number;
+				cohortexists.Number -= cohortToRemove.Number;
 				cohortexists.Number = Math.Max(0, cohortexists.Number);
 			}
 
-			LastCohortChanged = cohortToAdd;
+			LastCohortChanged = cohortToRemove;
 			ResourceTransaction details = new ResourceTransaction();
-			details.Debit = cohortToAdd.Number * -1;
+			details.Debit = cohortToRemove.Number * -1;
 			details.Activity = ActivityName;
-			details.Reason = UserName;
+			details.Reason = Reason;
 			details.ResourceType = this.Name;
-			details.ExtraInformation = cohortToAdd;
+			details.ExtraInformation = cohortToRemove;
 			LastTransaction = details;
 			TransactionEventArgs eargs = new TransactionEventArgs();
 			eargs.Transaction = LastTransaction;

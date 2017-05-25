@@ -54,6 +54,13 @@ namespace Models.WholeFarm.Activities
 			{
 				cohort.Age++;
 			}
+
+			// death from old age
+			while(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).Count() > 0)
+			{
+				animalType.Remove(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).FirstOrDefault(), this.Name, "Died");
+			}
+
 		}
 
 		/// <summary>

@@ -111,8 +111,8 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
 		/// <param name="ActivityName"></param>
-		/// <param name="UserName"></param>
-		public void Add(object ResourceAmount, string ActivityName, string UserName)
+		/// <param name="Reason"></param>
+		public void Add(object ResourceAmount, string ActivityName, string Reason)
 		{
 			if(ResourceAmount.GetType().ToString()!="System.Double")
 			{
@@ -127,7 +127,7 @@ namespace Models.WholeFarm.Resources
 				ResourceTransaction details = new ResourceTransaction();
 				details.Credit = addAmount;
 				details.Activity = ActivityName;
-				details.Reason = UserName;
+				details.Reason = Reason;
 				details.ResourceType = this.Name;
 				LastTransaction = details;
 				TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -149,8 +149,8 @@ namespace Models.WholeFarm.Resources
 		///// </summary>
 		///// <param name="RemoveAmount"></param>
 		///// <param name="ActivityName"></param>
-		///// <param name="UserName"></param>
-		//public double Remove(double RemoveAmount, string ActivityName, string UserName)
+		///// <param name="Reason"></param>
+		//public double Remove(double RemoveAmount, string ActivityName, string Reason)
 		//{
 		//	if (RemoveAmount > 0)
 		//	{
@@ -161,7 +161,7 @@ namespace Models.WholeFarm.Resources
 		//		details.ResourceType = this.Name;
 		//		details.Debit = RemoveAmount * -1;
 		//		details.Activity = ActivityName;
-		//		details.Reason = UserName;
+		//		details.Reason = Reason;
 		//		LastTransaction = details;
 		//		TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
 		//		OnTransactionOccurred(te);

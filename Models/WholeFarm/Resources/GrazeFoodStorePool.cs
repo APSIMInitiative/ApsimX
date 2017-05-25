@@ -63,8 +63,8 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		/// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
 		/// <param name="ActivityName"></param>
-		/// <param name="UserName"></param>
-		public void Add(object ResourceAmount, string ActivityName, string UserName)
+		/// <param name="Reason"></param>
+		public void Add(object ResourceAmount, string ActivityName, string Reason)
 		{
 			throw new NotImplementedException();
 		}
@@ -74,8 +74,8 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		/// <param name="RemoveAmount"></param>
 		/// <param name="ActivityName"></param>
-		/// <param name="UserName"></param>
-		public double Remove(double RemoveAmount, string ActivityName, string UserName)
+		/// <param name="Reason"></param>
+		public double Remove(double RemoveAmount, string ActivityName, string Reason)
 		{
 			RemoveAmount = Math.Min(this.amount, RemoveAmount);
 			this.amount = this.amount - RemoveAmount;

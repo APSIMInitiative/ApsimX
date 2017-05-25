@@ -91,8 +91,8 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		/// <param name="ResourceAmount"></param>
 		/// <param name="ActivityName"></param>
-		/// <param name="UserName"></param>
-		public void Add(object ResourceAmount, string ActivityName, string UserName)
+		/// <param name="Reason"></param>
+		public void Add(object ResourceAmount, string ActivityName, string Reason)
 		{
 			if (ResourceAmount.GetType().ToString() != "System.Double")
 			{
@@ -107,7 +107,7 @@ namespace Models.WholeFarm.Resources
 				details.Credit = addAmount;
 				details.CreditStandardised = addAmount * GlobalWarmingPotential;
 				details.Activity = ActivityName;
-				details.Reason = UserName;
+				details.Reason = Reason;
 				details.ResourceType = this.Name;
 				LastTransaction = details;
 				TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
