@@ -7338,6 +7338,7 @@ using System.Xml.Serialization;
 using Models.Core;
 using Models.PMF;
 using APSIM.Shared.Utilities;
+using System.Diagnostics;
 
 namespace Models
 {
