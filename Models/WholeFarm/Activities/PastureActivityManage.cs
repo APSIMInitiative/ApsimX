@@ -181,12 +181,7 @@ namespace Models.WholeFarm.Activities
 			{
 				throw new ApsimXException(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
 			}
-
-
 		}
-
-
-
 
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
@@ -289,8 +284,6 @@ namespace Models.WholeFarm.Activities
             CalculateEcologicalIndicators();
         }
 
-
-
         /// <summary>
         /// Function to age resource pools
         /// </summary>
@@ -316,7 +309,6 @@ namespace Models.WholeFarm.Activities
             // remove all pools with less than 10g of food
             LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
         }
-
 
 
         private void SetupStartingPasturePools(double StartingGrowth)
@@ -398,10 +390,7 @@ namespace Models.WholeFarm.Activities
         private double CalculateStockingRateRightNow()
         {
             return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * ha2sqkm);
-
         }
-
-
 
 		/// <summary>
 		/// Method to perform calculation of all ecological indicators.
@@ -473,16 +462,11 @@ namespace Models.WholeFarm.Activities
         }
 
 
-
-
-
-
-
         /// <summary>
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns>A list of resource requests</returns>
-        public override List<ResourceRequest> DetermineResourcesNeeded()
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			return null;
 		}
@@ -490,7 +474,26 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
+		{
+			return;
+		}
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
 		{
 			return;
 		}

@@ -119,7 +119,7 @@ namespace Models.WholeFarm.Activities
 			ResourceRequestList = null;
 		}
 
-		public override List<ResourceRequest> DetermineResourcesNeeded()
+		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			// check if resource request list has been calculated from a parent call
 			if (ResourceRequestList == null)
@@ -155,7 +155,7 @@ namespace Models.WholeFarm.Activities
 			return ResourceRequestList;
 		}
 
-		public override void PerformActivity()
+		public override void DoActivity()
 		{
 			//TODO: go through amount received and put it into the animals intake with quality measures.
 
@@ -163,6 +163,25 @@ namespace Models.WholeFarm.Activities
 
 
 			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
+		{
+			return;
 		}
 
 		/// <summary>

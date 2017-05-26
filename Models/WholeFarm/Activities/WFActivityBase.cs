@@ -36,12 +36,36 @@ namespace Models.WholeFarm.Activities
 
 		/// <summary>
 		/// Method to cascade calls for resources for all activities in the UI tree. 
+		/// Responds to WFInitialiseActivity in the Activity model holing top level list of activities
+		/// </summary>
+		public void GetResourcesForAllActivityInitialisation()
+		{
+			// Get resources needed and use substitution if needed and provided, then move through children getting their resources.
+			GetResourcesRequiredForInitialisation();
+
+			// get resources required for all dynamically created WFActivityBase activities
+			if (ActivityList != null)
+			{
+				foreach (WFActivityBase activity in ActivityList)
+				{
+					activity.GetResourcesForAllActivityInitialisation();
+				}
+			}
+			// get resources required for all children of type WFActivityBase
+			foreach (WFActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(WFActivityBase))).ToList())
+			{
+				activity.GetResourcesForAllActivityInitialisation();
+			}
+		}
+
+		/// <summary>
+		/// Method to cascade calls for resources for all activities in the UI tree. 
 		/// Responds to WFGetResourcesRequired in the Activity model holing top level list of activities
 		/// </summary>
 		public void GetResourcesForAllActivities()
 		{
 			// Get resources needed and use substitution if needed and provided, then move through children getting their resources.
-			GetResourcesRequired();
+			GetResourcesRequiredForActivity();
 
 			// get resources required for all dynamically created WFActivityBase activities
 			if (ActivityList != null)
@@ -59,18 +83,41 @@ namespace Models.WholeFarm.Activities
 		}
 
 		/// <summary>
+		/// Method to get required resources for initialisation of this activity. 
+		/// </summary>
+		public void GetResourcesRequiredForInitialisation()
+		{
+			// determine what resources are needed for initialisation
+			ResourceRequestList = GetResourcesNeededForinitialisation();
+
+			bool tookRequestedResources = TakeResources(ResourceRequestList);
+
+			// no resources required perform Activity if code is present.
+			// if resources are returned (all available or UseResourcesAvailable action) perform Activity
+			// if reportErrorAndStop do not perform Activity
+			// if SkipActivity still attempt to perform initialisation but no resources will show in Supplied fields of ResourceRequestItems
+			if (tookRequestedResources || (ResourceRequestList == null) || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
+			{
+				DoInitialisation();
+			}
+			ResourceRequestList = null;
+		}
+
+		/// <summary>
 		/// Method to get this time steps current required resources for this activity. 
 		/// </summary>
-		public void GetResourcesRequired()
+		public void GetResourcesRequiredForActivity()
         {
-
             // determine what resources are needed
-            ResourceRequestList = DetermineResourcesNeeded();
+            ResourceRequestList = GetResourcesNeededForActivity();
 
             bool tookRequestedResources = TakeResources(ResourceRequestList);
 
-            if (tookRequestedResources)
-                PerformActivity();
+			// if no resources required perform Activity if code is present.
+			// if resources are returned (all available or UseResourcesAvailable action) perform Activity
+			// if reportErrorAndStop or SkipActivity do not perform Activity
+            if (tookRequestedResources || (ResourceRequestList == null))
+                DoActivity();
         }
 
         /// <summary>
@@ -84,7 +131,7 @@ namespace Models.WholeFarm.Activities
             bool resourceAvailable = false;
 
             // no resources required or this is an Activity folder.
-				if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return false;
+			if ((ResourceRequestList == null)||(ResourceRequestList.Count() ==0)) return false;
 
             Guid uniqueRequestID = Guid.NewGuid();
             // check resource amounts available
@@ -196,12 +243,22 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Abstract method to determine list of resources and amounts needed. 
 		/// </summary>
-		public abstract List<ResourceRequest> DetermineResourcesNeeded();
+		public abstract List<ResourceRequest> GetResourcesNeededForActivity();
+
+		/// <summary>
+		/// Abstract method to determine list of resources and amounts needed for initilaisation. 
+		/// </summary>
+		public abstract List<ResourceRequest> GetResourcesNeededForinitialisation();
 
 		/// <summary>
 		/// Method to perform activity tasks if expected as soon as resources are available
 		/// </summary>
-		public abstract void PerformActivity();
+		public abstract void DoActivity();
+
+		/// <summary>
+		/// Method to initialise activity tasks if expected as soon as initialisation resources are provided
+		/// </summary>
+		public abstract void DoInitialisation();
 
 		/// <summary>
 		/// Resource shortfall occured event handler

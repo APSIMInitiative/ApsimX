@@ -56,12 +56,9 @@ namespace Models.WholeFarm.Activities
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("WFInitialiseActivity")]
-		private void OnWFInitialiseActivity(object sender, EventArgs e)
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			// This needs to happen after all manage pasture activities have been initialised on commencing
-			// Therefore we use WFInitialiseActivity event
-
 			// link to graze food store type pasture to muster to
 			// blank is general yards.
 			bool resavailable = true;
@@ -72,18 +69,13 @@ namespace Models.WholeFarm.Activities
 			}
 			if (!resavailable)
 			{
-				Summary.WriteWarning(this, String.Format("Could not find manage pasture in graze food store named \"{0}\" for {1}", ManagedPastureName, this.Name));
-				throw new Exception(String.Format("Invalid pasture name ({0}) provided for mustering activity {1}", ManagedPastureName, this.Name));
+				Summary.WriteWarning(this, String.Format("Could not find graze food store named \"{0}\" for {1}", ManagedPastureName, this.Name));
+				throw new Exception(String.Format("Invalid GrazeFoodStoreType name ({0}) provided for mustering activity {1}", ManagedPastureName, this.Name));
 			}
 
 			// get labour specifications
 			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
-
-			if (PerformAtStartOfSimulation)
-			{
-				Muster();
-			}
 		}
 
 		private void Muster()
@@ -128,7 +120,7 @@ namespace Models.WholeFarm.Activities
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
 		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> DetermineResourcesNeeded()
+		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			ResourceRequestList = null;
 			if (Clock.Today.Month == Month)
@@ -185,7 +177,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
 		{
 			// check if labour provided or PartialResources allowed
 
@@ -196,6 +188,27 @@ namespace Models.WholeFarm.Activities
 			}
 		}
 
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
+		{
+			if (PerformAtStartOfSimulation)
+			{
+				Muster();
+			}
+		}
 
 	}
 }

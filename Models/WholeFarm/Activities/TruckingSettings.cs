@@ -13,7 +13,7 @@ namespace Models.WholeFarm.Activities
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantActivityBuySell))]
-	public class TruckingSetings : WFModel
+	public class TruckingSettings : WFModel
 	{
 		/// <summary>
 		/// Distance to market

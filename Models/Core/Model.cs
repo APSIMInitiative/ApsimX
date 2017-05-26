@@ -311,7 +311,7 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.SummariseRuminantHerd))]
 		[XmlElement(typeof(Models.WholeFarm.Transmutation))]
 		[XmlElement(typeof(Models.WholeFarm.TransmutationCost))]
-		[XmlElement(typeof(Models.WholeFarm.Activities.TruckingSetings))]
+		[XmlElement(typeof(Models.WholeFarm.Activities.TruckingSettings))]
 		[XmlElement(typeof(Models.WholeFarm.WholeFarm))]
 		[XmlElement(typeof(Models.Lifecycle.Lifecycle))]
         [XmlElement(typeof(Models.Lifecycle.Lifestage))]
