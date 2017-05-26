@@ -66,7 +66,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         <Name>Phenology</Name>
         <Memo>
           <Name>Description</Name>
-          <MemoText><![CDATA[The duration of each phenologic phase in plantain is controlled in general by the accumulation of thermal time; for the reproductive phase, vernalisation and photoperiod are also used.]]></MemoText>
+          <MemoText><![CDATA[The duration of each phenologic phase in plantain is controlled either by the accumulation of thermal time or photoperiod.]]></MemoText>
         </Memo>
         <AirTemperatureFunction>
           <Name>ThermalTime</Name>
@@ -98,7 +98,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Germinating</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[Germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.  Germination rates in plantain typically vary between 75 and 95% when sown close to the surface (<10mm), in moist warm soil (Douglas et al., 2013; Lee et al., 2015).  The plantain model, following convention of PMF, assumes 100% germination, and therefore the user must correct sowing rate when variations between sown and germinated plant density is considered important. ]]></MemoText>
+            <MemoText><![CDATA[Germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.  Germination rates in plantain typically vary between 75 and 95% when sown close to the surface (<10mm), in moist warm soil (Reed et al, 2008; Douglas et al., 2013; Lee et al., 2015).  The plantain model, following convention of PMF, assumes 100% germination, and therefore the user must correct sowing rate when variations between sown and germinated plant density is considered important. ]]></MemoText>
           </Memo>
           <Start>Sowing</Start>
           <End>Germination</End>
@@ -107,7 +107,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Emerging</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[ Plantain has small seeds and emergence is best when seeds are sown at depth <10mm, deeper seed may stay dormant for years in the soil.  Variations in germination rate due to depth are not explicitly simulated by the plantain model in the current version, however the sowing depth does affect timing of emergence.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).
+            <MemoText><![CDATA[ Plantain has small seeds and emergence is best when seeds are sown at depth <10mm (Peri et al., 2000; Sanderson et al., 2000), deeper seed may stay dormant for years in the soil (Blom, 1978; Roberts and Boddrell, 1984).  Variations in germination rate due to depth are not explicitly simulated by the plantain model in the current version, however the sowing depth does affect timing of emergence.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).
 ]]></MemoText>
           </Memo>
           <VariableReference>
@@ -123,7 +123,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Vegetative</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase starts when plants emerge from the ground, but it is also triggered after the end of the reproductive phase (phenology reset).  It ends when the reproductive phase starts, which is triggered by the accumulation of days with long sunlight (Sussex, 1956; Rowarth, 1990; Case et al., 1995; Lacey et al., 2003; Gonzalez-Parado et al., 2015).  Stalk development have been recorded to start in October in NZ and in May in the USA (Rowarth, 1990; Lacey et al., 2003), with data suggesting a minimum of 25-30 days (non consecutive) with long daylight periods (Sussex, 1956; Fajer et al., 1991; Case et al., 1995).  The literature does not provide an indication of how long the sunlight period should be to trigger the reproductive phase (14-16 hours been used in growth chambers), but it is clear that daylight should be grater that the period in darkness.
+            <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase starts when plants emerge from the ground, but it is also triggered after the end of the reproductive phase (phenology reset).  It ends when the reproductive phase starts, which is triggered by the accumulation of days with long sunlight (Sussex, 1956; Rowarth, 1990; Case et al., 1995; Lacey et al., 2003; Gonzalez-Parado et al., 2015).  Stalk development have been recorded to start in October in NZ and in May in the USA (Rowarth, 1990; Lacey et al., 2003), with data suggesting a minimum of 25-30 days (non consecutive) with long daylight periods (Sussex, 1956; Fajer et al., 1991; Case et al., 1995).  The literature does not provide an indication of how long the sunlight period should be to trigger the reproductive phase, but it is clear that daylight should be grater that the period in darkness (14-16 hours been used in growth chambers).
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -157,7 +157,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Reproductive</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (stems, flowers, and seeds). Flower stages and seeds development are not explicitly described in the current model, only a generic organ refered to as _inflorescence_ is defined.  This was done partly due to lack of data and partly because of the variability and complex phenology of plantain.  There is a lot of variability among plantain plants regarding when flowering occurs and how long it lasts, plus even the same plant can have flowering stalks, stalks with young seeds, as well as stalks with ripen seed at the same time (Rowarth, 1990; Rumball et al., 1997; Lacey et al., 2003; Gonzalez-Parado et al., 2015).  Seed ripenning is reached some 8-10 weeks after flowering, with commercial cultivars closer to the low end of the range. Available data suggest an accumulation of 450oCd for the flowering period, with base temperature between 5 and 9oC (Rowarth, 1990; Rumball et al., 1997, Gonzalez-Parado et al., 2015). Howerver flowering continues throughout the summer into autumn and seem to be curtailed only by frosts (Rowarth, 1990).  The plantain model uses photoperiod to trigger the start of reproductive phase, so this approach is used to also end this phase (thus ensuring phenology reset even in warmer climates).
+            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (stems, flowers, and seeds). Flower stages and seeds development are not explicitly described in the current model, only a generic organ refered to as _inflorescence_ is defined.  This was done partly due to lack of data and partly because of the variability and complex phenology of plantain.  There is a lot of variation among plantain plants regarding when flowering occurs and how long it lasts, plus even the same plant can have flowering stalks, stalks with young seeds, as well as stalks with ripen seed at the same time (Rowarth, 1990; Rumball et al., 1997; Lacey et al., 2003; Gonzalez-Parado et al., 2015).  Seed ripenning is reached some 8-10 weeks after flowering, with commercial cultivars closer to the low end of the range. Available data suggest an accumulation of 450oCd for the flowering period, with base temperature between 5 and 9oC (Rowarth, 1990; Rumball et al., 1997, Gonzalez-Parado et al., 2015). Howerver flowering continues throughout the summer into autumn and seem to be curtailed only by frosts (Rowarth, 1990).  The plantain model uses photoperiod to trigger the start of reproductive phase, so this approach is used to also end this phase (thus ensuring phenology reset even in warmer climates).
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -235,12 +235,12 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <FixedValue>0.02</FixedValue>
+          <FixedValue>0.015</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <FixedValue>0.05</FixedValue>
+          <FixedValue>0.055</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <RUEModel>
@@ -346,7 +346,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <MultiplyFunction>
             <Name>PotentialPhotosynthesis</Name>
             <VariableReference>
-              <Name>PotentialRUE</Name>
+              <Name>RUE</Name>
               <VariableName>[Leaf].Photosynthesis.RUE.Value()</VariableName>
             </VariableReference>
             <MaximumFunction>
@@ -486,7 +486,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>LAIFunction</Name>
           <Constant>
             <Name>SpecificLeafArea</Name>
-            <FixedValue>0.03</FixedValue>
+            <FixedValue>0.022</FixedValue>
             <Units>m^2/g</Units>
           </Constant>
           <VariableReference>
@@ -521,8 +521,8 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
             </X>
             <Y>
               <double>100</double>
-              <double>400</double>
-              <double>1200</double>
+              <double>350</double>
+              <double>600</double>
             </Y>
           </XYPairs>
           <XProperty>[Plantain].AboveGround.Wt</XProperty>
@@ -542,13 +542,9 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
                 <double>3</double>
                 <double>4</double>
                 <double>5</double>
-                <double>6</double>
-                <double>7</double>
               </X>
               <Y>
                 <double>0.5</double>
-                <double>1</double>
-                <double>1</double>
                 <double>1</double>
                 <double>1</double>
               </Y>
@@ -583,12 +579,16 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>0</double>
-                <double>5</double>
+                <double>-15</double>
+                <double>-2</double>
+                <double>2</double>
+                <double>10</double>
                 <double>20</double>
                 <double>30</double>
               </X>
               <Y>
+                <double>1.5</double>
+                <double>0.25</double>
                 <double>0</double>
                 <double>0</double>
                 <double>1</double>
@@ -634,7 +634,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
               <Y>
                 <double>0.5</double>
                 <double>0.5</double>
-                <double>0.1</double>
+                <double>1</double>
               </Y>
             </XYPairs>
             <XProperty>[Leaf].Fw</XProperty>
@@ -739,7 +739,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <FixedValue>0.02</FixedValue>
+          <FixedValue>0.025</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PartitionFractionDemandFunction>
@@ -850,7 +850,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>SenescenceRate</Name>
           <Constant>
             <Name>ReferenceRate</Name>
-            <FixedValue>0.1</FixedValue>
+            <FixedValue>0.2</FixedValue>
             <Units>/day</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -859,20 +859,18 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
               <Name>XYPairs</Name>
               <X>
                 <double>3</double>
-                <double>4.99</double>
+                <double>3.999</double>
+                <double>4</double>
+                <double>4.5</double>
+                <double>4.75</double>
                 <double>5</double>
-                <double>6</double>
-                <double>6.5</double>
-                <double>6.75</double>
-                <double>7</double>
               </X>
               <Y>
                 <double>1</double>
                 <double>1</double>
-                <double>0</double>
-                <double>0</double>
-                <double>0.1</double>
-                <double>0.3</double>
+                <double>0.5</double>
+                <double>0.55</double>
+                <double>0.75</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -883,12 +881,16 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
+                <double>-15</double>
                 <double>0</double>
-                <double>5</double>
+                <double>2</double>
+                <double>10</double>
                 <double>20</double>
                 <double>30</double>
               </X>
               <Y>
+                <double>2</double>
+                <double>0.2</double>
                 <double>0</double>
                 <double>0</double>
                 <double>1</double>
@@ -933,8 +935,8 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
                 <double>1</double>
               </X>
               <Y>
-                <double>0</double>
-                <double>0</double>
+                <double>0.1</double>
+                <double>0.1</double>
                 <double>0.25</double>
                 <double>1</double>
               </Y>
@@ -1142,16 +1144,16 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
               <Name>XYPairs</Name>
               <X>
                 <double>3</double>
-                <double>5.99</double>
-                <double>6</double>
-                <double>6.5</double>
-                <double>7</double>
+                <double>3.99</double>
+                <double>4</double>
+                <double>4.5</double>
+                <double>5</double>
               </X>
               <Y>
                 <double>1</double>
                 <double>1</double>
-                <double>0</double>
-                <double>0.25</double>
+                <double>0.5</double>
+                <double>0.65</double>
                 <double>1</double>
               </Y>
             </XYPairs>
@@ -1291,12 +1293,12 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.007</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <FixedValue>0.025</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PartitionFractionDemandFunction>
@@ -1504,12 +1506,12 @@ The root organ demands and is partitioned N and DM and its depth increases throu
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <FixedValue>0.007</FixedValue>
+          <FixedValue>0.005</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <FixedValue>0.025</FixedValue>
+          <FixedValue>0.015</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -1580,7 +1582,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
         </PhaseLookup>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <FixedValue>1500</FixedValue>
+          <FixedValue>1000</FixedValue>
           <Units>mm</Units>
         </Constant>
         <PhaseLookup>
@@ -1609,7 +1611,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
             <Name>Reproductive</Name>
             <Constant>
               <Name>ReferenceVelocity</Name>
-              <FixedValue>5</FixedValue>
+              <FixedValue>1</FixedValue>
               <Units>mm/day</Units>
             </Constant>
             <Start>Flowering</Start>
@@ -1638,7 +1640,7 @@ No effect of soil water content on root growth is currently captured in the mode
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <FixedValue>40</FixedValue>
+          <FixedValue>100</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <MultiplyFunction>
@@ -1968,40 +1970,6 @@ No effect of soil water content on root growth is currently captured in the mode
         </PhaseLookupValue>
       </PhaseLookup>
       <PhaseLookup>
-        <Name>AdjustedShootRootRatio</Name>
-        <PhaseLookupValue>
-          <Name>AllPhases</Name>
-          <MultiplyFunction>
-            <Name>AdjustedSR</Name>
-            <VariableReference>
-              <Name>TargetSR</Name>
-              <VariableName>[TargetShootRootRatio].Value()</VariableName>
-            </VariableReference>
-            <DivideFunction>
-              <Name>SRfactor</Name>
-              <VariableReference>
-                <Name>TargetSR</Name>
-                <VariableName>[TargetShootRootRatio].Value()</VariableName>
-              </VariableReference>
-              <MaximumFunction>
-                <Name>CurrentSRx</Name>
-                <VariableReference>
-                  <Name>CurrentSR</Name>
-                  <VariableName>[ShootRootRatio].Value()</VariableName>
-                </VariableReference>
-                <Constant>
-                  <Name>MinCurrentSR</Name>
-                  <FixedValue>1E-09</FixedValue>
-                  <Units>g/g</Units>
-                </Constant>
-              </MaximumFunction>
-            </DivideFunction>
-          </MultiplyFunction>
-          <Start>Emergence</Start>
-          <End>Ripening</End>
-        </PhaseLookupValue>
-      </PhaseLookup>
-      <PhaseLookup>
         <Name>StemsLeafRatio</Name>
         <PhaseLookupValue>
           <Name>Reproductive</Name>
@@ -2039,7 +2007,7 @@ No effect of soil water content on root growth is currently captured in the mode
               <Units>g/g</Units>
             </Constant>
             <LinearInterpolationFunction>
-              <Name>StageEffect</Name>
+              <Name>PhotoPeriodEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -2097,7 +2065,7 @@ No effect of soil water content on root growth is currently captured in the mode
               <Units>g/g</Units>
             </Constant>
             <LinearInterpolationFunction>
-              <Name>StageEffect</Name>
+              <Name>PhotoPeriodEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <X>
@@ -2706,7 +2674,17 @@ namespace Models
 		[XmlIgnore] public double Inflorescence_DMDemand { get; set; }
 		[XmlIgnore] public double Root_DMDemand { get; set; }
 		[XmlIgnore] public double Taproot_DMDemand { get; set; }
+		
+		[XmlIgnore] public double Leaf_NSupply { get; set; }
+		[XmlIgnore] public double Stem_NSupply { get; set; }
+		[XmlIgnore] public double Inflorescence_NSupply { get; set; }
+		[XmlIgnore] public double Taproot_NSupply { get; set; }
 		[XmlIgnore] public double Root_NSupply { get; set; }
+		[XmlIgnore] public double Leaf_NDemand { get; set; }
+		[XmlIgnore] public double Stem_NDemand { get; set; }
+		[XmlIgnore] public double Inflorescence_NDemand { get; set; }
+		[XmlIgnore] public double Taproot_NDemand { get; set; }
+		[XmlIgnore] public double Root_NDemand { get; set; }
 		
 		[XmlIgnore] public double Leaf_NSupplyReallocation { get; set; }
 		[XmlIgnore] public double Stem_NSupplyReallocation { get; set; }
@@ -2789,7 +2767,15 @@ namespace Models
 
 			PMF.Interfaces.BiomassSupplyType Leaf_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Plantain.Leaf.NSupply");
 			PMF.Interfaces.BiomassSupplyType Stem_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Plantain.Stem.NSupply");
+			PMF.Interfaces.BiomassSupplyType Inflorescence_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Plantain.Inflorescence.NSupply");
+			PMF.Interfaces.BiomassSupplyType Taproot_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Plantain.Taproot.NSupply");
 			PMF.Interfaces.BiomassSupplyType Root_NSupplies = (PMF.Interfaces.BiomassSupplyType)zone.Get("Plantain.Root.NSupply");
+			
+			PMF.Interfaces.BiomassPoolType Leaf_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("Plantain.Leaf.NDemand");
+			PMF.Interfaces.BiomassPoolType Stem_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("Plantain.Stem.NDemand");
+			PMF.Interfaces.BiomassPoolType Inflorescence_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("Plantain.Inflorescence.NDemand");
+			PMF.Interfaces.BiomassPoolType Taproot_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("Plantain.Taproot.NDemand");
+			PMF.Interfaces.BiomassPoolType Root_NDemands = (PMF.Interfaces.BiomassPoolType)zone.Get("Plantain.Root.NDemand");
 			
 			Leaf_DMSupply = Leaf_DMSupplies.Fixation + Leaf_DMSupplies.Uptake + Leaf_DMSupplies.Reallocation + Leaf_DMSupplies.Retranslocation;
 			Stem_DMSupply = Stem_DMSupplies.Fixation + Stem_DMSupplies.Uptake + Stem_DMSupplies.Reallocation + Stem_DMSupplies.Retranslocation;
@@ -2801,7 +2787,18 @@ namespace Models
 			Inflorescence_DMDemand = Inflorescence_DMDemands.Structural + Inflorescence_DMDemands.NonStructural + Inflorescence_DMDemands.Metabolic;
 			Root_DMDemand = Root_DMDemands.Structural + Root_DMDemands.NonStructural + Root_DMDemands.Metabolic;
 			Taproot_DMDemand = Taproot_DMDemands.Structural + Taproot_DMDemands.NonStructural + Taproot_DMDemands.Metabolic;
+			
+			Leaf_NSupply = Leaf_NSupplies.Fixation + Leaf_NSupplies.Uptake + Leaf_NSupplies.Reallocation + Leaf_NSupplies.Retranslocation;
+			Stem_NSupply = Stem_NSupplies.Fixation + Stem_NSupplies.Uptake + Stem_NSupplies.Reallocation + Stem_NSupplies.Retranslocation;
+			Inflorescence_NSupply = Inflorescence_NSupplies.Fixation + Inflorescence_NSupplies.Uptake + Inflorescence_NSupplies.Reallocation + Inflorescence_NSupplies.Retranslocation;
+			Taproot_NSupply = Taproot_NSupplies.Fixation + Taproot_NSupplies.Uptake + Taproot_NSupplies.Reallocation + Taproot_NSupplies.Retranslocation;
 			Root_NSupply = Root_NSupplies.Fixation + Root_NSupplies.Uptake + Root_NSupplies.Reallocation + Root_NSupplies.Retranslocation;
+
+			Leaf_NDemand = Leaf_NDemands.Structural + Leaf_NDemands.NonStructural + Leaf_NDemands.Metabolic;
+			Stem_NDemand = Stem_NDemands.Structural + Stem_NDemands.NonStructural + Stem_NDemands.Metabolic;
+			Inflorescence_NDemand = Inflorescence_NDemands.Structural + Inflorescence_NDemands.NonStructural + Inflorescence_NDemands.Metabolic;
+			Taproot_NDemand = Taproot_NDemands.Structural + Taproot_NDemands.NonStructural + Taproot_NDemands.Metabolic;
+			Root_NDemand = Root_NDemands.Structural + Root_NDemands.NonStructural + Root_NDemands.Metabolic;
 
 			Leaf_NSupplyReallocation = Leaf_NSupplies.Reallocation;
 			Stem_NSupplyReallocation = Stem_NSupplies.Reallocation;
@@ -2941,7 +2938,7 @@ namespace Models
         <string>[Plantain].Root.NTakenUp</string>
         <string>[Plantain].Root.NSupply.Uptake</string>
         <string>[Plantain].Root.NUptake</string>
-        <string>[ExtraVariables].Script.LeafN_Supply</string>
+        <string>[ExtraVariables].Script.Leaf_NSupply</string>
         <string>[ExtraVariables].Script.Stem_NSupply</string>
         <string>[ExtraVariables].Script.Inflorescence_NSupply</string>
         <string>[ExtraVariables].Script.Root_NSupply</string>
@@ -8668,6 +8665,456 @@ Eutrochrept (US), Weathered Fluvial Recent Soil (NZ)</SoilType>
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>BottomRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+          </Folder>
+          <Folder>
+            <Name>Narbitration</Name>
+            <Graph>
+              <Name>Arbitration</Name>
+              <Series>
+                <Name>Demand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Supply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Allocated</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.Allocated</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Limitation</Name>
+              <Series>
+                <Name>NutrientLimitation</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-2793984</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.FN</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Dry Matter (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Leaf</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Leaf_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Leaf_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Stem</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Stem_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Stem_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Flower</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Inflorescence_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Inflorescence_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Root</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Root_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Root_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Taproot</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Taproot_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Taproot_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
               <DisabledSeries />
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Graph>
@@ -15693,6 +16140,456 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>BottomRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+          </Folder>
+          <Folder>
+            <Name>Narbitration</Name>
+            <Graph>
+              <Name>Arbitration</Name>
+              <Series>
+                <Name>Demand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Supply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Allocated</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.Allocated</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Limitation</Name>
+              <Series>
+                <Name>NutrientLimitation</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-2793984</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.FN</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Dry Matter (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Leaf</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Leaf_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Leaf_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Stem</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Stem_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Stem_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Flower</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Inflorescence_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Inflorescence_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Root</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Root_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Root_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Taproot</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Taproot_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Taproot_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
               <DisabledSeries />
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Graph>
@@ -23308,6 +24205,456 @@ namespace Models
             </Graph>
           </Folder>
           <Folder>
+            <Name>Narbitration</Name>
+            <Graph>
+              <Name>Arbitration</Name>
+              <Series>
+                <Name>Demand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Supply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Allocated</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.Allocated</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Limitation</Name>
+              <Series>
+                <Name>NutrientLimitation</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-2793984</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.FN</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Dry Matter (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Leaf</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Leaf_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Leaf_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Stem</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Stem_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Stem_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Flower</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Inflorescence_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Inflorescence_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Root</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Root_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Root_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Taproot</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Taproot_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Taproot_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+          </Folder>
+          <Folder>
             <Name>Harvests</Name>
             <Graph>
               <Name>DM</Name>
@@ -25241,7 +26588,10 @@ namespace Models
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
-                <string />
+                <string>[Plantain].Leaf.NDemand</string>
+                <string>[Plantain].Leaf.NSupply</string>
+                <string>[Plantain].Leaf.Allocated.N</string>
+                <string>i</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -30105,6 +31455,456 @@ namespace Models
                 <Interval>NaN</Interval>
               </Axis>
               <LegendPosition>BottomRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+          </Folder>
+          <Folder>
+            <Name>Narbitration</Name>
+            <Graph>
+              <Name>Arbitration</Name>
+              <Series>
+                <Name>Demand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Supply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Dash</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.TotalPlantSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Allocated</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16736653</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.N.Allocated</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Limitation</Name>
+              <Series>
+                <Name>NutrientLimitation</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-2793984</ColourArgb>
+                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>Plantain.Arbitrator.FN</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title>Dry Matter (g/m2)</Title>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Leaf</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Leaf_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Leaf_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Stem</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Stem_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Stem_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Flower</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Inflorescence_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Inflorescence_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Root</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Root_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Root_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
+              <DisabledSeries />
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Graph>
+            <Graph>
+              <Name>Taproot</Name>
+              <Series>
+                <Name>Ndemand</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-1663232</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Taproot_NDemand</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Series>
+                <Name>Nsupply</Name>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-11094807</ColourArgb>
+                <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Small</MarkerSize>
+                <Line>Dot</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Report</TableName>
+                <XFieldName>Date</XFieldName>
+                <YFieldName>ExtraVariables.Script.Taproot_NSupply</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+              </Series>
+              <Axis>
+                <Type>Bottom</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopRight</LegendPosition>
               <DisabledSeries />
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Graph>
