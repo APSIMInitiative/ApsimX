@@ -6,6 +6,7 @@
     using APSIM.Shared.Utilities;
     using Models.SurfaceOM;
     using Models.Soils;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Soil carbon model
@@ -41,6 +42,39 @@
 
         private SurfaceOrganicMatterDecompType PotentialSOMDecomp = null;
 
+        /// <summary>
+        /// Total C in each soil layer
+        /// </summary>
+        public double[] TotalC
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.C.Length];
+                List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
+
+                foreach (NutrientPool P in Pools)
+                    for (int i = 0; i < P.C.Length; i++)
+                        values[i] += P.C[i];
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// Total C in each soil layer
+        /// </summary>
+        public double[] TotalN
+        {
+            get
+            {
+                double[] values = new double[FOMLignin.N.Length];
+                List<IModel> Pools = Apsim.Children(this, typeof(NutrientPool));
+
+                foreach (NutrientPool P in Pools)
+                    for (int i = 0; i < P.N.Length; i++)
+                        values[i] += P.N[i];
+                return values;
+            }
+        }
         /// <summary>
         /// 
         /// </summary>
