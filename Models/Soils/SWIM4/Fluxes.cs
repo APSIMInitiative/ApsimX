@@ -14,23 +14,14 @@ namespace Models.Soils.SWIM4
     public static class Fluxes
     {
         /// <summary>Store a list of flux tables and their associated soil names and layers.</summary>
-<<<<<<< HEAD
         public static Dictionary<string, FluxTable> FluxTables { get; set; }
-=======
-        public static Dictionary<string, FluxTable> FluxTables {get;set;}
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         /// <summary></summary>
         public static FluxTable ft;
 
         static int mx = 100; // max no. of phi values
         static int i, j, ni, ns, nt, nu, nit, nfu, nphif, ip, nfs, ii, ie;
-<<<<<<< HEAD
         static int[] iphif = new int[mx + 1];
         static int[] ifs = new int[mx + 1];
-=======
-        static int[] iphif = new int[mx+1];
-        static int[] ifs = new int[mx+1];
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         static double qsmall = 1.0e-5;
         static double rerr = 1.0e-2;
         static double cfac = 1.2;
@@ -53,15 +44,9 @@ namespace Models.Soils.SWIM4
 
         /// <summary>
         /// Generate a flux table from given soil properties
-<<<<<<< HEAD
         /// <param name="dz"></param>
         /// <param name="props"></param>
         /// </summary>
-=======
-        /// </summary>
-        /// <param name="dz"></param>
-        /// <param name="props"></param>
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         public static void FluxTable(double dz, SoilProps props)
         {
             // Generates a flux table for use by other programs.
@@ -120,11 +105,7 @@ namespace Models.Soils.SWIM4
             Array.Copy(re.Slice(1, nu - 2).Reverse().ToArray(), 0, rei, 1, re.Slice(1, nu - 2).Reverse().ToArray().Length - 1); //need to 1-index slice JF
             Indices(nu - 2, rei, 1 + nu - i, cfac, out nphif, out iphif);
             int[] iphifReverse = iphif.Skip(1).Take(nphif).Reverse().ToArray();
-<<<<<<< HEAD
             int[] iphifReversei = new int[iphifReverse.Length + 1];
-=======
-            int[] iphifReversei = new int[iphifReverse.Length + 1]; 
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
             Array.Copy(iphifReverse, 0, iphifReversei, 1, iphifReverse.Length); // again, need to 1-index JF
             for (int idx = 1; idx < nphif; idx++)
                 iphif[idx] = 1 + nu - iphifReversei[idx]; // locations of phif in aphi
@@ -202,11 +183,7 @@ namespace Models.Soils.SWIM4
                 for (int col = 1; col <= i; col += 2)
                 {
                     qi5[col, row] = qf[col / 2 + 1, row / 2 + 1];
-<<<<<<< HEAD
                     qi5[col + 1, row] = qi1[col / 2 + 1, row / 2 + 1];
-=======
-                    qi5[col+1, row] = qi1[col / 2 + 1, row / 2 + 1];
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
                     qi5[col, row + 1] = qi2[col / 2 + 1, row / 2 + 1];
                     qi5[col + 1, row + 1] = qi3[col / 2 + 1, row / 2 + 1];
                 }
@@ -217,34 +194,22 @@ namespace Models.Soils.SWIM4
             {
                 ip = ip + 1;
                 ii = iphif[ip + 1] - 1;
-<<<<<<< HEAD
                 // if (ii >= sp.Kco.GetLength(1))
                 //     ii = sp.Kco.GetLength(1) - 1;
-=======
-               // if (ii >= sp.Kco.GetLength(1))
-               //     ii = sp.Kco.GetLength(1) - 1;
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
                 while (true) // Search down to locate phii position for cubic.
                 {
                     if (sp.phic[ii] <= phii[ip])
                         break;
                     ii = ii - 1;
-<<<<<<< HEAD
                 }
-=======
-                } 
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
                 x = phii[ip] - sp.phic[ii];
                 qi5[j, j] = sp.Kc[ii] + x * (aKco[ii, 1] + x * (aKco[ii, 2] + x * aKco[ii, 3]));
             }
 
             double[] phii51 = phif.Slice(1, nphif);
             double[] phii52 = phii.Slice(1, ni);
-<<<<<<< HEAD
+
             for (int a = 1; a <= nphif; a++)
-=======
-            for (int a = 1; a <= nphif;a++)
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
             {
                 phii5[a * 2 - 1] = phii51[a];
             }
@@ -289,11 +254,7 @@ namespace Models.Soils.SWIM4
             // q is global to subroutine fluxtbl.
             np = n2 - n1 + 1;
             double[] daTemp = MathUtilities.Subtract_Value(aK.Slice(n1, n2), q);
-<<<<<<< HEAD
             double[] dbTemp = MathUtilities.Subtract_Value(hpK.Slice(n1, n2 - 1), q);
-=======
-            double[] dbTemp = MathUtilities.Subtract_Value(hpK.Slice(n1, n2-1), q);
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
             diags.AppendLine("n1: " + n1 + Environment.NewLine + "n2: " + n2);
 
             for (int idx = 1; idx < da.Length; idx++)
@@ -301,11 +262,7 @@ namespace Models.Soils.SWIM4
                 da[idx] = 1.0 / daTemp[idx];
             }
 
-<<<<<<< HEAD
             for (int idx = 1; idx < db.Length; idx++)
-=======
-            for (int idx=1;idx<db.Length;idx++)
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
             {
                 db[idx] = 1.0 / dbTemp[idx];
             }
@@ -318,11 +275,7 @@ namespace Models.Soils.SWIM4
             // apply Simpson's rule
             // u[] = sum((aphi(n1+1:n2)-aphi(n1:n2-1))*(da(1:np-1)+4*db+da(2:np))/6). Love the C# implementation. Note aphi is now sp.phic
             u[1] = MathUtilities.Sum(MathUtilities.Divide_Value(MathUtilities.Multiply
-<<<<<<< HEAD
                   (MathUtilities.Subtract(sp.phic.Slice(n1 + 1, n2), sp.phic.Slice(n1, n2 - 1)),
-=======
-                  (MathUtilities.Subtract(sp.phic.Slice(n1 + 1, n2), sp.phic.Slice(n1, n2 - 1)), 
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
                   MathUtilities.Add(MathUtilities.Add(MathUtilities.Multiply_Value(db, 4), da.Slice(1, np - 1)), da.Slice(2, np))), 6)); // this is madness!
             da = MathUtilities.Multiply(da, da);
             db = MathUtilities.Multiply(db, db);
@@ -362,7 +315,6 @@ namespace Models.Soils.SWIM4
             }
             else
                 if (ha > hb - dz)
-<<<<<<< HEAD
             {
                 q1 = 0.0;
                 q2 = Ka;
@@ -374,19 +326,6 @@ namespace Models.Soils.SWIM4
                 q2 = 0.0;
                 q = -0.1 * Ka;
             }
-=======
-                {
-                    q1 = 0.0;
-                    q2 = Ka;
-                    q = 0.1 * Ka;
-                }
-                else
-                {
-                    q1 = -1.0e20;
-                    q2 = 0.0;
-                    q = -0.1 * Ka;
-                }
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
 
             if (qin < q1 || qin > q2)
             {
@@ -479,16 +418,10 @@ namespace Models.Soils.SWIM4
             double[] xSub = MathUtilities.Subtract(x.Slice(3, n), x.Slice(1, n - 2));
 
             s = MathUtilities.Divide(ySub, xSub);
-<<<<<<< HEAD
             yl = MathUtilities.Add(y.Slice(1, n - 2),
                                   MathUtilities.Multiply(MathUtilities.Subtract(x.Slice(2, n - 1),
                                                                                 x.Slice(1, n - 2)),
-=======
-            yl = MathUtilities.Add(y.Slice(1, n-2), 
-                                  MathUtilities.Multiply(MathUtilities.Subtract(x.Slice(2, n-1),
-                                                                                x.Slice(1, n-2)),
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
-                                                              s));
+                                                         s));
             double[] ySlice = y.Slice(2, n - 1);
             return MathUtilities.Subtract_Value(MathUtilities.Divide(ySlice, yl), 1);
         }
@@ -540,28 +473,17 @@ namespace Models.Soils.SWIM4
         private static void Indices(int n, double[] c, int iend, double fac, out int nsel, out int[] isel)
         {
             int a = 1, b = 1;
-<<<<<<< HEAD
             int[] di = new int[n + 1];
             isel = new int[100];
             double[] ac = new double[n + 1];
-=======
-            int[] di = new int[n+1];
-            isel = new int[100];
-            double[] ac = new double[n+1];
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
 
             for (int idx = 1; idx < c.Length; idx++)
                 ac[idx] = Math.Abs(c[idx]);
             for (int idx = 1; idx < c.Length; idx++)
                 di[idx] = (int)Math.Round(fac * MathUtilities.Max(ac) / ac[idx], MidpointRounding.ToEven); // min spacings
 
-<<<<<<< HEAD
             isel[1] = 1;
             while (true)
-=======
-            isel[1] = 1; 
-            while (true) 
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
             {
                 if (a >= iend)
                     break;
@@ -586,17 +508,10 @@ namespace Models.Soils.SWIM4
 
         /// <summary>
         /// Return quadratic interpolation coeffs co.
-<<<<<<< HEAD
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
         /// </summary>
-=======
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         public static double[] Quadco(double[] x, double[] y)
         {
             double[] co = new double[4];
@@ -614,19 +529,12 @@ namespace Models.Soils.SWIM4
 
         /// <summary>
         /// Return v(1:n-1) corresponding to u(1:n-1) using quadratic interpolation.
-<<<<<<< HEAD
-=======
-        /// </summary>
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="n"></param>
         /// <param name="u"></param>
         /// <returns></returns>
-<<<<<<< HEAD
         /// </summary>
-=======
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         public static double[] Quadinterp(double[] x, double[] y, int n, double[] u)
         {
             double[] v = new double[100 + 1];
@@ -638,13 +546,9 @@ namespace Models.Soils.SWIM4
                 i = k;
                 if (k + 2 > n)
                     i = n - 2;
-<<<<<<< HEAD
+
                 co = Quadco(x.Slice(i, i + 2), y.Slice(i, i + 2));
                 for (j = k; j <= i + 1; j++)
-=======
-                co = Quadco(x.Slice(i, i+2), y.Slice(i, i+2));
-                for (j = k; j <= i+1; j++)
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
                 {
                     z = u[j] - x[i];
                     v[j] = co[1] + z * (co[2] + z * co[3]);
@@ -655,15 +559,9 @@ namespace Models.Soils.SWIM4
 
         /// <summary>
         /// Read a flux table.
-<<<<<<< HEAD
-        /// <param name="key">The name of the flux table to return.</param>
-        /// <returns></returns>
-        /// </summary>
-=======
         /// </summary>
         /// <param name="key">The name of the flux table to return.</param>
         /// <returns></returns>
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         public static FluxTable ReadFluxTable(string key)
         {
             return FluxTables[key];
@@ -684,16 +582,12 @@ namespace Models.Soils.SWIM4
         }
     }
 
-<<<<<<< HEAD
-    //  sid - soil ident
-    //  nfu, nft - no. of fluxes unsat and total
-    //  dz - path length
-    //  phif(1:nft) - phi values
-    /// <summary></summary>
-=======
     /// <summary>
+    ///  sid - soil ident
+    ///  nfu, nft - no. of fluxes unsat and total
+    ///  dz - path length
+    ///  phif(1:nft) - phi values
     /// </summary>
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
     [Serializable]
     public struct FluxEnd
     {
@@ -709,23 +603,14 @@ namespace Models.Soils.SWIM4
         public double dz;
     }
 
-<<<<<<< HEAD
-    //  fend(2) - flux end data
-    //  qf(1:fend(1)%nft,1:fend(2)%nft) - flux table
-    /// <summary></summary>
-    [Serializable]
-    public struct FluxTable
-    {
-        /// <summary></summary>
-=======
-/// <summary>
-/// 
-/// </summary>
+    /// <summary>
+    ///  fend(2) - flux end data
+    ///  qf(1:fend(1)%nft,1:fend(2)%nft) - flux table
+    /// </summary>
     [Serializable]
     public struct FluxTable
     {
         /// <summary>flux end data</summary>
->>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         public FluxEnd[] fend;
         /// <summary>flux table</summary>
         public double[,] ftable;
