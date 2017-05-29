@@ -23,8 +23,8 @@ namespace Models.WholeFarm.Activities
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
-		[Link]
-		ISummary Summary = null;
+//		[Link]
+//		ISummary Summary = null;
 
 		/// <summary>
 		/// Get the Clock.
@@ -75,13 +75,12 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			// locate FeedType resource
-			bool resourceAvailable = false;
-			FeedType = Resources.GetResourceItem(typeof(AnimalFoodStore),FeedTypeName, out resourceAvailable) as IFeedType;
+			FeedType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
 			FoodSource = FeedType;
-			if(FeedType==null)
-			{
-				Summary.WriteWarning(this, String.Format("Unable to locate feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
-			}
+			//if(FeedType==null)
+			//{
+			//	Summary.WriteWarning(this, String.Format("Unable to locate feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
+			//}
 
 			// get labour specifications
 			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
@@ -132,7 +131,7 @@ namespace Models.WholeFarm.Activities
 						Required = daysNeeded,
 						ResourceType = typeof(Labour),
 						ResourceTypeName = "",
-						ActivityName = this.Name,
+						ActivityModel = this,
 						FilterDetails = new List<object>() { item }
 					}
 					);
@@ -177,7 +176,7 @@ namespace Models.WholeFarm.Activities
 				Required = feedRequired,
 				ResourceType = typeof(AnimalFoodStore),
 				ResourceTypeName = this.FeedTypeName,
-				ActivityName = this.Name
+				ActivityModel = this
 			}
 			);
 

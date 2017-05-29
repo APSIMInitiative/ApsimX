@@ -175,12 +175,12 @@ namespace Models.WholeFarm.Activities
 				Summary.WriteWarning(this, String.Format("Unable to locate Grass Basal Area relationship for {0}", this.Name));
 			}
 			// locate Pasture Type resource
-			bool resourceAvailable = false;
-			LinkedNativeFoodType = Resources.GetResourceItem(typeof(GrazeFoodStore), FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
-			if (LinkedNativeFoodType == null)
-			{
-				throw new ApsimXException(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
-			}
+//			bool resourceAvailable = false;
+			LinkedNativeFoodType = Resources.GetResourceItem(this, typeof(GrazeFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+			//if (LinkedNativeFoodType == null)
+			//{
+			//	throw new ApsimXException(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
+			//}
 		}
 
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
@@ -199,7 +199,7 @@ namespace Models.WholeFarm.Activities
                     Required = AreaRequested * ((UnitsOfArea == UnitsOfAreaTypes.Hectares) ? 1 : 100),
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse,
-                    ActivityName = this.Name,
+                    ActivityModel = this,
                     Reason = "Assign",
                     FilterDetails = null
                 }

@@ -23,8 +23,6 @@ namespace Models.WholeFarm.Activities
 		Clock Clock = null;
 		[Link]
 		private ResourcesHolder Resources = null;
-		[Link]
-		ISummary Summary = null;
 
 		/// <summary>
 		/// Name of managed pasture to muster to
@@ -61,17 +59,17 @@ namespace Models.WholeFarm.Activities
 		{
 			// link to graze food store type pasture to muster to
 			// blank is general yards.
-			bool resavailable = true;
+//			bool resavailable = true;
 
 			if (ManagedPastureName != "")
 			{
-				pasture = Resources.GetResourceItem(typeof(GrazeFoodStore), ManagedPastureName, out resavailable) as GrazeFoodStoreType;
+				pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 			}
-			if (!resavailable)
-			{
-				Summary.WriteWarning(this, String.Format("Could not find graze food store named \"{0}\" for {1}", ManagedPastureName, this.Name));
-				throw new Exception(String.Format("Invalid GrazeFoodStoreType name ({0}) provided for mustering activity {1}", ManagedPastureName, this.Name));
-			}
+			//if (!resavailable)
+			//{
+			//	Summary.WriteWarning(this, String.Format("Could not find graze food store named \"{0}\" for {1}", ManagedPastureName, this.Name));
+			//	throw new Exception(String.Format("Invalid GrazeFoodStoreType name ({0}) provided for mustering activity {1}", ManagedPastureName, this.Name));
+			//}
 
 			// get labour specifications
 			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
@@ -164,7 +162,7 @@ namespace Models.WholeFarm.Activities
 							Required = daysNeeded,
 							ResourceType = typeof(Labour),
 							ResourceTypeName = "",
-							ActivityName = this.Name,
+							ActivityModel = this,
 							FilterDetails = new List<object>() { item }
 						}
 						);

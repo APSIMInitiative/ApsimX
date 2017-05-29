@@ -133,29 +133,29 @@ namespace Models.WholeFarm.Activities
             //      if you can't find the resource types you need to end the simulation.
 
             // locate Land Type resource for this forage.
-            bool resourceAvailable = false;
-            LinkedLandType = Resources.GetResourceItem(typeof(Land), LandTypeNameToUse, out resourceAvailable) as LandType;
-            if (LinkedLandType == null)
-            {
-                throw new ApsimXException(this, String.Format("Unable to locate land type {0} in Land for {1}", this.LandTypeNameToUse, this.Name));
-            }
+//            bool resourceAvailable = false;
+            LinkedLandType = Resources.GetResourceItem(this, typeof(Land), LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+            //if (LinkedLandType == null)
+            //{
+            //    throw new ApsimXException(this, String.Format("Unable to locate land type {0} in Land for {1}", this.LandTypeNameToUse, this.Name));
+            //}
 
             // locate AnimalFoodStore Type resource for this forage.
             //bool resourceAvailable = false;
-            LinkedHumanFoodType = Resources.GetResourceItem(typeof(HumanFoodStore), FeedTypeName, out resourceAvailable) as HumanFoodStoreType;
-            if (LinkedHumanFoodType == null)
-            {
-                throw new ApsimXException(this, String.Format("Unable to locate crop type {0} in HumanFoodStore for {1}", this.FeedTypeName, this.Name));
-            }
+            LinkedHumanFoodType = Resources.GetResourceItem(this, typeof(HumanFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
+            //if (LinkedHumanFoodType == null)
+            //{
+            //    throw new ApsimXException(this, String.Format("Unable to locate crop type {0} in HumanFoodStore for {1}", this.FeedTypeName, this.Name));
+            //}
 
 
             // locate AnimalFoodStore Type resource for this forage.
             //bool resourceAvailable = false;
-            LinkedAnimalFoodType = Resources.GetResourceItem(typeof(AnimalFoodStore), FeedTypeName, out resourceAvailable) as AnimalFoodStoreType;
-			if (LinkedAnimalFoodType == null)
-			{
-                throw new ApsimXException(this, String.Format("Unable to locate crop feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
-			}
+            LinkedAnimalFoodType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as AnimalFoodStoreType;
+			//if (LinkedAnimalFoodType == null)
+			//{
+   //             throw new ApsimXException(this, String.Format("Unable to locate crop feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
+			//}
 
 
             // Retrieve harvest data from the forage file for the entire run. 

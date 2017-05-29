@@ -391,7 +391,7 @@ namespace Models.WholeFarm.Activities
 							Required = daysNeeded,
 							ResourceType = typeof(Labour),
 							ResourceTypeName = "",
-							ActivityName = this.Name,
+							ActivityModel = this,
 							FilterDetails = new List<object>() { item }
 						}
 						);

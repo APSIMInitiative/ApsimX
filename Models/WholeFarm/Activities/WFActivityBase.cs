@@ -143,7 +143,7 @@ namespace Models.WholeFarm.Activities
                 if (request.Resource == null)
                 {
                     //If it hasn't been assigned try and find it now.
-                    request.Resource = Resources.GetResourceItem(request, out resourceAvailable) as IResourceType;
+                    request.Resource = Resources.GetResourceItem(request, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                 }
                 if (request.Resource != null)
                 {

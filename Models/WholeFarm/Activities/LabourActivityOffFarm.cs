@@ -58,8 +58,8 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			// locate BankType resource
-			bool resourceAvailable = false;
-			bankType = Resources.GetResourceItem(typeof(Finance), BankAccountName, out resourceAvailable) as FinanceType;
+//			bool resourceAvailable = false;
+			bankType = Resources.GetResourceItem(this, typeof(Finance), BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
 
 			if(this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).Count() > 1)
 			{
@@ -86,7 +86,7 @@ namespace Models.WholeFarm.Activities
 					Required = DaysWorkAvailableEachMonth[month],
 					ResourceType = typeof(Labour),
 					ResourceTypeName = "",
-					ActivityName = this.Name,
+					ActivityModel = this,
 					Reason = this.Name,
 					FilterDetails = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>()
 				}

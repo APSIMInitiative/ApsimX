@@ -20,8 +20,8 @@ namespace Models.WholeFarm.Activities
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
-		[Link]
-		ISummary Summary = null;
+//		[Link]
+//		ISummary Summary = null;
 
 		/// <summary>
 		/// Herd to milk
@@ -47,14 +47,13 @@ namespace Models.WholeFarm.Activities
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 
 			// find milk store
-			bool available = false;
-			milkStore = Resources.GetResourceItem(typeof(HumanFoodStore), "Milk", out available) as HumanFoodStoreType;
-			if (milkStore == null)
-			{
-				string warning = String.Format("Unable to find resource type (Milk) in Human Food Store for ({0}).", this.Name);
-				Summary.WriteWarning(this, warning);
-				throw new Exception(warning);
-			}
+			milkStore = Resources.GetResourceItem(this, typeof(HumanFoodStore), "Milk", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
+			//if (milkStore == null)
+			//{
+			//	string warning = String.Format("Unable to find resource type (Milk) in Human Food Store for ({0}).", this.Name);
+			//	Summary.WriteWarning(this, warning);
+			//	throw new Exception(warning);
+			//}
 		}
 
 		/// <summary>An event handler to allow us to initialise herd pricing.</summary>
@@ -126,7 +125,7 @@ namespace Models.WholeFarm.Activities
 							Required = daysNeeded,
 							ResourceType = typeof(Labour),
 							ResourceTypeName = "",
-							ActivityName = this.Name,
+							ActivityModel = this,
 							Reason = "Milking",
 							FilterDetails = new List<object>() { item }
 						}

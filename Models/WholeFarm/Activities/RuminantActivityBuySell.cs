@@ -59,14 +59,14 @@ namespace Models.WholeFarm.Activities
 			finance = Resources.FinanceResource();
 			if (finance != null)
 			{
-				bool tmp = true;
-				bankAccount = Resources.GetResourceItem(typeof(Finance), BankAccountName, out tmp) as FinanceType;
-				if (!tmp & BankAccountName != "")
-				{
-					string error = String.Format("Unable to find bank account specified in ({0}).", this.Name);
-					Summary.WriteWarning(this, error);
-					throw new Exception(error);
-				}
+//				bool tmp = true;
+				bankAccount = Resources.GetResourceItem(this, typeof(Finance), BankAccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+				//if (!tmp & BankAccountName != "")
+				//{
+				//	string error = String.Format("Unable to find bank account specified in ({0}).", this.Name);
+				//	Summary.WriteWarning(this, error);
+				//	throw new Exception(error);
+				//}
 			}
 
 			// get labour specifications
@@ -227,7 +227,7 @@ namespace Models.WholeFarm.Activities
 					if (bankAccount != null && (trucks > 0 || trucking == null))
 					{
 						ResourceRequest expenseRequest = new ResourceRequest();
-						expenseRequest.ActivityName = this.Name;
+						expenseRequest.ActivityModel = this;
 						expenseRequest.AllowTransmutation = false;
 
 						// calculate transport costs
@@ -317,7 +317,7 @@ namespace Models.WholeFarm.Activities
 			if (bankAccount != null)
 			{
 				ResourceRequest purchaseRequest = new ResourceRequest();
-				purchaseRequest.ActivityName = this.Name;
+				purchaseRequest.ActivityModel = this;
 				purchaseRequest.Required = cost;
 				purchaseRequest.AllowTransmutation = false;
 				purchaseRequest.Reason = "Purchases";
@@ -420,7 +420,7 @@ namespace Models.WholeFarm.Activities
 				if (bankAccount != null && (trucks > 0 || trucking == null))
 				{
 					ResourceRequest purchaseRequest = new ResourceRequest();
-					purchaseRequest.ActivityName = this.Name;
+					purchaseRequest.ActivityModel = this;
 					purchaseRequest.Required = cost;
 					purchaseRequest.AllowTransmutation = false;
 					purchaseRequest.Reason = "Purchases";
@@ -439,7 +439,7 @@ namespace Models.WholeFarm.Activities
 					}
 
 					ResourceRequest expenseRequest = new ResourceRequest();
-					expenseRequest.ActivityName = this.Name;
+					expenseRequest.ActivityModel = this;
 					expenseRequest.AllowTransmutation = false;
 
 					// calculate transport costs
@@ -507,7 +507,7 @@ namespace Models.WholeFarm.Activities
 								Required = daysNeeded,
 								ResourceType = typeof(Labour),
 								ResourceTypeName = "",
-								ActivityName = this.Name,
+								ActivityModel = this,
 								Reason = BuySellString,
 								FilterDetails = new List<object>() { item }
 							}

@@ -151,7 +151,7 @@ namespace Models.WholeFarm.Activities
 					Required = amountNeeded,
 					ResourceType = typeof(Finance),
 					ResourceTypeName = this.AccountName,
-					ActivityName = this.Name,
+					ActivityModel = this,
 					Reason = BreedName
 				}
 				);

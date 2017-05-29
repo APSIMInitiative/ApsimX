@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,10 +24,6 @@ namespace Models.WholeFarm.Resources
 		///</summary> 
 		[XmlIgnore]
 		public Type ResourceType { get; set; }
-//		///<summary>
-//		/// Name of resource being requested 
-//		///</summary> 
-//		public string ResourceName { get; set; }
 		///<summary>
 		/// Name of resource type being requested 
 		///</summary> 
@@ -34,7 +31,7 @@ namespace Models.WholeFarm.Resources
 		///<summary>
 		/// Name of activity requesting resource
 		///</summary> 
-		public string ActivityName { get; set; }
+		public Model ActivityModel { get; set; }
 		///<summary>
 		/// Unique identifier for instance of activity request
 		/// Used to allow multiple concurrent resource requests i.e labour types.

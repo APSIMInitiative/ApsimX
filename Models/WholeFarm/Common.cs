@@ -196,6 +196,25 @@ namespace Models.WholeFarm
 	}
 
 	/// <summary>
+	/// Possible actions when only partial requested resources are available
+	/// </summary>
+	public enum OnMissingResourceActionTypes
+	{
+		/// <summary>
+		/// Report error and stop simulation
+		/// </summary>
+		ReportErrorAndStop,
+		/// <summary>
+		/// Report warning to summary
+		/// </summary>
+		ReportWarning,
+		/// <summary>
+		/// Ignore missing resources and return null
+		/// </summary>
+		Ignore
+	}
+
+	/// <summary>
 	/// Types of units of erea to use.
 	/// </summary>
 	public enum UnitsOfAreaTypes

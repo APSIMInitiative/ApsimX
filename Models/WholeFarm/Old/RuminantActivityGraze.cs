@@ -92,7 +92,7 @@ namespace Models.WholeFarm.Activities
 					Required = amount,
 					ResourceType = typeof(GrazeFoodStore),
 					ResourceTypeName = this.grazeType.Name,
-					ActivityName = this.Name
+					ActivityModel = this
 				}
 				);
 			}

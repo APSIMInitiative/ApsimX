@@ -41,8 +41,8 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			bool resourceAvailable = false;
-			methaneEmissions = Resources.GetResourceItem(typeof(GreenhouseGases), "Methane", out resourceAvailable) as GreenhouseGasesType;
+//			bool resourceAvailable = false;
+			methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
 		}
 
 		/// <summary>Function to determine all individuals potnetial intake and suckling intake after milk consumption from mother</summary>
