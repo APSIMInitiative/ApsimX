@@ -251,7 +251,7 @@ namespace Models.WholeFarm.Activities
 					{
 						FoodResourcePacket packet = new FoodResourcePacket()
 						{
-							Amount = grain,
+							Amount = stover,
 							PercentN = nextHarvest.StoverNpc
 						};
 						LinkedAnimalFoodType.Add(packet, this.Name, "Harvest");
