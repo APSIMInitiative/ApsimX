@@ -211,10 +211,8 @@ namespace Models.WholeFarm.Activities
                 );
             }
 
-            if (ResourceRequestList.Count() > 0)
-            {
-                gotLandRequested = TakeResources(ResourceRequestList);
-            }
+            gotLandRequested = TakeResources(ResourceRequestList);
+
 
             //Now the Land has been allocated we have an Area 
             if (gotLandRequested)
@@ -447,6 +445,7 @@ namespace Models.WholeFarm.Activities
                 // Reset running total for stocking rate
                 StockingRateSummed = 0;
 
+                //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
                 GetPastureDataList_TodayToNextEcolCalculation();
             }
 		}
@@ -457,7 +456,8 @@ namespace Models.WholeFarm.Activities
         /// </summary>
         private void GetPastureDataList_TodayToNextEcolCalculation()
         {
-            //In IAT it only updates the GrassBA, LandCon and StockingRate once a year not every month.
+            //In IAT it only updates the GrassBA, LandCon and StockingRate (Ecological Indicators) 
+            // every so many months (specified by  not every month.
             //And the month they are updated on each year is whatever the starting month was for the run.
 
             //round the doubles to nearest integers so can be used as primary key

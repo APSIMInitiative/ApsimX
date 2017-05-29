@@ -59,6 +59,8 @@ namespace Models.WholeFarm.Activities
         public double ResidueKept { get; set; }
 
 
+
+
         /// <summary>
         /// Area of forage paddock
         /// </summary>
@@ -131,8 +133,6 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-            //TODO: turn these warnings into fatal errors by throwing exceptions for them.
-            //      if you can't find the resource types you need to end the simulation.
 
             // locate Land Type resource for this forage.
             bool resourceAvailable = false;
@@ -168,6 +168,7 @@ namespace Models.WholeFarm.Activities
                 throw new ApsimXException(this, String.Format("Unable to locate in crop file {0} any harvest data for Region {1} , SoilType {2}, CropName {3} between the dates {4} and {5}", 
                     FileCrop.FileName, Region, LinkedLandType.SoilType, FeedTypeName, Clock.StartDate, Clock.EndDate));
             }
+
 
         }
 
@@ -256,8 +257,6 @@ namespace Models.WholeFarm.Activities
 						};
 						LinkedAnimalFoodType.Add(packet, this.Name, "Harvest");
 					}
-
-					//TOD0: need to add in % residue retained as a multiplier to the stover here.
 
 					//now remove the first item from the harvest data list because it has happened
 					HarvestData.RemoveAt(0);  

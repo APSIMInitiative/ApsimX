@@ -92,10 +92,10 @@ namespace Models.WholeFarm.Resources
 		/// Amount of food supplied
 		///</summary> 
 		public double Amount { get; set; }
-		///<summary>
-		/// DMD of food supplied
-		///</summary> 
-		public double DMD { get; set; }
+        ///<summary>
+        /// Dry Matter Digestibility of food supplied
+        ///</summary> 
+        public double DMD { get; set; }
 		///<summary>
 		/// Percent N of food supplied
 		///</summary> 
