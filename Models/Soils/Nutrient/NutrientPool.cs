@@ -6,7 +6,7 @@
     using System.Collections.Generic;
     using APSIM.Shared.Utilities;
     /// <summary>
-    /// Carbon / nitrogen pool
+    /// This pool encapsulates the carbon and nitrogen within a soil organic matter pool.  Child functions provide information on its initialisation and flows of C and N from it to other pools, or losses from the system.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
@@ -16,10 +16,10 @@
         Soil soil = null;
 
         [Link]
-        IFunction InitialiseCarbon = null;
+        IFunction InitialCarbon = null;
 
         [Link]
-        IFunction InitialiseNitrogen = null;
+        IFunction InitialNitrogen = null;
 
         /// <summary>Initial carbon/nitrogen ratio</summary>
         public double[] CNRatio { get { return MathUtilities.Divide(C, N, 0); } }
@@ -38,22 +38,11 @@
         {
             C = new double[soil.Thickness.Length];
             for (int i = 0; i < C.Length; i++)
-                C[i] = InitialiseCarbon.Value(i);
+                C[i] = InitialCarbon.Value(i);
 
             N = new double[soil.Thickness.Length];
             for (int i = 0; i < N.Length; i++)
-                N[i] = InitialiseNitrogen.Value(i);
-        }
-
-        /// <summary>
-        /// Get the information on potential residue decomposition - perform daily calculations as part of this.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoSoilOrganicMatter")]
-        private void OnDoSoilOrganicMatter(object sender, EventArgs e)
-        {
-
+                N[i] = InitialNitrogen.Value(i);
         }
     }
 }

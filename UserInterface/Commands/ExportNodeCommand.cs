@@ -138,7 +138,7 @@ namespace UserInterface.Commands
             // that we need to recurse down through.
             foreach (Model child in modelToExport.Children)
             {
-                bool ignoreChild = (child is Simulation && child.Parent is Experiment);
+                bool ignoreChild = (child is Simulation);
 
                 if (!ignoreChild)
                 {
