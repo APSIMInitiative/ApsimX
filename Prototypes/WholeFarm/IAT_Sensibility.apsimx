@@ -49,7 +49,7 @@
           <Name>Finances</Name>
           <FinanceType>
             <Name>General account</Name>
-            <OpeningBalance>10000</OpeningBalance>
+            <OpeningBalance>10000000</OpeningBalance>
             <WithdrawalLimit>-5000</WithdrawalLimit>
             <InterestRateCharged>7.5</InterestRateCharged>
             <InterestRatePaid>2</InterestRatePaid>
@@ -421,6 +421,13 @@
         <Name>Activities</Name>
         <IATGrowCrop>
           <Name>IAT Grow Crop</Name>
+          <IATGrowCropCost>
+            <Name>BagsAndLabels</Name>
+            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <MthsBeforeHarvest>1</MthsBeforeHarvest>
+            <Amount>11</Amount>
+            <AccountName>General account</AccountName>
+          </IATGrowCropCost>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           <Region>1</Region>
           <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
