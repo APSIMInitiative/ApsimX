@@ -743,9 +743,9 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceType.Name as Resource</string>
             <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceName as Resource</string>
-            <string>[Activities].LastShortfallResourceRequest.ActivityName as Activity</string>
+            <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
             <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
             <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
           </VariableNames>
