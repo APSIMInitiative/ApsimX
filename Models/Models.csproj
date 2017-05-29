@@ -135,8 +135,6 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
-    <Compile Include="Arbitrator\Arbitrator.cs" />
-    <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Core\APSIMFileConverter.cs" />
     <Compile Include="Core\APSIMFileReader.cs" />
     <Compile Include="Core\APSIMFileWriter.cs" />
@@ -238,7 +236,6 @@
     <Compile Include="Core\Attributes\UnitsAttribute.cs" />
     <Compile Include="Core\Attributes\LinkAttribute.cs" />
     <Compile Include="Core\IModel.cs" />
-    <Compile Include="Core\ICrop2.cs" />
     <Compile Include="Plant\CanopyProperties.cs" />
     <Compile Include="Plant\RootProperties.cs" />
     <Compile Include="Core\VariableComposite.cs" />
@@ -275,7 +272,6 @@
     <Compile Include="Report\ReportTable.cs" />
     <Compile Include="Soils\Nutrient\NFlow.cs" />
     <Compile Include="Soils\Nutrient\CFlow.cs" />
-    <Compile Include="Soils\Nutrient\Flow.cs" />
     <Compile Include="Soils\Nutrient\NutrientPool.cs" />
     <Compile Include="Soils\Nutrient\Nutrient.cs" />
     <Compile Include="Soils\Arbitrator\CropUptakes.cs" />
@@ -450,7 +446,6 @@
     <Compile Include="Soils\Phosphorus.cs" />
     <Compile Include="Soils\Sample.cs" />
     <Compile Include="Soils\CERESSoilTemperature.cs" />
-    <Compile Include="Soils\simpleSoilTemp.cs" />
     <Compile Include="Soils\Soil.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
     <Compile Include="Soils\SoilNitrogen.cs" />
@@ -650,6 +645,10 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>-->
   <Target Name="AfterBuild" DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
     <!-- Delete the file because I can't figure out how to force the SGen task. -->
     <Delete Files="$(TargetDir)$(TargetName).XmlSerializers.dll" ContinueOnError="true" />

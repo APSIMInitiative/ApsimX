@@ -73,9 +73,15 @@ namespace Models.Soils.SWIM4
         public static double dSfac = 1.25, h0min = -0.02, Smax = 1.001, dh0max = 0.0;
         /// <summary></summary>
         public static string botbc = "free drainage"; // bottom boundary conditions
+<<<<<<< HEAD
         /// <summary></summary>
         public static double h0max = 1.0e10, qprecmax = 1.0e10, hbot = 0.0, Sbot = 1.0; // boundary parameters
         /// <summary></summary>
+=======
+                                                      /// <summary></summary>
+        public static double h0max = 1.0e10, qprecmax = 1.0e10, hbot = 0.0, Sbot = 1.0; // boundary parameters
+                                                                                        /// <summary></summary>
+>>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         public static double dSmax = 0.05, dSmaxr = 0.5, dtmax = 1.0e10, dtmin = 0.0, dsmmax = 1.0; // solution parameters
         /// <summary></summary>
         public static int nwsteps = 10;
@@ -654,8 +660,13 @@ namespace Models.Soils.SWIM4
 
         /// <summary>
         /// Test harness only, not for general use.
+<<<<<<< HEAD
         /// <returns></returns>
         /// </summary>
+=======
+        /// </summary>
+        /// <returns></returns>
+>>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         public static List<object> TestSolute(double ti, double tf, double[] thi, double[] thf, double[,] dwexs, double win,
                                    double[] cin, int n, int ns, int nex, double[] dx, int[] jt, double dsmmax,
                                    double[,] sm, double[] sdrn, int[] nssteps, double[,] c, double[,,] sex, bool extraction, SolProps solProps)
@@ -913,11 +924,18 @@ namespace Models.Soils.SWIM4
             }
         }
 
+<<<<<<< HEAD
 
         /// <summary>
         /// Test harness only, not for general use.
         /// <returns></returns>
         /// </summary>
+=======
+        /// <summary>
+        /// Test harness only, not for general use.
+        /// </summary>
+        /// <returns></returns>
+>>>>>>> 57ea74aebce91c08c54619b6ea5251dd6b71e832
         public static List<double[]> TestTri(int ns, int n, double[] aa, double[] bb, double[] cc, double[] dd, double[] ee, double[] dy)
         {
             List<double[]> res = new List<double[]>();
