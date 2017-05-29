@@ -95,7 +95,7 @@ namespace Models.WholeFarm
 	/// <summary>
 	/// Animal payment style
 	/// </summary>
-	public enum HerdPaymentStyleType
+	public enum PaymentStyleType
 	{
 		/// <summary>
 		/// Fixed price
@@ -112,7 +112,11 @@ namespace Models.WholeFarm
 		/// <summary>
 		/// Proportion of total sales
 		/// </summary>
-		ProportionOfTotalSales
+		ProportionOfTotalSales,
+		/// <summary>
+		/// Amount per hectare
+		/// </summary>
+		perHa
 	}
 
 	/// <summary>

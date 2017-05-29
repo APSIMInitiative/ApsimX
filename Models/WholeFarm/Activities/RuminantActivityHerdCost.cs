@@ -55,7 +55,7 @@ namespace Models.WholeFarm.Activities
 		/// Payment style
 		/// </summary>
 		[Description("Payment style")]
-		public HerdPaymentStyleType PaymentStyle { get; set; }
+		public PaymentStyleType PaymentStyle { get; set; }
 
 		/// <summary>
 		/// name of account to use
@@ -110,10 +110,10 @@ namespace Models.WholeFarm.Activities
 				List<Ruminant> herd = new List<Ruminant>();
 				switch (PaymentStyle)
 				{
-					case HerdPaymentStyleType.Fixed:
+					case PaymentStyleType.Fixed:
 						amountNeeded = Amount;
 						break;
-					case HerdPaymentStyleType.perHead:
+					case PaymentStyleType.perHead:
 						herd = Resources.RuminantHerd().Herd;
 						// check for Ruminant filter group
 						if(this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).Count() > 0)
@@ -122,7 +122,7 @@ namespace Models.WholeFarm.Activities
 						}
 						amountNeeded = Amount*herd.Count();
 						break;
-					case HerdPaymentStyleType.perAE:
+					case PaymentStyleType.perAE:
 						herd = Resources.RuminantHerd().Herd;
 						// check for Ruminant filter group
 						if (this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).Count() > 0)

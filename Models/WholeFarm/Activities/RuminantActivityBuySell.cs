@@ -242,16 +242,16 @@ namespace Models.WholeFarm.Activities
 						{
 							switch (item.PaymentStyle)
 							{
-								case HerdPaymentStyleType.Fixed:
+								case PaymentStyleType.Fixed:
 									expenseRequest.Required = item.Amount;
 									break;
-								case HerdPaymentStyleType.perHead:
+								case PaymentStyleType.perHead:
 									expenseRequest.Required = head * item.Amount;
 									break;
-								case HerdPaymentStyleType.perAE:
+								case PaymentStyleType.perAE:
 									expenseRequest.Required = AESum * item.Amount;
 									break;
-								case HerdPaymentStyleType.ProportionOfTotalSales:
+								case PaymentStyleType.ProportionOfTotalSales:
 									expenseRequest.Required = saleValue * item.Amount;
 									break;
 								default:
