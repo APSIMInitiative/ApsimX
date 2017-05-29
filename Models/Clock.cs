@@ -103,9 +103,9 @@ namespace Models
         /// <summary> Process a Pest and Disease lifecycle object </summary>
         public event EventHandler DoLifecycle;
 
-        /// <summary>WholeFarm initalise Resources once at start of simmulation</summary>
+        /// <summary>WholeFarm initialise Resources occurs once at start of simulation</summary>
         public event EventHandler WFInitialiseResource;
-		/// <summary>WholeFarm initalise Activity once at start of simmulation</summary>
+		/// <summary>WholeFarm initialise Activity occurs once at start of simulation</summary>
 		public event EventHandler WFInitialiseActivity;
 		/// <summary>WholeFarm update pasture</summary>
 		public event EventHandler WFUpdatePasture;

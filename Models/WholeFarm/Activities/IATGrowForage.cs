@@ -126,10 +126,6 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 
-
-            //TODO: turn these warnings into fatal errors by throwing exceptions for them.
-            //      if you can't find the resource types you need to end the simulation.
-
             // locate Land Type resource for this forage.
            // bool resourceAvailable = false;
             LinkedLandType = Resources.GetResourceItem(this, typeof(Land), LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
