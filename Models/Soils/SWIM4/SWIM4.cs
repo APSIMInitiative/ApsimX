@@ -21,6 +21,8 @@ namespace Models.Soils.SWIM4
     public class SWIM4 : Model, ISoilWater
     {
         #region Links
+    //    [Link]
+    //    Clock Clock = null;
         [Link]
         Soil Soil = null;
         #endregion
@@ -224,6 +226,7 @@ namespace Models.Soils.SWIM4
             sinfil = new double[ns + 1];
             bd = Soil.BD.OneBase();
             SoilData sd = new SoilData();
+            sd = new SoilData();
             Flow.sink = new SinkDripperDrain(); //set the type of sink to use
             jt = new int[n + 1];
             nssteps = new int[ns + 1];
@@ -278,6 +281,7 @@ namespace Models.Soils.SWIM4
             runoff = Soil.SoilWater.Runoff;
             infil = Soil.SoilWater.Infiltration;
             drn = Soil.SoilWater.Drainage;
+            qprec = 10; //TODO: precipitation rate in cm/h, need to give this a real value
             for (int col = 1; col < sm.GetLength(0); col++)
                 sm[col, 1] = 1000.0 / sd.dx[1];
             //initial solute concn(mass units per cc of soil)
@@ -295,6 +299,28 @@ namespace Models.Soils.SWIM4
             ti = ts;
             tf = 24; //hours
             qevap = 0.05;// potential evap rate from soil surface
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void OnPrepare()
+        {
+            //timer here in FORTRAN, this basically runs the solution for 100 days
+            for (j = 1; j <= 100; j++)
+            {
+                tf = ti + 24.0;
+                Flow.Solve(solProps, sd, ti, tf, qprec, qevap, ns, Flow.sink.nex, ref h0, ref S, ref evap, ref runoff, ref infil, ref drn, ref nsteps, jt, cin, ref c0, ref sm, ref soff, ref sinfil, ref sdrn, ref nssteps, ref wex, ref sex);
+                win = win + qprec * (tf - ti);
+                if (j == 1)
+                    ti = tf;
+                qprec = 0.0;
+            }
+            win = win + qprec * (tf - ti);
+            wp = MathUtilities.Sum(MathUtilities.Multiply(MathUtilities.Multiply(sd.ths, S), sd.dx)); //!water in profile
+            double hS = 0; //hS is not used used here, but is a required parameter
+            for (j = 1; j <= n; j++)
+                sd.hofS(S[j], j, out h[j], out hS);
         }
 
         /// <summary>
