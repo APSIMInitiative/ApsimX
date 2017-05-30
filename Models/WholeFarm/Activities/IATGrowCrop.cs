@@ -170,6 +170,7 @@ namespace Models.WholeFarm.Activities
             }
 
 
+            Area = AreaRequested;  //TODO: change this to actually request the land as a resource
         }
 
 
@@ -233,13 +234,13 @@ namespace Models.WholeFarm.Activities
                     double grain, stover;
                     if (UnitsOfArea == UnitsOfAreaTypes.Squarekm)
                     {
-                        grain = nextHarvest.GrainWt * AreaRequested * ConvertToHectares;
-                        stover = nextHarvest.StoverWt * AreaRequested * ConvertToHectares * (ResidueKept / 100);
+                        grain = nextHarvest.GrainWt * Area * ConvertToHectares;
+                        stover = nextHarvest.StoverWt * Area * ConvertToHectares * (ResidueKept / 100);
                     }
                     else
                     {
-                        grain = nextHarvest.GrainWt * AreaRequested;
-                        stover = nextHarvest.StoverWt * AreaRequested * (ResidueKept/100);
+                        grain = nextHarvest.GrainWt * Area;
+                        stover = nextHarvest.StoverWt * Area * (ResidueKept/100);
                     }
 
 					if (grain > 0)

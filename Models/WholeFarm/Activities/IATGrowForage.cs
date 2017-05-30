@@ -154,6 +154,7 @@ namespace Models.WholeFarm.Activities
                     FileForage.FileName, Region, LinkedLandType.SoilType, FeedTypeName, Clock.StartDate, Clock.EndDate));
             }
 
+            Area = AreaRequested;  //TODO: change this to actually request the land as a resource
         }
 
 
@@ -216,9 +217,9 @@ namespace Models.WholeFarm.Activities
                 {
                     double amount;
                     if (UnitsOfArea == UnitsOfAreaTypes.Squarekm)
-                        amount = nextHarvest.Growth * AreaRequested * ConvertToHectares * (ResidueKept / 100);
+                        amount = nextHarvest.Growth * Area * ConvertToHectares * (ResidueKept / 100);
                     else
-                        amount = nextHarvest.Growth * AreaRequested * (ResidueKept / 100);
+                        amount = nextHarvest.Growth * Area * (ResidueKept / 100);
 
 
 					if (amount > 0)
