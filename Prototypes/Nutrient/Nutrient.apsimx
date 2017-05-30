@@ -1687,6 +1687,50 @@ But their data suggests a value of 0.3]]></MemoText>
       <Zoom>1.4</Zoom>
     </Map>
     <Folder>
+      <Name>Combined Results</Name>
+      <Graph>
+        <Name>TOC 0 to 30cm</Name>
+        <Series>
+          <Name>Pre vs Obs</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>5</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoil</TableName>
+          <XFieldName>Observed.TOC0_30cm</XFieldName>
+          <YFieldName>Predicted.TOC0_30cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
       <Name>Australia</Name>
       <Memo>
         <Name>Memo</Name>
@@ -3355,11 +3399,11 @@ namespace Models
                   <string>290-310</string>
                 </Depth>
                 <OC>
-                  <double>1.4</double>
-                  <double>1.4</double>
-                  <double>1.4</double>
-                  <double>1.35</double>
-                  <double>0.95</double>
+                  <double>1.4395</double>
+                  <double>1.11</double>
+                  <double>1.11</double>
+                  <double>1.11</double>
+                  <double>1.11</double>
                   <double>1</double>
                   <double>0.8</double>
                   <double>0.45</double>
@@ -4269,11 +4313,11 @@ namespace Models
                   <string>290-310</string>
                 </Depth>
                 <OC>
-                  <double>1.4</double>
-                  <double>1.4</double>
-                  <double>1.4</double>
-                  <double>1.35</double>
-                  <double>0.95</double>
+                  <double>1.44</double>
+                  <double>1.11</double>
+                  <double>1.11</double>
+                  <double>1.11</double>
+                  <double>1.11</double>
                   <double>1</double>
                   <double>0.8</double>
                   <double>0.45</double>
@@ -4681,7 +4725,7 @@ namespace Models
           </Zone>
         </Simulation>
         <Graph>
-          <Name>Graph</Name>
+          <Name>TOC 0 to 10cm</Name>
           <Series>
             <Name>Observed</Name>
             <Type>Scatter</Type>
@@ -4719,6 +4763,1947 @@ namespace Models
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TOC0_10cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>TOC 0 to 30cm</Name>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObsSoil</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TOC0_30cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TOC0_30cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+      </Folder>
+      <Folder>
+        <Name>Brigalow Catchment Study</Name>
+        <Simulation>
+          <Name>Brigalow</Name>
+          <Weather>
+            <Name>Weather</Name>
+            <FileName>Brigalow.met</FileName>
+            <ExcelWorkSheetName />
+          </Weather>
+          <Clock>
+            <Name>clock</Name>
+            <StartDate>1982-03-01T00:00:00</StartDate>
+            <EndDate>2005-12-31T00:00:00</EndDate>
+          </Clock>
+          <Summary>
+            <Name>summaryfile</Name>
+          </Summary>
+          <Zone>
+            <Name>Upper</Name>
+            <Operations>
+              <Name>SowOperations</Name>
+              <Operation>
+                <Date>1982-03-01</Date>
+                <Action> // weed sow plants =50, sowing_depth = 20, cultivar = perennial, row_spacing = 250, crop_class = perennial_grass</Action>
+              </Operation>
+              <Operation>
+                <Date>1982-10-25</Date>
+                <Action> // weed end_crop</Action>
+              </Operation>
+              <Operation>
+                <Date>1982-10-25</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.7, depth: 0);</Action>
+              </Operation>
+              <Operation>
+                <Date>1982-10-26</Date>
+                <Action> // weed sow plants =50, sowing_depth = 20, cultivar = perennial, row_spacing = 250, crop_class = perennial_grass</Action>
+              </Operation>
+              <Operation>
+                <Date>1982-10-01</Date>
+                <Action> //[Soil].Nutrient.Reset();</Action>
+              </Operation>
+              <Operation>
+                <Date>1984-09-01</Date>
+                <Action> // weed sow plants =10, sowing_depth = 20, cultivar = perennial, row_spacing = 250, crop_class = perennial_grass</Action>
+              </Operation>
+              <Operation>
+                <Date>1984-09-27</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:2, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+              <Operation>
+                <Date>1985-04-01</Date>
+                <Action> // weed NOTsow plants =50, sowing_depth = 20, cultivar = perennial, row_spacing = 250, crop_class = perennial_grass</Action>
+              </Operation>
+              <Operation>
+                <Date>1985-04-04</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:34, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1986-05-06</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:34, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1987-05-11</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:34, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1988-04-12</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:34, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1989-06-14</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:34, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1990-05-10</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:34, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-06-13</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:34, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-05-07</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:34, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-01</Date>
+                <Action> [Soil].SoilWater.CN2Bare = 75</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-04-20</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:77, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-01-16</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:13, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-03-31</Date>
+                <Action> //[Maize].OnEndCrop();</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-11-01</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:3, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-05-23</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:49, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-02-17</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:3, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-03-21</Date>
+                <Action> //[Maize].OnEndCrop();</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-06-20</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:20, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-08-11</Date>
+                <Action> [Wheat].OnEndCrop();</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-10-15</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:3, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-02-01</Date>
+                <Action> // weed sow plants =50, sowing_depth = 20, cultivar = perennial, row_spacing = 250, crop_class = perennial_grass</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-04-01</Date>
+                <Action> // weed end_crop</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-05-30</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:34, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-11-04</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:3, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-03-26</Date>
+                <Action> // weed sow plants =50, sowing_depth = 20, cultivar = perennial, row_spacing = 250, crop_class = perennial_grass</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-18</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:3, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-03-04</Date>
+                <Action> //[Maize].OnEndCrop();</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-11-27</Date>
+                <Action> // weed sow plants =100, sowing_depth = 20, cultivar = perennial, row_spacing = 250, crop_class = perennial_grass</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-12-06</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:7, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-12-04</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:5, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-06-29</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:78, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-05-14</Date>
+                <Action> [Wheat].Sow(cultivar:hartog, population:60, depth:30, rowSpacing:300);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-28</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:5, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-11-25</Date>
+                <Action> //[Maize].Sow(cultivar:Dekalb_XL82, population:7, depth:30, rowSpacing:1000);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>TillOperations</Name>
+              <Operation>
+                <Date>1983-10-01</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1984-07-02</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1984-08-20</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1984-08-30</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1985-01-21</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1985-01-30</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1985-02-14</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1985-03-07</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1985-03-22</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1985-10-15</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1985-11-04</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1986-01-02</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1986-01-14</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1986-02-11</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1986-03-06</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1986-10-31</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1986-11-19</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1986-12-19</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1987-02-12</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1987-04-07</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1987-12-22</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1988-01-29</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1988-03-08</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1988-04-11</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1988-09-28</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1988-11-25</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1989-01-09</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1989-01-19</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1989-02-20</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1989-04-11</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1989-04-20</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1989-06-05</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-03-21</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-05-08</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-12</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-02-04</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-03-24</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-02-16</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-04-07</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-11-08</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-12-18</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-12-20</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-02-17</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-04-22</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-02-24</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-03-25</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-10-27</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-10-27</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-11-09</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-05-29</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-08-21</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-02-08</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-04-18</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-01-19</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-02-06</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-03-26</Date>
+                <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.5, depth: 100);</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>SprayOperations</Name>
+              <Operation>
+                <Date>1987-12-09</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1988-03-15</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1989-06-09</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1989-11-30</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1990-01-12</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1990-03-20</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1990-04-21</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1990-06-26</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1990-07-21</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1990-12-19</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-01-20</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-02-20</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-07-29</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1991-12-14</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-01-08</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-03-03</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-04-28</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-05-06</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1992-06-09</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-01-16</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-09-25</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1993-11-09</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-01-20</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-03-20</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-11-25</Date>
+                <Action> // SprayManager spray_not_effective</Action>
+              </Operation>
+              <Operation>
+                <Date>1994-12-13</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-02-03</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-06-11</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1995-11-01</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-02-13</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-05-16</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-11-08</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1996-12-14</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-03-21</Date>
+                <Action> // SprayManager spray_not_effective</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-06-06</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-08-11</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-11-21</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-12-19</Date>
+                <Action> // SprayManager sprayheliothis</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-03-19</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-05-18</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-10-19</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-11-27</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1998-12-08</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>1999-08-27</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-14</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-01-19</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-03-04</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-05-26</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-08-28</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-11-27</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-11-26</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2001-12-06</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-04-17</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-06-10</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-06-10</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-06-10</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-06-22</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-06-22</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2002-12-18</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-01-07</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-02-19</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-03-27</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-07-08</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-10-29</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-10-29</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2003-12-16</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-01-09</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-02-16</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-11-04</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2004-11-20</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-03-25</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-04-18</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-05-19</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2005-11-18</Date>
+                <Action> // SprayManager spray_not_effective</Action>
+              </Operation>
+              <Operation>
+                <Date>2006-05-18</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-02-26</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-03-22</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-06-22</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-08-15</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-08-30</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+              <Operation>
+                <Date>2007-09-04</Date>
+                <Action> // SprayManager spray</Action>
+              </Operation>
+            </Operations>
+            <Operations>
+              <Name>SoilOperations</Name>
+              <Operation>
+                <Date>1982-03-08</Date>
+                <Action> // ClOutput do_output</Action>
+              </Operation>
+              <Operation>
+                <Date>1983-09-05</Date>
+                <Action> // ClOutput do_output</Action>
+              </Operation>
+              <Operation>
+                <Date>1987-11-19</Date>
+                <Action> // ClOutput do_output</Action>
+              </Operation>
+              <Operation>
+                <Date>1990-11-15</Date>
+                <Action> // ClOutput do_output</Action>
+              </Operation>
+              <Operation>
+                <Date>1997-01-15</Date>
+                <Action> // ClOutput do_output</Action>
+              </Operation>
+              <Operation>
+                <Date>2000-05-16</Date>
+                <Action> // ClOutput do_output</Action>
+              </Operation>
+            </Operations>
+            <Folder>
+              <Name>Manager folder</Name>
+              <Manager>
+                <Name>SprayManager</Name>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OldPlant;
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			/*
+				days_since_spraying = 0
+			*/
+		}
+		[EventSubscribe("DoCalculations")]
+		private void OnDoCalculations(object sender, EventArgs e)
+		{
+			/*
+				days_since_spraying = days_since_spraying + 1
+			*/
+		}
+		//[EventSubscribe("unknown")]
+		//private void OnUnknown(object sender, EventArgs e)
+		//{
+		/*
+				// ----- spray ----- 
+
+if weed.plant_status = 'alive' or weed.plant_status = 'dead' then
+   !weed kill_crop
+   !weed end_crop
+   days_since_spraying = 0
+endif
+
+
+			*/
+		//}
+	}
+}
+]]></Code>
+              </Manager>
+              <Manager>
+                <Name>TillManager</Name>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OldPlant;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+using Models.Soils.Nutrient;
+using System.Diagnostics;
+
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[ScopedLinkByName] NutrientPool FOMLignin;
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+		}
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			//Debugger.Break();
+		    
+			if (Clock.Today.DayOfYear == 60 && Clock.Today.Year == 1982)
+			{
+				double[] CAdded = new double[] { 11600, 80, 80 };
+				double[] NAdded = new double[] { 1450, 10, 10 };
+				FOMLignin.Add(CAdded, NAdded);
+			}
+		}
+	}
+}
+]]></Code>
+              </Manager>
+              <Manager>
+                <Name>Calculations</Name>
+                <Script>
+                  <CumRunoff>0</CumRunoff>
+                </Script>
+                <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OldPlant;
+using Models.Soils;
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Soil Soil;
+		
+		public double CumRunoff { get; set; }
+		
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+/*
+				CumRunoff = 0
+POC = 0
+HOC = 0
+TOC = 0
+sw40 = 0
+sw80 = 0
+sw120 = 0
+sw200 = 0
+Nexport = 0
+c10 = 0
+c20 = 0
+c30 = 0
+			*/
+		}
+		[EventSubscribe("DoCalculations")]
+		private void OnDoCalculations(object sender, EventArgs e)
+		{
+			if (Clock.Today.Year > 1983)
+				CumRunoff += Soil.SoilWater.Runoff;
+				
+ 
+/*
+POC = (fom_c(1) + fom_c(2) + fom_c(3) + biom_c(1) + biom_c(2) + biom_c(3))/1000.
+HOC = (hum_c(1) + hum_c(2) + hum_c(3))/1000
+			TOC = (carbon_tot(1) + carbon_tot(2) + carbon_tot(3)) /1000
+
+!sw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)
+!sw80 = sw40 + sw_dep(5) + sw_dep(6)
+!sw120 = sw80 + sw_dep(7) + sw_dep(8)
+!sw200 = sw120 + sw_dep(9) + sw_dep(10)
+
+sw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)
+sw80 = sw_dep(5) + sw_dep(6)
+sw120 = sw_dep(7) + sw_dep(8)
+sw200 = sw_dep(9) + sw_dep(10) + sw_dep(11) + sw_dep(12)
+
+c10 = carbon_tot(1) + 7590
+c20 = carbon_tot(2) + 2460
+c30 = carbon_tot(3) + 2600
+
+			*/
+		}
+	}
+}
+]]></Code>
+              </Manager>
+              <Manager>
+                <Name>Nrunoff</Name>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.OldPlant;
+namespace Models
+{
+	[Serializable]
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			/*
+				CumNRunoff = 0
+NRunoff = 0
+delta = 0
+			*/
+		}
+		[EventSubscribe("DoCalculations")]
+		private void OnDoCalculations(object sender, EventArgs e)
+		{
+			/*
+				
+if (runoff > 0) then
+NRunoff = runoff * 0.17
+   if no3(1) < NRunoff then
+      NRunoff = no3(1)
+   endif
+
+   CumNRunoff = CumNRunoff + NRunoff
+   delta = NRunoff * -1
+    'Upper Nitrogen' set dlt_no3 = delta 0 0 0 0 0 0 0 0 0 0 0
+
+else
+   NRunoff = 0
+   delta = 0
+endif
+
+			*/
+		}
+	}
+}
+]]></Code>
+              </Manager>
+            </Folder>
+            <SurfaceOrganicMatter>
+              <Name>SurfaceOrganicMatter</Name>
+              <PondActive>no</PondActive>
+              <ReportAdditions>no</ReportAdditions>
+              <ReportRemovals>no</ReportRemovals>
+              <ResidueTypes>
+                <Name>ResidueTypes</Name>
+                <LoadFromResource>ResidueTypes</LoadFromResource>
+              </ResidueTypes>
+              <TillageTypes>
+                <Name>TillageTypesList</Name>
+                <TillageType />
+              </TillageTypes>
+              <Pools>
+                <Pool>
+                  <PoolName>Brigalow</PoolName>
+                  <ResidueType>all_lign</ResidueType>
+                  <Mass>40000</Mass>
+                  <CNRatio>30</CNRatio>
+                  <CPRatio>0</CPRatio>
+                  <StandingFraction>0</StandingFraction>
+                </Pool>
+              </Pools>
+              <PoolName>Brigalow</PoolName>
+              <type>all_lign</type>
+              <mass>40000</mass>
+              <standing_fraction>0</standing_fraction>
+              <cpr>0</cpr>
+              <cnr>30</cnr>
+              <CriticalResidueWeight>2000</CriticalResidueWeight>
+              <OptimumDecompTemp>20</OptimumDecompTemp>
+              <MaxCumulativeEOS>20</MaxCumulativeEOS>
+              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+              <TotalLeachRain>25</TotalLeachRain>
+              <MinRainToLeach>10</MinRainToLeach>
+              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+              <DefaultCPRatio>0</DefaultCPRatio>
+              <DefaultStandingFraction>0</DefaultStandingFraction>
+              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+              <FractionFaecesAdded>0.5</FractionFaecesAdded>
+            </SurfaceOrganicMatter>
+            <Report>
+              <Name>BrigalowReport</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>Wheat.AboveGround.Wt</string>
+                <string>Wheat.Grain.Wt</string>
+                <string>Wheat.Grain.Protein</string>
+                <string>[Soil].SoilWater.ESW</string>
+                <string>sum([Soil].Nutrient.FOMC) as TotalFOMC</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
+            <Soil>
+              <Name>Upper</Name>
+              <Water>
+                <Name>Water</Name>
+                <SoilCrop>
+                  <Name>SorghumSoil</Name>
+                  <LL>
+                    <double>0.1</double>
+                    <double>0.15</double>
+                    <double>0.18</double>
+                    <double>0.18</double>
+                    <double>0.19</double>
+                    <double>0.2</double>
+                    <double>0.24</double>
+                    <double>0.27</double>
+                    <double>0.28</double>
+                    <double>0.28</double>
+                    <double>0.28</double>
+                    <double>0.28</double>
+                  </LL>
+                  <KL>
+                    <double>0.04</double>
+                    <double>0.04</double>
+                    <double>0.04</double>
+                    <double>0.04</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </KL>
+                  <XF>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </XF>
+                </SoilCrop>
+                <SoilCrop>
+                  <Name>WheatSoil</Name>
+                  <LL>
+                    <double>0.1</double>
+                    <double>0.15</double>
+                    <double>0.18</double>
+                    <double>0.18</double>
+                    <double>0.19</double>
+                    <double>0.2</double>
+                    <double>0.24</double>
+                    <double>0.27</double>
+                    <double>0.28</double>
+                    <double>0.28</double>
+                    <double>0.28</double>
+                    <double>0.28</double>
+                  </LL>
+                  <KL>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0</double>
+                  </KL>
+                  <XF>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </XF>
+                </SoilCrop>
+                <SoilCrop>
+                  <Name>MaizeSoil</Name>
+                  <LL>
+                    <double>0.1</double>
+                    <double>0.15</double>
+                    <double>0.18</double>
+                    <double>0.18</double>
+                    <double>0.19</double>
+                    <double>0.2</double>
+                    <double>0.24</double>
+                    <double>0.27</double>
+                    <double>0.28</double>
+                    <double>0.28</double>
+                    <double>0.28</double>
+                    <double>0.28</double>
+                  </LL>
+                  <KL>
+                    <double>0.04</double>
+                    <double>0.04</double>
+                    <double>0.04</double>
+                    <double>0.04</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                    <double>0.02</double>
+                    <double>0.01</double>
+                    <double>0.01</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </KL>
+                  <XF>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>0</double>
+                    <double>0</double>
+                    <double>0</double>
+                  </XF>
+                </SoilCrop>
+                <Thickness>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <BD>
+                  <double>1.38</double>
+                  <double>1.64</double>
+                  <double>1.73</double>
+                  <double>1.74</double>
+                  <double>1.77</double>
+                  <double>1.8</double>
+                  <double>1.83</double>
+                  <double>1.84</double>
+                  <double>1.84</double>
+                  <double>1.85</double>
+                  <double>1.86</double>
+                  <double>1.86</double>
+                </BD>
+                <AirDry>
+                  <double>0.04</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                  <double>0.06</double>
+                </AirDry>
+                <LL15>
+                  <double>0.1</double>
+                  <double>0.15</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
+                  <double>0.19</double>
+                  <double>0.2</double>
+                  <double>0.22</double>
+                  <double>0.23</double>
+                  <double>0.23</double>
+                  <double>0.23</double>
+                  <double>0.24</double>
+                  <double>0.24</double>
+                </LL15>
+                <DUL>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.34</double>
+                  <double>0.33</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                </DUL>
+                <SAT>
+                  <double>0.45</double>
+                  <double>0.45</double>
+                  <double>0.41</double>
+                  <double>0.41</double>
+                  <double>0.38</double>
+                  <double>0.38</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                  <double>0.37</double>
+                </SAT>
+              </Water>
+              <SoilWater>
+                <Name>SoilWater</Name>
+                <SummerDate>1-Nov</SummerDate>
+                <SummerU>10</SummerU>
+                <SummerCona>4</SummerCona>
+                <WinterDate>1-Apr</WinterDate>
+                <WinterU>10</WinterU>
+                <WinterCona>4</WinterCona>
+                <DiffusConst>40</DiffusConst>
+                <DiffusSlope>16</DiffusSlope>
+                <Salb>0.13</Salb>
+                <CN2Bare>72</CN2Bare>
+                <CNRed>20</CNRed>
+                <CNCov>0.8</CNCov>
+                <slope>NaN</slope>
+                <discharge_width>NaN</discharge_width>
+                <catchment_area>NaN</catchment_area>
+                <max_pond>0</max_pond>
+                <Thickness>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SWCON>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                </SWCON>
+                <residueinterception>0</residueinterception>
+              </SoilWater>
+              <Nutrient>
+                <Name>Nutrient</Name>
+              </Nutrient>
+              <SoilOrganicMatter>
+                <Name>SoilOrganicMatter</Name>
+                <RootCN>40</RootCN>
+                <RootWt>200</RootWt>
+                <SoilCN>17.6</SoilCN>
+                <EnrACoeff>7.4</EnrACoeff>
+                <EnrBCoeff>0.2</EnrBCoeff>
+                <Thickness>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <Depth>
+                  <string>0-10</string>
+                  <string>10-20</string>
+                  <string>20-30</string>
+                  <string>30-40</string>
+                  <string>40-60</string>
+                  <string>60-80</string>
+                  <string>80-100</string>
+                  <string>100-120</string>
+                  <string>120-140</string>
+                  <string>140-160</string>
+                  <string>160-180</string>
+                  <string>180-200</string>
+                </Depth>
+                <OC>
+                  <double>1.86</double>
+                  <double>0.848</double>
+                  <double>0.725</double>
+                  <double>0.4</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
+                  <double>0.2</double>
+                </OC>
+                <FBiom>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                  <double>0.01</double>
+                </FBiom>
+                <FInert>
+                  <double>0.29</double>
+                  <double>0.175</double>
+                  <double>0.2</double>
+                  <double>0.9</double>
+                  <double>0.95</double>
+                  <double>0.95</double>
+                  <double>0.95</double>
+                  <double>0.95</double>
+                  <double>0.95</double>
+                  <double>0.95</double>
+                  <double>0.95</double>
+                  <double>0.95</double>
+                </FInert>
+                <OCUnits>Total</OCUnits>
+              </SoilOrganicMatter>
+              <Analysis>
+                <Name>Analysis</Name>
+                <Thickness>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <PH>
+                  <double>6.6</double>
+                  <double>7.5</double>
+                  <double>8</double>
+                  <double>5</double>
+                  <double>5</double>
+                  <double>5</double>
+                  <double>5</double>
+                  <double>5</double>
+                  <double>5</double>
+                  <double>5</double>
+                  <double>5</double>
+                  <double>5</double>
+                </PH>
+                <PHUnits>Water</PHUnits>
+                <BoronUnits>HotWater</BoronUnits>
+              </Analysis>
+              <Sample>
+                <Name>Initial nitrogen</Name>
+                <Thickness>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <NO3>
+                  <double>6.50302743908077</double>
+                  <double>2.10100886506361</double>
+                  <double>2.10100886506361</double>
+                  <double>1.70100717728378</double>
+                  <double>1.70100717728378</double>
+                  <double>1.70100717728378</double>
+                  <double>1.70100717728378</double>
+                  <double>1.70100717728378</double>
+                  <double>1.70100717728378</double>
+                  <double>1.70100717728378</double>
+                  <double>1.70100717728378</double>
+                  <double>0.100000496224022</double>
+                </NO3>
+                <NH4>
+                  <double>0.599107736105583</double>
+                  <double>0.100017985994255</double>
+                  <double>0.100017985994255</double>
+                  <double>0.100017985994255</double>
+                  <double>0.100017985994255</double>
+                  <double>0.100017985994255</double>
+                  <double>0.100017985994255</double>
+                  <double>0.100017985994255</double>
+                  <double>0.100017985994255</double>
+                  <double>0.100017985994255</double>
+                  <double>0.100017985994255</double>
+                  <double>0.100001443245193</double>
+                </NH4>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
+              <Sample>
+                <Name>Initial water</Name>
+                <Thickness>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                </Thickness>
+                <SW>
+                  <double>0.1</double>
+                  <double>0.15</double>
+                  <double>0.18</double>
+                  <double>0.18</double>
+                  <double>0.29</double>
+                  <double>0.26</double>
+                  <double>0.24</double>
+                  <double>0.23</double>
+                  <double>0.23</double>
+                  <double>0.23</double>
+                  <double>0.24</double>
+                  <double>0.24</double>
+                </SW>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
+                <SWUnits>Volumetric</SWUnits>
+                <OCUnits>Total</OCUnits>
+                <PHUnits>Water</PHUnits>
+              </Sample>
+              <CERESSoilTemperature>
+                <Name>CERESSoilTemperature</Name>
+              </CERESSoilTemperature>
+              <RecordNumber>0</RecordNumber>
+              <SoilType>clay</SoilType>
+              <Site>Jimbour</Site>
+              <NearestTown>Jimbour, Q 4352</NearestTown>
+              <Region>South East Queensland</Region>
+              <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+              <Latitude>0</Latitude>
+              <Longitude>0</Longitude>
+            </Soil>
+            <Report>
+              <Name>ClOutput</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+              </VariableNames>
+              <EventNames />
+            </Report>
+            <MicroClimate>
+              <Name>MicroClimate</Name>
+              <a_interception>0</a_interception>
+              <b_interception>1</b_interception>
+              <c_interception>0</c_interception>
+              <d_interception>0</d_interception>
+              <soil_albedo>0.23</soil_albedo>
+              <sun_angle>15</sun_angle>
+              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+              <night_interception_fraction>0.5</night_interception_fraction>
+              <refheight>2</refheight>
+              <albedo>0.15</albedo>
+              <emissivity>0.96</emissivity>
+              <RadIntTotal>0</RadIntTotal>
+            </MicroClimate>
+            <Plant15>
+              <Name>Wheat</Name>
+              <ResourceName>Wheat</ResourceName>
+              <AutoHarvest>true</AutoHarvest>
+              <CropType>Wheat</CropType>
+            </Plant15>
+            <SoluteManager>
+              <Name>SoluteManager</Name>
+            </SoluteManager>
+            <Report>
+              <Name>Report</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>[Soil].Nutrient.TotalC[1] as TOC0_10cm</string>
+                <string>[Soil].Nutrient.TotalC[2] as TOC10_30cm</string>
+                <string>[Soil].Nutrient.TotalC[3] as TOC30_60cm</string>
+                <string>([Soil].Nutrient.TotalC[1]+[Soil].Nutrient.TotalC[2]+[Soil].Nutrient.TotalC[3]) as TOC0_30cm</string>
+                <string>([Soil].Nutrient.TotalN[1]+[Soil].Nutrient.NO3[1]+[Soil].Nutrient.NH4[1]) as TON0_10cm</string>
+                <string>([Soil].Nutrient.TotalN[1]+[Soil].Nutrient.TotalN[2]+[Soil].Nutrient.TotalN[3]) as TON0_30cm</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
+            <Report>
+              <Name>HarvestReport</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today.Year</string>
+                <string>[Wheat].Grain.Wt</string>
+                <string>[Wheat].AboveGround.Wt</string>
+                <string>[Wheat].Grain.Size</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Wheat].Harvesting</string>
+              </EventNames>
+            </Report>
+            <Area>1</Area>
+            <Slope>0</Slope>
+          </Zone>
+        </Simulation>
+        <Graph>
+          <Name>TOC 0 to 10cm</Name>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObsSoil</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TOC0_10cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TOC0_10cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>TON 0 to 10cm</Name>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObsSoil</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TON0_10cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TON0_10cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>TOC 0 to 30cm</Name>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObsSoil</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TOC0_30cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TOC0_30cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>TON 0 to 30cm</Name>
+          <Series>
+            <Name>Observed</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>ObsSoil</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TON0_30cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TON0_30cm</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Graph>
+        <Graph>
+          <Name>FOMC</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>BrigalowReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TotalFOMC</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
