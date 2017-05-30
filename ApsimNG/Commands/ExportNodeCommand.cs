@@ -129,7 +129,7 @@ namespace UserInterface.Commands
             // that we need to recurse down through.
             foreach (Model child in modelToExport.Children)
             {
-                bool ignoreChild = (child is Simulation && child.Parent is Experiment);
+                bool ignoreChild = (child is Simulation);
 
                 if (!ignoreChild)
                 {
@@ -216,8 +216,14 @@ namespace UserInterface.Commands
             AddUserDocumentation(tags, modelNameToExport);
 
             // Document model description.
+            int modelDescriptionIndex = tags.Count;
             tags.Add(new AutoDocumentation.Heading("Model description", 1));
             ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
+
+            // If 'Model description tag is imediately followed by a another heading at the same level.
+            // then the model must have writen its own name as a heading. We don't want that.
+            if (tags[modelDescriptionIndex+1] is AutoDocumentation.Heading && (tags[modelDescriptionIndex+1] as AutoDocumentation.Heading).headingLevel == 1)
+                tags.RemoveAt(modelDescriptionIndex+1);
 
             // Document model validation.
             AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
@@ -601,8 +607,8 @@ namespace UserInterface.Commands
                     AutoDocumentation.Heading heading = tag as AutoDocumentation.Heading;
                     if (heading.headingLevel > 0 && heading.headingLevel <= 6)
                     {
-                        if (heading.headingLevel == 1)
-                            section.AddPageBreak();
+                        //if (heading.headingLevel == 1)
+                        //    section.AddPageBreak();
 
                         Paragraph para = section.AddParagraph(heading.text, "Heading" + heading.headingLevel);
                         if (heading.headingLevel == 1)
