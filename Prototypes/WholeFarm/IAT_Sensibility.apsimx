@@ -428,6 +428,14 @@
             <Cost>11</Cost>
             <AccountName>General account</AccountName>
           </IATGrowCropCost>
+          <IATGrowCropCostPerHa>
+            <Name>Seeds</Name>
+            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <MthsBeforeHarvest>1</MthsBeforeHarvest>
+            <UnitsPerHa>1</UnitsPerHa>
+            <CostPerUnit>10</CostPerUnit>
+            <AccountName>General account</AccountName>
+          </IATGrowCropCostPerHa>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           <Region>1</Region>
           <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
