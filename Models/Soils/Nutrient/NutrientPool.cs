@@ -44,5 +44,24 @@
             for (int i = 0; i < N.Length; i++)
                 N[i] = InitialNitrogen.Value(i);
         }
+        /// <summary>
+        /// Add C and N into nutrient pool
+        /// </summary>
+        /// <param name="CAdded"></param>
+        /// <param name="NAdded"></param>
+        public void Add (double[] CAdded, double[] NAdded)
+        {
+            if (CAdded.Length != NAdded.Length)
+                throw new Exception("Arrays for addition of soil organic matter must be of same length.");
+            if (CAdded.Length > C.Length)
+                throw new Exception("Array for addition of soil organic matter must be less than or equal to the number of soil layers.");
+
+            for (int i = 0; i < CAdded.Length; i++)
+            {
+                C[i] += CAdded[i];
+                N[i] += NAdded[i];
+            }
+        }
+
     }
 }
