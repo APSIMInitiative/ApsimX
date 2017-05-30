@@ -361,7 +361,7 @@ namespace UserInterface.Commands
             do
             {
                 tagsRemoved = false;
-                for (int i = 2; i < tags.Count - 1; i++)
+                for (int i = 0; i < tags.Count - 1; i++)
                 {
                     AutoDocumentation.Heading thisTag = tags[i] as AutoDocumentation.Heading;
                     AutoDocumentation.Heading nextTag = tags[i + 1] as AutoDocumentation.Heading;
