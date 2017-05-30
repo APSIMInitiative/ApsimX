@@ -188,11 +188,11 @@ namespace Models.WholeFarm.Activities
 
 
 
-        /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
+        /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFInitialiseResource")]
-        private void OnWFInitialiseResource(object sender, EventArgs e)
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
         {
 
             if (Area == 0 & AreaRequested > 0)
