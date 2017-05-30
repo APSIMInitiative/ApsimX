@@ -42,10 +42,10 @@ namespace Models.WholeFarm.Activities
 
 
         /// <summary>
-        /// Cost Per Crop
+        /// Cost - fixed
         /// </summary>
-        [Description("Cost Per Crop ($)")]
-        public double Amount { get; set; }
+        [Description("Cost - fixed ($)")]
+        public double Cost { get; set; }
 
         /// <summary>
         /// name of account to use
@@ -64,6 +64,10 @@ namespace Models.WholeFarm.Activities
         /// </summary>
         private FinanceType bankAccount;
 
+        /// <summary>
+        /// Parent of this model
+        /// </summary>
+        private IATGrowCrop parent;
 
 
 
@@ -74,6 +78,8 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            parent = (IATGrowCrop)this.Parent;
+
 
             Finance finance = Resources.FinanceResource();
             if (finance != null)
@@ -96,12 +102,12 @@ namespace Models.WholeFarm.Activities
         /// <returns></returns>
         private DateTime CostDateFromHarvestDate()
         {
-            DateTime nextHarvest;
-            CropDataType harvestdata = ((IATGrowCrop)this.Parent).HarvestData.FirstOrDefault();
-            if (harvestdata != null)
+            DateTime nextdate;
+            CropDataType nextharvest = parent.HarvestData.FirstOrDefault();
+            if (nextharvest != null)
             {
-                nextHarvest = harvestdata.HarvestDate;
-                return nextHarvest.AddMonths(-1 * MthsBeforeHarvest);
+                nextdate = nextharvest.HarvestDate;
+                return nextdate.AddMonths(-1 * MthsBeforeHarvest);
             }
             else
             {
@@ -120,7 +126,7 @@ namespace Models.WholeFarm.Activities
             ResourceRequestList = new List<ResourceRequest>();
 
             costDate = CostDateFromHarvestDate();
-            string cropName = ((IATGrowCrop)this.Parent).FeedTypeName;
+            string cropName = parent.FeedTypeName;
 
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
@@ -129,10 +135,10 @@ namespace Models.WholeFarm.Activities
                     Resource = bankAccount,
                     ResourceType = typeof(Finance),
                     AllowTransmutation = false,
-                    Required = this.Amount,
+                    Required = this.Cost,
                     ResourceTypeName = this.AccountName,
-                    ActivityName = cropName + " crop input cost",
-                    Reason = cropName + " "+  this.Name
+                    ActivityName = "Crop cost (fixed)",
+                    Reason = cropName + " " + this.Name
                 }
                 );
             }
