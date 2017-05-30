@@ -620,7 +620,7 @@
             </RuminantSaleFee>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <BreedName>Bos indicus</BreedName>
-            <BreedingSirePrice>4500</BreedingSirePrice>
+            <BreedingSirePrice>1</BreedingSirePrice>
             <BankAccountName>General account</BankAccountName>
           </RuminantActivityBuySell>
           <RuminantActivityHerdCost>
