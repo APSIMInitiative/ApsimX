@@ -67,9 +67,12 @@ namespace Models.Soils.Arbitrator
                     foreach (ZoneWaterAndN NewZ in NewState.Zones)
                         if (Z.Zone.Name == NewZ.Zone.Name)
                         {
-                            NewZ.Water = MathUtilities.Subtract(NewZ.Water, Z.Water);
-                            NewZ.NO3N = MathUtilities.Subtract(NewZ.NO3N, Z.NO3N);
-                            NewZ.NH4N = MathUtilities.Subtract(NewZ.NH4N, Z.NH4N);
+                            for (int i = 0; i < NewZ.Water.Length; i++)
+                            {
+                                NewZ.Water[i] = MathUtilities.Bound(NewZ.Water[i] - Z.Water[i], 0.0, 10000.0);
+                                NewZ.NO3N[i] = MathUtilities.Bound(NewZ.NO3N[i] - Z.NO3N[i], 0.0, 10000.0);
+                                NewZ.NH4N[i] = MathUtilities.Bound(NewZ.NH4N[i] - Z.NH4N[i], 0.0, 10000.0);
+                            }
                         }
             return NewState;
         }
