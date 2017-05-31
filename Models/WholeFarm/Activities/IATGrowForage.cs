@@ -101,6 +101,8 @@ namespace Models.WholeFarm.Activities
         public List<ForageDataType> HarvestData { get; set; }
 
 
+        private bool gotLandRequested = false; //was this forage able to get the land it requested ?
+
         /// <summary>
         /// Convert area type specified to hectares
         /// </summary>
@@ -154,10 +156,45 @@ namespace Models.WholeFarm.Activities
                     FileForage.FileName, Region, LinkedLandType.SoilType, FeedTypeName, Clock.StartDate, Clock.EndDate));
             }
 
-            Area = AreaRequested;  //TODO: change this to actually request the land as a resource
         }
 
 
+
+
+        /// <summary>An event handler to allow us to initialise</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("WFInitialiseActivity")]
+        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        {
+
+            if (Area == 0 & AreaRequested > 0)
+            {
+                ResourceRequestList = new List<ResourceRequest>();
+                ResourceRequestList.Add(new ResourceRequest()
+                {
+                    AllowTransmutation = false,
+                    Required = AreaRequested * ((UnitsOfArea == UnitsOfAreaTypes.Hectares) ? 1 : 100),
+                    ResourceType = typeof(Land),
+                    ResourceTypeName = LandTypeNameToUse,
+                    ActivityName = this.Name,
+                    Reason = "Assign",
+                    FilterDetails = null
+                }
+                );
+            }
+
+            gotLandRequested = TakeResources(ResourceRequestList);
+
+
+            //Now the Land has been allocated we have an Area 
+            if (gotLandRequested)
+            {
+                //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
+                Area = ResourceRequestList.FirstOrDefault().Available; //TODO: should this be supplied not available ?
+            }
+
+        }
 
 
 
@@ -167,22 +204,6 @@ namespace Models.WholeFarm.Activities
         /// <returns>A list of resource requests</returns>
         public override List<ResourceRequest> DetermineResourcesNeeded()
         {
-            //if (Area == 0 & AreaRequested > 0)
-            //{
-            //    ResourceRequestList = new List<ResourceRequest>();
-            //    ResourceRequestList.Add(new ResourceRequest()
-            //    {
-            //        AllowTransmutation = false,
-            //        Required = AreaRequested * ((UnitsOfArea == UnitsOfAreaTypes.Hectares) ? 1 : 100),
-            //        ResourceName = "Land",
-            //        ResourceTypeName = LandTypeNameToUse,
-            //        ActivityName = this.Name,
-            //        Reason = "Assign",
-            //        FilterDetails = null
-            //    }
-            //    );
-            //    return ResourceRequestList;
-            //}
             return null;
         }
 
