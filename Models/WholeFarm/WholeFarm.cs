@@ -37,6 +37,12 @@ namespace Models.WholeFarm
 		public static Random RandomGenerator { get { return randomGenerator; } }
 
 		/// <summary>
+		/// Index of the simulation Climate Region
+		/// </summary>
+		[Description("Climate region index")]
+		public int ClimateRegion { get; set; }
+
+		/// <summary>
 		/// Ecological indicators calculation interval (in months, 1 monthly, 12 annual)
 		/// </summary>
 		[Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
