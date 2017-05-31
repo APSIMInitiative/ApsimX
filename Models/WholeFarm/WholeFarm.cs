@@ -87,6 +87,7 @@ namespace Models.WholeFarm
 				Summary.WriteWarning(this, error);
 			}
 
+			if (EcologicalIndicatorsCalculationMonth == 0) EcologicalIndicatorsCalculationMonth = 1;
 			if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
 			{
 				EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
