@@ -286,6 +286,8 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Resources.OtherAnimalsTypeCohort))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.PastureActivityBurn))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.PastureActivityManage))]
+		[XmlElement(typeof(Models.WholeFarm.Resources.ProductStore))]
+		[XmlElement(typeof(Models.WholeFarm.Resources.ProductStoreType))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.Relationship))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.ResourcesHolder))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityBuySell))]
