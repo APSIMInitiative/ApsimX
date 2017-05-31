@@ -32,18 +32,17 @@ namespace Models.WholeFarm.Activities
         [Link]
 		WholeFarm WholeFarm = null;
 
-
         /// <summary>
         /// Number for the Climate Region for the pasture.
         /// </summary>
         [Description("Climate Region Number")]
         public int Region { get; set; }
 
-        /// <summary>
-        /// Number for the Soil Type for the pasture.
-        /// </summary>
-        [Description("Soil Type")]
-        public int SoilNumber { get; set; }
+        ///// <summary>
+        ///// Number for the Soil Type for the pasture.
+        ///// </summary>
+        //[Description("Soil Type")]
+        //public int SoilNumber { get; set; }
 
         /// <summary>
         /// Name of land type where pasture is located
@@ -87,12 +86,6 @@ namespace Models.WholeFarm.Activities
         /// </summary>
         [XmlIgnore]
 		public Relationship GrassBasalArea { get; set; }
-        private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
-
-
-        private double StockingRateSummed;  //summed since last Ecological Calculation.
-        private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
-
 
         /// <summary>
         /// Perennials
@@ -148,17 +141,21 @@ namespace Models.WholeFarm.Activities
 			}
 		}
 
-        private double ha2sqkm = 0.01; //convert ha to square km
+		// private properties
+		private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
+		private int soilIndex = 0; // obtained from LandType used
+		private double StockingRateSummed;  //summed since last Ecological Calculation.
+		private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
 
+		private double ha2sqkm = 0.01; //convert ha to square km
         private bool gotLandRequested = false; //was this pasture able to get the land it requested ?
-
         //EcologicalCalculationIntervals worth of data read from GRASP file 
         private List<PastureDataType> PastureDataList;
 
 
-     /// <summary>An event handler to allow us to initialise ourselves.</summary>
-     /// <param name="sender">The sender.</param>
-     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
        [EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
@@ -175,7 +172,6 @@ namespace Models.WholeFarm.Activities
 				Summary.WriteWarning(this, String.Format("Unable to locate Grass Basal Area relationship for {0}", this.Name));
 			}
 			// locate Pasture Type resource
-//			bool resourceAvailable = false;
 			LinkedNativeFoodType = Resources.GetResourceItem(this, typeof(GrazeFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 			//if (LinkedNativeFoodType == null)
 			//{
@@ -189,7 +185,6 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("WFInitialiseResource")]
         private void OnWFInitialiseResource(object sender, EventArgs e)
         {
-
             if (Area == 0 & AreaRequested > 0)
             {
                 ResourceRequestList = new List<ResourceRequest>();
@@ -205,9 +200,12 @@ namespace Models.WholeFarm.Activities
                 }
                 );
             }
-
-            gotLandRequested = TakeResources(ResourceRequestList);
-
+			// if we get here we assume some land has been supplied
+			if (ResourceRequestList != null || ResourceRequestList.Count() > 0)
+			{
+				soilIndex = ((LandType)ResourceRequestList[0].Resource).SoilType;
+				gotLandRequested = TakeResources(ResourceRequestList);
+			}
 
             //Now the Land has been allocated we have an Area 
             if (gotLandRequested)
@@ -247,7 +245,6 @@ namespace Models.WholeFarm.Activities
                 PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
 
                 growth = pasturedata.Growth;
-  
            
                 if (growth > 0)
 			    {
@@ -457,7 +454,7 @@ namespace Models.WholeFarm.Activities
             double stockingRate = LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate;
             pkStkRate = (int)Math.Round(stockingRate);
 
-			PastureDataList = FileGRASP.GetIntervalsPastureData(Region, SoilNumber, 1,
+			PastureDataList = FileGRASP.GetIntervalsPastureData(Region, soilIndex, 1,
                pkGrassBA, pkLandCon, pkStkRate, Clock.Today, EcolCalculationInterval);
         }
 
