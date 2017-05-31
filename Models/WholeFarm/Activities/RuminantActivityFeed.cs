@@ -49,6 +49,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Labour grouping for breeding
 		/// </summary>
+		[XmlIgnore]
 		public List<object> LabourFilterList { get; set; }
 
 		/// <summary>
