@@ -1611,7 +1611,7 @@ The root organ demands and is partitioned N and DM and its depth increases throu
             <Name>Reproductive</Name>
             <Constant>
               <Name>ReferenceVelocity</Name>
-              <FixedValue>1</FixedValue>
+              <FixedValue>7.5</FixedValue>
               <Units>mm/day</Units>
             </Constant>
             <Start>Flowering</Start>
@@ -11226,19 +11226,19 @@ namespace Models
                   <double>500</double>
                 </Thickness>
                 <NO3>
-                  <double>26.4</double>
-                  <double>17</double>
-                  <double>32.779999999999994</double>
-                  <double>5.19</double>
+                  <double>15</double>
+                  <double>10</double>
+                  <double>5</double>
+                  <double>1</double>
                 </NO3>
                 <NH4>
-                  <double>0.88</double>
-                  <double>0.34</double>
-                  <double>0.60970799999999992</double>
-                  <double>0.48267</double>
+                  <double>0.5</double>
+                  <double>0.2</double>
+                  <double>0.093</double>
+                  <double>0.092999999999999985</double>
                 </NH4>
-                <NO3Units>kgha</NO3Units>
-                <NH4Units>kgha</NH4Units>
+                <NO3Units>ppm</NO3Units>
+                <NH4Units>ppm</NH4Units>
                 <SWUnits>Volumetric</SWUnits>
                 <OCUnits>Total</OCUnits>
                 <PHUnits>Water</PHUnits>
@@ -18167,7 +18167,7 @@ Weather data was obtained from nearby Broadfields weather station (NIWA).
           <Name>FRNLLincoln</Name>
           <Clock>
             <Name>clock</Name>
-            <StartDate>2014-01-01T00:00:00</StartDate>
+            <StartDate>2014-03-01T00:00:00</StartDate>
             <EndDate>2016-05-31T00:00:00</EndDate>
           </Clock>
           <Weather>
@@ -19033,7 +19033,7 @@ namespace Models
                 </CEC>
                 <ParticleSizeSand>
                   <double>17.4</double>
-                  <double>30.3</double>
+                  <double>24.8</double>
                   <double>21</double>
                   <double>37</double>
                   <double>43.6</double>
@@ -19041,17 +19041,17 @@ namespace Models
                 </ParticleSizeSand>
                 <ParticleSizeSilt>
                   <double>60.9</double>
-                  <double>53.7</double>
+                  <double>56.9</double>
                   <double>59.5</double>
-                  <double>54.6</double>
+                  <double>52.6</double>
                   <double>46.9</double>
                   <double>59.3</double>
                 </ParticleSizeSilt>
                 <ParticleSizeClay>
                   <double>21.8</double>
-                  <double>16</double>
+                  <double>18.3</double>
                   <double>19.5</double>
-                  <double>8.3</double>
+                  <double>10.3</double>
                   <double>9.5</double>
                   <double>16.6</double>
                 </ParticleSizeClay>
@@ -19064,16 +19064,16 @@ namespace Models
                   <Name>PlantainSoil</Name>
                   <LL>
                     <double>0.17</double>
-                    <double>0.177</double>
-                    <double>0.186</double>
-                    <double>0.132</double>
-                    <double>0.116</double>
-                    <double>0.138</double>
+                    <double>0.18</double>
+                    <double>0.19</double>
+                    <double>0.13</double>
+                    <double>0.12</double>
+                    <double>0.14</double>
                   </LL>
                   <KL>
                     <double>0.12</double>
                     <double>0.11</double>
-                    <double>0.08</double>
+                    <double>0.06</double>
                     <double>0.03</double>
                     <double>0.01</double>
                     <double>0.01</double>
@@ -19098,14 +19098,14 @@ namespace Models
                 <BD>
                   <double>1.35</double>
                   <double>1.43</double>
-                  <double>1.63</double>
-                  <double>1.57</double>
-                  <double>1.52</double>
+                  <double>1.54</double>
+                  <double>1.54</double>
+                  <double>1.48</double>
                   <double>1.41</double>
                 </BD>
                 <AirDry>
                   <double>0.057</double>
-                  <double>0.141</double>
+                  <double>0.159</double>
                   <double>0.186</double>
                   <double>0.132</double>
                   <double>0.116</double>
@@ -19120,12 +19120,12 @@ namespace Models
                   <double>0.138</double>
                 </LL15>
                 <DUL>
-                  <double>0.351</double>
+                  <double>0.34</double>
                   <double>0.325</double>
-                  <double>0.328</double>
-                  <double>0.257</double>
-                  <double>0.242</double>
-                  <double>0.276</double>
+                  <double>0.327</double>
+                  <double>0.251</double>
+                  <double>0.24</double>
+                  <double>0.273</double>
                 </DUL>
                 <SAT>
                   <double>0.439</double>
@@ -19136,12 +19136,12 @@ namespace Models
                   <double>0.39</double>
                 </SAT>
                 <KS>
-                  <double>4641.312</double>
-                  <double>1594.057</double>
-                  <double>75.525</double>
-                  <double>2914.115</double>
-                  <double>2476.033</double>
-                  <double>2859.216</double>
+                  <double>2913.761</double>
+                  <double>1052.63</double>
+                  <double>182.149</double>
+                  <double>1272.997</double>
+                  <double>1767.199</double>
+                  <double>586.553</double>
                 </KS>
               </Water>
               <SoilWater>
@@ -19172,11 +19172,11 @@ namespace Models
                 </Thickness>
                 <SWCON>
                   <double>0.5</double>
-                  <double>0.46</double>
+                  <double>0.41</double>
                   <double>0.27</double>
-                  <double>0.5</double>
+                  <double>0.39</double>
                   <double>0.49</double>
-                  <double>0.48</double>
+                  <double>0.42</double>
                 </SWCON>
                 <residueinterception>0</residueinterception>
               </SoilWater>
@@ -19255,19 +19255,19 @@ namespace Models
                   <double>0.18</double>
                 </OC>
                 <FBiom>
-                  <double>0.105</double>
-                  <double>0.075</double>
+                  <double>0.045</double>
+                  <double>0.025</double>
+                  <double>0.022</double>
                   <double>0.02</double>
                   <double>0.01</double>
-                  <double>0.008</double>
-                  <double>0.005</double>
+                  <double>0.01</double>
                 </FBiom>
                 <FInert>
-                  <double>0.4</double>
-                  <double>0.65</double>
-                  <double>0.81</double>
-                  <double>0.87</double>
-                  <double>0.95</double>
+                  <double>0.475</double>
+                  <double>0.695</double>
+                  <double>0.845</double>
+                  <double>0.89</double>
+                  <double>0.96</double>
                   <double>0.99</double>
                 </FInert>
                 <OCUnits>Total</OCUnits>
@@ -19288,18 +19288,18 @@ namespace Models
                   <double>500</double>
                 </Thickness>
                 <NO3>
-                  <double>16</double>
-                  <double>15.000000000000002</double>
-                  <double>17.962500000000002</double>
-                  <double>9.5</double>
-                  <double>8.46</double>
+                  <double>10.125</double>
+                  <double>8.58</double>
+                  <double>10.395</double>
+                  <double>5.55</double>
+                  <double>5.5</double>
                 </NO3>
                 <NH4>
                   <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
+                  <double>0.75</double>
+                  <double>1.3860000000000001</double>
+                  <double>0.5</double>
+                  <double>0.5</double>
                 </NH4>
                 <NO3Units>kgha</NO3Units>
                 <NH4Units>kgha</NH4Units>
@@ -19342,6 +19342,20 @@ namespace Models
             <SoluteManager>
               <Name>SoluteManager</Name>
             </SoluteManager>
+            <Report>
+              <Name>Report1</Name>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[SurfaceOrganicMatter].N as TotalSurfOMN</string>
+                <string>[Soil].SoilNitrogen.FOMN</string>
+                <string>[Soil].SoilNitrogen.HumicN</string>
+                <string>[Soil].SoilNitrogen.MicrobialN</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
@@ -25685,6 +25699,7 @@ namespace Models
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
+              <Filter />
             </Series>
             <Axis>
               <Type>Bottom</Type>
@@ -25770,6 +25785,10 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
+                <Date>2015-10-29</Date>
+                <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+              </Operation>
+              <Operation>
                 <Date>2015-10-09</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
@@ -25782,7 +25801,7 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
-                <Date>2015-01-26</Date>
+                <Date>2016-01-26</Date>
                 <Action>[Fertiliser].Apply(Amount: 5, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
@@ -25833,6 +25852,10 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
+                <Date>2015-10-29</Date>
+                <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+              </Operation>
+              <Operation>
                 <Date>2015-11-24</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
@@ -25841,7 +25864,7 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
-                <Date>2015-01-26</Date>
+                <Date>2016-01-26</Date>
                 <Action>[Fertiliser].Apply(Amount: 10, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
@@ -25892,6 +25915,10 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
+                <Date>2015-10-29</Date>
+                <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+              </Operation>
+              <Operation>
                 <Date>2015-11-24</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
@@ -25900,7 +25927,7 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
-                <Date>2015-01-26</Date>
+                <Date>2016-01-26</Date>
                 <Action>[Fertiliser].Apply(Amount: 20, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
@@ -25951,6 +25978,10 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
+                <Date>2015-10-29</Date>
+                <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+              </Operation>
+              <Operation>
                 <Date>2015-11-24</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
@@ -25959,7 +25990,7 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
-                <Date>2015-01-26</Date>
+                <Date>2016-01-26</Date>
                 <Action>[Fertiliser].Apply(Amount: 35, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
@@ -26010,6 +26041,10 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
+                <Date>2015-10-29</Date>
+                <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
+              </Operation>
+              <Operation>
                 <Date>2015-11-24</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
@@ -26018,7 +26053,7 @@ Weather data was obtained from nearby Ruakura weather station (NIWA).
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
-                <Date>2015-01-26</Date>
+                <Date>2016-01-26</Date>
                 <Action>[Fertiliser].Apply(Amount: 50, Type: Fertiliser.Types.UreaN, Depth: 10)</Action>
               </Operation>
               <Operation>
@@ -26097,59 +26132,59 @@ namespace Models
                 <Name>DefoliationSchedule</Name>
                 <Operation>
                   <Date>2014-12-16</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-01-14</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-03-18</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-04-28</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-06-17</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-09-07</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-10-07</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-10-28</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-11-23</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2015-12-16</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-01-25</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-04-11</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-06-29</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
                 <Operation>
                   <Date>2016-09-21</Date>
-                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 50, amountType: "ResidualDM", duration: 1)</Action>
+                  <Action>[Defoliate].Script.Defoliate(defoliationType: "Cut", amountDM: 60, amountType: "ResidualDM", duration: 1)</Action>
                 </Operation>
               </Operations>
               <Manager>
@@ -26510,22 +26545,22 @@ namespace Models
                   <double>0.07</double>
                 </OC>
                 <FBiom>
-                  <double>0.08</double>
-                  <double>0.04</double>
-                  <double>0.02</double>
+                  <double>0.06</double>
+                  <double>0.03</double>
+                  <double>0.021</double>
                   <double>0.01</double>
                   <double>0.01</double>
                   <double>0.01</double>
                   <double>0.01</double>
                 </FBiom>
                 <FInert>
-                  <double>0.57</double>
                   <double>0.6</double>
-                  <double>0.62</double>
-                  <double>0.65</double>
+                  <double>0.645</double>
+                  <double>0.675</double>
                   <double>0.7</double>
-                  <double>0.8</double>
-                  <double>0.85</double>
+                  <double>0.78</double>
+                  <double>0.87</double>
+                  <double>0.95</double>
                 </FInert>
                 <OCUnits>Total</OCUnits>
               </SoilOrganicMatter>
@@ -26588,10 +26623,7 @@ namespace Models
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
-                <string>[Plantain].Leaf.NDemand</string>
-                <string>[Plantain].Leaf.NSupply</string>
-                <string>[Plantain].Leaf.Allocated.N</string>
-                <string>i</string>
+                <string />
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -32809,6 +32841,7 @@ namespace Models
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
+              <Filter>[Date] &lt; "2016-02-5"</Filter>
             </Series>
             <Axis>
               <Type>Bottom</Type>
@@ -32940,6 +32973,7 @@ namespace Models
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
+              <Filter>[Date] &lt; "2016-02-5"</Filter>
             </Series>
             <Axis>
               <Type>Bottom</Type>
@@ -33036,6 +33070,7 @@ namespace Models
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
+          <Filter />
         </Series>
         <Axis>
           <Type>Bottom</Type>
