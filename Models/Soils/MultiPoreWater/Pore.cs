@@ -153,7 +153,7 @@ namespace Models.Soils
         /// <summary>The potential diffusion out of this pore</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Diffusivity { get { return PoiseuilleFlow * RelativeWaterContent * (1- TensionFactor) * RepelancyFactor; } }
+        public double Diffusivity { get { return PoiseuilleFlow * RelativeWaterContent * (1- TensionFactor); } }
         /// <summary>The potential diffusion into this pore</summary>
         [XmlIgnore]
         [Units("mm")]

@@ -305,8 +305,8 @@ namespace Models.Soils
         [Display(Format = "N2")]
         public double[] SAT { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
-        [Description("ConductC")]
-        [Display(Format = "e1")]
+        [Description("ConductC (*e^-10")]
+        [Display(Format = "N2")]
         public double[] CFlow { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
         [Description("ConductX")]
@@ -637,11 +637,12 @@ namespace Models.Soils
             SaturatedWaterDepth = new double[ProfileLayers];
             HourlyWaterExtraction = new double[ProfileLayers];
             RootLengthDensity = new double[ProfileLayers];
+            double[] CflowScaled = MathUtilities.Multiply_Value(CFlow, 1e-10);
 
             MappedSAT = Soil.Map(SAT, ParamThickness, Thickness, Soil.MapType.Concentration,SAT[SAT.Length-1]);
             MappedDUL = Soil.Map(DUL, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedLL15 = Soil.Map(LL15, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedCFlow = Soil.Map(CFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedCFlow = Soil.Map(CflowScaled, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedUpperRepellentWC = Soil.Map(UpperRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
