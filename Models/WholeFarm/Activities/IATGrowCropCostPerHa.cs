@@ -25,9 +25,9 @@ namespace Models.WholeFarm.Activities
         [XmlIgnore]
         [Link]
         Clock Clock = null;
-        [XmlIgnore]
-        [Link]
-        ISummary Summary = null;
+        //[XmlIgnore]
+        //[Link]
+        //ISummary Summary = null;
         [XmlIgnore]
         [Link]
         private ResourcesHolder Resources = null;
@@ -89,13 +89,13 @@ namespace Models.WholeFarm.Activities
             Finance finance = Resources.FinanceResource();
             if (finance != null)
             {
-                bool tmp = true;
-                bankAccount = Resources.GetResourceItem(typeof(Finance), AccountName, out tmp) as FinanceType;
-                if (!tmp & AccountName != "")
-                {
-                    Summary.WriteWarning(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
-                    throw new ApsimXException(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
-                }
+//                bool tmp = true;
+                bankAccount = Resources.GetResourceItem(this, typeof(Finance), AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+                //if (!tmp & AccountName != "")
+                //{
+                //    Summary.WriteWarning(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
+                //    throw new ApsimXException(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
+                //}
             }
         }
 
@@ -126,7 +126,7 @@ namespace Models.WholeFarm.Activities
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns></returns>
-        public override List<ResourceRequest> DetermineResourcesNeeded()
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
             ResourceRequestList = new List<ResourceRequest>();
 
@@ -143,7 +143,7 @@ namespace Models.WholeFarm.Activities
                     AllowTransmutation = false,
                     Required = totalcost,
                     ResourceTypeName = this.AccountName,
-                    ActivityName = "Crop cost (per Ha)" ,
+                    ActivityModel = this ,
                     Reason = cropName + " " + this.Name
                 }
                 );
@@ -154,10 +154,29 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
 		{
             return;
         }
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
+		{
+			return;
+		}
 
 		/// <summary>
 		/// Resource shortfall event handler

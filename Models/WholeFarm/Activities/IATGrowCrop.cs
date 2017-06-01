@@ -189,7 +189,7 @@ namespace Models.WholeFarm.Activities
                     Required = AreaRequested * ((UnitsOfArea == UnitsOfAreaTypes.Hectares) ? 1 : 100),
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse,
-                    ActivityName = this.Name,
+                    ActivityModel = this,
                     Reason = "Assign",
                     FilterDetails = null
                 }
