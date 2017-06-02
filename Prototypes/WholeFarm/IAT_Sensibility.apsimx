@@ -455,7 +455,7 @@
           <AreaRequested>200</AreaRequested>
         </IATGrowForage>
         <ActivityFolder>
-          <Name>Cash flow</Name>
+          <Name>Pay Overheads</Name>
           <FinanceActivityCalculateInterest>
             <Name>Bank interest</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
