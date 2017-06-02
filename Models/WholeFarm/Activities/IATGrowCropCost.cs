@@ -132,7 +132,7 @@ namespace Models.WholeFarm.Activities
                     Required = this.Amount,
                     ResourceTypeName = this.AccountName,
                     ActivityModel = this,
-                    Reason = cropName + " "+  this.Name
+                    Reason = "Crop cost (fixed) - " + cropName
                 }
                 );
             }

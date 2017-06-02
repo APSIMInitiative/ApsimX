@@ -144,7 +144,7 @@ namespace Models.WholeFarm.Activities
                     Required = totalcost,
                     ResourceTypeName = this.AccountName,
                     ActivityModel = this ,
-                    Reason = cropName + " " + this.Name
+                    Reason = "Crop cost (per Ha) - " + cropName
                 }
                 );
             }

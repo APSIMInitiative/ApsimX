@@ -98,7 +98,7 @@ namespace Models.WholeFarm.Activities
 							interestRequest.ActivityModel = this;
 							interestRequest.Required = Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200;
 							interestRequest.AllowTransmutation = false;
-							interestRequest.Reason = "Interest charged";
+							interestRequest.Reason = "Pay interest charged";
 							accnt.Remove(interestRequest);
 						}
 					}

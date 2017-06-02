@@ -126,7 +126,7 @@ namespace Models.WholeFarm.Activities
 					ResourceTypeName = this.AccountName,
 //					ActivityName = "Overheads",
 					ActivityModel = this,
-					Reason = this.Name
+					Reason = "Pay overhead"
 				}
 				);
 			}
