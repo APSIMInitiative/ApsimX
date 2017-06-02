@@ -126,7 +126,7 @@ namespace Models.WholeFarm.Resources
 			ResourceTransaction details = new ResourceTransaction();
 			details.ResourceType = this.Name;
 			details.Debit = amountRemoved * -1;
-			details.Activity = Request.ActivityName;
+			details.Activity = Request.ActivityModel.Name;
 			details.Reason = Request.Reason;
 			LastTransaction = details;
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };

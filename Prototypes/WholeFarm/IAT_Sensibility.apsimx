@@ -425,17 +425,9 @@
             <Name>BagsAndLabels</Name>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             <MthsBeforeHarvest>1</MthsBeforeHarvest>
-            <Cost>11</Cost>
+            <Amount>11</Amount>
             <AccountName>General account</AccountName>
           </IATGrowCropCost>
-          <IATGrowCropCostPerHa>
-            <Name>Seeds</Name>
-            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-            <MthsBeforeHarvest>1</MthsBeforeHarvest>
-            <UnitsPerHa>1</UnitsPerHa>
-            <CostPerUnit>10</CostPerUnit>
-            <AccountName>General account</AccountName>
-          </IATGrowCropCostPerHa>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           <Region>1</Region>
           <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
@@ -620,7 +612,7 @@
             </RuminantSaleFee>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <BreedName>Bos indicus</BreedName>
-            <BreedingSirePrice>1</BreedingSirePrice>
+            <BreedingSirePrice>4500</BreedingSirePrice>
             <BankAccountName>General account</BankAccountName>
           </RuminantActivityBuySell>
           <RuminantActivityHerdCost>
@@ -751,10 +743,9 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceType.Name as Resource</string>
             <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceName as Resource</string>
-            <string>[Activities].LastShortfallResourceRequest.ActivityName as Activity</string>
-            <string>[Activities].LastShortfallResourceRequest.Reason as Reason</string>
+            <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
             <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
             <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
           </VariableNames>

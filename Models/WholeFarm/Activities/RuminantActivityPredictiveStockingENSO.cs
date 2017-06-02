@@ -159,14 +159,13 @@ namespace Models.WholeFarm.Activities
 			if (GrazeFoodStoreName == null) GrazeFoodStoreName = "";
 			if (GrazeFoodStoreName != "")
 			{
-				bool resourceAvailable = false;
-				foodStore = Resources.GetResourceItem(typeof(GrazeFoodStore), GrazeFoodStoreName, out resourceAvailable) as GrazeFoodStoreType;
-				if (!resourceAvailable)
-				{
-					Summary.WriteWarning(this, String.Format("Could not find graze food store named {0} in which to place new purchases for {1}", GrazeFoodStoreName, this.Name));
-				}
+//				bool resourceAvailable = false;
+				foodStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+				//if (!resourceAvailable)
+				//{
+				//	Summary.WriteWarning(this, String.Format("Could not find graze food store named {0} in which to place new purchases for {1}", GrazeFoodStoreName, this.Name));
+				//}
 			}
-
 		}
 
 		private ENSOState GetENSOMeasure()
@@ -219,19 +218,19 @@ namespace Models.WholeFarm.Activities
 					double AEPurchase = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
 
 //					double ShortfallAE = 0;
-					bool available;
+//					bool available;
 					double herdChange = 1.0;
 					switch (ForecastEnsoState)
 					{
 						case ENSOState.Neutral:
 							break;
 						case ENSOState.ElNino:
-							GrazeFoodStoreType pasture = Resources.GetResourceItem(typeof(GrazeFoodStoreType), newgroup.Key, out available) as GrazeFoodStoreType;
+							GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GrazeFoodStoreType;
 							double kgha = pasture.TonnesPerHectare * 1000;
 							herdChange = this.PastureToStockingChangeElNino.SolveY(kgha, false);
 							break;
 						case ENSOState.LaNina:
-							pasture = Resources.GetResourceItem(typeof(GrazeFoodStoreType), newgroup.Key, out available) as GrazeFoodStoreType;
+							pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GrazeFoodStoreType;
 							kgha = pasture.TonnesPerHectare * 1000;
 							herdChange = this.PastureToStockingChangeLaNina.SolveY(kgha, false);
 							break;
@@ -425,7 +424,7 @@ namespace Models.WholeFarm.Activities
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
 		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> DetermineResourcesNeeded()
+		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			return null;
 		}
@@ -433,9 +432,28 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
 		{
 			return; ;
+		}
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
+		{
+			return;
 		}
 
 		/// <summary>

@@ -55,7 +55,7 @@ namespace Models.WholeFarm.Activities
 		/// Payment style
 		/// </summary>
 		[Description("Payment style")]
-		public HerdPaymentStyleType PaymentStyle { get; set; }
+		public PaymentStyleType PaymentStyle { get; set; }
 
 		/// <summary>
 		/// name of account to use
@@ -100,7 +100,7 @@ namespace Models.WholeFarm.Activities
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
 		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> DetermineResourcesNeeded()
+		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			ResourceRequestList = new List<ResourceRequest>();
 
@@ -110,10 +110,10 @@ namespace Models.WholeFarm.Activities
 				List<Ruminant> herd = new List<Ruminant>();
 				switch (PaymentStyle)
 				{
-					case HerdPaymentStyleType.Fixed:
+					case PaymentStyleType.Fixed:
 						amountNeeded = Amount;
 						break;
-					case HerdPaymentStyleType.perHead:
+					case PaymentStyleType.perHead:
 						herd = Resources.RuminantHerd().Herd;
 						// check for Ruminant filter group
 						if(this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).Count() > 0)
@@ -122,7 +122,7 @@ namespace Models.WholeFarm.Activities
 						}
 						amountNeeded = Amount*herd.Count();
 						break;
-					case HerdPaymentStyleType.perAE:
+					case PaymentStyleType.perAE:
 						herd = Resources.RuminantHerd().Herd;
 						// check for Ruminant filter group
 						if (this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).Count() > 0)
@@ -135,7 +135,7 @@ namespace Models.WholeFarm.Activities
 						throw new Exception(String.Format("Unknown Payment style {0} in {1}",PaymentStyle, this.Name));
 				}
 
-				if (amountNeeded == 0) return null;
+				if (amountNeeded == 0) return ResourceRequestList;
 
 				// determine breed
 				string BreedName = "Multiple breeds";
@@ -151,7 +151,7 @@ namespace Models.WholeFarm.Activities
 					Required = amountNeeded,
 					ResourceType = typeof(Finance),
 					ResourceTypeName = this.AccountName,
-					ActivityName = this.Name,
+					ActivityModel = this,
 					Reason = BreedName
 				}
 				);
@@ -162,7 +162,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
 		{
 			// if occurred
 			if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
@@ -174,6 +174,25 @@ namespace Models.WholeFarm.Activities
 					this.NextDueDate = this.NextDueDate.AddMonths(this.PaymentInterval);
 				}
 			}
+		}
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
+		{
+			return;
 		}
 
 		/// <summary>

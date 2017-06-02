@@ -31,8 +31,6 @@ namespace Models.WholeFarm.Activities
         [Link]
         FileAPSIMCrop FileCrop = null;
 
-
-
         /// <summary>
         /// Number for the Climate Region the crop is grown in.
         /// </summary>
@@ -137,29 +135,29 @@ namespace Models.WholeFarm.Activities
 		{
 
             // locate Land Type resource for this forage.
-            bool resourceAvailable = false;
-            LinkedLandType = Resources.GetResourceItem(typeof(Land), LandTypeNameToUse, out resourceAvailable) as LandType;
-            if (LinkedLandType == null)
-            {
-                throw new ApsimXException(this, String.Format("Unable to locate land type {0} in Land for {1}", this.LandTypeNameToUse, this.Name));
-            }
+//            bool resourceAvailable = false;
+            LinkedLandType = Resources.GetResourceItem(this, typeof(Land), LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+            //if (LinkedLandType == null)
+            //{
+            //    throw new ApsimXException(this, String.Format("Unable to locate land type {0} in Land for {1}", this.LandTypeNameToUse, this.Name));
+            //}
 
             // locate AnimalFoodStore Type resource for this forage.
             //bool resourceAvailable = false;
-            LinkedHumanFoodType = Resources.GetResourceItem(typeof(HumanFoodStore), FeedTypeName, out resourceAvailable) as HumanFoodStoreType;
-            if (LinkedHumanFoodType == null)
-            {
-                throw new ApsimXException(this, String.Format("Unable to locate crop type {0} in HumanFoodStore for {1}", this.FeedTypeName, this.Name));
-            }
+            LinkedHumanFoodType = Resources.GetResourceItem(this, typeof(HumanFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
+            //if (LinkedHumanFoodType == null)
+            //{
+            //    throw new ApsimXException(this, String.Format("Unable to locate crop type {0} in HumanFoodStore for {1}", this.FeedTypeName, this.Name));
+            //}
 
 
             // locate AnimalFoodStore Type resource for this forage.
             //bool resourceAvailable = false;
-            LinkedAnimalFoodType = Resources.GetResourceItem(typeof(AnimalFoodStore), FeedTypeName, out resourceAvailable) as AnimalFoodStoreType;
-			if (LinkedAnimalFoodType == null)
-			{
-                throw new ApsimXException(this, String.Format("Unable to locate crop feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
-			}
+            LinkedAnimalFoodType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as AnimalFoodStoreType;
+			//if (LinkedAnimalFoodType == null)
+			//{
+   //             throw new ApsimXException(this, String.Format("Unable to locate crop feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
+			//}
 
 
             // Retrieve harvest data from the forage file for the entire run. 
@@ -191,7 +189,7 @@ namespace Models.WholeFarm.Activities
                     Required = AreaRequested * ((UnitsOfArea == UnitsOfAreaTypes.Hectares) ? 1 : 100),
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse,
-                    ActivityName = this.Name,
+                    ActivityModel = this,
                     Reason = "Assign",
                     FilterDetails = null
                 }
@@ -217,7 +215,7 @@ namespace Models.WholeFarm.Activities
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns>A list of resource requests</returns>
-        public override List<ResourceRequest> DetermineResourcesNeeded()
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             return null;
         }
@@ -227,17 +225,34 @@ namespace Models.WholeFarm.Activities
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
-        public override void PerformActivity()
+        public override void DoActivity()
 		{
 			return;
 		}
 
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
 
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
+		{
+			return;
+		}
 
-        /// <summary>An event handler for a Cut and Carry</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFDoCutAndCarry")]
+		/// <summary>An event handler for a Cut and Carry</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("WFDoCutAndCarry")]
         private void OnWFDoCutAndCarry(object sender, EventArgs e)
         {
             int year = Clock.Today.Year;

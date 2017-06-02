@@ -20,8 +20,8 @@ namespace Models.WholeFarm.Activities
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
-		[Link]
-		ISummary Summary = null;
+//		[Link]
+//		ISummary Summary = null;
 
 		/// <summary>
 		/// Herd to milk
@@ -36,24 +36,32 @@ namespace Models.WholeFarm.Activities
 
 		private HumanFoodStoreType milkStore;
 
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			// get labour specifications
+			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+
+			// find milk store
+			milkStore = Resources.GetResourceItem(this, typeof(HumanFoodStore), "Milk", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
+			//if (milkStore == null)
+			//{
+			//	string warning = String.Format("Unable to find resource type (Milk) in Human Food Store for ({0}).", this.Name);
+			//	Summary.WriteWarning(this, warning);
+			//	throw new Exception(warning);
+			//}
+		}
+
 		/// <summary>An event handler to allow us to initialise herd pricing.</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("WFInitialiseActivity")]
 		private void OnWFInitialiseActivity(object sender, EventArgs e)
 		{
-			// get labour specifications
-			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
-
-			bool available = false;
-			milkStore = Resources.GetResourceItem(typeof(HumanFoodStore), "Milk", out available) as HumanFoodStoreType;
-			if(milkStore==null)
-			{
-				string warning = String.Format("Unable to find Milk resource type in Human Food Store for ({0}).", this.Name);
-				Summary.WriteWarning(this, warning);
-				throw new Exception(warning);
-			}
 		}
 
 		/// <summary>An event handler to call for all herd management activities</summary>
@@ -85,7 +93,7 @@ namespace Models.WholeFarm.Activities
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
 		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> DetermineResourcesNeeded()
+		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			ResourceRequestList = null;
 
@@ -117,7 +125,7 @@ namespace Models.WholeFarm.Activities
 							Required = daysNeeded,
 							ResourceType = typeof(Labour),
 							ResourceTypeName = "",
-							ActivityName = this.Name,
+							ActivityModel = this,
 							Reason = "Milking",
 							FilterDetails = new List<object>() { item }
 						}
@@ -132,7 +140,26 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
+		{
+			return;
+		}
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
 		{
 			return;
 		}

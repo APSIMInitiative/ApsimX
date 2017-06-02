@@ -25,9 +25,9 @@ namespace Models.WholeFarm.Activities
         [XmlIgnore]
         [Link]
         Clock Clock = null;
-        [XmlIgnore]
-        [Link]
-        ISummary Summary = null;
+//        [XmlIgnore]
+//        [Link]
+//        ISummary Summary = null;
         [XmlIgnore]
         [Link]
         private ResourcesHolder Resources = null;
@@ -42,10 +42,10 @@ namespace Models.WholeFarm.Activities
 
 
         /// <summary>
-        /// Cost - fixed
+        /// Cost Per Crop
         /// </summary>
-        [Description("Cost - fixed ($)")]
-        public double Cost { get; set; }
+        [Description("Cost Per Crop ($)")]
+        public double Amount { get; set; }
 
         /// <summary>
         /// name of account to use
@@ -64,10 +64,6 @@ namespace Models.WholeFarm.Activities
         /// </summary>
         private FinanceType bankAccount;
 
-        /// <summary>
-        /// Parent of this model
-        /// </summary>
-        private IATGrowCrop parent;
 
 
 
@@ -78,19 +74,17 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            parent = (IATGrowCrop)this.Parent;
-
 
             Finance finance = Resources.FinanceResource();
             if (finance != null)
             {
-                bool tmp = true;
-                bankAccount = Resources.GetResourceItem(typeof(Finance), AccountName, out tmp) as FinanceType;
-                if (!tmp & AccountName != "")
-                {
-                    Summary.WriteWarning(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
-                    throw new ApsimXException(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
-                }
+                //bool tmp = true;
+                bankAccount = Resources.GetResourceItem(this, typeof(Finance), AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+                //if (!tmp & AccountName != "")
+                //{
+                //    Summary.WriteWarning(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
+                //    throw new ApsimXException(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
+                //}
             }
         }
 
@@ -102,12 +96,12 @@ namespace Models.WholeFarm.Activities
         /// <returns></returns>
         private DateTime CostDateFromHarvestDate()
         {
-            DateTime nextdate;
-            CropDataType nextharvest = parent.HarvestData.FirstOrDefault();
-            if (nextharvest != null)
+            DateTime nextHarvest;
+            CropDataType harvestdata = ((IATGrowCrop)this.Parent).HarvestData.FirstOrDefault();
+            if (harvestdata != null)
             {
-                nextdate = nextharvest.HarvestDate;
-                return nextdate.AddMonths(-1 * MthsBeforeHarvest);
+                nextHarvest = harvestdata.HarvestDate;
+                return nextHarvest.AddMonths(-1 * MthsBeforeHarvest);
             }
             else
             {
@@ -121,12 +115,12 @@ namespace Models.WholeFarm.Activities
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns></returns>
-        public override List<ResourceRequest> DetermineResourcesNeeded()
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
             ResourceRequestList = new List<ResourceRequest>();
 
             costDate = CostDateFromHarvestDate();
-            string cropName = parent.FeedTypeName;
+            string cropName = ((IATGrowCrop)this.Parent).FeedTypeName;
 
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
@@ -135,10 +129,10 @@ namespace Models.WholeFarm.Activities
                     Resource = bankAccount,
                     ResourceType = typeof(Finance),
                     AllowTransmutation = false,
-                    Required = this.Cost,
+                    Required = this.Amount,
                     ResourceTypeName = this.AccountName,
-                    ActivityName = "Crop cost (fixed)",
-                    Reason = cropName + " " + this.Name
+                    ActivityModel = this,
+                    Reason = cropName + " "+  this.Name
                 }
                 );
             }
@@ -148,10 +142,29 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
 		{
             return;
         }
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
+		{
+			return;
+		}
 
 		/// <summary>
 		/// Resource shortfall event handler
@@ -167,8 +180,6 @@ namespace Models.WholeFarm.Activities
 			if (ResourceShortfallOccurred != null)
 				ResourceShortfallOccurred(this, e);
 		}
-
-
 
 	}
 }

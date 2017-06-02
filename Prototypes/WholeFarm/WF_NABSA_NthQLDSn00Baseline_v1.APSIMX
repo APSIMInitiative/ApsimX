@@ -44,7 +44,7 @@
           <Name>Finances</Name>
           <FinanceType>
             <Name>General account</Name>
-            <OpeningBalance>10000</OpeningBalance>
+            <OpeningBalance>10000000</OpeningBalance>
             <WithdrawalLimit>-5000</WithdrawalLimit>
             <InterestRateCharged>7.5</InterestRateCharged>
             <InterestRatePaid>2</InterestRatePaid>
@@ -624,7 +624,8 @@
             <MonthlyManagement>false</MonthlyManagement>
             <WeaningAge>9</WeaningAge>
             <WeaningWeight>250</WeaningWeight>
-            <MinimumPastureBeforeRestock>0</MinimumPastureBeforeRestock>
+            <GrazeFoodStoreName>Native Pasture</GrazeFoodStoreName>
+            <MinimumPastureBeforeRestock>3000</MinimumPastureBeforeRestock>
             <SellFemalesLikeMales>false</SellFemalesLikeMales>
           </RuminantActivityManage>
           <RuminantActivityBuySell>
@@ -644,6 +645,14 @@
               <PaymentStyle>ProportionOfTotalSales</PaymentStyle>
               <Amount>0.02</Amount>
             </RuminantSaleFee>
+            <TruckingSettings>
+              <Name>Trucking details</Name>
+              <DistanceToMarket>120</DistanceToMarket>
+              <CostPerKmTrucking>5</CostPerKmTrucking>
+              <Number450kgPerTruck>100</Number450kgPerTruck>
+              <MinimumTrucksBeforeSelling>0</MinimumTrucksBeforeSelling>
+              <MinimumLoadBeforeSelling>0</MinimumLoadBeforeSelling>
+            </TruckingSettings>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <BreedName>Bos indicus</BreedName>
             <BreedingSirePrice>4500</BreedingSirePrice>
@@ -796,9 +805,10 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceName as Resource</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
-            <string>[Activities].LastShortfallResourceRequest.ActivityName as Activity</string>
+						<string>[Activities].LastShortfallResourceRequest.ResourceType.Name as Resource</string>
+						<string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
+						<string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
+            <string>[Activities].LastShortfallResourceRequest.Reason as Reason</string>
             <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
             <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
           </VariableNames>

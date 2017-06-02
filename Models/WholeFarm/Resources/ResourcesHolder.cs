@@ -72,28 +72,39 @@ namespace Models.WholeFarm.Resources
 		/// Retrieve a ResourceType from a ResourceGroup based on a request item including filter and sort options
 		/// </summary>
 		/// <param name="Request">A resource request item</param>
-		/// <param name="ResourceAvailable">Determines whether the resource was found successfully. An empty return is therefore a real lack of resource such as no labour found</param>
+		/// <param name="MissingResourceAction">Action to take if requested resource group not found</param>
+		/// <param name="MissingResourceTypeAction">Action to take if requested resource type not found</param>
 		/// <returns>A reference to the item of type Model</returns>
-		public Model GetResourceItem(ResourceRequest Request, out bool ResourceAvailable)
+		public Model GetResourceItem(ResourceRequest Request, OnMissingResourceActionTypes MissingResourceAction, OnMissingResourceActionTypes MissingResourceTypeAction)
 		{
-			ResourceAvailable = false;
 			if (Request.FilterDetails != null)
 			{
 				if (Request.ResourceType == null)
 				{
-					Summary.WriteWarning(this, String.Format("Resource type must be supplied in resource request from {0}",Request.ActivityName));
-					return null;
+					string errorMsg = String.Format("Resource type must be supplied in resource request from {0}", Request.ActivityModel.Name);
+					Summary.WriteWarning(Request.ActivityModel, String.Format("Resource type must be supplied in resource request from {0}",Request.ActivityModel.Name));
+					throw new Exception(errorMsg);
 				}
 
 				IModel resourceGroup = this.GetByType(Request.ResourceType);
 				if(resourceGroup== null)
 				{
+					string errorMsg = String.Format("Unable to locate resources of type ({0}) for ({1})", Request.ResourceType, Request.ActivityModel.Name);
+					switch (MissingResourceAction)
+					{
+						case OnMissingResourceActionTypes.ReportErrorAndStop:
+							throw new Exception(errorMsg);
+						case OnMissingResourceActionTypes.ReportWarning:
+							Summary.WriteWarning(Request.ActivityModel, errorMsg);
+							break;
+						default:
+							break;
+					}
 					return null;
 				}
 
 				// get list of children matching the conditions in filter
 				// and return the lowest item that has enough time available
-				ResourceAvailable = true;
 				object resourceGroupObject = resourceGroup as object;
 				switch (resourceGroupObject.GetType().ToString())
 				{
@@ -114,28 +125,28 @@ namespace Models.WholeFarm.Resources
 							return items.OrderByDescending(a => a.Amount).FirstOrDefault();
 						}
 					default:
-						string errorMsg = "Resource cannot be filtered. Filtering not implemented for " + resourceGroupObject.GetType().ToString() + " from activity (" + Request.ActivityName + ")";
-						Summary.WriteWarning(this, errorMsg);
+						string errorMsg = "Resource cannot be filtered. Filtering not implemented for " + resourceGroupObject.GetType().ToString() + " from activity (" + Request.ActivityModel.Name + ")";
+						Summary.WriteWarning(Request.ActivityModel, errorMsg);
 						throw new Exception(errorMsg);
 				}
 			}
 			else
 			{
-				return GetResourceItem(Request.ResourceType, Request.ResourceTypeName, out ResourceAvailable);
-//				return GetResourceItem(Request.ResourceName, Request.ResourceTypeName, out ResourceAvailable);
+				return GetResourceItem(Request.ActivityModel, Request.ResourceType, Request.ResourceTypeName, MissingResourceAction, MissingResourceTypeAction);
 			}
 		}
 
 		/// <summary>
 		/// Retrieve a ResourceType from a ResourceGroup with specified names
 		/// </summary>
+		/// <param name="RequestingModel">name of model requesting resource</param>
 		/// <param name="ResourceType">Type of the resource group</param>
 		/// <param name="ResourceTypeName">Name of the resource item</param>
-		/// <param name="ResourceAvailable">Determines whether the resource was found successfully. An empty return is therefore a real lack of resource such as no labour found</param>
+		/// <param name="MissingResourceAction">Action to take if requested resource group not found</param>
+		/// <param name="MissingResourceTypeAction">Action to take if requested resource type not found</param>
 		/// <returns>A reference to the item of type object</returns>
-		public Model GetResourceItem(Type ResourceType, string ResourceTypeName, out bool ResourceAvailable)
+		public Model GetResourceItem(Model RequestingModel, Type ResourceType, string ResourceTypeName, OnMissingResourceActionTypes MissingResourceAction, OnMissingResourceActionTypes MissingResourceTypeAction)
 		{
-			ResourceAvailable = false;
 			// locate specified resource
 			Model resourceGroup = this.Children.Where(a => a.GetType() == ResourceType).FirstOrDefault();
 			if (resourceGroup != null)
@@ -143,44 +154,37 @@ namespace Models.WholeFarm.Resources
 				Model resource = resourceGroup.Children.Where(a => a.Name == ResourceTypeName).FirstOrDefault();
 				if (resource == null)
 				{
+					string errorMsg = String.Format("Unable to locate resources type ({0}) in resources ({1}) for ({2})", ResourceTypeName, ResourceType.ToString(), RequestingModel.Name);
+					switch (MissingResourceTypeAction)
+					{
+						case OnMissingResourceActionTypes.ReportErrorAndStop:
+							throw new Exception(errorMsg);
+						case OnMissingResourceActionTypes.ReportWarning:
+							Summary.WriteWarning(RequestingModel, errorMsg);
+							break;
+						default:
+							break;
+					}
 					return null;
 				}
-				ResourceAvailable = true;
 				return resource;
 			}
 			else
 			{
+				string errorMsg = String.Format("Unable to locate resources of type ({0}) for ({1})", ResourceType.ToString(), RequestingModel.Name);
+				switch (MissingResourceAction)
+				{
+					case OnMissingResourceActionTypes.ReportErrorAndStop:
+						throw new Exception(errorMsg);
+					case OnMissingResourceActionTypes.ReportWarning:
+						Summary.WriteWarning(RequestingModel, errorMsg);
+						break;
+					default:
+						break;
+				}
 				return null;
 			}
 		}
-
-		///// <summary>
-		///// Retrieve a ResourceType from a ResourceGroup with specified names
-		///// </summary>
-		///// <param name="ResourceGroupName">Name of the resource group</param>
-		///// <param name="ResourceTypeName">Name of the resource item</param>
-		///// <param name="ResourceAvailable">Determines whether the resource was found successfully. An empty return is therefore a real lack of resource such as no labour found</param>
-		///// <returns>A reference to the item of type object</returns>
-		//public Model GetResourceItem(string ResourceGroupName, string ResourceTypeName, out bool ResourceAvailable)
-		//{
-		//	ResourceAvailable = false;
-		//	// locate specified resource
-		//	Model resourceGroup = this.Children.Where(a => a.Name == ResourceGroupName).FirstOrDefault();
-		//	if (resourceGroup != null)
-		//	{
-		//		Model resource = resourceGroup.Children.Where(a => a.Name == ResourceTypeName).FirstOrDefault();
-		//		if (resource == null)
-		//		{
-		//			return null;
-		//		}
-		//		ResourceAvailable = true;
-		//		return resource;
-		//	}
-		//	else
-		//	{
-		//		return null;
-		//	}
-		//}
 
 		/// <summary>
 		/// Get the Resource Group for Products
@@ -295,8 +299,7 @@ namespace Models.WholeFarm.Resources
 				if (request.AllowTransmutation & (QueryOnly || request.TransmutationPossible))
 				{
 					// get resource type
-					bool resourceAvailable = false;
-					IModel model = this.GetResourceItem(request.ResourceType, request.ResourceTypeName, out resourceAvailable) as IModel;
+					IModel model = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IModel;
 					if (model != null)
 					{
 						// check if transmutations provided
@@ -314,18 +317,18 @@ namespace Models.WholeFarm.Resources
 								{
 									// get by labour group filter under the transmutation cost
 									ResourceRequest labourRequest = new ResourceRequest();
+									labourRequest.ActivityModel = request.ActivityModel;
 									labourRequest.ResourceType = typeof(Labour);
 									labourRequest.FilterDetails = transcost.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>();
-									transResource = this.GetResourceItem(labourRequest, out resourceAvailable) as IResourceType;
+									transResource = this.GetResourceItem(labourRequest, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
 
 									// TODO: put group name in the transcost resource type name
 									// this still needs to be checked
 									transcost.ResourceTypeName = (transResource as LabourType).Name;
-
 								}
 								else
 								{
-									transResource = this.GetResourceItem(transcost.ResourceType, transcost.ResourceTypeName, out resourceAvailable) as IResourceType;
+									transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceType, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
 								}
 
 								if (!QueryOnly)
@@ -335,7 +338,7 @@ namespace Models.WholeFarm.Resources
 									// create new request for this transmutation cost
 									ResourceRequest transRequest = new ResourceRequest();
 									transRequest.Reason = trans.Name + " " + trans.Parent.Name;
-									transRequest.ActivityName = trans.Name + " " + trans.Parent.Name;
+//									transRequest.ActivityName = trans.Name + " " + trans.Parent.Name;
 									transRequest.Required = transmutationCost;
 									transRequest.ResourceType = transcost.ResourceType;
 

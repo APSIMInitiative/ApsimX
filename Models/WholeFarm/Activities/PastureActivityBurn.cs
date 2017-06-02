@@ -97,28 +97,27 @@ namespace Models.WholeFarm.Activities
 			}
 
 			// get pasture
-			bool resavailable = false;
-			pasture = Resources.GetResourceItem(typeof(GrazeFoodStore), PaddockName, out resavailable) as GrazeFoodStoreType;
-			if (!resavailable)
-			{
-				Summary.WriteWarning(this, String.Format("Could not find pasture in graze food store named \"{0}\" for {1}", PaddockName, this.Name));
-				throw new Exception(String.Format("Invalid pasture name ({0}) provided for burn activity {1}", PaddockName, this.Name));
-			}
+//			bool resavailable = false;
+			pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+			//if (!resavailable)
+			//{
+			//	Summary.WriteWarning(this, String.Format("Could not find pasture in graze food store named \"{0}\" for {1}", PaddockName, this.Name));
+			//	throw new Exception(String.Format("Invalid pasture name ({0}) provided for burn activity {1}", PaddockName, this.Name));
+			//}
 
 			// get labour specifications
 			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 
-			bool available;
-			methane = Resources.GetResourceItem(typeof(GreenhouseGases), "Methane", out available) as GreenhouseGasesType;
-			nox = Resources.GetResourceItem(typeof(GreenhouseGases), "NOx", out available) as GreenhouseGasesType;
+			methane = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+			nox = Resources.GetResourceItem(this, typeof(GreenhouseGases), "NOx", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
 		}
 
 		/// <summary>
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
 		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> DetermineResourcesNeeded()
+		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			ResourceRequestList = null;
 			if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
@@ -144,7 +143,7 @@ namespace Models.WholeFarm.Activities
 							Required = daysNeeded,
 							ResourceType = typeof(Labour),
 							ResourceTypeName = "",
-							ActivityName = this.Name,
+							ActivityModel = this,
 							FilterDetails = new List<object>() { item }
 						}
 						);
@@ -157,7 +156,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
 		{
 			// labour is consumed and shortfall has no impact at present
 			// could lead to other paddocks burning in future.
@@ -186,7 +185,7 @@ namespace Models.WholeFarm.Activities
 					// remove biomass
 					pasture.Remove(new ResourceRequest()
 					{
-						ActivityName = this.Name,
+						ActivityModel = this,
 						Required = total,
 						AllowTransmutation = false,
 						Reason = "Burn",
@@ -211,5 +210,25 @@ namespace Models.WholeFarm.Activities
 				}
 			}
 		}
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
+		{
+			return;
+		}
+
 	}
 }

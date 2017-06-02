@@ -23,8 +23,8 @@ namespace Models.WholeFarm.Activities
 		private ResourcesHolder Resources = null;
 		[Link]
 		Clock Clock = null;
-		[Link]
-		ISummary Summary = null;
+//		[Link]
+//		ISummary Summary = null;
 
 		/// <summary>
 		/// Name of herd to breed
@@ -65,7 +65,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Male selling age (months)
 		/// </summary>
-		[Description("male selling age (months)")]
+		[Description("Male selling age (months)")]
 		public double MaleSellingAge { get; set; }
 
 		/// <summary>
@@ -107,7 +107,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Minimum pasture (kg/ha) before restocking if placed in paddock
 		/// </summary>
-		[Description("Minimum pasture (kg/ga) before restocking if placed in paddock")]
+		[Description("Minimum pasture (kg/ha) before restocking if placed in paddock")]
 		public double MinimumPastureBeforeRestock { get; set; }
 
 		/// <summary>
@@ -131,12 +131,11 @@ namespace Models.WholeFarm.Activities
 			if (GrazeFoodStoreName == null) GrazeFoodStoreName = "";
 			if(GrazeFoodStoreName!="")
 			{
-				bool resourceAvailable = false;
-				foodStore = Resources.GetResourceItem(typeof(GrazeFoodStore), GrazeFoodStoreName, out resourceAvailable) as GrazeFoodStoreType;
-				if(!resourceAvailable)
-				{
-					Summary.WriteWarning(this, String.Format("Could not find graze food store named {0} in which to place new purchases for {1}", GrazeFoodStoreName, this.Name));
-				}
+				foodStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+				//if(!resourceAvailable)
+				//{
+				//	Summary.WriteWarning(this, String.Format("Could not find graze food store named {0} in which to place new purchases for {1}", GrazeFoodStoreName, this.Name));
+				//}
 			}
 		}
 
@@ -156,8 +155,7 @@ namespace Models.WholeFarm.Activities
 			// get breedParams when no herd remaining
 			if (herd.Count() == 0)
 			{
-				bool resourceAvailable = false;
-				breedParams = Resources.GetResourceItem(typeof(RuminantHerd), HerdName, out resourceAvailable) as RuminantType;
+				breedParams = Resources.GetResourceItem(this, typeof(RuminantHerd), HerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 			}
 			else
 			{
@@ -226,7 +224,7 @@ namespace Models.WholeFarm.Activities
 				}
 				else if(numberMaleInHerd < MaximumSiresKept)
 				{
-					if ((foodStore == null) || ((foodStore.TonnesPerHectare * 1000) > MinimumPastureBeforeRestock))
+					if ((foodStore == null) || (sufficientFood))
 					{
 						if (AllowSireReplacement)
 						{
@@ -289,7 +287,7 @@ namespace Models.WholeFarm.Activities
 				}
 				else
 				{
-					if ((foodStore == null) || ((foodStore.TonnesPerHectare * 1000) > MinimumPastureBeforeRestock))
+					if ((foodStore == null) || (sufficientFood))
 					{
 						// remove young females from sale herd to replace breeders (not those sold because too old)
 						foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
@@ -334,7 +332,7 @@ namespace Models.WholeFarm.Activities
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
 		/// <returns>List of required resource requests</returns>
-		public override List<ResourceRequest> DetermineResourcesNeeded()
+		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			return null;
 		}
@@ -342,7 +340,26 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
+		{
+			return;
+		}
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
 		{
 			return;
 		}

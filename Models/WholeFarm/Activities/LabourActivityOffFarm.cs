@@ -58,8 +58,8 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			// locate BankType resource
-			bool resourceAvailable = false;
-			bankType = Resources.GetResourceItem(typeof(Finance), BankAccountName, out resourceAvailable) as FinanceType;
+//			bool resourceAvailable = false;
+			bankType = Resources.GetResourceItem(this, typeof(Finance), BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
 
 			if(this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).Count() > 1)
 			{
@@ -71,7 +71,7 @@ namespace Models.WholeFarm.Activities
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
 		/// <returns></returns>
-		public override List<ResourceRequest> DetermineResourcesNeeded()
+		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			ResourceRequestList = new List<ResourceRequest>();
 
@@ -86,7 +86,7 @@ namespace Models.WholeFarm.Activities
 					Required = DaysWorkAvailableEachMonth[month],
 					ResourceType = typeof(Labour),
 					ResourceTypeName = "",
-					ActivityName = this.Name,
+					ActivityModel = this,
 					Reason = this.Name,
 					FilterDetails = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>()
 				}
@@ -102,7 +102,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
 		{
 			// days provided from labour set in the only request in the resourceResquestList
 			// receive payment for labour if bank type exists
@@ -110,6 +110,25 @@ namespace Models.WholeFarm.Activities
 			{
 				bankType.Add(ResourceRequestList.FirstOrDefault().Available * DailyRate, "Off farm labour", this.Name);
 			}
+		}
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
+		{
+			return;
 		}
 
 		/// <summary>

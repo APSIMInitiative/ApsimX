@@ -37,6 +37,12 @@ namespace Models.WholeFarm
 		public static Random RandomGenerator { get { return randomGenerator; } }
 
 		/// <summary>
+		/// Index of the simulation Climate Region
+		/// </summary>
+		[Description("Climate region index")]
+		public int ClimateRegion { get; set; }
+
+		/// <summary>
 		/// Ecological indicators calculation interval (in months, 1 monthly, 12 annual)
 		/// </summary>
 		[Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
@@ -81,6 +87,7 @@ namespace Models.WholeFarm
 				Summary.WriteWarning(this, error);
 			}
 
+			if (EcologicalIndicatorsCalculationMonth == 0) EcologicalIndicatorsCalculationMonth = 1;
 			if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
 			{
 				EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);

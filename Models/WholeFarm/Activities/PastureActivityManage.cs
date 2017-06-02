@@ -32,18 +32,17 @@ namespace Models.WholeFarm.Activities
         [Link]
 		WholeFarm WholeFarm = null;
 
-
         /// <summary>
         /// Number for the Climate Region for the pasture.
         /// </summary>
         [Description("Climate Region Number")]
         public int Region { get; set; }
 
-        /// <summary>
-        /// Number for the Soil Type for the pasture.
-        /// </summary>
-        [Description("Soil Type")]
-        public int SoilNumber { get; set; }
+        ///// <summary>
+        ///// Number for the Soil Type for the pasture.
+        ///// </summary>
+        //[Description("Soil Type")]
+        //public int SoilNumber { get; set; }
 
         /// <summary>
         /// Name of land type where pasture is located
@@ -87,12 +86,6 @@ namespace Models.WholeFarm.Activities
         /// </summary>
         [XmlIgnore]
 		public Relationship GrassBasalArea { get; set; }
-        private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
-
-
-        private double StockingRateSummed;  //summed since last Ecological Calculation.
-        private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
-
 
         /// <summary>
         /// Perennials
@@ -148,17 +141,21 @@ namespace Models.WholeFarm.Activities
 			}
 		}
 
-        private double ha2sqkm = 0.01; //convert ha to square km
+		// private properties
+		private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
+		private int soilIndex = 0; // obtained from LandType used
+		private double StockingRateSummed;  //summed since last Ecological Calculation.
+		private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
 
+		private double ha2sqkm = 0.01; //convert ha to square km
         private bool gotLandRequested = false; //was this pasture able to get the land it requested ?
-
         //EcologicalCalculationIntervals worth of data read from GRASP file 
         private List<PastureDataType> PastureDataList;
 
 
-     /// <summary>An event handler to allow us to initialise ourselves.</summary>
-     /// <param name="sender">The sender.</param>
-     /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		/// <summary>An event handler to allow us to initialise ourselves.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
        [EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
@@ -175,26 +172,19 @@ namespace Models.WholeFarm.Activities
 				Summary.WriteWarning(this, String.Format("Unable to locate Grass Basal Area relationship for {0}", this.Name));
 			}
 			// locate Pasture Type resource
-			bool resourceAvailable = false;
-			LinkedNativeFoodType = Resources.GetResourceItem(typeof(GrazeFoodStore), FeedTypeName, out resourceAvailable) as GrazeFoodStoreType;
-			if (LinkedNativeFoodType == null)
-			{
-				throw new ApsimXException(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
-			}
-
-
+			LinkedNativeFoodType = Resources.GetResourceItem(this, typeof(GrazeFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+			//if (LinkedNativeFoodType == null)
+			//{
+			//	throw new ApsimXException(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
+			//}
 		}
 
-
-
-
-        /// <summary>An event handler to allow us to initialise</summary>
+        /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("WFInitialiseActivity")]
-        private void OnWFInitialiseActivity(object sender, EventArgs e)
+        [EventSubscribe("WFInitialiseResource")]
+        private void OnWFInitialiseResource(object sender, EventArgs e)
         {
-
             if (Area == 0 & AreaRequested > 0)
             {
                 ResourceRequestList = new List<ResourceRequest>();
@@ -204,15 +194,18 @@ namespace Models.WholeFarm.Activities
                     Required = AreaRequested * ((UnitsOfArea == UnitsOfAreaTypes.Hectares) ? 1 : 100),
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse,
-                    ActivityName = this.Name,
+                    ActivityModel = this,
                     Reason = "Assign",
                     FilterDetails = null
                 }
                 );
             }
-
-            gotLandRequested = TakeResources(ResourceRequestList);
-
+			// if we get here we assume some land has been supplied
+			if (ResourceRequestList != null || ResourceRequestList.Count() > 0)
+			{
+				soilIndex = ((LandType)ResourceRequestList[0].Resource).SoilType;
+				gotLandRequested = TakeResources(ResourceRequestList);
+			}
 
             //Now the Land has been allocated we have an Area 
             if (gotLandRequested)
@@ -252,7 +245,6 @@ namespace Models.WholeFarm.Activities
                 PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
 
                 growth = pasturedata.Growth;
-  
            
                 if (growth > 0)
 			    {
@@ -287,8 +279,6 @@ namespace Models.WholeFarm.Activities
             CalculateEcologicalIndicators();
         }
 
-
-
         /// <summary>
         /// Function to age resource pools
         /// </summary>
@@ -314,7 +304,6 @@ namespace Models.WholeFarm.Activities
             // remove all pools with less than 10g of food
             LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
         }
-
 
 
         private void SetupStartingPasturePools(double StartingGrowth)
@@ -396,10 +385,7 @@ namespace Models.WholeFarm.Activities
         private double CalculateStockingRateRightNow()
         {
             return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * ha2sqkm);
-
         }
-
-
 
 		/// <summary>
 		/// Method to perform calculation of all ecological indicators.
@@ -468,21 +454,16 @@ namespace Models.WholeFarm.Activities
             double stockingRate = LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate;
             pkStkRate = (int)Math.Round(stockingRate);
 
-			PastureDataList = FileGRASP.GetIntervalsPastureData(Region, SoilNumber, 1,
+			PastureDataList = FileGRASP.GetIntervalsPastureData(Region, soilIndex, 1,
                pkGrassBA, pkLandCon, pkStkRate, Clock.Today, EcolCalculationInterval);
         }
-
-
-
-
-
 
 
         /// <summary>
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns>A list of resource requests</returns>
-        public override List<ResourceRequest> DetermineResourcesNeeded()
+        public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			return null;
 		}
@@ -490,7 +471,26 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
+		{
+			return;
+		}
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
 		{
 			return;
 		}

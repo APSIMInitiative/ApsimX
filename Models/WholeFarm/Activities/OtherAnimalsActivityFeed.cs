@@ -61,8 +61,8 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			// locate FeedType resource
-			bool resourceAvailable = false;
-			FeedType = Resources.GetResourceItem(typeof(AnimalFoodStore), FeedTypeName, out resourceAvailable) as IFeedType;
+//			bool resourceAvailable = false;
+			FeedType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
 			FoodSource = FeedType;
 
 			// get labour specifications
@@ -74,7 +74,7 @@ namespace Models.WholeFarm.Activities
 		/// Method to determine resources required for this activity in the current month
 		/// </summary>
 		/// <returns></returns>
-		public override List<ResourceRequest> DetermineResourcesNeeded()
+		public override List<ResourceRequest> GetResourcesNeededForActivity()
 		{
 			ResourceRequestList = null;
 
@@ -112,7 +112,8 @@ namespace Models.WholeFarm.Activities
 						Required = amount,
 						ResourceType = typeof(AnimalFoodStore),
 						ResourceTypeName = FeedTypeName,
-						ActivityName = "Feed "+(child as OtherAnimalsFilterGroup).AnimalType,
+						ActivityModel = this,
+//						ActivityName = "Feed " + (child as OtherAnimalsFilterGroup).AnimalType,
 						Reason = "oops",
 						FilterDetails = null
 					}
@@ -146,7 +147,7 @@ namespace Models.WholeFarm.Activities
 						Required = daysNeeded,
 						ResourceType = typeof(Labour),
 						ResourceTypeName = "",
-						ActivityName = this.Name,
+						ActivityModel = this,
 						FilterDetails = new List<object>() { item }
 					}
 					);
@@ -158,7 +159,26 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method used to perform activity if it can occur as soon as resources are available.
 		/// </summary>
-		public override void PerformActivity()
+		public override void DoActivity()
+		{
+			return;
+		}
+
+		/// <summary>
+		/// Method to determine resources required for initialisation of this activity
+		/// </summary>
+		/// <returns></returns>
+		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Method used to perform initialisation of this activity.
+		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+		/// It is the responsibility of this activity to determine resources provided.
+		/// </summary>
+		public override void DoInitialisation()
 		{
 			return;
 		}

@@ -95,7 +95,7 @@ namespace Models.WholeFarm
 	/// <summary>
 	/// Animal payment style
 	/// </summary>
-	public enum HerdPaymentStyleType
+	public enum PaymentStyleType
 	{
 		/// <summary>
 		/// Fixed price
@@ -112,7 +112,11 @@ namespace Models.WholeFarm
 		/// <summary>
 		/// Proportion of total sales
 		/// </summary>
-		ProportionOfTotalSales
+		ProportionOfTotalSales,
+		/// <summary>
+		/// Amount per hectare
+		/// </summary>
+		perHa
 	}
 
 	/// <summary>
@@ -193,6 +197,25 @@ namespace Models.WholeFarm
 		/// Receive resources available and perform activity
 		/// </summary>
 		UseResourcesAvailable
+	}
+
+	/// <summary>
+	/// Possible actions when only partial requested resources are available
+	/// </summary>
+	public enum OnMissingResourceActionTypes
+	{
+		/// <summary>
+		/// Report error and stop simulation
+		/// </summary>
+		ReportErrorAndStop,
+		/// <summary>
+		/// Report warning to summary
+		/// </summary>
+		ReportWarning,
+		/// <summary>
+		/// Ignore missing resources and return null
+		/// </summary>
+		Ignore
 	}
 
 	/// <summary>

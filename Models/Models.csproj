@@ -498,7 +498,7 @@
     <Compile Include="WholeFarm\Activities\RuminantActivityMilking.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityPredictiveStockingENSO.cs" />
     <Compile Include="WholeFarm\Activities\RuminantSaleFee.cs" />
-    <Compile Include="WholeFarm\Activities\TruckingSetings.cs" />
+    <Compile Include="WholeFarm\Activities\TruckingSettings.cs" />
     <Compile Include="WholeFarm\FileAPSIMCrop.cs" />
     <Compile Include="WholeFarm\FileAPSIMForage.cs" />
     <Compile Include="WholeFarm\Groupings\LabourFilterGroupSpecified.cs" />

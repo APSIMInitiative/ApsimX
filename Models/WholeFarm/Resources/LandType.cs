@@ -24,7 +24,7 @@ namespace Models.WholeFarm.Resources
         /// <summary>
         /// Total Area (ha)
         /// </summary>
-        [Description("Land Area (ha)")]
+        [Description("Land area")]
         public double LandArea { get; set; }
 
 		/// <summary>
@@ -33,23 +33,23 @@ namespace Models.WholeFarm.Resources
 		[Description("Buildings - proportion taken up with bldgs, paths (%)")]
         public double UnusablePortion { get; set; }
 
-        /// <summary>
-        /// Portion Bunded (%)
-        /// </summary>
-        [Description("Portion bunded (%)")]
-        public double BundedPortion { get; set; }
+        ///// <summary>
+        ///// Portion Bunded (%)
+        ///// </summary>
+        //[Description("Portion bunded (%)")]
+        //public double BundedPortion { get; set; }
 
         /// <summary>
         /// Soil Type (1-5) 
         /// </summary>
-        [Description("Soil Type (1-5)")]
+        [Description("Soil type index")]
         public int SoilType { get; set; }
 
-        /// <summary>
-        /// Fertility - N Decline Yield
-        /// </summary>
-        [Description("Fertility - N Decline yld")]
-        public double NDecline { get; set; }
+        ///// <summary>
+        ///// Fertility - N Decline Yield
+        ///// </summary>
+        //[Description("Fertility - N decline yld")]
+        //public double NDecline { get; set; }
 
         /// <summary>
         /// Area not currently being used (ha)
@@ -154,7 +154,7 @@ namespace Models.WholeFarm.Resources
 			ResourceTransaction details = new ResourceTransaction();
 			details.ResourceType = this.Name;
 			details.Debit = amountRemoved * -1;
-			details.Activity = Request.ActivityName;
+			details.Activity = Request.ActivityModel.Name;
 			details.Reason = Request.Reason;
 			LastTransaction = details;
 			TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
