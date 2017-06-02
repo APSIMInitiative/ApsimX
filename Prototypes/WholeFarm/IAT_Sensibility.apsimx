@@ -31,17 +31,13 @@
             <Name>NthQld_NtvPast_SandyCntry</Name>
             <LandArea>30000</LandArea>
             <UnusablePortion>30</UnusablePortion>
-            <BundedPortion>0</BundedPortion>
             <SoilType>1</SoilType>
-            <NDecline>3000</NDecline>
           </LandType>
           <LandType>
             <Name>NthQld_CrackingClayPlains</Name>
             <LandArea>250</LandArea>
             <UnusablePortion>0</UnusablePortion>
-            <BundedPortion>0</BundedPortion>
             <SoilType>3</SoilType>
-            <NDecline>4000</NDecline>
           </LandType>
           <UnitOfArea>Hectares</UnitOfArea>
         </Land>
@@ -425,9 +421,17 @@
             <Name>BagsAndLabels</Name>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             <MthsBeforeHarvest>1</MthsBeforeHarvest>
-            <Amount>11</Amount>
+            <Cost>11</Cost>
             <AccountName>General account</AccountName>
           </IATGrowCropCost>
+          <IATGrowCropCostPerHa>
+            <Name>Seeds</Name>
+            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <MthsBeforeHarvest>1</MthsBeforeHarvest>
+            <UnitsPerHa>1</UnitsPerHa>
+            <CostPerUnit>10</CostPerUnit>
+            <AccountName>General account</AccountName>
+          </IATGrowCropCostPerHa>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           <Region>1</Region>
           <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
@@ -556,7 +560,6 @@
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             <FeedTypeName>Lucerne</FeedTypeName>
             <ProportionTramplingWastage>0</ProportionTramplingWastage>
-            <LabourFilterList />
             <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
           </RuminantActivityFeed>
           <RuminantActivityGrow>
@@ -612,7 +615,7 @@
             </RuminantSaleFee>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <BreedName>Bos indicus</BreedName>
-            <BreedingSirePrice>4500</BreedingSirePrice>
+            <BreedingSirePrice>1</BreedingSirePrice>
             <BankAccountName>General account</BankAccountName>
           </RuminantActivityBuySell>
           <RuminantActivityHerdCost>
@@ -743,9 +746,9 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceType.Name as Resource</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource</string>
             <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
+            <string>[Activities].LastShortfallResourceRequest.Reason as Reason</string>
             <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
             <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
           </VariableNames>
@@ -782,6 +785,7 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <RandomSeed>0</RandomSeed>
+      <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationInterval>12</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
     </WholeFarm>
