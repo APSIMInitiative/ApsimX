@@ -6,6 +6,7 @@
 !AJRV- rainfall updated using new guage calibration
 
 latitude =        -31.52 (degrees)
+longitude = 150.75 (degrees)
 
 ! NIH - amp and tav taken from hudson met data analysis
 amp =  15.0   ! temperature amplitude (oC) - difference between highest and

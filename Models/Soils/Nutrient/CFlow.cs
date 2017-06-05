@@ -8,7 +8,7 @@ namespace Models.Soils.Nutrient
     using System.Collections.Generic;
 
     /// <summary>
-    /// Encapsulates a carbon flow between pools.
+    /// Encapsulates a carbon and nutrient flow between pools.  This flow is characterised in terms of the rate of flow (fraction of the pool per day).  Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(NutrientPool))]
@@ -23,9 +23,6 @@ namespace Models.Soils.Nutrient
 
         [ChildLinkByName]
         private IFunction CO2Efficiency = null;
-
-        [Link]
-        private Clock Clock = null;
 
         [Link]
         private SoluteManager solutes = null;
@@ -64,9 +61,6 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
-            if (DateUtilities.DatesEqual("01-Oct",Clock.Today))
-            { }
-
             NutrientPool source = Parent as NutrientPool;
             double[] NH4 = solutes.GetSolute("NH4");
             double[] NO3 = solutes.GetSolute("NO3");
