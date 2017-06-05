@@ -108,6 +108,9 @@ namespace Models.PostSimulationTools
                 // Write all sheets that are specified in 'SheetNames' to the data store
                 foreach (DataTable table in dataSet.Tables)
                 {
+                    if (SheetNames == null)
+                        throw new ApsimXException(this, "Error: No sheet name was specified in ExcelInput.");
+
                     bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
                     if (keep)
                     {
