@@ -46,6 +46,7 @@ namespace UserInterface.Presenters
         /// <summary>Detach the model from the view</summary>
         public void Detach()
         {
+            this.OnCommandsChanged(this, new EventArgs());
             this.view.LeaveEditor -= this.OnCommandsChanged;
             this.view.ContextItemsNeeded -= this.OnContextItemsNeeded;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
@@ -56,12 +57,15 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnCommandsChanged(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
+            if (this.view.Lines != this.cultivar.Commands)
+            {
+                this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-            Commands.ChangeProperty command = new Commands.ChangeProperty(this.cultivar, "Commands", this.view.Lines);
-            this.explorerPresenter.CommandHistory.Add(command);
+                Commands.ChangeProperty command = new Commands.ChangeProperty(this.cultivar, "Commands", this.view.Lines);
+                this.explorerPresenter.CommandHistory.Add(command);
 
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+                this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            }
         }
 
         /// <summary>User has pressed a '.' in the commands window - supply context items.</summary>
