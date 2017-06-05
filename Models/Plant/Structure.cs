@@ -249,10 +249,10 @@ namespace Models.PMF
         [Units("/d")]
         IFunction BranchMortality = null;
         /// <summary>The maximum age of stem senescence</summary>
-        [Link]
+        [Link(IsOptional = true)]
         public IFunction StemSenescenceAge = null;
         /// <summary>Whether to use Apex model to calculate the stem dynamic</summary>
-        [Link]
+        [Link(IsOptional = true)]
         IFunction ApexModel = null;
         #endregion
 
