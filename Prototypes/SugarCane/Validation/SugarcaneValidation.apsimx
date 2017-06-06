@@ -92445,86 +92445,86 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <RegrStats>
             <Name>biomass</Name>
             <n>189</n>
-            <Slope>0.97831489015223272</Slope>
-            <Intercept>29.845892046837434</Intercept>
-            <SEslope>0.026917354849741223</SEslope>
-            <SEintercept>113.98850143504097</SEintercept>
-            <R2>0.87599213115205987</R2>
-            <RMSE>928.87001013085307</RMSE>
-            <NSE>0.86373405192904806</NSE>
-            <ME>-44.015542320171384</ME>
-            <MAE>651.794071237271</MAE>
-            <RSR>0.36816431687322</RSR>
+            <Slope>0.98556804966410394</Slope>
+            <Intercept>16.911084264918372</Intercept>
+            <SEslope>0.027566863220185086</SEslope>
+            <SEintercept>116.7390126286445</SEintercept>
+            <R2>0.872372299568194</R2>
+            <RMSE>949.812485601906</RMSE>
+            <NSE>0.85752022913391812</NSE>
+            <ME>-32.245436500065523</ME>
+            <MAE>663.43422996742959</MAE>
+            <RSR>0.37646501782312813</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cab_N</Name>
             <n>158</n>
-            <Slope>0.29486943349061739</Slope>
-            <Intercept>0.27633583842982634</Intercept>
-            <SEslope>0.035209188570968268</SEslope>
-            <SEintercept>0.088196590786309356</SEintercept>
-            <R2>0.31015283901631741</R2>
-            <RMSE>1.6326211671441828</RMSE>
-            <NSE>-0.657070183819219</NSE>
-            <ME>-1.2468354404137665</ME>
-            <MAE>1.2779746789282447</MAE>
-            <RSR>1.2831922684639585</RSR>
+            <Slope>0.30294296492199396</Slope>
+            <Intercept>0.26522510251728615</Intercept>
+            <SEslope>0.034934413650116285</SEslope>
+            <SEintercept>0.087508298546802712</SEintercept>
+            <R2>0.3252579924333463</R2>
+            <RMSE>1.6206983888280184</RMSE>
+            <NSE>-0.6329559065570578</NSE>
+            <ME>-1.240506326489716</ME>
+            <MAE>1.2716455650041938</MAE>
+            <RSR>1.2738213150169482</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_dmc</Name>
             <n>188</n>
-            <Slope>-0.51951813987707229</Slope>
-            <Intercept>0.45137367658514749</Intercept>
-            <SEslope>0.10718174901782408</SEslope>
-            <SEintercept>0.023514880981938012</SEintercept>
-            <R2>0.11214704930677322</R2>
-            <RMSE>0.28699971696919951</RMSE>
-            <NSE>-5.614744726698027</NSE>
-            <ME>0.16434639911886653</ME>
-            <MAE>0.16491648848945209</MAE>
-            <RSR>2.5650652846120652</RSR>
+            <Slope>-0.51962907190811281</Slope>
+            <Intercept>0.45137108021114469</Intercept>
+            <SEslope>0.10718209247977376</SEslope>
+            <SEintercept>0.023514956334943</SEintercept>
+            <R2>0.11218893560233345</R2>
+            <RMSE>0.28699384283207052</RMSE>
+            <NSE>-5.6144739562570756</NSE>
+            <ME>0.16432284839228456</ME>
+            <MAE>0.16489293776287012</MAE>
+            <RSR>2.5650127844027071</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_N</Name>
             <n>168</n>
-            <Slope>0.88974465311742335</Slope>
-            <Intercept>1.4781217007276775</Intercept>
-            <SEslope>0.046340161516999531</SEslope>
-            <SEintercept>0.49682518574755535</SEintercept>
-            <R2>0.68951722041809149</R2>
-            <RMSE>4.391018352838123</RMSE>
-            <NSE>0.62438970375443936</NSE>
-            <ME>0.59874999179726274</ME>
-            <MAE>3.1341071343705771</MAE>
-            <RSR>0.61104379603484271</RSR>
+            <Slope>0.93112285741876433</Slope>
+            <Intercept>1.2889913593793594</Intercept>
+            <SEslope>0.04776048405716015</SEslope>
+            <SEintercept>0.51205284112760574</SEintercept>
+            <R2>0.69601597585823916</R2>
+            <RMSE>4.4975563370247471</RMSE>
+            <NSE>0.60594194607252827</NSE>
+            <ME>0.73964284894012022</ME>
+            <MAE>3.1805952205260595</MAE>
+            <RSR>0.62586937157296774</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_wt</Name>
             <n>196</n>
-            <Slope>1.0439804410423614</Slope>
-            <Intercept>15.46721962306583</Intercept>
-            <SEslope>0.030239506829830533</SEslope>
-            <SEintercept>95.821722261862249</SEintercept>
-            <R2>0.86001751201945043</R2>
-            <RMSE>868.35061781013678</RMSE>
-            <NSE>0.81702671431309892</NSE>
-            <ME>122.47658482609886</ME>
-            <MAE>596.1773984122766</MAE>
-            <RSR>0.42666116358889417</RSR>
+            <Slope>1.0516341698483056</Slope>
+            <Intercept>6.3243254330809577</Intercept>
+            <SEslope>0.030960850006655303</SEslope>
+            <SEintercept>98.107485251786642</SEintercept>
+            <R2>0.85605409565905455</R2>
+            <RMSE>891.48999447339622</RMSE>
+            <NSE>0.80714522414124823</NSE>
+            <ME>131.95607462201713</ME>
+            <MAE>605.51913310615419</MAE>
+            <RSR>0.43803061870227394</RSR>
           </RegrStats>
           <RegrStats>
             <Name>canefw</Name>
             <n>188</n>
-            <Slope>0.86024982869622413</Slope>
-            <Intercept>-5.090524378416589</Intercept>
-            <SEslope>0.0317843012063707</SEslope>
-            <SEintercept>3.9538884620195445</SEintercept>
-            <R2>0.79750195067542751</R2>
-            <RMSE>38.16515310045763</RMSE>
-            <NSE>0.72199152328828964</NSE>
-            <ME>-19.229078943298603</ME>
-            <MAE>28.627479526849616</MAE>
-            <RSR>0.5258609209844014</RSR>
+            <Slope>0.86705661987838978</Slope>
+            <Intercept>-5.4662443762979223</Intercept>
+            <SEslope>0.0323561925155714</SEslope>
+            <SEintercept>4.0250303264983733</SEintercept>
+            <R2>0.79426872742341725</R2>
+            <RMSE>38.349235308205131</RMSE>
+            <NSE>0.71930321577486134</NSE>
+            <ME>-18.91615442902679</ME>
+            <MAE>28.819294594242738</MAE>
+            <RSR>0.52839730906197957</RSR>
           </RegrStats>
           <RegrStats>
             <Name>das</Name>
@@ -92543,100 +92543,100 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <RegrStats>
             <Name>green_biomass</Name>
             <n>182</n>
-            <Slope>1.0072249380025549</Slope>
-            <Intercept>-30.635496387422791</Intercept>
-            <SEslope>0.030300283590945824</SEslope>
-            <SEintercept>113.42767139752154</SEintercept>
-            <R2>0.85992142331092558</R2>
-            <RMSE>882.06673775685249</RMSE>
-            <NSE>0.83467281408840543</NSE>
-            <ME>-8.5936754205733052</ME>
-            <MAE>638.177960801596</MAE>
-            <RSR>0.40548587494537</RSR>
+            <Slope>1.0165407880148518</Slope>
+            <Intercept>-47.220441781173122</Intercept>
+            <SEslope>0.031086172308144477</SEslope>
+            <SEintercept>116.36960845569696</SEintercept>
+            <R2>0.855923730734</R2>
+            <RMSE>905.47586941683437</RMSE>
+            <NSE>0.82578114914340606</NSE>
+            <ME>3.2421487552508386</ME>
+            <MAE>649.83873003236522</MAE>
+            <RSR>0.41624704734486212</RSR>
           </RegrStats>
           <RegrStats>
             <Name>green_biomass_n</Name>
             <n>166</n>
-            <Slope>0.79070558613290076</Slope>
-            <Intercept>1.9045153368043017</Intercept>
-            <SEslope>0.044964315483150059</SEslope>
-            <SEintercept>0.85206438019871267</SEintercept>
-            <R2>0.65345173855536509</R2>
-            <RMSE>6.2906198258372523</RMSE>
-            <NSE>0.60305273398676218</NSE>
-            <ME>-1.4663855345924228</ME>
-            <MAE>4.6902409740887485</MAE>
-            <RSR>0.628136941616075</RSR>
+            <Slope>0.81997764097852821</Slope>
+            <Intercept>1.5805287958497498</Intercept>
+            <SEslope>0.04545335185192103</SEslope>
+            <SEintercept>0.86133151717108836</SEintercept>
+            <R2>0.66492382377931</R2>
+            <RMSE>6.22478830554513</RMSE>
+            <NSE>0.61131739105350924</NSE>
+            <ME>-1.3189156550743502</ME>
+            <MAE>4.6512048478945172</MAE>
+            <RSR>0.62156347016761937</RSR>
           </RegrStats>
           <RegrStats>
             <Name>lai</Name>
             <n>185</n>
-            <Slope>0.77033833714688971</Slope>
-            <Intercept>0.77107574020668812</Intercept>
-            <SEslope>0.04406441028044495</SEslope>
-            <SEintercept>0.20671140343568004</SEintercept>
-            <R2>0.62547870356019941</R2>
-            <RMSE>1.294324542434512</RMSE>
-            <NSE>0.581600390832943</NSE>
-            <ME>-0.20336628162570269</ME>
-            <MAE>0.97945801505316954</MAE>
-            <RSR>0.64508758293587221</RSR>
+            <Slope>0.77313690302697935</Slope>
+            <Intercept>0.76590173820833884</Intercept>
+            <SEslope>0.044156067081608</SEslope>
+            <SEintercept>0.20714137642027816</SEintercept>
+            <R2>0.62620387077942574</R2>
+            <RMSE>1.2936015801820378</RMSE>
+            <NSE>0.5820676656698992</NSE>
+            <ME>-0.19666611986268573</ME>
+            <MAE>0.97852384862153141</MAE>
+            <RSR>0.64472726065447183</RSR>
           </RegrStats>
           <RegrStats>
             <Name>leaf_N</Name>
             <n>170</n>
-            <Slope>0.84037568474858326</Slope>
-            <Intercept>0.0046411931496708192</Intercept>
-            <SEslope>0.054307653538316278</SEslope>
-            <SEintercept>0.35578136169343838</SEintercept>
-            <R2>0.58768507021342153</R2>
-            <RMSE>2.1634640024330274</RMSE>
-            <NSE>0.35504428372142449</NSE>
-            <ME>-0.94858827564470982</ME>
-            <MAE>1.6649411911280723</MAE>
-            <RSR>0.80072583268182118</RSR>
+            <Slope>0.83938262816952125</Slope>
+            <Intercept>0.0093949644161996915</Intercept>
+            <SEslope>0.054526904007310889</SEslope>
+            <SEintercept>0.35721771965274129</SEintercept>
+            <R2>0.58515719814551836</R2>
+            <RMSE>2.1712232972826113</RMSE>
+            <NSE>0.35040970164278229</NSE>
+            <ME>-0.94976474623294527</ME>
+            <MAE>1.6678823675986612</MAE>
+            <RSR>0.80359764743005346</RSR>
           </RegrStats>
           <RegrStats>
             <Name>scmst</Name>
             <n>143</n>
-            <Slope>0.9457806030908269</Slope>
-            <Intercept>-0.01191514948334077</Intercept>
-            <SEslope>0.044858446594445905</SEslope>
-            <SEintercept>0.016844119601623971</SEintercept>
-            <R2>0.75918885129476865</R2>
-            <RMSE>0.10563839751969287</RMSE>
-            <NSE>0.68909517716877988</NSE>
-            <ME>-0.029492850503819872</ME>
-            <MAE>0.071174201383232508</MAE>
-            <RSR>0.55563536895251886</RSR>
+            <Slope>0.94627158466987238</Slope>
+            <Intercept>-0.011837222942572112</Intercept>
+            <SEslope>0.044884375808657284</SEslope>
+            <SEintercept>0.016853855890294447</SEintercept>
+            <R2>0.75916732808933562</R2>
+            <RMSE>0.10561920301088912</RMSE>
+            <NSE>0.68920814978737943</NSE>
+            <ME>-0.02925574979485673</ME>
+            <MAE>0.071054475457585489</MAE>
+            <RSR>0.5555344099429973</RSR>
           </RegrStats>
           <RegrStats>
             <Name>scmstf</Name>
             <n>143</n>
-            <Slope>0.99560555409012863</Slope>
-            <Intercept>0.010679889475466081</Intercept>
-            <SEslope>0.047905623882179171</SEslope>
-            <SEintercept>0.00486043391885188</SEintercept>
-            <R2>0.75389161732174292</R2>
-            <RMSE>0.034106122677909911</RMSE>
-            <NSE>0.64383721155838558</NSE>
-            <ME>0.010311493547736661</ME>
-            <MAE>0.023411324562906326</MAE>
-            <RSR>0.59470340470808913</RSR>
+            <Slope>0.9959368889277358</Slope>
+            <Intercept>0.010715408830899831</Intercept>
+            <SEslope>0.047934061269220646</SEslope>
+            <SEintercept>0.0048633191341844228</SEintercept>
+            <R2>0.75379486644073634</R2>
+            <RMSE>0.034143562864894485</RMSE>
+            <NSE>0.64305482297093941</NSE>
+            <ME>0.010374789420936878</ME>
+            <MAE>0.02347176148048909</MAE>
+            <RSR>0.59535624369781859</RSR>
           </RegrStats>
           <RegrStats>
             <Name>sucrose_wt</Name>
             <n>152</n>
-            <Slope>1.0820363276117802</Slope>
-            <Intercept>-108.10054563214681</Intercept>
-            <SEslope>0.047387059519087268</SEslope>
-            <SEintercept>76.338310446229812</SEintercept>
-            <R2>0.77658349539102789</R2>
-            <RMSE>586.76328786467877</RMSE>
-            <NSE>0.6564193164625286</NSE>
-            <ME>-4.5558578732149746</ME>
-            <MAE>388.71098621970782</MAE>
-            <RSR>0.58422622699060012</RSR>
+            <Slope>1.0899021964076132</Slope>
+            <Intercept>-111.01132675322788</Intercept>
+            <SEslope>0.048715489466992862</SEslope>
+            <SEintercept>78.47834822866362</SEintercept>
+            <R2>0.76942319429084183</R2>
+            <RMSE>604.00424356261544</RMSE>
+            <NSE>0.63593171144890881</NSE>
+            <ME>2.4615105478376318</ME>
+            <MAE>394.32335464076039</MAE>
+            <RSR>0.60139263583968372</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>

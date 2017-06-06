@@ -1016,6 +1016,7 @@ namespace UserInterface.Views
                 // Make sure our table has enough rows.
                 string newtext = e.NewText;
                 object newValue = oldValue;
+                bool isInvalid = false;
                 if (newtext == null)
                 {
                     newValue = DBNull.Value;
@@ -1036,7 +1037,10 @@ namespace UserInterface.Views
                     if (Double.TryParse(newtext, out numval))
                         newValue = numval;
                     else
+                    {
                         newValue = Double.NaN;
+                        isInvalid = true;
+                    }
                 }
                 else if (dataType == typeof(Single))
                 {
@@ -1044,7 +1048,10 @@ namespace UserInterface.Views
                     if (Single.TryParse(newtext, out numval))
                         newValue = numval;
                     else
+                    {
                         newValue = Single.NaN;
+                        isInvalid = true;
+                    }
                 }
                 else if (dataType == typeof(int))
                 {
@@ -1052,13 +1059,17 @@ namespace UserInterface.Views
                     if (int.TryParse(newtext, out numval))
                         newValue = numval;
                     else
-                        newValue = Single.NaN;
+                    {
+                        newValue = 0;
+                        isInvalid = true;
+                    }
                 }
                 else if (dataType == typeof(DateTime))
                 {
                     DateTime dateval;
-                    if (DateTime.TryParse(newtext, out dateval))
-                        newValue = dateval;
+                    if (!DateTime.TryParse(newtext, out dateval))
+                        isInvalid = true;
+                    newValue = dateval;
                 }
 
                 while (this.DataSource != null && where.RowIndex >= this.DataSource.Rows.Count)
@@ -1088,6 +1099,7 @@ namespace UserInterface.Views
                     GridCellsChangedArgs args = new GridCellsChangedArgs();
                     args.ChangedCells = new List<IGridCell>();
                     args.ChangedCells.Add(this.GetCell(where.ColumnIndex, where.RowIndex));
+                    args.invalidValue = isInvalid;
                     this.CellsChanged(this, args);
                 }
             }

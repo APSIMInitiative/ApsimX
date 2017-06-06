@@ -140,19 +140,28 @@ namespace UserInterface.Presenters
             {
                 if (this.ApsimXFile != null && this.ApsimXFile.FileName != null)
                 {
-                    // need to test is ApsimXFile has changed and only prompt when changes have occured.
-                    // serialise ApsimXFile to buffer
-                    StringWriter o = new StringWriter();
-                    this.ApsimXFile.Write(o);
-                    string newSim = o.ToString();
-
-                    StreamReader simStream = new StreamReader(this.ApsimXFile.FileName);
-                    string origSim = simStream.ReadToEnd(); // read original file to buffer2
-                    simStream.Close();
-
                     QuestionResponseEnum choice = QuestionResponseEnum.No;
-                    if (string.Compare(newSim, origSim) != 0)   
-                        choice = MainPresenter.AskQuestion("Do you want to save changes in file " + ApsimXFile.FileName + " ?");
+
+                    if (!File.Exists(this.ApsimXFile.FileName))
+                    {
+                        choice = MainPresenter.AskQuestion("The original file '" + ApsimXFile.FileName +
+                            "' no longer exists.\n\nClick \"Yes\" to save to this location or \"No\" to discard your work.");
+                    }
+                    else
+                    {
+                        // need to test is ApsimXFile has changed and only prompt when changes have occured.
+                        // serialise ApsimXFile to buffer
+                        StringWriter o = new StringWriter();
+                        this.ApsimXFile.Write(o);
+                        string newSim = o.ToString();
+
+                        StreamReader simStream = new StreamReader(this.ApsimXFile.FileName);
+                        string origSim = simStream.ReadToEnd(); // read original file to buffer2
+                        simStream.Close();
+
+                        if (string.Compare(newSim, origSim) != 0)
+                            choice = MainPresenter.AskQuestion("Do you want to save changes in file " + ApsimXFile.FileName + " ?");
+                    }
 
                     if (choice == QuestionResponseEnum.Cancel)
                     {   // cancel
