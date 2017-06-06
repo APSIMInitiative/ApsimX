@@ -104,7 +104,7 @@
             options.HighlightCaretLine = true;
             textEditor.Options = options;
             textEditor.Document.LineChanged += OnTextHasChanged;
-            textEditor.LeaveNotifyEvent += OnTextBoxLeave;
+            textEditor.TextArea.FocusOutEvent += OnTextBoxLeave;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
 
             CompletionForm = new Window(WindowType.Toplevel);
@@ -156,7 +156,7 @@
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             textEditor.Document.LineChanged -= OnTextHasChanged;
-            textEditor.LeaveNotifyEvent -= OnTextBoxLeave;
+            textEditor.TextArea.FocusOutEvent -= OnTextBoxLeave;
             _mainWidget.Destroyed -= _mainWidget_Destroyed;
             textEditor.TextArea.KeyPressEvent -= OnKeyPress;
             CompletionForm.FocusOutEvent -= OnLeaveCompletion;

@@ -2242,8 +2242,8 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                solutes.AddToTopLayer("NH4", nh4Incorp);
-                solutes.AddToTopLayer("NO3", no3Incorp);
+                solutes.AddToLayer(0, "NH4", nh4Incorp);
+                solutes.AddToLayer(0, "NO3", no3Incorp);
 
                 if (phosphorusAware)
                 {
