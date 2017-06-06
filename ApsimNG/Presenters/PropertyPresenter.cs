@@ -85,6 +85,7 @@ namespace UserInterface.Presenters
 
             string[] split;
 
+            grid.NumericFormat = "G6"; 
             this.FindAllProperties(this.model);
             if (this.grid.DataSource == null)
             {
