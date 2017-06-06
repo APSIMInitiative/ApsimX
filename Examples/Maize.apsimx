@@ -573,7 +573,7 @@ namespace Models
 			
 			if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
 			    !Maize.IsAlive &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 				Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -318,6 +318,9 @@ The proxy tree component of this model is intended also to be a guide for develo
         <OCUnits>Total</OCUnits>
         <PHUnits>Water</PHUnits>
       </Sample>
+      <CERESSoilTemperature>
+        <Name>CERESSoilTemperature</Name>
+      </CERESSoilTemperature>
       <RecordNumber>0</RecordNumber>
       <Site>ICRAF Machakos Research Station</Site>
       <NearestTown>Machakos</NearestTown>
@@ -1143,6 +1146,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -1161,6 +1167,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.005</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -1535,6 +1544,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -1552,6 +1564,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.01</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -1926,6 +1941,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -1943,6 +1961,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.01</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -2317,6 +2338,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -2334,6 +2358,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.01</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -2708,6 +2735,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -2725,6 +2755,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.01</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -3099,6 +3132,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -3116,6 +3152,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.02</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -3490,6 +3529,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -3507,6 +3549,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.03</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -3881,6 +3926,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -3898,6 +3946,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.04</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -4272,6 +4323,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -4289,6 +4343,9 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -5364,6 +5421,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -5382,6 +5442,9 @@ namespace Models
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -5775,6 +5838,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -5798,6 +5864,9 @@ namespace Models
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
         </Plant15>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -6191,6 +6260,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -6214,6 +6286,9 @@ namespace Models
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
         </Plant15>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -6607,6 +6682,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -6630,6 +6708,9 @@ namespace Models
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
         </Plant15>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -7023,6 +7104,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -7046,6 +7130,9 @@ namespace Models
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
         </Plant15>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.1</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -7439,6 +7526,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -7462,6 +7552,9 @@ namespace Models
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
         </Plant15>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.05</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -7855,6 +7948,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -7878,6 +7974,9 @@ namespace Models
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
         </Plant15>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.1</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -8271,6 +8370,9 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>37</RecordNumber>
           <ASCOrder>Vertosol</ASCOrder>
           <ASCSubOrder>Grey</ASCSubOrder>
@@ -8294,6 +8396,9 @@ namespace Models
           <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
         </Plant15>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>0.1</Area>
         <Slope>0</Slope>
         <Length>100</Length>
@@ -10136,6 +10241,9 @@ NOTE: Germination failure was an important factor in determining yield impacts o
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -10143,6 +10251,9 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.001</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -10656,6 +10767,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -10663,6 +10777,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -11176,6 +11293,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -11183,6 +11303,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -11696,6 +11819,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -11703,6 +11829,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -12216,6 +12345,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -12223,6 +12355,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -12736,6 +12871,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -12743,6 +12881,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -13256,6 +13397,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -13263,6 +13407,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -13776,6 +13923,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -13783,6 +13933,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -14324,6 +14477,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -14331,6 +14487,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -15490,6 +15649,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -15497,6 +15659,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.001</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -16005,6 +16170,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -16012,6 +16180,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -16520,6 +16691,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -16527,6 +16701,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -17035,6 +17212,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -17042,6 +17222,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -17550,6 +17733,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -17557,6 +17743,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -18065,6 +18254,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -18072,6 +18264,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -18580,6 +18775,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -18587,6 +18785,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -19095,6 +19296,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -19102,6 +19306,9 @@ namespace Models
             <Latitude>-1.55</Latitude>
             <Longitude>37.13</Longitude>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -19610,6 +19817,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <Site>ICRAF Machakos Research Station</Site>
             <NearestTown>Machakos</NearestTown>
@@ -19660,6 +19870,9 @@ namespace Models
             <DisabledSeries />
             <IncludeInDocumentation>false</IncludeInDocumentation>
           </Graph>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.002</Area>
           <Slope>0</Slope>
           <Length>20</Length>
@@ -20391,7 +20604,7 @@ namespace Models
 						
 				if (Wheat != null && DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
 				    Wheat.plant_status == "out" &&
-				    ESWSoil.SoilWater.ESW >= MinESW &&
+				    MathUtilities.Sum(ESWSoil.SoilWater.ESW) >= MinESW &&
 				    accumulatedRain.Sum >= MinRain)
 				{
 					Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
@@ -20940,6 +21153,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -20953,6 +21169,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -21330,6 +21549,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -21343,6 +21565,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -21720,6 +21945,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -21733,6 +21961,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -22110,6 +22341,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -22123,6 +22357,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -22500,6 +22737,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -22513,6 +22753,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -22890,6 +23133,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -22903,6 +23149,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -23280,6 +23529,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -23293,6 +23545,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.05</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -23670,6 +23925,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -23683,6 +23941,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.1</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -24060,6 +24321,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -24073,6 +24337,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.1</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -24450,6 +24717,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -24463,6 +24733,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.25</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -24840,6 +25113,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -24853,6 +25129,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.25</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -25230,6 +25509,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -25243,6 +25525,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.5</Area>
           <Slope>0</Slope>
           <Length>100</Length>
@@ -25620,6 +25905,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>580</RecordNumber>
             <SoilType>Clay</SoilType>
             <Site>Wolseley</Site>
@@ -25633,6 +25921,9 @@ namespace Models
             <DataSource>APSoil</DataSource>
             <Comments>Chemical data based on old soil pit sites/ CLL measured for wheat 2007 </Comments>
           </Soil>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>0.5</Area>
           <Slope>0</Slope>
           <Length>100</Length>
