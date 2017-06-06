@@ -7,13 +7,13 @@ using System.Text;
 namespace UnitTests
 {
     [Serializable]
-    class MockSummary : ISummary
+    class MockSummary : Model,ISummary
     {
         public static List<string> messages = new List<string>();
 
         public void WriteMessage(IModel model, string message)
         {
-            throw new NotImplementedException();
+            messages.Add(message);
         }
 
         public void WriteMessage(object model, string message)
@@ -23,7 +23,7 @@ namespace UnitTests
 
         public void WriteWarning(IModel model, string message)
         {
-            throw new NotImplementedException();
+            messages.Add("WARNING: " + message);
         }
 
         public void WriteWarning(object model, string message)
