@@ -19,17 +19,17 @@
         <AcceptedStats>
           <RegrStats>
             <Name>MeasuredProfile</Name>
-            <n>507</n>
-            <Slope>0.99626966662124794</Slope>
-            <Intercept>-15.556827663568839</Intercept>
-            <SEslope>0.069147231157992872</SEslope>
-            <SEintercept>12.309630064899293</SEintercept>
-            <R2>0.29131654085731251</R2>
-            <RMSE>69.302409570658142</RMSE>
-            <NSE>-1.5541732422607706</NSE>
-            <ME>-16.200901273625433</ME>
-            <MAE>59.233224667311582</MAE>
-            <RSR>1.5966012104514049</RSR>
+            <n>1179</n>
+            <Slope>0.80004631546566662</Slope>
+            <Intercept>-14.530581591376219</Intercept>
+            <SEslope>0.028071126946646079</SEslope>
+            <SEintercept>4.6946114114948125</SEintercept>
+            <R2>0.40833131303431724</R2>
+            <RMSE>59.141810722930906</RMSE>
+            <NSE>-1.6597484857864311</NSE>
+            <ME>-47.175188313856758</ME>
+            <MAE>51.631422845955868</MAE>
+            <RSR>1.6301817536200698</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
