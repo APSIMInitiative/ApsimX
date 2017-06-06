@@ -85,6 +85,7 @@ namespace UserInterface.Presenters
 
             string[] split;
 
+            grid.NumericFormat = "G6"; 
             this.FindAllProperties(this.model);
             if (this.grid.DataSource == null)
             {
@@ -369,6 +370,8 @@ namespace UserInterface.Presenters
 
             foreach (IGridCell cell in e.ChangedCells)
             {
+                if (e.invalidValue)
+                    this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
                 this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
             }
             

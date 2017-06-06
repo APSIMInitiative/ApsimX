@@ -27,7 +27,7 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
-    public class Soil : Model
+    public class Soil : Model, ISoil
     {
         /// <summary>Gets the water.</summary>
         private Water waterNode;

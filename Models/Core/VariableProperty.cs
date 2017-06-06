@@ -570,6 +570,10 @@ namespace Models.Core
                 {
                     this.property.SetValue(this.Object, Convert.ToBoolean(value), null);
                 }
+                else if (this.DataType.IsEnum)
+                {
+                    this.Value = Enum.Parse(this.DataType, value);
+                }
                 else
                 {
                     this.Value = value;
