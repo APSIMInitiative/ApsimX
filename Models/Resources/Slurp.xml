@@ -133,7 +133,7 @@ This is important in SLURP as it is set for each species to represent their diff
     <FractionToResidue>0</FractionToResidue>
     <Constant>
       <Name>InitialDM</Name>
-      <FixedValue>50</FixedValue>
+          <FixedValue>0.005</FixedValue>
       <Units>g/plant</Units>
     </Constant>
     <Constant>
@@ -148,7 +148,7 @@ This is important in SLURP as it is set for each species to represent their diff
     </Constant>
     <Constant>
       <Name>SpecificRootLength</Name>
-      <FixedValue>40</FixedValue>
+          <FixedValue>105</FixedValue>
       <Units>m/g</Units>
     </Constant>
     <LinearInterpolationFunction>
