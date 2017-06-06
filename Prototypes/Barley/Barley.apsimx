@@ -18,29 +18,6 @@ The model consists of:
 * an arbitrator to allocate resources (N, biomass) to various plant organs.  
 ]]></MemoText>
   </Memo>
-  <Memo>
-    <Name>References</Name>
-    <MemoText><![CDATA[Alzueta I, Abeledo LG, Mignonea CM, Miralles DJ 2012. Differences between wheat and barley in leaf and tillering coordination under contrasting nitrogen and sulfur conditions. Europ. J. Agronomy 4: 92-102.
-
-Brown HE, Huth NI, Holzworth DP et al. 2014. "Plant Modelling Framework: Software for building and running crop models on the APSIM platform. Environmental Modelling & Software 62: 385-398.
-
-De Ruiter JM 1999. Yield and quality of malting barley (Hordeum vulgare L. ‘Valetta') in response to irrigation and nitrogen fertilisation. New Zealand Journal of Crop and Horticultural Science 24: 307-317
-
-Jamieson PD, Munro CA 1999. A simple method for the phenological evaluation of new cereal cultivars. Proceeding of the 29th Agronomy Society of New Zealand 29: 63-68.
-	
-Jamieson PD, Martin RJ, Francis GS 1995. Drought influences on grain yield of barley, wheat, and maize. New Zealand Journal of Crop and Horticultural Science 23: 55-66
-
-Jamieson PD, Francis GS, Wilson DR, Martin RJ 1994. Effects of water deficits on evapotranspiration from barley. Agricultural and Forest Meteorology 76 (1995) 41-58
-
-Jamieson PD, Martin RJ, Francis GS, Wilson DR 1995. Drought effects on biomass production and radiation use efficiency in barley. Field Crops Research 43: 77-86
-
-Kirby EJM 1995. Factors affecting rate of leaf emergence in barley and wheat. Crop Science 35: 11-19.
-
-Mirschel W, Wenkel K, Schultz A, Pommerening J, Verch G 2005. Dynamic phenological model for winter rye and winter barley. European Journal of Agronomy 23: 123-135.
-
-
-]]></MemoText>
-  </Memo>
   <Replacements>
     <Name>Replacements</Name>
     <Report>
@@ -2242,7 +2219,7 @@ N conc values are from Zhao et al 2009
               </X>
               <Y>
                 <double>35000</double>
-                <double>50000</double>
+                <double>71000</double>
               </Y>
             </XYPairs>
             <Memo>
@@ -4309,7 +4286,7 @@ namespace Models
       <Clock>
         <Name>Clock</Name>
         <StartDate>1995-10-19T00:00:00</StartDate>
-        <EndDate>1996-03-31T00:00:00</EndDate>
+        <EndDate>1996-02-29T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
@@ -5950,7 +5927,7 @@ namespace Models
             <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
-            <Maximum>6</Maximum>
+            <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopRight</LegendPosition>
@@ -6631,6 +6608,49 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+    </Graph>
+    <Graph>
+      <Name>PhenoStage_LAI</Name>
+      <Series>
+        <Name>Predicted</Name>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>DailyReport</TableName>
+        <XFieldName>Barley.Phenology.Stage</XFieldName>
+        <YFieldName>Barley.Leaf.LAI</YFieldName>
+        <ShowInLegend>true</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>true</CumulativeX>
+      </Series>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopRight</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
@@ -8469,7 +8489,7 @@ namespace Models
           <Title>Stem weight</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
-          <Maximum>600</Maximum>
+          <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
@@ -8617,7 +8637,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>AboveGround_Wt</YFieldName>
+          <YFieldName>AboveGround_LiveWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8684,7 +8704,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>DailyReport</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>AboveGroundN</YFieldName>
+          <YFieldName>AboveGround_LiveN</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -14662,5 +14682,28 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
+  <Memo>
+    <Name>References</Name>
+    <MemoText><![CDATA[Alzueta I, Abeledo LG, Mignonea CM, Miralles DJ 2012. Differences between wheat and barley in leaf and tillering coordination under contrasting nitrogen and sulfur conditions. Europ. J. Agronomy 4: 92-102.
+
+Brown HE, Huth NI, Holzworth DP et al. 2014. "Plant Modelling Framework: Software for building and running crop models on the APSIM platform. Environmental Modelling & Software 62: 385-398.
+
+De Ruiter JM 1999. Yield and quality of malting barley (Hordeum vulgare L. ‘Valetta') in response to irrigation and nitrogen fertilisation. New Zealand Journal of Crop and Horticultural Science 24: 307-317
+
+Jamieson PD, Munro CA 1999. A simple method for the phenological evaluation of new cereal cultivars. Proceeding of the 29th Agronomy Society of New Zealand 29: 63-68.
+	
+Jamieson PD, Martin RJ, Francis GS 1995. Drought influences on grain yield of barley, wheat, and maize. New Zealand Journal of Crop and Horticultural Science 23: 55-66
+
+Jamieson PD, Francis GS, Wilson DR, Martin RJ 1994. Effects of water deficits on evapotranspiration from barley. Agricultural and Forest Meteorology 76 (1995) 41-58
+
+Jamieson PD, Martin RJ, Francis GS, Wilson DR 1995. Drought effects on biomass production and radiation use efficiency in barley. Field Crops Research 43: 77-86
+
+Kirby EJM 1995. Factors affecting rate of leaf emergence in barley and wheat. Crop Science 35: 11-19.
+
+Mirschel W, Wenkel K, Schultz A, Pommerening J, Verch G 2005. Dynamic phenological model for winter rye and winter barley. European Journal of Agronomy 23: 123-135.
+
+
+]]></MemoText>
+  </Memo>
   <ExplorerWidth>278</ExplorerWidth>
 </Simulations>
