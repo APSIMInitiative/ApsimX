@@ -3099,8 +3099,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     </Input>
     <Input>
       <Name>Phenology9596</Name>
-      <ErrorMessage>Input string was not in a correct format.</ErrorMessage>
-      <FileName>Observations\BarleyPhenologyData.txt</FileName>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>Observations\BarleyPhenologyData2.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved_9596</Name>
