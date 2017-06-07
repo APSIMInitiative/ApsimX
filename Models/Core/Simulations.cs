@@ -291,36 +291,36 @@ namespace Models.Core
                     modelToDocument = Apsim.ChildrenRecursivelyVisible(simulation).FirstOrDefault(m => m.Name.Equals(modelNameToDocument, StringComparison.OrdinalIgnoreCase));
 
                 // If still not found throw an error.
-                if (modelToDocument == null)
-                    throw new ApsimXException(this, "Could not find a model of the name " + modelNameToDocument + ". Simulation file name must match the name of the node to document.");
+                if (modelToDocument != null)
+                {
+                    // Get the path of the model (relative to parentSimulation) to document so that 
+                    // when replacements happen below we will point to the replacement model not the 
+                    // one passed into this method.
+                    string pathOfSimulation = Apsim.FullPath(simulation) + ".";
+                    string pathOfModelToDocument = Apsim.FullPath(modelToDocument).Replace(pathOfSimulation, "");
 
-                // Get the path of the model (relative to parentSimulation) to document so that 
-                // when replacements happen below we will point to the replacement model not the 
-                // one passed into this method.
-                string pathOfSimulation = Apsim.FullPath(simulation) + ".";
-                string pathOfModelToDocument = Apsim.FullPath(modelToDocument).Replace(pathOfSimulation, "");
+                    // Clone the simulation
+                    Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
 
-                // Clone the simulation
-                Simulation clonedSimulation = Apsim.Clone(simulation) as Simulation;
+                    // Make any substitutions.
+                    Simulations.MakeSubstitutions(this, new List<Simulation> { clonedSimulation });
 
-                // Make any substitutions.
-                Simulations.MakeSubstitutions(this, new List<Simulation> { clonedSimulation });
+                    // Now use the path to get the model we want to document.
+                    modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
 
-                // Now use the path to get the model we want to document.
-                modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
+                    if (modelToDocument == null)
+                        throw new Exception("Cannot find model to document: " + modelNameToDocument);
 
-                if (modelToDocument == null)
-                    throw new Exception("Cannot find model to document: " + modelNameToDocument);
+                    // resolve all links in cloned simulation.
+                    Links links = new Core.Links();
+                    links.Resolve(clonedSimulation);
 
-                // resolve all links in cloned simulation.
-                Links links = new Core.Links();
-                links.Resolve(clonedSimulation);
+                    // Document the model.
+                    modelToDocument.Document(tags, headingLevel, 0);
 
-                // Document the model.
-                modelToDocument.Document(tags, headingLevel, 0);
-
-                // Unresolve links.
-                links.Unresolve(clonedSimulation);
+                    // Unresolve links.
+                    links.Unresolve(clonedSimulation);
+                }
             }
         }
     }
