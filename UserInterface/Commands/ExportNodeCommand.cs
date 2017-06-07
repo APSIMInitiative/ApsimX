@@ -221,9 +221,15 @@ namespace UserInterface.Commands
             tags.Add(new AutoDocumentation.Heading("Model description", 1));
             ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
 
+            // If no model was documented then remove the 'Model description' tag.
+            if (modelDescriptionIndex == tags.Count-1)
+                tags.RemoveAt(modelDescriptionIndex);
+
             // If 'Model description tag is imediately followed by a another heading at the same level.
             // then the model must have writen its own name as a heading. We don't want that.
-            if (tags[modelDescriptionIndex+1] is AutoDocumentation.Heading && (tags[modelDescriptionIndex+1] as AutoDocumentation.Heading).headingLevel == 1)
+            if (modelDescriptionIndex+1 < tags.Count &&
+                tags[modelDescriptionIndex+1] is AutoDocumentation.Heading && 
+                (tags[modelDescriptionIndex+1] as AutoDocumentation.Heading).headingLevel == 1)
                 tags.RemoveAt(modelDescriptionIndex+1);
 
             // Document model validation.
