@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
-    <MemoText><![CDATA[# The APSIM Forage Plantain Model
+    <MemoText><![CDATA[# The APSIM Plantain Model
+
+
+_Rogerio Cichota, AgResearch, New Zealand_
+
+
+##Preamble
+
+Plantain (*Plantago lanceolata*), also know as English plantain, ribgrass, or ribwort, is a herbaceous perennial herb with a broad distribution in the native grasslands of Eurasia ([SagarHarper_1964]; [StewartPlantain_1996]).  It is now common around the world in suitable habitats with temperate and subtropical climates.  The plant consists of a rosette of basal semi-erect leaves which may have one or more flowering stalks.  The leaves are green to grey-green in colour, have a characteristic lanceolate shape with 3 to 5 parallel veins along the length and have few or no hairs.  The stems are leafless, growing some 10-15cm above the leaves and have scattered hairs toward the base of the plant.  Each stalk terminates in an ovoid inflorescence containing many small flowers each with a pointed bract.  The inflrescence is 1-4cm long and changes shape over time (from a cone to a cilinder) as the flowers mature from the based to the top, the colour also changes from the initial grey-green to light brown when mature.  The flowering period goes from late spring to early fall and varies between plants, it can last several months for a population of plants in a given locale.  Plantain does not need vernalisation to trigger flowering.  The flowers are wind-pollinated and are replaced by a small seed capsule containing two small seeds, with weight varying between 1.5 and 2.0 mg per seed. Seeds have an oblong shape and the colour varies from dark brown to black.  The root system consists of a relatively shallow crown of coarse fibrous roots including adventitious roots ([SandersonElwinger_2000a]) and although technically a taprooted species it does not have the typical solid deep taproot.  Plantain can allocate greater proportion of roots at depth, giving a competitive advantage over shallow root grasses ([StewartPlantain_1996]; [NieEtAl_2008]; [vanDenBergeEtAl_2014]).  
+Selection of plantain cultivars for use as forage have focused mostly on narrow leaf varieties, which have an erect, bushy, growth habit and ability to tiller under grazing ([StewartPlantain_1996]), more recently some emphasis has also been put on the ability to growth over cold periods.  Forage plantain can grow large leaves, up to around 40cm instead of typical 15-25cm, and these are highly palatable to grazing animals, being specifically targeted by sheep ([SagarHarper_1964]; [StewartPlantain_1996]; [RumballKeog_1997]; [QuijadaThesis_2015]). Reproductive organs are less palatable and mature stalks are avoided by grazers ([StewartPlantain_1996]; [MoorheadPigot_2009]; [AyalaEtAl_2011]).  Plantain is highly nutritious, has good digestibility, and the mineral composition usually is higher than ryegras-clover swards ([StewartPlantain_1996]; [JacobsWard_2010]; [ElgersmaEtal_2014]; [LeeEtAlYields_2015]).  Potential medicinal effects of plantain have been suggested and few bio-active compounds that may alter rumen fermentation and N partitionin in the animal are being investigated ([StewartPlantain_1996]; [QuijadaThesis_2015]; [JansmaThesis_2016]).  
+
+
+
+**Objective:**  The model presented here has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage plantin crop.  Currently, the focus is on describing biomass accumulation and regrowth after harvest on monocultural swards. As part of APSIM's PMF, using plantain in mixed swards is possible, but this has not been properly tested yet.  Likewise, describing the effect of population decrease on plant growth was not attempted; for swards free of weeds and within typical population ranges, the changes in plant size (number of tillers) and LAI should compensate for loss of population, but competition with weeds and others would alter this pattern significantly.  
+Simulating variations in plant N concentration (seasonal or due to changes in soil status)  is not a major focus of the current model.  Further development of PMF's supply/demand processes are needed for capturing the variations in N content typically seen in perennial species.  
+
+
+## Generic background  
+
 ]]></MemoText>
   </Memo>
   <Replacements>
@@ -11,11 +29,9 @@
     <Plant>
       <Name>Plantain</Name>
       <Memo>
-        <Name>TitlePage</Name>
+        <Name>GeneralDescription</Name>
         <MemoText><![CDATA[
-# Forage Plantain
-
-_Rogerio Cichota and Brittany Patton, AgResearch, New Zealand_
+## Presentation
 
 This model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of a forage plantain crop ( _Plantago lanceolata_ ).  The model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future releases).  To simulate the aboveground plant structure, including the photosynthesis process, the plantain model uses the SimpleLeaf procedure of PMF.  The model describes a semi-perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.
 
@@ -23,15 +39,15 @@ This model has been built using the Plant Modelling Framework (PMF) of [brown_pl
 ##Inclusion in APSIM simulations
 A forage plantain crop can be included in a simulation the same as any other APSIM crop.
 
- - The plantain object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;
- - To become active and grow, plantain needs to be sown using a manager script with a sowing rule. e.g.:
+ * - The plantain object can be dragged or copied from the Crop folder in the tool box into a Field in your simulation;
+ * - To become active and grow, plantain needs to be sown using a manager script with a sowing rule. e.g.:
 <pre><code class='language-cs'>
  Plantain.Sow(cultivar: Tonic, population: 300, depth: 10, rowSpacing: 150);  
 </code></pre>
 If a specified cultivar is not available, a fatal error will be thrown.
 
 
-##Harvest and biomass removal
+###Harvest and biomass removal
 Plantain biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, similarly to other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:
 <pre><code class='language-cs'>
 [EventSubscribe("Commencing")]  
@@ -54,12 +70,16 @@ private void OnDoManagement(object sender, EventArgs e)
 The RemovalFractions class can be sent with Harvest, Cut, Graze, or Prune events. All parameters are optional, defaults are used whenever any value is not specified.
 
 
-##Crop termination
+###Crop termination
 To fully terminate a crop the EndCrop event should be raised:
 <pre><code class='language-cs'>
  Plantain.EndCrop();  
 </code></pre>
 Once a crop has been ended the field is open to be used by another APSIM plant model, or another plantain crop.  Note that ending plantain is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.
+
+
+## Acknowledgements
+This model was developed with help from Brittany Paton and Russel McAuliffe organising data and simulations. Datasets were kindly shared by Julia M. Lee, and the Forages for Reduced Nitrogen Leaching programme.  
 ]]></MemoText>
       </Memo>
       <Phenology>
@@ -72,7 +92,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>ThermalTime</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[The thermal time is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Crop development acelerates as temperature increases from minimum to optimum and slows down after that, stopping completely when maximum temperature is reached.  There is very little information about these thresholds for plantain, the minimum temperature seem to be quite variable as one of the main traits that vary among cultivars is the growth over winter. For "chinese plantain" ( _Plantago  asiatica_ ) the minimum temperature varies between 3 and 14 oC (Ishikawa et al., 2007), which gives an idea of potential variations for this parameter in plantain. Plantain is tolerant to high temperatures (Stewardt, 1996; Nie et al., 2008) and outgrows ryegrass over summer in subtropical climate (Moorhead and Piggot, 2009). The data for chinese plantain suggest similar growth, and thus the optimum and maximum temperature for it, 30 and 38oC respectively (Ishikawa et al., 2007), should give a good indication of the values for forage plantain.
+            <MemoText><![CDATA[The thermal time is calculated from the daily average temperature using three cardinal temperatures: minimum, maximum, and optimum.  Crop development acelerates as temperature increases from minimum to optimum and slows down after that, stopping completely when maximum temperature is reached.  There is very little information about these thresholds for plantain, the minimum temperature seem to be quite variable as one of the main traits that vary among cultivars is the growth over winter. For "chinese plantain" ( _Plantago  asiatica_ ) the minimum temperature varies between 3 and 14 oC ([IshikawaEtAl_2007]), which gives an idea of potential variations for this parameter in plantain. Plantain is tolerant to high temperatures ([StewartPlantain_1996]; [NieEtAl_2008]) and outgrows ryegrass over summer in subtropical climate ([MoorheadPigot_2009]). The data for chinese plantain suggest similar growth, and thus the optimum and maximum temperature for it, 30 and 38oC respectively ([IshikawaEtAl_2007]), should give a good indication of the values for forage plantain.
 ]]></MemoText>
           </Memo>
           <XYPairs>
@@ -98,7 +118,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Germinating</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[Germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.  Germination rates in plantain typically vary between 75 and 95% when sown close to the surface (<10mm), in moist warm soil (Reed et al, 2008; Douglas et al., 2013; Lee et al., 2015).  The plantain model, following convention of PMF, assumes 100% germination, and therefore the user must correct sowing rate when variations between sown and germinated plant density is considered important. ]]></MemoText>
+            <MemoText><![CDATA[Germination will occur one day after sowing, provided that the amount of soil extractable water is greater than zero.  Germination rates in plantain typically vary between 75 and 95% when sown close to the surface (<10mm), in moist warm soil ([ReedEtAl_2008]; [DouglasEtAl_2013]; [LeeEtAlYields_2015]).  The plantain model, following convention of PMF, assumes 100% germination, and therefore the user must correct sowing rate when variations between sown and germinated plant density is considered important. ]]></MemoText>
           </Memo>
           <Start>Sowing</Start>
           <End>Germination</End>
@@ -107,7 +127,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Emerging</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[ Plantain has small seeds and emergence is best when seeds are sown at depth <10mm (Peri et al., 2000; Sanderson et al., 2000), deeper seed may stay dormant for years in the soil (Blom, 1978; Roberts and Boddrell, 1984).  Variations in germination rate due to depth are not explicitly simulated by the plantain model in the current version, however the sowing depth does affect timing of emergence.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).
+            <MemoText><![CDATA[ Plantain has small seeds and emergence is best when seeds are sown at depth <10mm (Peri et al., 2000; Sanderson et al., 2000), deeper seed may stay dormant for years in the soil ([Blom_1978]; [RobertsBoddrell_1984]).  Variations in germination rate due to depth are not explicitly simulated by the plantain model in the current version, however the sowing depth does affect timing of emergence.  This is controlled by the parameter ShootRate, which is the shoot elongation rate as function of thermal time (mm/oCd).
 ]]></MemoText>
           </Memo>
           <VariableReference>
@@ -123,7 +143,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Vegetative</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase starts when plants emerge from the ground, but it is also triggered after the end of the reproductive phase (phenology reset).  It ends when the reproductive phase starts, which is triggered by the accumulation of days with long sunlight (Sussex, 1956; Rowarth, 1990; Case et al., 1995; Lacey et al., 2003; Gonzalez-Parado et al., 2015).  Stalk development have been recorded to start in October in NZ and in May in the USA (Rowarth, 1990; Lacey et al., 2003, Sanderson et al., 2003), with data suggesting a minimum of 25-30 days (non consecutive) with long daylight periods (Sussex, 1956; Fajer et al., 1991; Case et al., 1995).  The literature does not provide an indication of how long the sunlight period should be to trigger the reproductive phase, but it is clear that daylight should be grater that the period in darkness (14-16 hours been used to induce flowering in growth chambers).  The base plantain model uses the accumulation of days greater than 12hrs to trigger the end of the vegetative phase.
+            <MemoText><![CDATA[During this phase the plant only partitions biomass to leaf and root+taproot organs.  The phase starts when plants emerge from the ground, but it is also triggered after the end of the reproductive phase (phenology reset).  It ends when the reproductive phase starts, which is triggered by the accumulation of days with long sunlight ([SussexPlantain_1956]; [Rowarth_Plantain_1990]; [CaseLaceyHopkins_1996]; [LaceyRoach_2003]; [GonzalezParrado_2015]).  Stalk development have been recorded to start in October in NZ and in May in the USA ([Rowarth_Plantain_1990]; [LaceyRoach_2003]; [SandersonEtAl_2003]), with data suggesting a minimum of 25-30 days (non consecutive) with long daylight periods ([SussexPlantain_1956]; [FajerEtAl_1991]; [CaseLaceyHopkins_1996]).  The literature does not provide an indication of how long the sunlight period should be to trigger the reproductive phase, but it is clear that daylight should be grater that the period in darkness (14-16 hours been used to induce flowering in growth chambers).  The base plantain model uses the accumulation of days greater than 12hrs to trigger the end of the vegetative phase.
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -157,7 +177,7 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Reproductive</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (stems, flowers, and seeds). Flower stages and seeds development are not explicitly described in the current model, only a generic organ refered to as _inflorescence_ is defined.  This was done partly due to lack of data and partly because of the variability and complex phenology of plantain.  There is a lot of variation among plantain plants regarding when flowering occurs and how long it lasts, plus even the same plant can have flowering stalks, stalks with young seeds, as well as stalks with ripen seed at the same time (Rowarth, 1990; Rumball et al., 1997; Lacey et al., 2003; Gonzalez-Parado et al., 2015).  Seed ripenning is reached some 8-10 weeks after flowering, with commercial cultivars closer to the low end of the range.  The available data suggest an accumulation of 450oCd for the flowering period, with base temperature between 5 and 9oC (Rowarth, 1990; Rumball et al., 1997, Gonzalez-Parado et al., 2015).  Howerver flowering continues throughout the summer into autumn and seem to be curtailed only by frosts (Rowarth, 1990) and/or short days (Sanderson et al., 2003).  In the plantain model the photoperiod is used to define the end of reproductive phase, following the same approach used to start it.  And correspondelly, the accumulation of days shorter than 12 hours is used as the trigger the end of the phase (this approach also ensures phenology reset even in warmer climates).  Note that the DM partition functions also use photoperiod to change priority allocation into reproductive organs, with maximum allocation only when daylight length is greater than 14hours.  This was done to limit the allocation to reproductive organs on the sason shoulders when only few plants are actively in the reproductive phase (e.g. Sanderson et al., 2003).
+            <MemoText><![CDATA[During this phase the plant is partitioning biomass to all organs, including reproductive organs (stems, flowers, and seeds). Flower stages and seeds development are not explicitly described in the current model, only a generic organ refered to as _inflorescence_ is defined.  This was done partly due to lack of data and partly because of the variability and complex phenology of plantain.  There is a lot of variation among plantain plants regarding when flowering occurs and how long it lasts, plus even the same plant can have flowering stalks, stalks with young seeds, as well as stalks with ripen seed at the same time ([Rowarth_Plantain_1990]; [RumballKeog_1997]; [LaceyRoach_2003]; [GonzalezParrado_2015]).  Seed ripenning is reached some 8-10 weeks after flowering, with commercial cultivars closer to the low end of the range.  The available data suggest an accumulation of 450oCd for the flowering period, with base temperature between 5 and 9oC ([Rowarth_Plantain_1990]; [RumballKeog_1997]; [GonzalezParrado_2015]).  Howerver flowering continues throughout the summer into autumn and seem to be curtailed only by frosts ([Rowarth_Plantain_1990]) and/or short days ([SandersonEtAl_2003]).  In the plantain model the photoperiod is used to define the end of reproductive phase, following the same approach used to start it.  And correspondelly, the accumulation of days shorter than 12 hours is used as the trigger the end of the phase (this approach also ensures phenology reset even in warmer climates).  Note that the DM partition functions also use photoperiod to change priority allocation into reproductive organs, with maximum allocation only when daylight length is greater than 14hours.  This was done to limit the allocation to reproductive organs on the sason shoulders when only few plants are actively in the reproductive phase (e.g. [SandersonEtAl_2003]).
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -205,9 +225,17 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
         <Name>Arbitrator</Name>
         <RelativeAllocation>
           <Name>NArbitrator</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[Controls the allocation of N to each of the plant's organs.]]></MemoText>
+          </Memo>
         </RelativeAllocation>
         <RelativeAllocation>
           <Name>DMArbitrator</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[Controls the allocation of biomass to each of the plant's organs. Partition is based on:]]></MemoText>
+          </Memo>
         </RelativeAllocation>
       </OrganArbitrator>
       <SimpleLeaf>
@@ -247,8 +275,8 @@ Once a crop has been ended the field is open to be used by another APSIM plant m
           <Name>Photosynthesis</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[Data for photosynthesys in plantain is very sparse and some of the data are from studies taht used wild varieties.  Values for CO2 assimilation rates are generally consistent (Poot et al., 1996; Labrevaux et al., 2002; van der Berge et al., 2014; Cranston et al., 2015) and follow a classic relationhip with light intensity (directly proportional) as well with N concentration in the leaves (inversely proportional).  Reported values of photosynthetic rate indicate that these are simlar or slightly higher in plantain when compared to Chicory (Labrevaux et al., 2002; Cranston et al., 2015).  No reported values for RUE were found in the literature, but they can be infered as to be just under 2.0 g DM/MJ for wild vareties (Poot et al., 1996).  
-The current model assumes generic responses to enviromental factors, such as temperature and water availability.  Wild plantain is ubiquitous in meadows in subtropical climates around the world, and it is generally assumed to be tollerant to high temperatures but not to cold (Sagar and Harper, 1964; Stewart, 1996).  Forage plantain show differences between cultivars, but generally can grow more over winter compared to wild varieties and still outperform temperate grasses in summer (Stewart, 1996; Moorhead and Piggot, 2009, Douglas et al., 2013), although survivability in harsh winters in the USA was found to be low (Sanderson et al., 2003, Skinner, 2005).  Forage plantain is also often mentioned as a drought tollerant species (Stewart, 1996; Douglas et al., 2013; Quijada, 2015), although less so than deep rooted species such as chicory or lucerne.  The use of reserves from the taproots seem to be mechanism used to confer drought resistance in plantain as is the case for many herbs (Cranston et al., 2015; Quijada, 2015).
+            <MemoText><![CDATA[Data for photosynthesys in plantain is very sparse and some of the data are from studies that used wild varieties.  Values for CO2 assimilation rates are generally consistent (Poot et al., 1996; Labrevaux et al., 2002; van der Berge et al., 2014; Cranston et al., 2015) and follow a classic relationhip with light intensity (directly proportional) as well with N concentration in the leaves (inversely proportional).  Reported values of photosynthetic rate indicate that these are similar or slightly higher in plantain when compared to Chicory (Labrevaux et al., 2002; Cranston et al., 2015).  No reported values for RUE were found in the literature, but they can be infered as to be just under 2.0 g DM/MJ for wild vareties (Poot et al., 1996).  
+The current model assumes generic responses to enviromental factors, such as temperature and water availability.  Wild plantain is ubiquitous in meadows in subtropical climates around the world, and it is generally assumed to be tollerant to high temperatures but not to cold (Sagar and Harper, 1964; Stewart, 1996).  Forage plantain shows large differences between cultivars, but generally can grow more over winter compared to wild varieties and still outperform temperate grasses in summer (Stewart, 1996; Moorhead and Piggot, 2009, Douglas et al., 2013), although survivability in harsh winters in the USA was found to be low (Sanderson et al., 2003, Skinner, 2005).  Forage plantain is also often mentioned as a drought tollerant species (Stewart, 1996; Douglas et al., 2013; Quijada, 2015), although less so than deep rooted species such as chicory or lucerne.  The use of reserves from the taproots seem to be mechanism used to confer drought resistance in plantain as is the case for many herbs (Cranston et al., 2015; Quijada, 2015).
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -284,16 +312,16 @@ The current model assumes generic responses to enviromental factors, such as tem
             <XYPairs>
               <Name>XYPairs</Name>
               <X>
-                <double>5</double>
+                <double>4</double>
                 <double>10</double>
                 <double>15</double>
                 <double>21</double>
-                <double>26</double>
+                <double>27</double>
                 <double>35</double>
               </X>
               <Y>
                 <double>0</double>
-                <double>0.05</double>
+                <double>0.075</double>
                 <double>0.35</double>
                 <double>1</double>
                 <double>1</double>
@@ -345,6 +373,10 @@ The current model assumes generic responses to enviromental factors, such as tem
         </RUEModel>
         <DivideFunction>
           <Name>FRGRFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[This parameter represents the Fractional Growth Rate.  It is needed by the MicroClimate model, where it is used to compute the effect of growth rate on transpiration.  ]]></MemoText>
+          </Memo>
           <VariableReference>
             <Name>Photosynthesis</Name>
             <VariableName>[Leaf].Photosynthesis.Value()</VariableName>
@@ -372,7 +404,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           <Name>DMDemandFunction</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[In the plantain model, the DM demand function attempts to keep the shoot to root ratio and then the leaf to stem ratio close to a target value, which may vary according to the phenolgical phase.  This approach, linked to a higher senescence of below ground material following defoliation, ensures that the plantain plants will recovery after being cut or grazed.  In this case, leaves will grow preferably even during reproductive phase.  
+            <MemoText><![CDATA[In the plantain model, the DM demand function attempts to keep the shoot to root ratio and then the stem to leaf ratio close to a target value (defined by the [TargetShootRootRatio].Value and [TargetStemsLeafRatio].Value), which may vary according to the phenolgical stage.  This approach ensures that the plantain plants will recovery after being cut or grazed.  In this case, biomass will be allocated to leaves preferably, even during reproductive phase.  
 ]]></MemoText>
           </Memo>
           <PhaseLookup>
@@ -518,6 +550,11 @@ The current model assumes generic responses to enviromental factors, such as tem
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[The average height of plantain is assumed here as a simple function of above ground biomass. Sward population and competition with other plant can have an influence on this relationship, but this is not currently accounted for by PMF.  
+]]></MemoText>
+          </Memo>
           <XYPairs>
             <Name>XYPairs</Name>
             <X>
@@ -537,7 +574,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           <Name>SenescenceRate</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[The sparse availabe data suggests that plantain has a relativelly slow senescence rate compared to other medow herbs (Calvieri and Duru, 1995; Schippers and Olff, 2000).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed.]]></MemoText>
+            <MemoText><![CDATA[The sparse availabe data suggests that plantain has a relativelly slow senescence rate compared to other medow herbs ([CalviereDuru_1995]; [SchippersOlff_2000]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.]]></MemoText>
           </Memo>
           <Constant>
             <Name>ReferenceRate</Name>
@@ -629,7 +666,7 @@ The current model assumes generic responses to enviromental factors, such as tem
           <Name>DetachmentRateFunction</Name>
           <Memo>
             <Name>Description</Name>
-            <MemoText><![CDATA[A generic relationship between detachment and soil moisture is assumed.  It implies that under dry conditions the detachment rate decrease due to slow down in the activity of decomposing microorganisms.  ]]></MemoText>
+            <MemoText><![CDATA[A generic relationship between detachment and soil moisture is assumed.  It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  ]]></MemoText>
           </Memo>
           <Constant>
             <Name>ReferenceRate</Name>
@@ -729,18 +766,11 @@ The current model assumes generic responses to enviromental factors, such as tem
           <Name>Description</Name>
           <MemoText><![CDATA[Represents all the stems in the plant.]]></MemoText>
         </Memo>
-        <MultiplyFunction>
+        <Constant>
           <Name>InitialWtFunction</Name>
-          <Constant>
-            <Name>InitialPlantWt</Name>
-            <FixedValue>1E-06</FixedValue>
-            <Units>g/plant</Units>
-          </Constant>
-          <VariableReference>
-            <Name>Population</Name>
-            <VariableName>[Plant].Population</VariableName>
-          </VariableReference>
-        </MultiplyFunction>
+          <FixedValue>1E-06</FixedValue>
+          <Units>g/plant</Units>
+        </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
           <FixedValue>1</FixedValue>
@@ -748,16 +778,21 @@ The current model assumes generic responses to enviromental factors, such as tem
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <FixedValue>0.01</FixedValue>
+          <FixedValue>0.005</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <FixedValue>0.025</FixedValue>
+          <FixedValue>0.02</FixedValue>
           <Units>gN/gDM</Units>
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[A simple approach is used in the plantain model to define the allocation of biomass to various organs.  The proportion of the above ground biomass allocated to stems is determined based on the current state and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation of biomass to stems can only occur during the reproductive phase.  
+]]></MemoText>
+          </Memo>
           <PhaseLookup>
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
@@ -862,6 +897,10 @@ The current model assumes generic responses to enviromental factors, such as tem
         </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[The reference senescence rate is adjusted using generic relationships to enviromental factors, such as temperature and soil moisture.  These are based on general knowledge from other plant models.]]></MemoText>
+          </Memo>
           <Constant>
             <Name>ReferenceRate</Name>
             <FixedValue>0.2</FixedValue>
@@ -933,6 +972,10 @@ The current model assumes generic responses to enviromental factors, such as tem
         </MultiplyFunction>
         <MultiplyFunction>
           <Name>DetachmentRateFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[A generic relationship between detachment and soil moisture is assumed.  It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  ]]></MemoText>
+          </Memo>
           <Constant>
             <Name>ReferenceRate</Name>
             <FixedValue>0.1</FixedValue>
@@ -1039,6 +1082,11 @@ The current model assumes generic responses to enviromental factors, such as tem
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[The plantain model uses a  simple approach to define the allocation of biomass to various organs.  The fraction of the above ground biomass allocated to inflorescence is determined based on the current proprotion and two target ratios, the [TargetStemsLeafRatio].Value and [FlowerStemRatio].Value).  Allocation to inflorescence can only occur during the reproductive phase.  
+]]></MemoText>
+          </Memo>
           <PhaseLookup>
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
@@ -1147,6 +1195,10 @@ The current model assumes generic responses to enviromental factors, such as tem
         </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[The sparse availabe data suggests that plantain has a relativelly slow senescence rate compared to other medow herbs ([CalviereDuru_1995]; [SchippersOlff_2000]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.]]></MemoText>
+          </Memo>
           <Constant>
             <Name>ReferenceRate</Name>
             <FixedValue>0.25</FixedValue>
@@ -1212,6 +1264,10 @@ The current model assumes generic responses to enviromental factors, such as tem
         </MultiplyFunction>
         <MultiplyFunction>
           <Name>DetachmentRateFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[A generic relationship between detachment and soil moisture is assumed.  It implies that under dry conditions the detachment rate decreases due to the lower level of activity of decomposing microorganisms.  ]]></MemoText>
+          </Memo>
           <Constant>
             <Name>ReferenceRate</Name>
             <FixedValue>0.25</FixedValue>
@@ -1317,6 +1373,11 @@ The current model assumes generic responses to enviromental factors, such as tem
         </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[The plantain model computes the allocation of biomass to taproots assuming that there is a target ratio the biomass of root and taproot (defined by [TaprootRootRatio].Value).  The existing literature does not provide values for this parameter, and based on other herbs, such as chicory, a simple value which is further modified by plant specific biomass is assumed in the model. This should be update when more data becomes available.
+]]></MemoText>
+          </Memo>
           <PhaseLookup>
             <Name>PartitionFraction</Name>
             <PhaseLookupValue>
@@ -1390,11 +1451,21 @@ The current model assumes generic responses to enviromental factors, such as tem
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
+          <Constant>
+            <Name>MaintenanceRespirationFunction</Name>
+            <FixedValue>0</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
           <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <MultiplyFunction>
           <Name>SenescenceRate</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[The reference senescence rate is adjusted according to enviromental factors, temperature and soil moisture.  Currently only sensitivity to temperature is considered, based on general knowledge from other plant models. The sensitivity of plantain roots to low moisture or water logging is not clear , so this will have to be upgrade in the future when more data is available.  According to [SagarHarper_1964], *P. major*, a similar species, is more tolerant to water logging than *P. lanceolata*, which rarely occurs in water logged sites ([vanTiederen_1992]).  
+]]></MemoText>
+          </Memo>
           <Constant>
             <Name>ReferenceRate</Name>
             <FixedValue>0.001</FixedValue>
@@ -1441,25 +1512,71 @@ The current model assumes generic responses to enviromental factors, such as tem
             <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
-          <Memo>
-            <Name>Description</Name>
-            <MemoText><![CDATA[This represents all the taproots of the plant (described as a storage organ)
-]]></MemoText>
-          </Memo>
         </MultiplyFunction>
         <Constant>
           <Name>DetachmentRateFunction</Name>
           <FixedValue>1</FixedValue>
           <Units>/day</Units>
         </Constant>
-        <Constant>
+        <MultiplyFunction>
           <Name>DMRetranslocationFactor</Name>
-          <FixedValue>0</FixedValue>
-          <Units>/day</Units>
-        </Constant>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[Taproots are primary reserve organs and will supply sugars and N to burst growth early in spring and following defoliation.  This is controlled in teh model by the DM allocation processes.  However, the rate of retranslocation is limited here by temperature and moisture factors; this is done using generic functions in order to limit taproot exhausting the reseves over winter or in periods where moisture conditions are unfavourable.  ]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>ReferenceFactor</Name>
+            <FixedValue>0.1</FixedValue>
+            <Units>/day</Units>
+          </Constant>
+          <WeightedTemperatureFunction>
+            <Name>TemperatureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>5</double>
+                <double>10</double>
+                <double>14</double>
+                <double>16</double>
+                <double>21</double>
+                <double>26</double>
+                <double>34</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0</double>
+                <double>0.1</double>
+                <double>0.25</double>
+                <double>1</double>
+                <double>1</double>
+                <double>0</double>
+              </Y>
+            </XYPairs>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WeightedTemperatureFunction>
+          <LinearInterpolationFunction>
+            <Name>SoilMoistureFactor</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>0.4</double>
+                <double>0.5</double>
+                <double>1</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>0.9</double>
+                <double>1</double>
+                <double>1</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Arbitrator].FW</XProperty>
+          </LinearInterpolationFunction>
+        </MultiplyFunction>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <FixedValue>0</FixedValue>
+          <FixedValue>0.1</FixedValue>
           <Units>/day</Units>
         </Constant>
         <Constant>
@@ -1509,15 +1626,9 @@ The current model assumes generic responses to enviromental factors, such as tem
         <Name>Root</Name>
         <Memo>
           <Name>Description</Name>
-          <MemoText><![CDATA[This represents all the fine roots of the plant
-The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply
+          <MemoText><![CDATA[This represents all the fine roots of the plant.  The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply
 ]]></MemoText>
         </Memo>
-        <Constant>
-          <Name>InitialDM1</Name>
-          <FixedValue>0.01</FixedValue>
-          <Units>g/plant</Units>
-        </Constant>
         <MultiplyFunction>
           <Name>InitialDM</Name>
           <Constant>
@@ -1552,6 +1663,11 @@ The root organ demands and is partitioned N and DM and its depth increases throu
         </PhaseBasedSwitch>
         <PhaseLookup>
           <Name>PartitionFraction</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[The allocation of biomass below ground follows a simple approach in the plantain model.  The amount allocated to roots is computed based on current proportion and two target ratios (the [TargetShootRootRatio].Value and [TaprootRootRatio].Value).  There is little information in the literature about these parameters and they should vary with cultivar. Currently the model will attempt to keep a given proportion in ach organ, ho these porportions vary should be update when more data becomes available.
+]]></MemoText>
+          </Memo>
           <PhaseLookupValue>
             <Name>AllPhases</Name>
             <DivideFunction>
@@ -1726,6 +1842,10 @@ No effect of soil water content on root growth is currently captured in the mode
             <MemoText><![CDATA[This represents all the fine roots of the plant
 The root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply
 ]]></MemoText>
+          </Memo>
+          <Memo>
+            <Name>Description1</Name>
+            <MemoText><![CDATA[The reference senescence rate is adjusted according to enviromental factors, temperature and soil moisture.  Currently only sensitivity to temperature is considered, based on general knowledge from other plant models. The sensitivity of plantain roots to low moisture or water logging is not clear (according to [SagarHarper_1964], *P. major* is more tolerant to water logging than *P. lanceolata*) , so this will have to be upgrade in the future when more data is available.  ]]></MemoText>
           </Memo>
         </MultiplyFunction>
         <Constant>
@@ -1932,11 +2052,11 @@ The root organ demands and is partitioned N and DM and its depth increases throu
             <Name>CurrentSR</Name>
             <VariableReference>
               <Name>AbogeGroundDM</Name>
-              <VariableName>[AboveGroundLive].StructuralWt</VariableName>
+              <VariableName>[AboveGroundLive].Wt</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>BelowGroundDM</Name>
-              <VariableName>[BelowGroundLive].StructuralWt</VariableName>
+              <VariableName>[BelowGroundLive].Wt</VariableName>
             </VariableReference>
           </DivideFunction>
           <Start>Emergence</Start>
@@ -1945,6 +2065,14 @@ The root organ demands and is partitioned N and DM and its depth increases throu
       </PhaseLookup>
       <PhaseLookup>
         <Name>TargetShootRootRatio</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[To ensure prompt regrowth of forage plantain after a defoliation, the model will adjust the allocation of new growth following any defoliation event. This is a simplified approach to biomass allocation plasticity (e.g. [Wilson_1988]; [LevangBrilz_2002]), it assumes that the plant switches allocation of towards leaves whenever the current shoot:root ratio differs from the target value.  
+Published data forn the shoot:root ratio in plantain is highly variable, with values as low as 1.0 for wild varieties and as high as 6.0 for seedlings with no water of nutrient limitations ([SchippersOlff_2000]; [LabreveuxThesis_2002]; [CranstonEtAl_2015]; [PankokeEtAl_2015]).  The data suggests mean values to be around 1.75-2.0.  This value is likely to be affected by environmental conditions, with water or nutrient deficit favouring root growth, while low light conditions lead to higher allocation above ground. However, these relationships can vary considerably in different plants and there is little data for plantain, so the model current ignores the influence of environmental factors on the shoot:root partition, this should be upgraded when data becomes available.
+
+
+]]></MemoText>
+        </Memo>
         <PhaseLookupValue>
           <Name>Vegetative</Name>
           <Constant>
@@ -2034,6 +2162,12 @@ The root organ demands and is partitioned N and DM and its depth increases throu
       </PhaseLookup>
       <PhaseLookup>
         <Name>TargetStemsLeafRatio</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[The  plantain model defines allocation of biomass above ground following a simple approach, it attempts to keep given proportion among the varios organs.  The allocation of biomass to leaves is defined primarily byt the target shoo:root ratio, but during the reproductive phase, the partition is further modified based on the ratio of stems+inflorescence to leaves. This ratio may be affected by defoliation ([AyalaEtAl_2011]; [QuijadaThesis_2015]) and is probably affected by enviromental factors too. There is not enough data to describe these interactions.  
+Published results suggest that reproductive parts represent a relatively small proportion of the biomass, about 10-25% in grazed swards, and about 40% if not grazed ([SchippersOlff_2000]; [LabreveuxThesis_2002]; [MoorheadPigot_2009]; [AyalaEtAl_2011]).
+]]></MemoText>
+        </Memo>
         <PhaseLookupValue>
           <Name>Reproductive</Name>
           <MultiplyFunction>
@@ -2092,6 +2226,11 @@ The root organ demands and is partitioned N and DM and its depth increases throu
       </PhaseLookup>
       <PhaseLookup>
         <Name>TargetFlowerStemRatio</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[The allocation of biomass follows a simple approach in the plantain model.  Allocation during the reproductive phase will attempt to keep a ratio between stem and inflorescence biomass.  This ratio is probably affected by enviromental factors, but there is not data to determine how these would interact.  Because of the short period between stem elongation, flowering and seed maturity, aand a relatively long reproductive phase, plantain plants will have ripe seeds as well as young stalks at the same time.  This makes quite difficult to define variation in biomass allocation to inflorescence.  Inference from published values suggest that the ratio of flower biomass to stems varies between 0.1 and nearly 0.4 ([SchippersOlff_2000])
+]]></MemoText>
+        </Memo>
         <PhaseLookupValue>
           <Name>Reproductive</Name>
           <MultiplyFunction>
@@ -2150,6 +2289,11 @@ The root organ demands and is partitioned N and DM and its depth increases throu
       </PhaseLookup>
       <PhaseLookup>
         <Name>TargetTaprootRootRatio</Name>
+        <Memo>
+          <Name>Description</Name>
+          <MemoText><![CDATA[The plantain model assumes that biomass is allocated so to mantain a given proportion of among the various organs (varying with phenological phase and other factors).  The ratio between taproot and root biomass is assumed to vary, increasing with the biomass bellow ground per plant, reaching a maximum target.  This is a simple approach and can describe the general behaviour of plants, it may be upgraded if deemed necessary when more data becomes available.  
+]]></MemoText>
+        </Memo>
         <PhaseLookupValue>
           <Name>AllPhases</Name>
           <MultiplyFunction>
@@ -2192,12 +2336,23 @@ The root organ demands and is partitioned N and DM and its depth increases throu
       <CultivarFolder>
         <Name>Cultivars</Name>
         <Cultivar>
-          <Name>Lancelot</Name>
+          <Name>Tonic</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[*Tonic* is the basic forage plantain cultivar. It was develop later than *Lancelot* and was developed from a northern Portugal germplasm. It has very erect and large leaves, produce less tillers than *Lancelot* and perhaps less seed heads.  *Tonic* cultivar is heat tolerante and also witnter active, typically with higher yields when compared to *Lancelot*.]]></MemoText>
+          </Memo>
           <Command />
         </Cultivar>
         <Cultivar>
-          <Name>Tonic</Name>
-          <Command />
+          <Name>Lancelot</Name>
+          <Memo>
+            <Name>Description</Name>
+            <MemoText><![CDATA[*Lancelot* is the first forage plantain cultivar released, it was selected from New Zealand pastures. It has a semi-erect growth habit, medium to large leaves, and produce many tillers.  This cultivar has good heat tolerance but growth is low over winter.  *Lancelot*  has been used for many years as grazing forage, in monoculture or in mixed swards, in several countries worldwide.  However, currently the most common cultivar is *Tonic*.  ]]></MemoText>
+          </Memo>
+          <Command>[Leaf].Photosynthesis.FT.XYPairs.X = 5, 10, 15, 21, 27, 35</Command>
+          <Command>[Leaf].Photosynthesis.FT.XYPairs.Y = 0.0, 0.04, 0.3, 1.0, 1.0, 0.0</Command>
+          <Command>[Leaf].HeightFunction.XYPairs.X = 10, 100, 500</Command>
+          <Command>[Leaf].HeightFunction.XYPairs.Y = 100, 300, 400</Command>
         </Cultivar>
       </CultivarFolder>
       <CropType>Plantain</CropType>
@@ -3149,6 +3304,16 @@ namespace Models
   </DataStore>
   <Folder>
     <Name>Validation</Name>
+    <Memo>
+      <Name>Note</Name>
+      <MemoText><![CDATA[The performance of the plantain mode is evaluated in simulations based on experiments conducted primarily in New Zealand.  Datasets from USA have been added, but they should be taken with caution as there was limited information about the experiments and published results corresponded to annual or seasonal aggregates only.  Note that population is not explicitly simulated by the model, only a decrease in plant numbers as function of cuts or grazings is considered.  The literature suggest that severe defoliation may reduce population by increasing death rate, but mostly is infered from other species and even then the variation is high.  Plantain persistency has been shown to be low, usually restricted to 2-4 years, but very little actuall data is available.  
+
+
+The evaluation of the model with regards to plant N concentration is only superficial and should not be seen as a test currently.  This is due to, on one hand, the amount and quality of data for N content being restricted, with uncertainties regarding whether they refer to whole plant or only fresh leaves.   On the other hand, and more importantly, some of the underlying code don't seem to be able to describe some processes under plant cut/grazing and re-growth conditions.  The PMF processes for computing N demand and supply (especially regarding remobilisation within living tissues) are still being developed.  One issue in particular is caused because the model attempts to keep all the plant tissues at maximum N concentration, which can lead to high N demands when the plant is in deficit, restricting growth beyond expectations. This may also reduces mobilisation of N (as well as DM) from storage organs (taproot in chicory) towards new growth.  Due to these issues, N concentration in the various organs is currently poorly predicted.  The model will be upgraded in the near future as the work on the code to improve the description of those specific processes is ongoing.  
+
+The lack of leaf cohorts which can have different ages may be another issue. After defoliation most damaged leaves may cease growing, and nearly all leaves will be young, having higher N content. However detailed data is needed to define whether this is important.  
+]]></MemoText>
+    </Memo>
     <Folder>
       <Name>New Zealand</Name>
       <Experiment>
@@ -3157,7 +3322,7 @@ namespace Models
           <Name>Memo</Name>
           <MemoText><![CDATA[Simulation setup based on field trial performed at Lincoln University Research Dairy Farm, New Zealand, between 2014 and 2016.  The experiment was part of the FRNL (Forages for Reduced Nitrogen Leaching) program and the data is basically unpublished (references will be added when this come about).  Here only plots with pure plantain are used.  
 The experiment consisted of six fertiliser treatments (N rates of 0, 50, 100, 200, 350 and 500 kg/ha/yr) in four replicates, and measurements comprised yield and quality indicators (here N content is used).  
-Data supplyed by Grant Edwards, Lincoln University.
+Data supplied by Grant Edwards, Lincoln University.
 
 The soil at the experimental site was a Templeton fine sandy loam (an Immature Pallic soil, USDA: Udic Haplustept), the required parameters were inferred based on data from the New Zealand National Soils Database (Landcare Research).  
 Weather data was obtained from nearby Broadfields weather station (NIWA).
@@ -10841,7 +11006,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>HerbageNc_PO</Name>
@@ -10888,7 +11053,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>AboveGroundWt</Name>
@@ -10951,7 +11116,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>AboveGroundWt_PO</Name>
@@ -10998,7 +11163,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>HarvestedWt</Name>
@@ -11082,7 +11247,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>HarvestedWt_PO</Name>
@@ -11130,7 +11295,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
         </Folder>
       </Experiment>
@@ -18077,7 +18242,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>HerbageNc_PO</Name>
@@ -18124,7 +18289,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>AboveGroundWt</Name>
@@ -18187,7 +18352,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>AboveGroundWt_PO</Name>
@@ -18235,7 +18400,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>HarvestedWt</Name>
@@ -18319,7 +18484,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
             <Name>HarvestedWt_PO</Name>
@@ -18367,7 +18532,7 @@ namespace Models
             </Axis>
             <LegendPosition>TopRight</LegendPosition>
             <DisabledSeries />
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
         </Folder>
       </Experiment>
@@ -18403,6 +18568,7 @@ namespace Models
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
+          <Filter />
         </Series>
         <Axis>
           <Type>Bottom</Type>
@@ -18422,7 +18588,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>HarvestedBiomass</Name>
@@ -18470,7 +18636,7 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>HerbageNconc</Name>
@@ -18484,8 +18650,8 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Small</MarkerSize>
@@ -24929,10 +25095,7 @@ namespace Models
               <Interval>NaN</Interval>
             </Axis>
             <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries>
-              <string>Tonic3wks: Predicted1</string>
-              <string>Tonic5wks: Predicted1</string>
-            </DisabledSeries>
+            <DisabledSeries />
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Graph>
           <Graph>
