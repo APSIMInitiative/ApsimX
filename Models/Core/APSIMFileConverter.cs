@@ -14,6 +14,7 @@ namespace Models.Core
     using APSIM.Shared.Utilities;
     using System.Reflection;
     using System.IO;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// TODO: Update summary.
@@ -21,7 +22,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 6; } }
+        public static int LastestVersion { get { return 7; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -196,7 +197,7 @@ namespace Models.Core
                 XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
         }
 
-        /// <summary>Upgrades to version 5. Make sure all zones have a SoluteManager model.</summary>
+        /// <summary>Upgrades to version 5. Make sure all zones have a CERESSoilTemperature model.</summary>
         /// <param name="node">The node to upgrade.</param>
         private static void UpgradeToVersion5(XmlNode node)
         {
@@ -220,5 +221,81 @@ namespace Models.Core
             }
         }
 
+        /// <summary>
+        /// Upgrades to version 7. Find all occurrences of ESW
+        /// XProperty values.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        private static void UpgradeToVersion7(XmlNode node)
+        {
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+                SearchReplaceManagerCode(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
+            foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
+                SearchReplaceReportCode(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
+        }
+
+        /// <summary>
+        /// Perform a search and replace in manager script. Also optionally insert a using statement.
+        /// </summary>
+        /// <param name="manager">The manager model.</param>
+        /// <param name="searchPattern">The pattern to search for</param>
+        /// <param name="replacePattern">The string to replace</param>
+        /// <param name="usingStatement">An optional using statement to insert at top of the script.</param>
+        private static void SearchReplaceManagerCode(XmlNode manager, string searchPattern, string replacePattern, string usingStatement = null)
+        {
+            XmlCDataSection codeNode = XmlUtilities.Find(manager, "Code").ChildNodes[0] as XmlCDataSection;
+            string newCode = Regex.Replace(codeNode.InnerText, searchPattern, replacePattern, RegexOptions.None);
+            if (codeNode.InnerText != newCode)
+            {
+                // Replacement was done so need to add using statement.
+                if (usingStatement != null)
+                    newCode = InsertUsingStatementInManagerCode(newCode, usingStatement);
+                codeNode.InnerText = newCode;
+            }
+        }
+
+        /// <summary>
+        /// Perform a search and replace in report variables.
+        /// </summary>
+        /// <param name="report">The reportr model.</param>
+        /// <param name="searchPattern">The pattern to search for</param>
+        /// <param name="replacePattern">The string to replace</param>
+        private static void SearchReplaceReportCode(XmlNode report, string searchPattern, string replacePattern)
+        {
+            List<string> variableNames = XmlUtilities.Values(report, "VariableNames/string");
+            for (int i = 0; i < variableNames.Count; i++)
+                variableNames[i] = Regex.Replace(variableNames[i], searchPattern, replacePattern, RegexOptions.None);
+            XmlUtilities.SetValues(report, "VariableNames/string", variableNames);
+        }
+
+        /// <summary>
+        /// Add the specified 'using' statement to the specified code.
+        /// </summary>
+        /// <param name="code">The code to modifiy</param>
+        /// <param name="usingStatement">The using statement to insert at the correct location</param>
+        private static string InsertUsingStatementInManagerCode(string code, string usingStatement)
+        {
+            // Find all using statements
+            StringReader reader = new StringReader(code);
+            StringWriter writer = new StringWriter();
+            bool foundUsingStatement = false;
+            bool foundEndOfUsingSection = false;
+            string line = reader.ReadLine();
+            do
+            {
+                if (!line.Trim().StartsWith("using ") && !foundEndOfUsingSection)
+                {
+                    foundEndOfUsingSection = true;
+                    if (!foundUsingStatement)
+                        writer.WriteLine(usingStatement);
+                }
+                else
+                    foundUsingStatement = foundUsingStatement || line.Trim() == usingStatement;
+                writer.WriteLine(line);
+                line = reader.ReadLine();
+            }
+            while (line != null);
+            return writer.ToString();
+        }
     }
 }

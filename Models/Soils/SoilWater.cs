@@ -856,18 +856,11 @@ namespace Models.Soils
             }
 
         /// <summary>
-        /// Extractable soil water (above LL15) over the profile (mm)
+        /// Extractable soil water (above LL15) (mm)
         /// </summary>
-        /// <remarks>
-        /// Extractable Soil Water
-        /// (sw - ll15) of each layer summed over the profile.
-        /// </remarks>
-        /// <value>
-        /// The esw.
-        /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double ESW
+        public double[] ESW
         { get { return SoilObject.esw; } }
 
         /// <summary>

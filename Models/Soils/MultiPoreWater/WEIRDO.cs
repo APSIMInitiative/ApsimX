@@ -82,7 +82,7 @@ namespace Models.Soils
         public double Es { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
-        public double ESW { get; set; }
+        public double[] ESW { get; set; }
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double[] flow { get; set; }
