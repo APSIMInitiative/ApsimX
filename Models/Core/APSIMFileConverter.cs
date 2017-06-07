@@ -229,9 +229,9 @@ namespace Models.Core
         private static void UpgradeToVersion7(XmlNode node)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
-                SearchReplaceManagerCode(manager, @"([\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
+                SearchReplaceManagerCode(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
-                SearchReplaceReportCode(report, @"([\.\w]+\.ESW)", "sum($1)");
+                SearchReplaceReportCode(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
         }
 
         /// <summary>

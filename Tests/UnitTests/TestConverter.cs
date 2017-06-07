@@ -116,7 +116,7 @@ namespace UnitTests
                                    "<Name>Report</Name>\r\n" +
                                    "<VariableNames>\r\n" +
                                       "<string>[Clock].Today</string>\r\n" +
-                                      "<string>MySoil.SoilWater.ESW</string>\r\n" +
+                                      "<string>[MySoil].SoilWater.ESW</string>\r\n" +
                                    "</VariableNames>\r\n" +
                              "   </Report>\r\n" +
                 " </Simulation>\r\n";
@@ -159,7 +159,7 @@ namespace UnitTests
                                 "<Name>Report</Name>" +
                                 "<VariableNames>" +
                                     "<string>[Clock].Today</string>" +
-                                    "<string>sum(MySoil.SoilWater.ESW)</string>" +
+                                    "<string>sum([MySoil].SoilWater.ESW)</string>" +
                                 "</VariableNames>" +
                              "</Report>" +
                              "</Simulation>";
