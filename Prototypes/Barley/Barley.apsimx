@@ -20,132 +20,6 @@ The model consists of:
   </Memo>
   <Replacements>
     <Name>Replacements</Name>
-    <Report>
-      <Name>DailyReport</Name>
-      <ExperimentFactorNames />
-      <ExperimentFactorValues />
-      <VariableNames>
-        <string>[Clock].Today</string>
-        <string>[Weather].MeanT</string>
-        <string>[Soil].SoilWater.SW</string>
-        <string>[Soil].SoilWater.SWmm</string>
-        <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-        <string>[Barley].AboveGround.N</string>
-        <string>[Barley].AboveGroundLive.Wt*10 as AboveGround_LiveWt</string>
-        <string>[Barley].AboveGroundLive.N</string>
-        <string>[Barley].AboveGroundLive.N*10 as AboveGround_LiveN</string>
-        <string>[Barley].AboveGround.Wt*10 as TotalAboveGroundWt</string>
-        <string>[Barley].AboveGroundDead.N</string>
-        <string>[Barley].AboveGroundDead.Wt</string>
-        <string>[Barley].Arbitrator.DMDemand</string>
-        <string>[Barley].Arbitrator.DM.TotalFixationSupply</string>
-        <string>[Barley].Ear.N</string>
-        <string>[Barley].Ear.Nconc</string>
-        <string>[Barley].Ear.Wt</string>
-        <string>[Barley].Grain.N</string>
-        <string>[Barley].Grain.NConc</string>
-        <string>[Barley].Grain.Number</string>
-        <string>[Barley].Grain.Size</string>
-        <string>[Barley].Grain.Wt</string>
-        <string>[Barley].Grain.Live.Wt</string>
-        <string>[Barley].Leaf.AppearedCohortNo</string>
-        <string>[Barley].Leaf.CoverDead</string>
-        <string>[Barley].Leaf.CoverGreen</string>
-        <string>[Barley].Leaf.CoverTotal</string>
-        <string>[Barley].Leaf.Dead.N</string>
-        <string>[Barley].Leaf.Dead.NConc</string>
-        <string>[Barley].Leaf.Dead.Wt</string>
-        <string>[Barley].Leaf.DeadCohortNo</string>
-        <string>[Barley].Leaf.SenescingCohortNo</string>
-        <string>[Barley].Leaf.ExpandedCohortNo</string>
-        <string>[Barley].Leaf.Fn</string>
-        <string>[Barley].Leaf.Fw</string>
-        <string>[Barley].Leaf.Height</string>
-        <string>[Barley].Leaf.InitialisedCohortNo</string>
-        <string>[Barley].Leaf.LAI</string>
-        <string>[Barley].Leaf.Live.N</string>
-        <string>[Barley].Leaf.Live.NConc</string>
-        <string>[Barley].Leaf.Live.Wt</string>
-        <string>[Barley].Leaf.SpecificArea</string>
-        <string>[Barley].Leaf.Transpiration</string>
-        <string>[Barley].Phenology.CurrentPhaseName</string>
-        <string>[Barley].Phenology.CurrentStageName</string>
-        <string>[Barley].Phenology.DailyVernalisation.Value()</string>
-        <string>[Barley].Phenology.MeanTemp.Value()</string>
-        <string>[Barley].Phenology.Photoperiod.Value()</string>
-        <string>[Barley].Phenology.Stage</string>
-        <string>[Barley].Phenology.ThermalTime.Value()</string>
-        <string>[Barley].Phenology.AccumulatedTT.Value()</string>
-        <string>[Barley].Phenology.Vrn1.Value()</string>
-        <string>[Barley].Phenology.Vrn2.Value()</string>
-        <string>[Barley].Phenology.Vrn4.Value()</string>
-        <string>[Barley].Phenology.Zadok.Stage</string>
-        <string>[Barley].Population</string>
-        <string>[Barley].Root.Depth</string>
-        <string>[Barley].Root.N</string>
-        <string>[Barley].Root.Wt</string>
-        <string>[Barley].Root.Nconc</string>
-        <string>[Barley].Root.WaterUptake</string>
-        <string>[Barley].Spike.N</string>
-        <string>[Barley].Spike.NConc</string>
-        <string>[Barley].Spike.Wt</string>
-        <string>[Barley].Spike.Live.NonStructuralWt</string>
-        <string>[Barley].Stem.N</string>
-        <string>[Barley].Stem.NConc</string>
-        <string>[Barley].Stem.Wt</string>
-        <string>[Barley].Stem.PercentWSC</string>
-        <string>[Barley].Stem.Live.NonStructuralWt</string>
-        <string>[Barley].StemPlusSpike.Wt</string>
-        <string>[Barley].StemPlusSpike.N</string>
-        <string>[Barley].SowingData.Cultivar</string>
-        <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value()</string>
-        <string>[Barley].Structure.HaunStage.Value()</string>
-        <string>[Barley].Structure.Height</string>
-        <string>[Barley].Structure.LeafTipsAppeared</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
-        <string>[Barley].Structure.MainStemPopn</string>
-        <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
-        <string>[Barley].Structure.TotalStemPopn</string>
-        <string>[Barley].Total.N</string>
-        <string>[Barley].Total.Wt</string>
-        <string>[SurfaceOrganicMatter].Wt</string>
-        <string>([Barley].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
-        <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilN</string>
-        <string>[Barley].Phenology.FlagLeafDAS</string>
-        <string>[Barley].Phenology.FloweringDAS</string>
-        <string>[Barley].Phenology.MaturityDAS</string>
-        <string>[Barley].Phenology.PhotoPeriod</string>
-        <string>[Barley].Phenology.PhotoPeriodDeltaFunction</string>
-        <string>[Barley].Phenology.Stage</string>
-        <string>[Barley].Phenology.SoilTemperatureFunction.Value()</string>
-        <string>[Irrigation].IrrigationApplied as Irrigation</string>
-        <string>[Fertiliser].NitrogenApplied as NFert</string>
-        <string>[Weather].Rain</string>
-        <string>[Barley].Leaf.Fn</string>
-        <string>[Barley].Leaf.Fw</string>
-      </VariableNames>
-      <EventNames>
-        <string>[Clock].DoReport</string>
-      </EventNames>
-    </Report>
-    <Report>
-      <Name>EndTrialReport</Name>
-      <ExperimentFactorNames />
-      <ExperimentFactorValues />
-      <VariableNames>
-        <string>[Clock].Today</string>
-        <string>[Barley].Structure.LeafTipsAppeared</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber</string>
-        <string>[Barley].Phenology.FlagLeafDAS</string>
-        <string>[Barley].Phenology.FloweringDAS</string>
-        <string>[Barley].Phenology.MaturityDAS</string>
-        <string>[Script].CalcVals.SowMonth</string>
-      </VariableNames>
-      <EventNames>
-        <string>[Clock].EndOfSimulation</string>
-      </EventNames>
-    </Report>
     <Plant>
       <Name>Barley</Name>
       <OrganArbitrator>
@@ -162,7 +36,7 @@ The model consists of:
         <Memo>
           <Name>Memo</Name>
           <MemoText><![CDATA[Phenology takes into account the daily mean soil (pre-germination) and air (post-germination) temperature, the length of photoperiod as well as the water, nitrogen and vernalisation statuses (e.g. Mirschel et al. (2005).
-The barley cultivar "Valetta" used in this model is not sensitive to vernalisation and therefore nil sensitivity is used.
+The barley cultivar "Valetta" used in this model is not sensitive to vernalisation and therefore nil sensitivity is used to reflect that.
 The data  shows a slowdown in phenological developement in winter conditions, which could be due to temperature and photoperiod. 
 
 
@@ -333,10 +207,10 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
           <Name>VernLag</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The amount of vernalising temperature required before vernalisation response will be evident.  Value of relative to the amount offl vernalisation temperature required from the end of the lag until vernalisation saturation.  A value of 0 means there is no lag, a value of 1 means the lag is the same (in vernal time) as the vernalisation requirement and a value of 2 means the lag is twice as long as the vernalisation response phase
+            <MemoText><![CDATA[This represents the the temperature requirement to trigger vernalisation response.  The value is relative to the amount of vernalisation temperature required from the end of the lag until vernalisation saturation.  A value of 0 means there is no lag, a value of 1 means the lag is the same (in vernal time) as the vernalisation requirement and a value of 2 means the lag is twice as long as the vernalisation response phase
 
 
-Not used in barley]]></MemoText>
+This is not used in this barley model.]]></MemoText>
           </Memo>
           <FixedValue>1</FixedValue>
           <Units>Unitless</Units>
@@ -345,9 +219,9 @@ Not used in barley]]></MemoText>
           <Name>PpSensitivity</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The reduction in leaf number going from 8 to 16 h Pp
+            <MemoText><![CDATA[The reduction in leaf number when day length decreases from 8 to 16 h Pp
 
-Not used in current barley model]]></MemoText>
+This is not currently used in the barley model.]]></MemoText>
           </Memo>
           <FixedValue>6</FixedValue>
           <Units>Leaves</Units>
@@ -356,9 +230,9 @@ Not used in current barley model]]></MemoText>
           <Name>EarlyReproductivePpSensitivity</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp compared to the phyllochron duration for the same phase at 8 h Pp.  
+            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligule appearance at 16 h Pp compared to the phyllochron duration for the same phase at 8 h Pp.  
 
-Not used in curreent oat model.]]></MemoText>
+Not used in current barley model.]]></MemoText>
           </Memo>
           <FixedValue>0</FixedValue>
         </Constant>
@@ -366,9 +240,9 @@ Not used in curreent oat model.]]></MemoText>
           <Name>EarlyReproductiveLongDayBase</Name>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp.
+            <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligule appearance at 16 h Pp.
 
-Not used in current oat model.]]></MemoText>
+Not used in current barley model.]]></MemoText>
           </Memo>
           <FixedValue>2.5</FixedValue>
         </Constant>
@@ -385,7 +259,7 @@ Not used in current oat model.]]></MemoText>
           </VariableReference>
           <Memo>
             <Name>Memo</Name>
-            <MemoText><![CDATA[This assumes 150°Cd from sowing to emergence(Alzueta et al. 2012).]]></MemoText>
+            <MemoText><![CDATA[On the assumption that the soil moisture is adequate, temperature is the main driver of phenology during the germination phase. Based on Alzueta et al (2012), barley requires 150°Cd from sowing to emergence.]]></MemoText>
           </Memo>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -398,9 +272,9 @@ Not used in current oat model.]]></MemoText>
             <Name>Memo</Name>
             <MemoText><![CDATA[This is the first 4-6 leaf growth of the emerged oat plant, In the current model is decides the final leaf number based on Martin et al 1998.
 
-At the end of this grwth stage a trigger event occurs which calculates the FLN.
+At the end of this grwth stage a trigger event occurs which calculates the final leaf number (FLN).
 
-Currently the leaf number is 4, due to March sowings in which th sixth leaf dosn'y emerge until after june. ]]></MemoText>
+Currently the leaf number is 4, due to March sowings in which th sixth leaf does not emerge until after june. ]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -3083,6 +2957,133 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <CropType>Wheat</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
+    <Report>
+      <Name>EndTrialReport</Name>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Barley].Structure.LeafTipsAppeared</string>
+        <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+        <string>[Barley].Phenology.FlagLeafDAS</string>
+        <string>[Barley].Phenology.FloweringDAS</string>
+        <string>[Barley].Phenology.MaturityDAS</string>
+        <string>[Script].CalcVals.SowMonth</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Clock].EndOfSimulation</string>
+      </EventNames>
+    </Report>
+    <Report>
+      <Name>DailyReport</Name>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Weather].MeanT</string>
+        <string>[Soil].SoilWater.SW</string>
+        <string>[Soil].SoilWater.SWmm</string>
+        <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+        <string>[Barley].AboveGround.N</string>
+        <string>[Barley].AboveGroundLive.Wt*10 as AboveGround_LiveWt</string>
+        <string>[Barley].AboveGroundLive.N</string>
+        <string>[Barley].AboveGroundLive.N*10 as AboveGround_LiveN</string>
+        <string>[Barley].AboveGround.Wt*10 as TotalAboveGroundWt</string>
+        <string>[Barley].AboveGroundDead.N</string>
+        <string>[Barley].AboveGroundDead.Wt</string>
+        <string>[Barley].Arbitrator.DMDemand</string>
+        <string>[Barley].Arbitrator.DM.TotalFixationSupply</string>
+        <string>[Barley].Ear.N</string>
+        <string>[Barley].Ear.Nconc</string>
+        <string>[Barley].Ear.Wt</string>
+        <string>[Barley].Grain.N</string>
+        <string>[Barley].Grain.NConc</string>
+        <string>[Barley].Grain.Number</string>
+        <string>[Barley].Grain.Size</string>
+        <string>[Barley].Grain.Wt</string>
+        <string>[Barley].Grain.Live.Wt</string>
+        <string>[Barley].Leaf.AppearedCohortNo</string>
+        <string>[Barley].Leaf.CoverDead</string>
+        <string>[Barley].Leaf.CoverGreen</string>
+        <string>[Barley].Leaf.CoverTotal</string>
+        <string>[Barley].Leaf.Dead.N</string>
+        <string>[Barley].Leaf.Dead.NConc</string>
+        <string>[Barley].Leaf.Dead.Wt</string>
+        <string>[Barley].Leaf.DeadCohortNo</string>
+        <string>[Barley].Leaf.SenescingCohortNo</string>
+        <string>[Barley].Leaf.ExpandedCohortNo</string>
+        <string>[Barley].Leaf.Fn</string>
+        <string>[Barley].Leaf.Fw</string>
+        <string>[Barley].Leaf.Height</string>
+        <string>[Barley].Leaf.InitialisedCohortNo</string>
+        <string>[Barley].Leaf.LAI</string>
+        <string>[Barley].Leaf.Live.N</string>
+        <string>[Barley].Leaf.Live.NConc</string>
+        <string>[Barley].Leaf.Live.Wt</string>
+        <string>[Barley].Leaf.SpecificArea</string>
+        <string>[Barley].Leaf.Transpiration</string>
+        <string>[Barley].Phenology.CurrentPhaseName</string>
+        <string>[Barley].Phenology.CurrentStageName</string>
+        <string>[Barley].Phenology.DailyVernalisation.Value()</string>
+        <string>[Barley].Phenology.MeanTemp.Value()</string>
+        <string>[Barley].Phenology.Photoperiod.Value()</string>
+        <string>[Barley].Phenology.Stage</string>
+        <string>[Barley].Phenology.ThermalTime.Value()</string>
+        <string>[Barley].Phenology.AccumulatedTT.Value()</string>
+        <string>[Barley].Phenology.Vrn1.Value()</string>
+        <string>[Barley].Phenology.Vrn2.Value()</string>
+        <string>[Barley].Phenology.Vrn4.Value()</string>
+        <string>[Barley].Phenology.Zadok.Stage</string>
+        <string>[Barley].Population</string>
+        <string>[Barley].Root.Depth</string>
+        <string>[Barley].Root.N</string>
+        <string>[Barley].Root.Wt</string>
+        <string>[Barley].Root.Nconc</string>
+        <string>[Barley].Root.WaterUptake</string>
+        <string>[Barley].Spike.N</string>
+        <string>[Barley].Spike.NConc</string>
+        <string>[Barley].Spike.Wt</string>
+        <string>[Barley].Spike.Live.NonStructuralWt</string>
+        <string>[Barley].Stem.N</string>
+        <string>[Barley].Stem.NConc</string>
+        <string>[Barley].Stem.Wt</string>
+        <string>[Barley].Stem.PercentWSC</string>
+        <string>[Barley].Stem.Live.NonStructuralWt</string>
+        <string>[Barley].StemPlusSpike.Wt</string>
+        <string>[Barley].StemPlusSpike.N</string>
+        <string>[Barley].SowingData.Cultivar</string>
+        <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value()</string>
+        <string>[Barley].Structure.HaunStage.Value()</string>
+        <string>[Barley].Structure.Height</string>
+        <string>[Barley].Structure.LeafTipsAppeared</string>
+        <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
+        <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+        <string>[Barley].Structure.MainStemPopn</string>
+        <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
+        <string>[Barley].Structure.TotalStemPopn</string>
+        <string>[Barley].Total.N</string>
+        <string>[Barley].Total.Wt</string>
+        <string>[SurfaceOrganicMatter].Wt</string>
+        <string>([Barley].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
+        <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilN</string>
+        <string>[Barley].Phenology.FlagLeafDAS</string>
+        <string>[Barley].Phenology.FloweringDAS</string>
+        <string>[Barley].Phenology.MaturityDAS</string>
+        <string>[Barley].Phenology.PhotoPeriod</string>
+        <string>[Barley].Phenology.PhotoPeriodDeltaFunction</string>
+        <string>[Barley].Phenology.Stage</string>
+        <string>[Barley].Phenology.SoilTemperatureFunction.Value()</string>
+        <string>[Irrigation].IrrigationApplied as Irrigation</string>
+        <string>[Fertiliser].NitrogenApplied as NFert</string>
+        <string>[Weather].Rain</string>
+        <string>[Barley].Leaf.Fn</string>
+        <string>[Barley].Leaf.Fw</string>
+        <string>[Soil].SoilNitrogen.TotalN</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Clock].DoReport</string>
+      </EventNames>
+    </Report>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
@@ -3098,8 +3099,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     </Input>
     <Input>
       <Name>Phenology9596</Name>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>Observations\BarleyPhenologyData2.txt</FileName>
+      <ErrorMessage>Input string was not in a correct format.</ErrorMessage>
+      <FileName>Observations\BarleyPhenologyData.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved_9596</Name>
@@ -4641,7 +4642,7 @@ namespace Models
               <double>300</double>
             </Thickness>
             <NO3>
-              <double>23</double>
+              <double>123</double>
               <double>18</double>
               <double>15</double>
               <double>1.5</double>
@@ -5051,6 +5052,7 @@ namespace Models
             <string>[Barley].Phenology.Stage</string>
             <string>[Barley].Phenology.SoilTemperatureFunction.Value()</string>
             <string>[Barley].Population</string>
+            <string>[Soil].SoilNitrogen.TotalN</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -5409,7 +5411,28 @@ namespace Models
       <Graph>
         <Name>LeafNo</Name>
         <Series>
-          <Name>Predicted</Name>
+          <Name>Pred</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>DailyReport</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Obs</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -6603,49 +6626,6 @@ namespace Models
         <Interval>NaN</Interval>
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>PhenoStage_LAI</Name>
-      <Series>
-        <Name>Predicted</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>DailyReport</TableName>
-        <XFieldName>Barley.Phenology.Stage</XFieldName>
-        <YFieldName>Barley.Leaf.LAI</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>true</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopRight</LegendPosition>
       <DisabledSeries />
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
