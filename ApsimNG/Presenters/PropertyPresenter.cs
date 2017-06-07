@@ -85,6 +85,7 @@ namespace UserInterface.Presenters
 
             string[] split;
 
+            grid.NumericFormat = "G6"; 
             this.FindAllProperties(this.model);
             if (this.grid.DataSource == null)
             {
@@ -407,6 +408,10 @@ namespace UserInterface.Presenters
             else if (typeof(ICrop).IsAssignableFrom(property.DataType))
             {
                 value = Apsim.Find(this.model, value.ToString()) as ICrop;
+            }
+            else if (property.DataType == typeof(DateTime))
+            {
+                value = Convert.ToDateTime(value);
             }
             else if (property.DataType.IsEnum)
             {

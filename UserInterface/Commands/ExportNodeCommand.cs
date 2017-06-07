@@ -199,9 +199,11 @@ namespace UserInterface.Commands
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
 
             // See if there is a title page. If so do it first.
-            IModel titlePage = Apsim.Find(ExplorerPresenter.ApsimXFile, "TitlePage");
-            if (titlePage != null)
-                titlePage.Document(tags, 1, 0);
+            foreach (IModel memo in Apsim.FindAll(ExplorerPresenter.ApsimXFile, typeof(Memo)))
+            {
+                if (memo.Name == "TitlePage" && memo.Parent.Name == modelNameToExport)
+                    memo.Document(tags, 1, 0);
+            }
             AddBackground(tags);
 
             // See if there is a title page. If so do it first.
@@ -219,9 +221,15 @@ namespace UserInterface.Commands
             tags.Add(new AutoDocumentation.Heading("Model description", 1));
             ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
 
+            // If no model was documented then remove the 'Model description' tag.
+            if (modelDescriptionIndex == tags.Count-1)
+                tags.RemoveAt(modelDescriptionIndex);
+
             // If 'Model description tag is imediately followed by a another heading at the same level.
             // then the model must have writen its own name as a heading. We don't want that.
-            if (tags[modelDescriptionIndex+1] is AutoDocumentation.Heading && (tags[modelDescriptionIndex+1] as AutoDocumentation.Heading).headingLevel == 1)
+            if (modelDescriptionIndex+1 < tags.Count &&
+                tags[modelDescriptionIndex+1] is AutoDocumentation.Heading && 
+                (tags[modelDescriptionIndex+1] as AutoDocumentation.Heading).headingLevel == 1)
                 tags.RemoveAt(modelDescriptionIndex+1);
 
             // Document model validation.
