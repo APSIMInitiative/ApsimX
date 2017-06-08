@@ -170,6 +170,7 @@
     <Compile Include="Presenters\ExplorerPresenter.cs" />
     <Compile Include="Presenters\FactorPresenter.cs" />
     <Compile Include="Presenters\FolderPresenter.cs" />
+    <Compile Include="Presenters\GenericPresenter.cs" />
     <Compile Include="Presenters\GraphPresenter.cs" />
     <Compile Include="Presenters\IExportable.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />

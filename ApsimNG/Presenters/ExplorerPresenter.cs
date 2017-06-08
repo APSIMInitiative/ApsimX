@@ -836,8 +836,14 @@ namespace UserInterface.Presenters
 
                     if (this.advancedMode)
                     {
-                        viewName = new ViewNameAttribute("ApsimNG.Views.GridView");
-                        presenterName = new PresenterNameAttribute("ApsimNG.Presenters.PropertyPresenter");
+                        viewName = new ViewNameAttribute("UserInterface.Views.GridView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.PropertyPresenter");
+                    }
+
+                    if (viewName == null && presenterName == null)
+                    {
+                        viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
                     }
 
                     if (viewName != null && presenterName != null)

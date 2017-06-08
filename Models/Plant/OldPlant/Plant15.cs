@@ -107,8 +107,8 @@ namespace Models.PMF.OldPlant
     /// The generic plant15 crop model
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    //[ViewName("UserInterface.Views.GridView")]
+    //[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ScopedModel]
     public class Plant15 : ModelCollectionFromResource, ICrop, IUptake
