@@ -415,13 +415,69 @@
         <Name>Activities</Name>
         <IATGrowCrop>
           <Name>IAT Grow Crop</Name>
-          <IATGrowCropCost>
-            <Name>BagsAndLabels</Name>
-            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-            <MthsBeforeHarvest>1</MthsBeforeHarvest>
-            <Amount>11</Amount>
-            <AccountName>General account</AccountName>
-          </IATGrowCropCost>
+          <ActivityFolder>
+            <Name>Sowing</Name>
+            <ActivityFolder>
+              <Name>fixed costs</Name>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            </ActivityFolder>
+            <ActivityFolder>
+              <Name>per Ha costs</Name>
+              <IATGrowCropCostPerHa>
+                <Name>Seeds</Name>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+                <UnitsPerHa>1</UnitsPerHa>
+                <CostPerUnit>10</CostPerUnit>
+                <AccountName>General account</AccountName>
+              </IATGrowCropCostPerHa>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            </ActivityFolder>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+          </ActivityFolder>
+          <ActivityFolder>
+            <Name>Growing</Name>
+            <ActivityFolder>
+              <Name>fixed costs</Name>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            </ActivityFolder>
+            <ActivityFolder>
+              <Name>per Ha costs</Name>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            </ActivityFolder>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+          </ActivityFolder>
+          <ActivityFolder>
+            <Name>Harvesting</Name>
+            <ActivityFolder>
+              <Name>fixed costs</Name>
+              <IATGrowCropCost>
+                <Name>BagsAndLabels</Name>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+                <Cost>11</Cost>
+                <AccountName>General account</AccountName>
+              </IATGrowCropCost>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            </ActivityFolder>
+            <ActivityFolder>
+              <Name>per Ha costs</Name>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            </ActivityFolder>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+          </ActivityFolder>
+          <ActivityFolder>
+            <Name>PostHarvest</Name>
+            <ActivityFolder>
+              <Name>fixed costs</Name>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            </ActivityFolder>
+            <ActivityFolder>
+              <Name>per Ha costs</Name>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            </ActivityFolder>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+          </ActivityFolder>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           <Region>1</Region>
           <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
@@ -441,7 +497,7 @@
           <AreaRequested>200</AreaRequested>
         </IATGrowForage>
         <ActivityFolder>
-          <Name>Cash flow</Name>
+          <Name>Pay Overheads</Name>
           <FinanceActivityCalculateInterest>
             <Name>Bank interest</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
@@ -605,7 +661,7 @@
             </RuminantSaleFee>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <BreedName>Bos indicus</BreedName>
-            <BreedingSirePrice>4500</BreedingSirePrice>
+            <BreedingSirePrice>1</BreedingSirePrice>
             <BankAccountName>General account</BankAccountName>
           </RuminantActivityBuySell>
           <RuminantActivityHerdCost>
@@ -736,9 +792,9 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceType.Name as Resource</string>
-            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource</string>
             <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
+            <string>[Activities].LastShortfallResourceRequest.Reason as Reason</string>
             <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
             <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
           </VariableNames>

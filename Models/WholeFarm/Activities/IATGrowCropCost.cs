@@ -17,7 +17,8 @@ namespace Models.WholeFarm.Activities
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(IATGrowCrop))]
-	public class IATGrowCropCost : WFActivityBase
+    [ValidParent(ParentType = typeof(ActivityFolder))]
+    public class IATGrowCropCost : WFActivityBase
 	{
         /// <summary>
         /// Get the Clock.
@@ -25,9 +26,9 @@ namespace Models.WholeFarm.Activities
         [XmlIgnore]
         [Link]
         Clock Clock = null;
-//        [XmlIgnore]
-//        [Link]
-//        ISummary Summary = null;
+        [XmlIgnore]
+        [Link]
+        ISummary Summary = null;
         [XmlIgnore]
         [Link]
         private ResourcesHolder Resources = null;
@@ -44,8 +45,8 @@ namespace Models.WholeFarm.Activities
         /// <summary>
         /// Cost Per Crop
         /// </summary>
-        [Description("Cost Per Crop ($)")]
-        public double Amount { get; set; }
+        [Description("Cost - fixed ($)")]
+        public double Cost { get; set; }
 
         /// <summary>
         /// name of account to use
@@ -64,6 +65,7 @@ namespace Models.WholeFarm.Activities
         /// </summary>
         private FinanceType bankAccount;
 
+        private IATGrowCrop ParentGrowCrop;
 
 
 
@@ -74,6 +76,13 @@ namespace Models.WholeFarm.Activities
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            bool foundGrowCrop = FindParentGrowCrop();
+            if (! foundGrowCrop)
+            {
+                Summary.WriteWarning(this, String.Format("Unable to find a parent IATGrowCrop anywhere above ({0}).", this.Name));
+                throw new ApsimXException(this, String.Format("Unable to find a parent IATGrowCrop anywhere above ({0}).", this.Name));
+            }
+
 
             Finance finance = Resources.FinanceResource();
             if (finance != null)
@@ -88,6 +97,32 @@ namespace Models.WholeFarm.Activities
             }
         }
 
+        /// <summary>
+        /// Find a parent of type IATGrowCrop somewhere above this model in the simulation tree.
+        /// </summary>
+        /// <returns>true or false whether this found it</returns>
+        private bool FindParentGrowCrop()
+        {
+
+            IModel temp = this.Parent;
+
+            //stop when you hit the top level Activity folder if you have not found it yet.
+            while ((temp is ActivitiesHolder) == false)
+            {
+                //if you have found it.
+                if (temp is IATGrowCrop)
+                {
+                    ParentGrowCrop = (IATGrowCrop)temp;  //set the global variable to it.
+                    return true;
+                }
+                //else go up one more folder level
+                temp = temp.Parent;
+            }
+
+            return false;
+        }
+
+
 
         /// <summary>
         /// Get the cost date from the harvest date.
@@ -96,12 +131,12 @@ namespace Models.WholeFarm.Activities
         /// <returns></returns>
         private DateTime CostDateFromHarvestDate()
         {
-            DateTime nextHarvest;
-            CropDataType harvestdata = ((IATGrowCrop)this.Parent).HarvestData.FirstOrDefault();
-            if (harvestdata != null)
+            DateTime nextdate;
+            CropDataType nextharvest = ParentGrowCrop.HarvestData.FirstOrDefault();
+            if (nextharvest != null)
             {
-                nextHarvest = harvestdata.HarvestDate;
-                return nextHarvest.AddMonths(-1 * MthsBeforeHarvest);
+                nextdate = nextharvest.HarvestDate;
+                return nextdate.AddMonths(-1 * MthsBeforeHarvest);
             }
             else
             {
@@ -120,7 +155,7 @@ namespace Models.WholeFarm.Activities
             ResourceRequestList = new List<ResourceRequest>();
 
             costDate = CostDateFromHarvestDate();
-            string cropName = ((IATGrowCrop)this.Parent).FeedTypeName;
+            string cropName = ParentGrowCrop.FeedTypeName;
 
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
@@ -129,10 +164,10 @@ namespace Models.WholeFarm.Activities
                     Resource = bankAccount,
                     ResourceType = typeof(Finance),
                     AllowTransmutation = false,
-                    Required = this.Amount,
+                    Required = this.Cost,
                     ResourceTypeName = this.AccountName,
                     ActivityModel = this,
-                    Reason = cropName + " "+  this.Name
+                    Reason = "Crop cost (fixed) - " + cropName
                 }
                 );
             }
