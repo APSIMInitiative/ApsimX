@@ -144,7 +144,7 @@ namespace UserInterface.Views
             this.plot1.Model.DefaultFontSize = FontSize;
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
             this.plot1.Model.LegendBorder = OxyColors.Transparent;
-            this.plot1.Model.LegendBackground = OxyColors.White;
+            this.plot1.Model.LegendBackground = OxyColors.Transparent;
 
             if (this.LeftRightPadding != 0)
                 this.plot1.Model.Padding = new OxyThickness(10, 10, this.LeftRightPadding, 10);

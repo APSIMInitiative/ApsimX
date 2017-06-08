@@ -409,6 +409,10 @@ namespace UserInterface.Presenters
             {
                 value = Apsim.Find(this.model, value.ToString()) as ICrop;
             }
+            else if (property.DataType == typeof(DateTime))
+            {
+                value = Convert.ToDateTime(value);
+            }
             else if (property.DataType.IsEnum)
             {
                 value = Enum.Parse(property.DataType, value.ToString());
