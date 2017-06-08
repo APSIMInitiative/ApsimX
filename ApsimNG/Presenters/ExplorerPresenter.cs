@@ -125,9 +125,9 @@ namespace UserInterface.Presenters
             this.view.Droped -= this.OnDrop;
             this.view.Renamed -= this.OnRename;
             this.view.ShortcutKeyPressed -= this.OnShortcutKeyPress;
+            HideRightHandPanel();
             if (this.view is Views.ExplorerView)
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
-            HideRightHandPanel();
             this.contextMenu = null;
             this.CommandHistory.Clear();
         }
