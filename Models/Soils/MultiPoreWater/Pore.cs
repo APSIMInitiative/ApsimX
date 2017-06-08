@@ -193,9 +193,9 @@ namespace Models.Soils
                 if (Double.IsNaN(Sorption))
                     throw new Exception("Sorption is NaN");
                 if (IncludeSorption)
-                    return (PoiseuilleFlow + Sorption) * RepelancyFactor;
+                    return PoiseuilleFlow + (Sorption * RepelancyFactor);
                 else
-                    return PoiseuilleFlow * RepelancyFactor;
+                    return PoiseuilleFlow;
             }
         }
         /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
