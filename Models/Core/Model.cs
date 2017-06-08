@@ -267,6 +267,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.WholeFarm.Activities.IATGrowCrop))]
         [XmlElement(typeof(Models.WholeFarm.Activities.IATGrowCropCost))]
         [XmlElement(typeof(Models.WholeFarm.Activities.IATGrowCropCostPerHa))]
+        [XmlElement(typeof(Models.WholeFarm.Activities.IATGrowCropLabour))]
         [XmlElement(typeof(Models.WholeFarm.Activities.IATGrowForage))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.Labour))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.LabourActivityOffFarm))]
