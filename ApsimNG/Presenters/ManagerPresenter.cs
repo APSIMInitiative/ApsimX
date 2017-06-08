@@ -62,6 +62,9 @@ namespace UserInterface.Presenters
             this.managerView.Editor.Text = this.manager.Code;
             this.managerView.Editor.ContextItemsNeeded += this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor += this.OnEditorLeave;
+            this.managerView.Editor.AddContextSeparator();
+            this.managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
+            this.managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
         }
 
         /// <summary>
@@ -69,8 +72,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            propertyPresenter.Detach();
             this.BuildScript();  // compiles and saves the script
+            propertyPresenter.Detach();
 
             this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor -= this.OnEditorLeave;
@@ -153,10 +156,7 @@ namespace UserInterface.Presenters
 
             try
             {
-                // format the code first.
                 string code = this.managerView.Editor.Text;
-                code = new CSharpFormatter(FormattingOptionsFactory.CreateAllman()).Format(code);
-
                 // set the code property manually first so that compile error can be trapped via
                 // an exception.
                 this.manager.Code = code;
@@ -207,6 +207,19 @@ namespace UserInterface.Presenters
         public Image GetScreenshot()
         {
             return managerView.GridView.GetScreenshot();
+        }
+
+        private void OnDoCompile(object sender, EventArgs e)
+        {
+            BuildScript();
+        }
+
+        private void OnDoReformat(object sender, EventArgs e)
+        {
+            CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
+            string newText = formatter.Format(this.managerView.Editor.Text);
+            this.managerView.Editor.Text = newText;
+            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", newText));
         }
     }
 }
