@@ -39,8 +39,8 @@ namespace UserInterface.Presenters
                 }
                 else if (tag is AutoDocumentation.Paragraph)
                 {
-                    contents.Append("\r\n#### ");
-                    contents.Append((tag as AutoDocumentation.Paragraph).text.Replace("\r\n", " "));
+                    contents.Append("\r\n");
+                    contents.Append((tag as AutoDocumentation.Paragraph).text);
                 }
             }
 
