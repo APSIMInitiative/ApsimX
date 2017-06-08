@@ -208,12 +208,15 @@ namespace Models.WholeFarm.Activities
 				{
 					string resourcelist = "";
 					foreach (var item in ResourceRequestList.Where(a => a.Required > a.Available))
-			{
+					{
 						Summary.WriteWarning(this, String.Format("Insufficient ({0}) resource of type ({1}) for activity ({2})", item.ResourceType, item.ResourceTypeName, this.Name));
 						resourcelist += ((resourcelist.Length >0)?",":"")+item.ResourceType.Name;
 					}
-					Summary.WriteWarning(this, String.Format("Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity ({0}) to handle previous error", this.Name));
-					throw new Exception(String.Format("Insufficient resources ({0}) for activity ({1}) (see Summary for details)", resourcelist, this.Name));
+					if (resourcelist.Length > 0)
+					{
+						Summary.WriteWarning(this, String.Format("Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity ({0}) to handle previous error", this.Name));
+						throw new Exception(String.Format("Insufficient resources ({0}) for activity ({1}) (see Summary for details)", resourcelist, this.Name));
+					}
 				}
 
                 foreach (ResourceRequest request in ResourceRequestList)

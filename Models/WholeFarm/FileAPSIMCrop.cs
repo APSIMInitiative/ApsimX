@@ -40,16 +40,16 @@ namespace Models.WholeFarm
     [ValidParent(ParentType=typeof(Simulation))]
     public class FileAPSIMCrop : Model
     {
-        ///// <summary>
-        ///// A link to the clock model.
-        ///// </summary>
-        //[Link]
-        //private Clock clock = null;
+		///// <summary>
+		///// A link to the clock model.
+		///// </summary>
+		//[Link]
+		//private Clock clock = null;
 
-        /// <summary>
-        /// A reference to the text file reader object
-        /// </summary>
-        [NonSerialized]
+		/// <summary>
+		/// A reference to the text file reader object
+		/// </summary>
+		[NonSerialized]
         private ApsimTextFile reader = null;
 
         /// <summary>
@@ -170,9 +170,14 @@ namespace Models.WholeFarm
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+			if (!File.Exists(FullFileName))
+			{
+				string errorMsg = String.Format("Could not locate file ({0}) for ({1})", FullFileName, this.Name);
+				throw new ApsimXException(this, errorMsg);
+			}
 
-            //this.doSeek = true;
-            this.regionIndex = 0;
+			//this.doSeek = true;
+			this.regionIndex = 0;
             this.soilIndex = 0;
             this.cropNoIndex = 0;
             this.cropNameIndex = 0;
@@ -205,14 +210,15 @@ namespace Models.WholeFarm
 
 
 
-        /// <summary>
-        /// Provides an error message to display if something is wrong.
-        /// Used by the UserInterface to give a warning of what is wrong
-        /// 
-        /// When the user selects a file using the browse button in the UserInterface 
-        /// and the file can not be displayed for some reason in the UserInterface.
-        /// </summary>
-        public string ErrorMessage = string.Empty;
+		/// <summary>
+		/// Provides an error message to display if something is wrong.
+		/// Used by the UserInterface to give a warning of what is wrong
+		/// 
+		/// When the user selects a file using the browse button in the UserInterface 
+		/// and the file can not be displayed for some reason in the UserInterface.
+		/// </summary>
+		[XmlIgnore]
+		public string ErrorMessage = string.Empty;
 
         /// <summary>
         /// 
@@ -526,7 +532,7 @@ namespace Models.WholeFarm
             }
             else
             {
-                return false;
+				return false;
             }
         }
 

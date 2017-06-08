@@ -5,14 +5,11 @@
     <Name>WF_IATExample_IndiaICRISAT_v1</Name>
     <FileAPSIMCrop>
       <Name>File APSIM Crop</Name>
-      <ErrorMessage>Invalid number of values on line: 
-in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</ErrorMessage>
-      <FileName>C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.prn</FileName>
+      <FileName>C:\Temp\WholeFarm\Crop_Inputs.prn</FileName>
     </FileAPSIMCrop>
     <FileAPSIMForage>
       <Name>File APSIM Forage</Name>
-      <ErrorMessage />
-      <FileName>C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Forage_Inputs.prn</FileName>
+      <FileName>C:\Temp\WholeFarm\Forage_Inputs.prn</FileName>
     </FileAPSIMForage>
     <Clock>
       <Name>clock</Name>
@@ -29,31 +26,31 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
         <Land>
           <Name>Land</Name>
           <LandType>
-            <Name>Land1_InterBund</Name>
+            <Name>Land1 interbund</Name>
             <LandArea>1.8</LandArea>
             <UnusablePortion>0</UnusablePortion>
             <SoilType>1</SoilType>
           </LandType>
           <LandType>
-            <Name>Land1_Bund</Name>
+            <Name>Land1 bund</Name>
             <LandArea>0.2</LandArea>
             <UnusablePortion>0</UnusablePortion>
             <SoilType>1</SoilType>
           </LandType>
           <LandType>
-            <Name>Land2_InterBund</Name>
+            <Name>Land2 interbund</Name>
             <LandArea>1.425</LandArea>
             <UnusablePortion>0</UnusablePortion>
             <SoilType>1</SoilType>
           </LandType>
           <LandType>
-            <Name>Land2_Bund</Name>
+            <Name>Land2 bund</Name>
             <LandArea>0.075</LandArea>
             <UnusablePortion>0</UnusablePortion>
             <SoilType>1</SoilType>
           </LandType>
           <LandType>
-            <Name>Common_Land</Name>
+            <Name>Common land</Name>
             <LandArea>0.075</LandArea>
             <UnusablePortion>0</UnusablePortion>
             <SoilType>1</SoilType>
@@ -63,7 +60,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
         <Labour>
           <Name>Labour</Name>
           <LabourType>
-            <Name>Elderly_Male_1x72</Name>
+            <Name>Elderly male</Name>
             <InitialAge>72</InitialAge>
             <Gender>Male</Gender>
             <MaxLabourSupply>
@@ -83,7 +80,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <Individuals>1</Individuals>
           </LabourType>
           <LabourType>
-            <Name>Elderly_Female_1x68</Name>
+            <Name>Elderly female</Name>
             <InitialAge>68</InitialAge>
             <Gender>Female</Gender>
             <MaxLabourSupply>
@@ -103,7 +100,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <Individuals>1</Individuals>
           </LabourType>
           <LabourType>
-            <Name>Adult_Male_1x42</Name>
+            <Name>Adult male</Name>
             <InitialAge>42</InitialAge>
             <Gender>Male</Gender>
             <MaxLabourSupply>
@@ -123,7 +120,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <Individuals>1</Individuals>
           </LabourType>
           <LabourType>
-            <Name>Adult_Female_1x31</Name>
+            <Name>Adult female</Name>
             <InitialAge>31</InitialAge>
             <Gender>Female</Gender>
             <MaxLabourSupply>
@@ -143,7 +140,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <Individuals>1</Individuals>
           </LabourType>
           <LabourType>
-            <Name>Teenager_Male_1x13</Name>
+            <Name>Teenage male</Name>
             <InitialAge>13</InitialAge>
             <Gender>Male</Gender>
             <MaxLabourSupply>
@@ -163,7 +160,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <Individuals>1</Individuals>
           </LabourType>
           <LabourType>
-            <Name>Child_Female_1x4</Name>
+            <Name>Child female</Name>
             <InitialAge>31</InitialAge>
             <Gender>Female</Gender>
             <MaxLabourSupply>
@@ -187,7 +184,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
         <HumanFoodStore>
           <Name>HumanFoodStore</Name>
           <HumanFoodStoreType>
-            <Name>CottonFibre</Name>
+            <Name>Cotton fibre</Name>
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
@@ -196,7 +193,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
           <HumanFoodStoreType>
-            <Name>MaizeGrain</Name>
+            <Name>Maize grain</Name>
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
@@ -205,7 +202,16 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
           <HumanFoodStoreType>
-            <Name>SorghumGrain</Name>
+            <Name>Sorghum grain</Name>
+            <DryMatter>50</DryMatter>
+            <DMD>50</DMD>
+            <Nitrogen>20</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
+            <StartingAge>0</StartingAge>
+            <StartingAmount>100</StartingAmount>
+          </HumanFoodStoreType>
+          <HumanFoodStoreType>
+            <Name>Milk</Name>
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
@@ -217,7 +223,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
         <AnimalFoodStore>
           <Name>AnimalFoodStore</Name>
           <AnimalFoodStoreType>
-            <Name>MaizeResidue</Name>
+            <Name>Maize residue</Name>
             <DryMatter>91</DryMatter>
             <DMD>52</DMD>
             <Nitrogen>1.66</Nitrogen>
@@ -225,7 +231,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
-            <Name>SorghumResidue</Name>
+            <Name>Sorghum residue</Name>
             <DryMatter>91</DryMatter>
             <DMD>52</DMD>
             <Nitrogen>1.66</Nitrogen>
@@ -233,7 +239,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
-            <Name>Supp_MaizeGrain</Name>
+            <Name>Maize grain</Name>
             <DryMatter>89</DryMatter>
             <DMD>55</DMD>
             <Nitrogen>2</Nitrogen>
@@ -241,7 +247,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
-            <Name>Supp_MaizeBran</Name>
+            <Name>Maize bran</Name>
             <DryMatter>89</DryMatter>
             <DMD>55</DMD>
             <Nitrogen>2</Nitrogen>
@@ -249,7 +255,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
-            <Name>CottonSeed</Name>
+            <Name>Cotton seed</Name>
             <DryMatter>91</DryMatter>
             <DMD>52</DMD>
             <Nitrogen>1.66</Nitrogen>
@@ -257,7 +263,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
-            <Name>Supp_MilletBran</Name>
+            <Name>Millet bran</Name>
             <Transmutation>
               <Name>Purchase</Name>
               <TransmutationCost>
@@ -289,7 +295,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <RuminantInitialCohorts>
               <Name>Initial cohorts</Name>
               <RuminantTypeCohort>
-                <Name>Start_WeanerF</Name>
+                <Name>WeanerF</Name>
                 <Gender>Female</Gender>
                 <StartingAge>54</StartingAge>
                 <StartingNumber>1</StartingNumber>
@@ -298,7 +304,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
                 <Suckling>false</Suckling>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
-                <Name>Start_Female3_4</Name>
+                <Name>Female3_4</Name>
                 <Gender>Female</Gender>
                 <StartingAge>42</StartingAge>
                 <StartingNumber>2</StartingNumber>
@@ -388,7 +394,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <RuminantInitialCohorts>
               <Name>Initial cohorts</Name>
               <RuminantTypeCohort>
-                <Name>Start_WeanerF</Name>
+                <Name>WeanerF</Name>
                 <Gender>Female</Gender>
                 <StartingAge>9</StartingAge>
                 <StartingNumber>1</StartingNumber>
@@ -397,7 +403,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
                 <Suckling>false</Suckling>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
-                <Name>Start_Female3_4</Name>
+                <Name>Female3_4</Name>
                 <Gender>Female</Gender>
                 <StartingAge>42</StartingAge>
                 <StartingNumber>1</StartingNumber>
@@ -487,7 +493,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <RuminantInitialCohorts>
               <Name>Initial cohorts</Name>
               <RuminantTypeCohort>
-                <Name>Start_WeanerM</Name>
+                <Name>WeanerM</Name>
                 <Gender>Male</Gender>
                 <StartingAge>2</StartingAge>
                 <StartingNumber>5</StartingNumber>
@@ -496,7 +502,7 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
                 <Suckling>false</Suckling>
               </RuminantTypeCohort>
               <RuminantTypeCohort>
-                <Name>Start_Female2_3</Name>
+                <Name>Female2_3</Name>
                 <Gender>Female</Gender>
                 <StartingAge>30</StartingAge>
                 <StartingNumber>4</StartingNumber>
@@ -631,48 +637,56 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
           </FinanceActivityPayOverhead>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
-        <IATGrowCrop>
-          <Name>IAT Grow Crop Cotton</Name>
-          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <Region>1</Region>
-          <LandTypeNameToUse>Land1_InterBund</LandTypeNameToUse>
-          <FeedTypeName>Cotton</FeedTypeName>
-          <ResidueKept>0</ResidueKept>
-          <UnitsOfArea>Hectares</UnitsOfArea>
-          <AreaRequested>1.54</AreaRequested>
-        </IATGrowCrop>
-        <IATGrowCrop>
-          <Name>IAT Grow Crop Sorghum</Name>
-          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <Region>1</Region>
-          <LandTypeNameToUse>Land1_InterBund</LandTypeNameToUse>
-          <FeedTypeName>SorghumGrain</FeedTypeName>
-          <ResidueKept>0</ResidueKept>
-          <UnitsOfArea>Hectares</UnitsOfArea>
-          <AreaRequested>0.26</AreaRequested>
-        </IATGrowCrop>
-        <IATGrowCrop>
-          <Name>IAT Grow Crop Maize</Name>
-          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <Region>1</Region>
-          <LandTypeNameToUse>Land2_InterBund</LandTypeNameToUse>
-          <FeedTypeName>Maize</FeedTypeName>
-          <ResidueKept>0</ResidueKept>
-          <UnitsOfArea>Hectares</UnitsOfArea>
-          <AreaRequested>1.425</AreaRequested>
-        </IATGrowCrop>
-        <IATGrowForage>
-          <Name>IAT Grow Forage NativePasture</Name>
-          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          <Region>1</Region>
-          <LandTypeNameToUse>Common_land</LandTypeNameToUse>
-          <FeedTypeName>Native</FeedTypeName>
-          <ResidueKept>0</ResidueKept>
-          <UnitsOfArea>Hectares</UnitsOfArea>
-          <AreaRequested>200</AreaRequested>
-        </IATGrowForage>
         <ActivityFolder>
-          <Name>Manage Ruminants</Name>
+          <Name>Manage crops</Name>
+          <IATGrowCrop>
+            <Name>Grow cotton</Name>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <Region>1</Region>
+            <LandTypeNameToUse>Land1_InterBund</LandTypeNameToUse>
+            <FeedTypeName>Cotton</FeedTypeName>
+            <ResidueKept>0</ResidueKept>
+            <UnitsOfArea>Hectares</UnitsOfArea>
+            <AreaRequested>1.54</AreaRequested>
+          </IATGrowCrop>
+          <IATGrowCrop>
+            <Name>Grow sorghum</Name>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <Region>1</Region>
+            <LandTypeNameToUse>Land1_InterBund</LandTypeNameToUse>
+            <FeedTypeName>SorghumGrain</FeedTypeName>
+            <ResidueKept>0</ResidueKept>
+            <UnitsOfArea>Hectares</UnitsOfArea>
+            <AreaRequested>0.26</AreaRequested>
+          </IATGrowCrop>
+          <IATGrowCrop>
+            <Name>Grow maize</Name>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <Region>1</Region>
+            <LandTypeNameToUse>Land2_InterBund</LandTypeNameToUse>
+            <FeedTypeName>Maize</FeedTypeName>
+            <ResidueKept>0</ResidueKept>
+            <UnitsOfArea>Hectares</UnitsOfArea>
+            <AreaRequested>1.425</AreaRequested>
+          </IATGrowCrop>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+        </ActivityFolder>
+        <ActivityFolder>
+          <Name>Manage pasture</Name>
+          <IATGrowForage>
+            <Name>Grow native pasture</Name>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <Region>1</Region>
+            <LandTypeNameToUse>Common_land</LandTypeNameToUse>
+            <FeedTypeName>Native</FeedTypeName>
+            <ResidueKept>0</ResidueKept>
+            <UnitsOfArea>Hectares</UnitsOfArea>
+            <AreaRequested>200</AreaRequested>
+          </IATGrowForage>
+          <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+        </ActivityFolder>
+        <ActivityFolder>
+          <Name>Manage ruminants</Name>
           <RuminantActivityManage>
             <Name>Manage Buffalos</Name>
             <RuminantActivityFeed>
@@ -982,11 +996,11 @@ in file: C:\LOCALDATA\A\Ag_FarmModelling\IAT_Examples\India\Crop_Inputs.csv</Err
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <EnergyGross>18.4</EnergyGross>
           </RuminantActivityGrow>
+          <SummariseRuminantHerd>
+            <Name>SummariseHerd</Name>
+          </SummariseRuminantHerd>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
-        <SummariseRuminantHerd>
-          <Name>SummariseHerd</Name>
-        </SummariseRuminantHerd>
       </ActivitiesHolder>
       <Folder>
         <Name>Reports</Name>

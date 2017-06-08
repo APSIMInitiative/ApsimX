@@ -5,12 +5,10 @@
     <Name>Simulation</Name>
     <FileAPSIMCrop>
       <Name>File APSIM Crop</Name>
-      <ErrorMessage />
       <FileName>Crop_inputs (Burkina 20130222).out</FileName>
     </FileAPSIMCrop>
     <FileAPSIMForage>
       <Name>File APSIM Forage</Name>
-      <ErrorMessage />
       <FileName>Forage_inputs (Burkina 20130222).out</FileName>
     </FileAPSIMForage>
     <Clock>
@@ -31,17 +29,13 @@
             <Name>NthQld_NtvPast_SandyCntry</Name>
             <LandArea>30000</LandArea>
             <UnusablePortion>30</UnusablePortion>
-            <BundedPortion>0</BundedPortion>
             <SoilType>1</SoilType>
-            <NDecline>3000</NDecline>
           </LandType>
           <LandType>
             <Name>NthQld_CrackingClayPlains</Name>
             <LandArea>250</LandArea>
             <UnusablePortion>0</UnusablePortion>
-            <BundedPortion>0</BundedPortion>
             <SoilType>3</SoilType>
-            <NDecline>4000</NDecline>
           </LandType>
           <UnitOfArea>Hectares</UnitOfArea>
         </Land>
@@ -556,7 +550,6 @@
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             <FeedTypeName>Lucerne</FeedTypeName>
             <ProportionTramplingWastage>0</ProportionTramplingWastage>
-            <LabourFilterList />
             <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
           </RuminantActivityFeed>
           <RuminantActivityGrow>
@@ -782,6 +775,7 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <RandomSeed>0</RandomSeed>
+      <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationInterval>12</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
     </WholeFarm>
