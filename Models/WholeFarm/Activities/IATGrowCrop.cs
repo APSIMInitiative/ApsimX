@@ -294,8 +294,20 @@ namespace Models.WholeFarm.Activities
 						LinkedAnimalFoodType.Add(packet, this.Name, "Harvest");
 					}
 
-					//now remove the first item from the harvest data list because it has happened
-					HarvestData.RemoveAt(0);  
+
+                    //Now remove the first item from the harvest data list because it has happened.
+
+                    //This causes a problem for the children of this model 
+                    //because of a race condition that occurs if user sets MthsBeforeHarvest = 0 
+                    //for any of the children of this model. 
+                    //Then because this model and children are all executing on the harvest month and 
+                    //this executes first and it removes the harvest from the harvest list, 
+                    //then the chidren never get the Clock.Today == harvest date (aka costdate).
+                    //So to fix this problem, in the children we store the next harvest date (aka costdate) 
+                    //in a global variable and don't update its value
+                    //until after we have done the Clock.Today == harvest date (aka costdate) comparison.
+
+                    HarvestData.RemoveAt(0);  
                 }
             }
         }

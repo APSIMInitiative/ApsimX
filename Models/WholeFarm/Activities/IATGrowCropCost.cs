@@ -26,9 +26,11 @@ namespace Models.WholeFarm.Activities
         [XmlIgnore]
         [Link]
         Clock Clock = null;
+
         [XmlIgnore]
         [Link]
         ISummary Summary = null;
+
         [XmlIgnore]
         [Link]
         private ResourcesHolder Resources = null;
@@ -56,7 +58,13 @@ namespace Models.WholeFarm.Activities
 
 
         /// <summary>
-        /// Date to apply the cost on
+        /// Date to apply the cost on.
+        /// Has to be stored as a global variable because of a race condition that occurs if user sets  MthsBeforeHarvest=0
+        /// Then because ParentGrowCrop and children are all executing on the harvest month and 
+        /// the ParentGrowCrop executes first and it removes the harvest from the harvest list, 
+        /// then the chidren such as these never get the Clock.Today == harvest date (aka costdate).
+        /// So instead we store the next harvest date (aka costdate) in this variable and don't update its value
+        /// until after we have done the Clock.Today == harvest date (aka costdate) comparison.
         /// </summary>
         private DateTime costDate;
 
@@ -95,6 +103,8 @@ namespace Models.WholeFarm.Activities
                 //    throw new ApsimXException(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
                 //}
             }
+
+            costDate = CostDateFromHarvestDate();
         }
 
         /// <summary>
@@ -154,11 +164,10 @@ namespace Models.WholeFarm.Activities
 		{
             ResourceRequestList = new List<ResourceRequest>();
 
-            costDate = CostDateFromHarvestDate();
-            string cropName = ParentGrowCrop.FeedTypeName;
-
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
+                string cropName = ParentGrowCrop.FeedTypeName;
+
                 ResourceRequestList.Add(new ResourceRequest()
                 {
                     Resource = bankAccount,
@@ -171,6 +180,9 @@ namespace Models.WholeFarm.Activities
                 }
                 );
             }
+
+            costDate = CostDateFromHarvestDate();
+
             return ResourceRequestList;
         }
 
