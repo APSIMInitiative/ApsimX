@@ -87,7 +87,17 @@ namespace Models.WholeFarm
 				Summary.WriteWarning(this, error);
 			}
 
-			if (EcologicalIndicatorsCalculationMonth == 0) EcologicalIndicatorsCalculationMonth = 1;
+			if (EcologicalIndicatorsCalculationMonth <= 0)
+			{
+				string error = "Calculation month for Ecological indicators must be between 1 and 12 in (WholeFarm)";
+				throw new Exception(error);
+			}
+			if (EcologicalIndicatorsCalculationInterval <= 0)
+			{
+				string error = "Interval (months) for calculation of Ecological indicators must be greater or equal to 1 in (WholeFarm)";
+				throw new Exception(error);
+			}
+
 			if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
 			{
 				EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
