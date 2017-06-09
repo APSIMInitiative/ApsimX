@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -692,6 +692,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -876,6 +877,7 @@ namespace Models
           </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
       </Simulation>
       <Graph>
@@ -1455,6 +1457,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -1580,6 +1583,7 @@ namespace Models
           </MicroClimate>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
       </Simulation>
       <Graph>
@@ -1838,9 +1842,12 @@ namespace Models
               <string>[ExtraVariables].Script.MineralN</string>
               <string>[ExtraVariables].Script.TotalNO3</string>
               <string>[ExtraVariables].Script.TotalNH4</string>
-              <string />
-              <string />
-              <string />
+              <string>
+              </string>
+              <string>
+              </string>
+              <string>
+              </string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -2205,6 +2212,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -2506,6 +2514,7 @@ private void OnDoManagement(object sender, EventArgs e)
           </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
       </Simulation>
       <Graph>
@@ -2859,7 +2868,8 @@ private void OnDoManagement(object sender, EventArgs e)
               <string>Wheat.NStress.Photo</string>
               <string>Wheat.NStress.Expansion</string>
               <string>Wheat.Total.Wt</string>
-              <string />
+              <string>
+              </string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -3263,6 +3273,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Irrigation>
             <Name>irrigation</Name>
@@ -3472,6 +3483,7 @@ private void OnDoManagement(object sender, EventArgs e)
           </MicroClimate>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
       </Simulation>
     </Experiment>
@@ -4111,6 +4123,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Irrigation>
             <Name>irrigation</Name>
@@ -4478,6 +4491,7 @@ private void OnDoManagement(object sender, EventArgs e)
           </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
       </Simulation>
       <Graph>
@@ -6098,6 +6112,7 @@ public class Script : Model
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Report>
             <Name>Report</Name>
@@ -6129,13 +6144,20 @@ public class Script : Model
               <string>Wheat.NStress.Photo</string>
               <string>Wheat.NStress.Expansion</string>
               <string>Wheat.Total.Wt</string>
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
-              <string />
+              <string>
+              </string>
+              <string>
+              </string>
+              <string>
+              </string>
+              <string>
+              </string>
+              <string>
+              </string>
+              <string>
+              </string>
+              <string>
+              </string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -6202,6 +6224,7 @@ public class Script : Model
           </MicroClimate>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
       </Simulation>
       <Graph>
@@ -7228,6 +7251,7 @@ public class Script : Model
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Report>
             <Name>Report</Name>
@@ -7260,7 +7284,8 @@ public class Script : Model
               <string>Wheat.NStress.Expansion</string>
               <string>Wheat.Total.Wt</string>
               <string>sum([Soil].SoilWater.SWmm) as TotalSW</string>
-              <string />
+              <string>
+              </string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -7363,6 +7388,7 @@ namespace Models
           </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
       </Simulation>
       <Graph>
@@ -8276,6 +8302,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -8641,6 +8668,7 @@ namespace Models
           </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
       </Simulation>
       <Graph>
@@ -9489,6 +9517,7 @@ namespace Models
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -9781,6 +9810,7 @@ private void OnDoManagement(object sender, EventArgs e)
           </Operations>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
       </Simulation>
       <Graph>
@@ -10281,6 +10311,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Soil>
             <Name>Unripped</Name>
@@ -10730,6 +10761,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <Specifications>
             <string>[WonganSoil]</string>
@@ -11414,6 +11446,7 @@ private void OnDoManagement(object sender, EventArgs e)
             <NaturalVegetation>Unknown</NaturalVegetation>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
+            <CERESSoilTemperature />
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -11688,6 +11721,7 @@ private void OnDoManagement(object sender, EventArgs e)
           </Manager>
           <Area>1</Area>
           <Slope>0</Slope>
+          <SoluteManager />
         </Zone>
       </Simulation>
     </Experiment>
