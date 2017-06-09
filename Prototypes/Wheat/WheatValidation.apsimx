@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1354,16 +1354,54 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Leaf</Name>
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
+          <NReallocationFactor>0</NReallocationFactor>
+          <DMReallocationFactor>0</DMReallocationFactor>
+          <NRetranslocationFactor>0</NRetranslocationFactor>
+          <DMRetranslocationFactor>0</DMRetranslocationFactor>
+          <ShadeInducedSenRate>0</ShadeInducedSenRate>
+          <SenescedFrac>0</SenescedFrac>
+          <DeltaPotentialArea>0</DeltaPotentialArea>
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+          <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+          <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+          <MetabolicNReallocated>0</MetabolicNReallocated>
+          <MetabolicWtReallocated>0</MetabolicWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <DMRetranslocated>0</DMRetranslocated>
+          <MetabolicNAllocation>0</MetabolicNAllocation>
+          <StructuralDMAllocation>0</StructuralDMAllocation>
+          <MetabolicDMAllocation>0</MetabolicDMAllocation>
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
+          <NReallocationFactor>0</NReallocationFactor>
+          <DMReallocationFactor>0</DMReallocationFactor>
+          <NRetranslocationFactor>0</NRetranslocationFactor>
+          <DMRetranslocationFactor>0</DMRetranslocationFactor>
+          <ShadeInducedSenRate>0</ShadeInducedSenRate>
+          <SenescedFrac>0</SenescedFrac>
+          <DeltaPotentialArea>0</DeltaPotentialArea>
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+          <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+          <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+          <MetabolicNReallocated>0</MetabolicNReallocated>
+          <MetabolicWtReallocated>0</MetabolicWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <DMRetranslocated>0</DMRetranslocated>
+          <MetabolicNAllocation>0</MetabolicNAllocation>
+          <StructuralDMAllocation>0</StructuralDMAllocation>
+          <MetabolicDMAllocation>0</MetabolicDMAllocation>
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>

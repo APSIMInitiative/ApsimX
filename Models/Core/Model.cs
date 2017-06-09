@@ -135,6 +135,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.Leaf))]
         [XmlElement(typeof(Models.PMF.Organs.LeafCohort))]
         [XmlElement(typeof(Models.PMF.Organs.Leaf.LeafCohortParameters))]
+        [XmlElement(typeof(Models.PMF.Organs.ApexStandard))]
+        [XmlElement(typeof(Models.PMF.Organs.ApexTiller))]
         [XmlElement(typeof(Models.PMF.Organs.Nodule))]
         [XmlElement(typeof(Models.PMF.Organs.ReproductiveOrgan))]
         [XmlElement(typeof(Models.PMF.Organs.Root))]
