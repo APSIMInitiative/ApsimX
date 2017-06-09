@@ -6,7 +6,6 @@
     using EventArguments;
     using Gtk;
     using Mono.TextEditor;
-    using ICSharpCode.NRefactory.CSharp;
     using Utility;
 
     /// <summary>
