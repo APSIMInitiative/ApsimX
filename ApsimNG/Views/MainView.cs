@@ -167,8 +167,11 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
-            Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), 
+            if ((uint)Environment.OSVersion.Platform <= 3)
+            {
+                Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                                       ".gtkrc"));
+            }
 
             Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.MainView.glade", "window1");
             gxml.Autoconnect(this);
