@@ -89,10 +89,10 @@ namespace Models.Report
         /// </summary>
         private string aggregationFunction;
 
-        ///// <summary>
-        ///// Units as specified in the descriptor.
-        ///// </summary>
-        //private string units;
+        /// <summary>
+        /// Units as specified in the descriptor.
+        /// </summary>
+        public string Units { get; private set; }
 
         /// <summary>
         /// The date when an aggregation value was last stored
@@ -127,6 +127,10 @@ namespace Models.Report
             this.reportingFrequencies.AddRange(frequenciesFromReport);
             this.clock = Apsim.Find(parentModel, typeof(Clock)) as Clock;
 
+            IVariable var = Apsim.GetVariableObject(parentModel.Parent, Name);
+            if (var != null)
+                Units = var.UnitsLabel;
+
             Apsim.Subscribe(parentModel, "[Clock].StartOfDay", this.OnStartOfDay);
             Apsim.Subscribe(parentModel, "[Clock].DoReportCalculations", this.OnEndOfDay);
 
@@ -159,6 +163,10 @@ namespace Models.Report
             this.parentModel = parentModel;
             this.reportingFrequencies.AddRange(frequenciesFromReport);
             this.clock = Apsim.Find(parentModel, typeof(Clock)) as Clock;
+
+            IVariable var = Apsim.GetVariableObject(parentModel.Parent, Name);
+            if (var != null)
+                Units = var.UnitsLabel;
 
             foreach (string frequency in this.reportingFrequencies)
                 Apsim.Subscribe(parentModel, frequency, this.OnReportFrequency);

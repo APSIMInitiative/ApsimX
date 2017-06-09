@@ -10,7 +10,7 @@ namespace Models.Report
     using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
-    using System.Threading.Tasks;
+    using System.Xml.Serialization;
 
     /// <summary>A class for holding data for a .db table.</summary>
     [Serializable]
@@ -24,21 +24,25 @@ namespace Models.Report
         public string TableName;
         /// <summary>The data</summary>
         public List<IReportColumn> Columns = new List<IReportColumn>();
+        /// <summary>
+        ///  map of column name to units of measurement
+        /// </summary>
+        public Dictionary<String, String> colUnitsMap = new Dictionary<String, String>();
 
         /// <summary>Flatten the table i.e. turn arrays and structures into a flat table.</summary>
         public void Flatten()
         {
-            List<IReportColumn> flattenedColumns = new List<Models.Report.IReportColumn>();
-            foreach (IReportColumn column in Columns)
+            List<IReportColumn> origColumns = Columns;
+            Columns = new List<IReportColumn>();
+            colUnitsMap.Clear();
+            foreach (IReportColumn column in origColumns)
             {
                 if (column is ReportColumnConstantValue)
-                    flattenedColumns.Add(column);
+                    Columns.Add(column);
                 else
                     for (int rowIndex = 0; rowIndex < column.Values.Count; rowIndex++)
-                        FlattenValue(column.Name, column.Values[rowIndex], rowIndex, flattenedColumns);
+                        FlattenValue(column.Name, column.Units, column.Values[rowIndex], rowIndex);
             }
-
-            Columns = flattenedColumns;
         }
 
         /// <summary>
@@ -46,24 +50,27 @@ namespace Models.Report
         /// to a data table.
         /// </summary>
         /// <param name="name">Column name where the value came from.</param>
+        /// <param name="units">Units of measurement; null if not applicable</param>
         /// <param name="value">The object to be analyzed and flattened</param>
         /// <param name="rowIndex">The row index of the specified value.</param>
-        /// <param name="flattenedColumns">The returned flattened columns.</param>
         /// <returns>The list of values that can be written to a data table</returns>
-        private static void FlattenValue(string name, object value, int rowIndex, List<IReportColumn> flattenedColumns)
+        private void FlattenValue(string name, string units, object value, int rowIndex)
         {
-            if (value == null || value.GetType() == typeof(DateTime) || value.GetType() == typeof(string) || !value.GetType().IsClass)
+            Type type = value.GetType();
+            if (value == null || type == typeof(DateTime) || type == typeof(string) || !type.IsClass)
             {
                 // Scalar
-                IReportColumn flattenedColumn = flattenedColumns.Find(col => col.Name == name);
+                IReportColumn flattenedColumn = Columns.Find(col => col.Name == name);
                 if (flattenedColumn == null)
                 {
                     flattenedColumn = new ReportColumnWithValues(name);
-                    InsertColumn(flattenedColumn, flattenedColumns);
+                    InsertColumn(flattenedColumn);
+                    if (units != null)
+                        colUnitsMap.Add(name, units);
                 }
 
                 // Ensure all columns have the correct number of values.
-                foreach (IReportColumn column in flattenedColumns)
+                foreach (IReportColumn column in Columns)
                 {
                     if (column is ReportColumnConstantValue)
                     { }
@@ -85,7 +92,7 @@ namespace Models.Report
                     heading += "(" + (columnIndex + 1).ToString() + ")";
 
                     object arrayElement = array.GetValue(columnIndex);
-                    FlattenValue(heading, arrayElement, rowIndex, flattenedColumns);  // recursion
+                    FlattenValue(heading, units, arrayElement, rowIndex);  // recursion
                 }
             }
             else if (value.GetType().GetInterface("IList") != null)
@@ -98,7 +105,7 @@ namespace Models.Report
                     heading += "(" + (columnIndex + 1).ToString() + ")";
 
                     object arrayElement = array[columnIndex];
-                    FlattenValue(heading, arrayElement, rowIndex, flattenedColumns);  // recursion
+                    FlattenValue(heading, units, arrayElement, rowIndex);  // recursion
                 }
             }
             else
@@ -106,9 +113,25 @@ namespace Models.Report
                 // A struct or class
                 foreach (PropertyInfo property in ReflectionUtilities.GetPropertiesSorted(value.GetType(), BindingFlags.Instance | BindingFlags.Public))
                 {
+                    object[] attrs = property.GetCustomAttributes(true);
+                    string propUnits = null;
+                    bool ignore = false;
+                    foreach (object attr in attrs)
+                    {
+                        if (attr is XmlIgnoreAttribute)
+                        {
+                            ignore = true;
+                            continue;
+                        }
+                        Core.UnitsAttribute unitsAttr = attr as Core.UnitsAttribute;
+                        if (unitsAttr != null)
+                            propUnits = unitsAttr.ToString();
+                    }
+                    if (ignore)
+                        continue;
                     string heading = name + "." + property.Name;
                     object classElement = property.GetValue(value, null);
-                    FlattenValue(heading, classElement, rowIndex, flattenedColumns);
+                    FlattenValue(heading, propUnits, classElement, rowIndex);
                 }
             }
         }
@@ -118,22 +141,21 @@ namespace Models.Report
         /// Need to ensure that array columns are kept in order.
         /// </summary>
         /// <param name="column">The column to insert.</param>
-        /// <param name="flattenedColumns">The returned flattened columns.</param>
-        private static void InsertColumn(IReportColumn column, List<IReportColumn> flattenedColumns)
+        private void InsertColumn(IReportColumn column)
         {
             int indexOfBracket = column.Name.IndexOf('(');
             if (indexOfBracket != -1)
             {
                 // find the last column that has a name is identical up to bracketed value.
                 string namePrefixToMatch = column.Name.Substring(0, indexOfBracket);
-                int indexToInsertAfter = flattenedColumns.FindLastIndex(col => col.Name.StartsWith(namePrefixToMatch));
+                int indexToInsertAfter = Columns.FindLastIndex(col => col.Name.StartsWith(namePrefixToMatch));
                 if (indexToInsertAfter != -1)
                 {
-                    flattenedColumns.Insert(indexToInsertAfter + 1, column);
+                    Columns.Insert(indexToInsertAfter + 1, column);
                     return;
                 }
             }
-            flattenedColumns.Add(column);
+            Columns.Add(column);
         }
     }
 }
