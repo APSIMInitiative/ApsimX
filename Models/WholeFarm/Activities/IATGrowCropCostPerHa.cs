@@ -41,17 +41,23 @@ namespace Models.WholeFarm.Activities
         [Description("Months before harvest to apply cost")]
         public int MthsBeforeHarvest { get; set; }
 
+        /// <summary>
+        /// Crop payment style
+        /// </summary>
+        [Description("Payment style")]
+        public CropPaymentStyleType  PaymentStyle { get; set; }
+
 
         /// <summary>
-        /// Cost Per Crop
+        /// Units Per Hectare 
         /// </summary>
-        [Description("Units per Ha")]
-        public double UnitsPerHa { get; set; }
+        [Description("Units [eg. tonnes, kgs, bags] per Ha or Tree")]
+        public double UnitsPerHaOrTree { get; set; }
 
         /// <summary>
-        /// Cost Per Crop
+        /// Cost Per Unit
         /// </summary>
-        [Description("Cost per Unit ($)")]
+        [Description("Cost (per Unit or fixed) ($)")]
         public double CostPerUnit { get; set; }
 
         /// <summary>
@@ -176,21 +182,44 @@ namespace Models.WholeFarm.Activities
 
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
-                double totalcost = CostPerUnit * UnitsPerHa * ParentGrowCrop.Area;
 
                 string cropName = ParentGrowCrop.FeedTypeName;
+                double totalcost;
+                string reason;
 
-                ResourceRequestList.Add(new ResourceRequest()
+                switch (PaymentStyle)
                 {
-                    Resource = bankAccount,
-                    ResourceType = typeof(Finance),
-                    AllowTransmutation = false,
-                    Required = totalcost,
-                    ResourceTypeName = this.AccountName,
-                    ActivityModel = this ,
-                    Reason = "Crop cost (per Ha) - " + cropName
+                    case CropPaymentStyleType.Fixed:
+                        totalcost = CostPerUnit;
+                        reason = "Crop cost (fixed) - " + cropName;
+                        break;
+                    case CropPaymentStyleType.perHa:
+                        totalcost = CostPerUnit * UnitsPerHaOrTree * ParentGrowCrop.Area;
+                        reason = "Crop cost (per Ha) - " + cropName;
+                        break;
+                    //case CropPaymentStyleType.perTree:
+                    //    totalcost = CostPerUnit * UnitsPerHaOrTree * ParentGrowCrop.Trees;
+                    //    reason = "Crop cost (per Tree) - " + cropName;
+                    //    break;
+                    default:
+                        throw new Exception(String.Format("CropPaymentStyleType {0} is not supported for {1}", PaymentStyle, this.Name));
                 }
-                );
+
+                if (totalcost > 0)
+                {
+                    ResourceRequestList.Add(new ResourceRequest()
+                    {
+                        Resource = bankAccount,
+                        ResourceType = typeof(Finance),
+                        AllowTransmutation = false,
+                        Required = totalcost,
+                        ResourceTypeName = this.AccountName,
+                        ActivityModel = this,
+                        Reason = reason
+                    }
+                    );
+                }
+
             }
 
             costDate = CostDateFromHarvestDate();

@@ -461,43 +461,41 @@
           <Name>IAT Grow Crop</Name>
           <ActivityFolder>
             <Name>Sowing</Name>
-             <IATGrowCropCost>
-                <Name>BagsAndLabels</Name>
-                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-                <MthsBeforeHarvest>1</MthsBeforeHarvest>
-                <Cost>11</Cost>
-                <AccountName>General account</AccountName>
-              </IATGrowCropCost>
-            
-            
-              <IATGrowCropCostPerHa>
-                <Name>Seeds</Name>
-                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-                <MthsBeforeHarvest>1</MthsBeforeHarvest>
-                <UnitsPerHa>1</UnitsPerHa>
-                <CostPerUnit>10</CostPerUnit>
-                <AccountName>General account</AccountName>
-              </IATGrowCropCostPerHa>
-            
-              <IATGrowCropLabour>
-                <Name>HandSowing</Name>
-                <LabourFilterGroupSpecified>
-                  <Name>Labour details</Name>
-                  <LabourFilter>
-                    <Name>Filter[Name=Joe B]</Name>
-                    <Parameter>Name</Parameter>
-                    <Operator>Equal</Operator>
-                    <Value>Joe B</Value>
-                  </LabourFilter>
-                  <UnitType>Fixed</UnitType>
-                  <UnitSize>1</UnitSize>
-                  <LabourPerUnit>2</LabourPerUnit>
-                </LabourFilterGroupSpecified>
-                <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-                <MthsBeforeHarvest>1</MthsBeforeHarvest>
-              </IATGrowCropLabour>
-            
-
+            <IATGrowCropCostPerHa>
+              <Name>Bags and Labels</Name>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+              <MthsBeforeHarvest>1</MthsBeforeHarvest>
+              <PaymentStyle>Fixed</PaymentStyle>
+              <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
+              <CostPerUnit>11</CostPerUnit>
+              <AccountName>General account</AccountName>
+            </IATGrowCropCostPerHa>
+            <IATGrowCropCostPerHa>
+              <Name>Seeds</Name>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+              <MthsBeforeHarvest>1</MthsBeforeHarvest>
+              <PaymentStyle>perHa</PaymentStyle>
+              <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
+              <CostPerUnit>10</CostPerUnit>
+              <AccountName>General account</AccountName>
+            </IATGrowCropCostPerHa>
+            <IATGrowCropLabour>
+              <Name>HandSowing</Name>
+              <LabourFilterGroupSpecified>
+                <Name>Labour details</Name>
+                <LabourFilter>
+                  <Name>Filter[Name=Joe B]</Name>
+                  <Parameter>Name</Parameter>
+                  <Operator>Equal</Operator>
+                  <Value>Joe B</Value>
+                </LabourFilter>
+                <UnitType>Fixed</UnitType>
+                <UnitSize>1</UnitSize>
+                <LabourPerUnit>2</LabourPerUnit>
+              </LabourFilterGroupSpecified>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+              <MthsBeforeHarvest>1</MthsBeforeHarvest>
+            </IATGrowCropLabour>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           </ActivityFolder>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
