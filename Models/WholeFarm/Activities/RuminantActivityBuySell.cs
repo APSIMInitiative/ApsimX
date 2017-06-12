@@ -242,16 +242,16 @@ namespace Models.WholeFarm.Activities
 						{
 							switch (item.PaymentStyle)
 							{
-								case PaymentStyleType.Fixed:
+								case AnimalPaymentStyleType.Fixed:
 									expenseRequest.Required = item.Amount;
 									break;
-								case PaymentStyleType.perHead:
+								case AnimalPaymentStyleType.perHead:
 									expenseRequest.Required = head * item.Amount;
 									break;
-								case PaymentStyleType.perAE:
+								case AnimalPaymentStyleType.perAE:
 									expenseRequest.Required = AESum * item.Amount;
 									break;
-								case PaymentStyleType.ProportionOfTotalSales:
+								case AnimalPaymentStyleType.ProportionOfTotalSales:
 									expenseRequest.Required = saleValue * item.Amount;
 									break;
 								default:

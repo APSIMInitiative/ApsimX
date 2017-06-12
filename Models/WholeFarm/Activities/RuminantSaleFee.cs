@@ -19,7 +19,7 @@ namespace Models.WholeFarm.Activities
 		/// Payment style
 		/// </summary>
 		[Description("Payment style")]
-		public PaymentStyleType PaymentStyle { get; set; }
+		public AnimalPaymentStyleType PaymentStyle { get; set; }
 
 		/// <summary>
 		/// Amount

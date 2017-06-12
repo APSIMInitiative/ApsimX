@@ -92,10 +92,34 @@ namespace Models.WholeFarm
 		perKg
 	}
 
-	/// <summary>
-	/// Animal payment style
-	/// </summary>
-	public enum PaymentStyleType
+
+
+    /// <summary>
+    /// Crop payment style
+    /// </summary>
+    public enum CropPaymentStyleType
+    {
+        /// <summary>
+        /// Fixed price
+        /// </summary>
+        Fixed,
+        /// <summary>
+        /// Amount per hectare
+        /// </summary>
+        perHa,
+        /// <summary>
+        /// Amount per tree
+        /// </summary>
+        perTree,
+    }
+
+
+
+
+    /// <summary>
+    /// Animal payment style
+    /// </summary>
+    public enum AnimalPaymentStyleType
 	{
 		/// <summary>
 		/// Fixed price
