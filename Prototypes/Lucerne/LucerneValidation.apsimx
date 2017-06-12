@@ -1548,17 +1548,17 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <AcceptedStats>
           <RegrStats>
             <Name>Lucerne.AboveGround.Wt</Name>
-            <n>725</n>
-            <Slope>1.1488894831243959</Slope>
-            <Intercept>174.65051718792603</Intercept>
-            <SEslope>0.067386373871675648</SEslope>
-            <SEintercept>13.882923614301863</SEintercept>
-            <R2>0.28675583491787993</R2>
-            <RMSE>314.31662043018304</RMSE>
-            <NSE>-4.4764525325003435</NSE>
-            <ME>197.90979196479796</ME>
-            <MAE>238.81539670451735</MAE>
-            <RSR>2.3385676823366279</RSR>
+            <n>145</n>
+            <Slope>1.1488894831243957</Slope>
+            <Intercept>174.65051718792617</Intercept>
+            <SEslope>0.15152113578532389</SEslope>
+            <SEintercept>31.216345875291189</SEintercept>
+            <R2>0.2867558349178797</R2>
+            <RMSE>314.31662043018287</RMSE>
+            <NSE>-4.4764525325003284</NSE>
+            <ME>197.90979196479805</ME>
+            <MAE>238.81539670451727</MAE>
+            <RSR>2.3320986030494413</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
