@@ -1541,6 +1541,33 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>Observed</string>
       </SheetNames>
     </ExcelInput>
+    <PredictedObserved>
+      <Name>ObsVsPre</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <AcceptedStats>
+          <RegrStats>
+            <Name>Lucerne.AboveGround.Wt</Name>
+            <n>725</n>
+            <Slope>1.1488894831243959</Slope>
+            <Intercept>174.65051718792603</Intercept>
+            <SEslope>0.067386373871675648</SEslope>
+            <SEintercept>13.882923614301863</SEintercept>
+            <R2>0.28675583491787993</R2>
+            <RMSE>314.31662043018304</RMSE>
+            <NSE>-4.4764525325003435</NSE>
+            <ME>197.90979196479796</ME>
+            <MAE>238.81539670451735</MAE>
+            <RSR>2.3385676823366279</RSR>
+          </RegrStats>
+        </AcceptedStats>
+        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
+        <POName>ObsVsPre</POName>
+      </Tests>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>Observed</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -1563,6 +1590,94 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <Name>irr</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
+            <Operation>
+              <Date>2000-12-20</Date>
+              <Action>[Irrigation].Apply(25);</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-12-29</Date>
+              <Action>[Irrigation].Apply(30);</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-01-28</Date>
+              <Action>[Irrigation].Apply(36);</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-02-17</Date>
+              <Action>[Irrigation].Apply(45);</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-03-07</Date>
+              <Action>[Irrigation].Apply(55);</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-03-30</Date>
+              <Action>[Irrigation].Apply(80);</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-04-29</Date>
+              <Action>[Irrigation].Apply(52);</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-10-06</Date>
+              <Action>[Irrigation].Apply(70);</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-12-06</Date>
+              <Action>[Irrigation].Apply(70);</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-12-20</Date>
+              <Action>[Irrigation].Apply(80);</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-09-12</Date>
+              <Action>[Irrigation].Apply(42);</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-10-11</Date>
+              <Action>[Irrigation].Apply(40);</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-12-31</Date>
+              <Action>[Irrigation].Apply(47);</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-01-19</Date>
+              <Action>[Irrigation].Apply(40);</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-02-12</Date>
+              <Action>[Irrigation].Apply(45);</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-02-28</Date>
+              <Action>[Irrigation].Apply(45);</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-03-14</Date>
+              <Action>[Irrigation].Apply(50);</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-03-27</Date>
+              <Action>[Irrigation].Apply(40);</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-11-27</Date>
+              <Action>[Irrigation].Apply(35);</Action>
+            </Operation>
+            <Operation>
+              <Date>2004-01-02</Date>
+              <Action>[Irrigation].Apply(40);</Action>
+            </Operation>
+            <Operation>
+              <Date>2004-01-14</Date>
+              <Action>[Irrigation].Apply(40);</Action>
+            </Operation>
+            <Operation>
+              <Date>2004-02-15</Date>
+              <Action>[Irrigation].Apply(40);</Action>
+            </Operation>
           </Operations>
           <Specifications>
             <string>[IrrigationEvents]</string>
@@ -4302,7 +4417,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -4345,7 +4460,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -4409,7 +4524,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -4430,7 +4545,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -4473,7 +4588,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -4594,14 +4709,14 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>StemWt1</Name>
+        <Name>SoilWaterContent</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -4610,7 +4725,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Lucerne.Stem.Live.Wt</YFieldName>
+          <YFieldName>DiagnosticsVariables.Script.SWC</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -4659,5 +4774,50 @@ namespace Models
       </Graph>
     </Folder>
   </Experiment>
+  <Graph>
+    <Name>ObsVsPred</Name>
+    <Series>
+      <Name>Series</Name>
+      <Regression>
+        <Name>Regression</Name>
+        <ForEachSeries>true</ForEachSeries>
+      </Regression>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777216</ColourArgb>
+      <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>FilledCircle</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>None</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>ObsVsPre</TableName>
+      <XFieldName>Observed.Lucerne.AboveGround.Wt</XFieldName>
+      <YFieldName>Predicted.Lucerne.AboveGround.Wt</YFieldName>
+      <ShowInLegend>false</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <Axis>
+      <Type>Bottom</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopLeft</LegendPosition>
+    <DisabledSeries />
+    <IncludeInDocumentation>false</IncludeInDocumentation>
+  </Graph>
   <ExplorerWidth>232</ExplorerWidth>
 </Simulations>
