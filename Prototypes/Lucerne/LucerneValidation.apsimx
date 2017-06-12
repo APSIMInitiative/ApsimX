@@ -1459,6 +1459,8 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <string>[Root].Dead</string>
           <string>[Nodule].Live</string>
           <string>[Nodule].Dead</string>
+          <string>[TapRoot].Live</string>
+          <string>[TapRoot].Dead</string>
         </Propertys>
       </CompositeBiomass>
       <CompositeBiomass>
@@ -1476,6 +1478,8 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <string>[Root].Dead</string>
           <string>[Nodule].Live</string>
           <string>[Nodule].Dead</string>
+          <string>[TapRoot].Live</string>
+          <string>[TapRoot].Dead</string>
         </Propertys>
       </CompositeBiomass>
       <CompositeBiomass>
@@ -1487,6 +1491,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <string>[Shell].Live</string>
           <string>[Root].Live</string>
           <string>[Nodule].Live</string>
+          <string>[TapRoot].Live</string>
         </Propertys>
       </CompositeBiomass>
       <CompositeBiomass>
@@ -1498,6 +1503,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <string>[Shell].Dead</string>
           <string>[Root].Dead</string>
           <string>[Nodule].Dead</string>
+          <string>[TapRoot].Dead</string>
         </Propertys>
       </CompositeBiomass>
       <CompositeBiomass>
@@ -1557,54 +1563,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <Name>irr</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
-            <Operation>
-              <Date>1998-01-07</Date>
-              <Action>[Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-01-14</Date>
-              <Action> [Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-01-21</Date>
-              <Action> [Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-01-28</Date>
-              <Action> [Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-02-07</Date>
-              <Action>[Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-02-14</Date>
-              <Action> [Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-02-21</Date>
-              <Action> [Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-02-28</Date>
-              <Action> [Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-03-07</Date>
-              <Action>[Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-03-14</Date>
-              <Action> [Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-03-21</Date>
-              <Action> [Irrigation].Apply(25);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-03-28</Date>
-              <Action> [Irrigation].Apply(25);</Action>
-            </Operation>
           </Operations>
           <Specifications>
             <string>[IrrigationEvents]</string>
@@ -1618,7 +1576,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
       <Clock>
         <Name>clock</Name>
         <StartDate>2000-10-24T00:00:00</StartDate>
-        <EndDate>2004-07-01T00:00:00</EndDate>
+        <EndDate>2003-07-01T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
@@ -2266,58 +2224,6 @@ namespace Models
         </Manager>
         <Operations>
           <Name>IrrigationEvents</Name>
-          <Operation>
-            <Date>1998-01-07</Date>
-            <Action>[Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-01-14</Date>
-            <Action> [Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-01-21</Date>
-            <Action> [Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-01-28</Date>
-            <Action> [Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-02-07</Date>
-            <Action>[Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-02-14</Date>
-            <Action> [Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-02-21</Date>
-            <Action> [Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-02-28</Date>
-            <Action> [Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-03-07</Date>
-            <Action>[Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-03-14</Date>
-            <Action> [Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-03-21</Date>
-            <Action> [Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-03-28</Date>
-            <Action> [Irrigation].Apply(25);</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-07-01</Date>
-            <Action> [Mower].Script.Cut(0.8,1.0,0.1);</Action>
-          </Operation>
         </Operations>
         <Plant>
           <Name>Lucerne</Name>
@@ -2941,7 +2847,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2962,7 +2868,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-65536</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -2983,7 +2889,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16744448</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3004,7 +2910,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-32768</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3025,7 +2931,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-65281</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3046,7 +2952,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16711681</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3067,7 +2973,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-8388544</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3088,7 +2994,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-12582784</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -3130,7 +3036,7 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-16777056</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
