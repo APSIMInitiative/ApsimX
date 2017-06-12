@@ -461,12 +461,15 @@
           <Name>IAT Grow Crop</Name>
           <ActivityFolder>
             <Name>Sowing</Name>
-            <ActivityFolder>
-              <Name>fixed costs</Name>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            </ActivityFolder>
-            <ActivityFolder>
-              <Name>per Ha costs</Name>
+             <IATGrowCropCost>
+                <Name>BagsAndLabels</Name>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+                <Cost>11</Cost>
+                <AccountName>General account</AccountName>
+              </IATGrowCropCost>
+            
+            
               <IATGrowCropCostPerHa>
                 <Name>Seeds</Name>
                 <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
@@ -475,10 +478,7 @@
                 <CostPerUnit>10</CostPerUnit>
                 <AccountName>General account</AccountName>
               </IATGrowCropCostPerHa>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            </ActivityFolder>
-            <ActivityFolder>
-              <Name>Labour used</Name>
+            
               <IATGrowCropLabour>
                 <Name>HandSowing</Name>
                 <LabourFilterGroupSpecified>
@@ -496,51 +496,8 @@
                 <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
               </IATGrowCropLabour>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            </ActivityFolder>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          </ActivityFolder>
-          <ActivityFolder>
-            <Name>Growing</Name>
-            <ActivityFolder>
-              <Name>fixed costs</Name>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            </ActivityFolder>
-            <ActivityFolder>
-              <Name>per Ha costs</Name>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            </ActivityFolder>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          </ActivityFolder>
-          <ActivityFolder>
-            <Name>Harvesting</Name>
-            <ActivityFolder>
-              <Name>fixed costs</Name>
-              <IATGrowCropCost>
-                <Name>BagsAndLabels</Name>
-                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-                <MthsBeforeHarvest>1</MthsBeforeHarvest>
-                <Cost>11</Cost>
-                <AccountName>General account</AccountName>
-              </IATGrowCropCost>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            </ActivityFolder>
-            <ActivityFolder>
-              <Name>per Ha costs</Name>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            </ActivityFolder>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          </ActivityFolder>
-          <ActivityFolder>
-            <Name>PostHarvest</Name>
-            <ActivityFolder>
-              <Name>fixed costs</Name>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            </ActivityFolder>
-            <ActivityFolder>
-              <Name>per Ha costs</Name>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            </ActivityFolder>
+            
+
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           </ActivityFolder>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
