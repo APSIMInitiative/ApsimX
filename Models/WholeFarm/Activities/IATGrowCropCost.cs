@@ -18,7 +18,7 @@ namespace Models.WholeFarm.Activities
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(IATGrowCrop))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    public class IATGrowCropCostPerHa : WFActivityBase
+    public class IATGrowCropCost : WFActivityBase
 	{
         /// <summary>
         /// Get the Clock.

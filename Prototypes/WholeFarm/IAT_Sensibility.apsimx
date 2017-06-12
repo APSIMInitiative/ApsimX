@@ -461,7 +461,7 @@
           <Name>IAT Grow Crop</Name>
           <ActivityFolder>
             <Name>Sowing</Name>
-            <IATGrowCropCostPerHa>
+            <IATGrowCropCost>
               <Name>Bags and Labels</Name>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
               <MthsBeforeHarvest>1</MthsBeforeHarvest>
@@ -469,8 +469,8 @@
               <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
               <CostPerUnit>11</CostPerUnit>
               <AccountName>General account</AccountName>
-            </IATGrowCropCostPerHa>
-            <IATGrowCropCostPerHa>
+            </IATGrowCropCost>
+            <IATGrowCropCost>
               <Name>Seeds</Name>
               <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
               <MthsBeforeHarvest>1</MthsBeforeHarvest>
@@ -478,7 +478,7 @@
               <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
               <CostPerUnit>10</CostPerUnit>
               <AccountName>General account</AccountName>
-            </IATGrowCropCostPerHa>
+            </IATGrowCropCost>
             <IATGrowCropLabour>
               <Name>HandSowing</Name>
               <LabourFilterGroupSpecified>
