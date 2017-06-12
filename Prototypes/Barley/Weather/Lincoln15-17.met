@@ -4,7 +4,7 @@ Latitude	=	-43.7
 tav	=	12.5							
 amp	=	17							
 year	day	rain	maxt	mint	mean	radn	wind	vp	
-()	()	(mm)	(oC)	(oC)	(oC)	(MJ/m2/d)	(m/s)	(mbar)	star
+()	()	(mm)	(oC)	(oC)	(oC)	(MJ/m2/d)	(m/s)	(mbar)
 2015	1	0	20.6	12	15.7	32.1	5.6	11.6	
 2015	2	0	26.4	12.6	18.1	30.7	3.9	13.5	
 2015	3	0	21	10.3	15.7	28.3	5.1	12.5	
