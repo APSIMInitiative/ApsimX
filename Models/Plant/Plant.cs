@@ -379,10 +379,10 @@ namespace Models.PMF
             if (biomassRemoveType == "Prune" && Pruning != null)
                 Pruning.Invoke(this, new EventArgs());
 
-            if (biomassRemoveType == "Cut" && Pruning != null)
+            if (biomassRemoveType == "Cut" && Cutting != null)
                 Cutting.Invoke(this, new EventArgs());
 
-            if (biomassRemoveType == "Graze" && Pruning != null)
+            if (biomassRemoveType == "Graze" && Grazing != null)
                 Grazing.Invoke(this, new EventArgs());
 
             // Set up the default BiomassRemovalData values
