@@ -479,7 +479,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Simulation.cs" />
     <Compile Include="WholeFarm\Activities\ActivitiesHolder.cs" />
-    <Compile Include="WholeFarm\Activities\IATGrowCropCostPerHa.cs" />
     <Compile Include="WholeFarm\Activities\IATGrowCropCost.cs" />
     <Compile Include="WholeFarm\Activities\ActivityFolder.cs" />
     <Compile Include="WholeFarm\Activities\ControlledMatingSettings.cs" />
