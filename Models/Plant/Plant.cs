@@ -249,6 +249,10 @@ namespace Models.PMF
         public event EventHandler PlantEnding;
         /// <summary>Occurs when a plant is about to be pruned.</summary>
         public event EventHandler Pruning;
+        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        public event EventHandler Cutting;
+        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        public event EventHandler Grazing;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
@@ -366,10 +370,20 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
         {
-            // Invoke an event.
+            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
+
+            // Invoke specific defoliation events.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
-            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
+            
+            if (biomassRemoveType == "Prune" && Pruning != null)
+                Pruning.Invoke(this, new EventArgs());
+
+            if (biomassRemoveType == "Cut" && Cutting != null)
+                Cutting.Invoke(this, new EventArgs());
+
+            if (biomassRemoveType == "Graze" && Grazing != null)
+                Grazing.Invoke(this, new EventArgs());
 
             // Set up the default BiomassRemovalData values
             foreach (IOrgan organ in Organs)
@@ -389,10 +403,8 @@ namespace Models.PMF
             if (removalData != null && removalData.SetThinningProportion != 0)
                 Structure.doThin(removalData.SetThinningProportion);
 
-            // Pruning event (winter pruning, summer pruning is called as cut) reset the phenology if SetPhenologyStage specified.
-            if (biomassRemoveType == "Prune" && Pruning != null)
-                Pruning.Invoke(this, new EventArgs());
-                
+
+
         }
 
         /// <summary>End the crop.</summary>
