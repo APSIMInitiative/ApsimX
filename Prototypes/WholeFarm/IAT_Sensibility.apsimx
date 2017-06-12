@@ -37,7 +37,7 @@
             <UnusablePortion>0</UnusablePortion>
             <SoilType>3</SoilType>
           </LandType>
-          <UnitOfArea>Hectares</UnitOfArea>
+          <UnitsOfArea>Hectares</UnitsOfArea>
         </Land>
         <Labour>
           <Name>Labour</Name>
@@ -503,7 +503,6 @@
           <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
           <FeedTypeName>Maize_local</FeedTypeName>
           <ResidueKept>20</ResidueKept>
-          <UnitsOfArea>Hectares</UnitsOfArea>
           <AreaRequested>50</AreaRequested>
         </IATGrowCrop>
         <IATGrowForage>
@@ -513,7 +512,6 @@
           <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
           <FeedTypeName>Brachiaria</FeedTypeName>
           <ResidueKept>90</ResidueKept>
-          <UnitsOfArea>Hectares</UnitsOfArea>
           <AreaRequested>200</AreaRequested>
         </IATGrowForage>
         <ActivityFolder>

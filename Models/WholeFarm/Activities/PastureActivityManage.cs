@@ -93,11 +93,6 @@ namespace Models.WholeFarm.Activities
         [XmlIgnore]
 		public double Perennials { get; set; }
 
-		/// <summary>
-		/// Units of erea to use
-		/// </summary>
-		[Description("units of area")]
-		public UnitsOfAreaTypes UnitsOfArea { get; set; }
 
 		/// <summary>
 		/// Area requested
@@ -123,23 +118,14 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
 
-		/// <summary>
-		/// Convert area type specified to hectares
-		/// </summary>
-		[XmlIgnore]
-		public double ConvertToHectares { get
-			{
-				switch (UnitsOfArea)
-				{
-					case UnitsOfAreaTypes.Squarekm:
-						return 100;
-					case UnitsOfAreaTypes.Hectares:
-						return 1;
-					default:
-						return 0;
-				}
-			}
-		}
+
+
+        /// <summary>
+        /// Units of area to use for this run
+        /// </summary>
+        private UnitsOfAreaType unitsOfArea;
+
+
 
 		// private properties
 		private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
@@ -159,8 +145,11 @@ namespace Models.WholeFarm.Activities
        [EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			// Get Land condition relationship from children
-			LandConditionIndex = this.Children.Where(a => a.GetType() == typeof(Relationship) & a.Name=="LandConditionIndex").FirstOrDefault() as Relationship; ;
+            //get the units of area for this run from the Land resource.
+            unitsOfArea = Resources.Land().UnitsOfArea; 
+
+            // Get Land condition relationship from children
+            LandConditionIndex = this.Children.Where(a => a.GetType() == typeof(Relationship) & a.Name=="LandConditionIndex").FirstOrDefault() as Relationship; ;
 			if (LandConditionIndex == null)
 			{
 				Summary.WriteWarning(this, String.Format("Unable to locate Land Condition Index relationship for {0}", this.Name));
@@ -191,7 +180,7 @@ namespace Models.WholeFarm.Activities
                 ResourceRequestList.Add(new ResourceRequest()
                 {
                     AllowTransmutation = false,
-                    Required = AreaRequested * ((UnitsOfArea == UnitsOfAreaTypes.Hectares) ? 1 : 100),
+                    Required = AreaRequested * (double)unitsOfArea,
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse,
                     ActivityModel = this,

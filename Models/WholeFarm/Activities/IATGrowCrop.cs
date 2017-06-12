@@ -66,13 +66,6 @@ namespace Models.WholeFarm.Activities
 		public double Area { get; set; }
 
 
-
-		/// <summary>
-		/// Units of area to use
-		/// </summary>
-		[Description("units of area")]
-		public UnitsOfAreaTypes UnitsOfArea { get; set; }
-
 		/// <summary>
 		/// Area requested
 		/// </summary>
@@ -107,25 +100,18 @@ namespace Models.WholeFarm.Activities
         public List<CropDataType> HarvestData { get; set; }
 
 
+
+
+
         private bool gotLandRequested = false; //was this crop able to get the land it requested ?
 
         /// <summary>
-        /// Convert area type specified to hectares
+        /// Units of area to use for this run
         /// </summary>
-        [XmlIgnore]
-		public double ConvertToHectares { get
-			{
-				switch (UnitsOfArea)
-				{
-					case UnitsOfAreaTypes.Squarekm:
-						return 100;
-					case UnitsOfAreaTypes.Hectares:
-						return 1;
-					default:
-						return 0;
-				}
-			}
-		}
+        private UnitsOfAreaType unitsOfArea;
+
+
+        
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -133,9 +119,11 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
+            //get the units of area for this run from the Land resource.
+            unitsOfArea = Resources.Land().UnitsOfArea; 
 
             // locate Land Type resource for this forage.
-//            bool resourceAvailable = false;
+            //            bool resourceAvailable = false;
             LinkedLandType = Resources.GetResourceItem(this, typeof(Land), LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
             //if (LinkedLandType == null)
             //{
@@ -168,7 +156,7 @@ namespace Models.WholeFarm.Activities
                 throw new ApsimXException(this, String.Format("Unable to locate in crop file {0} any harvest data for Region {1} , SoilType {2}, CropName {3} between the dates {4} and {5}", 
                     FileCrop.FileName, Region, LinkedLandType.SoilType, FeedTypeName, Clock.StartDate, Clock.EndDate));
             }
-
+            
         }
 
 
@@ -186,7 +174,7 @@ namespace Models.WholeFarm.Activities
                 ResourceRequestList.Add(new ResourceRequest()
                 {
                     AllowTransmutation = false,
-                    Required = AreaRequested * ((UnitsOfArea == UnitsOfAreaTypes.Hectares) ? 1 : 100),
+                    Required = AreaRequested * (double)unitsOfArea,
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse,
                     ActivityModel = this,
@@ -266,17 +254,9 @@ namespace Models.WholeFarm.Activities
                 //if this month is a harvest month for this crop
                 if ((year == nextHarvest.Year) && (month == nextHarvest.Month))
                 {
-                    double grain, stover;
-                    if (UnitsOfArea == UnitsOfAreaTypes.Squarekm)
-                    {
-                        grain = nextHarvest.GrainWt * Area * ConvertToHectares;
-                        stover = nextHarvest.StoverWt * Area * ConvertToHectares * (ResidueKept / 100);
-                    }
-                    else
-                    {
-                        grain = nextHarvest.GrainWt * Area;
-                        stover = nextHarvest.StoverWt * Area * (ResidueKept/100);
-                    }
+
+                    double grain = nextHarvest.GrainWt * Area * (double)unitsOfArea;
+                    double stover = nextHarvest.StoverWt * Area * (double)unitsOfArea * (ResidueKept / 100);
 
 					if (grain > 0)
 					{
