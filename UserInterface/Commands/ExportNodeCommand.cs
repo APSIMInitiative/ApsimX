@@ -157,23 +157,15 @@ namespace UserInterface.Commands
                 if (child is Memo && child.Parent is Folder && (child.Parent as Folder).ShowPageOfGraphs)
                     doDocument = false; // The memo will be shown in parent folder
 
-                if (doDocument)
-                    child.Document(tags, headingLevel, 0);
-
-                if (recurseDown)
+                if (child.IncludeInDocumentation)
                 {
-                    tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel));
-                    AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
+                    if (doDocument)
+                        child.Document(tags, headingLevel, 0);
+
+                    if (recurseDown)
+                        AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
                 }
             }
-
-            //IModel dataStore = Apsim.Child(modelToExport, "DataStore");
-            //if (dataStore != null)
-            //{
-            //    tags.Add(new AutoDocumentation.NewPage());
-            //    tags.Add(new AutoDocumentation.Heading("Statistics", headingLevel + 1));
-            //    AddValidationTags(tags, dataStore, headingLevel + 2, workingDirectory);
-            //}
         }
 
         #region PDF
@@ -215,7 +207,10 @@ namespace UserInterface.Commands
                 foreach (IModel memo in Apsim.FindAll(ExplorerPresenter.ApsimXFile, typeof(Memo)))
                 {
                     if (memo.Name == "TitlePage" && memo.Parent.Name == modelNameToExport)
+                    {
                         memo.Document(tags, 1, 0);
+                        break;
+                    }
                 }
             }
             AddBackground(tags);
@@ -236,18 +231,21 @@ namespace UserInterface.Commands
             ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
 
             // If no model was documented then remove the 'Model description' tag.
-            if (modelDescriptionIndex == tags.Count-1)
+            if (modelDescriptionIndex == tags.Count - 1)
                 tags.RemoveAt(modelDescriptionIndex);
 
             // If 'Model description tag is imediately followed by a another heading at the same level.
             // then the model must have writen its own name as a heading. We don't want that.
-            if (modelDescriptionIndex+1 < tags.Count &&
-                tags[modelDescriptionIndex+1] is AutoDocumentation.Heading && 
-                (tags[modelDescriptionIndex+1] as AutoDocumentation.Heading).headingLevel == 1)
-                tags.RemoveAt(modelDescriptionIndex+1);
+            if (modelDescriptionIndex + 1 < tags.Count &&
+                tags[modelDescriptionIndex + 1] is AutoDocumentation.Heading &&
+                (tags[modelDescriptionIndex + 1] as AutoDocumentation.Heading).headingLevel == 1)
+                tags.RemoveAt(modelDescriptionIndex + 1);
 
             // Document model validation.
             AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
+
+            // Add statistics
+            AddStatistics(tags);
 
             // Move cultivars to end.
             MoveCultivarsToEnd(tags);
@@ -276,6 +274,22 @@ namespace UserInterface.Commands
 
             // Remove temporary working directory.
             Directory.Delete(workingDirectory, true);
+        }
+
+        /// <summary>Add statistics</summary>
+        /// <param name="tags">Document tags to add to.</param>
+        private void AddStatistics(List<AutoDocumentation.ITag> tags)
+        {
+            IModel dataStore = Apsim.Child(ExplorerPresenter.ApsimXFile, "DataStore");
+            if (dataStore != null)
+            {
+                List<IModel> tests = Apsim.ChildrenRecursively(dataStore, typeof(Tests));
+                if (tests.Count > 0)
+                    tags.Add(new AutoDocumentation.Heading("Statistics", 2));
+
+                foreach (Tests test in tests)
+                    test.Document(tags, 3, 0);
+            }
         }
 
         /// <summary>Add user documentation, based on the example.</summary>
@@ -484,6 +498,8 @@ namespace UserInterface.Commands
             // Setup graph.
             GraphView graph = new GraphView();
             graph.Clear();
+            graph.Width = 400;
+            graph.Height = 250;
 
             // Create a line series.
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y,
@@ -499,10 +515,17 @@ namespace UserInterface.Commands
             graph.Refresh();
 
             // Export graph to bitmap file.
-            Bitmap image = new Bitmap(400, 250);
+            Bitmap image = new Bitmap(graph.Width, graph.Height);
+            using (Graphics gfx = Graphics.FromImage(image))
+            using (SolidBrush brush = new SolidBrush(System.Drawing.Color.White))
+            {
+                gfx.FillRectangle(brush, 0, 0, image.Width, image.Height);
+            }
             graph.Export(image, new Rectangle(0, 0, image.Width, image.Height), false);
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
-            MigraDoc.DocumentObjectModel.Shapes.Image image1 = row.Cells[0].AddImage(PNGFileName);
+            MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = row.Cells[0].AddImage(PNGFileName);
+            sectionImage.LockAspectRatio = true;
+            sectionImage.Width = "8cm";
 
             // Add x/y data.
             Paragraph xyParagraph = row.Cells[1].AddParagraph();
@@ -519,7 +542,7 @@ namespace UserInterface.Commands
             }
 
             // Add an empty paragraph for spacing.
-            Paragraph spacing = section.AddParagraph();
+            section.AddParagraph();
         }
 
         /// <summary>Creates the graph page.</summary>
@@ -528,44 +551,55 @@ namespace UserInterface.Commands
         /// <param name="workingDirectory">The working directory.</param>
         private void CreateGraphPage(Section section, GraphPage graphPage, string workingDirectory)
         {
-            int numColumns = 2;
-            int numRows = 3;
-
-            // Export graph to bitmap file.
-            Bitmap image = new Bitmap(700, 850);
-
-            GraphPresenter graphPresenter = new GraphPresenter();
-            GraphView graphView = new GraphView();
-            graphView.BackColor = System.Drawing.Color.White;
-            graphView.FontSize = 10;
-            graphView.MarkerSize = 4;
-            graphView.Width = image.Width / numColumns;
-            graphView.Height = image.Height / numRows;
-
-            int col = 0;
-            int row = 0;
-            for (int i = 0; i < graphPage.graphs.Count; i++)
+            int numGraphsToPrint = graphPage.graphs.FindAll(g => g.IncludeInDocumentation).Count;
+            if (numGraphsToPrint > 0)
             {
-                if (graphPage.graphs[i].IncludeInDocumentation)
+                int numColumns = 2;
+                int numRows = (numGraphsToPrint + 1) / numColumns;
+
+                // Export graph to bitmap file.
+                Bitmap image = new Bitmap(1800, numRows * 600);
+                using (Graphics gfx = Graphics.FromImage(image))
+                using (SolidBrush brush = new SolidBrush(System.Drawing.Color.White))
                 {
-                    graphPresenter.Attach(graphPage.graphs[i], graphView, ExplorerPresenter);
-                    Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height,
-                                                graphView.Width, graphView.Height);
-                    graphView.Export(image, r, false);
-                    graphPresenter.Detach();
-                    col++;
-                    if (col >= numColumns)
+                    gfx.FillRectangle(brush, 0, 0, image.Width, image.Height);
+                }
+                GraphPresenter graphPresenter = new GraphPresenter();
+                GraphView graphView = new GraphView();
+                graphView.BackColor = System.Drawing.Color.White;
+                graphView.FontSize = 22;
+                graphView.MarkerSize = 8;
+                graphView.Width = image.Width / numColumns;
+                graphView.Height = image.Height / numRows;
+                graphView.LeftRightPadding = 0;
+
+                int col = 0;
+                int row = 0;
+                for (int i = 0; i < graphPage.graphs.Count; i++)
+                {
+                    if (graphPage.graphs[i].IncludeInDocumentation)
                     {
-                        col = 0;
-                        row++;
+                        graphPresenter.Attach(graphPage.graphs[i], graphView, ExplorerPresenter);
+                        Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height,
+                                                    graphView.Width, graphView.Height);
+                        graphView.Export(image, r, false);
+                        graphPresenter.Detach();
+                        col++;
+                        if (col >= numColumns)
+                        {
+                            col = 0;
+                            row++;
+                        }
                     }
                 }
+
+                string PNGFileName = Path.Combine(workingDirectory, graphPage.name + ".png");
+                image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
+
+                MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = section.AddImage(PNGFileName);
+                sectionImage.LockAspectRatio = true;
+                sectionImage.Width = "19cm";
             }
-
-            string PNGFileName = Path.Combine(workingDirectory, graphPage.name + ".png");
-            image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
-            section.AddImage(PNGFileName);
-
         }
 
         /// <summary>Creates the table.</summary>
@@ -577,7 +611,7 @@ namespace UserInterface.Commands
             // Create a 2 column, 1 row table. Image in first cell, X/Y data in second cell.
             Table table = section.AddTable();
             table.Style = "Table";
-            table.Rows.LeftIndent = "1cm";
+            table.Rows.LeftIndent = "3cm";
 
             foreach (List<string> column in tableObj.data)
             {
@@ -608,9 +642,9 @@ namespace UserInterface.Commands
         /// <param name="text">The text</param>
         private static void AddFixedWidthText(Paragraph paragraph, string text, int width)
         {
-            //For some reason, a parapraph converts all sequences of white
-            //space to a single space.  Thus we need to split the text and add
-            //the spaces using the AddSpace function.
+            // For some reason, a parapraph converts all sequences of white
+            // space to a single space.  Thus we need to split the text and add
+            // the spaces using the AddSpace function.
 
             int numSpaces = width - text.Length;
 
