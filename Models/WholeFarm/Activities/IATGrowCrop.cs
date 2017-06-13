@@ -8,10 +8,8 @@ using System.Xml.Serialization;
 
 namespace Models.WholeFarm.Activities
 {
-	/// <summary>Graowing Forage Activity</summary>
-	/// <summary>This activity sows, grows and harvests forages.</summary>
-	/// <summary>This is done by the values entered by the user as well as looking up the file specified in the 
-    /// FileAPSIMForage component in the simulation tree.</summary>
+	/// <summary>Grow a crop activity</summary>
+	/// <summary>This activity sows, grows and harvests crops.</summary>
 	/// <version>1.0</version>
 	/// <updates>First implementation of this activity recreating IAT logic</updates>
 	[Serializable]
@@ -22,14 +20,27 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(ActivityFolder))]
 	public class IATGrowCrop: WFActivityBase
 	{
-		[Link]
-		private ResourcesHolder Resources = null;
-		[Link]
-		Clock Clock = null;
-		//[Link]
-		//ISummary Summary = null;
         [Link]
-        FileAPSIMCrop FileCrop = null;
+		Clock Clock = null;
+
+        //[Link]
+        //ISummary Summary = null;
+
+        [Link]
+        Simulation Simulation = null;
+
+        //[Link]
+        //FileAPSIMCrop FileCrop = null;
+
+        [Link]
+        private ResourcesHolder Resources = null;
+
+
+        /// <summary>
+        /// Name of the model for the crop input file
+        /// </summary>
+        [Description("Name of model for crop input file")]
+        public string FileCropName { get; set; }
 
         /// <summary>
         /// Number for the Climate Region the crop is grown in.
@@ -44,10 +55,11 @@ namespace Models.WholeFarm.Activities
         [Description("Land type where crop is located")]
 		public string LandTypeNameToUse { get; set; }
 
-		/// <summary>
-		/// Name of the crop type to grow
-		/// </summary>
-		[Description("Name of crop")]
+
+        /// <summary>
+        /// Name of the crop type to grow
+        /// </summary>
+        [Description("Name of crop")]
 		public string FeedTypeName { get; set; }
 
         /// <summary>
@@ -100,7 +112,10 @@ namespace Models.WholeFarm.Activities
         public List<CropDataType> HarvestData { get; set; }
 
 
-
+        /// <summary>
+        /// Model for the crop input file
+        /// </summary>
+        private FileAPSIMCrop fileCrop;
 
 
         private bool gotLandRequested = false; //was this crop able to get the land it requested ?
@@ -119,6 +134,12 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
+            fileCrop = Apsim.Child(Simulation, FileCropName) as FileAPSIMCrop;
+            if (fileCrop == null)
+            {
+                throw new ApsimXException(this, String.Format("Unable to locate model for crop input file {0} (under Simulation) referred to in {1}", this.FileCropName, this.Name));
+            }
+
             //get the units of area for this run from the Land resource.
             unitsOfArea = Resources.Land().UnitsOfArea; 
 
@@ -149,13 +170,14 @@ namespace Models.WholeFarm.Activities
 
 
             // Retrieve harvest data from the forage file for the entire run. 
-            HarvestData = FileCrop.GetCropDataForEntireRun(Region, LinkedLandType.SoilType, FeedTypeName, 
+            HarvestData = fileCrop.GetCropDataForEntireRun(Region, LinkedLandType.SoilType, FeedTypeName, 
                                                                Clock.StartDate, Clock.EndDate);
             if (HarvestData == null)
             {
                 throw new ApsimXException(this, String.Format("Unable to locate in crop file {0} any harvest data for Region {1} , SoilType {2}, CropName {3} between the dates {4} and {5}", 
-                    FileCrop.FileName, Region, LinkedLandType.SoilType, FeedTypeName, Clock.StartDate, Clock.EndDate));
+                    fileCrop.FileName, Region, LinkedLandType.SoilType, FeedTypeName, Clock.StartDate, Clock.EndDate));
             }
+            
             
         }
 

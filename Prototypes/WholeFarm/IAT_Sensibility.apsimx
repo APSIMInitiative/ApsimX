@@ -4,7 +4,7 @@
   <Simulation>
     <Name>Simulation</Name>
     <FileAPSIMCrop>
-      <Name>File APSIM Crop</Name>
+      <Name>FileAPSIMCrop</Name>
       <FileName>Crop_inputs (Burkina 20130222).out</FileName>
     </FileAPSIMCrop>
     <FileAPSIMForage>
@@ -499,6 +499,7 @@
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           </ActivityFolder>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+          <FileCropName>FileAPSIMCrop</FileCropName>
           <Region>1</Region>
           <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
           <FeedTypeName>Maize_local</FeedTypeName>
