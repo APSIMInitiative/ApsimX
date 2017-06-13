@@ -760,7 +760,11 @@ namespace Models.Graph
                 int hash = 0;
                 for (int i = 0; i < factorNameValues.Count; i++)
                 {
-                    hash += factorNameValues[i].Key.GetHashCode() + factorNameValues[i].Value.GetHashCode();
+                    hash += factorNameValues[i].Key.GetHashCode();
+                    if (factorNameValues[i].Value == null)
+                        hash += "null".GetHashCode();
+                    else
+                        hash += factorNameValues[i].Value.GetHashCode();
                 }
                 return hash;
             }
