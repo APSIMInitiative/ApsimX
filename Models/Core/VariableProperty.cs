@@ -570,6 +570,10 @@ namespace Models.Core
                 {
                     this.property.SetValue(this.Object, Convert.ToBoolean(value), null);
                 }
+                else if (this.DataType == typeof(DateTime))
+                {
+                    this.Value = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
+                }
                 else if (this.DataType.IsEnum)
                 {
                     this.Value = Enum.Parse(this.DataType, value);

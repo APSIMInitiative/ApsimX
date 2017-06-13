@@ -125,9 +125,9 @@ namespace UserInterface.Presenters
             this.view.Droped -= this.OnDrop;
             this.view.Renamed -= this.OnRename;
             this.view.ShortcutKeyPressed -= this.OnShortcutKeyPress;
+            HideRightHandPanel();
             if (this.view is Views.ExplorerView)
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
-            HideRightHandPanel();
             this.contextMenu = null;
             this.CommandHistory.Clear();
         }
@@ -836,8 +836,14 @@ namespace UserInterface.Presenters
 
                     if (this.advancedMode)
                     {
-                        viewName = new ViewNameAttribute("ApsimNG.Views.GridView");
-                        presenterName = new PresenterNameAttribute("ApsimNG.Presenters.PropertyPresenter");
+                        viewName = new ViewNameAttribute("UserInterface.Views.GridView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.PropertyPresenter");
+                    }
+
+                    if (viewName == null && presenterName == null)
+                    {
+                        viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
+                        presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
                     }
 
                     if (viewName != null && presenterName != null)

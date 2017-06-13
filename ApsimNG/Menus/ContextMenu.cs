@@ -16,6 +16,7 @@ namespace UserInterface.Presenters
     using Models.Factorial;
     using Models.Soils;
     using APSIM.Shared.Utilities;
+    using Models.Graph;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -474,5 +475,46 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Include/Exclude graphs from the auto-documenation. Will recursively do children as well.
+        /// </summary>
+        /// <param name="include"></param>
+        private void IncludeGraphsInDocumentation(bool include)
+        {
+            try
+            {
+                IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+                if (model is Graph)
+                    (model as Graph).IncludeInDocumentation = include;
+                foreach (Graph graph in Apsim.ChildrenRecursively(model, typeof(GraphPresenter)))
+                    graph.IncludeInDocumentation = include;
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Models.DataStore.ErrorLevel.Error);
+            }
+        }
+
+        /// <summary>
+        /// Event handler for 'Include graphs in documentation'
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Include graphs in documentation")]
+        public void IncludeGraphsInDocumentation(object sender, EventArgs e)
+        {
+            IncludeGraphsInDocumentation(true);
+        }
+
+        /// <summary>
+        /// Event handler for 'Exclude graphs from documentation'
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Exclude graphs from documentation")]
+        public void ExcludeGraphsInDocumentation(object sender, EventArgs e)
+        {
+            IncludeGraphsInDocumentation(false);
+        }
     }
 }

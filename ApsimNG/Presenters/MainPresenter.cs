@@ -316,6 +316,7 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private ExplorerPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl)
         {
+            this.view.ShowMessage(" ", DataStore.ErrorLevel.Information); // Clear the message window
             ExplorerView explorerView = new ExplorerView(null);
             ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)

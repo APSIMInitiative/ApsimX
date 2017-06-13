@@ -86,11 +86,17 @@ namespace Models.PMF.Functions
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                 memo.Document(tags, -1, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
-            (PreEventValue as IModel).Document(tags, -1, indent + 1);
+            if (PreEventValue != null)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
+                (PreEventValue as IModel).Document(tags, -1, indent + 1);
+            }
 
-            tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
-            (PostEventValue as IModel).Document(tags, -1, indent + 1);
+            if (PostEventValue != null)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
+                (PostEventValue as IModel).Document(tags, -1, indent + 1);
+            }
         }
 
     }
