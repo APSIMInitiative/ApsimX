@@ -37,16 +37,7 @@ namespace UserInterface.Commands
                                                   " class=\"tab4\"", " class=\"tab5\"", " class=\"tab6\"",
                                                   " class=\"tab7\"", " class=\"tab8\"", " class=\"tab9\""};
 
-        // Setup a list of model types that we will recurse down through.
-        private static Type[] modelTypesToRecurseDown = new Type[] {//typeof(Folder),
-                                                                    typeof(Simulations),
-                                                                    typeof(Simulation),
-                                                                    typeof(Experiment),
-                                                                    typeof(Zone),
-                                                                    typeof(AgroforestrySystem),
-                                                                    typeof(CircularZone),
-                                                                    typeof(RectangularZone),
-                                                                    typeof(PredictedObserved)};
+       
 
         /// <summary>A .bib file instance.</summary>
         private BibTeX bibTeX;
@@ -134,38 +125,55 @@ namespace UserInterface.Commands
         /// <returns>True if something was written to index.</returns>
         private void AddValidationTags(List<AutoDocumentation.ITag> tags, IModel modelToExport, int headingLevel, string workingDirectory)
         {
+
+            // Setup a list of model types that we will recurse down through.
+            Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
+                                                         typeof(Simulation),
+                                                         typeof(Experiment),
+                                                         typeof(Zone),
+                                                         typeof(AgroforestrySystem),
+                                                         typeof(CircularZone),
+                                                         typeof(RectangularZone),
+                                                         typeof(PredictedObserved)};
+            Type[] modelTypesToDocument = new Type[] { typeof(Graph),
+                                                       typeof(Folder),
+                                                       typeof(Memo),
+                                                       typeof(Map),
+                                                       typeof(Tests)}; 
+
             // Look for child models that are a folder or simulation etc
             // that we need to recurse down through.
             foreach (Model child in modelToExport.Children)
             {
-                bool ignoreChild = (child is Simulation);
+                bool recurseDown = Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1;
+                bool doDocument = Array.IndexOf(modelTypesToDocument, child.GetType()) != -1;
 
-                if (!ignoreChild)
+                if (child.Name == "TitlePage" || child.Name == "Introduction")
+                    doDocument = false;
+
+                if (child is Graph && child.Parent is Folder && (child.Parent as Folder).ShowPageOfGraphs)
+                    doDocument = false; // The graph will be shown in parent folder
+
+                if (child is Memo && child.Parent is Folder && (child.Parent as Folder).ShowPageOfGraphs)
+                    doDocument = false; // The memo will be shown in parent folder
+
+                if (doDocument)
+                    child.Document(tags, headingLevel, 0);
+
+                if (recurseDown)
                 {
-                    if (child.Name == "Validation" || Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
-                    {
-                        tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel));
-                        string childFolderPath = Path.Combine(workingDirectory, child.Name);
-                        AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
-
-                        if (child.Name == "Validation")
-                        {
-                            IModel dataStore = Apsim.Child(modelToExport, "DataStore");
-                            if (dataStore != null)
-                            {
-                                tags.Add(new AutoDocumentation.NewPage());
-                                tags.Add(new AutoDocumentation.Heading("Statistics", headingLevel + 1));
-                                AddValidationTags(tags, dataStore, headingLevel + 2, workingDirectory);
-                            }
-                        }
-                    }
-                    else if (child is Graph && (child as Graph).IncludeInDocumentation)
-                        child.Document(tags, headingLevel, 0);
-                    else if (child.Name != "TitlePage" && child.Name != "Introduction" &&
-                             (child is Folder || child is Memo || child is Map || child is Tests))
-                        child.Document(tags, headingLevel, 0);
+                    tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel));
+                    AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
                 }
             }
+
+            //IModel dataStore = Apsim.Child(modelToExport, "DataStore");
+            //if (dataStore != null)
+            //{
+            //    tags.Add(new AutoDocumentation.NewPage());
+            //    tags.Add(new AutoDocumentation.Heading("Statistics", headingLevel + 1));
+            //    AddValidationTags(tags, dataStore, headingLevel + 2, workingDirectory);
+            //}
         }
 
         #region PDF
@@ -198,11 +206,17 @@ namespace UserInterface.Commands
 
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
 
-            // See if there is a title page. If so do it first.
-            foreach (IModel memo in Apsim.FindAll(ExplorerPresenter.ApsimXFile, typeof(Memo)))
+            IModel titlePage = Apsim.Child(ExplorerPresenter.ApsimXFile, "TitlePage");
+            if (titlePage != null)
+                titlePage.Document(tags, 1, 0);
+            else
             {
-                if (memo.Name == "TitlePage" && memo.Parent.Name == modelNameToExport)
-                    memo.Document(tags, 1, 0);
+                // See if there is a title page. If so do it first.
+                foreach (IModel memo in Apsim.FindAll(ExplorerPresenter.ApsimXFile, typeof(Memo)))
+                {
+                    if (memo.Name == "TitlePage" && memo.Parent.Name == modelNameToExport)
+                        memo.Document(tags, 1, 0);
+                }
             }
             AddBackground(tags);
 
