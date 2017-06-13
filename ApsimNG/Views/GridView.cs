@@ -1211,41 +1211,41 @@ namespace UserInterface.Views
         private void OnPasteFromClipboard(object sender, EventArgs e)
         {
             {
-                try
+                List<IGridCell> cellsChanged = new List<IGridCell>();
+                int rowIndex = popupCell.RowIndex;
+                int columnIndex = popupCell.ColumnIndex;
+                if (this.userEditingCell && this.editControl != null)
                 {
-                    List<IGridCell> cellsChanged = new List<IGridCell>();
-                    int rowIndex = popupCell.RowIndex;
-                    int columnIndex = popupCell.ColumnIndex;
-                    if (this.userEditingCell && this.editControl != null)
+                    (editControl as Entry).PasteClipboard();
+                    cellsChanged.Add(popupCell);
+                }
+                else
+                {
+                    Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+                    string text = cb.WaitForText();
+                    if (text != null)
                     {
-                        (editControl as Entry).PasteClipboard();
-                        cellsChanged.Add(popupCell);
-                    }
-                    else
-                    {
-                        Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
-                        string text = cb.WaitForText();
-                        if (text != null)
+                        string[] lines = text.Split('\n');
+                        foreach (string line in lines)
                         {
-                            string[] lines = text.Split('\n');
-                            foreach (string line in lines)
+                            if (rowIndex < this.RowCount && line.Length > 0)
                             {
-                                if (rowIndex < this.RowCount && line.Length > 0)
+                                string[] words = line.Split('\t');
+                                for (int i = 0; i < words.GetLength(0); ++i)
                                 {
-                                    string[] words = line.Split('\t');
-                                    for (int i = 0; i < words.GetLength(0); ++i)
+                                    if (columnIndex + i < this.DataSource.Columns.Count)
                                     {
-                                        if (columnIndex + i < this.DataSource.Columns.Count)
+                                        // Make sure there are enough rows in the data source.
+                                        while (this.DataSource.Rows.Count <= rowIndex)
                                         {
-                                            // Make sure there are enough rows in the data source.
-                                            while (this.DataSource.Rows.Count <= rowIndex)
-                                            {
-                                                this.DataSource.Rows.Add(this.DataSource.NewRow());
-                                            }
+                                            this.DataSource.Rows.Add(this.DataSource.NewRow());
+                                        }
 
-                                            IGridCell cell = this.GetCell(columnIndex + i, rowIndex);
-                                            IGridColumn column = this.GetColumn(columnIndex + i);
-                                            if (!column.ReadOnly)
+                                        IGridCell cell = this.GetCell(columnIndex + i, rowIndex);
+                                        IGridColumn column = this.GetColumn(columnIndex + i);
+                                        if (!column.ReadOnly)
+                                        {
+                                            try
                                             {
                                                 if (cell.Value == null || cell.Value.ToString() != words[i])
                                                 {
@@ -1264,31 +1264,31 @@ namespace UserInterface.Views
                                                     cellsChanged.Add(this.GetCell(columnIndex + i, rowIndex));
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
-                                            break;
+                                            catch (FormatException)
+                                            {
+                                            }
                                         }
                                     }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                }
 
-                                    rowIndex++;
-                                }
-                                else
-                                {
-                                    break;
-                                }
+                                rowIndex++;
+                            }
+                            else
+                            {
+                                break;
                             }
                         }
                     }
-
-                    // If some cells were changed then send out an event.
-                    if (cellsChanged.Count > 0 && this.CellsChanged != null)
-                    {
-                        this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
-                    }
                 }
-                catch (FormatException)
+
+                // If some cells were changed then send out an event.
+                if (cellsChanged.Count > 0 && this.CellsChanged != null)
                 {
+                    this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
                 }
             }
         }
