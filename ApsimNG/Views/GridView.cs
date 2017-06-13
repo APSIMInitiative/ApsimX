@@ -84,6 +84,7 @@ namespace UserInterface.Views
         internal Dictionary<Tuple<int, int>, ListStore> comboLookup = new Dictionary<Tuple<int, int>, ListStore>();
         private Menu Popup = new Menu();
         private AccelGroup accel = new AccelGroup();
+        private GridCell popupCell = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
@@ -347,6 +348,7 @@ namespace UserInterface.Views
                 Label label = GetColumnHeaderLabel(i);
                 if (label != null)
                 {
+                    label.Wrap = true;
                     label.Justify = Justification.Center;
                     label.Style.FontDescription.Weight = Pango.Weight.Bold;
                 }
@@ -354,6 +356,7 @@ namespace UserInterface.Views
                 label = GetColumnHeaderLabel(i, fixedcolview);
                 if (label != null)
                 {
+                    label.Wrap = true;
                     label.Justify = Justification.Center;
                     label.Style.FontDescription.Weight = Pango.Weight.Bold;
                 }
@@ -1004,7 +1007,6 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCellValueChanged(object sender, EditedArgs e)
         {
-
             if (this.userEditingCell)
             {
                 IGridCell where = GetCurrentCell;
@@ -1211,77 +1213,70 @@ namespace UserInterface.Views
             {
                 try
                 {
-                    /* TBI
-                    string text = Clipboard.GetText();
-                    string[] lines = text.Split('\n');
-                    int rowIndex = this.Grid.CurrentCell.RowIndex;
-                    int columnIndex = this.Grid.CurrentCell.ColumnIndex;
                     List<IGridCell> cellsChanged = new List<IGridCell>();
-                    if (lines.Length > 0 && this.Grid.CurrentCell.IsInEditMode)
+                    int rowIndex = popupCell.RowIndex;
+                    int columnIndex = popupCell.ColumnIndex;
+                    if (this.userEditingCell && this.editControl != null)
                     {
-                        DataGridViewTextBoxEditingControl dText = (DataGridViewTextBoxEditingControl)Grid.EditingControl;
-                        dText.Paste(text);
-                        cellsChanged.Add(this.GetCell(columnIndex, rowIndex));
+                        (editControl as Entry).PasteClipboard();
+                        cellsChanged.Add(popupCell);
                     }
                     else
                     {
-                        foreach (string line in lines)
+                        Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+                        string text = cb.WaitForText();
+                        if (text != null)
                         {
-                            if (rowIndex < this.Grid.RowCount && line.Length > 0)
+                            string[] lines = text.Split('\n');
+                            foreach (string line in lines)
                             {
-                                string[] words = line.Split('\t');
-                                for (int i = 0; i < words.GetLength(0); ++i)
+                                if (rowIndex < this.RowCount && line.Length > 0)
                                 {
-                                    if (columnIndex + i < this.Grid.ColumnCount)
+                                    string[] words = line.Split('\t');
+                                    for (int i = 0; i < words.GetLength(0); ++i)
                                     {
-                                        DataGridViewCell cell = this.Grid[columnIndex + i, rowIndex];
-                                        if (!cell.ReadOnly)
+                                        if (columnIndex + i < this.DataSource.Columns.Count)
                                         {
-                                            if (cell.Value == null || cell.Value.ToString() != words[i])
+                                            // Make sure there are enough rows in the data source.
+                                            while (this.DataSource.Rows.Count <= rowIndex)
                                             {
-                                                // We are pasting a new value for this cell. Put the new
-                                                // value into the cell.
-                                                if (words[i] == string.Empty)
-                                                {
-                                                    cell.Value = null;
-                                                }
-                                                else
-                                                {
-                                                    cell.Value = Convert.ChangeType(words[i], this.DataSource.Columns[columnIndex + i].DataType);
-                                                }
+                                                this.DataSource.Rows.Add(this.DataSource.NewRow());
+                                            }
 
-                                                // Make sure there are enough rows in the data source.
-                                                while (this.DataSource.Rows.Count <= rowIndex)
+                                            IGridCell cell = this.GetCell(columnIndex + i, rowIndex);
+                                            IGridColumn column = this.GetColumn(columnIndex + i);
+                                            if (!column.ReadOnly)
+                                            {
+                                                if (cell.Value == null || cell.Value.ToString() != words[i])
                                                 {
-                                                    this.DataSource.Rows.Add(this.DataSource.NewRow());
-                                                }
+                                                    // We are pasting a new value for this cell. Put the new
+                                                    // value into the cell.
+                                                    if (words[i] == string.Empty)
+                                                    {
+                                                        cell.Value = null;
+                                                    }
+                                                    else
+                                                    {
+                                                        cell.Value = Convert.ChangeType(words[i], this.DataSource.Columns[columnIndex + i].DataType);
+                                                    }
 
-                                                // Put the new value into the data source.
-                                                if (cell.Value == null)
-                                                {
-                                                    this.DataSource.Rows[rowIndex][columnIndex + i] = DBNull.Value;
+                                                    // Put a cell into the cells changed member.
+                                                    cellsChanged.Add(this.GetCell(columnIndex + i, rowIndex));
                                                 }
-                                                else
-                                                {
-                                                    this.DataSource.Rows[rowIndex][columnIndex + i] = cell.Value;
-                                                }
-
-                                                // Put a cell into the cells changed member.
-                                                cellsChanged.Add(this.GetCell(columnIndex + i, rowIndex));
                                             }
                                         }
+                                        else
+                                        {
+                                            break;
+                                        }
                                     }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
 
-                                rowIndex++;
-                            }
-                            else
-                            {
-                                break;
+                                    rowIndex++;
+                                }
+                                else
+                                {
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1291,7 +1286,6 @@ namespace UserInterface.Views
                     {
                         this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
                     }
-                    */
                 }
                 catch (FormatException)
                 {
@@ -1416,17 +1410,22 @@ namespace UserInterface.Views
                     GridHeaderClickedArgs args = new GridHeaderClickedArgs();
                     if (sender is TreeView)
                     {
-                        int i = 0;
+                        TreePath path;
+                        TreeViewColumn column;
+                        gridview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out column);
+                        int iRow = path.Indices[0];
                         int xpos = (int)e.Event.X;
+                        int iCol = 0;
                         foreach (Widget child in (sender as TreeView).AllChildren)
                         {
                             if (child.GetType() != (typeof(Gtk.Button)))
                                 continue;
                             if (xpos >= child.Allocation.Left && xpos <= child.Allocation.Right)
                                 break;
-                            i++;
+                            iCol++;
                         }
-                        args.Column = this.GetColumn(i);
+                        args.Column = this.GetColumn(iCol);
+                        popupCell = new GridCell(this, iCol, iRow);
                     }
                     args.RightClick = true;
                     this.ColumnHeaderClicked.Invoke(this, args);
