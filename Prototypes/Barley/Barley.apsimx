@@ -4041,12 +4041,12 @@ namespace Models
               <AirDry>
                 <double>0.05</double>
                 <double>0.05</double>
-                <double>0.16</double>
-                <double>0.17</double>
-                <double>0.17</double>
-                <double>0.17</double>
-                <double>0.17</double>
-                <double>0.12</double>
+                <double>0.15</double>
+                <double>0.155</double>
+                <double>0.155</double>
+                <double>0.155</double>
+                <double>0.155</double>
+                <double>0.11</double>
               </AirDry>
               <LL15>
                 <double>0.14</double>
@@ -32577,5 +32577,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>300</ExplorerWidth>
+  <ExplorerWidth>278</ExplorerWidth>
 </Simulations>
