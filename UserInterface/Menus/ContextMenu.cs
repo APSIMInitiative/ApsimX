@@ -133,7 +133,7 @@ namespace UserInterface.Presenters
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {
-            RunAPSIMInternal(multiProcessRunner:false);
+            RunAPSIMInternal(multiProcessRunner: false);
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace UserInterface.Presenters
         public void AcceptTests(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("You are about to change the officially accepted stats for this model. Are you sure?", "Replace official stats?", MessageBoxButtons.YesNo);
-            if(result != DialogResult.Yes)
+            if (result != DialogResult.Yes)
             {
                 return;
             }
@@ -321,7 +321,7 @@ namespace UserInterface.Presenters
                 string fileName = Path.ChangeExtension(dataStore.Filename, ".xlsx");
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
                 explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, DataStore.ErrorLevel.Information);
-                Cursor.Current = Cursors.Default; 
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -469,20 +469,21 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Include/Exclude graphs from the auto-documenation. Will recursively do children as well.
+        /// Event handler for 'Include in documentation'
         /// </summary>
-        /// <param name="include"></param>
-        private void IncludeGraphsInDocumentation(bool include)
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Include in documentation")]
+        public void IncludeInDocumentation(object sender, EventArgs e)
         {
             try
             {
                 IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
-                if (model is Graph)
-                    (model as Graph).IncludeInDocumentation = include;
-                foreach (Graph graph in Apsim.ChildrenRecursively(model, typeof(Graph)))
-                    graph.IncludeInDocumentation = include;
-                explorerPresenter.HideRightHandPanel();
-                explorerPresenter.ShowRightHandPanel();
+                model.IncludeInDocumentation = !model.IncludeInDocumentation; // toggle switch
+
+                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    child.IncludeInDocumentation = model.IncludeInDocumentation;
+                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
             }
             catch (Exception err)
             {
@@ -491,26 +492,39 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for 'Include graphs in documentation'
+        /// Event handler for checkbox for 'Include in documentation' menu item.
         /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Include graphs in documentation")]
-        public void IncludeGraphsInDocumentation(object sender, EventArgs e)
+        public bool IncludeInDocumentationChecked()
         {
-            IncludeGraphsInDocumentation(true);
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            return model.IncludeInDocumentation;
         }
 
         /// <summary>
-        /// Event handler for 'Exclude graphs from documentation'
+        /// Event handler for 'Include in documentation'
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Exclude graphs from documentation")]
-        public void ExcludeGraphsInDocumentation(object sender, EventArgs e)
+        [ContextMenu(MenuName = "Show page of graphs in documentation",
+                     AppliesTo = new Type[] { typeof(Folder) })]
+        public void ShowPageOfGraphs(object sender, EventArgs e)
         {
-            IncludeGraphsInDocumentation(false);
+            Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
+            folder.ShowPageOfGraphs = !folder.ShowPageOfGraphs;
+            foreach (Folder child in Apsim.ChildrenRecursively(folder, typeof(Folder)))
+                child.ShowPageOfGraphs = folder.ShowPageOfGraphs;
+            explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
         }
+
+        /// <summary>
+        /// Event handler for checkbox for 'Include in documentation' menu item.
+        /// </summary>
+        public bool ShowPageOfGraphsChecked()
+        {
+            Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
+            return folder.ShowPageOfGraphs;
+        }
+
 
     }
 }
