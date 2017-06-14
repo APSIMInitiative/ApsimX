@@ -36,11 +36,34 @@ namespace Models.WholeFarm.Activities
         private ResourcesHolder Resources = null;
 
 
+
+        /// <summary>
+        /// Name of land type where crop is located
+        /// </summary>
+        [Description("Land item where crop is to be grown")]
+        public string LandItemNameToUse { get; set; }
+
+        /// <summary>
+        /// Area of land requested
+        /// </summary>
+        [Description("Area requested")]
+        public double AreaRequested { get; set; }
+
+        /// <summary>
+        /// Area of land actually received (maybe less than requested)
+        /// </summary>
+        [XmlIgnore]
+        public double Area { get; set; }
+
+
+
+
+
         /// <summary>
         /// Name of the model for the crop input file
         /// </summary>
-        [Description("Name of model for crop input file")]
-        public string FileCropName { get; set; }
+        [Description("Name of model for crop growth file")]
+        public string ModelNameFileCrop { get; set; }
 
         /// <summary>
         /// Number for the Climate Region the crop is grown in.
@@ -50,60 +73,61 @@ namespace Models.WholeFarm.Activities
 
 
         /// <summary>
-        /// Name of land type where crop is located
-        /// </summary>
-        [Description("Land type where crop is located")]
-		public string LandTypeNameToUse { get; set; }
-
-
-        /// <summary>
         /// Name of the crop type to grow
         /// </summary>
-        [Description("Name of crop")]
-		public string FeedTypeName { get; set; }
+        [Description("Name of crop in file")]
+		public string CropName { get; set; }
+
+
+
+
 
         /// <summary>
-        /// Percentage of the residue (stover) that is kept
+        /// Name of the model for the crop input file
         /// </summary>
-        [Description("Proportion of Residue (stover) Kept (%)")]
-        public double ResidueKept { get; set; }
-
-
+        [Description("Store to put crop growth into")]
+        public StoresForCrops Store { get; set; }
 
 
         /// <summary>
-        /// Area of forage paddock
+        /// Name of the model for the crop input file
         /// </summary>
-        [XmlIgnore]
-		public double Area { get; set; }
-
-
-		/// <summary>
-		/// Area requested
-		/// </summary>
-		[Description("Area requested")]
-		public double AreaRequested { get; set; }
-
+        [Description("Item name (in the store) to put crop growth into")]
+        public string StoreItemName { get; set; }
 
         /// <summary>
-        /// Land type
+        /// Percentage of the crop growth that is kept
         /// </summary>
-        [XmlIgnore]
-        public LandType LinkedLandType { get; set; }
+        [Description("Proportion of crop growth kept (%)")]
+        public double PercentKept { get; set; }
+
 
 
 
         /// <summary>
-        /// Human Food type
+        /// Land item
         /// </summary>
         [XmlIgnore]
-        public HumanFoodStoreType LinkedHumanFoodType { get; set; }
+        public LandType LinkedLandItem { get; set; }
+
 
         /// <summary>
-        /// Feed type
+        /// Human Food item
         /// </summary>
         [XmlIgnore]
-		public AnimalFoodStoreType LinkedAnimalFoodType { get; set; }
+        public HumanFoodStoreType LinkedHumanFoodItem { get; set; }
+
+        /// <summary>
+        /// Feed item
+        /// </summary>
+        [XmlIgnore]
+		public AnimalFoodStoreType LinkedAnimalFoodItem { get; set; }
+
+        /// <summary>
+        /// Inedible crop product item
+        /// </summary>
+        [XmlIgnore]
+        public ProductStoreType LinkedProductItem { get; set; }
 
         /// <summary>
         /// Harvest Data retrieved from the Forage File.
@@ -134,48 +158,42 @@ namespace Models.WholeFarm.Activities
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-            fileCrop = Apsim.Child(Simulation, FileCropName) as FileAPSIMCrop;
+            fileCrop = Apsim.Child(Simulation, ModelNameFileCrop) as FileAPSIMCrop;
             if (fileCrop == null)
             {
-                throw new ApsimXException(this, String.Format("Unable to locate model for crop input file {0} (under Simulation) referred to in {1}", this.FileCropName, this.Name));
+                throw new ApsimXException(this, String.Format("Unable to locate model for crop input file {0} (under Simulation) referred to in {1}", this.ModelNameFileCrop, this.Name));
             }
 
             //get the units of area for this run from the Land resource.
             unitsOfArea = Resources.Land().UnitsOfArea; 
 
             // locate Land Type resource for this forage.
-            //            bool resourceAvailable = false;
-            LinkedLandType = Resources.GetResourceItem(this, typeof(Land), LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
-            //if (LinkedLandType == null)
-            //{
-            //    throw new ApsimXException(this, String.Format("Unable to locate land type {0} in Land for {1}", this.LandTypeNameToUse, this.Name));
-            //}
+            LinkedLandItem = Resources.GetResourceItem(this, typeof(Land), LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
 
-            // locate AnimalFoodStore Type resource for this forage.
-            //bool resourceAvailable = false;
-            LinkedHumanFoodType = Resources.GetResourceItem(this, typeof(HumanFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
-            //if (LinkedHumanFoodType == null)
-            //{
-            //    throw new ApsimXException(this, String.Format("Unable to locate crop type {0} in HumanFoodStore for {1}", this.FeedTypeName, this.Name));
-            //}
-
-
-            // locate AnimalFoodStore Type resource for this forage.
-            //bool resourceAvailable = false;
-            LinkedAnimalFoodType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as AnimalFoodStoreType;
-			//if (LinkedAnimalFoodType == null)
-			//{
-   //             throw new ApsimXException(this, String.Format("Unable to locate crop feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
-			//}
+            switch (Store)
+            {
+                case StoresForCrops.HumanFoodStore:
+                    LinkedHumanFoodItem = Resources.GetResourceItem(this, typeof(HumanFoodStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
+                    LinkedAnimalFoodItem = Resources.GetResourceItem(this, typeof(AnimalFoodStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as AnimalFoodStoreType;
+                    break;
+                case StoresForCrops.AnimalFoodStore:
+                    LinkedAnimalFoodItem = Resources.GetResourceItem(this, typeof(AnimalFoodStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as AnimalFoodStoreType;
+                    break;
+                case StoresForCrops.ProductStore:
+                    LinkedProductItem = Resources.GetResourceItem(this, typeof(ProductStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as ProductStoreType;
+                    break;
+                default:
+                    throw new Exception(String.Format("Store {0} is not supported for {1}", Enum.GetName(typeof(StoresForCrops), Store), this.Name));
+            }
 
 
             // Retrieve harvest data from the forage file for the entire run. 
-            HarvestData = fileCrop.GetCropDataForEntireRun(Region, LinkedLandType.SoilType, FeedTypeName, 
+            HarvestData = fileCrop.GetCropDataForEntireRun(Region, LinkedLandItem.SoilType, CropName, 
                                                                Clock.StartDate, Clock.EndDate);
             if (HarvestData == null)
             {
                 throw new ApsimXException(this, String.Format("Unable to locate in crop file {0} any harvest data for Region {1} , SoilType {2}, CropName {3} between the dates {4} and {5}", 
-                    fileCrop.FileName, Region, LinkedLandType.SoilType, FeedTypeName, Clock.StartDate, Clock.EndDate));
+                    fileCrop.FileName, Region, LinkedLandItem.SoilType, CropName, Clock.StartDate, Clock.EndDate));
             }
             
             
@@ -198,7 +216,7 @@ namespace Models.WholeFarm.Activities
                     AllowTransmutation = false,
                     Required = AreaRequested * (double)unitsOfArea,
                     ResourceType = typeof(Land),
-                    ResourceTypeName = LandTypeNameToUse,
+                    ResourceTypeName = LandItemNameToUse,
                     ActivityModel = this,
                     Reason = "Assign",
                     FilterDetails = null
@@ -277,24 +295,53 @@ namespace Models.WholeFarm.Activities
                 if ((year == nextHarvest.Year) && (month == nextHarvest.Month))
                 {
 
-                    double grain = nextHarvest.GrainWt * Area * (double)unitsOfArea;
-                    double stover = nextHarvest.StoverWt * Area * (double)unitsOfArea * (ResidueKept / 100);
+                    switch (Store)
+                    {
+                        //double totalamount = nextHarvest.GrainWt * Area * (double)unitsOfArea * (PercentKept / 100);
 
-					if (grain > 0)
-					{
-						//TODO: check that there is no N provided with grain
-						LinkedHumanFoodType.Add(grain, this.Name, "Harvest");
-					}
+                        case StoresForCrops.HumanFoodStore:
+                            double grain = nextHarvest.GrainWt * Area * (double)unitsOfArea * (PercentKept / 100);
+                            if (grain > 0)
+                            {
+                                //TODO: check that there is no N provided with grain
+                                LinkedHumanFoodItem.Add(grain, this.Name, "Harvest");
+                            }
+                            double stover = nextHarvest.StoverWt * Area * (double)unitsOfArea * (PercentKept / 100);
+                            if (stover > 0)
+                            {
+                                FoodResourcePacket packet = new FoodResourcePacket()
+                                {
+                                    Amount = stover,
+                                    PercentN = nextHarvest.StoverNpc
+                                };
+                                LinkedAnimalFoodItem.Add(packet, this.Name, "Harvest");
+                            }
+                            break;
+                        case StoresForCrops.AnimalFoodStore:
+                            //TODO: uncomment this when you change the file formate to Di's new format
+                            //if (totalamount > 0)
+                            //{
+                            //    FoodResourcePacket packet = new FoodResourcePacket()
+                            //    {
+                            //        Amount = stover,
+                            //        PercentN = nextHarvest.StoverNpc
+                            //    };
+                            //    LinkedAnimalFoodItem.Add(packet, this.Name, "Harvest");
+                            //}
+                            break;
+                        case StoresForCrops.ProductStore:
+                            //TODO: uncomment this when you change the file formate to Di's new format
+                            //if (totalamount > 0)
+                            //{
+                            //    LinkedProductItem.Add(totalamount, this.Name, "Harvest");
+                            //}
+                            break;
+                        default:
+                            throw new Exception(String.Format("Store {0} is not supported for {1}", Enum.GetName(typeof(StoresForCrops), Store), this.Name));
+                    }
 
-					if (stover > 0)
-					{
-						FoodResourcePacket packet = new FoodResourcePacket()
-						{
-							Amount = stover,
-							PercentN = nextHarvest.StoverNpc
-						};
-						LinkedAnimalFoodType.Add(packet, this.Name, "Harvest");
-					}
+
+
 
 
                     //Now remove the first item from the harvest data list because it has happened.
