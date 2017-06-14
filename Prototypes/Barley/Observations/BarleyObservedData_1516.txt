@@ -1,9 +1,9 @@
-SimulationName	Treatment	Clock.Today	Barley.Aboveground.Wt	Barley.Grain.Wt
-()	()	()	(kg/ha)	(g/m2)
-Barley15_16_Zero	1	2015-11-06	54.1	*
-Barley15_16_Zero	1	2015-11-25	302	*
-Barley15_16_Zero	1	2015-12-16	644.2	*
-Barley15_16_Zero	1	2016-02-10	875.3	*
+SimulationName	Treatment	Clock.Today	TotalAboveGroundWt	Barley.Grain.Wt
+()	()	()	(g/m2)	(g/m2)
+Barley15_16_ZeroN	1	2015-11-06	54.1	*
+Barley15_16_ZeroN	1	2015-11-25	302	*
+Barley15_16_ZeroN	1	2015-12-16	644.2	*
+Barley15_16_ZeroN	1	2016-02-10	875.3	*
 Barley15_16_50N	2	2015-11-06	40.6	*
 Barley15_16_50N	2	2015-11-25	269	*
 Barley15_16_50N	2	2015-12-16	570.8	*
@@ -20,7 +20,7 @@ Barley15_16_125N	5	2015-11-06	38.1	*
 Barley15_16_125N	5	2015-11-25	212.9	*
 Barley15_16_125N	5	2015-12-16	606.3	*
 Barley15_16_125N	5	2016-02-10	963.1	*
-Barley15_16_Zero	1	2016-03-14	1013.2	707.3
+Barley15_16_ZeroN	1	2016-03-14	1013.2	707.3
 Barley15_16_50N	2	2016-03-14	1104.2	722.2
 Barley15_16_75N	3	2016-03-14	1230.6	756.4
 Barley15_16_100N	4	2016-03-14	1276.2	822.1
