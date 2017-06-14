@@ -39,8 +39,21 @@ namespace Models.PMF.Functions
         [Description("(optional) Stage name to reset accumulation")]
         public string ResetStageName { get; set; }
 
-        /// <summary>The fraction removed on cut</summary>
-        private double FractionRemovedOnCut = 0; //FIXME: This should be passed from the manager when "cut event" is called. Must be made general to other events.
+        /// <summary>The fraction removed on Cut event</summary>
+        [Description("(optional) Fraction to remove on Cut")]
+        public double FractionRemovedOnCut { get; set; }
+
+        /// <summary>The fraction removed on Harvest event</summary>
+        [Description("(optional) Fraction to remove on Harvest")]
+        public double FractionRemovedOnHarvest { get; set; }
+
+        /// <summary>The fraction removed on Graze event</summary>
+        [Description("(optional) Fraction to remove on Graze")]
+        public double FractionRemovedOnGraze { get; set; }
+
+        /// <summary>The fraction removed on Prun event</summary>
+        [Description("(optional) Fraction to remove on Prun")]
+        public double FractionRemovedOnPrune { get; set; }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -96,6 +109,32 @@ namespace Models.PMF.Functions
         private void OnCut(object sender, EventArgs e)
         {
             AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
+        }
+
+        /// <summary>Called when [cut].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvest(object sender, EventArgs e)
+        {
+            AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
+        }
+        /// <summary>Called when [cut].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Grazing")]
+        private void OnGraze(object sender, EventArgs e)
+        {
+            AccumulatedValue -= FractionRemovedOnGraze * AccumulatedValue;
+        }
+
+        /// <summary>Called when [cut].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Pruning")]
+        private void OnPrune(object sender, EventArgs e)
+        {
+            AccumulatedValue -= FractionRemovedOnPrune * AccumulatedValue;
         }
 
         /// <summary>Called when [EndCrop].</summary>

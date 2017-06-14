@@ -85,6 +85,7 @@ namespace UserInterface.Presenters
 
             string[] split;
 
+            grid.NumericFormat = "G6"; 
             this.FindAllProperties(this.model);
             if (this.grid.DataSource == null)
             {
@@ -369,6 +370,8 @@ namespace UserInterface.Presenters
 
             foreach (IGridCell cell in e.ChangedCells)
             {
+                if (e.invalidValue)
+                    this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
                 this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
             }
             
@@ -405,6 +408,10 @@ namespace UserInterface.Presenters
             else if (typeof(ICrop).IsAssignableFrom(property.DataType))
             {
                 value = Apsim.Find(this.model, value.ToString()) as ICrop;
+            }
+            else if (property.DataType == typeof(DateTime))
+            {
+                value = Convert.ToDateTime(value);
             }
             else if (property.DataType.IsEnum)
             {

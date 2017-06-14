@@ -189,7 +189,7 @@ namespace Models.Soils
     /// </summary>
     [Serializable]
     [ValidParent(ParentType=typeof(Soil))]
-    public partial class SoilNitrogen : Model, ISolute
+    public partial class SoilNitrogen : Model, ISolute, INutrient
     {
         /// <summary>The surface organic matter</summary>
         [Link]
@@ -504,9 +504,6 @@ namespace Models.Soils
             for (int k = 0; k < Patch.Count; k++)
                 Patch[k].Process();
 
-            // send actual decomposition back to surface OM
-            if (!is_pond_active)
-                SendActualResidueDecompositionCalculated();
         }
 
         /// <summary>Performs every-day calculations - before begining of day tasks</summary>
@@ -550,8 +547,9 @@ namespace Models.Soils
             }
         }
 
+         
         /// <summary>Send back to SurfaceOM the information about residue decomposition</summary>
-        private void SendActualResidueDecompositionCalculated()
+        public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
             // Note:
             //      Potential decomposition was given to this module by a residue/surfaceOM module. 
@@ -586,7 +584,7 @@ namespace Models.Soils
                 ActualSOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
             }
 
-            SurfaceOrganicMatter.ActualSOMDecomp = ActualSOMDecomp;
+            return ActualSOMDecomp;
         }
 
         #endregion
@@ -597,6 +595,15 @@ namespace Models.Soils
         /// <param name="inFOMdata">The in fo mdata.</param>
         [EventSubscribe("IncorpFOM")]
         private void OnIncorpFOM(FOMLayerType inFOMdata)
+        {
+            DoIncorpFOM(inFOMdata);
+        }
+
+        /// <summary>
+        /// Partition the given FOM C and N into fractions in each layer (one FOM)
+        /// </summary>
+        /// <param name="inFOMdata"></param>
+        public void DoIncorpFOM(FOMLayerType inFOMdata)
         {
             // Note: In this event all FOM is given as one, so it will be assumed that the CN ratios of all fractions are equal
 

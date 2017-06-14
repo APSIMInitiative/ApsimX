@@ -10,7 +10,7 @@ namespace Models.Soils.Nutrient
     /// Encapsulates a nitrogen flow between mineral N pools.
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(Nutrient))]
+    [ValidParent(ParentType = typeof(Solute))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
     public class NFlow : Model
@@ -24,8 +24,14 @@ namespace Models.Soils.Nutrient
         [Link]
         private SoluteManager solutes = null;
 
-        [Link]
-        private Soil soil = null;
+        /// <summary>
+        /// Value of total N flow into destination
+        /// </summary>
+        public double[] Value { get; set; }
+        /// <summary>
+        /// Value of total loss
+        /// </summary>
+        public double[] Loss { get; set; }
 
         /// <summary>
         /// Name of source pool
@@ -46,22 +52,34 @@ namespace Models.Soils.Nutrient
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
-        {
+        {            
+            double[] source = solutes.GetSolute(Parent.Name);
+            if (Value == null)
+                Value = new double[source.Length];
+            if (Loss == null)
+                Loss = new double[source.Length];
 
-            double[] source = solutes.GetSolute(sourceName);
+            double[] destination = null;
+            if (destinationName !=null)
+                destination = solutes.GetSolute(destinationName);
 
-            double[] destination = solutes.GetSolute(destinationName);
-
-            for (int i= 0; i < soil.Thickness.Length; i++)
+            for (int i= 0; i < source.Length; i++)
             {
                 double nitrogenFlow = rate.Value(i) * source[i];
-                double nitrogenFlowToDestination = nitrogenFlow * (1-NLoss.Value(i));
+                Loss[i]= nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
+                double nitrogenFlowToDestination = nitrogenFlow - Loss[i];
+
+                if (destination == null && NLoss.Value(i) != 1)
+                    throw new Exception("N loss fraction for N flow must be 1 if no destination is specified.");
 
                 source[i] -= nitrogenFlow;
-                destination[i] += nitrogenFlowToDestination;
+                Value[i] = nitrogenFlowToDestination;  // keep value of flow for use in output
+                if (destination != null)
+                    destination[i] += nitrogenFlowToDestination;
             }
             solutes.SetSolute(sourceName, source);
-            solutes.SetSolute(destinationName, destination);
+            if (destination != null)
+                solutes.SetSolute(destinationName, destination);
         }
 
 
