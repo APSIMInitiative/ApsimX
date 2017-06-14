@@ -1142,6 +1142,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCellMouseDown(object sender, /* TBI DataGridViewCellMouse */ EventArgs e)
         {
+            // Probably not needed in the Gtk implementation
             /*
             if (e.RowIndex == -1)
             {
@@ -1175,6 +1176,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnEditingControlShowing(object sender, /* TBI DataGridViewEditingControlShowing */ EventArgs e)
         {
+            // Probably not needed in the Gtk implementation
             /* TBI
             if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
             {
@@ -1192,6 +1194,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnGridCellValidating(object sender, /* TBI DataGridViewCellValidating */ EventArgs e)
         {
+            // Probably not needed in the Gtk implementation
             /* 
             if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
             {
@@ -1389,6 +1392,7 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="DataGridViewCellEventArgs"/> instance containing the event data.</param>
         private void OnCellContentClick(object sender, /* TBI DataGridViewCell */ EventArgs e)
         {
+            // Probably not needed in the Gtk implementation
             /* TBI
             IGridCell cell = this.GetCell(e.ColumnIndex, e.RowIndex);
             if (cell != null && cell.EditorType == EditorTypeEnum.Button)
