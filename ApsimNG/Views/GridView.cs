@@ -12,6 +12,7 @@ namespace UserInterface.Views
     using System.Drawing.Imaging;
     using System.IO;
     using System.Reflection;
+    using System.Text;
     using Classes;
     using DataGridViewAutoFilter;
     using EventArguments;
@@ -1288,6 +1289,8 @@ namespace UserInterface.Views
                 // If some cells were changed then send out an event.
                 if (cellsChanged.Count > 0 && this.CellsChanged != null)
                 {
+                    fixedcolview.QueueDraw();
+                    gridview.QueueDraw();
                     this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
                 }
             }
@@ -1300,27 +1303,35 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCopyToClipboard(object sender, EventArgs e)
         {
-            /* TBI
-            // this.Grid.EndEdit();
-            DataObject content = new DataObject();
-            if (this.Grid.SelectedCells.Count==1)
+            if (this.userEditingCell && this.editControl != null)
             {
-                if (this.Grid.CurrentCell.IsInEditMode)
-                {
-                    if (this.Grid.EditingControl is System.Windows.Forms.TextBox)
-                    {
-                        string text = ((System.Windows.Forms.TextBox)this.Grid.EditingControl).SelectedText;
-                        content.SetText(text);
-                    }
-                }
-                else
-                    content.SetText(this.Grid.CurrentCell.Value.ToString());
+                (editControl as Entry).CopyClipboard();
             }
             else
-            content = this.Grid.GetClipboardContent();
-
-            Clipboard.SetDataObject(content);
-            */
+            {
+                TreeSelection selection = gridview.Selection;
+                if (selection.CountSelectedRows() > 0)
+                {
+                    StringBuilder buffer = new StringBuilder();
+                    int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                    TreePath[] selRows = selection.GetSelectedRows();
+                    foreach (TreePath row in selRows)
+                    {
+                        int iRow = row.Indices[0];
+                        for (int iCol = 0; iCol < nCols; iCol++)
+                        {
+                            object dataVal = this.DataSource.Rows[iRow][iCol];
+                            buffer.Append(dataVal.ToString());
+                            if (iCol == nCols - 1)
+                                buffer.Append('\n');
+                            else
+                                buffer.Append('\t');
+                        }
+                    }
+                    Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+                    cb.Text = buffer.ToString();
+                }
+            }
         }
 
         /// <summary>
@@ -1331,41 +1342,37 @@ namespace UserInterface.Views
         private void OnDeleteClick(object sender, EventArgs e)
         {
             List<IGridCell> cellsChanged = new List<IGridCell>();
-            /* TBI
-            if (this.Grid.CurrentCell.IsInEditMode)
+            if (this.userEditingCell && this.editControl != null)
             {
-                DataGridViewTextBoxEditingControl dText = (DataGridViewTextBoxEditingControl)Grid.EditingControl;
-                string newText;
-                int savedSelectionStart = dText.SelectionStart;
-                if (dText.SelectionLength == 0)
-                    newText = dText.Text.Remove(dText.SelectionStart, 1);
-                else
-                    newText = dText.Text.Remove(dText.SelectionStart, dText.SelectionLength);
-                dText.Text = newText;
-                dText.SelectionStart = savedSelectionStart;
-                cellsChanged.Add(this.GetCell(Grid.CurrentCell.ColumnIndex, Grid.CurrentCell.RowIndex));
+                (editControl as Entry).DeleteSelection();
+                cellsChanged.Add(popupCell);
             }
             else
             {
-            foreach (DataGridViewCell cell in this.Grid.SelectedCells)
-            {
-                // Save change in data source
-                if (cell.RowIndex < this.DataSource.Rows.Count)
+                TreeSelection selection = gridview.Selection;
+                if (selection.CountSelectedRows() > 0)
                 {
-                    this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
-
-                    // Delete cell in grid.
-                    this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
-
-                    // Put a cell into the cells changed member.
-                    cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+                    int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                    TreePath[] selRows = selection.GetSelectedRows();
+                    foreach (TreePath row in selRows)
+                    {
+                        int iRow = row.Indices[0];
+                        for (int iCol = 0; iCol < nCols; iCol++)
+                        {
+                            if (!this.GetColumn(iCol).ReadOnly)
+                            {
+                                DataSource.Rows[iRow][iCol] = DBNull.Value;
+                                cellsChanged.Add(this.GetCell(iCol, iRow));
+                            }
+                        }
+                    }
                 }
-                }
-            }*/
-
+            }
             // If some cells were changed then send out an event.
             if (cellsChanged.Count > 0 && this.CellsChanged != null)
             {
+                fixedcolview.QueueDraw();
+                gridview.QueueDraw();
                 this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
         }
