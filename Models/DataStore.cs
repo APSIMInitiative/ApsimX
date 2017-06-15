@@ -266,7 +266,8 @@ namespace Models
                     RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
                 }
 
-                RunQueryWithNoReturnData("DELETE FROM " + UnitsTableName + " WHERE " + idString);
+                if (TableNames.Contains(UnitsTableName))
+                    RunQueryWithNoReturnData("DELETE FROM " + UnitsTableName + " WHERE " + idString);
             }
             finally
             {
