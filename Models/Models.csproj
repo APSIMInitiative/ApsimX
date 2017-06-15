@@ -485,7 +485,6 @@
     <Compile Include="WholeFarm\Activities\FinanceActivityPayOverhead.cs" />
     <Compile Include="WholeFarm\Activities\GrazeBreedPoolLimit.cs" />
     <Compile Include="WholeFarm\Activities\IATGrowCrop.cs" />
-    <Compile Include="WholeFarm\Activities\IATGrowForage.cs" />
     <Compile Include="WholeFarm\Activities\LabourActivityOffFarm.cs" />
     <Compile Include="WholeFarm\Activities\OtherAnimalsActivityGrow.cs" />
     <Compile Include="WholeFarm\Activities\PastureActivityBurn.cs" />
@@ -499,8 +498,6 @@
     <Compile Include="WholeFarm\Activities\RuminantActivityPredictiveStockingENSO.cs" />
     <Compile Include="WholeFarm\Activities\RuminantSaleFee.cs" />
     <Compile Include="WholeFarm\Activities\TruckingSettings.cs" />
-    <Compile Include="WholeFarm\FileAPSIMCrop.cs" />
-    <Compile Include="WholeFarm\FileAPSIMForage.cs" />
     <Compile Include="WholeFarm\Groupings\LabourFilterGroupSpecified.cs" />
     <Compile Include="WholeFarm\Groupings\RuminantFilterGroup.cs" />
     <Compile Include="WholeFarm\Groupings\LabourFilterGroup.cs" />

@@ -233,7 +233,6 @@
     <Compile Include="Presenters\FolderPresenter.cs" />
     <Compile Include="Presenters\WFFileCropPresenter.cs" />
     <Compile Include="Presenters\WFFileGRASPPresenter.cs" />
-    <Compile Include="Presenters\WFFileForagePresenter.cs" />
     <Compile Include="Presenters\MapPresenter.cs" />
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />

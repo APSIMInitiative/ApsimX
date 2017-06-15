@@ -3,14 +3,6 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
-    <FileAPSIMCrop>
-      <Name>FileAPSIMCrop</Name>
-      <FileName>Crop_inputs (Burkina 20130222).out</FileName>
-    </FileAPSIMCrop>
-    <FileAPSIMForage>
-      <Name>File APSIM Forage</Name>
-      <FileName>Forage_inputs (Burkina 20130222).out</FileName>
-    </FileAPSIMForage>
     <Clock>
       <Name>clock</Name>
       <StartDate>1995-01-01T00:00:00</StartDate>
@@ -508,15 +500,6 @@
           <StoreItemName>MaizeNewName</StoreItemName>
           <PercentKept>100</PercentKept>
         </IATGrowCrop>
-        <IATGrowForage>
-          <Name>IAT Grow Forage</Name>
-          <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-          <Region>1</Region>
-          <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
-          <FeedTypeName>Brachiaria</FeedTypeName>
-          <ResidueKept>90</ResidueKept>
-          <AreaRequested>200</AreaRequested>
-        </IATGrowForage>
         <ActivityFolder>
           <Name>Pay Overheads</Name>
           <FinanceActivityCalculateInterest>
