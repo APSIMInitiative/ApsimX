@@ -20,12 +20,13 @@ namespace Models.WholeFarm.Groupings
 		public static List<LabourType> Filter(this IEnumerable<LabourType> individuals, Model filterGroup)
 		{
 			var rules = new List<Rule>();
-			foreach (LabourFilter filter in filterGroup.Children.Where(a => a.GetType() == typeof(LabourFilter)))
+			foreach (LabourFilter filter in Apsim.Children(filterGroup, typeof(LabourFilter)))
 			{
 				ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
 				// create rule list
 				rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
 			}
+
 			var compiledRulesList = CompileRule(new List<LabourType>(), rules);
 			return GetItemsThatMatchAll<LabourType>(individuals, compiledRulesList).ToList<LabourType>();
 		}
@@ -36,15 +37,11 @@ namespace Models.WholeFarm.Groupings
 		public static List<Ruminant> Filter(this IEnumerable<Ruminant> individuals, Model filterGroup)
 		{
 			var rules = new List<Rule>();
-			foreach (var child in filterGroup.Children)
+			foreach (RuminantFilter filter in Apsim.Children(filterGroup, typeof(RuminantFilter)))
 			{
-				if (child.GetType() == typeof(RuminantFilter))
-				{
-					RuminantFilter filter = child as RuminantFilter;
-					ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
-					// create rule list
-					rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
-				}
+				ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
+				// create rule list
+				rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
 			}
 
 			var compiledRulesList = CompileRule(new List<Ruminant>(), rules);
@@ -57,15 +54,11 @@ namespace Models.WholeFarm.Groupings
 		public static List<OtherAnimalsTypeCohort> Filter(this IEnumerable<OtherAnimalsTypeCohort> individuals, Model filterGroup)
 		{
 			var rules = new List<Rule>();
-			foreach (var child in filterGroup.Children)
+			foreach (OtherAnimalsFilter filter in Apsim.Children(filterGroup, typeof(OtherAnimalsFilter)))
 			{
-				if (child.GetType() == typeof(OtherAnimalsFilter))
-				{
-					OtherAnimalsFilter filter = child as OtherAnimalsFilter;
-					ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
-					// create rule list
-					rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
-				}
+				ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
+				// create rule list
+				rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
 			}
 
 			var compiledRulesList = CompileRule(new List<OtherAnimalsTypeCohort>(), rules);
@@ -119,7 +112,6 @@ namespace Models.WholeFarm.Groupings
 				{
 					ce = Convert.ChangeType(rule.ComparisonValue, propertyType);
 				}
-//				var value = Expression.Constant(Convert.ChangeType(rule.ComparisonValue, propertyType));
 				var value = Expression.Constant(ce);
 				var binaryExpression = Expression.MakeBinary(rule.ComparisonOperator, key, value);
 
