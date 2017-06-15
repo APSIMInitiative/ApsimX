@@ -733,7 +733,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Gets the available to animal.</summary>
         /// <value>The available to animal.</value>
         public override AvailableToAnimalelementType[] AvailableToAnimal
-        { get { return Util.AvailableToAnimal(Plant.Name, this.Name, 0.0, Live, Dead); } }
+        { get { return Util.AvailableToAnimal(Plant == null ? null : Plant.Name, this.Name, 0.0, Live, Dead); } }
         /// <summary>Sets the removed by animal.</summary>
         /// <value>The removed by animal.</value>
         public override RemovedByAnimalType RemovedByAnimal

@@ -311,7 +311,7 @@ namespace UserInterface.Presenters
                 List<DataTable> tables = new List<DataTable>();
                 foreach (string tableName in dataStore.TableNames)
                 {
-                    if (tableName != "Simulations" && tableName != "Messages" && tableName != "InitialConditions")
+                    if (tableName != "Simulations" && tableName != "Messages" && tableName != "InitialConditions" && tableName != DataStore.UnitsTableName)
                     {
                         DataTable table = dataStore.GetData("*", tableName, true);
                         table.TableName = tableName;
