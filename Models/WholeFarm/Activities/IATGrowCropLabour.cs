@@ -143,7 +143,7 @@ namespace Models.WholeFarm.Activities
 
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
-                string cropName = ParentGrowCrop.FeedTypeName;
+                string cropName = ParentGrowCrop.CropName;
 
                 // for each labour item specified
                 foreach (var item in labour)
