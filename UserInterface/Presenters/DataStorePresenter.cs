@@ -72,7 +72,7 @@ namespace UserInterface.Presenters
             {
                 foreach (string tableName in this.dataStore.TableNames)
                 {
-                    if (tableName != "Messages" && tableName != "InitialConditions")
+                    if (tableName != "Messages" && tableName != "InitialConditions" && tableName != DataStore.UnitsTableName)
                     {
                         tableNames.Add(tableName);
                     }
@@ -100,12 +100,17 @@ namespace UserInterface.Presenters
                     }
                 }
 
+                int simulationId = 0;
 
                 for (int i = 0; i < data.Columns.Count; i++)
                 {
 
                     if (data.Columns[i].ColumnName == "SimulationID")
                     {
+                        if (simulationId == 0 && data.Rows.Count > 0)
+                        {
+                            simulationId = (int)data.Rows[0][1]
+                        }
                         data.Columns.RemoveAt(i);
                         i--;
                     }
@@ -121,9 +126,19 @@ namespace UserInterface.Presenters
                 // Convert the last dot to a CRLF so that the columns in the grid are narrower.
                 foreach (DataColumn column in data.Columns)
                 {
+                    string units = null;
+                    // Try to obtain units
+                    if (dataStore != null && simulationId != 0)
+                    {
+                        units = dataStore.GetUnits(simulationId, view.TableList.SelectedValue, column.ColumnName);
+                    }
                     int posLastDot = column.ColumnName.LastIndexOf('.');
                     if (posLastDot != -1)
                         column.ColumnName = column.ColumnName.Insert(posLastDot + 1, "\r\n");
+
+                    // Add the units, if they're available
+                    if (units != null)
+                        column.ColumnName = column.ColumnName + " " + units;
                 }
 
                 this.view.Grid.DataSource = data;

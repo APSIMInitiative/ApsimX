@@ -24,25 +24,20 @@ namespace Models.Report
         public string TableName;
         /// <summary>The data</summary>
         public List<IReportColumn> Columns = new List<IReportColumn>();
-        /// <summary>
-        ///  map of column name to units of measurement
-        /// </summary>
-        public Dictionary<String, String> colUnitsMap = new Dictionary<String, String>();
 
         /// <summary>Flatten the table i.e. turn arrays and structures into a flat table.</summary>
         public void Flatten()
         {
-            List<IReportColumn> origColumns = Columns;
-            Columns = new List<IReportColumn>();
-            colUnitsMap.Clear();
-            foreach (IReportColumn column in origColumns)
+            List<IReportColumn> flattenedColumns = new List<Models.Report.IReportColumn>();
+            foreach (IReportColumn column in Columns)
             {
                 if (column is ReportColumnConstantValue)
-                    Columns.Add(column);
+                    flattenedColumns.Add(column);
                 else
                     for (int rowIndex = 0; rowIndex < column.Values.Count; rowIndex++)
-                        FlattenValue(column.Name, column.Units, column.Values[rowIndex], rowIndex);
+                        FlattenValue(column.Name, column.Units, column.Values[rowIndex], rowIndex, flattenedColumns);
             }
+            Columns = flattenedColumns;
         }
 
         /// <summary>
@@ -53,24 +48,22 @@ namespace Models.Report
         /// <param name="units">Units of measurement; null if not applicable</param>
         /// <param name="value">The object to be analyzed and flattened</param>
         /// <param name="rowIndex">The row index of the specified value.</param>
+        /// <param name="flattenedColumns">The returned flattened columns.</param>
         /// <returns>The list of values that can be written to a data table</returns>
-        private void FlattenValue(string name, string units, object value, int rowIndex)
+        private static void FlattenValue(string name, string units, object value, int rowIndex, List<IReportColumn> flattenedColumns)
         {
-            Type type = value.GetType();
-            if (value == null || type == typeof(DateTime) || type == typeof(string) || !type.IsClass)
+            if (value == null || value.GetType() == typeof(DateTime) || value.GetType() == typeof(string) || !value.GetType().IsClass)
             {
                 // Scalar
-                IReportColumn flattenedColumn = Columns.Find(col => col.Name == name);
+                IReportColumn flattenedColumn = flattenedColumns.Find(col => col.Name == name);
                 if (flattenedColumn == null)
                 {
-                    flattenedColumn = new ReportColumnWithValues(name);
-                    InsertColumn(flattenedColumn);
-                    if (units != null)
-                        colUnitsMap.Add(name, units);
+                    flattenedColumn = new ReportColumnWithValues(name, units);
+                    InsertColumn(flattenedColumn, flattenedColumns);
                 }
 
                 // Ensure all columns have the correct number of values.
-                foreach (IReportColumn column in Columns)
+                foreach (IReportColumn column in flattenedColumns)
                 {
                     if (column is ReportColumnConstantValue)
                     { }
@@ -92,7 +85,7 @@ namespace Models.Report
                     heading += "(" + (columnIndex + 1).ToString() + ")";
 
                     object arrayElement = array.GetValue(columnIndex);
-                    FlattenValue(heading, units, arrayElement, rowIndex);  // recursion
+                    FlattenValue(heading, units, arrayElement, rowIndex, flattenedColumns);  // recursion
                 }
             }
             else if (value.GetType().GetInterface("IList") != null)
@@ -105,7 +98,7 @@ namespace Models.Report
                     heading += "(" + (columnIndex + 1).ToString() + ")";
 
                     object arrayElement = array[columnIndex];
-                    FlattenValue(heading, units, arrayElement, rowIndex);  // recursion
+                    FlattenValue(heading, units, arrayElement, rowIndex, flattenedColumns);  // recursion
                 }
             }
             else
@@ -131,7 +124,7 @@ namespace Models.Report
                         continue;
                     string heading = name + "." + property.Name;
                     object classElement = property.GetValue(value, null);
-                    FlattenValue(heading, propUnits, classElement, rowIndex);
+                    FlattenValue(heading, propUnits, classElement, rowIndex, flattenedColumns);
                 }
             }
         }
@@ -141,21 +134,22 @@ namespace Models.Report
         /// Need to ensure that array columns are kept in order.
         /// </summary>
         /// <param name="column">The column to insert.</param>
-        private void InsertColumn(IReportColumn column)
+        /// <param name="flattenedColumns">The returned flattened columns.</param>
+        private static void InsertColumn(IReportColumn column, List<IReportColumn> flattenedColumns)
         {
             int indexOfBracket = column.Name.IndexOf('(');
             if (indexOfBracket != -1)
             {
                 // find the last column that has a name is identical up to bracketed value.
                 string namePrefixToMatch = column.Name.Substring(0, indexOfBracket);
-                int indexToInsertAfter = Columns.FindLastIndex(col => col.Name.StartsWith(namePrefixToMatch));
+                int indexToInsertAfter = flattenedColumns.FindLastIndex(col => col.Name.StartsWith(namePrefixToMatch));
                 if (indexToInsertAfter != -1)
                 {
-                    Columns.Insert(indexToInsertAfter + 1, column);
+                    flattenedColumns.Insert(indexToInsertAfter + 1, column);
                     return;
                 }
             }
-            Columns.Add(column);
+            flattenedColumns.Add(column);
         }
     }
 }

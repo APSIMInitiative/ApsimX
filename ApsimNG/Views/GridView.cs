@@ -343,7 +343,22 @@ namespace UserInterface.Views
             gridview.AppendColumn(fillColumn);
             fillColumn.Sizing = TreeViewColumnSizing.Autosize;
 
+            int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
+
+            gridview.Model = null;
+            fixedcolview.Model = null;
+            for (int row = 0; row < nRows; row++)
+            {
+                // We could store data into the grid model, but we don't.
+                // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
+                gridmodel.Append();
+            }
+            gridview.Model = gridmodel;
+
+            gridview.Show();
+
             // Now let's apply center-justification to all the column headers, just for the heck of it
+            // It seems that on Windows, it's best to do this after gridview has been shown
             for (int i = 0; i < nCols; i++)
             {
                 Label label = GetColumnHeaderLabel(i);
@@ -362,20 +377,6 @@ namespace UserInterface.Views
                     label.Style.FontDescription.Weight = Pango.Weight.Bold;
                 }
             }
-
-            int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
-
-            gridview.Model = null;
-            fixedcolview.Model = null;
-            for (int row = 0; row < nRows; row++)
-            {
-                // We could store data into the grid model, but we don't.
-                // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
-                gridmodel.Append();
-            }
-            gridview.Model = gridmodel;
-
-            gridview.Show();
 
             if (mainWindow != null)
                 mainWindow.Cursor = null;
