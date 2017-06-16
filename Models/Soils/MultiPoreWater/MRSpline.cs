@@ -141,6 +141,9 @@ namespace Models.Soils
         {
             for (int layer = 0; layer < Weirdo.Thickness.Length; layer++)
             {
+                if (Weirdo.MappedPsiBub[layer] > 0)
+                    throw new Exception(this + "PsiBub is positive in layer " + layer + ".  It must be a negative number" );
+
                 DELk[layer, 0] = (Weirdo.MappedSAT[layer] - (Weirdo.MappedSAT[layer]+1e-20)) / (Math.Log10(-Weirdo.MappedPsiBub[layer])); //Tiny amount added to Sat so in situations where DUL = SAT this function returns a non zero value
                 DELk[layer, 1] = (Weirdo.MappedDUL[layer] - Weirdo.MappedSAT[layer]) / (Math.Log10(-psidul) - Math.Log10(-Weirdo.MappedPsiBub[layer]));
                 DELk[layer, 2] = (Weirdo.MappedLL15[layer] - Weirdo.MappedDUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psidul));

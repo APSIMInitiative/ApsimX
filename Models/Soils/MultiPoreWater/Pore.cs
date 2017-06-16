@@ -119,7 +119,7 @@ namespace Models.Soils
                 if (_WaterDepth - VolumeDepth>FloatingPointTolerance)
                     throw new Exception("Trying to put more water into pore " + Compartment + "in layer " + Layer + " than will fit");
                 if (Double.IsNaN(_WaterDepth))
-                    throw new Exception("Something has just set Water depth to Nan in " + Compartment + "in layer " + Layer + ".  Don't Worry, things like this happen sometimes.");
+                    throw new Exception("Something has just set Water depth to Nan for Pore " + Compartment + " in layer " + Layer + ".  Don't Worry, things like this happen sometimes.");
             }
         }
         /// <summary>The depth of Air in the pore</summary>
