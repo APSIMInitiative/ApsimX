@@ -119,7 +119,7 @@ namespace Models.Soils
                 if (_WaterDepth - VolumeDepth>FloatingPointTolerance)
                     throw new Exception("Trying to put more water into pore " + Compartment + "in layer " + Layer + " than will fit");
                 if (Double.IsNaN(_WaterDepth))
-                    throw new Exception("Something has just set Water depth to Nan in " + Compartment + "in layer " + Layer + ".  Don't Worry, things like this happen sometimes.");
+                    throw new Exception("Something has just set Water depth to Nan for Pore " + Compartment + " in layer " + Layer + ".  Don't Worry, things like this happen sometimes.");
             }
         }
         /// <summary>The depth of Air in the pore</summary>
@@ -153,7 +153,7 @@ namespace Models.Soils
         /// <summary>The potential diffusion out of this pore</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Diffusivity { get { return PoiseuilleFlow * RelativeWaterContent * (1- TensionFactor) * RepelancyFactor; } }
+        public double Diffusivity { get { return PoiseuilleFlow * RelativeWaterContent * (1- TensionFactor); } }
         /// <summary>The potential diffusion into this pore</summary>
         [XmlIgnore]
         [Units("mm")]
@@ -193,9 +193,9 @@ namespace Models.Soils
                 if (Double.IsNaN(Sorption))
                     throw new Exception("Sorption is NaN");
                 if (IncludeSorption)
-                    return (PoiseuilleFlow + Sorption) * RepelancyFactor;
+                    return PoiseuilleFlow + (Sorption * RepelancyFactor);
                 else
-                    return PoiseuilleFlow * RepelancyFactor;
+                    return PoiseuilleFlow;
             }
         }
         /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
