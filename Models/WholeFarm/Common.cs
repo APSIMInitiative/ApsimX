@@ -6,10 +6,32 @@ using System.Text;
 
 namespace Models.WholeFarm
 {
-	/// <summary>
-	/// Reasons for a change in herd
-	/// </summary>
-	public enum HerdChangeReason
+
+    /// <summary>
+    /// Crop payment style
+    /// </summary>
+    public enum StoresForCrops
+    {
+        /// <summary>
+        /// Food Store for Humans
+        /// </summary>
+        HumanFoodStore,
+        /// <summary>
+        /// Food Store for Animals
+        /// </summary>
+        AnimalFoodStore,
+        /// <summary>
+        /// Store for inedible crop products
+        /// </summary>
+        ProductStore,
+    }
+
+
+
+    /// <summary>
+    /// Reasons for a change in herd
+    /// </summary>
+    public enum HerdChangeReason
 	{
 		/// <summary>
 		/// This individual remains in herd

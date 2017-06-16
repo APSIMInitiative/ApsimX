@@ -183,7 +183,7 @@ namespace Models.WholeFarm.Activities
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
 
-                string cropName = ParentGrowCrop.FeedTypeName;
+                string cropName = ParentGrowCrop.CropName;
                 double totalcost;
                 string reason;
 
