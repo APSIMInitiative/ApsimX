@@ -45,137 +45,6 @@ Mirschel W, Wenkel K, Schultz A, Pommerening J, Verch G 2005. Dynamic phenologic
   </Memo>
   <Replacements>
     <Name>Replacements</Name>
-    <Report>
-      <Name>DailyReport</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ExperimentFactorNames />
-      <ExperimentFactorValues />
-      <VariableNames>
-        <string>[Clock].Today</string>
-        <string>[Weather].MeanT</string>
-        <string>[Soil].SoilWater.SW</string>
-        <string>[Soil].SoilWater.SWmm</string>
-        <string>sum([Soil].SoilNitrogen.TotalN) as ProfileN</string>
-        <string>[Soil].SoilNitrogen.TotalN</string>
-        <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilN</string>
-        <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
-        <string>[Barley].AboveGround.N</string>
-        <string>[Barley].AboveGroundLive.Wt as AboveGround_LiveWt</string>
-        <string>[Barley].AboveGroundLive.N</string>
-        <string>[Barley].AboveGroundLive.N as AboveGround_LiveN</string>
-        <string>[Barley].AboveGround.Wt as TotalAboveGroundWt</string>
-        <string>[Barley].AboveGroundDead.N</string>
-        <string>[Barley].AboveGroundDead.Wt</string>
-        <string>[Barley].Arbitrator.DMDemand</string>
-        <string>[Barley].Arbitrator.DM.TotalFixationSupply</string>
-        <string>[Barley].Ear.N</string>
-        <string>[Barley].Ear.Nconc</string>
-        <string>[Barley].Ear.Wt</string>
-        <string>[Barley].Grain.N</string>
-        <string>[Barley].Grain.NConc</string>
-        <string>[Barley].Grain.Number</string>
-        <string>[Barley].Grain.Size</string>
-        <string>[Barley].Grain.Wt</string>
-        <string>[Barley].Grain.Live.Wt</string>
-        <string>[Barley].Leaf.AppearedCohortNo</string>
-        <string>[Barley].Leaf.CoverDead</string>
-        <string>[Barley].Leaf.CoverGreen</string>
-        <string>[Barley].Leaf.CoverTotal</string>
-        <string>[Barley].Leaf.Dead.N</string>
-        <string>[Barley].Leaf.Dead.NConc</string>
-        <string>[Barley].Leaf.Dead.Wt</string>
-        <string>[Barley].Leaf.DeadCohortNo</string>
-        <string>[Barley].Leaf.SenescingCohortNo</string>
-        <string>[Barley].Leaf.ExpandedCohortNo</string>
-        <string>[Barley].Leaf.Fn</string>
-        <string>[Barley].Leaf.Fw</string>
-        <string>[Barley].Leaf.Height</string>
-        <string>[Barley].Leaf.InitialisedCohortNo</string>
-        <string>[Barley].Leaf.LAI</string>
-        <string>[Barley].Leaf.Live.N</string>
-        <string>[Barley].Leaf.Live.NConc</string>
-        <string>[Barley].Leaf.Live.Wt</string>
-        <string>[Barley].Leaf.SpecificArea</string>
-        <string>[Barley].Leaf.Transpiration</string>
-        <string>[Barley].Phenology.CurrentPhaseName</string>
-        <string>[Barley].Phenology.CurrentStageName</string>
-        <string>[Barley].Phenology.DailyVernalisation.Value()</string>
-        <string>[Barley].Phenology.MeanTemp.Value()</string>
-        <string>[Barley].Phenology.Photoperiod.Value()</string>
-        <string>[Barley].Phenology.Stage</string>
-        <string>[Barley].Phenology.ThermalTime.Value()</string>
-        <string>[Barley].Phenology.AccumulatedTT.Value()</string>
-        <string>[Barley].Phenology.Vrn1.Value()</string>
-        <string>[Barley].Phenology.Vrn2.Value()</string>
-        <string>[Barley].Phenology.Vrn4.Value()</string>
-        <string>[Barley].Phenology.Zadok.Stage</string>
-        <string>[Barley].Population</string>
-        <string>[Barley].Root.Depth</string>
-        <string>[Barley].Root.N</string>
-        <string>[Barley].Root.Wt</string>
-        <string>[Barley].Root.Nconc</string>
-        <string>[Barley].Root.WaterUptake</string>
-        <string>[Barley].Spike.N</string>
-        <string>[Barley].Spike.NConc</string>
-        <string>[Barley].Spike.Wt</string>
-        <string>[Barley].Spike.Live.NonStructuralWt</string>
-        <string>[Barley].Stem.N</string>
-        <string>[Barley].Stem.NConc</string>
-        <string>[Barley].Stem.Wt</string>
-        <string>[Barley].Stem.PercentWSC</string>
-        <string>[Barley].Stem.Live.NonStructuralWt</string>
-        <string>[Barley].StemPlusSpike.Wt</string>
-        <string>[Barley].StemPlusSpike.N</string>
-        <string>[Barley].SowingData.Cultivar</string>
-        <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value()</string>
-        <string>[Barley].Structure.HaunStage.Value()</string>
-        <string>[Barley].Structure.Height</string>
-        <string>[Barley].Structure.LeafTipsAppeared</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
-        <string>[Barley].Structure.MainStemPopn</string>
-        <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
-        <string>[Barley].Structure.TotalStemPopn</string>
-        <string>[Barley].Total.N</string>
-        <string>[Barley].Total.Wt</string>
-        <string>[SurfaceOrganicMatter].Wt</string>
-        <string>([Barley].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
-        <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilN</string>
-        <string>[Barley].Phenology.FlagLeafDAS</string>
-        <string>[Barley].Phenology.FloweringDAS</string>
-        <string>[Barley].Phenology.MaturityDAS</string>
-        <string>[Barley].Phenology.PhotoPeriod</string>
-        <string>[Barley].Phenology.PhotoPeriodDeltaFunction</string>
-        <string>[Barley].Phenology.Stage</string>
-        <string>[Barley].Phenology.SoilTemperatureFunction.Value()</string>
-        <string>[Irrigation].IrrigationApplied as Irrigation</string>
-        <string>[Fertiliser].NitrogenApplied as NFert</string>
-        <string>[Weather].Rain</string>
-        <string>[Barley].Leaf.Fn</string>
-        <string>[Barley].Leaf.Fw</string>
-      </VariableNames>
-      <EventNames>
-        <string>[Clock].DoReport</string>
-      </EventNames>
-    </Report>
-    <Report>
-      <Name>EndTrialReport</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ExperimentFactorNames />
-      <ExperimentFactorValues />
-      <VariableNames>
-        <string>[Clock].Today</string>
-        <string>[Barley].Structure.LeafTipsAppeared</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber</string>
-        <string>[Barley].Phenology.FlagLeafDAS</string>
-        <string>[Barley].Phenology.FloweringDAS</string>
-        <string>[Barley].Phenology.MaturityDAS</string>
-        <string>[Script].CalcVals.SowMonth</string>
-      </VariableNames>
-      <EventNames>
-        <string>[Clock].EndOfSimulation</string>
-      </EventNames>
-    </Report>
     <Plant>
       <Name>Barley</Name>
       <OrganArbitrator>
@@ -215,7 +84,7 @@ The data  shows a slowdown in phenological developement in winter conditions, wh
 
 TTbase = T-0
 
-FP = Max (0, (P -7)/9)
+FP = Max (0, (P-7)/9)
 
 TT = TTBase*FP
 
@@ -425,7 +294,7 @@ Not used in current barley model]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp compared to the phyllochron duration for the same phase at 8 h Pp.  
 
-Not used in curreent oat model.]]></MemoText>
+Not used in current barley model.]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
@@ -437,7 +306,7 @@ Not used in curreent oat model.]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp.
 
-Not used in current oat model.]]></MemoText>
+Not used in current barley model.]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>2.5</FixedValue>
@@ -3745,6 +3614,137 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <CropType>Barley</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
+    <Report>
+      <Name>DailyReport</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Weather].MeanT</string>
+        <string>[Soil].SoilWater.SW</string>
+        <string>[Soil].SoilWater.SWmm</string>
+        <string>sum([Soil].SoilNitrogen.TotalN) as ProfileN</string>
+        <string>[Soil].SoilNitrogen.TotalN</string>
+        <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilN</string>
+        <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+        <string>[Barley].AboveGround.N</string>
+        <string>[Barley].AboveGroundLive.Wt as AboveGround_LiveWt</string>
+        <string>[Barley].AboveGroundLive.N</string>
+        <string>[Barley].AboveGroundLive.N as AboveGround_LiveN</string>
+        <string>[Barley].AboveGround.Wt as TotalAboveGroundWt</string>
+        <string>[Barley].AboveGroundDead.N</string>
+        <string>[Barley].AboveGroundDead.Wt</string>
+        <string>[Barley].Arbitrator.DMDemand</string>
+        <string>[Barley].Arbitrator.DM.TotalFixationSupply</string>
+        <string>[Barley].Ear.N</string>
+        <string>[Barley].Ear.Nconc</string>
+        <string>[Barley].Ear.Wt</string>
+        <string>[Barley].Grain.N</string>
+        <string>[Barley].Grain.NConc</string>
+        <string>[Barley].Grain.Number</string>
+        <string>[Barley].Grain.Size</string>
+        <string>[Barley].Grain.Wt</string>
+        <string>[Barley].Grain.Live.Wt</string>
+        <string>[Barley].Leaf.AppearedCohortNo</string>
+        <string>[Barley].Leaf.CoverDead</string>
+        <string>[Barley].Leaf.CoverGreen</string>
+        <string>[Barley].Leaf.CoverTotal</string>
+        <string>[Barley].Leaf.Dead.N</string>
+        <string>[Barley].Leaf.Dead.NConc</string>
+        <string>[Barley].Leaf.Dead.Wt</string>
+        <string>[Barley].Leaf.DeadCohortNo</string>
+        <string>[Barley].Leaf.SenescingCohortNo</string>
+        <string>[Barley].Leaf.ExpandedCohortNo</string>
+        <string>[Barley].Leaf.Fn</string>
+        <string>[Barley].Leaf.Fw</string>
+        <string>[Barley].Leaf.Height</string>
+        <string>[Barley].Leaf.InitialisedCohortNo</string>
+        <string>[Barley].Leaf.LAI</string>
+        <string>[Barley].Leaf.Live.N</string>
+        <string>[Barley].Leaf.Live.NConc</string>
+        <string>[Barley].Leaf.Live.Wt</string>
+        <string>[Barley].Leaf.SpecificArea</string>
+        <string>[Barley].Leaf.Transpiration</string>
+        <string>[Barley].Phenology.CurrentPhaseName</string>
+        <string>[Barley].Phenology.CurrentStageName</string>
+        <string>[Barley].Phenology.DailyVernalisation.Value()</string>
+        <string>[Barley].Phenology.MeanTemp.Value()</string>
+        <string>[Barley].Phenology.Photoperiod.Value()</string>
+        <string>[Barley].Phenology.Stage</string>
+        <string>[Barley].Phenology.ThermalTime.Value()</string>
+        <string>[Barley].Phenology.AccumulatedTT.Value()</string>
+        <string>[Barley].Phenology.Vrn1.Value()</string>
+        <string>[Barley].Phenology.Vrn2.Value()</string>
+        <string>[Barley].Phenology.Vrn4.Value()</string>
+        <string>[Barley].Phenology.Zadok.Stage</string>
+        <string>[Barley].Population</string>
+        <string>[Barley].Root.Depth</string>
+        <string>[Barley].Root.N</string>
+        <string>[Barley].Root.Wt</string>
+        <string>[Barley].Root.Nconc</string>
+        <string>[Barley].Root.WaterUptake</string>
+        <string>[Barley].Spike.N</string>
+        <string>[Barley].Spike.NConc</string>
+        <string>[Barley].Spike.Wt</string>
+        <string>[Barley].Spike.Live.NonStructuralWt</string>
+        <string>[Barley].Stem.N</string>
+        <string>[Barley].Stem.NConc</string>
+        <string>[Barley].Stem.Wt</string>
+        <string>[Barley].Stem.PercentWSC</string>
+        <string>[Barley].Stem.Live.NonStructuralWt</string>
+        <string>[Barley].StemPlusSpike.Wt</string>
+        <string>[Barley].StemPlusSpike.N</string>
+        <string>[Barley].SowingData.Cultivar</string>
+        <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value()</string>
+        <string>[Barley].Structure.HaunStage.Value()</string>
+        <string>[Barley].Structure.Height</string>
+        <string>[Barley].Structure.LeafTipsAppeared</string>
+        <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
+        <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+        <string>[Barley].Structure.MainStemPopn</string>
+        <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
+        <string>[Barley].Structure.TotalStemPopn</string>
+        <string>[Barley].Total.N</string>
+        <string>[Barley].Total.Wt</string>
+        <string>[SurfaceOrganicMatter].Wt</string>
+        <string>([Barley].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
+        <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilN</string>
+        <string>[Barley].Phenology.FlagLeafDAS</string>
+        <string>[Barley].Phenology.FloweringDAS</string>
+        <string>[Barley].Phenology.MaturityDAS</string>
+        <string>[Barley].Phenology.PhotoPeriod</string>
+        <string>[Barley].Phenology.PhotoPeriodDeltaFunction</string>
+        <string>[Barley].Phenology.Stage</string>
+        <string>[Barley].Phenology.SoilTemperatureFunction.Value()</string>
+        <string>[Irrigation].IrrigationApplied as Irrigation</string>
+        <string>[Fertiliser].NitrogenApplied as NFert</string>
+        <string>[Weather].Rain</string>
+        <string>[Barley].Leaf.Fn</string>
+        <string>[Barley].Leaf.Fw</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Clock].DoReport</string>
+      </EventNames>
+    </Report>
+    <Report>
+      <Name>EndTrialReport</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
+      <VariableNames>
+        <string>[Clock].Today</string>
+        <string>[Barley].Structure.LeafTipsAppeared</string>
+        <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+        <string>[Barley].Phenology.FlagLeafDAS</string>
+        <string>[Barley].Phenology.FloweringDAS</string>
+        <string>[Barley].Phenology.MaturityDAS</string>
+        <string>[Script].CalcVals.SowMonth</string>
+      </VariableNames>
+      <EventNames>
+        <string>[Clock].EndOfSimulation</string>
+      </EventNames>
+    </Report>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
   <DataStore>
@@ -3770,14 +3770,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     <Input>
       <Name>Biomass1415</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>Observations\BarleyObservedData_1516.txt</FileName>
-    </Input>
-    <Input>
-      <Name>CPT</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage>Invalid number of values on line: 						
-in file: C:\ApsimX\Prototypes\Barley\Observations\CPTBarleyPhenology.txt</ErrorMessage>
+      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\Observations\BarleyObservedData_1415.txt' because it is being used by another process.</ErrorMessage>
       <FileName>Observations\BarleyObservedData_1415.txt</FileName>
     </Input>
     <PredictedObserved>
@@ -3813,63 +3806,6 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\CPTBarleyPhenology.txt</ErrorM
       <ObservedTableName>Biomass1516</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
-    <PredictedObserved>
-      <Name>PredictedObserved_CPT</Name>
-      <Tests>
-        <Name>Tests</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <AcceptedStats>
-          <RegrStats>
-            <Name>Barley.Phenology.FlagLeafDAS</Name>
-            <n>43</n>
-            <Slope>2.9294978750196536</Slope>
-            <Intercept>-150.60077128915319</Intercept>
-            <SEslope>0.32836437162256193</SEslope>
-            <SEintercept>22.845277954719112</SEintercept>
-            <R2>0.66001314552392332</R2>
-            <RMSE>23.733990932445295</RMSE>
-            <NSE>-15.394553754131909</NSE>
-            <ME>-16.837209302325583</ME>
-            <MAE>16.837209302325583</MAE>
-            <RSR>4.0016602882023049</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>Barley.Phenology.FloweringDAS</Name>
-            <n>43</n>
-            <Slope>0</Slope>
-            <Intercept>65</Intercept>
-            <SEslope>0</SEslope>
-            <SEintercept>0</SEintercept>
-            <R2>NaN</R2>
-            <RMSE>17.220188260321958</RMSE>
-            <NSE>-6.1837560924479824</NSE>
-            <ME>-15.976744186046512</ME>
-            <MAE>15.976744186046512</MAE>
-            <RSR>2.6489039237531382</RSR>
-          </RegrStats>
-          <RegrStats>
-            <Name>Barley.Structure.LeafTipsAppeared</Name>
-            <n>31</n>
-            <Slope>9.5423080000424659E-14</Slope>
-            <Intercept>8.7141709970571</Intercept>
-            <SEslope>8.1122759254074246E-08</SEslope>
-            <SEintercept>6.03137861688503E-07</SEintercept>
-            <R2>4.7628567756419216E-14</R2>
-            <RMSE>1.380993144866131</RMSE>
-            <NSE>-7.2705945876926332</NSE>
-            <ME>1.29481618911182</ME>
-            <MAE>1.29481618911182</MAE>
-            <RSR>2.829099010974359</RSR>
-          </RegrStats>
-        </AcceptedStats>
-        <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
-        <POName>PredictedObserved_Physio</POName>
-      </Tests>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <PredictedTableName>DailyReport</PredictedTableName>
-      <ObservedTableName>CPT</ObservedTableName>
-      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
-    </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>5000</MaximumResultsPerPage>
@@ -3884,7 +3820,7 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\CPTBarleyPhenology.txt</ErrorM
           <Name>_SD_</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
-            <string>[Clock].StartDate = 2003-05-21,2003-09-02,2004-05-28,2004-09-06</string>
+            <string>[Clock].StartDate = 2003-05-21,2003-09-02,2004-05-28,2004-09-06,</string>
           </Specifications>
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3900,8 +3836,8 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\CPTBarleyPhenology.txt</ErrorM
         <Clock>
           <Name>Clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <StartDate>2003-05-01T00:00:00</StartDate>
-          <EndDate>2005-11-30T00:00:00</EndDate>
+          <StartDate>2004-05-01T00:00:00</StartDate>
+          <EndDate>2007-11-30T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -4041,12 +3977,12 @@ namespace Models
               <AirDry>
                 <double>0.05</double>
                 <double>0.05</double>
-                <double>0.15</double>
-                <double>0.155</double>
-                <double>0.155</double>
-                <double>0.155</double>
-                <double>0.155</double>
-                <double>0.11</double>
+                <double>0.16</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.17</double>
+                <double>0.12</double>
               </AirDry>
               <LL15>
                 <double>0.14</double>
@@ -4419,7 +4355,7 @@ namespace Models
             <Name>Sow_n_Harvest</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <Cultivar>Boss</Cultivar>
+              <Cultivar>Cellar</Cultivar>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -4638,6 +4574,28 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Biomass1516</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>TotalAboveGroundWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
@@ -4675,6 +4633,28 @@ namespace Models
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Biomass1516</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Grain.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -26688,7 +26668,7 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
+            <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
@@ -26717,13 +26697,6 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Right</Type>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -27019,7 +26992,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>AboveGroundN</YFieldName>
+            <YFieldName>AboveGround_LiveN</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -28296,15 +28269,15 @@ The treatments were monitored for:
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2014-11-18</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
-                <Action>[Irrigation].Apply(45); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-11-27</Date>
-                <Action>[Irrigation].Apply(45); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-12-02</Date>
@@ -28312,47 +28285,47 @@ The treatments were monitored for:
               </Operation>
               <Operation>
                 <Date>2014-12-10</Date>
-                <Action>[Irrigation].Apply(36); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-12-16</Date>
-                <Action>[Irrigation].Apply(32); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-12-23</Date>
-                <Action>[Irrigation].Apply(43); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-01-06</Date>
-                <Action>[Irrigation].Apply(60); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-12</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-12</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-16</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-19</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-23</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-26</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
             </Operations>
             <Operations>
@@ -28495,15 +28468,15 @@ The treatments were monitored for:
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2014-11-18</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-11-26</Date>
-                <Action>[Irrigation].Apply(45); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-11-27</Date>
-                <Action>[Irrigation].Apply(45); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-12-02</Date>
@@ -28511,47 +28484,47 @@ The treatments were monitored for:
               </Operation>
               <Operation>
                 <Date>2014-12-10</Date>
-                <Action>[Irrigation].Apply(36); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-12-16</Date>
-                <Action>[Irrigation].Apply(32); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-12-23</Date>
-                <Action>[Irrigation].Apply(43); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2014-12-30</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-01-06</Date>
-                <Action>[Irrigation].Apply(60); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-12</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-12</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-16</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-19</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-23</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
               <Operation>
                 <Date>2015-02-26</Date>
-                <Action>[Irrigation].Apply(40); </Action>
+                <Action>[Irrigation].Apply(0); </Action>
               </Operation>
             </Operations>
             <Operations>
@@ -29196,8 +29169,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <InitialRootDepth>40</InitialRootDepth>
                 <CropToSow>Dash</CropToSow>
+                <InitialRootDepth>40</InitialRootDepth>
                 <SowingDate>2014-10-14</SowingDate>
               </Script>
               <Code><![CDATA[using System;
@@ -31099,7 +31072,7 @@ namespace Models
       <Folder>
         <Name>ZadokStage</Name>
         <Graph>
-          <Name>Zadok</Name>
+          <Name>Z</Name>
           <Series>
             <Name>Predicted</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -31136,7 +31109,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Phenology9596</TableName>
+            <TableName>Biomass1415</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Phenology.FloweringDAS</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -32576,6 +32549,709 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
+  <Folder>
+    <Name>Australia</Name>
+    <Simulation>
+      <Name>Base_ZeroN</Name>
+      <Weather>
+        <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <FileName>Weather\Lincoln15-17.met</FileName>
+        <ExcelWorkSheetName />
+      </Weather>
+      <Clock>
+        <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <StartDate>2015-09-11T00:00:00</StartDate>
+        <EndDate>2016-03-31T00:00:00</EndDate>
+      </Clock>
+      <Summary>
+        <Name>summaryfile</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Summary>
+      <SoilArbitrator>
+        <Name>Soil Arbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </SoilArbitrator>
+      <Zone>
+        <Name>Paddock</Name>
+        <Manager>
+          <Name>DAS</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Script>
+            <DAS>0</DAS>
+          </Script>
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		
+	
+		
+		
+		[Description("Days after sowing")]
+		public double DAS { get; set; }
+		
+		[EventSubscribe("DoInitialSummary")]
+		private void OnDoInitialSummary(object sender, EventArgs e)
+		{
+			DAS = 0;
+		}
+		
+		[EventSubscribe("DoReportCalculations")]
+		private void OnDoReportCalculations(object sender, EventArgs e)
+		{
+			DAS += 1;
+		}
+	
+	}
+}]]></Code>
+        </Manager>
+        <Soil>
+          <Name>Soil</Name>
+          <Analysis>
+            <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <Texture />
+            <MunsellColour />
+            <PH>
+              <double>6.6</double>
+              <double>6.2</double>
+              <double>5.7</double>
+              <double>5.5</double>
+              <double>5.5</double>
+              <double>5.5</double>
+            </PH>
+            <PHUnits>Water</PHUnits>
+            <BoronUnits>HotWater</BoronUnits>
+          </Analysis>
+          <Water>
+            <Name>Water</Name>
+            <SoilCrop>
+              <Name>BarleySoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <LL>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.157</double>
+                <double>0.173</double>
+                <double>0.173</double>
+                <double>0.165</double>
+              </LL>
+              <KL>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+                <double>0.1</double>
+              </KL>
+              <XF>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+              </XF>
+            </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <BD>
+              <double>1.23</double>
+              <double>1.23</double>
+              <double>1.59</double>
+              <double>1.57</double>
+              <double>1.57</double>
+              <double>1.6</double>
+            </BD>
+            <AirDry>
+              <double>0.05</double>
+              <double>0.05</double>
+              <double>0.16</double>
+              <double>0.17</double>
+              <double>0.17</double>
+              <double>0.17</double>
+            </AirDry>
+            <LL15>
+              <double>0.14</double>
+              <double>0.14</double>
+              <double>0.16</double>
+              <double>0.17</double>
+              <double>0.17</double>
+              <double>0.17</double>
+            </LL15>
+            <DUL>
+              <double>0.33</double>
+              <double>0.33</double>
+              <double>0.29</double>
+              <double>0.28</double>
+              <double>0.3</double>
+              <double>0.3</double>
+            </DUL>
+            <SAT>
+              <double>0.48</double>
+              <double>0.48</double>
+              <double>0.4</double>
+              <double>0.38</double>
+              <double>0.37</double>
+              <double>0.36</double>
+            </SAT>
+            <KS>
+              <double>4832.039</double>
+              <double>389.229</double>
+              <double>16.362</double>
+              <double>97.995</double>
+              <double>97.995</double>
+              <double>97.995</double>
+            </KS>
+          </Water>
+          <SoilWater>
+            <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <SummerDate>1-Nov</SummerDate>
+            <SummerU>6</SummerU>
+            <SummerCona>2</SummerCona>
+            <WinterDate>1-Apr</WinterDate>
+            <WinterU>9</WinterU>
+            <WinterCona>4.4</WinterCona>
+            <DiffusConst>0</DiffusConst>
+            <DiffusSlope>0</DiffusSlope>
+            <Salb>0.18</Salb>
+            <CN2Bare>68</CN2Bare>
+            <CNRed>20</CNRed>
+            <CNCov>0.8</CNCov>
+            <slope>0</slope>
+            <discharge_width>0</discharge_width>
+            <catchment_area>0</catchment_area>
+            <max_pond>0</max_pond>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <SWCON>
+              <double>0.9</double>
+              <double>0.6</double>
+              <double>0.4</double>
+              <double>0.4</double>
+              <double>0.4</double>
+              <double>0.9</double>
+            </SWCON>
+            <KLAT>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+              <double>0</double>
+            </KLAT>
+            <residueinterception>0</residueinterception>
+          </SoilWater>
+          <SoilNitrogen>
+            <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <fom_type>
+              <string>default</string>
+              <string>manure</string>
+              <string>mucuna</string>
+              <string>lablab</string>
+              <string>shemp</string>
+              <string>stable</string>
+            </fom_type>
+            <fract_carb>
+              <double>0.2</double>
+              <double>0.3</double>
+              <double>0.54</double>
+              <double>0.57</double>
+              <double>0.45</double>
+              <double>0</double>
+            </fract_carb>
+            <fract_cell>
+              <double>0.7</double>
+              <double>0.3</double>
+              <double>0.37</double>
+              <double>0.37</double>
+              <double>0.47</double>
+              <double>0.1</double>
+            </fract_cell>
+            <fract_lign>
+              <double>0.1</double>
+              <double>0.4</double>
+              <double>0.09</double>
+              <double>0.06</double>
+              <double>0.08</double>
+              <double>0.9</double>
+            </fract_lign>
+            <wfpsN2N2O_x>
+              <double>22</double>
+              <double>88</double>
+            </wfpsN2N2O_x>
+            <wfpsN2N2O_y>
+              <double>0.1</double>
+              <double>1</double>
+            </wfpsN2N2O_y>
+            <oc>
+              <double>1.8356606676098439</double>
+              <double>1.4633385968844384</double>
+              <double>1.1988393325681357</double>
+              <double>1.0301002994895852</double>
+              <double>0.4703383219429832</double>
+              <double>0.47013790451920212</double>
+            </oc>
+          </SoilNitrogen>
+          <SoilOrganicMatter>
+            <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <RootCN>31.5</RootCN>
+            <RootWt>1500</RootWt>
+            <SoilCN>11</SoilCN>
+            <EnrACoeff>7.4</EnrACoeff>
+            <EnrBCoeff>0.2</EnrBCoeff>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <Depth>
+              <string>0-15</string>
+              <string>15-30</string>
+              <string>30-60</string>
+              <string>60-90</string>
+              <string>90-120</string>
+              <string>120-150</string>
+            </Depth>
+            <OC>
+              <double>2.68</double>
+              <double>2.78</double>
+              <double>1.45</double>
+              <double>0.38</double>
+              <double>0.24</double>
+              <double>0.24</double>
+            </OC>
+            <FBiom>
+              <double>0.025</double>
+              <double>0.025</double>
+              <double>0.015</double>
+              <double>0.01</double>
+              <double>0.01</double>
+              <double>0.01</double>
+            </FBiom>
+            <FInert>
+              <double>0.45</double>
+              <double>0.6</double>
+              <double>0.75</double>
+              <double>0.9</double>
+              <double>0.96</double>
+              <double>0.96</double>
+            </FInert>
+            <OCUnits>Total</OCUnits>
+          </SoilOrganicMatter>
+          <Sample>
+            <Name>InitialN</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <NO3>
+              <double>8.4</double>
+              <double>11.6</double>
+              <double>10</double>
+              <double>11</double>
+              <double>9</double>
+              <double>3</double>
+            </NO3>
+            <NH4>
+              <double>2</double>
+              <double>0.6</double>
+              <double>0.8</double>
+              <double>0.3</double>
+              <double>0.2</double>
+              <double>0.4</double>
+            </NH4>
+            <SW>
+              <double>0.31</double>
+              <double>0.31</double>
+              <double>0.16</double>
+              <double>0.15</double>
+              <double>0.2</double>
+              <double>0.2</double>
+            </SW>
+            <NO3Units>kgha</NO3Units>
+            <NH4Units>kgha</NH4Units>
+            <SWUnits>Volumetric</SWUnits>
+            <OCUnits>Total</OCUnits>
+            <PHUnits>Water</PHUnits>
+          </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <Sample>
+            <Name>Initial water</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+              <double>300</double>
+            </Thickness>
+            <SW>
+              <double>0.31</double>
+              <double>0.31</double>
+              <double>0.16</double>
+              <double>0.15</double>
+              <double>0.2</double>
+              <double>0.2</double>
+            </SW>
+            <NO3Units>kgha</NO3Units>
+            <NH4Units>kgha</NH4Units>
+            <SWUnits>Volumetric</SWUnits>
+            <OCUnits>Total</OCUnits>
+            <PHUnits>Water</PHUnits>
+          </Sample>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <RecordNumber>0</RecordNumber>
+          <SoilType>NZ_sedementary</SoilType>
+          <LocalName />
+          <Site />
+          <NearestTown />
+          <Region>Plains</Region>
+          <State>Canterbury </State>
+          <Country>New Zealnd</Country>
+          <NaturalVegetation />
+          <Latitude>0</Latitude>
+          <Longitude>0</Longitude>
+        </Soil>
+        <Plant>
+          <Name>Barley</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ResourceName>Barley</ResourceName>
+          <CropType>Wheat</CropType>
+          <SowingDate>0001-01-01T00:00:00</SowingDate>
+        </Plant>
+        <SurfaceOrganicMatter>
+          <Name>Surface Organic Matter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ResidueTypes>
+            <Name>ResidueTypes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <LoadFromResource>ResidueTypes</LoadFromResource>
+          </ResidueTypes>
+          <Pools>
+            <Pool>
+              <PoolName>wheat_stubble</PoolName>
+              <ResidueType>wheat</ResidueType>
+              <Mass>1500</Mass>
+              <CNRatio>80</CNRatio>
+              <CPRatio>NaN</CPRatio>
+              <StandingFraction>0</StandingFraction>
+            </Pool>
+          </Pools>
+          <PoolName>wheat_stubble</PoolName>
+          <type>wheat</type>
+          <mass>1500</mass>
+          <standing_fraction>0</standing_fraction>
+          <cpr />
+          <cnr>80</cnr>
+          <CriticalResidueWeight>2000</CriticalResidueWeight>
+          <OptimumDecompTemp>20</OptimumDecompTemp>
+          <MaxCumulativeEOS>20</MaxCumulativeEOS>
+          <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+          <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+          <TotalLeachRain>25</TotalLeachRain>
+          <MinRainToLeach>10</MinRainToLeach>
+          <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+          <DefaultCPRatio>0</DefaultCPRatio>
+          <DefaultStandingFraction>0</DefaultStandingFraction>
+          <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+          <FractionFaecesAdded>0.5</FractionFaecesAdded>
+        </SurfaceOrganicMatter>
+        <MicroClimate>
+          <Name>MicroClimate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <a_interception>0</a_interception>
+          <b_interception>1</b_interception>
+          <c_interception>0</c_interception>
+          <d_interception>0</d_interception>
+          <soil_albedo>0.3</soil_albedo>
+          <sun_angle>15</sun_angle>
+          <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+          <night_interception_fraction>0.5</night_interception_fraction>
+          <refheight>2</refheight>
+          <albedo>0.29366217672824863</albedo>
+          <emissivity>0.96</emissivity>
+          <RadIntTotal>0</RadIntTotal>
+        </MicroClimate>
+        <Irrigation>
+          <Name>Irrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Irrigation>
+        <Fertiliser>
+          <Name>Fertiliser</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </Fertiliser>
+        <Folder>
+          <Name>Manager folder</Name>
+          <Operations>
+            <Name>SowingEvent</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2015-09-28</Date>
+              <Action>[Barley].Sow(population:280, cultivar:"Valetta", depth:40, rowSpacing:150);</Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>IrrigationEvents</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2015-10-19</Date>
+              <Action>[Irrigation].Apply(30); </Action>
+            </Operation>
+            <Operation>
+              <Date>2015-11-26</Date>
+              <Action>[Irrigation].Apply(30); </Action>
+            </Operation>
+            <Operation>
+              <Date>2015-12-01</Date>
+              <Action>[Irrigation].Apply(30); </Action>
+            </Operation>
+            <Operation>
+              <Date>2015-12-10</Date>
+              <Action>[Irrigation].Apply(30); </Action>
+            </Operation>
+          </Operations>
+          <Operations>
+            <Name>FertiliserEvents</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2015-11-10</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-11-29</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-12-16</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+            </Operation>
+            <Operation>
+              <Date>2015-12-16</Date>
+              <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
+        </Folder>
+        <Manager>
+          <Name>Harvesting</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Script />
+          <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
+		}
+	}
+}
+	   ]]></Code>
+        </Manager>
+        <Report>
+          <Name>DailyReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Weather].MeanT</string>
+            <string>[Soil].SoilWater.SW</string>
+            <string>[Soil].SoilWater.SWmm</string>
+            <string>sum([Soil].SoilWater.SWmm) as ProfileWater</string>
+            <string>[Barley].AboveGround.N</string>
+            <string>[Barley].AboveGround.Wt</string>
+            <string>[Barley].AboveGroundLive.N</string>
+            <string>[Barley].AboveGroundLive.N*10 as AboveGroundN</string>
+            <string>[Barley].AboveGroundLive.Wt</string>
+            <string>[Barley].AboveGroundDead.N</string>
+            <string>[Barley].AboveGroundDead.Wt</string>
+            <string>[Barley].Arbitrator.DMDemand</string>
+            <string>[Barley].Arbitrator.DM.TotalFixationSupply</string>
+            <string>[Barley].Ear.N</string>
+            <string>[Barley].Ear.Nconc</string>
+            <string>[Barley].Ear.Wt</string>
+            <string>[Barley].Grain.N</string>
+            <string>[Barley].Grain.NConc</string>
+            <string>[Barley].Grain.Number</string>
+            <string>[Barley].Grain.Size</string>
+            <string>[Barley].Grain.Wt</string>
+            <string>[Barley].Grain.Live.Wt</string>
+            <string>[Barley].Leaf.AppearedCohortNo</string>
+            <string>[Barley].Leaf.CoverDead</string>
+            <string>[Barley].Leaf.CoverGreen</string>
+            <string>[Barley].Leaf.CoverTotal</string>
+            <string>[Barley].Leaf.Dead.N</string>
+            <string>[Barley].Leaf.Dead.NConc</string>
+            <string>[Barley].Leaf.Dead.Wt</string>
+            <string>[Barley].Leaf.DeadCohortNo</string>
+            <string>[Barley].Leaf.SenescingCohortNo</string>
+            <string>[Barley].Leaf.ExpandedCohortNo</string>
+            <string>[Barley].Leaf.Fn</string>
+            <string>[Barley].Leaf.Fw</string>
+            <string>[Barley].Leaf.Height</string>
+            <string>[Barley].Leaf.InitialisedCohortNo</string>
+            <string>[Barley].Leaf.LAI</string>
+            <string>[Barley].Leaf.Live.N</string>
+            <string>[Barley].Leaf.Live.NConc</string>
+            <string>[Barley].Leaf.Live.Wt</string>
+            <string>[Barley].Leaf.SpecificArea</string>
+            <string>[Barley].Leaf.Transpiration</string>
+            <string>[Barley].Phenology.CurrentPhaseName</string>
+            <string>[Barley].Phenology.CurrentStageName</string>
+            <string>[Barley].Phenology.DailyVernalisation.Value()</string>
+            <string>[Barley].Phenology.MeanTemp.Value()</string>
+            <string>[Barley].Phenology.Photoperiod.Value()</string>
+            <string>[Barley].Phenology.Stage</string>
+            <string>[Barley].Phenology.ThermalTime.Value()</string>
+            <string>[Barley].Phenology.ThermalTime.Value  </string>
+            <string>[Barley].Phenology.Vrn1.Value()</string>
+            <string>[Barley].Phenology.Vrn2.Value()</string>
+            <string>[Barley].Phenology.Vrn4.Value()</string>
+            <string>[Barley].Phenology.Zadok.Stage</string>
+            <string>[Barley].Root.Depth</string>
+            <string>[Barley].Root.N</string>
+            <string>[Barley].Root.Wt</string>
+            <string>[Barley].Root.Nconc</string>
+            <string>[Barley].Root.WaterUptake</string>
+            <string>[Barley].Spike.N</string>
+            <string>[Barley].Spike.NConc</string>
+            <string>[Barley].Spike.Wt</string>
+            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.N</string>
+            <string>[Barley].Stem.NConc</string>
+            <string>[Barley].Stem.Wt</string>
+            <string>[Barley].Stem.PercentWSC</string>
+            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].StemPlusSpike.Wt</string>
+            <string>[Barley].StemPlusSpike.N</string>
+            <string>[Barley].SowingData.Cultivar</string>
+            <string>[Barley].Structure.HaunStage.ValueTerminalSpikelet.Value()</string>
+            <string>[Barley].Structure.HaunStage.Value()</string>
+            <string>[Barley].Structure.Height</string>
+            <string>[Barley].Structure.LeafTipsAppeared</string>
+            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
+            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.MainStemPopn</string>
+            <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
+            <string>[Barley].Structure.TotalStemPopn</string>
+            <string>[Barley].Total.N</string>
+            <string>[Barley].Total.Wt</string>
+            <string>[SurfaceOrganicMatter].Wt</string>
+            <string>([Barley].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].interception) as ET</string>
+            <string>sum([Soil].SoilNitrogen.NO3) as TotalSoilNitrogen</string>
+            <string>[Barley].Phenology.FlagLeafDAS</string>
+            <string>[Barley].Phenology.FloweringDAS</string>
+            <string>[Barley].Phenology.MaturityDAS</string>
+            <string>[Barley].Phenology.PhotoPeriod</string>
+            <string>[Barley].Phenology.PhotoPeriodDeltaFunction</string>
+            <string>[Barley].Phenology.Stage</string>
+            <string>[Barley].Phenology.SoilTemperatureFunction.Value()</string>
+            <string>[Barley].Population</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].DoReport</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>EndTrialReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Barley].Structure.LeafTipsAppeared</string>
+            <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+            <string>[Barley].Phenology.FlagLeafDAS</string>
+            <string>[Barley].Phenology.FloweringDAS</string>
+            <string>[Barley].Phenology.MaturityDAS</string>
+            <string>[Script].CalcVals.SowMonth</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Clock].EndOfSimulation</string>
+          </EventNames>
+        </Report>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SoluteManager>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>1</Area>
+        <Slope>0</Slope>
+      </Zone>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Simulation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
+  </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>278</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
