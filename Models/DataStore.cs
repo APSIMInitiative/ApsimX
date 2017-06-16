@@ -213,6 +213,7 @@ namespace Models
                 // Simulations table.
                 string[] simulationNames = this.SimulationNames;
                 string sql = string.Empty;
+                int j = 0;
                 foreach (string simulationNameToKeep in simulationNamesToKeep)
                 {
                     if (!StringUtilities.Contains(simulationNames, simulationNameToKeep))
@@ -221,6 +222,14 @@ namespace Models
                             sql += "),(";
                         sql += "'" + simulationNameToKeep + "'";
                     }
+                    if (j == 100)
+                    {
+                        if (sql != string.Empty)
+                            RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
+                        sql = string.Empty;
+                        j = 0;
+                    }
+                    j++;
                 }
 
                 if (sql != string.Empty)
@@ -252,22 +261,32 @@ namespace Models
                 foreach (string simulationNameToBeRun in simulationNamesToBeRun)
                     idsToDelete.Add(GetSimulationID(simulationNameToBeRun));
 
-                idString = "";
+                idString = string.Empty;
+                j = 0;
                 for (int i = 0; i < idsToDelete.Count; i++)
                 {
-                    if (i > 0)
+                    if (j > 0)
                         idString += " OR ";
                     idString += "SimulationID = " + idsToDelete[i].ToString();
+
+                    if (j == 100 || j == idsToDelete.Count-1)
+                    {
+                        foreach (string tableName in TableNames)
+                        {
+                            // delete this simulation
+                            RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
+                        }
+
+                        if (TableNames.Contains(UnitsTableName))
+                            RunQueryWithNoReturnData("DELETE FROM " + UnitsTableName + " WHERE " + idString);
+
+                        idString = string.Empty;
+                        j = 0;
+                    }
+                    else
+                        j++;
                 }
 
-                foreach (string tableName in TableNames)
-                {
-                    // delete this simulation
-                    RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
-                }
-
-                if (TableNames.Contains(UnitsTableName))
-                    RunQueryWithNoReturnData("DELETE FROM " + UnitsTableName + " WHERE " + idString);
             }
             finally
             {
