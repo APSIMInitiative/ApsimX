@@ -36,7 +36,6 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			// locate OtherAnimalsType resource
-//			bool resourceAvailable = false;
 			animalType = Resources.GetResourceItem(this, typeof(OtherAnimals), OtherAnimalType, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
 		}
 

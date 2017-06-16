@@ -32,7 +32,7 @@ namespace Models.WholeFarm
 		[EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-			if (Children.Where(a => a.GetType() == typeof(TransmutationCost)).Count()==0)
+			if (Apsim.Children(this, typeof(TransmutationCost)).Count()==0)
 			{
 				throw new Exception("Invalid costs povided in Transmutation:"+this.Name+" for ResourceType:"+this.Parent.Name);
 			}

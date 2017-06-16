@@ -148,7 +148,7 @@ namespace Models.WholeFarm.Resources
 		public Model GetResourceItem(Model RequestingModel, Type ResourceType, string ResourceTypeName, OnMissingResourceActionTypes MissingResourceAction, OnMissingResourceActionTypes MissingResourceTypeAction)
 		{
 			// locate specified resource
-			Model resourceGroup = this.Children.Where(a => a.GetType() == ResourceType).FirstOrDefault();
+			Model resourceGroup = Apsim.Children(this, ResourceType).FirstOrDefault() as Model;
 			if (resourceGroup != null)
 			{
 				Model resource = resourceGroup.Children.Where(a => a.Name == ResourceTypeName).FirstOrDefault();
@@ -303,11 +303,11 @@ namespace Models.WholeFarm.Resources
 					if (model != null)
 					{
 						// check if transmutations provided
-						foreach (Transmutation trans in model.Children.Where(a => a.GetType() == typeof(Transmutation)))
+						foreach (Transmutation trans in Apsim.Children(model, typeof(Transmutation)))
 						{
 							// check if resources available for activity and transmutation
 							double unitsNeeded = Math.Ceiling((request.Required - request.Available) / trans.AmountPerUnitPurchase);
-							foreach (TransmutationCost transcost in trans.Children.Where(a => a.GetType() == typeof(TransmutationCost)))
+							foreach (TransmutationCost transcost in Apsim.Children(trans, typeof(TransmutationCost)))
 							{
 								double transmutationCost = unitsNeeded * transcost.CostPerUnit;
 
@@ -319,7 +319,7 @@ namespace Models.WholeFarm.Resources
 									ResourceRequest labourRequest = new ResourceRequest();
 									labourRequest.ActivityModel = request.ActivityModel;
 									labourRequest.ResourceType = typeof(Labour);
-									labourRequest.FilterDetails = transcost.Children.Where(a => a.GetType() == typeof(LabourFilterGroup)).ToList<object>();
+									labourRequest.FilterDetails = Apsim.Children(transcost, typeof(LabourFilterGroup)).ToList<object>();
 									transResource = this.GetResourceItem(labourRequest, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
 
 									// TODO: put group name in the transcost resource type name

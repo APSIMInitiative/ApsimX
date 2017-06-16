@@ -49,9 +49,9 @@ namespace Models.WholeFarm.Resources
 			LastIndividualChanged = new Ruminant();
 
 			// for each Ruminant type 
-			foreach (RuminantType rType in this.Children.Where(a => a.GetType() == typeof(RuminantType)).Cast<RuminantType>().ToList())
+			foreach (RuminantType rType in Apsim.Children(this, typeof(RuminantType)))
 			{
-				foreach (RuminantInitialCohorts ruminantCohorts in rType.Children.Where(a => a.GetType() == typeof(RuminantInitialCohorts)).Cast<RuminantInitialCohorts>().ToList())
+				foreach (RuminantInitialCohorts ruminantCohorts in Apsim.Children(rType, typeof(RuminantInitialCohorts)))
 				{
 					foreach (var ind in ruminantCohorts.CreateIndividuals())
 					{

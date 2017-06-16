@@ -97,16 +97,10 @@ namespace Models.WholeFarm.Activities
 			}
 
 			// get pasture
-//			bool resavailable = false;
 			pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
-			//if (!resavailable)
-			//{
-			//	Summary.WriteWarning(this, String.Format("Could not find pasture in graze food store named \"{0}\" for {1}", PaddockName, this.Name));
-			//	throw new Exception(String.Format("Invalid pasture name ({0}) provided for burn activity {1}", PaddockName, this.Name));
-			//}
 
 			// get labour specifications
-			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 
 			methane = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;

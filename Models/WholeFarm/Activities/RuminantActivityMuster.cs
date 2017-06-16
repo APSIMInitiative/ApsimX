@@ -59,20 +59,13 @@ namespace Models.WholeFarm.Activities
 		{
 			// link to graze food store type pasture to muster to
 			// blank is general yards.
-//			bool resavailable = true;
-
 			if (ManagedPastureName != "")
 			{
 				pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 			}
-			//if (!resavailable)
-			//{
-			//	Summary.WriteWarning(this, String.Format("Could not find graze food store named \"{0}\" for {1}", ManagedPastureName, this.Name));
-			//	throw new Exception(String.Format("Invalid GrazeFoodStoreType name ({0}) provided for mustering activity {1}", ManagedPastureName, this.Name));
-			//}
 
 			// get labour specifications
-			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 		}
 
@@ -85,10 +78,10 @@ namespace Models.WholeFarm.Activities
 			if (herd == null && herd.Count == 0) return;
 
 			// get filters for individuals to muster
-			foreach (var item in this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)))
+			foreach (RuminantFilterGroup filtergroup in Apsim.Children(this, typeof(RuminantFilterGroup)))
 			{
 				// get list from filters
-				foreach (Ruminant ind in herd.Filter(item))
+				foreach (Ruminant ind in herd.Filter(filtergroup))
 				{
 					// set new location ID
 					ind.Location = pasture.Name;

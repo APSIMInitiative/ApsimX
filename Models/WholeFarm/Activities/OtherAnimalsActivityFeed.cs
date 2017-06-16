@@ -61,12 +61,11 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			// locate FeedType resource
-//			bool resourceAvailable = false;
 			FeedType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
 			FoodSource = FeedType;
 
 			// get labour specifications
-			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 		}
 
@@ -83,18 +82,18 @@ namespace Models.WholeFarm.Activities
 			int month = Clock.Today.Month - 1;
 			double allIndividuals = 0;
 			double amount = 0;
-			foreach (OtherAnimalsFilterGroup child in this.Children.Where(a => a.GetType() == typeof(OtherAnimalsFilterGroup)))
+			foreach (OtherAnimalsFilterGroup filtergroup in Apsim.Children(this, typeof(OtherAnimalsFilterGroup)))
 			{
 				double total = 0;
-				foreach (OtherAnimalsTypeCohort item in (child as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.Cohorts.Filter(child as OtherAnimalsFilterGroup))
+				foreach (OtherAnimalsTypeCohort item in (filtergroup as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.Cohorts.Filter(filtergroup as OtherAnimalsFilterGroup))
 				{
-					total += item.Number * ((item.Age < (child as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.AgeWhenAdult)?0.1:1);
+					total += item.Number * ((item.Age < (filtergroup as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.AgeWhenAdult)?0.1:1);
 				}
 				allIndividuals += total;
 				switch (FeedStyle)
 				{
 					case OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount:
-						amount += (child as OtherAnimalsFilterGroup).MonthlyValues[month] * 30.4 * total;
+						amount += (filtergroup as OtherAnimalsFilterGroup).MonthlyValues[month] * 30.4 * total;
 						break;
 					case OtherAnimalsFeedActivityTypes.ProportionOfWeight:
 						throw new NotImplementedException("Proportion of weight is not implemented as a feed style for other animals");

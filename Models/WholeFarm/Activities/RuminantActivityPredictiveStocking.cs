@@ -101,7 +101,6 @@ namespace Models.WholeFarm.Activities
 					double ShortfallAE = 0;
 					// Determine total feed requirements for dry season for all ruminants on the pasture
 					// We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
-//					bool available = false;
 					ShortfallAE = 0;
 					GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 					double pastureBiomass = pasture.Amount;

@@ -43,17 +43,11 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			// get labour specifications
-			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 
 			// find milk store
 			milkStore = Resources.GetResourceItem(this, typeof(HumanFoodStore), "Milk", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
-			//if (milkStore == null)
-			//{
-			//	string warning = String.Format("Unable to find resource type (Milk) in Human Food Store for ({0}).", this.Name);
-			//	Summary.WriteWarning(this, warning);
-			//	throw new Exception(warning);
-			//}
 		}
 
 		/// <summary>An event handler to allow us to initialise herd pricing.</summary>

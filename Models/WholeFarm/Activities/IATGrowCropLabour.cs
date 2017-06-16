@@ -76,9 +76,8 @@ namespace Models.WholeFarm.Activities
             }
 
             // get labour specifications
-            labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
-
 
             costDate = CostDateFromHarvestDate();
         }

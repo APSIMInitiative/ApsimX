@@ -38,9 +38,9 @@ namespace Models.WholeFarm.Resources
 			// initialise herd price list
 			PriceList = new List<AnimalPriceValue>();
 
-			foreach (AnimalPricing priceGroup in this.Children.Where(a => a.GetType() == typeof(AnimalPricing)))
+			foreach (AnimalPricing priceGroup in Apsim.Children(this, typeof(AnimalPricing)))
 			{
-				foreach (AnimalPriceEntry price in priceGroup.Children.Where(a => a.GetType() == typeof(AnimalPriceEntry)))
+				foreach (AnimalPriceEntry price in Apsim.Children(priceGroup, typeof(AnimalPriceEntry)))
 				{
 					AnimalPriceValue val = new AnimalPriceValue();
 					val.Age = price.Age;

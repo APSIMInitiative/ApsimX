@@ -140,10 +140,10 @@ namespace Models.WholeFarm.Activities
 				}
 			}
 			// check for controlled mating settings
-			ControlledMatings = this.Children.Where(a => a.GetType() == typeof(ControlledMatingSettings)).Cast<ControlledMatingSettings>().FirstOrDefault();
+			ControlledMatings = Apsim.Children(this, typeof(ControlledMatingSettings)).FirstOrDefault() as ControlledMatingSettings;
 
 			// get labour specifications
-			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 		}
 

@@ -59,22 +59,15 @@ namespace Models.WholeFarm.Activities
 			finance = Resources.FinanceResource();
 			if (finance != null)
 			{
-//				bool tmp = true;
 				bankAccount = Resources.GetResourceItem(this, typeof(Finance), BankAccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
-				//if (!tmp & BankAccountName != "")
-				//{
-				//	string error = String.Format("Unable to find bank account specified in ({0}).", this.Name);
-				//	Summary.WriteWarning(this, error);
-				//	throw new Exception(error);
-				//}
 			}
 
 			// get labour specifications
-			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 
 			// get trucking settings
-			trucking = this.Children.Where(a => a.GetType() == typeof(TruckingSettings)).Cast<TruckingSettings>().FirstOrDefault();
+			trucking = Apsim.Children(this, typeof(TruckingSettings)).FirstOrDefault() as TruckingSettings;
 		}
 
 		/// <summary>An event handler to call for animal purchases</summary>
@@ -238,7 +231,7 @@ namespace Models.WholeFarm.Activities
 							bankAccount.Remove(expenseRequest);
 						}
 
-						foreach (RuminantSaleFee item in this.Children.Where(a => a.GetType() == typeof(RuminantSaleFee)).Cast<RuminantSaleFee>().ToList())
+						foreach (RuminantSaleFee item in Apsim.Children(this, typeof(RuminantSaleFee)))
 						{
 							switch (item.PaymentStyle)
 							{

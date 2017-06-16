@@ -149,23 +149,19 @@ namespace Models.WholeFarm.Activities
             unitsOfArea = Resources.Land().UnitsOfArea; 
 
             // Get Land condition relationship from children
-            LandConditionIndex = this.Children.Where(a => a.GetType() == typeof(Relationship) & a.Name=="LandConditionIndex").FirstOrDefault() as Relationship; ;
+            LandConditionIndex = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name=="LandConditionIndex").FirstOrDefault() as Relationship;
 			if (LandConditionIndex == null)
 			{
 				Summary.WriteWarning(this, String.Format("Unable to locate Land Condition Index relationship for {0}", this.Name));
 			}
 			// Get Grass basal area relationship fron children
-			GrassBasalArea = this.Children.Where(a => a.GetType() == typeof(Relationship) & a.Name == "GrassBasalArea").FirstOrDefault() as Relationship; ;
+			GrassBasalArea = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as Relationship;
 			if (GrassBasalArea == null)
 			{
 				Summary.WriteWarning(this, String.Format("Unable to locate Grass Basal Area relationship for {0}", this.Name));
 			}
 			// locate Pasture Type resource
 			LinkedNativeFoodType = Resources.GetResourceItem(this, typeof(GrazeFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
-			//if (LinkedNativeFoodType == null)
-			//{
-			//	throw new ApsimXException(this, String.Format("Unable to locate graze feed type {0} in GrazeFoodStore for {1}", this.FeedTypeName, this.Name));
-			//}
 		}
 
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>

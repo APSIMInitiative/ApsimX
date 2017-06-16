@@ -84,7 +84,7 @@ namespace Models.WholeFarm.Activities
 			if (financesExist)
 			{
 				// make interest payments on bank accounts
-				foreach (FinanceType accnt in Resources.FinanceResource().Children.Where(a => a.GetType() == typeof(FinanceType)))
+				foreach (FinanceType accnt in Apsim.Children(Resources.FinanceResource(), typeof(FinanceType)))
 				{
 					if (accnt.Balance > 0)
 					{

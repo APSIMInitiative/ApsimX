@@ -159,12 +159,7 @@ namespace Models.WholeFarm.Activities
 			if (GrazeFoodStoreName == null) GrazeFoodStoreName = "";
 			if (GrazeFoodStoreName != "")
 			{
-//				bool resourceAvailable = false;
 				foodStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
-				//if (!resourceAvailable)
-				//{
-				//	Summary.WriteWarning(this, String.Format("Could not find graze food store named {0} in which to place new purchases for {1}", GrazeFoodStoreName, this.Name));
-				//}
 			}
 		}
 

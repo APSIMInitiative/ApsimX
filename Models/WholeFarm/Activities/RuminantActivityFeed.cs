@@ -78,13 +78,9 @@ namespace Models.WholeFarm.Activities
 			// locate FeedType resource
 			FeedType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
 			FoodSource = FeedType;
-			//if(FeedType==null)
-			//{
-			//	Summary.WriteWarning(this, String.Format("Unable to locate feed type {0} in AnimalFoodStore for {1}", this.FeedTypeName, this.Name));
-			//}
 
 			// get labour specifications
-			labour = this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
 			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
 		}
 
@@ -98,7 +94,7 @@ namespace Models.WholeFarm.Activities
 			List<Ruminant> herd;
 			int head = 0;
 			double AE = 0;
-			foreach (RuminantFeedGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFeedGroup)))
+			foreach (RuminantFeedGroup child in Apsim.Children(this, typeof(RuminantFeedGroup)))
 			{
 				herd = Resources.RuminantHerd().Herd.Filter(child).ToList();
 				head += herd.Count();
@@ -147,7 +143,7 @@ namespace Models.WholeFarm.Activities
 			int month = Clock.Today.Month - 1;
 
 			// get list from filters
-			foreach (RuminantFeedGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFeedGroup)))
+			foreach (RuminantFeedGroup child in Apsim.Children(this, typeof(RuminantFeedGroup)))
 			{
 				foreach (Ruminant ind in herd.Filter(child as RuminantFeedGroup))
 				{
@@ -171,6 +167,7 @@ namespace Models.WholeFarm.Activities
 				}
 			}
 			if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+
 			ResourceRequestList.Add(new ResourceRequest()
 			{
 				AllowTransmutation = true,
@@ -218,7 +215,7 @@ namespace Models.WholeFarm.Activities
 				int month = Clock.Today.Month - 1;
 
 				// get list from filters
-				foreach (RuminantFeedGroup child in this.Children.Where(a => a.GetType() == typeof(RuminantFeedGroup)))
+				foreach (RuminantFeedGroup child in Apsim.Children(this, typeof(RuminantFeedGroup)))
 				{
 					foreach (Ruminant ind in herd.Filter(child as RuminantFeedGroup))
 					{

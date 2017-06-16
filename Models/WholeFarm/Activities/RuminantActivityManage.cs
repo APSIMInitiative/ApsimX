@@ -23,8 +23,6 @@ namespace Models.WholeFarm.Activities
 		private ResourcesHolder Resources = null;
 		[Link]
 		Clock Clock = null;
-//		[Link]
-//		ISummary Summary = null;
 
 		/// <summary>
 		/// Name of herd to breed
@@ -132,10 +130,6 @@ namespace Models.WholeFarm.Activities
 			if(GrazeFoodStoreName!="")
 			{
 				foodStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
-				//if(!resourceAvailable)
-				//{
-				//	Summary.WriteWarning(this, String.Format("Could not find graze food store named {0} in which to place new purchases for {1}", GrazeFoodStoreName, this.Name));
-				//}
 			}
 		}
 

@@ -184,7 +184,7 @@
         <HumanFoodStore>
           <Name>HumanFoodStore</Name>
           <HumanFoodStoreType>
-            <Name>Cotton fibre</Name>
+            <Name>Cotton</Name>
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
@@ -193,7 +193,7 @@
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
           <HumanFoodStoreType>
-            <Name>Maize grain</Name>
+            <Name>Maize</Name>
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
@@ -202,7 +202,7 @@
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
           <HumanFoodStoreType>
-            <Name>Sorghum grain</Name>
+            <Name>SorghumGrain</Name>
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
@@ -231,7 +231,7 @@
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
-            <Name>Sorghum residue</Name>
+            <Name>SorghumGrain</Name>
             <DryMatter>91</DryMatter>
             <DMD>52</DMD>
             <Nitrogen>1.66</Nitrogen>
@@ -239,7 +239,7 @@
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
-            <Name>Maize grain</Name>
+            <Name>Maize</Name>
             <DryMatter>89</DryMatter>
             <DMD>55</DMD>
             <Nitrogen>2</Nitrogen>
@@ -255,7 +255,7 @@
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
-            <Name>Cotton seed</Name>
+            <Name>Cotton</Name>
             <DryMatter>91</DryMatter>
             <DMD>52</DMD>
             <Nitrogen>1.66</Nitrogen>
@@ -277,6 +277,14 @@
             <DryMatter>91</DryMatter>
             <DMD>60</DMD>
             <Nitrogen>2.5</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
+            <StartingAmount>100</StartingAmount>
+          </AnimalFoodStoreType>
+          <AnimalFoodStoreType>
+            <Name>Native</Name>
+            <DryMatter>91</DryMatter>
+            <DMD>52</DMD>
+            <Nitrogen>1.66</Nitrogen>
             <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
@@ -605,7 +613,7 @@
           <Name>Cash flow</Name>
           <FinanceActivityPayOverhead>
             <Name>General farm maintenance</Name>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>200</Amount>
@@ -613,7 +621,7 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Machinery maintenance</Name>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>500</Amount>
@@ -621,7 +629,7 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Electricity</Name>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>3</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>1000</Amount>
@@ -629,7 +637,7 @@
           </FinanceActivityPayOverhead>
           <FinanceActivityPayOverhead>
             <Name>Living costs</Name>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>6</PaymentInterval>
             <MonthDue>6</MonthDue>
             <Amount>5000</Amount>
@@ -643,7 +651,7 @@
             <Name>Grow cotton</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <Region>1</Region>
-            <LandTypeNameToUse>Land1_InterBund</LandTypeNameToUse>
+            <LandTypeNameToUse>Land1 interbund</LandTypeNameToUse>
             <FeedTypeName>Cotton</FeedTypeName>
             <ResidueKept>0</ResidueKept>
             <UnitsOfArea>Hectares</UnitsOfArea>
@@ -653,7 +661,7 @@
             <Name>Grow sorghum</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <Region>1</Region>
-            <LandTypeNameToUse>Land1_InterBund</LandTypeNameToUse>
+            <LandTypeNameToUse>Land1 interbund</LandTypeNameToUse>
             <FeedTypeName>SorghumGrain</FeedTypeName>
             <ResidueKept>0</ResidueKept>
             <UnitsOfArea>Hectares</UnitsOfArea>
@@ -663,7 +671,7 @@
             <Name>Grow maize</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <Region>1</Region>
-            <LandTypeNameToUse>Land2_InterBund</LandTypeNameToUse>
+            <LandTypeNameToUse>Land2 interbund</LandTypeNameToUse>
             <FeedTypeName>Maize</FeedTypeName>
             <ResidueKept>0</ResidueKept>
             <UnitsOfArea>Hectares</UnitsOfArea>
@@ -675,9 +683,9 @@
           <Name>Manage pasture</Name>
           <IATGrowForage>
             <Name>Grow native pasture</Name>
-            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             <Region>1</Region>
-            <LandTypeNameToUse>Common_land</LandTypeNameToUse>
+            <LandTypeNameToUse>Common land</LandTypeNameToUse>
             <FeedTypeName>Native</FeedTypeName>
             <ResidueKept>0</ResidueKept>
             <UnitsOfArea>Hectares</UnitsOfArea>
@@ -726,8 +734,8 @@
                 <UnitSize>300</UnitSize>
                 <LabourPerUnit>0.5</LabourPerUnit>
               </LabourFilterGroupSpecified>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-              <FeedTypeName>GrainPool1</FeedTypeName>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+              <FeedTypeName>Maize residue</FeedTypeName>
               <ProportionTramplingWastage>0</ProportionTramplingWastage>
               <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
             </RuminantActivityFeed>
@@ -756,8 +764,8 @@
                   <double>1</double>
                 </MonthlyValues>
               </RuminantFeedGroup>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-              <FeedTypeName>MaizeGrain</FeedTypeName>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+              <FeedTypeName>Maize</FeedTypeName>
               <ProportionTramplingWastage>0</ProportionTramplingWastage>
               <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
             </RuminantActivityFeed>
@@ -833,8 +841,8 @@
                 <UnitSize>300</UnitSize>
                 <LabourPerUnit>0.5</LabourPerUnit>
               </LabourFilterGroupSpecified>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-              <FeedTypeName>GrainPool1</FeedTypeName>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+              <FeedTypeName>Maize</FeedTypeName>
               <ProportionTramplingWastage>0</ProportionTramplingWastage>
               <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
             </RuminantActivityFeed>
@@ -863,8 +871,8 @@
                   <double>1</double>
                 </MonthlyValues>
               </RuminantFeedGroup>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-              <FeedTypeName>MaizeGrain</FeedTypeName>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+              <FeedTypeName>Millet bran</FeedTypeName>
               <ProportionTramplingWastage>0</ProportionTramplingWastage>
               <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
             </RuminantActivityFeed>
@@ -940,8 +948,8 @@
                 <UnitSize>300</UnitSize>
                 <LabourPerUnit>0.5</LabourPerUnit>
               </LabourFilterGroupSpecified>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-              <FeedTypeName>GrainPool1</FeedTypeName>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+              <FeedTypeName>Maize</FeedTypeName>
               <ProportionTramplingWastage>0</ProportionTramplingWastage>
               <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
             </RuminantActivityFeed>
@@ -970,8 +978,8 @@
                   <double>1</double>
                 </MonthlyValues>
               </RuminantFeedGroup>
-              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-              <FeedTypeName>MaizeGrain</FeedTypeName>
+              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+              <FeedTypeName>Maize</FeedTypeName>
               <ProportionTramplingWastage>0</ProportionTramplingWastage>
               <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
             </RuminantActivityFeed>
@@ -1029,37 +1037,20 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today</string>
-            <string>[Activities].SummariseHerd.ReportDetails.Breed as Breed</string>
-            <string>[Activities].SummariseHerd.ReportDetails.Herd as Herd</string>
-            <string>[Activities].SummariseHerd.ReportDetails.Age as AgeGroup</string>
-            <string>[Activities].SummariseHerd.ReportDetails.Sex as Sex</string>
-            <string>[Activities].SummariseHerd.ReportDetails.Number as Num</string>
-            <string>[Activities].SummariseHerd.ReportDetails.AverageWeight as AvgWt</string>
-            <string>[Activities].SummariseHerd.ReportDetails.AverageWeightGain as AvgWtGn</string>
-            <string>[Activities].SummariseHerd.ReportDetails.AverageIntake as AvgIntake</string>
-            <string>[Activities].SummariseHerd.ReportDetails.AdultEquivalents as AE</string>
-            <string>[Activities].SummariseHerd.ReportDetails.NumberPregnant as NoPregnant</string>
-            <string>[Activities].SummariseHerd.ReportDetails.NumberOfBirths as Births</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.Breed as Breed</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.Herd as Herd</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.Age as AgeGroup</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.Sex as Sex</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.Number as Num</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.AverageWeight as AvgWt</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.AverageWeightGain as AvgWtGn</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.AverageIntake as AvgIntake</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.AdultEquivalents as AE</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.NumberPregnant as NoPregnant</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.ReportDetails.NumberOfBirths as Births</string>
           </VariableNames>
           <EventNames>
-            <string>[Activities].SummariseHerd.OnReportItemGenerated</string>
-          </EventNames>
-        </Report>
-        <Report>
-          <Name>OtherAnimalsLedger</Name>
-          <ExperimentFactorNames />
-          <ExperimentFactorValues />
-          <VariableNames>
-            <string>[Clock].Today as Date</string>
-            <string>[Resources].OtherAnimals.LastTransaction.Reason as Type</string>
-            <string>[Resources].OtherAnimals.LastTransaction.ExtraInformation.GenderAsString as Gender</string>
-            <string>[Resources].OtherAnimals.LastTransaction.ExtraInformation.Age as Age</string>
-            <string>[Resources].OtherAnimals.LastTransaction.ExtraInformation.SaleFlagAsString as Reason</string>
-            <string>[Resources].OtherAnimals.LastTransaction.Credit as Credit</string>
-            <string>[Resources].OtherAnimals.LastTransaction.Debit as Debit</string>
-          </VariableNames>
-          <EventNames>
-            <string>[Resources].OtherAnimals.TransactionOccurred</string>
+            <string>[Activities].Manage ruminants.SummariseHerd.OnReportItemGenerated</string>
           </EventNames>
         </Report>
         <Report>
@@ -1145,8 +1136,8 @@
       <Slope>0</Slope>
       <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationInterval>0</EcologicalIndicatorsCalculationInterval>
-      <EcologicalIndicatorsCalculationMonth>0</EcologicalIndicatorsCalculationMonth>
+      <EcologicalIndicatorsCalculationInterval>12</EcologicalIndicatorsCalculationInterval>
+      <EcologicalIndicatorsCalculationMonth>6</EcologicalIndicatorsCalculationMonth>
     </WholeFarm>
     <Graph>
       <Name>MaizeGrain</Name>

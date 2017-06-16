@@ -97,13 +97,7 @@ namespace Models.WholeFarm.Activities
 			Finance finance = Resources.FinanceResource();
 			if (finance != null)
 			{
-				//bool tmp = true;
 				bankAccount = Resources.GetResourceItem(this, typeof(Finance), AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
-				//if (!tmp & AccountName != "")
-				//{
-				//	Summary.WriteWarning(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
-				//	throw new Exception(String.Format("Unable to find bank account specified in ({0}).", this.Name));
-				//}
 			}
 		}
 

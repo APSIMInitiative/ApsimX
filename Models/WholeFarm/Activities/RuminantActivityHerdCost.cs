@@ -116,18 +116,18 @@ namespace Models.WholeFarm.Activities
 					case AnimalPaymentStyleType.perHead:
 						herd = Resources.RuminantHerd().Herd;
 						// check for Ruminant filter group
-						if(this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).Count() > 0)
+						if(Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
 						{
-							herd = herd.Filter(this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).FirstOrDefault());
+							herd = herd.Filter(Apsim.Children(this, typeof(RuminantFilterGroup)).FirstOrDefault() as RuminantFilterGroup);
 						}
 						amountNeeded = Amount*herd.Count();
 						break;
 					case AnimalPaymentStyleType.perAE:
 						herd = Resources.RuminantHerd().Herd;
 						// check for Ruminant filter group
-						if (this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).Count() > 0)
+						if (Apsim.Children(this, typeof(RuminantFilterGroup)).Count() > 0)
 						{
-							herd = herd.Filter(this.Children.Where(a => a.GetType() == typeof(RuminantFilterGroup)).FirstOrDefault());
+							herd = herd.Filter(Apsim.Children(this, typeof(RuminantFilterGroup)).FirstOrDefault() as RuminantFilterGroup);
 						}
 						amountNeeded = Amount * herd.Sum(a => a.AdultEquivalent);
 						break;

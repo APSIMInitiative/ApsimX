@@ -24,9 +24,7 @@ namespace Models.WholeFarm.Resources
 		public List<Ruminant> CreateIndividuals()
 		{
 			List<Ruminant> Individuals = new List<Ruminant>();
-
-			List<RuminantTypeCohort> childNodes = this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>().ToList();
-			foreach (RuminantTypeCohort cohort in childNodes)
+			foreach (RuminantTypeCohort cohort in Apsim.Children(this, typeof(RuminantTypeCohort)))
 			{
 				Individuals.AddRange(cohort.CreateIndividuals());
 			}
