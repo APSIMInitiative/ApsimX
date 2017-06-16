@@ -263,6 +263,7 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Resources.GreenhouseGasesType))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.HumanFoodStore))]
         [XmlElement(typeof(Models.WholeFarm.Resources.HumanFoodStoreType))]
+        [XmlElement(typeof(Models.WholeFarm.Activities.IATCropLand))]
         [XmlElement(typeof(Models.WholeFarm.Activities.IATGrowCrop))]
         [XmlElement(typeof(Models.WholeFarm.Activities.IATGrowCropCost))]
         [XmlElement(typeof(Models.WholeFarm.Activities.IATGrowCropLabour))]

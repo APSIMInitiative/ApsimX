@@ -52,7 +52,7 @@ namespace Models.WholeFarm.Activities
         /// <summary>
         /// Parent of this model
         /// </summary>
-        private IATGrowCrop ParentGrowCrop;
+        private IATGrowCrop parentGrowCrop;
 
         /// <summary>
         /// Labour settings
@@ -100,7 +100,7 @@ namespace Models.WholeFarm.Activities
                 //if you have found it.
                 if (temp is IATGrowCrop)
                 {
-                    ParentGrowCrop = (IATGrowCrop)temp;  //set the global variable to it.
+                    parentGrowCrop = (IATGrowCrop)temp;  //set the global variable to it.
                     return true;
                 }
                 //else go up one more folder level
@@ -119,7 +119,7 @@ namespace Models.WholeFarm.Activities
         private DateTime CostDateFromHarvestDate()
         {
             DateTime nextdate;
-            CropDataType nextharvest = ParentGrowCrop.HarvestData.FirstOrDefault();
+            CropDataType nextharvest = parentGrowCrop.HarvestData.FirstOrDefault();
             if (nextharvest != null)
             {
                 nextdate = nextharvest.HarvestDate;
@@ -143,7 +143,7 @@ namespace Models.WholeFarm.Activities
 
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
-                string cropName = ParentGrowCrop.CropName;
+                string cropName = parentGrowCrop.CropName;
 
                 // for each labour item specified
                 foreach (var item in labour)

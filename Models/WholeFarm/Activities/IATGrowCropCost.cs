@@ -84,9 +84,14 @@ namespace Models.WholeFarm.Activities
         private FinanceType bankAccount;
 
         /// <summary>
-        /// Parent of this model
+        /// Parent somewhere above this model.
         /// </summary>
-        private IATGrowCrop ParentGrowCrop;
+        private IATGrowCrop parentGrowCrop;
+
+        /// <summary>
+        /// Parent above ParentGrowCrop.
+        /// </summary>
+        private IATCropLand grandParentCropLand;
 
 
 
@@ -105,17 +110,12 @@ namespace Models.WholeFarm.Activities
                 throw new ApsimXException(this, String.Format("Unable to find a parent IATGrowCrop anywhere above ({0}).", this.Name));
             }
 
+            grandParentCropLand = (IATCropLand)parentGrowCrop.Parent;
 
             Finance finance = Resources.FinanceResource();
             if (finance != null)
             {
-//                bool tmp = true;
                 bankAccount = Resources.GetResourceItem(this, typeof(Finance), AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
-                //if (!tmp & AccountName != "")
-                //{
-                //    Summary.WriteWarning(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
-                //    throw new ApsimXException(this, String.Format("Unable to find bank account specified in ({0}).", this.Name));
-                //}
             }
 
             costDate = CostDateFromHarvestDate();
@@ -137,7 +137,7 @@ namespace Models.WholeFarm.Activities
                 //if you have found it.
                 if (temp is IATGrowCrop)
                 {
-                    ParentGrowCrop = (IATGrowCrop)temp;  //set the global variable to it.
+                    parentGrowCrop = (IATGrowCrop)temp;  //set the global variable to it.
                     return true;
                 }
                 //else go up one more folder level
@@ -158,7 +158,7 @@ namespace Models.WholeFarm.Activities
         private DateTime CostDateFromHarvestDate()
         {
             DateTime nextdate;
-            CropDataType nextharvest = ParentGrowCrop.HarvestData.FirstOrDefault();
+            CropDataType nextharvest = parentGrowCrop.HarvestData.FirstOrDefault();
             if (nextharvest != null)
             {
                 nextdate = nextharvest.HarvestDate;
@@ -183,7 +183,7 @@ namespace Models.WholeFarm.Activities
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
 
-                string cropName = ParentGrowCrop.CropName;
+                string cropName = parentGrowCrop.CropName;
                 double totalcost;
                 string reason;
 
@@ -194,7 +194,7 @@ namespace Models.WholeFarm.Activities
                         reason = "Crop cost (fixed) - " + cropName;
                         break;
                     case CropPaymentStyleType.perHa:
-                        totalcost = CostPerUnit * UnitsPerHaOrTree * ParentGrowCrop.Area;
+                        totalcost = CostPerUnit * UnitsPerHaOrTree * grandParentCropLand.Area;
                         reason = "Crop cost (per Ha) - " + cropName;
                         break;
                     //case CropPaymentStyleType.perTree:
