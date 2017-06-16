@@ -40,5 +40,9 @@ using System.IO;
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent);
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
+        /// </summary>
+        bool IncludeInDocumentation { get; set; }
     }
 }
