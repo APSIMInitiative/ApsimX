@@ -3,6 +3,14 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
+    <FileCrop>
+      <Name>FileCrop</Name>
+      <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
+    <FileCrop>
+      <Name>FileCropResidue</Name>
+      <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
     <Clock>
       <Name>clock</Name>
       <StartDate>1995-01-01T00:00:00</StartDate>
@@ -493,10 +501,20 @@
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           <LandItemNameToUse>NthQld_CrackingClayPlains</LandItemNameToUse>
           <AreaRequested>50</AreaRequested>
-          <ModelNameFileCrop>FileAPSIMCrop</ModelNameFileCrop>
-          <Region>1</Region>
+          <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
           <CropName>Maize_local</CropName>
           <Store>HumanFoodStore</Store>
+          <StoreItemName>MaizeNewName</StoreItemName>
+          <PercentKept>100</PercentKept>
+        </IATGrowCrop>
+        <IATGrowCrop>
+          <Name>IAT Grow CropResidue</Name>
+          <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+          <LandItemNameToUse>NthQld_CrackingClayPlains</LandItemNameToUse>
+          <AreaRequested>50</AreaRequested>
+          <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
+          <CropName>Maize_local_Stover</CropName>
+          <Store>AnimalFoodStore</Store>
           <StoreItemName>MaizeNewName</StoreItemName>
           <PercentKept>100</PercentKept>
         </IATGrowCrop>
