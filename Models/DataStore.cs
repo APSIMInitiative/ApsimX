@@ -1146,6 +1146,29 @@ namespace Models
             else
                 return null;
         }
+
+        /// <summary>
+        /// Obtain the units for a column of data
+        /// </summary>
+        /// <param name="simulationName">The name of the simulation</param>
+        /// <param name="tableName">Name of the table</param>
+        /// <param name="columnHeading">Name of the data column</param>
+        /// <returns>The units (with surrounding parentheses), or null if not available</returns>
+        public string GetUnits(string simulationName, string tableName, string columnHeading)
+        {
+            string result = null;
+            if (TableNames.Contains(UnitsTableName))
+            {
+                string query = "SELECT U.Units FROM " + UnitsTableName + " U, Simulations S " +
+                      "WHERE U.SimulationID = S.ID AND U.TableName = '" + tableName +
+                      "' AND U.ColumnHeading = '" + columnHeading + "'";
+                DataTable DB = Connection.ExecuteQuery(query);
+                if (DB.Rows.Count > 0)
+                    result = (string)DB.Rows[0][0];
+            }
+            return result;
+        }
+
         #endregion
     }
 }
