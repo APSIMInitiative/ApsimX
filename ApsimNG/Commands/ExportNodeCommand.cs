@@ -512,7 +512,7 @@ namespace UserInterface.Commands
             graph.Refresh();
 
             // Export graph to bitmap file.
-            Bitmap image = new Bitmap(400, 250);
+            Bitmap image = new Bitmap(graph.Width, graph.Height);
             using (Graphics gfx = Graphics.FromImage(image))
             using (SolidBrush brush = new SolidBrush(System.Drawing.Color.White))
             {
