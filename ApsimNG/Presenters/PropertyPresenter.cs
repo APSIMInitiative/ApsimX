@@ -131,8 +131,9 @@ namespace UserInterface.Presenters
             table.Columns.Add("Description", typeof(string));
             table.Columns.Add("Value", typeof(object));
 
+            this.grid.PropertyMode = true;
             this.FillTable(table);
-             this.FormatGrid();
+            this.FormatGrid();
             if (selectedCell != null)
                 this.grid.GetCurrentCell = selectedCell;
             this.grid.ResizeControls();

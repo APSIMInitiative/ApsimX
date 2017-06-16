@@ -301,9 +301,10 @@ namespace UserInterface.Views
                 CellRendererToggle toggleRender = new Gtk.CellRendererToggle();
                 toggleRender.Visible = false;
                 toggleRender.Toggled += ToggleRender_Toggled;
+                toggleRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 0.5f; // Left of center align, as appropriate
                 CellRendererCombo comboRender = new Gtk.CellRendererCombo();
                 comboRender.Edited += ComboRender_Edited;
-                comboRender.Xalign = 1.0f;
+                comboRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 1.0f; // Left or right align, as appropriate
                 comboRender.Visible = false;
 
                 colLookup.Add(textRender, i);
@@ -313,7 +314,7 @@ namespace UserInterface.Views
                 textRender.EditingStarted += OnCellBeginEdit;
                 textRender.EditingCanceled += TextRender_EditingCanceled;
                 textRender.Edited += OnCellValueChanged;
-                textRender.Xalign = i == 0 ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
+                textRender.Xalign = ((i == 0) || (i == 1) && isPropertyMode) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
 
                 TreeViewColumn column = new TreeViewColumn();
                 column.Title = this.DataSource.Columns[i].ColumnName;
@@ -324,7 +325,10 @@ namespace UserInterface.Views
                 //column.FixedWidth = 100;
                 column.Resizable = true;
                 column.SetCellDataFunc(textRender, OnSetCellData);
-                column.Alignment = 0.5f; // For centered alignment of the column header
+                if (i == 1 && isPropertyMode)
+                    column.Alignment = 0.0f;
+                else
+                    column.Alignment = 0.5f; // For centered alignment of the column header
                 gridview.AppendColumn(column);
 
                 // Gtk Treeview doesn't support "frozen" columns, so we fake it by creating a second, identical, TreeView to display
@@ -338,10 +342,14 @@ namespace UserInterface.Views
                 fixedColumn.Visible = false;
                 fixedcolview.AppendColumn(fixedColumn);
             }
-            // Add an empty column at the end; auto-sizing will give this any "leftover" space
-            TreeViewColumn fillColumn = new TreeViewColumn();
-            gridview.AppendColumn(fillColumn);
-            fillColumn.Sizing = TreeViewColumnSizing.Autosize;
+
+            if (!isPropertyMode)
+            {
+                // Add an empty column at the end; auto-sizing will give this any "leftover" space
+                TreeViewColumn fillColumn = new TreeViewColumn();
+                gridview.AppendColumn(fillColumn);
+                fillColumn.Sizing = TreeViewColumnSizing.Autosize;
+            }
 
             int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
 
@@ -359,6 +367,8 @@ namespace UserInterface.Views
 
             // Now let's apply center-justification to all the column headers, just for the heck of it
             // It seems that on Windows, it's best to do this after gridview has been shown
+            // Note that this affects the justification of wrapped lines, not justification of the
+            // header as a whole, which is handled with column.Alignment
             for (int i = 0; i < nCols; i++)
             {
                 Label label = GetColumnHeaderLabel(i);
@@ -366,6 +376,8 @@ namespace UserInterface.Views
                 {
                     label.Wrap = true;
                     label.Justify = Justification.Center;
+                    if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
+                        (label.Parent as Alignment).LeftPadding = 2;
                     label.Style.FontDescription.Weight = Pango.Weight.Bold;
                 }
 
@@ -518,6 +530,28 @@ namespace UserInterface.Views
                 this.defaultNumericFormat = value;
             }
         }
+
+        private bool isPropertyMode = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether "property" mode is enabled
+        /// </summary>
+        public bool PropertyMode
+        {
+            get
+            {
+                return isPropertyMode;
+            }
+            set
+            {
+                if (value != isPropertyMode)
+                {
+                    this.PopulateGrid();
+                }
+                isPropertyMode = value;
+            }
+        }
+
 
         private bool isReadOnly = false;
 

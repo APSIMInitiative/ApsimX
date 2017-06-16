@@ -49,6 +49,11 @@ namespace UserInterface.Interfaces
         bool ReadOnly { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether "property" mode is enabled
+        /// </summary>
+        bool PropertyMode { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the grid has an auto filter
         /// </summary>
         bool AutoFilterOn { get; set; }
