@@ -12,6 +12,7 @@ namespace UserInterface.Views
     using System.Drawing.Imaging;
     using System.IO;
     using System.Reflection;
+    using System.Text;
     using Classes;
     using DataGridViewAutoFilter;
     using EventArguments;
@@ -342,7 +343,22 @@ namespace UserInterface.Views
             gridview.AppendColumn(fillColumn);
             fillColumn.Sizing = TreeViewColumnSizing.Autosize;
 
+            int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
+
+            gridview.Model = null;
+            fixedcolview.Model = null;
+            for (int row = 0; row < nRows; row++)
+            {
+                // We could store data into the grid model, but we don't.
+                // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
+                gridmodel.Append();
+            }
+            gridview.Model = gridmodel;
+
+            gridview.Show();
+
             // Now let's apply center-justification to all the column headers, just for the heck of it
+            // It seems that on Windows, it's best to do this after gridview has been shown
             for (int i = 0; i < nCols; i++)
             {
                 Label label = GetColumnHeaderLabel(i);
@@ -361,20 +377,6 @@ namespace UserInterface.Views
                     label.Style.FontDescription.Weight = Pango.Weight.Bold;
                 }
             }
-
-            int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
-
-            gridview.Model = null;
-            fixedcolview.Model = null;
-            for (int row = 0; row < nRows; row++)
-            {
-                // We could store data into the grid model, but we don't.
-                // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
-                gridmodel.Append();
-            }
-            gridview.Model = gridmodel;
-
-            gridview.Show();
 
             if (mainWindow != null)
                 mainWindow.Cursor = null;
@@ -1141,6 +1143,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCellMouseDown(object sender, /* TBI DataGridViewCellMouse */ EventArgs e)
         {
+            // Probably not needed in the Gtk implementation
             /*
             if (e.RowIndex == -1)
             {
@@ -1174,6 +1177,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnEditingControlShowing(object sender, /* TBI DataGridViewEditingControlShowing */ EventArgs e)
         {
+            // Probably not needed in the Gtk implementation
             /* TBI
             if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
             {
@@ -1191,6 +1195,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnGridCellValidating(object sender, /* TBI DataGridViewCellValidating */ EventArgs e)
         {
+            // Probably not needed in the Gtk implementation
             /* 
             if (this.Grid.CurrentCell is DataGridViewComboBoxCell)
             {
@@ -1288,6 +1293,8 @@ namespace UserInterface.Views
                 // If some cells were changed then send out an event.
                 if (cellsChanged.Count > 0 && this.CellsChanged != null)
                 {
+                    fixedcolview.QueueDraw();
+                    gridview.QueueDraw();
                     this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
                 }
             }
@@ -1300,27 +1307,35 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCopyToClipboard(object sender, EventArgs e)
         {
-            /* TBI
-            // this.Grid.EndEdit();
-            DataObject content = new DataObject();
-            if (this.Grid.SelectedCells.Count==1)
+            if (this.userEditingCell && this.editControl != null)
             {
-                if (this.Grid.CurrentCell.IsInEditMode)
-                {
-                    if (this.Grid.EditingControl is System.Windows.Forms.TextBox)
-                    {
-                        string text = ((System.Windows.Forms.TextBox)this.Grid.EditingControl).SelectedText;
-                        content.SetText(text);
-                    }
-                }
-                else
-                    content.SetText(this.Grid.CurrentCell.Value.ToString());
+                (editControl as Entry).CopyClipboard();
             }
             else
-            content = this.Grid.GetClipboardContent();
-
-            Clipboard.SetDataObject(content);
-            */
+            {
+                TreeSelection selection = gridview.Selection;
+                if (selection.CountSelectedRows() > 0)
+                {
+                    StringBuilder buffer = new StringBuilder();
+                    int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                    TreePath[] selRows = selection.GetSelectedRows();
+                    foreach (TreePath row in selRows)
+                    {
+                        int iRow = row.Indices[0];
+                        for (int iCol = 0; iCol < nCols; iCol++)
+                        {
+                            object dataVal = this.DataSource.Rows[iRow][iCol];
+                            buffer.Append(dataVal.ToString());
+                            if (iCol == nCols - 1)
+                                buffer.Append('\n');
+                            else
+                                buffer.Append('\t');
+                        }
+                    }
+                    Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+                    cb.Text = buffer.ToString();
+                }
+            }
         }
 
         /// <summary>
@@ -1331,41 +1346,37 @@ namespace UserInterface.Views
         private void OnDeleteClick(object sender, EventArgs e)
         {
             List<IGridCell> cellsChanged = new List<IGridCell>();
-            /* TBI
-            if (this.Grid.CurrentCell.IsInEditMode)
+            if (this.userEditingCell && this.editControl != null)
             {
-                DataGridViewTextBoxEditingControl dText = (DataGridViewTextBoxEditingControl)Grid.EditingControl;
-                string newText;
-                int savedSelectionStart = dText.SelectionStart;
-                if (dText.SelectionLength == 0)
-                    newText = dText.Text.Remove(dText.SelectionStart, 1);
-                else
-                    newText = dText.Text.Remove(dText.SelectionStart, dText.SelectionLength);
-                dText.Text = newText;
-                dText.SelectionStart = savedSelectionStart;
-                cellsChanged.Add(this.GetCell(Grid.CurrentCell.ColumnIndex, Grid.CurrentCell.RowIndex));
+                (editControl as Entry).DeleteSelection();
+                cellsChanged.Add(popupCell);
             }
             else
             {
-            foreach (DataGridViewCell cell in this.Grid.SelectedCells)
-            {
-                // Save change in data source
-                if (cell.RowIndex < this.DataSource.Rows.Count)
+                TreeSelection selection = gridview.Selection;
+                if (selection.CountSelectedRows() > 0)
                 {
-                    this.DataSource.Rows[cell.RowIndex][cell.ColumnIndex] = DBNull.Value;
-
-                    // Delete cell in grid.
-                    this.Grid[cell.ColumnIndex, cell.RowIndex].Value = null;
-
-                    // Put a cell into the cells changed member.
-                    cellsChanged.Add(this.GetCell(cell.ColumnIndex, cell.RowIndex));
+                    int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                    TreePath[] selRows = selection.GetSelectedRows();
+                    foreach (TreePath row in selRows)
+                    {
+                        int iRow = row.Indices[0];
+                        for (int iCol = 0; iCol < nCols; iCol++)
+                        {
+                            if (!this.GetColumn(iCol).ReadOnly)
+                            {
+                                DataSource.Rows[iRow][iCol] = DBNull.Value;
+                                cellsChanged.Add(this.GetCell(iCol, iRow));
+                            }
+                        }
+                    }
                 }
-                }
-            }*/
-
+            }
             // If some cells were changed then send out an event.
             if (cellsChanged.Count > 0 && this.CellsChanged != null)
             {
+                fixedcolview.QueueDraw();
+                gridview.QueueDraw();
                 this.CellsChanged.Invoke(this, new GridCellsChangedArgs() { ChangedCells = cellsChanged });
             }
         }
@@ -1382,6 +1393,7 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="DataGridViewCellEventArgs"/> instance containing the event data.</param>
         private void OnCellContentClick(object sender, /* TBI DataGridViewCell */ EventArgs e)
         {
+            // Probably not needed in the Gtk implementation
             /* TBI
             IGridCell cell = this.GetCell(e.ColumnIndex, e.RowIndex);
             if (cell != null && cell.EditorType == EditorTypeEnum.Button)
