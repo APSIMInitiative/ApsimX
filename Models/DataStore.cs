@@ -213,6 +213,7 @@ namespace Models
                 // Simulations table.
                 string[] simulationNames = this.SimulationNames;
                 string sql = string.Empty;
+                int j = 0;
                 foreach (string simulationNameToKeep in simulationNamesToKeep)
                 {
                     if (!StringUtilities.Contains(simulationNames, simulationNameToKeep))
@@ -221,6 +222,13 @@ namespace Models
                             sql += "),(";
                         sql += "'" + simulationNameToKeep + "'";
                     }
+                    if (j == 100)
+                    {
+                        RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
+                        sql = string.Empty;
+                        j = 0;
+                    }
+                    j++;
                 }
 
                 if (sql != string.Empty)
