@@ -224,7 +224,8 @@ namespace Models
                     }
                     if (j == 100)
                     {
-                        RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
+                        if (sql != string.Empty)
+                            RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
                         sql = string.Empty;
                         j = 0;
                     }
