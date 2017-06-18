@@ -165,14 +165,14 @@ namespace Models.Graph
                 // Get data for each simulation / zone object
                 DataStore dataStore = new DataStore(this);
                 DataTable baseData = GetBaseData(dataStore, simulationZones);
-                dataStore.Disconnect();
                 simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
 
                 // Setup all colour, marker, line types etc in all simulation / zone objects.
                 PaintAllSimulationZones(simulationZones);
 
                 // Convert all simulation / zone objects to seriesdefinitions.
-                simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(simZone)));
+                simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(simZone, dataStore)));
+                dataStore.Disconnect();
             }
 
             // Get all data.
@@ -450,7 +450,8 @@ namespace Models.Graph
 
         /// <summary>Convert a simulation zone object into a series definition</summary>
         /// <param name="simulationZone">The object to convert</param>
-        private SeriesDefinition ConvertToSeriesDefinition(SimulationZone simulationZone)
+        /// <param name="dataStore">Datastore from which we are drawing data</param>
+        private SeriesDefinition ConvertToSeriesDefinition(SimulationZone simulationZone, DataStore dataStore)
         {
             SeriesDefinition seriesDefinition = new Models.Graph.SeriesDefinition();
             seriesDefinition.type = Type;
@@ -463,6 +464,11 @@ namespace Models.Graph
             seriesDefinition.yFieldName = YFieldName;
             seriesDefinition.xAxis = XAxis;
             seriesDefinition.yAxis = YAxis;
+            if (dataStore != null && simulationZone.simulationNames.Count > 0)
+            {
+                seriesDefinition.xFieldUnits = dataStore.GetUnits(simulationZone.simulationNames[0], TableName, XFieldName);
+                seriesDefinition.yFieldUnits = dataStore.GetUnits(simulationZone.simulationNames[0], TableName, YFieldName);
+            }
             seriesDefinition.showInLegend = ShowInLegend;
             seriesDefinition.title = simulationZone.GetSeriesTitle();
             if (IncludeSeriesNameInLegend)
