@@ -180,13 +180,13 @@ namespace UserInterface.Views
 
         public int Width
         {
-            get { return this.plot1.Allocation.Width; }
+            get { return this.plot1.Allocation.Width > 1 ? this.plot1.Allocation.Width : this.plot1.ChildRequisition.Width; }
             set { this.plot1.WidthRequest = value; }
         }
 
         public int Height
         {
-            get { return this.plot1.Allocation.Height; }
+            get { return this.plot1.Allocation.Height > 1 ? this.plot1.Allocation.Height : this.plot1.ChildRequisition.Height; }
             set { this.plot1.HeightRequest = value; }
         }
 
