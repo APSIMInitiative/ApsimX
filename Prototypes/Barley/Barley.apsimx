@@ -5093,7 +5093,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>EndTrialReport</TableName>
+            <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -5159,7 +5159,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>EndTrialReport</TableName>
+            <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Phenology.FloweringDAS</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -5228,8 +5228,8 @@ namespace Models
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Phenology.FloweringDAS</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
@@ -5247,7 +5247,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>CPT</TableName>
+            <TableName>Factors</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Phenology.FloweringDAS</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -34080,7 +34080,7 @@ namespace Models
     <Folder>
       <Name>MCPD_09_10</Name>
       <Experiment>
-        <Name>Barley09_10</Name>
+        <Name>Barley09</Name>
         <Memo>
           <Name>Experiment</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -34110,7 +34110,7 @@ namespace Models
               </Specifications>
             </Factor>
             <Factor>
-              <Name>150N</Name>
+              <Name>150</Name>
               <Operations>
                 <Name>FertiliserEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
