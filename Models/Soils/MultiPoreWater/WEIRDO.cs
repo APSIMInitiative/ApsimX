@@ -305,8 +305,8 @@ namespace Models.Soils
         [Display(Format = "N2")]
         public double[] SAT { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
-        [Description("ConductC")]
-        [Display(Format = "e1")]
+        [Description("ConductC (*e^-10")]
+        [Display(Format = "N2")]
         public double[] CFlow { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
         [Description("ConductX")]
@@ -637,11 +637,12 @@ namespace Models.Soils
             SaturatedWaterDepth = new double[ProfileLayers];
             HourlyWaterExtraction = new double[ProfileLayers];
             RootLengthDensity = new double[ProfileLayers];
+            double[] CflowScaled = MathUtilities.Multiply_Value(CFlow, 1e-10);
 
             MappedSAT = Soil.Map(SAT, ParamThickness, Thickness, Soil.MapType.Concentration,SAT[SAT.Length-1]);
             MappedDUL = Soil.Map(DUL, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedLL15 = Soil.Map(LL15, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedCFlow = Soil.Map(CFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedCFlow = Soil.Map(CflowScaled, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedUpperRepellentWC = Soil.Map(UpperRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
@@ -1390,21 +1391,11 @@ namespace Models.Soils
         {
             for (int l = 0; l < ProfileLayers; l++)
             {
-                double MatrixWaterContent = 0;
-                double MatrixWaterCapacity = 0;
-                for (int c = PoreCompartments - 2; c >= 0 && Pores[l][c].TensionFactor!=1; c--) //Excluding pore compartment 9 because it is below LL15
-                {
-                    MatrixWaterContent += Pores[l][c].WaterDepth;
-                    MatrixWaterCapacity += Pores[l][c].VolumeDepth;
-                }
-                double MatrixRelativeWaterContent = MatrixWaterContent / MatrixWaterCapacity;
-
-                //MatrixRelativeWater[l] = MatrixRelativeWaterContent;
-
                 double[] X = { MappedLowerRepellentWC[l], MappedUpperRepellentWC[l] };
                 double[] Y = { MappedMinRepellancyFactor[l],1.0};
+
                 bool DidInterpolate;
-                double Factor = MathUtilities.LinearInterpReal(MatrixRelativeWaterContent, X, Y, out DidInterpolate);
+                double Factor = MathUtilities.LinearInterpReal(Pores[l][5].RelativeWaterContent, X, Y, out DidInterpolate);
                
                 for (int c = PoreCompartments - 1; c >= 0; c--)
                 {

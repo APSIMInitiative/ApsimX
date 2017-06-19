@@ -213,6 +213,7 @@ namespace Models
                 // Simulations table.
                 string[] simulationNames = this.SimulationNames;
                 string sql = string.Empty;
+                int j = 0;
                 foreach (string simulationNameToKeep in simulationNamesToKeep)
                 {
                     if (!StringUtilities.Contains(simulationNames, simulationNameToKeep))
@@ -221,6 +222,14 @@ namespace Models
                             sql += "),(";
                         sql += "'" + simulationNameToKeep + "'";
                     }
+                    if (j == 100)
+                    {
+                        if (sql != string.Empty)
+                            RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
+                        sql = string.Empty;
+                        j = 0;
+                    }
+                    j++;
                 }
 
                 if (sql != string.Empty)
@@ -252,22 +261,32 @@ namespace Models
                 foreach (string simulationNameToBeRun in simulationNamesToBeRun)
                     idsToDelete.Add(GetSimulationID(simulationNameToBeRun));
 
-                idString = "";
+                idString = string.Empty;
+                j = 0;
                 for (int i = 0; i < idsToDelete.Count; i++)
                 {
-                    if (i > 0)
+                    if (j > 0)
                         idString += " OR ";
                     idString += "SimulationID = " + idsToDelete[i].ToString();
+
+                    if (j == 100 || j == idsToDelete.Count-1)
+                    {
+                        foreach (string tableName in TableNames)
+                        {
+                            // delete this simulation
+                            RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
+                        }
+
+                        if (TableNames.Contains(UnitsTableName))
+                            RunQueryWithNoReturnData("DELETE FROM " + UnitsTableName + " WHERE " + idString);
+
+                        idString = string.Empty;
+                        j = 0;
+                    }
+                    else
+                        j++;
                 }
 
-                foreach (string tableName in TableNames)
-                {
-                    // delete this simulation
-                    RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
-                }
-
-                if (TableNames.Contains(UnitsTableName))
-                    RunQueryWithNoReturnData("DELETE FROM " + UnitsTableName + " WHERE " + idString);
             }
             finally
             {
@@ -847,16 +866,15 @@ namespace Models
                                 names.Add(column.Name);
                                 types.Add(firstNonBlankValue.GetType());
                                 if (column.Units != null)
-                                //string unitString;
-                                //if (table.colUnitsMap.TryGetValue(column.Name, out unitString))
                                 {
-                                    string sql = string.Format("INSERT INTO " + UnitsTableName + " (SimulationID, TableName, ColumnHeading, Units) " +
-                                                               "VALUES ({0}, {1}, {2}, {3})",
-                                                               new object[] { GetSimulationID(table.SimulationName),
-                                                      "'" + table.TableName + "'",
-                                                      "'" + column.Name + "'",
-                                                      "'" + column.Units + "'"});
-                                    Connection.ExecuteNonQuery(sql);
+                                    string sql = "INSERT INTO " + UnitsTableName + " (SimulationID, TableName, ColumnHeading, Units) " +
+                                                               "VALUES (?, ?, ?, ?)";
+                                    IntPtr statement = Connection.Prepare(sql);
+                                    Connection.BindParametersAndRunQuery(statement, new object[] {
+                                                      GetSimulationID(table.SimulationName),
+                                                      table.TableName,
+                                                      column.Name,
+                                                      column.Units});
                                 }
                             }
                         }
@@ -1127,6 +1145,29 @@ namespace Models
             else
                 return null;
         }
+
+        /// <summary>
+        /// Obtain the units for a column of data
+        /// </summary>
+        /// <param name="simulationName">The name of the simulation</param>
+        /// <param name="tableName">Name of the table</param>
+        /// <param name="columnHeading">Name of the data column</param>
+        /// <returns>The units (with surrounding parentheses), or null if not available</returns>
+        public string GetUnits(string simulationName, string tableName, string columnHeading)
+        {
+            string result = null;
+            if (TableNames.Contains(UnitsTableName))
+            {
+                string query = "SELECT U.Units FROM " + UnitsTableName + " U, Simulations S " +
+                      "WHERE U.SimulationID = S.ID AND U.TableName = '" + tableName +
+                      "' AND U.ColumnHeading = '" + columnHeading + "'";
+                DataTable DB = Connection.ExecuteQuery(query);
+                if (DB.Rows.Count > 0)
+                    result = (string)DB.Rows[0][0];
+            }
+            return result;
+        }
+
         #endregion
     }
 }
