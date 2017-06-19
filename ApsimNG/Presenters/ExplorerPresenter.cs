@@ -549,6 +549,7 @@ namespace UserInterface.Presenters
                         desc.Name = contextMenuAttr.MenuName;
                         desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
                         desc.ShortcutKey = contextMenuAttr.ShortcutKey;
+                        desc.ShowCheckbox = contextMenuAttr.IsToggle;
 
                         // Check for an enable method
                         MethodInfo enableMethod = typeof(ContextMenu).GetMethod(method.Name + "Enabled");

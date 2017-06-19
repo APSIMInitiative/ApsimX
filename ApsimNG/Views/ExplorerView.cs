@@ -388,7 +388,13 @@ namespace UserInterface.Views
             foreach (MenuDescriptionArgs Description in menuDescriptions)
             {
                 MenuItem item;
-                if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
+                if (Description.ShowCheckbox)
+                {
+                    CheckMenuItem checkItem = new CheckMenuItem(Description.Name);
+                    checkItem.Active = Description.Checked;
+                    item = checkItem;
+                }
+                else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
                 {
                     ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
                     imageItem.Image = new Image(null, Description.ResourceNameForImage);
@@ -396,9 +402,7 @@ namespace UserInterface.Views
                 }
                 else
                 {
-                    CheckMenuItem checkItem = new CheckMenuItem(Description.Name);
-                    checkItem.Active = Description.Checked;
-                    item = checkItem;
+                    item = new MenuItem(Description.Name);
                 }
                 if (!String.IsNullOrEmpty(Description.ShortcutKey))
                 {
