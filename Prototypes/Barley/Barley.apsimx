@@ -3616,6 +3616,22 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           <Command>[Structure].BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
+        <Cultivar>
+          <Name>Valetta1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+          <Command>[Structure].BasePhyllochron.FixedValue = 80</Command>
+        </Cultivar>
+        <Cultivar>
+          <Name>Valetta2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+          <Command>[Structure].BasePhyllochron.FixedValue = 80</Command>
+        </Cultivar>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3741,13 +3757,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
-        <string>[Clock].Today</string>
-        <string>[Barley].Structure.LeafTipsAppeared</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber</string>
-        <string>[Barley].Phenology.FlagLeafDAS</string>
-        <string>[Barley].Phenology.FloweringDAS</string>
-        <string>[Barley].Phenology.MaturityDAS</string>
-        <string>[Script].CalcVals.SowMonth</string>
+        <string />
       </VariableNames>
       <EventNames>
         <string>[Clock].EndOfSimulation</string>
@@ -3780,6 +3790,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\Observations\BarleyObservedData_1415.txt' because it is being used by another process.</ErrorMessage>
       <FileName>Observations\BarleyObservedData_1415.txt</FileName>
+    </Input>
+    <Input>
+      <Name>CPT_Phenology</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ErrorMessage>The specified file does not exist.</ErrorMessage>
+      <FileName>Observations\CPTBarleyPhenology.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved_9596</Name>
@@ -3814,6 +3830,17 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <ObservedTableName>Biomass1516</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObserved_CPT</Name>
+      <Tests>
+        <Name>Tests</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </Tests>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <PredictedTableName>DailyReport</PredictedTableName>
+      <ObservedTableName>Biomass9596</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>5000</MaximumResultsPerPage>
@@ -3825,11 +3852,37 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_bSD</Name>
+          <Factor>
+            <Name>May03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2013-05-21</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-09-02</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-05-28</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep06</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-09-06</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2003-05-21,2003-09-02,2004-05-28,2004-09-06,</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -4359,71 +4412,6 @@ namespace Models
             <Name>Fertiliser</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
-          <Manager>
-            <Name>Sow_n_Harvest</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Script>
-              <Cultivar>Cellar</Cultivar>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-using System.Xml.Serialization;
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant Barley;
-		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
-		
-		[Description("Cultivar")]
-		public string Cultivar { get; set; }
-		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Sown == false)
-			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
-			}
-			
-			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-			{
-				Barley.Harvest();
-				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
-			}
-		}
-	}
-}
-				   ]]></Code>
-          </Manager>
           <Report>
             <Name>DailyReport</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4550,6 +4538,98 @@ namespace Models
             <Name>SoluteManager</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
+          <Manager>
+            <Name>Sowing</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <SowingDate>2003-05-21</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Valetta</Cultivar>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
+		
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
+		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
+			}
+					
+			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -4688,109 +4768,6 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <ShowPageOfGraphs>true</ShowPageOfGraphs>
-      </Folder>
-      <Folder>
-        <Name>TestStats</Name>
-        <Graph>
-          <Name>AboveGroundWt</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Regression>
-              <Name>Regression</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ForEachSeries>false</ForEachSeries>
-            </Regression>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>PredictedObserved_1516</TableName>
-            <XFieldName>Observed.TotalAboveGroundWt</XFieldName>
-            <YFieldName>Predicted.TotalAboveGroundWt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>BottomRight</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>GrainWt</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Regression>
-              <Name>Regression</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ForEachSeries>false</ForEachSeries>
-            </Regression>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>PredictedObserved_1516</TableName>
-            <XFieldName>Observed.Barley.Grain.Wt</XFieldName>
-            <YFieldName>Predicted.Barley.Grain.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -5116,7 +5093,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>EndTrialReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -5138,7 +5115,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>CPT</TableName>
+            <TableName>EndTrialReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -5182,7 +5159,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>EndTrialReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Phenology.FloweringDAS</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -5307,11 +5284,44 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_cSD</Name>
+          <Factor>
+            <Name>May04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-05-28</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-09-06</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-05-27</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May06</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2006-05-10</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Oct06</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2006-10-11</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2004-05-28,2004-09-06,2005-05-27,2006-05-10,2006-10-11</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -5842,69 +5852,96 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <Manager>
-            <Name>Sow_n_Harvest</Name>
+            <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2004-05-28</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Cellar</Cultivar>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
+using System.Collections.Generic;
+using System.Text;
 using Models.PMF;
-using APSIM.Shared.Utilities;
+using Models;
 using System.Xml.Serialization;
-        
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
 namespace Models
 {
 	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
 		[Link] Plant Barley;
 		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
 		
-		[Description("Cultivar")]
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
 		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
 		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Sown == false)
+			if (Clock.Today.Date == SowingDate)
 			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
 			}
+					
 			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
 			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
 				Barley.Harvest();
 				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
 			}
 		}
 	}
 }
-				   ]]></Code>
+	   ]]></Code>
           </Manager>
           <Report>
             <Name>DailyReport</Name>
@@ -6789,11 +6826,44 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_coSD</Name>
+          <Factor>
+            <Name>May03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-05-21</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-09-02</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-05-28</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-05-27</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-09-05</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2003-05-21,2003-09-02,2004-05-28,2005-05-27,2005-09-05</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -7323,71 +7393,6 @@ namespace Models
             <Name>Fertiliser</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
-          <Manager>
-            <Name>Sow_n_Harvest</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Script>
-              <Cultivar>County</Cultivar>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-using System.Xml.Serialization;
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant Barley;
-		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
-		
-		[Description("Cultivar")]
-		public string Cultivar { get; set; }
-		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Sown == false)
-			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
-			}
-			
-			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-			{
-				Barley.Harvest();
-				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
-			}
-		}
-	}
-}
-				   ]]></Code>
-          </Manager>
           <Report>
             <Name>DailyReport</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7514,6 +7519,98 @@ namespace Models
             <Name>SoluteManager</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
+          <Manager>
+            <Name>Sowing</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <SowingDate>2003-05-21</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>County</Cultivar>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
+		
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
+		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
+			}
+					
+			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -8271,11 +8368,51 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_daSD</Name>
+          <Factor>
+            <Name>May03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-05-21</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-09-02</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-05-28</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-09-06</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-05-27</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-09-05</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2003-05-21,2003-09-02,2004-05-28,2004-09-06,2005-05-27,2005-09-05</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -8996,6 +9133,98 @@ namespace Models
             <Name>SoluteManager</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
+          <Manager>
+            <Name>Sowing</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <SowingDate>2003-05-15</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Dash</Cultivar>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
+		
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
+		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
+			}
+					
+			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -9753,11 +9982,44 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_doSD</Name>
+          <Factor>
+            <Name>May04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-05-28</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-09-06</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-05-27</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May06</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2006-05-10</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Oct06</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2006-10-11</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2004-05-28,2004-09-06,2005-05-27,2006-05-10,2006-10-11</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -10478,6 +10740,98 @@ namespace Models
             <Name>SoluteManager</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
+          <Manager>
+            <Name>Sowing</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <SowingDate>2004-05-28</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Doyen</Cultivar>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
+		
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
+		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
+			}
+					
+			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -11235,11 +11589,37 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_omSD</Name>
+          <Factor>
+            <Name>May03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2013-05-21</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-09-02</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-05-28</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-09-06</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2003-05-21,2003-09-02,2004-05-28,2004-09-06</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -11896,69 +12276,96 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
           <Manager>
-            <Name>Sow_n_Harvest</Name>
+            <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Omaka</Cultivar>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
+using System.Collections.Generic;
+using System.Text;
 using Models.PMF;
-using APSIM.Shared.Utilities;
+using Models;
 using System.Xml.Serialization;
-        
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
 namespace Models
 {
 	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
 		[Link] Plant Barley;
 		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
 		
-		[Description("Cultivar")]
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
 		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
 		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Sown == false)
+			if (Clock.Today.Date == SowingDate)
 			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
 			}
+					
 			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
 			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
 				Barley.Harvest();
 				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
 			}
 		}
 	}
 }
-				   ]]></Code>
+	   ]]></Code>
           </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
@@ -12717,11 +13124,51 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_opSD</Name>
+          <Factor>
+            <Name>May03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-05-21</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-09-02</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-05-28</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-09-06</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-05-27</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-09-05</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2003-05-21,2003-09-02,2004-05-28,2004-09-06,2005-05-27,2005-09-05</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -13378,69 +13825,96 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
           <Manager>
-            <Name>Sow_n_Harvest</Name>
+            <Name>Harvesting</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Script>
-              <Cultivar>Optic</Cultivar>
-            </Script>
+            <Script />
             <Code><![CDATA[using System;
 using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
 using Models.PMF;
-using APSIM.Shared.Utilities;
+using Models;
 using System.Xml.Serialization;
-        
+using APSIM.Shared.Utilities;
+
 namespace Models
 {
 	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
 		[Link] Plant Barley;
-		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
-		
-		[Description("Cultivar")]
-		public string Cultivar { get; set; }
-		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
-		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Sown == false)
-			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
-			}
-			
 			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
 				Barley.Harvest();
 				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
 			}
 		}
 	}
 }
-				   ]]></Code>
+	   ]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Sowing</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <SowingDate>2003-05-21</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Optic</Cultivar>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
+		
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
+		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
+			}
+					
+			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
           </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
@@ -14199,11 +14673,30 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_pySD</Name>
+          <Factor>
+            <Name>May05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-05-27</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May06</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2006-05-10</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Oct06</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2006-10-11</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2005-05-27,2006-05-10,2006-10-11</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -14733,71 +15226,6 @@ namespace Models
             <Name>Fertiliser</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
-          <Manager>
-            <Name>Sow_n_Harvest</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Script>
-              <Cultivar>Pyramid</Cultivar>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-using System.Xml.Serialization;
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant Barley;
-		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
-		
-		[Description("Cultivar")]
-		public string Cultivar { get; set; }
-		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Sown == false)
-			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
-			}
-			
-			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-			{
-				Barley.Harvest();
-				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
-			}
-		}
-	}
-}
-				   ]]></Code>
-          </Manager>
           <Report>
             <Name>DailyReport</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -14924,6 +15352,98 @@ namespace Models
             <Name>SoluteManager</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Sowing</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script>
+              <SowingDate>2005-05-27</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Pyramid</Cultivar>
+            </Script>
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
+		
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
+		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
+			}
+					
+			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -15681,11 +16201,51 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_shSD</Name>
+          <Factor>
+            <Name>May03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-05-21</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-09-02</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-05-28</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-09-06</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-05-27</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-09-05</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2003-05-21,2003-09-02,2004-05-28,2004-09-06,2005-05-27,2005-09-05</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -16342,69 +16902,96 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
           <Manager>
-            <Name>Sow_n_Harvest</Name>
+            <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Sherwood</Cultivar>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
+using System.Collections.Generic;
+using System.Text;
 using Models.PMF;
-using APSIM.Shared.Utilities;
+using Models;
 using System.Xml.Serialization;
-        
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
 namespace Models
 {
 	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
 		[Link] Plant Barley;
 		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
 		
-		[Description("Cultivar")]
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
 		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
 		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Sown == false)
+			if (Clock.Today.Date == SowingDate)
 			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
 			}
+					
 			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
 			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
 				Barley.Harvest();
 				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
 			}
 		}
 	}
 }
-				   ]]></Code>
+	   ]]></Code>
           </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
@@ -17163,11 +17750,51 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_taSD</Name>
+          <Factor>
+            <Name>May03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-05-21</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-09-02</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-05-28</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-09-06</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-05-27</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-09-05</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2003-05-21,2003-09-02,2004-05-28,2004-09-06,2005-05-27,2005-09-05</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -17824,69 +18451,96 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
           <Manager>
-            <Name>Sow_n_Harvest</Name>
+            <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Tavern</Cultivar>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
+using System.Collections.Generic;
+using System.Text;
 using Models.PMF;
-using APSIM.Shared.Utilities;
+using Models;
 using System.Xml.Serialization;
-        
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
 namespace Models
 {
 	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
 		[Link] Plant Barley;
 		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
 		
-		[Description("Cultivar")]
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
 		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
 		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Sown == false)
+			if (Clock.Today.Date == SowingDate)
 			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
 			}
+					
 			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
 			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
 				Barley.Harvest();
 				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
 			}
 		}
 	}
 }
-				   ]]></Code>
+	   ]]></Code>
           </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
@@ -18645,11 +19299,44 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_SD_</Name>
+          <Name>_voSD</Name>
+          <Factor>
+            <Name>May03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-05-21</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep03</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2003-09-02</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-05-28</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>Sep04</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2004-09-06</string>
+            </Specifications>
+          </Factor>
+          <Factor>
+            <Name>May05</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications>
+              <string>[Sowing].Script.SowingDate = 2005-05-27</string>
+            </Specifications>
+          </Factor>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Clock].StartDate = 2003-05-21,2003-09-02,2004-05-28,2004-09-06,2005-05-27</string>
-          </Specifications>
+          <Specifications />
         </Factor>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Factors>
@@ -19306,69 +19993,96 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
           <Manager>
-            <Name>Sow_n_Harvest</Name>
+            <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Vortex</Cultivar>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
+using System.Collections.Generic;
+using System.Text;
 using Models.PMF;
-using APSIM.Shared.Utilities;
+using Models;
 using System.Xml.Serialization;
-        
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
 namespace Models
 {
 	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
 		[Link] Plant Barley;
 		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
 		
-		[Description("Cultivar")]
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
 		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
 		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Sown == false)
+			if (Clock.Today.Date == SowingDate)
 			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
 			}
+					
 			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
 			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
 				Barley.Harvest();
 				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
 			}
 		}
 	}
 }
-				   ]]></Code>
+	   ]]></Code>
           </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
@@ -22497,9 +23211,7 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries>
-            <string>Latedrought150NC3</string>
-          </DisabledSeries>
+          <DisabledSeries />
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -29983,8 +30695,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <CropToSow>Dash</CropToSow>
                 <InitialRootDepth>40</InitialRootDepth>
+                <CropToSow>Dash</CropToSow>
                 <SowingDate>2014-10-14</SowingDate>
               </Script>
               <Code><![CDATA[using System;
@@ -31961,14 +32673,14 @@ namespace Models
   <Folder>
     <Name>New Zealand Field Trials</Name>
     <Folder>
-      <Name>2015_16</Name>
+      <Name>Uni_Block_15_16</Name>
       <Experiment>
         <Name>Barley15_16</Name>
         <Memo>
           <Name>Experiment</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This is the mineral nitrogen (N)validation trial conducted at the Lincoln University Dairy Farm on a deep well-drained Templeton silt loam soil. The trial ran from September 2015 to February 2016. Five N fertiliser treatments were evaluated:
+This is the mineral nitrogen (N) validation trial conducted at the Lincoln University Dairy Farm on a deep well-drained Templeton silt loam soil. The trial ran from September 2015 to February 2016. Five N fertiliser treatments were evaluated:
 1. Nil N - the crop did not get any fertiliser N 
 2. 50% N - the crop recieved 50% of the required fertiliser N 
 3. 75% N - the crop recieved 75% of the required fertiliser N 
@@ -32650,14 +33362,11 @@ namespace Models
                   <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
                 </Operation>
               </Operations>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ShowPageOfGraphs>true</ShowPageOfGraphs>
-            </Folder>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
+              <Manager>
+                <Name>Harvesting</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script />
+                <Code><![CDATA[using System;
 using Models.Core;
 using System.Collections.Generic;
 using System.Text;
@@ -32685,7 +33394,10 @@ namespace Models
 	}
 }
 	   ]]></Code>
-            </Manager>
+              </Manager>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ShowPageOfGraphs>true</ShowPageOfGraphs>
+            </Folder>
             <Report>
               <Name>DailyReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -33372,13 +34084,10 @@ namespace Models
         <Memo>
           <Name>Experiment</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <MemoText><![CDATA[
-This is the mineral nitrogen (N)validation trial conducted at the Lincoln University Dairy Farm on a deep well-drained Templeton silt loam soil. The trial ran from September 2015 to February 2016. Five N fertiliser treatments were evaluated:
-1. Nil N - the crop did not get any fertiliser N 
-2. 50% N - the crop recieved 50% of the required fertiliser N 
-3. 75% N - the crop recieved 75% of the required fertiliser N 
-4. 100% N - the crop recieved the required fertiliser N as estimated by the fertiliser calculator
-5. 125% N - the crop recieved 25% fertiliser N above the requirement. 
+          <MemoText><![CDATA[This was a “cultivar*nitrogen*irrigation trial conducted at Lincoln. Crops were sown in spring (Oct 2009). Treatments were:
+•	Four cultivars (Booma, Dash, Omaka, Sherwood);
+•	Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm);
+•	Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha).
 ]]></MemoText>
         </Memo>
         <Factors>
@@ -33391,20 +34100,8 @@ This is the mineral nitrogen (N)validation trial conducted at the Lincoln Univer
                 <Name>FertiliserEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-11-23</Date>
+                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -33418,20 +34115,8 @@ This is the mineral nitrogen (N)validation trial conducted at the Lincoln Univer
                 <Name>FertiliserEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-11-23</Date>
+                  <Action>[Fertiliser].Apply(150, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -33447,88 +34132,136 @@ This is the mineral nitrogen (N)validation trial conducted at the Lincoln Univer
             <Factor>
               <Name>0</Name>
               <Operations>
-                <Name>FertiliserEvents</Name>
+                <Name>IrrigationEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-11-11</Date>
+                  <Action>[Irrigation].Apply(0); </Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-11-19</Date>
+                  <Action>[Irrigation].Apply(0); </Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-11-26</Date>
+                  <Action>[Irrigation].Apply(0); </Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-12-11</Date>
+                  <Action>[Irrigation].Apply(0); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2009-12-21</Date>
+                  <Action>[Irrigation].Apply(0); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2009-12-29</Date>
+                  <Action>[Irrigation].Apply(0); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-01-05</Date>
+                  <Action>[Irrigation].Apply(0); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-01-13</Date>
+                  <Action>[Irrigation].Apply(0); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-03-02</Date>
+                  <Action>[Irrigation].Apply(0); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-03-03</Date>
+                  <Action>[Irrigation].Apply(0);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[IrrigationEvents]</string>
               </Specifications>
             </Factor>
             <Factor>
               <Name>1</Name>
               <Operations>
-                <Name>FertiliserEvents</Name>
+                <Name>Irrigtion Events</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-11-11</Date>
+                  <Action>[Irrigation].Apply(20); </Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-11-19</Date>
+                  <Action>[Irrigation].Apply(25); </Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-11-26</Date>
+                  <Action>[Irrigation].Apply(25); </Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-12-11</Date>
+                  <Action>[Irrigation].Apply(20); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2009-12-21</Date>
+                  <Action>[Irrigation].Apply(35); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2009-12-29</Date>
+                  <Action>[Irrigation].Apply(40); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-01-05</Date>
+                  <Action>[Irrigation].Apply(35); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-01-13</Date>
+                  <Action>[Irrigation].Apply(30); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-03-02</Date>
+                  <Action>[Irrigation].Apply(40); </Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-03-03</Date>
+                  <Action>[Irrigation].Apply(40);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[IrrigationEvents]</string>
               </Specifications>
             </Factor>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Specifications />
           </Factor>
           <Factor>
-            <Name>_cv</Name>
+            <Name>_</Name>
             <Factor>
               <Name>Booma</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[Sowing].Script.Cultivar = Optic</string>
               </Specifications>
             </Factor>
             <Factor>
               <Name>Dash</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[Sowing].Script.Cultivar = Dash</string>
               </Specifications>
             </Factor>
             <Factor>
               <Name>Omaka</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[Sowing].Script.Cultivar = Omaka</string>
               </Specifications>
             </Factor>
             <Factor>
               <Name>Sherwood</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[Sowing].Script.Cultivar = Sherwood</string>
               </Specifications>
             </Factor>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -33541,14 +34274,14 @@ This is the mineral nitrogen (N)validation trial conducted at the Lincoln Univer
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Weather\Lincoln15-17.met</FileName>
+            <FileName>Weather\lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
             <Name>Clock</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartDate>2015-09-11T00:00:00</StartDate>
-            <EndDate>2016-03-31T00:00:00</EndDate>
+            <StartDate>2009-09-01T00:00:00</StartDate>
+            <EndDate>2010-06-30T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
@@ -34019,69 +34752,96 @@ namespace Models
             <Folder>
               <Name>Manager folder</Name>
               <Manager>
-                <Name>Sow_n_Harvest</Name>
+                <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <Cultivar>Cellar</Cultivar>
+                  <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Dash</Cultivar>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
+using System.Collections.Generic;
+using System.Text;
 using Models.PMF;
-using APSIM.Shared.Utilities;
+using Models;
 using System.Xml.Serialization;
-        
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
 namespace Models
 {
 	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
 		[Link] Plant Barley;
 		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
 		
-		[Description("Cultivar")]
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
 		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
 		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Sown == false)
+			if (Clock.Today.Date == SowingDate)
 			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
 			}
+					
 			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+              </Manager>
+              <Manager>
+                <Name>Harvesting</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
 			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
 				Barley.Harvest();
 				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
 			}
 		}
 	}
 }
-				   ]]></Code>
+	   ]]></Code>
               </Manager>
               <Operations>
                 <Name>IrrigationEvents</Name>
@@ -34131,20 +34891,8 @@ namespace Models
                 <Name>FertiliserEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2009-11-23</Date>
+                  <Action>[Fertiliser].Apply(150, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -34870,12 +35618,8 @@ namespace Models
           <Name>Experiment</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This is the mineral nitrogen (N)validation trial conducted at the Lincoln University Dairy Farm on a deep well-drained Templeton silt loam soil. The trial ran from September 2015 to February 2016. Five N fertiliser treatments were evaluated:
-1. Nil N - the crop did not get any fertiliser N 
-2. 50% N - the crop recieved 50% of the required fertiliser N 
-3. 75% N - the crop recieved 75% of the required fertiliser N 
-4. 100% N - the crop recieved the required fertiliser N as estimated by the fertiliser calculator
-5. 125% N - the crop recieved 25% fertiliser N above the requirement. 
+This was a cultivar evaluation trial conducted in Lincoln. Eight cultivars were evaluated.
+
 ]]></MemoText>
         </Memo>
         <Factors>
@@ -34883,138 +35627,59 @@ This is the mineral nitrogen (N)validation trial conducted at the Lincoln Univer
           <Factor>
             <Name>_</Name>
             <Factor>
-              <Name>ZeroN</Name>
-              <Operations>
-                <Name>FertiliserEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-              </Operations>
+              <Name>Booma</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[Sowing].Script.Cultivar = Optic</string>
               </Specifications>
             </Factor>
             <Factor>
-              <Name>50N</Name>
-              <Operations>
-                <Name>FertiliserEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-              </Operations>
+              <Name>County</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[Sowing].Script.Cultivar = County</string>
               </Specifications>
             </Factor>
             <Factor>
-              <Name>75N</Name>
-              <Operations>
-                <Name>FertiliserEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(34, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(34, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(34, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(34, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-              </Operations>
+              <Name>Dash</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[Sowing].Script.Cultivar = Dash</string>
               </Specifications>
             </Factor>
             <Factor>
-              <Name>100N</Name>
-              <Operations>
-                <Name>FertiliserEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(45, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(45, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(45, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(45, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-              </Operations>
+              <Name>Hooded</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[Sowing].Script.Cultivar = Sherwood</string>
               </Specifications>
             </Factor>
             <Factor>
-              <Name>125N</Name>
-              <Operations>
-                <Name>FertiliserEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(56, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(56, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(56, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(56, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-              </Operations>
+              <Name>Omaka</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
+                <string>[Sowing].Script.Cultivar = Omaka</string>
+              </Specifications>
+            </Factor>
+            <Factor>
+              <Name>Optic</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Specifications>
+                <string>[Sowing].Script.Cultivar = Optic</string>
+              </Specifications>
+            </Factor>
+            <Factor>
+              <Name>Quencher</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Specifications>
+                <string>[Sowing].Script.Cultivar = Optic</string>
+              </Specifications>
+            </Factor>
+            <Factor>
+              <Name>Retriever</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Specifications>
+                <string>[Sowing].Script.Cultivar = Optic</string>
               </Specifications>
             </Factor>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -35027,14 +35692,14 @@ This is the mineral nitrogen (N)validation trial conducted at the Lincoln Univer
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Weather\Lincoln15-17.met</FileName>
+            <FileName>Weather\lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
             <Name>Clock</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartDate>2015-09-11T00:00:00</StartDate>
-            <EndDate>2016-03-31T00:00:00</EndDate>
+            <StartDate>2010-08-01T00:00:00</StartDate>
+            <EndDate>2011-06-30T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
@@ -35504,62 +36169,70 @@ namespace Models
             </Fertiliser>
             <Folder>
               <Name>Manager folder</Name>
-              <Operations>
-                <Name>SowingEvent</Name>
+              <Manager>
+                <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-09-28</Date>
-                  <Action>[Barley].Sow(population:280, cultivar:"Valetta", depth:40, rowSpacing:150);</Action>
-                </Operation>
-              </Operations>
-              <Operations>
-                <Name>IrrigationEvents</Name>
+                <Script>
+                  <SowingDate>2010-08-26</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Dash</Cultivar>
+                </Script>
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
+		
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
+		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
+			}
+					
+			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+              </Manager>
+              <Manager>
+                <Name>Harvesting</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-10-19</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-26</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-01</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-10</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
-                </Operation>
-              </Operations>
-              <Operations>
-                <Name>FertiliserEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-              </Operations>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ShowPageOfGraphs>true</ShowPageOfGraphs>
-            </Folder>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
+                <Script />
+                <Code><![CDATA[using System;
 using Models.Core;
 using System.Collections.Generic;
 using System.Text;
@@ -35587,7 +36260,46 @@ namespace Models
 	}
 }
 	   ]]></Code>
-            </Manager>
+              </Manager>
+              <Operations>
+                <Name>IrrigationEvents</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2010-10-28</Date>
+                  <Action>[Irrigation].Apply(20);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-11-03</Date>
+                  <Action>[Irrigation].Apply(10);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-11-18</Date>
+                  <Action>[Irrigation].Apply(20);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-12-03</Date>
+                  <Action>[Irrigation].Apply(20);</Action>
+                </Operation>
+              </Operations>
+              <Operations>
+                <Name>FertiliserEvents</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2010-08-25</Date>
+                  <Action>[Fertiliser].Apply(22.5, Fertiliser.Types.NO3N,10);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-10-20</Date>
+                  <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,10);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2010-11-03</Date>
+                  <Action>[Fertiliser].Apply(50, Fertiliser.Types.NO3N,10);</Action>
+                </Operation>
+              </Operations>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ShowPageOfGraphs>true</ShowPageOfGraphs>
+            </Folder>
             <Report>
               <Name>DailyReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -36275,150 +36987,110 @@ namespace Models
           <Name>Experiment</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
-This is the mineral nitrogen (N)validation trial conducted at the Lincoln University Dairy Farm on a deep well-drained Templeton silt loam soil. The trial ran from September 2015 to February 2016. Five N fertiliser treatments were evaluated:
-1. Nil N - the crop did not get any fertiliser N 
-2. 50% N - the crop recieved 50% of the required fertiliser N 
-3. 75% N - the crop recieved 75% of the required fertiliser N 
-4. 100% N - the crop recieved the required fertiliser N as estimated by the fertiliser calculator
-5. 125% N - the crop recieved 25% fertiliser N above the requirement. 
+This was a nitrogen*irrigation trial conducted at Lincoln
+•	Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm)
+•	Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha)
 ]]></MemoText>
         </Memo>
         <Factors>
           <Name>Factors</Name>
           <Factor>
+            <Name>_1</Name>
+            <Factor>
+              <Name>Booma</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Specifications>
+                <string>[Sowing].Script.Cultivar = Optic</string>
+              </Specifications>
+            </Factor>
+            <Factor>
+              <Name>Dash</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Specifications>
+                <string>[Sowing].Script.Cultivar = Dash</string>
+              </Specifications>
+            </Factor>
+            <Factor>
+              <Name>Omaka</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Specifications>
+                <string>[Sowing].Script.Cultivar = Omaka</string>
+              </Specifications>
+            </Factor>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Specifications />
+          </Factor>
+          <Factor>
             <Name>_</Name>
             <Factor>
-              <Name>ZeroN</Name>
+              <Name>Jul</Name>
               <Operations>
                 <Name>FertiliserEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2011-09-09</Date>
+                  <Action>[Fertiliser].Apply(32, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2011-10-24</Date>
+                  <Action>[Fertiliser].Apply(70, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2011-11-07</Date>
+                  <Action>[Fertiliser].Apply(70, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
+                <string>[Sowing].Script.SowingDate = 2011-07-13</string>
                 <string>[FertiliserEvents]</string>
               </Specifications>
             </Factor>
             <Factor>
-              <Name>50N</Name>
+              <Name>Sep</Name>
               <Operations>
                 <Name>FertiliserEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2011-07-08</Date>
+                  <Action>[Fertiliser].Apply(32, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2011-09-23</Date>
+                  <Action>[Fertiliser].Apply(70, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(23, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2011-10-18</Date>
+                  <Action>[Fertiliser].Apply(70, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
+                <string>[Sowing].Script.SowingDate = 2011-09-09</string>
                 <string>[FertiliserEvents]</string>
               </Specifications>
             </Factor>
             <Factor>
-              <Name>75N</Name>
+              <Name>Nov</Name>
               <Operations>
                 <Name>FertiliserEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(34, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2011-11-15</Date>
+                  <Action>[Fertiliser].Apply(32, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(34, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2011-12-05</Date>
+                  <Action>[Fertiliser].Apply(70, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
                 <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(34, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(34, Fertiliser.Types.NO3N,0);</Action>
+                  <Date>2011-12-15</Date>
+                  <Action>[Fertiliser].Apply(70, Fertiliser.Types.NO3N,10);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
-                <string>[FertiliserEvents]</string>
-              </Specifications>
-            </Factor>
-            <Factor>
-              <Name>100N</Name>
-              <Operations>
-                <Name>FertiliserEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(45, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(45, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(45, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(45, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-              </Operations>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Specifications>
-                <string>[FertiliserEvents]</string>
-              </Specifications>
-            </Factor>
-            <Factor>
-              <Name>125N</Name>
-              <Operations>
-                <Name>FertiliserEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(56, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(56, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(56, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(56, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-              </Operations>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Specifications>
+                <string>[Sowing].Script.SowingDate = 2011-11-15</string>
                 <string>[FertiliserEvents]</string>
               </Specifications>
             </Factor>
@@ -36432,14 +37104,14 @@ This is the mineral nitrogen (N)validation trial conducted at the Lincoln Univer
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Weather\Lincoln15-17.met</FileName>
+            <FileName>Weather\lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
             <Name>Clock</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartDate>2015-09-11T00:00:00</StartDate>
-            <EndDate>2016-03-31T00:00:00</EndDate>
+            <StartDate>2014-07-01T00:00:00</StartDate>
+            <EndDate>2012-06-30T00:00:00</EndDate>
           </Clock>
           <Summary>
             <Name>summaryfile</Name>
@@ -36909,62 +37581,70 @@ namespace Models
             </Fertiliser>
             <Folder>
               <Name>Manager folder</Name>
-              <Operations>
-                <Name>SowingEvent</Name>
+              <Manager>
+                <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-09-28</Date>
-                  <Action>[Barley].Sow(population:280, cultivar:"Valetta", depth:40, rowSpacing:150);</Action>
-                </Operation>
-              </Operations>
-              <Operations>
-                <Name>IrrigationEvents</Name>
+                <Script>
+                  <SowingDate>2011-07-13</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Dash</Cultivar>
+                </Script>
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
+namespace Models
+{
+	[Serializable] 
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[Link] Clock Clock;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
+		
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
+		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
+		
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Clock.Today.Date == SowingDate)
+			{
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
+			}
+					
+			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+              </Manager>
+              <Manager>
+                <Name>Harvesting</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-10-19</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-26</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-01</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-10</Date>
-                  <Action>[Irrigation].Apply(30); </Action>
-                </Operation>
-              </Operations>
-              <Operations>
-                <Name>FertiliserEvents</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-11-10</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-29</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-12-16</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.NO3N,0);</Action>
-                </Operation>
-              </Operations>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ShowPageOfGraphs>true</ShowPageOfGraphs>
-            </Folder>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
+                <Script />
+                <Code><![CDATA[using System;
 using Models.Core;
 using System.Collections.Generic;
 using System.Text;
@@ -36992,7 +37672,54 @@ namespace Models
 	}
 }
 	   ]]></Code>
-            </Manager>
+              </Manager>
+              <Operations>
+                <Name>IrrigationEvents</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2011-11-07</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2011-11-28</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2011-12-14</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2011-12-29</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2012-01-04</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2012-01-19</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+              </Operations>
+              <Operations>
+                <Name>FertiliserEvents</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2011-07-08</Date>
+                  <Action>[Fertiliser].Apply(32, Fertiliser.Types.NO3N,10);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2011-09-23</Date>
+                  <Action>[Fertiliser].Apply(70, Fertiliser.Types.NO3N,10);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2011-10-18</Date>
+                  <Action>[Fertiliser].Apply(70, Fertiliser.Types.NO3N,10);</Action>
+                </Operation>
+              </Operations>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ShowPageOfGraphs>true</ShowPageOfGraphs>
+            </Folder>
             <Report>
               <Name>DailyReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
