@@ -3,14 +3,14 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
-    <FileAPSIMCrop>
-      <Name>FileAPSIMCrop</Name>
-      <FileName>Crop_inputs (Burkina 20130222).out</FileName>
-    </FileAPSIMCrop>
-    <FileAPSIMForage>
-      <Name>File APSIM Forage</Name>
-      <FileName>Forage_inputs (Burkina 20130222).out</FileName>
-    </FileAPSIMForage>
+    <FileCrop>
+      <Name>FileCrop</Name>
+      <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
+    <FileCrop>
+      <Name>FileCropResidue</Name>
+      <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
+    </FileCrop>
     <Clock>
       <Name>clock</Name>
       <StartDate>1995-01-01T00:00:00</StartDate>
@@ -457,66 +457,69 @@
       </ResourcesHolder>
       <ActivitiesHolder>
         <Name>Activities</Name>
-        <IATGrowCrop>
-          <Name>IAT Grow Crop</Name>
-          <ActivityFolder>
-            <Name>Sowing</Name>
-            <IATGrowCropCost>
-              <Name>Bags and Labels</Name>
-              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-              <MthsBeforeHarvest>1</MthsBeforeHarvest>
-              <PaymentStyle>Fixed</PaymentStyle>
-              <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
-              <CostPerUnit>11</CostPerUnit>
-              <AccountName>General account</AccountName>
-            </IATGrowCropCost>
-            <IATGrowCropCost>
-              <Name>Seeds</Name>
-              <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-              <MthsBeforeHarvest>1</MthsBeforeHarvest>
-              <PaymentStyle>perHa</PaymentStyle>
-              <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
-              <CostPerUnit>10</CostPerUnit>
-              <AccountName>General account</AccountName>
-            </IATGrowCropCost>
-            <IATGrowCropLabour>
-              <Name>HandSowing</Name>
-              <LabourFilterGroupSpecified>
-                <Name>Labour details</Name>
-                <LabourFilter>
-                  <Name>Filter[Name=Joe B]</Name>
-                  <Parameter>Name</Parameter>
-                  <Operator>Equal</Operator>
-                  <Value>Joe B</Value>
-                </LabourFilter>
-                <UnitType>Fixed</UnitType>
-                <UnitSize>1</UnitSize>
-                <LabourPerUnit>2</LabourPerUnit>
-              </LabourFilterGroupSpecified>
+        <IATCropLand>
+          <Name>TopPaddock</Name>
+          <IATGrowCrop>
+            <Name>MaizeGrain</Name>
+            <ActivityFolder>
+              <Name>Sowing</Name>
+              <IATGrowCropCost>
+                <Name>Bags and Labels</Name>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+                <PaymentStyle>Fixed</PaymentStyle>
+                <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
+                <CostPerUnit>11</CostPerUnit>
+                <AccountName>General account</AccountName>
+              </IATGrowCropCost>
+              <IATGrowCropCost>
+                <Name>Seeds</Name>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+                <PaymentStyle>perHa</PaymentStyle>
+                <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
+                <CostPerUnit>10</CostPerUnit>
+                <AccountName>General account</AccountName>
+              </IATGrowCropCost>
+              <IATGrowCropLabour>
+                <Name>HandSowing</Name>
+                <LabourFilterGroupSpecified>
+                  <Name>Labour details</Name>
+                  <LabourFilter>
+                    <Name>Filter[Name=Joe B]</Name>
+                    <Parameter>Name</Parameter>
+                    <Operator>Equal</Operator>
+                    <Value>Joe B</Value>
+                  </LabourFilter>
+                  <UnitType>Fixed</UnitType>
+                  <UnitSize>1</UnitSize>
+                  <LabourPerUnit>2</LabourPerUnit>
+                </LabourFilterGroupSpecified>
+                <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+              </IATGrowCropLabour>
               <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-              <MthsBeforeHarvest>1</MthsBeforeHarvest>
-            </IATGrowCropLabour>
+            </ActivityFolder>
+            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
+            <CropName>Maize_local</CropName>
+            <Store>HumanFoodStore</Store>
+            <StoreItemName>MaizeNewName</StoreItemName>
+            <PercentKept>100</PercentKept>
+          </IATGrowCrop>
+          <IATGrowCrop>
+            <Name>MaizeResidue</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-          </ActivityFolder>
+            <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
+            <CropName>Maize_local_Stover</CropName>
+            <Store>AnimalFoodStore</Store>
+            <StoreItemName>MaizeNewName</StoreItemName>
+            <PercentKept>100</PercentKept>
+          </IATGrowCrop>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           <LandItemNameToUse>NthQld_CrackingClayPlains</LandItemNameToUse>
           <AreaRequested>50</AreaRequested>
-          <ModelNameFileCrop>FileAPSIMCrop</ModelNameFileCrop>
-          <Region>1</Region>
-          <CropName>Maize_local</CropName>
-          <Store>HumanFoodStore</Store>
-          <StoreItemName>MaizeNewName</StoreItemName>
-          <PercentKept>100</PercentKept>
-        </IATGrowCrop>
-        <IATGrowForage>
-          <Name>IAT Grow Forage</Name>
-          <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-          <Region>1</Region>
-          <LandTypeNameToUse>NthQld_CrackingClayPlains</LandTypeNameToUse>
-          <FeedTypeName>Brachiaria</FeedTypeName>
-          <ResidueKept>90</ResidueKept>
-          <AreaRequested>200</AreaRequested>
-        </IATGrowForage>
+        </IATCropLand>
         <ActivityFolder>
           <Name>Pay Overheads</Name>
           <FinanceActivityCalculateInterest>

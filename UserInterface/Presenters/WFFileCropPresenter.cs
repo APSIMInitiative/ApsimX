@@ -12,7 +12,7 @@ namespace UserInterface.Presenters
     /// </summary>
     public class WFFileCropPresenter : IPresenter
     {
-        private Models.WholeFarm.FileAPSIMCrop FileAPSIM;
+        private Models.WholeFarm.FileCrop FileCrop;
         private IWFFileView View;
         private ExplorerPresenter ExplorerPresenter;
 
@@ -21,7 +21,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            FileAPSIM = model as Models.WholeFarm.FileAPSIMCrop;
+            FileCrop = model as Models.WholeFarm.FileCrop;
             View = view as IWFFileView;
             ExplorerPresenter = explorerPresenter;
 
@@ -48,7 +48,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(FileAPSIM, "FullFileName", e.FileNames[0]));
+                ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(FileCrop, "FullFileName", e.FileNames[0]));
             }
             catch (Exception err)
             {
@@ -61,10 +61,10 @@ namespace UserInterface.Presenters
         /// </summary>
         void OnModelChanged(object changedModel)
         {
-            View.FileName = FileAPSIM.FullFileName;
-            View.GridView.DataSource = FileAPSIM.GetTable();
+            View.FileName = FileCrop.FullFileName;
+            View.GridView.DataSource = FileCrop.GetTable();
             if (View.GridView.DataSource == null)
-                View.WarningText = FileAPSIM.ErrorMessage;
+                View.WarningText = FileCrop.ErrorMessage;
             else
                 View.WarningText = string.Empty;
         }
