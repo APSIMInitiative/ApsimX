@@ -8,7 +8,7 @@ using Models.Core;
 namespace Models.WholeFarm.Resources
 {
     /// <summary>
-    /// This stores the initialisation parameters for a person who can do labour 
+    /// This stores the initialisation parameters for a land type person who can do labour 
     /// who is a family member.
     /// eg. AdultMale, AdultFemale etc.
     /// </summary>
@@ -18,17 +18,6 @@ namespace Models.WholeFarm.Resources
     [ValidParent(ParentType = typeof(Labour))]
     public class LabourType : WFModel, IResourceWithTransactionType, IResourceType
 	{
-  //      /// <summary>
-  //      /// Get the Clock.
-  //      /// </summary>
-  //      [Link]
-  //      Clock Clock = null;
-
-		///// <summary>
-		///// Get the Summary object.
-		///// </summary>
-		//[Link]
-  //      ISummary Summary = null;
 
         /// <summary>
         /// Age in years.

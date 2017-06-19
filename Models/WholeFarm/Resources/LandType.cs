@@ -22,7 +22,7 @@ namespace Models.WholeFarm.Resources
         ISummary Summary = null;
 
         /// <summary>
-        /// Total Area (ha)
+        /// Total Area
         /// </summary>
         [Description("Land area")]
         public double LandArea { get; set; }
@@ -33,23 +33,17 @@ namespace Models.WholeFarm.Resources
 		[Description("Buildings - proportion taken up with bldgs, paths (%)")]
         public double UnusablePortion { get; set; }
 
-        ///// <summary>
-        ///// Portion Bunded (%)
-        ///// </summary>
-        //[Description("Portion bunded (%)")]
-        //public double BundedPortion { get; set; }
+		/// <summary>
+		/// Allocate proportion of Total Area
+		/// </summary>
+		[Description("Proportion of Total Area to assign")]
+		public double ProportionOfTotalArea { get; set; }
 
-        /// <summary>
-        /// Soil Type (1-5) 
-        /// </summary>
-        [Description("Soil type index")]
+		/// <summary>
+		/// Soil Type (1-5) 
+		/// </summary>
+		[Description("Soil type index")]
         public int SoilType { get; set; }
-
-        ///// <summary>
-        ///// Fertility - N Decline Yield
-        ///// </summary>
-        //[Description("Fertility - N decline yld")]
-        //public double NDecline { get; set; }
 
         /// <summary>
         /// Area not currently being used (ha)
@@ -68,7 +62,7 @@ namespace Models.WholeFarm.Resources
 		/// The total area available 
 		/// </summary>
 		[XmlIgnore]
-		public double UsableArea { get { return this.LandArea * (1.0 - (UnusablePortion / 100)); }  }
+		public double UsableArea { get { return (this.LandArea * (1.0 - (UnusablePortion / 100)))*ProportionOfTotalArea; }  }
 
 		/// <summary>
 		/// Initialise the current state to the starting amount of fodder

@@ -395,6 +395,10 @@ namespace Models.WholeFarm.Activities
 				energyMaintenance = ind.BreedParams.Kme * Sme * (0.26 * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-0.000082 * maintenanceAge) + (0.09 * energyMetablicFromIntake);
 				ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFoetus; // milk will be zero for non lactating individuals.
 
+				//TODO: reduce remove milk e and production if this is limiting
+
+
+
 				// Reference: Feeding_value = Ajustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
 				double feedingValue = 0;
 				if (ind.EnergyBalance > 0)
