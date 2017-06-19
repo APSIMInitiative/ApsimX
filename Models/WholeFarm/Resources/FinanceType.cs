@@ -29,6 +29,12 @@ namespace Models.WholeFarm.Resources
 		public double WithdrawalLimit { get; set; }
 
 		/// <summary>
+		/// Enforce withdrawal limit
+		/// </summary>
+		[Description("Enforce withdrawal limit. (false, no limit to spending)")]
+		public bool EnforceWithdrawalLimit { get; set; }
+
+		/// <summary>
 		/// Interest rate (%) charged on negative balance
 		/// </summary>
 		[Description("Interest rate (%) charged on negative balance")]
@@ -43,7 +49,20 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Current funds available
 		/// </summary>
-		public double FundsAvailable { get { return amount - WithdrawalLimit; } }
+		public double FundsAvailable
+		{
+			get
+			{
+				if(!EnforceWithdrawalLimit)
+				{
+					return double.PositiveInfinity;
+				}
+				else
+				{
+					return amount - WithdrawalLimit;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Current balance
@@ -143,31 +162,6 @@ namespace Models.WholeFarm.Resources
 		{
 			throw new NotImplementedException();
 		}
-
-		///// <summary>
-		///// Remove money from account
-		///// </summary>
-		///// <param name="RemoveAmount"></param>
-		///// <param name="ActivityName"></param>
-		///// <param name="Reason"></param>
-		//public double Remove(double RemoveAmount, string ActivityName, string Reason)
-		//{
-		//	if (RemoveAmount > 0)
-		//	{
-		//		RemoveAmount = Math.Round(RemoveAmount, 2, MidpointRounding.ToEven);
-		//		amount -= RemoveAmount;
-
-		//		ResourceTransaction details = new ResourceTransaction();
-		//		details.ResourceType = this.Name;
-		//		details.Debit = RemoveAmount * -1;
-		//		details.Activity = ActivityName;
-		//		details.Reason = Reason;
-		//		LastTransaction = details;
-		//		TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-		//		OnTransactionOccurred(te);
-		//	}
-		//	return RemoveAmount;
-		//}
 
 		/// <summary>
 		/// Remove from finance type store
