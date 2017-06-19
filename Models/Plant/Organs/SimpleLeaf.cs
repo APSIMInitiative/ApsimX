@@ -227,7 +227,15 @@ namespace Models.PMF.Organs
         public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
 
         /// <summary>Gets the function.</summary>
-        public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value(), 1); } }
+        public double Fn
+        {
+            get
+            {
+                if (Live != null)
+                    return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value(), 1);
+                return 0;
+            }
+        }
 
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }

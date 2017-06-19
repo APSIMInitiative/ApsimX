@@ -2115,30 +2115,6 @@ namespace Models.Soils
                     NumberOfCrops += 1;
                 }
 
-                List<IModel> models2 = Apsim.FindAll(paddock, typeof(ICrop2));
-
-                foreach (Model m in models2)
-                {
-                    Array.Resize(ref cover_green, NumberOfCrops + 1);
-                    Array.Resize(ref cover_tot, NumberOfCrops + 1);
-                    Array.Resize(ref canopy_height, NumberOfCrops + 1);
-
-                    ICrop2 Crop2 = m as ICrop2;
-                    if (Crop2.CanopyProperties != null)
-                    {
-                        cover_green[NumberOfCrops] = Crop2.CanopyProperties.CoverGreen;
-                        cover_tot[NumberOfCrops] = Crop2.CanopyProperties.CoverTot;
-                        canopy_height[NumberOfCrops] = Crop2.CanopyProperties.CanopyHeight;
-                    }
-                    else
-                    {
-                        cover_green[NumberOfCrops] = 0;
-                        cover_tot[NumberOfCrops] = 0;
-                        canopy_height[NumberOfCrops] = 0;
-                    }
-                    NumberOfCrops += 1;
-                }
-
                 /////                foreach (Component Comp in paddock.Crops)
                 /////                {
                 ////                    Double coverGreen;

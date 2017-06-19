@@ -135,8 +135,6 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
-    <Compile Include="Arbitrator\Arbitrator.cs" />
-    <Compile Include="Arbitrator\ArbitratorGod.cs" />
     <Compile Include="Core\APSIMFileConverter.cs" />
     <Compile Include="Core\APSIMFileReader.cs" />
     <Compile Include="Core\APSIMFileWriter.cs" />
@@ -172,10 +170,12 @@
     <Compile Include="IIrrigation.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISoilTemperature.cs" />
+    <Compile Include="Interfaces\ISoil.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
     <Compile Include="Interfaces\ISolute.cs" />
+    <Compile Include="Interfaces\INutrient.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Lifecycle\Cohort.cs" />
     <Compile Include="Lifecycle\Lifecycle.cs" />
@@ -192,7 +192,12 @@
     <Compile Include="Plant\Arbitrator\RelativeAllocationSinglePass.cs" />
     <Compile Include="Plant\Arbitrator\RelativeAllocation.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
+    <Compile Include="Plant\Functions\SupplyFunctions\LeafLightUseEfficiency.cs" />
+    <Compile Include="Plant\Functions\SupplyFunctions\LeafMaxGrossPhotosynthesis.cs" />
+    <Compile Include="Plant\Functions\SupplyFunctions\CanopyGrossPhotosynthesisHourly.cs" />
+    <Compile Include="Plant\Functions\WangEngelTempFunction.cs" />
     <Compile Include="Plant\Functions\Bound.cs" />
+    <Compile Include="Plant\Functions\LinearAfterThresholdFunction.cs" />
     <Compile Include="Plant\Functions\SoilWaterScale.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\BerryFillingRateFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\TEWaterDemandFunction.cs" />
@@ -232,7 +237,6 @@
     <Compile Include="Core\Attributes\UnitsAttribute.cs" />
     <Compile Include="Core\Attributes\LinkAttribute.cs" />
     <Compile Include="Core\IModel.cs" />
-    <Compile Include="Core\ICrop2.cs" />
     <Compile Include="Plant\CanopyProperties.cs" />
     <Compile Include="Plant\RootProperties.cs" />
     <Compile Include="Core\VariableComposite.cs" />

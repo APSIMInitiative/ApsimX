@@ -167,8 +167,11 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
-            Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), 
+            if ((uint)Environment.OSVersion.Platform <= 3)
+            {
+                Gtk.Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                                       ".gtkrc"));
+            }
 
             Glade.XML gxml = new Glade.XML("ApsimNG.Resources.Glade.MainView.glade", "window1");
             gxml.Autoconnect(this);
@@ -516,25 +519,28 @@ namespace UserInterface.Views
                 StatusWindow.Visible = message != null;
                 StatusWindow.Buffer.Clear();
 
-                string tagName;
-                // Output the message
-                if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                if (message != null)
                 {
-                    tagName = "error";
+                    string tagName;
+                    // Output the message
+                    if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                    {
+                        tagName = "error";
+                    }
+                    else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+                    {
+                        tagName = "warning";
+                    }
+                    else
+                    {
+                        tagName = "normal";
+                    }
+                    message = message.TrimEnd("\n".ToCharArray());
+                    message = message.Replace("\n", "\n                      ");
+                    message += "\n";
+                    TextIter insertIter = StatusWindow.Buffer.StartIter;
+                    StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
                 }
-                else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
-                {
-                    tagName = "warning";
-                }
-                else
-                {
-                    tagName = "normal";
-                }
-                message = message.TrimEnd("\n".ToCharArray());
-                message = message.Replace("\n", "\n                      ");
-                message += "\n";
-                TextIter insertIter = StatusWindow.Buffer.StartIter;
-                StatusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
 
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
                 progressBar.Visible = false;

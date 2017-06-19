@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -8,6 +8,7 @@
       <FileName>observed.xlsx</FileName>
       <SheetNames>
         <string>ObsCrop</string>
+        <string>ObsSoil</string>
       </SheetNames>
     </ExcelInput>
     <PredictedObserved>
@@ -15,6 +16,12 @@
       <PredictedTableName>HarvestReport</PredictedTableName>
       <ObservedTableName>ObsCrop</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today.Year</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>PredictedObservedSoil</Name>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>ObsSoil</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
@@ -148,6 +155,165 @@
         </Specifications>
       </Factor>
       <Factor>
+        <Name>Stubble</Name>
+        <Operations>
+          <Name>Burnt</Name>
+          <Operation>
+            <Date>1978-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1980-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1982-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1984-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1986-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1988-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1990-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1992-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1994-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>Incorporated</Name>
+          <Operation>
+            <Date>1978-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1979-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1980-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1982-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1984-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1985-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1986-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1987-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1988-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1989-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1990-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1991-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1992-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1993-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1994-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+          <Operation>
+            <Date>1995-12-31</Date>
+            <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)</Action>
+          </Operation>
+        </Operations>
+        <Operations>
+          <Name>Retained</Name>
+        </Operations>
+        <Specifications>
+          <string>[stubbleoperations]</string>
+        </Specifications>
+      </Factor>
+      <Factor>
         <Name>N</Name>
         <Specifications>
           <string>[SowingFertiliser].Script.Amount = 0,40,80</string>
@@ -250,6 +416,9 @@
             <Action> [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
         </Operations>
+        <Operations>
+          <Name>stubbleoperations</Name>
+        </Operations>
         <Report>
           <Name>Report</Name>
           <ExperimentFactorNames />
@@ -257,9 +426,13 @@
           <VariableNames>
             <string>[Clock].Today</string>
             <string>[Soil].SoilNitrogen.oc[1:3]</string>
+            <string>[Soil].SoilNitrogen.TotalC[1] as TOC0_10cm</string>
+            <string>[Soil].SoilNitrogen.TotalC[2] as TOC10_30cm</string>
+            <string>[Soil].SoilNitrogen.TotalC[3] as TOC30_60cm</string>
+            <string>([Soil].SoilNitrogen.TotalC[1]+[Soil].SoilNitrogen.TotalC[2]) as TOC0_30cm</string>
           </VariableNames>
           <EventNames>
-            <string>[Clock].DoReport</string>
+            <string>[Clock].EndOfMonth</string>
           </EventNames>
         </Report>
         <Report>
@@ -270,6 +443,7 @@
             <string>[Clock].Today.Year</string>
             <string>[Wheat].Grain.Wt</string>
             <string>[Wheat].AboveGround.Wt</string>
+            <string>[Wheat].Grain.Size</string>
           </VariableNames>
           <EventNames>
             <string>[Wheat].Harvesting</string>
@@ -515,7 +689,7 @@ namespace Models
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
             <RootCN>40</RootCN>
-            <RootWt>1000</RootWt>
+            <RootWt>5000</RootWt>
             <SoilCN>12</SoilCN>
             <EnrACoeff>7.4</EnrACoeff>
             <EnrBCoeff>0.2</EnrBCoeff>
@@ -534,9 +708,9 @@ namespace Models
               <string>90-125</string>
             </Depth>
             <OC>
-              <double>1.16</double>
-              <double>0.75</double>
-              <double>0.36</double>
+              <double>0.96</double>
+              <double>0.72</double>
+              <double>0.38</double>
               <double>0.12</double>
               <double>0.12</double>
             </OC>
@@ -548,11 +722,11 @@ namespace Models
               <double>0.01</double>
             </FBiom>
             <FInert>
-              <double>0.4</double>
+              <double>0.1</double>
+              <double>0.15</double>
               <double>0.5</double>
-              <double>0.7</double>
-              <double>1</double>
-              <double>1</double>
+              <double>0.99</double>
+              <double>0.99</double>
             </FInert>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
@@ -598,10 +772,13 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>450</RecordNumber>
           <ASCOrder>Sodosol</ASCOrder>
           <ASCSubOrder>Red</ASCSubOrder>
-          <SoilType>Sandy loam</SoilType>
+          <SoilType>Sand</SoilType>
           <Site>Tarlee</Site>
           <NearestTown>Tarlee</NearestTown>
           <Region>Mid North</Region>
@@ -658,162 +835,599 @@ namespace Models
         <Fertiliser>
           <Name>Fertiliser</Name>
         </Fertiliser>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
     </Simulation>
-    <Graph>
-      <Name>Yield</Name>
-      <Series>
-        <Name>Predicted</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>HarvestReport</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>Wheat.Grain.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Observed</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>ObsCrop</TableName>
-        <XFieldName>Clock.Today.Year</XFieldName>
-        <YFieldName>Wheat.Grain.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>TopLeft</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Obs vs Pre Yield</Name>
-      <Series>
-        <Name>Series</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
-        <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Obs vs Pre Biomass</Name>
-      <Series>
-        <Name>Series</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>None</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>PredictedObserved</TableName>
-        <XFieldName>Observed.Wheat.AboveGround.Wt</XFieldName>
-        <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Axis>
-        <Type>Bottom</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
+    <Folder>
+      <Name>Crop</Name>
+      <Graph>
+        <Name>Yield</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Clock.Today.Year</XFieldName>
+          <YFieldName>Wheat.Grain.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObsCrop</TableName>
+          <XFieldName>Clock.Today.Year</XFieldName>
+          <YFieldName>Wheat.Grain.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Obs vs Pre Yield</Name>
+        <Series>
+          <Name>Series</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObserved</TableName>
+          <XFieldName>Observed.Wheat.Grain.Wt</XFieldName>
+          <YFieldName>Predicted.Wheat.Grain.Wt</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>GrainSize</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>2</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>HarvestReport</TableName>
+          <XFieldName>Clock.Today.Year</XFieldName>
+          <YFieldName>Wheat.Grain.Size</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>TopLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+    </Folder>
+    <Folder>
+      <Name>Soil</Name>
+      <Graph>
+        <Name>TOC 30cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TOC0_30cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObsSoil</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TOC0_30cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Obs vs Pre TOC 30cm</Name>
+        <Series>
+          <Name>Series</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoil</TableName>
+          <XFieldName>Observed.TOC0_30cm</XFieldName>
+          <YFieldName>Predicted.TOC0_30cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>TOC 0 to 10cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TOC0_10cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObsSoil</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TOC0_10cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Obs vs Pre TOC 10cm</Name>
+        <Series>
+          <Name>Series</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoil</TableName>
+          <XFieldName>Observed.TOC0_10cm</XFieldName>
+          <YFieldName>Predicted.TOC0_10cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>TOC 10 to 30cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TOC10_30cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObsSoil</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TOC10_30cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Obs vs Pre TOC 10 to 30 cm</Name>
+        <Series>
+          <Name>Series</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoil</TableName>
+          <XFieldName>Observed.TOC10_30cm</XFieldName>
+          <YFieldName>Predicted.TOC10_30cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>TOC 30 to 60cm</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>Solid</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>Report</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TOC30_60cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Series>
+          <Name>Observed</Name>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>ObsSoil</TableName>
+          <XFieldName>Clock.Today</XFieldName>
+          <YFieldName>TOC30_60cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+          <Filter />
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomLeft</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+      <Graph>
+        <Name>Obs vs Pre TOC 30 to 60cm</Name>
+        <Series>
+          <Name>Series</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>None</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedSoil</TableName>
+          <XFieldName>Observed.TOC30_60cm</XFieldName>
+          <YFieldName>Predicted.TOC30_60cm</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <Axis>
+          <Type>Bottom</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>NaN</Interval>
+        </Axis>
+        <LegendPosition>BottomRight</LegendPosition>
+        <DisabledSeries />
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </Graph>
+    </Folder>
   </Experiment>
   <ExplorerWidth>0</ExplorerWidth>
 </Simulations>

@@ -119,7 +119,7 @@ namespace Models.Soils
                 if (_WaterDepth - VolumeDepth>FloatingPointTolerance)
                     throw new Exception("Trying to put more water into pore " + Compartment + "in layer " + Layer + " than will fit");
                 if (Double.IsNaN(_WaterDepth))
-                    throw new Exception("Something has just set Water depth to Nan in " + Compartment + "in layer " + Layer + ".  Don't Worry, things like this happen sometimes.");
+                    throw new Exception("Something has just set Water depth to Nan for Pore " + Compartment + " in layer " + Layer + ".  Don't Worry, things like this happen sometimes.");
             }
         }
         /// <summary>The depth of Air in the pore</summary>
@@ -146,14 +146,10 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm3/s")]
         public double PoreFlowRate { get { return CFlow * Math.Pow(Radius,XFlow); } }
-        /// <summary>The volume flow rate of water through this pore compartment</summary>
-        [XmlIgnore]
-        [Units("mm3/s/m2")]
-        public double VolumetricFlowRate { get { return PoreFlowRate * Number ; } }
         /// <summary>The hydraulic conductivity of water through this pore compartment</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double PoiseuilleFlow { get { return VolumetricFlowRate/1e6*3600; } }
+        public double PoiseuilleFlow { get { return (PoreFlowRate * Number)/ 1e6*3600; } }
         /// <summary>The potential diffusion out of this pore</summary>
         [XmlIgnore]
         [Units("mm/h")]
@@ -197,9 +193,9 @@ namespace Models.Soils
                 if (Double.IsNaN(Sorption))
                     throw new Exception("Sorption is NaN");
                 if (IncludeSorption)
-                    return (PoiseuilleFlow + Sorption) * RepelancyFactor;
+                    return PoiseuilleFlow + (Sorption * RepelancyFactor);
                 else
-                    return PoiseuilleFlow * RepelancyFactor;
+                    return PoiseuilleFlow;
             }
         }
         /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
@@ -254,8 +250,8 @@ namespace Models.Soils
         {
             get {
                 double MeanDiffusionDistance = Math.Sqrt(1 / RootLengthDensity) * 0.5; //assumes root length density represents the number of roots transecting a layer
-                double UptakeFraction = (PoiseuilleFlow / MeanDiffusionDistance) * ExtractionMultiplier;
-                double PotentialRootUptake = WaterDepth * UptakeFraction;
+                double UptakeProp = (PoiseuilleFlow / MeanDiffusionDistance) * ExtractionMultiplier;
+                double PotentialRootUptake = WaterDepth * UptakeProp;
                 return Math.Min(PotentialRootUptake, WaterDepth); }
         }
         #endregion

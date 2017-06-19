@@ -193,6 +193,7 @@ namespace Models
         /// Gets or sets the maximum temperature (oC)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        [Units("oC")]
         [XmlIgnore]
         public double MaxT
         {
@@ -212,6 +213,7 @@ namespace Models
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         [XmlIgnore]
+        [Units("oC")]
         public double MinT
         {
             get
@@ -228,13 +230,15 @@ namespace Models
         /// Daily Mean temperature (oC)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
+        [Units("oC")]
         [XmlIgnore]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
 
-            /// <summary>
-            /// Gets or sets the rainfall (mm)
-            /// </summary>
-            [XmlIgnore]
+        /// <summary>
+        /// Gets or sets the rainfall (mm)
+        /// </summary>
+        [Units("mm")]
+        [XmlIgnore]
         public double Rain
         {
             get
@@ -251,6 +255,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the solar radiation. MJ/m2/day
         /// </summary>
+        [Units("MJ/m^2/d")]
         [XmlIgnore]
         public double Radn
         {
@@ -264,10 +269,11 @@ namespace Models
                 this.todaysMetData.Radn = value;
             }
         }
-		
+
         /// <summary>
         /// Gets or sets the Pan Evaporation (mm) (Class A pan)
         /// </summary>
+        [Units("mm")]
         [XmlIgnore]
         public double PanEvap
             {
@@ -302,6 +308,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the vapor pressure (hPa)
         /// </summary>
+        [Units("hPa")]
         [XmlIgnore]
         public double VP
         {
@@ -342,6 +349,7 @@ namespace Models
         /// <summary>
         /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
         /// </summary>
+        [Units("hPa")]
         [XmlIgnore]
         public double AirPressure { get; set; }
 
@@ -385,6 +393,7 @@ namespace Models
         /// <summary>
         /// Gets the average temperature
         /// </summary>
+        [Units("oC")]
         public double Tav
         {
             get

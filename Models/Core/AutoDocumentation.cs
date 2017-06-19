@@ -81,17 +81,22 @@ namespace Models.Core
                     st = st.Remove(0, 2);
                 StringReader reader = new StringReader(st);
                 string line = reader.ReadLine();
-                while (line != null && line.Trim() != string.Empty)
+                while (line != null)
                 {
-                    if (numSpacesStartOfLine == -1)
+                    line = line.Trim();
+                    if (line != string.Empty)
                     {
-                        int preLineLength = line.Length;
-                        line = line.TrimStart();
-                        numSpacesStartOfLine = preLineLength - line.Length - 1;
+                        {
+                            if (numSpacesStartOfLine == -1)
+                            {
+                                int preLineLength = line.Length;
+                                line = line.TrimStart();
+                                numSpacesStartOfLine = preLineLength - line.Length - 1;
+                            }
+                            else
+                                line = line.Remove(0, numSpacesStartOfLine);
+                        }
                     }
-                    else
-                        line = line.Remove(0, numSpacesStartOfLine);
-
                     string heading;
                     int headingLevel;
                     if (GetHeadingFromLine(line, out heading, out headingLevel))
@@ -148,6 +153,22 @@ namespace Models.Core
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Document all child members of the specified model.
+        /// </summary>
+        /// <param name="model">The parent model</param>
+        /// <param name="tags">Documentation elements</param>
+        /// <param name="headingLevel">Heading level</param>
+        /// <param name="indent">Indent level</param>
+        /// <param name="childTypesToExclude">An optional list of Types to exclude from documentation.</param>
+        public static void DocumentChildren(IModel model, List<AutoDocumentation.ITag> tags, int headingLevel, int indent, Type[] childTypesToExclude = null)
+        {
+            foreach (IModel child in model.Children)
+                if (child.IncludeInDocumentation && 
+                    (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
+                    child.Document(tags, headingLevel + 1, indent);
         }
 
         /// <summary>

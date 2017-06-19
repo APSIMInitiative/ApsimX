@@ -169,13 +169,13 @@ namespace UserInterface.Views
         {
             foreach (Widget w in Popup)
             {
-                if (w is ImageMenuItem)
+                if (w is MenuItem)
                 {
                     PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
                     if (pi != null)
                     {
                         System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
+                        if (w is ImageMenuItem && handlers != null && handlers.ContainsKey("activate"))
                         {
                             EventHandler handler = (EventHandler)handlers["activate"];
                             (w as ImageMenuItem).Activated -= handler;
@@ -270,7 +270,25 @@ namespace UserInterface.Views
         public void Delete(string nodePath)
         {
             TreeIter node = FindNode(nodePath);
+
+            // We will typically be deleting the currently selected node. If this is the case,
+            // Gtk will not automatically move the cursor for us.
+            // We need to work out where we want selection to be after this node is deleted
+            TreePath cursorPath;
+            TreeViewColumn cursorCol;
+            treeview1.GetCursor(out cursorPath, out cursorCol);
+            TreeIter nextSel = node;
+            TreePath pathToSelect = treemodel.GetPath(node);
+            if (pathToSelect.Compare(cursorPath) != 0)
+                pathToSelect = null;
+            else if (!treemodel.IterNext(ref nextSel)) // If there's a "next" sibling, the current TreePath will do
+            {                                     // Otherwise
+                if (!pathToSelect.Prev())         // If there's a "previous" sibling, use that
+                    pathToSelect.Up();            // and if that didn't work, use the parent
+            }
             treemodel.Remove(ref node);
+            if (pathToSelect != null)
+                treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
         }
 
         /// <summary>Adds a child node.</summary>
@@ -287,6 +305,7 @@ namespace UserInterface.Views
             else
                 iter = treemodel.InsertNode(node, position);
             RefreshNode(iter, nodeDescription);
+            treeview1.ExpandToPath(treemodel.GetPath(iter));
         }
 
         /// <summary>Gets or sets the currently selected node.</summary>
@@ -368,9 +387,19 @@ namespace UserInterface.Views
             ClearPopup();
             foreach (MenuDescriptionArgs Description in menuDescriptions)
             {
-                ImageMenuItem item = new ImageMenuItem(Description.Name);
+                MenuItem item;
                 if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
-                    item.Image = new Image(null, Description.ResourceNameForImage);
+                {
+                    ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
+                    imageItem.Image = new Image(null, Description.ResourceNameForImage);
+                    item = imageItem;
+                }
+                else
+                {
+                    CheckMenuItem checkItem = new CheckMenuItem(Description.Name);
+                    checkItem.Active = Description.Checked;
+                    item = checkItem;
+                }
                 if (!String.IsNullOrEmpty(Description.ShortcutKey))
                 {
                     string keyName = String.Empty;
@@ -812,12 +841,13 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Get whatever text is currently on the clipboard
+        /// Get whatever text is currently on the _APSIM_MODEL clipboard
         /// </summary>
         /// <returns></returns>
         public string GetClipboardText()
         {
-            Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
             return cb.WaitForText();
         }
 
@@ -827,7 +857,8 @@ namespace UserInterface.Views
         /// <param name="text"></param>
         public void SetClipboardText(string text)
         {
-            Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
+            Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
+            Clipboard cb = Clipboard.Get(modelClipboard);
             cb.Text = text;
         }
 

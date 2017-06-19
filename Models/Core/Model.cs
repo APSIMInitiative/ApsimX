@@ -29,6 +29,7 @@ namespace Models.Core
             this.Name = GetType().Name;
             this.IsHidden = false;
             this.Children = new List<Model>();
+            IncludeInDocumentation = true;
         }
 
         /// <summary>
@@ -69,8 +70,6 @@ namespace Models.Core
         [XmlElement(typeof(Irrigation))]
         [XmlElement(typeof(Manager))]
         [XmlElement(typeof(MicroClimate))]
-        [XmlElement(typeof(Arbitrator.Arbitrator))]
-        [XmlElement(typeof(ArbitratorGod.ArbitratorGod))]
         [XmlElement(typeof(Operations))]
         [XmlElement(typeof(Models.Report.Report))]
         [XmlElement(typeof(Summary))]
@@ -200,6 +199,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.SubtractFunction))]
         [XmlElement(typeof(Models.PMF.Functions.VariableReference))]
         [XmlElement(typeof(Models.PMF.Functions.WeightedTemperatureFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.WangEngelTempFunction))]
         [XmlElement(typeof(Models.PMF.Functions.XYPairs))]
         [XmlElement(typeof(Models.PMF.Functions.Zadok))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.CanopyPhotosynthesis))]
@@ -339,6 +339,11 @@ namespace Models.Core
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 child.Document(tags, headingLevel + 1, indent);
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
+        /// </summary>
+        public bool IncludeInDocumentation { get; set; }
 
         /// <summary>
         /// Return the current APSIM version number.

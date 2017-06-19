@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -56,16 +56,16 @@
           <RegrStats>
             <Name>NLeaching</Name>
             <n>36</n>
-            <Slope>1.0175549344266093</Slope>
-            <Intercept>11.463508725445678</Intercept>
-            <SEslope>0.079202752619090364</SEslope>
-            <SEintercept>7.1953115556148006</SEintercept>
-            <R2>0.82919505432938645</R2>
-            <RMSE>32.040997987632075</RMSE>
-            <NSE>0.74733560053451775</NSE>
-            <ME>12.599833971174139</ME>
-            <MAE>17.613960732254736</MAE>
-            <RSR>0.49562681921459262</RSR>
+            <Slope>0.9584193505497689</Slope>
+            <Intercept>13.128193083666034</Intercept>
+            <SEslope>0.075474104053685973</SEslope>
+            <SEintercept>7.5089407548347529</SEintercept>
+            <R2>0.82586940631123074</R2>
+            <RMSE>32.445767696901719</RMSE>
+            <NSE>0.78327762517998423</NSE>
+            <ME>10.176018648600682</ME>
+            <MAE>16.019440270270671</MAE>
+            <RSR>0.45902321167103649</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -83,128 +83,128 @@
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>126</n>
-            <Slope>0.9917086401469325</Slope>
-            <Intercept>4.5134816324390385</Intercept>
-            <SEslope>0.033726364566491945</SEslope>
-            <SEintercept>10.683030046882772</SEintercept>
-            <R2>0.874573610639515</R2>
-            <RMSE>15.970581340749787</RMSE>
-            <NSE>0.85683639058146088</NSE>
-            <ME>1.9105650434544073</ME>
-            <MAE>12.913366758874796</MAE>
-            <RSR>0.37686521502543829</RSR>
+            <Slope>1.1591955959186775</Slope>
+            <Intercept>-37.802863951580605</Intercept>
+            <SEslope>0.049060199764068259</SEslope>
+            <SEintercept>15.54011512721212</SEintercept>
+            <R2>0.81825737618925021</R2>
+            <RMSE>26.927224780319694</RMSE>
+            <NSE>0.59301876949739873</NSE>
+            <ME>12.173601290931003</ME>
+            <MAE>19.6857487825889</MAE>
+            <RSR>0.635414211941083</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(1)</Name>
             <n>126</n>
-            <Slope>1.2003699360080538</Slope>
-            <Intercept>-0.0049652206966044055</Intercept>
-            <SEslope>0.034137328921882891</SEslope>
-            <SEintercept>0.0062008300623797559</SEintercept>
-            <R2>0.90885265564731621</R2>
-            <RMSE>0.044034027859598049</RMSE>
-            <NSE>0.69364275651641494</NSE>
-            <ME>0.027754170655784359</ME>
-            <MAE>0.030548952737738531</MAE>
-            <RSR>0.55129469142126786</RSR>
+            <Slope>1.257886280759017</Slope>
+            <Intercept>-0.0064806444855074752</Intercept>
+            <SEslope>0.035765020777174659</SEslope>
+            <SEintercept>0.0064964900014359136</SEintercept>
+            <R2>0.908889777659132</R2>
+            <RMSE>0.051907391700905671</RMSE>
+            <NSE>0.57429403010878122</NSE>
+            <ME>0.035630873403219729</ME>
+            <MAE>0.0372770359576631</MAE>
+            <RSR>0.64986717957022444</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(2)</Name>
             <n>126</n>
-            <Slope>1.0127559711613066</Slope>
-            <Intercept>-0.010941318257822214</Intercept>
-            <SEslope>0.035189936010764263</SEslope>
-            <SEintercept>0.0074892565510803095</SEintercept>
-            <R2>0.86978502270425517</R2>
-            <RMSE>0.022684984234017391</RMSE>
-            <NSE>0.82242778237367553</NSE>
-            <ME>-0.0083148283624559019</ME>
-            <MAE>0.018108500806760019</MAE>
-            <RSR>0.41971766023343576</RSR>
+            <Slope>1.1716950029271251</Slope>
+            <Intercept>-0.032909963387705993</Intercept>
+            <SEslope>0.045297262838145259</SEslope>
+            <SEintercept>0.0096403364403054026</SEintercept>
+            <R2>0.84364973434961887</R2>
+            <RMSE>0.02878778924840384</RMSE>
+            <NSE>0.71403381332910731</NSE>
+            <ME>0.0024425146455528857</ME>
+            <MAE>0.022601915162832067</MAE>
+            <RSR>0.53263178065226846</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(3)</Name>
             <n>126</n>
-            <Slope>0.7561035635156923</Slope>
-            <Intercept>0.0410112872340829</Intercept>
-            <SEslope>0.033848253801997887</SEslope>
-            <SEintercept>0.0068366487513564717</SEintercept>
-            <R2>0.800959222572196</R2>
-            <RMSE>0.023219110604136426</RMSE>
-            <NSE>0.7798451660161021</NSE>
-            <ME>-0.0067493453032557663</ME>
-            <MAE>0.019110455185711854</MAE>
-            <RSR>0.46734096053815366</RSR>
+            <Slope>0.96505558784908607</Slope>
+            <Intercept>0.01222034650648704</Intercept>
+            <SEslope>0.030858487359215692</SEslope>
+            <SEintercept>0.0062327776288618776</SEintercept>
+            <R2>0.88748111646724681</R2>
+            <RMSE>0.017918259064120822</RMSE>
+            <NSE>0.86889215230338024</NSE>
+            <ME>0.0053774124643553509</ME>
+            <MAE>0.0147626822106193</MAE>
+            <RSR>0.360648456565167</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(4)</Name>
             <n>126</n>
-            <Slope>0.516357233269482</Slope>
-            <Intercept>0.096222034334129</Intercept>
-            <SEslope>0.03773682172233845</SEslope>
-            <SEintercept>0.0076299797501095546</SEintercept>
-            <R2>0.60157776295693977</R2>
-            <RMSE>0.022882422796718451</RMSE>
-            <NSE>0.58950467726730216</NSE>
-            <ME>-2.76742885648017E-05</ME>
-            <MAE>0.018337991996647252</MAE>
-            <RSR>0.63815156769056869</RSR>
+            <Slope>0.70946677218837784</Slope>
+            <Intercept>0.06687398119308216</Intercept>
+            <SEslope>0.028447130054411452</SEslope>
+            <SEintercept>0.0057517039421316214</SEintercept>
+            <R2>0.83377914574888867</R2>
+            <RMSE>0.017822917394282187</RMSE>
+            <NSE>0.75096419619460342</NSE>
+            <ME>0.0090549865844840333</ME>
+            <MAE>0.015350675857052595</MAE>
+            <RSR>0.49705063039092956</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(5)</Name>
             <n>126</n>
-            <Slope>0.25598566546258811</Slope>
-            <Intercept>0.15155186990328279</Intercept>
-            <SEslope>0.042217665016112065</SEslope>
-            <SEintercept>0.0085708292744234547</SEintercept>
-            <R2>0.22869120889655104</R2>
-            <RMSE>0.028337338767031591</RMSE>
-            <NSE>0.21982067367035407</NSE>
-            <ME>0.0024035677690510257</ME>
-            <MAE>0.023114980679047756</MAE>
-            <RSR>0.87976555224351183</RSR>
+            <Slope>0.29621209584584623</Slope>
+            <Intercept>0.15190613672151238</Intercept>
+            <SEslope>0.05059345286726695</SEslope>
+            <SEintercept>0.010271241831196582</SEintercept>
+            <R2>0.21656888839141475</R2>
+            <RMSE>0.030880554826629152</RMSE>
+            <NSE>0.073497697380896621</NSE>
+            <ME>0.010821797220895881</ME>
+            <MAE>0.026121611965173597</MAE>
+            <RSR>0.95872264484634673</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(6)</Name>
             <n>126</n>
-            <Slope>0.12949471591695189</Slope>
-            <Intercept>0.17838057215921918</Intercept>
-            <SEslope>0.024041709023476004</SEslope>
-            <SEintercept>0.0048086490839329716</SEintercept>
-            <R2>0.18960454118008696</R2>
-            <RMSE>0.01966234139494432</RMSE>
-            <NSE>0.10781225320719468</NSE>
-            <ME>0.0052139267685797457</ME>
-            <MAE>0.015953177435786451</MAE>
-            <RSR>0.940801196672033</RSR>
+            <Slope>0.096437801472786189</Slope>
+            <Intercept>0.1867073520636908</Intercept>
+            <SEslope>0.025604944514332512</SEslope>
+            <SEintercept>0.005121316161957188</SEintercept>
+            <R2>0.10265597119142922</R2>
+            <RMSE>0.020916829923035663</RMSE>
+            <NSE>-0.00966550694398749</NSE>
+            <ME>0.0069648074959527935</ME>
+            <MAE>0.017627246914090365</MAE>
+            <RSR>1.0008258033418744</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(7)</Name>
             <n>126</n>
-            <Slope>-0.022570841747866298</Slope>
-            <Intercept>0.2046393288812674</Intercept>
-            <SEslope>0.006966065561121516</SEslope>
-            <SEintercept>0.0014128096023865579</SEintercept>
-            <R2>0.078055496549547243</R2>
-            <RMSE>0.025587334224929457</RMSE>
-            <NSE>-0.053907574747062981</NSE>
-            <ME>-0.0011794288556945521</ME>
-            <MAE>0.020995094930011404</MAE>
-            <RSR>1.0225180824394926</RSR>
+            <Slope>-0.0536993968302481</Slope>
+            <Intercept>0.21169411492762125</Intercept>
+            <SEslope>0.011146914930400398</SEslope>
+            <SEintercept>0.0022607407743260336</SEintercept>
+            <R2>0.15765194523749171</R2>
+            <RMSE>0.026447242712822189</RMSE>
+            <NSE>-0.12593480350564357</NSE>
+            <ME>-0.00039006743874943215</ME>
+            <MAE>0.02168544310618762</MAE>
+            <RSR>1.0568816456924732</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Soil.SoilWater.SW(8)</Name>
             <n>126</n>
-            <Slope>-0.035309651558193773</Slope>
-            <Intercept>0.20264777750110918</Intercept>
-            <SEslope>0.0169850097492114</SEslope>
-            <SEintercept>0.0035075645865361889</SEintercept>
-            <R2>0.033678685822725596</R2>
-            <RMSE>0.028250268102378549</RMSE>
-            <NSE>-0.25046645058637074</NSE>
-            <ME>-0.0095475631661723816</ME>
-            <MAE>0.021700727296239269</MAE>
-            <RSR>1.1137962621938338</RSR>
+            <Slope>-0.057870206145808824</Slope>
+            <Intercept>0.20778499641357881</Intercept>
+            <SEslope>0.020143432167880393</SEslope>
+            <SEintercept>0.0041598085821900445</SEintercept>
+            <R2>0.062407334565083072</R2>
+            <RMSE>0.028774296406878078</RMSE>
+            <NSE>-0.29728776693533</NSE>
+            <ME>-0.00903431792105591</ME>
+            <MAE>0.022168687247974352</MAE>
+            <RSR>1.1344566242378389</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -566,6 +566,9 @@
             <double>100</double>
           </Thickness>
         </LayerStructure>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+        </CERESSoilTemperature>
         <RecordNumber>0</RecordNumber>
         <SoilType />
         <LocalName />
@@ -1258,6 +1261,9 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+      </SoluteManager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -3013,6 +3019,9 @@ This model has been built to simulate a range of different crops in simulations 
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+        </CERESSoilTemperature>
         <RecordNumber>0</RecordNumber>
         <SoilType />
         <LocalName />
@@ -3448,6 +3457,9 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+      </SoluteManager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -5055,6 +5067,9 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType />
           <LocalName />
@@ -5090,8 +5105,8 @@ These graphs are intended to demonstrate how SCRUM represents approximate differ
           <Name>SCRUMSowingRule</Name>
           <Script>
             <CultivarName>Barley_Spring</CultivarName>
-            <InitialRootDepth>10</InitialRootDepth>
             <SowingDate>1998-10-14</SowingDate>
+            <InitialRootDepth>10</InitialRootDepth>
           </Script>
           <Code><![CDATA[
 using System;
@@ -5847,6 +5862,9 @@ namespace Models
              
              ]]></Code>
         </Manager>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -7847,6 +7865,9 @@ Testing of SCRUM under New Zealand conditions was undertaken using the data Maiz
             </FInert>
             <OCUnits>Total</OCUnits>
           </SoilOrganicMatter>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <SoilType>lignin_FOM</SoilType>
           <Region>Generic soil types</Region>
@@ -10045,6 +10066,9 @@ namespace Models
           <DisabledSeries />
           <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -11011,7 +11035,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -11032,7 +11056,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -11074,7 +11098,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -11095,7 +11119,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -11137,7 +11161,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -11179,7 +11203,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
@@ -12151,6 +12175,9 @@ namespace Models
             <FractionFull>0.9</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+          </CERESSoilTemperature>
           <RecordNumber>0</RecordNumber>
           <Site>-</Site>
           <NearestTown>-</NearestTown>
@@ -12268,17 +12295,17 @@ namespace Models
           <Manager>
             <Name>Sowing_Yield</Name>
             <Script>
+              <Crop2>Dried_Peas</Crop2>
+              <SowingDate2>2005-09-28</SowingDate2>
+              <HarvestDate2>2006-02-24</HarvestDate2>
+              <CropNConc>0</CropNConc>
               <YieldFile>%root%\Tests\Validation\SCRUM\YieldsToSet.csv</YieldFile>
               <InitialRootDepth>10</InitialRootDepth>
               <Crop1>Potatoes_Short</Crop1>
               <SowingDate1>2004-10-15</SowingDate1>
               <HarvestDate1>2005-03-14</HarvestDate1>
               <Yield1>5500</Yield1>
-              <Crop2>Dried_Peas</Crop2>
-              <SowingDate2>2005-09-28</SowingDate2>
-              <HarvestDate2>2006-02-24</HarvestDate2>
               <Yield2>958</Yield2>
-              <CropNConc>0</CropNConc>
               <Crop3>Potatoes_Short</Crop3>
               <SowingDate3>2006-10-11</SowingDate3>
               <HarvestDate3>2007-03-12</HarvestDate3>
@@ -12572,22 +12599,22 @@ namespace Models
           <Manager>
             <Name>InF</Name>
             <Script>
+              <NFert>0</NFert>
+              <Irr1>0</Irr1>
+              <Irr2>0</Irr2>
+              <Irr3>0</Irr3>
+              <Irr4>0</Irr4>
+              <IrrFact1>0</IrrFact1>
+              <IrrFact2>0</IrrFact2>
+              <IrrFact3>0</IrrFact3>
+              <IrrFact4>0</IrrFact4>
+              <TreatFact>0</TreatFact>
               <FertDate1>2005-10-26</FertDate1>
               <FertDate2>2005-11-25</FertDate2>
-              <NFert>0</NFert>
-              <TreatFact>0</TreatFact>
               <IrrDate1>2005-11-18</IrrDate1>
-              <Irr1>0</Irr1>
-              <IrrFact1>0</IrrFact1>
               <IrrDate2>2005-11-23</IrrDate2>
-              <Irr2>0</Irr2>
-              <IrrFact2>0</IrrFact2>
               <IrrDate3>2005-12-07</IrrDate3>
-              <Irr3>0</Irr3>
-              <IrrFact3>0</IrrFact3>
               <IrrDate4>2005-12-29</IrrDate4>
-              <Irr4>0</Irr4>
-              <IrrFact4>0</IrrFact4>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -12733,7 +12760,6 @@ namespace Models
             <string>[SCRUM].Stover.LAI</string>
             <string>[SCRUM].Stover.Height</string>
             <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
-            <string>[SCRUM].Product.LiveFWt</string>
             <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
             <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
             <string>[SCRUM].Stover.Fw</string>
@@ -13187,6 +13213,9 @@ namespace Models
 }
 	]]></Code>
         </Manager>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+        </SoluteManager>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
@@ -13208,7 +13237,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Product.LiveFWt</YFieldName>
+        <YFieldName>SCRUM.Product.Live.Wt</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -14231,13 +14260,7 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries>
-          <string>W1_N0</string>
-          <string>W2_N0</string>
-          <string>W1_N1</string>
-          <string>W2_N1</string>
-          <string>W1_N2</string>
-        </DisabledSeries>
+        <DisabledSeries />
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
@@ -16847,5 +16870,5 @@ namespace Models
       <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
   </Experiment>
-  <ExplorerWidth>286</ExplorerWidth>
+  <ExplorerWidth>270</ExplorerWidth>
 </Simulations>

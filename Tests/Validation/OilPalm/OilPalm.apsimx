@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <MemoText><![CDATA[
 ### Datasets
 
@@ -60,6 +61,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage />
       <FileName>observed.prn</FileName>
     </Input>
@@ -67,6 +69,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
       <Name>POMonthly</Name>
       <Tests>
         <Name>Tests</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <AcceptedStats>
           <RegrStats>
             <Name>OilPalm.LAI</Name>
@@ -100,6 +103,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
         <POName>POMonthly</POName>
       </Tests>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>MonthlyOutput</PredictedTableName>
       <ObservedTableName>Input</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -108,6 +112,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
       <Name>POAnnual</Name>
       <Tests>
         <Name>Tests</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <AcceptedStats>
           <RegrStats>
             <Name>Calculations.Script.AnnualBunches</Name>
@@ -155,14 +160,17 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
         <POName>POAnnual</POName>
       </Tests>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>AnnualOutput</PredictedTableName>
       <ObservedTableName>Input</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <TableName>POAnnual</TableName>
     </TimeSeriesStats>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -176,6 +184,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           <Name>N</Name>
           <Operations>
             <Name>0</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1996-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
@@ -243,6 +252,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           </Operations>
           <Operations>
             <Name>1</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1996-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
@@ -350,6 +360,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           </Operations>
           <Operations>
             <Name>2</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1996-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
@@ -455,34 +466,42 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
               <Action>[Fertiliser].Apply(227, Fertiliser.Types.UreaN, 10);</Action>
             </Operation>
           </Operations>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Specifications>
             <string>[operations]</string>
           </Specifications>
         </Factor>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Factors>
       <Simulation>
         <Name>Base324</Name>
         <Weather>
           <Name>Weather</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <FileName>..\..\WeatherFiles\Popondetta.met</FileName>
         </Weather>
         <Clock>
           <Name>Clock</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <StartDate>1996-03-01T00:00:00</StartDate>
           <EndDate>2010-09-29T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>Summary</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Summary>
         <Zone>
           <Name>Field</Name>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOM</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -528,6 +547,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
               <Name>Water</Name>
               <SoilCropOilPalm>
                 <Name>OilPalmSoil</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
                 <KL>
                   <double>0.06</double>
                   <double>0.04</double>
@@ -557,6 +577,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
                   <double>0</double>
                 </XF>
               </SoilCropOilPalm>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -644,6 +665,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -706,6 +728,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -763,6 +786,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <RootCN>30</RootCN>
               <RootWt>3000</RootWt>
               <SoilCN>12</SoilCN>
@@ -842,6 +866,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -875,12 +900,14 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             </Analysis>
             <InitialWater>
               <Name>Initial water</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>Initial nitrogen</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -929,6 +956,11 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <SoilType>Higaturu Series </SoilType>
             <LocalName />
@@ -938,10 +970,10 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
             <NaturalVegetation />
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>AnnualOutput</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -987,6 +1019,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           </Report>
           <Report>
             <Name>MonthlyOutput</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -1024,6 +1057,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           </Report>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
@@ -1039,6 +1073,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           </MicroClimate>
           <OilPalm>
             <Name>OilPalm</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResourceName>OilPalm</ResourceName>
             <interception>0</interception>
             <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
@@ -1052,6 +1087,7 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           </OilPalm>
           <Operations>
             <Name>operations</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1996-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(1.9, Fertiliser.Types.NH4NO3N, 10);</Action>
@@ -1119,9 +1155,11 @@ Huth, N.I., Thorburn, P.J., Radford, B.J., Thornton, C.M., 2010\. Impacts of fer
           </Operations>
           <Irrigation>
             <Name>Irrigation</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Irrigation>
           <Manager>
             <Name>Palm Management</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Script>
               <sowing_date>1996-03-01</sowing_date>
               <population>135</population>
@@ -1191,6 +1229,7 @@ namespace Models
           </Manager>
           <Manager>
             <Name>Calculations</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Script>
               <AnnualRain>0</AnnualRain>
               <Offset>6</Offset>
@@ -1381,6 +1420,7 @@ namespace Models
           </Manager>
           <Report>
             <Name>daily</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -1397,14 +1437,21 @@ namespace Models
               <string>[Clock].DoReport</string>
             </EventNames>
           </Report>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1426,6 +1473,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1445,6 +1493,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1463,12 +1512,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemMass</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1490,6 +1539,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1509,6 +1559,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1527,12 +1578,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>FrondProduction</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1554,6 +1605,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1573,6 +1625,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1591,12 +1644,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>BunchProduction</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1618,6 +1671,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1637,6 +1691,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1655,12 +1710,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>AnnualFFB</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1682,6 +1737,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1701,6 +1757,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1719,12 +1776,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>AnnualBunchSize</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1746,6 +1803,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -1765,6 +1823,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -1783,8 +1842,8 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Experiment>
     <Experiment>
       <Name>Hargy</Name>
@@ -1794,6 +1853,7 @@ namespace Models
           <Name>N</Name>
           <Operations>
             <Name>0</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1998-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
@@ -1845,6 +1905,7 @@ namespace Models
           </Operations>
           <Operations>
             <Name>1</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1998-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
@@ -1976,6 +2037,7 @@ namespace Models
           </Operations>
           <Operations>
             <Name>2</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1998-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
@@ -2105,34 +2167,42 @@ namespace Models
               <Action>[Fertiliser].Apply(140, Fertiliser.Types.NH4NO3N, 10);</Action>
             </Operation>
           </Operations>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Specifications>
             <string>[operations]</string>
           </Specifications>
         </Factor>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Factors>
       <Simulation>
         <Name>Base212</Name>
         <Weather>
           <Name>Weather</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <FileName>..\..\WeatherFiles\Hargy.met</FileName>
         </Weather>
         <Clock>
           <Name>Clock</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <StartDate>1996-02-01T00:00:00</StartDate>
           <EndDate>2009-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>Summary</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Summary>
         <Zone>
           <Name>Field</Name>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOM</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -2178,6 +2248,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCropOilPalm>
                 <Name>OilPalmSoil</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
                 <KL>
                   <double>0.04</double>
                   <double>0.04</double>
@@ -2203,6 +2274,7 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCropOilPalm>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -2278,6 +2350,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -2326,6 +2399,7 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -2381,6 +2455,7 @@ namespace Models
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <RootCN>30</RootCN>
               <RootWt>3000</RootWt>
               <SoilCN>10</SoilCN>
@@ -2420,6 +2495,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>100</double>
@@ -2441,12 +2517,14 @@ namespace Models
             </Analysis>
             <InitialWater>
               <Name>Initial water</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>Initial nitrogen</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -2477,6 +2555,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <SoilType>Volcanic Ash</SoilType>
             <LocalName />
@@ -2486,10 +2569,10 @@ namespace Models
             <NaturalVegetation />
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>AnnualOutput</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -2535,6 +2618,7 @@ namespace Models
           </Report>
           <Report>
             <Name>MonthlyOutput</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -2572,6 +2656,7 @@ namespace Models
           </Report>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
@@ -2587,9 +2672,11 @@ namespace Models
           </MicroClimate>
           <Irrigation>
             <Name>Irrigation</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Irrigation>
           <Operations>
             <Name>operations</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1998-04-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(36.7, Fertiliser.Types.UreaN, 10);</Action>
@@ -2641,6 +2728,7 @@ namespace Models
           </Operations>
           <OilPalm>
             <Name>OilPalm</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResourceName>OilPalm</ResourceName>
             <interception>0</interception>
             <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
@@ -2654,6 +2742,7 @@ namespace Models
           </OilPalm>
           <Manager>
             <Name>Palm Management</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Script>
               <sowing_date>1996-03-01</sowing_date>
               <population>135</population>
@@ -2726,6 +2815,7 @@ namespace Models
           </Manager>
           <Manager>
             <Name>Calculations</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Script>
               <AnnualRain>0</AnnualRain>
               <Offset>6</Offset>
@@ -2914,14 +3004,21 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2943,6 +3040,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2962,6 +3060,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -2980,12 +3079,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemMass</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3007,6 +3106,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3026,6 +3126,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3044,12 +3145,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>FrondProduction</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3071,6 +3172,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3090,6 +3192,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3108,12 +3211,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>BunchProduction</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3135,6 +3238,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3154,6 +3258,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3172,12 +3277,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>AnnualYield</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3199,6 +3304,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3218,6 +3324,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3236,12 +3343,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>AnnualBunchSize</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3263,6 +3370,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3282,6 +3390,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -3300,8 +3409,8 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Experiment>
     <Experiment>
       <Name>Sagarai</Name>
@@ -3311,6 +3420,7 @@ namespace Models
           <Name>N</Name>
           <Operations>
             <Name>0</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1991-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
@@ -3338,6 +3448,7 @@ namespace Models
           </Operations>
           <Operations>
             <Name>1</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1991-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(17.8, Fertiliser.Types.NH4N, 10);</Action>
@@ -3557,6 +3668,7 @@ namespace Models
           </Operations>
           <Operations>
             <Name>2</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1991-02-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
@@ -3774,34 +3886,42 @@ namespace Models
               <Action>[Fertiliser].Apply(53.3, Fertiliser.Types.NH4N, 10);</Action>
             </Operation>
           </Operations>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Specifications>
             <string>[operations]</string>
           </Specifications>
         </Factor>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Factors>
       <Simulation>
         <Name>Base504</Name>
         <Weather>
           <Name>Weather</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <FileName>..\..\WeatherFiles\Sagarai.met</FileName>
         </Weather>
         <Clock>
           <Name>Clock</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <StartDate>1991-03-01T00:00:00</StartDate>
           <EndDate>2008-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>Summary</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Summary>
         <Zone>
           <Name>Field</Name>
           <Fertiliser>
             <Name>Fertiliser</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOM</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -3847,6 +3967,7 @@ namespace Models
               <Name>Water</Name>
               <SoilCropOilPalm>
                 <Name>OilPalmSoil</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
                 <KL>
                   <double>0.03</double>
                   <double>0.02</double>
@@ -3870,6 +3991,7 @@ namespace Models
                   <double>0</double>
                 </XF>
               </SoilCropOilPalm>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -3939,6 +4061,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -3986,6 +4109,7 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -4040,6 +4164,7 @@ namespace Models
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <RootCN>30</RootCN>
               <RootWt>3000</RootWt>
               <SoilCN>12</SoilCN>
@@ -4114,6 +4239,7 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Thickness>
                 <double>200</double>
                 <double>200</double>
@@ -4145,12 +4271,14 @@ namespace Models
             </Analysis>
             <InitialWater>
               <Name>Initial water</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>Initial nitrogen</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -4181,6 +4309,11 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </CERESSoilTemperature>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <SoilType>Alluvial Clay</SoilType>
             <LocalName />
@@ -4190,10 +4323,10 @@ namespace Models
             <NaturalVegetation />
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>AnnualOutput</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -4239,6 +4372,7 @@ namespace Models
           </Report>
           <Report>
             <Name>MonthlyOutput</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
@@ -4276,6 +4410,7 @@ namespace Models
           </Report>
           <MicroClimate>
             <Name>MicroClimate</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
@@ -4291,6 +4426,7 @@ namespace Models
           </MicroClimate>
           <Operations>
             <Name>operations</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1991-03-01T00:00:00</Date>
               <Action>[Fertiliser].Apply(42, Fertiliser.Types.UreaN, 10);</Action>
@@ -4318,6 +4454,7 @@ namespace Models
           </Operations>
           <OilPalm>
             <Name>OilPalm</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResourceName>OilPalm</ResourceName>
             <interception>0</interception>
             <UnderstoryCoverMax>0.4</UnderstoryCoverMax>
@@ -4331,9 +4468,11 @@ namespace Models
           </OilPalm>
           <Irrigation>
             <Name>Irrigation</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
           </Irrigation>
           <Manager>
             <Name>Palm Management</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Script>
               <sowing_date>1991-03-01</sowing_date>
               <population>127</population>
@@ -4406,6 +4545,7 @@ namespace Models
           </Manager>
           <Manager>
             <Name>Calculations</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Script>
               <AnnualRain>0</AnnualRain>
               <Offset>6</Offset>
@@ -4594,14 +4734,21 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </SoluteManager>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Simulation>
       <Graph>
         <Name>LAI</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4623,6 +4770,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4642,6 +4790,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -4660,12 +4809,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>StemMass</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4687,6 +4836,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 2</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4706,6 +4856,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -4724,12 +4875,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>FrondProduction</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4751,6 +4902,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4770,6 +4922,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -4788,12 +4941,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>BunchProduction</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4815,6 +4968,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4834,6 +4988,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -4852,12 +5007,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>AnnualYield</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4879,6 +5034,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4898,6 +5054,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -4916,12 +5073,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>AnnualBunchSize</Name>
         <Series>
           <Name>Series 0</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4943,6 +5100,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Series 1</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4962,6 +5120,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Year</Title>
@@ -4980,11 +5139,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Experiment>
     <Memo>
       <Name>Combined Results</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText><![CDATA[
 ##Combined Results
 Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date)
@@ -4996,8 +5156,10 @@ Simulation results for the combined datasets from the various countries are show
         <Name>graph</Name>
         <Regression>
           <Name>Regression</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ForEachSeries>false</ForEachSeries>
         </Regression>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5017,6 +5179,7 @@ Simulation results for the combined datasets from the various countries are show
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -5035,7 +5198,6 @@ Simulation results for the combined datasets from the various countries are show
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>FFB</Name>
@@ -5043,8 +5205,10 @@ Simulation results for the combined datasets from the various countries are show
         <Name>graph</Name>
         <Regression>
           <Name>Regression</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ForEachSeries>false</ForEachSeries>
         </Regression>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5064,6 +5228,7 @@ Simulation results for the combined datasets from the various countries are show
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title>Predicted Bunch Production</Title>
@@ -5082,7 +5247,6 @@ Simulation results for the combined datasets from the various countries are show
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>BunchSize</Name>
@@ -5090,8 +5254,10 @@ Simulation results for the combined datasets from the various countries are show
         <Name>graph</Name>
         <Regression>
           <Name>Regression</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ForEachSeries>false</ForEachSeries>
         </Regression>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5111,6 +5277,7 @@ Simulation results for the combined datasets from the various countries are show
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title>Predicted Bunch Size</Title>
@@ -5129,7 +5296,6 @@ Simulation results for the combined datasets from the various countries are show
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>BunchProduction</Name>
@@ -5137,8 +5303,10 @@ Simulation results for the combined datasets from the various countries are show
         <Name>graph</Name>
         <Regression>
           <Name>Regression</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ForEachSeries>false</ForEachSeries>
         </Regression>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -5158,6 +5326,7 @@ Simulation results for the combined datasets from the various countries are show
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title>Predicted Bunch Production</Title>
@@ -5176,8 +5345,10 @@ Simulation results for the combined datasets from the various countries are show
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>296</ExplorerWidth>
 </Simulations>

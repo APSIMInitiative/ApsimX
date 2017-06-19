@@ -50,6 +50,11 @@
         /// <summary>Link to Apsim's solute manager module.</summary>
         [Link]
         private SoluteManager solutes = null;
+        /// <summary>
+        /// Link to the soil N model
+        /// </summary>
+        [Link]
+        private INutrient SoilNitrogen = null;
 
         #endregion
 
@@ -1551,6 +1556,8 @@
             MetData.Rain = weather.Rain;
             MetData.VP = weather.VP;
             MetData.Wind = weather.Wind;
+
+            dlayer = soil.Thickness;
         }
 
         /// <summary>The initialised</summary>
@@ -1704,13 +1711,13 @@
         public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
             GetOtherVariables();
+
             return Process();
         }
 
         /// <summary>Actual surface organic matter decomposition. Calculated by SoilNitrogen.</summary>
         /// <value>The actual som decomp.</value>
-        [XmlIgnore]
-        public SurfaceOrganicMatterDecompType ActualSOMDecomp { get; set; }
+        private SurfaceOrganicMatterDecompType ActualSOMDecomp { get; set; }
 
         /// <summary>Do the daily residue decomposition for today.</summary>
         /// <param name="sender">The sender.</param>
@@ -1718,6 +1725,7 @@
         [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
         private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs args)
         {
+            ActualSOMDecomp = SoilNitrogen.CalculateActualSOMDecomp();
             if (ActualSOMDecomp != null)
                 DecomposeSurfom(ActualSOMDecomp);
         }
@@ -2234,8 +2242,8 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                solutes.AddToTopLayer("NH4", nh4Incorp);
-                solutes.AddToTopLayer("NO3", no3Incorp);
+                solutes.AddToLayer(0, "NH4", nh4Incorp);
+                solutes.AddToLayer(0, "NO3", no3Incorp);
 
                 if (phosphorusAware)
                 {

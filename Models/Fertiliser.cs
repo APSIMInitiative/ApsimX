@@ -5,6 +5,7 @@ using Models.Soils;
 using System.Xml.Serialization;
 using System.Collections.Generic;
 using System.Linq;
+using Models.Interfaces;
 
 namespace Models
 {
@@ -50,7 +51,7 @@ namespace Models
     public class Fertiliser : Model
     {
         /// <summary>The soil</summary>
-        [Link] private Soil Soil = null;
+        [Link] private ISoil Soil = null;
         
         /// <summary>The summary</summary>
         [Link] private ISummary Summary = null;
@@ -146,17 +147,17 @@ namespace Models
 
                 if (fertiliserType.FractionNO3 != 0)
                 {
-                    solutes.AddToTopLayer("NO3", Amount * fertiliserType.FractionNO3);
+                    solutes.AddToLayer(layer, "NO3", Amount * fertiliserType.FractionNO3);
                     NitrogenApplied += Amount * fertiliserType.FractionNO3;
                 }
                 if (fertiliserType.FractionNH4 != 0)
                 {
-                    solutes.AddToTopLayer("NH4", Amount * fertiliserType.FractionNH4);
+                    solutes.AddToLayer(layer, "NH4", Amount * fertiliserType.FractionNH4);
                     NitrogenApplied += Amount * fertiliserType.FractionNH4;
                 }
                 if (fertiliserType.FractionUrea != 0)
                 {
-                    solutes.AddToTopLayer("Urea", Amount * fertiliserType.FractionUrea);
+                    solutes.AddToLayer(layer, "Urea", Amount * fertiliserType.FractionUrea);
                     NitrogenApplied += Amount * fertiliserType.FractionUrea;
                 }
                 Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));

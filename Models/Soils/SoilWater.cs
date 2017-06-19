@@ -649,7 +649,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Eo { get{return surface.Eo;} }
+        public double Eo { get{return surface != null ? surface.Eo : Double.NaN;} }
 
         /// <summary>
         /// Potential evaporation of water from the soil (after accounting for the effects of cover and residues)
@@ -659,7 +659,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Eos { get{return surface.Eos;} }
+        public double Eos { get{return surface != null ? surface.Eos : Double.NaN;} }
 
         /// <summary>
         /// Actual (realised) soil water evaporation
@@ -669,7 +669,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Es { get { return surface.Es; } }
+        public double Es { get { return surface != null ? surface.Es : Double.NaN; } }
 
         /// <summary>
         /// Number of days since the beginning of 2nd-stage soil water evaporation
@@ -686,6 +686,8 @@ namespace Models.Soils
             {
             get
                 {
+                if (surface == null)
+                    return Double.NaN;
                 switch (surface.SurfaceType)
                     {
                     case Surfaces.NormalSurface:
@@ -714,6 +716,8 @@ namespace Models.Soils
         public double cn2_new
             {
             get {
+                if (surface == null)
+                    return Double.NaN;
                 switch (surface.SurfaceType)
                     {
                     case Surfaces.NormalSurface :
@@ -739,7 +743,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm/day")]
-        public double Drainage { get{return SoilObject.Drainage;} }
+        public double Drainage { get{return SoilObject != null ? SoilObject.Drainage : Double.NaN;} }
 
         /// <summary>
         /// Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)
@@ -749,7 +753,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double LeachNO3 { get { return SoilObject.LeachNO3; } }         //! Leaching from bottom layer (kg/ha) // 
+        public double LeachNO3 { get { return SoilObject != null ? SoilObject.LeachNO3 : Double.NaN; } }         //! Leaching from bottom layer (kg/ha) // 
 
         /// <summary>
         /// Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)
@@ -759,7 +763,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double LeachNH4 { get { return SoilObject.LeachNH4; } }         //! Leaching from bottom layer (kg/ha) // 
+        public double LeachNH4 { get { return SoilObject != null ? SoilObject.LeachNH4 : Double.NaN; } }         //! Leaching from bottom layer (kg/ha) // 
 
         /// <summary>
         /// Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)
@@ -769,7 +773,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("kg/ha")]
-        public double LeachUrea { get { return SoilObject.LeachUrea; } }         //! Leaching from bottom layer (kg/ha) // 
+        public double LeachUrea { get { return SoilObject != null ? SoilObject.LeachUrea : Double.NaN; } }         //! Leaching from bottom layer (kg/ha) // 
 
         /// <summary>
         /// Depth of water infiltration into the soil (mm)
@@ -779,7 +783,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Infiltration { get{return surface.Infiltration;} }
+        public double Infiltration { get{return surface != null ? surface.Infiltration : Double.NaN;} }
 
         /// <summary>
         /// Amount of water runoff (mm)
@@ -789,7 +793,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Runoff { get{return surface.Runoff;} }
+        public double Runoff { get{return surface != null ? surface.Runoff : Double.NaN;} }
 
         /// <summary>
         /// Evaporation of water from the surface of the pond (mm)
@@ -802,6 +806,8 @@ namespace Models.Soils
         public double pond_evap
             {
             get {
+                if (surface == null)
+                    return Double.NaN;
                 if (surface.SurfaceType == Surfaces.PondSurface)
                     {
                     PondSurface pond = (PondSurface) surface;
@@ -825,6 +831,8 @@ namespace Models.Soils
         public double pond
             {
             get {
+                if (surface == null)
+                    return Double.NaN;
                 if (surface.SurfaceType == Surfaces.PondSurface)
                     {
                     PondSurface pond = (PondSurface) surface;
@@ -851,24 +859,17 @@ namespace Models.Soils
         [Units("mm")]
         public double WaterTable
             { 
-            get{return SoilObject.DepthToWaterTable;}
+            get{return SoilObject != null ? SoilObject.DepthToWaterTable : Double.NaN;}
             set { SetWaterTable(value); } //TODO: remove this later, have manager scripts directly use SoilWater.SetWaterTable(amount) instead
             }
 
         /// <summary>
-        /// Extractable soil water (above LL15) over the profile (mm)
+        /// Extractable soil water (above LL15) (mm)
         /// </summary>
-        /// <remarks>
-        /// Extractable Soil Water
-        /// (sw - ll15) of each layer summed over the profile.
-        /// </remarks>
-        /// <value>
-        /// The esw.
-        /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double ESW
-        { get { return SoilObject.esw; } }
+        public double[] ESW
+        { get { return SoilObject != null ? SoilObject.esw : new double[0]; } }
 
         /// <summary>
         /// Soil layer to which irrigation was applied (0 is for surface irrigation)
@@ -886,7 +887,7 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         public int IrrigLayer
-        { get { return irrig.layer; } }
+        { get { return irrig != null ? irrig.layer : 0; } }
 
         #endregion
 
@@ -902,7 +903,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 10000.0)]
         [Units("mm")]
         public double[] dlayer
-        { get { return SoilObject.dlayer; } }
+        { get { return SoilObject != null ? SoilObject.dlayer : new double[0]; } }
 
         //ARRAYS IN MILLIMETERS
 
@@ -915,7 +916,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm")]
         public double[] SATmm
-        { get { return SoilObject.sat_dep; } }
+        { get { return SoilObject != null ? SoilObject.sat_dep : new double[0]; } }
 
         /// <summary>
         /// Drained upper limit for each soil layer expressed as a depth of water (mm)
@@ -926,7 +927,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm")]
         public double[] DULmm
-        { get { return SoilObject.dul_dep; } }
+        { get { return SoilObject != null ? SoilObject.dul_dep : new double[0]; } }
 
         /// <summary>
         /// Current soil water content for each soil layer expressed as a depth of water (mm)
@@ -941,8 +942,10 @@ namespace Models.Soils
             get {
                 if (SoilObject != null)
                     return SoilObject.sw_dep;
-                else
+                else if (Soil != null)
                     return Soil.InitialWaterVolumetric;
+                else
+                    return new double[0];
                  }
             set { SetWater_mm(value); }  //TODO: remove this later, have manager scripts directly use SoilWater.SetWater_mm(amount) instead
             }
@@ -956,7 +959,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm")]
         public double[] LL15mm
-        { get { return SoilObject.ll15_dep; } }
+        { get { return SoilObject != null ? SoilObject.ll15_dep : new double[0]; } }
 
         /// <summary>
         /// Air dry soil water content for each soil layer expressed as a depth of water (mm)
@@ -967,7 +970,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm")]
         public double[] AIRDRYmm
-        { get { return SoilObject.air_dry_dep; } }
+        { get { return SoilObject != null ? SoilObject.air_dry_dep : new double[0]; } }
 
 
         //ARRAYS AS FRACTIONS
@@ -979,9 +982,10 @@ namespace Models.Soils
         /// The sat.
         /// </value>
         [XmlIgnore]
+        [Units("mm/mm")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] SAT
-        { get { return SoilObject.sat; } }
+        { get { return SoilObject != null ? SoilObject.sat : new double[0]; } }
 
         /// <summary>
         /// Drained upper limit for each soil layer expressed as a volumetric water content
@@ -990,9 +994,10 @@ namespace Models.Soils
         /// The dul.
         /// </value>
         [XmlIgnore]
+        [Units("mm/mm")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] DUL
-        { get { return SoilObject.dul; } }
+        { get { return SoilObject != null ? SoilObject.dul : new double[0]; } }
 
         /// <summary>
         /// Current soil water content for each soil layer expressed as a volumetric water content
@@ -1001,10 +1006,11 @@ namespace Models.Soils
         /// The sw.
         /// </value>
         [XmlIgnore]
+        [Units("mm/mm")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] SW
             { 
-            get { return SoilObject.sw; }
+            get { return SoilObject != null ? SoilObject.sw : new double[0]; }
             set { SetWater_frac(value); } //TODO: remove this later, have manager scripts directly use SoilWater.SetWater_frac(amount) instead
             }
 
@@ -1015,9 +1021,10 @@ namespace Models.Soils
         /// The l L15.
         /// </value>
         [XmlIgnore]
+        [Units("mm/mm")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] LL15
-        { get { return SoilObject.ll15; } }
+        { get { return SoilObject != null ? SoilObject.ll15 : new double[0]; } }
 
         /// <summary>
         /// Air dry soil water content for each soil layer expressed as a volumetric water content
@@ -1026,9 +1033,10 @@ namespace Models.Soils
         /// The airdry.
         /// </value>
         [XmlIgnore]
+        [Units("mm/mm")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] AIRDRY
-        { get { return SoilObject.air_dry; } }
+        { get { return SoilObject != null ? SoilObject.air_dry : new double[0]; } }
 
         /// <summary>
         /// Depth of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)
@@ -1039,7 +1047,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm")]
         public double[] flow
-        { get { return SoilObject.flow; } }
+        { get { return SoilObject != null ? SoilObject.flow : new double[0]; } }
 
         /// <summary>
         /// Depth of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)
@@ -1050,7 +1058,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm")]
         public double[] flux
-        { get { return SoilObject.flux; } }
+        { get { return SoilObject != null ? SoilObject.flux : new double[0]; } }
 
         /// <summary>
         /// Amount of water moving laterally out of the profile (mm)
@@ -1061,7 +1069,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm")]
         public double[] outflow_lat
-        { get { return SoilObject.outflow_lat; } }
+        { get { return SoilObject != null ? SoilObject.outflow_lat : new double[0] ; } }
 
         //DELTA ARRAY FOR A SOLUTE
 
@@ -1074,7 +1082,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("kg/ha")]
         public double[] flow_no3
-        { get { return SoilObject.GetFlowArrayForASolute("NO3"); } }
+        { get { return SoilObject != null ? SoilObject.GetFlowArrayForASolute("NO3") : new double[0]; } }
 
         /// <summary>
         /// Amount of N leaching as NH4 from each soil layer (kg /ha)
@@ -1085,7 +1093,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("kg/ha")]
         public double[] flow_nh4
-        { get { return SoilObject.GetFlowArrayForASolute("NH4"); } }
+        { get { return SoilObject != null ? SoilObject.GetFlowArrayForASolute("NH4") : new double[0]; } }
 
         /// <summary>
         /// Amount of N leaching as urea from each soil layer (kg /ha)
@@ -1096,7 +1104,7 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("kg/ha")]
         public double[] flow_urea
-        { get { return SoilObject.GetFlowArrayForASolute("urea"); } }
+        { get { return SoilObject != null ? SoilObject.GetFlowArrayForASolute("urea") : new double[0]; } }
 
         #endregion
 
@@ -1604,32 +1612,6 @@ namespace Models.Soils
                     canopy.canopy_height[canopy.NumberOfCrops] = Canopy.Height;
 
                     canopy.NumberOfCrops += 1;     //increment number of crops ready for next array resize in next iteration.
-                }
-
-
-            //foreach crop2 model in the simulation
-            List<IModel> models2 = Apsim.FindAll(paddock, typeof(ICrop2));
-
-            foreach (Model m in models2)
-                {
-                Array.Resize(ref canopy.cover_green, canopy.NumberOfCrops + 1);
-                Array.Resize(ref canopy.cover_tot, canopy.NumberOfCrops + 1);
-                Array.Resize(ref canopy.canopy_height, canopy.NumberOfCrops + 1);
-
-                ICrop2 Crop2 = m as ICrop2;
-                if (Crop2.CanopyProperties != null)
-                    {
-                    canopy.cover_green[canopy.NumberOfCrops] = Crop2.CanopyProperties.CoverGreen;
-                    canopy.cover_tot[canopy.NumberOfCrops] = Crop2.CanopyProperties.CoverTot;
-                    canopy.canopy_height[canopy.NumberOfCrops] = Crop2.CanopyProperties.CanopyHeight;
-                    }
-                else
-                    {
-                    canopy.cover_green[canopy.NumberOfCrops] = 0;
-                    canopy.cover_tot[canopy.NumberOfCrops] = 0;
-                    canopy.canopy_height[canopy.NumberOfCrops] = 0;
-                    }
-                canopy.NumberOfCrops += 1;
                 }
 
             canopy.interception = interception;

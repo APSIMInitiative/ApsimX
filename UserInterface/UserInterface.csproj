@@ -765,6 +765,15 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CarbonFlow.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Solute.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\NFlow.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LinearAfterThresholdFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Evapotranspiration.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\LayerStructure.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\MRSpline.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\OutputLayers.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\WEIRDO.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CERESSoilTemperature.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoluteManager.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Flow.png" />
