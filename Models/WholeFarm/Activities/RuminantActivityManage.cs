@@ -33,8 +33,14 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Maximum number of breeders that can be kept
 		/// </summary>
-		[Description("Maximum number of breeders that can be kept")]
+		[Description("Maximum number of breeders to be kept")]
 		public int MaximumBreedersKept { get; set; }
+
+		/// <summary>
+		/// Minimum number of breeders that can be kept
+		/// </summary>
+		[Description("Minimum number of breeders to be kept")]
+		public int MinimumBreedersKept { get; set; }
 
 		/// <summary>
 		/// Maximum breeder age (months) for culling
@@ -264,7 +270,6 @@ namespace Models.WholeFarm.Activities
 
 				// FEMALES
 				// check for maximum number of breeders remaining after sale and buy/sell
-
 				if (numberFemaleInHerd > MaximumBreedersKept)
 				{
 					// sell breeders
@@ -284,20 +289,20 @@ namespace Models.WholeFarm.Activities
 					if ((foodStore == null) || (sufficientFood))
 					{
 						// remove young females from sale herd to replace breeders (not those sold because too old)
-						foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight))
+						foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Age))
 						{
 							female.SaleFlag = HerdChangeReason.None;
 							numberFemaleInHerd++;
-							if (numberFemaleInHerd >= MaximumBreedersKept) break;
+							if (numberFemaleInHerd > MaximumBreedersKept) break;
 						}
 
 						// if still insufficient buy breeders.
-						if (numberFemaleInHerd < MaximumBreedersKept & sufficientFood)
+						if (numberFemaleInHerd < MinimumBreedersKept & sufficientFood)
 						{
 							int ageOfHeifer = 12;
 							double weightOfHeifer = 260;
 
-							int numberToBuy = Convert.ToInt32((MaximumBreedersKept - numberFemaleInHerd));
+							int numberToBuy = Convert.ToInt32((MinimumBreedersKept - numberFemaleInHerd));
 
 							for (int i = 0; i < numberToBuy; i++)
 							{
