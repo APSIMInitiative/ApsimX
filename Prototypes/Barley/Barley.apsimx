@@ -3771,31 +3771,25 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <Name>Biomass9596</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>C:\ApsimX\Prototypes\Barley\Observations\BarleyObservedData9596.txt</FileName>
+      <FileName>Observations\BarleyObservedData95_96.txt</FileName>
     </Input>
     <Input>
       <Name>Biomass1516</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>Observations\BarleyObservedData_1516.txt</FileName>
+      <FileName>Observations\BarleyObservedData15_16.txt</FileName>
     </Input>
     <Input>
       <Name>Biomass8889</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>Observations\BarleyObservedData_8889.txt</FileName>
+      <FileName>Observations\BarleyObservedData88_89.txt</FileName>
     </Input>
     <Input>
       <Name>Biomass1415</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\Observations\BarleyObservedData_1415.txt' because it is being used by another process.</ErrorMessage>
-      <FileName>Observations\BarleyObservedData_1415.txt</FileName>
-    </Input>
-    <Input>
-      <Name>CPT_Phenology</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage>The specified file does not exist.</ErrorMessage>
-      <FileName>Observations\CPTBarleyPhenology.txt</FileName>
+      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\Observations\BarleyObservedData14_15.txt' because it is being used by another process.</ErrorMessage>
+      <FileName>Observations\BarleyObservedData14_15.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved_9596</Name>
@@ -3831,14 +3825,14 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
-      <Name>PredictedObserved_CPT</Name>
+      <Name>PredictedObserved_1415</Name>
       <Tests>
         <Name>Tests</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Tests>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>DailyReport</PredictedTableName>
-      <ObservedTableName>Biomass9596</ObservedTableName>
+      <ObservedTableName>Biomass1516</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3852,7 +3846,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_bSD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May03</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4542,9 +4536,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Valetta</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -5284,7 +5278,7 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_cSD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May04</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -5855,9 +5849,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Cellar</Cultivar>
+              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -6657,7 +6651,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>CPT</TableName>
+            <TableName>EndTrialReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -6826,7 +6820,7 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_coSD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May03</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7523,9 +7517,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>County</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -8368,7 +8362,7 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_daSD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May03</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -8428,7 +8422,7 @@ namespace Models
           <Name>Clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>2003-05-01T00:00:00</StartDate>
-          <EndDate>2006-11-30T00:00:00</EndDate>
+          <EndDate>2007-11-30T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -8942,71 +8936,6 @@ namespace Models
             <Name>Fertiliser</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
-          <Manager>
-            <Name>Sow_n_Harvest</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Script>
-              <Cultivar>Dash</Cultivar>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-using System.Xml.Serialization;
-        
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant Barley;
-		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
-		
-		[Description("Cultivar")]
-		public string Cultivar { get; set; }
-		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Sown == false)
-			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
-			}
-			
-			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-			{
-				Barley.Harvest();
-				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
-			}
-		}
-	}
-}
-				   ]]></Code>
-          </Manager>
           <Report>
             <Name>DailyReport</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -9134,12 +9063,45 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
           <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
+		}
+	}
+}
+	   ]]></Code>
+          </Manager>
+          <Manager>
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-15</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -9191,39 +9153,6 @@ namespace Models
 	
         
 ]]></Code>
-          </Manager>
-          <Manager>
-            <Name>Harvesting</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Barley;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-			{
-				Barley.Harvest();
-				Barley.EndCrop();
-			}
-		}
-	}
-}
-	   ]]></Code>
           </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
@@ -9982,7 +9911,7 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_doSD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May04</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -10035,7 +9964,7 @@ namespace Models
           <Name>Clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>2004-05-01T00:00:00</StartDate>
-          <EndDate>2008-11-30T00:00:00</EndDate>
+          <EndDate>2007-11-30T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>summaryfile</Name>
@@ -10550,69 +10479,96 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <Manager>
-            <Name>Sow_n_Harvest</Name>
+            <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Doyen</Cultivar>
+              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
+using System.Collections.Generic;
+using System.Text;
 using Models.PMF;
-using APSIM.Shared.Utilities;
+using Models;
 using System.Xml.Serialization;
-        
+using APSIM.Shared.Utilities;
+using System.Data;
+using Models.PMF.Interfaces;
+using Models.SurfaceOM;
+
 namespace Models
 {
 	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
 	public class Script : Model
 	{
 		[Link] Plant Barley;
 		[Link] Clock Clock;
-		[Link] Simulation sim;
-		[Link] Summary Summary;
+		[Link] Zone zone;
+		[Link] Simulation Simulation;
+		[Link] SurfaceOrganicMatter SurfOM;
 		
-		[Description("Cultivar")]
+				
+		[Description("Initial Root Depth")]
+		public double InitialRootDepth { get; set; }
+		[Description("Cultivar name")]
 		public string Cultivar { get; set; }
+		[Description("Sowing Date")]
+		public DateTime SowingDate { get; set; }
 		
-		[XmlIgnore] public bool Sown { get; set; }
-		[XmlIgnore] public bool Harvested { get; set; }
-		[XmlIgnore] public bool EndSet { get; set; }
-		
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			Sown = false;
-			Harvested = false;
-			EndSet = false;
-		}
 		
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Sown == false)
+			if (Clock.Today.Date == SowingDate)
 			{
-				Barley.Sow(population: 280, cultivar: Cultivar, depth: 40, rowSpacing: 150, budNumber: 1);
-				Sown = true;
+				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
+				
 			}
+					
 			
+		}
+	}
+}
+				
+	
+        
+]]></Code>
+          </Manager>
+          <Manager>
+            <Name>Harvesting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Script />
+            <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Barley;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
 			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
 			{
 				Barley.Harvest();
 				Barley.EndCrop();
-				Harvested = true;
-				Summary.WriteMessage(this, "Flowering reached so setting end date to stop simulation");
-			}
-			
-			if ((Harvested == true) && (EndSet == false))
-			{
-				sim.Set("Clock.EndDate", Clock.Today.AddDays(1));
-				EndSet = true;
 			}
 		}
 	}
 }
-				   ]]></Code>
+	   ]]></Code>
           </Manager>
           <Report>
             <Name>DailyReport</Name>
@@ -10740,98 +10696,6 @@ namespace Models
             <Name>SoluteManager</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </SoluteManager>
-          <Manager>
-            <Name>Sowing</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Script>
-              <SowingDate>2004-05-28</SowingDate>
-              <InitialRootDepth>40</InitialRootDepth>
-              <Cultivar>Doyen</Cultivar>
-            </Script>
-            <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-using System.Data;
-using Models.PMF.Interfaces;
-using Models.SurfaceOM;
-
-namespace Models
-{
-	[Serializable] 
-	//[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		[Link] Plant Barley;
-		[Link] Clock Clock;
-		[Link] Zone zone;
-		[Link] Simulation Simulation;
-		[Link] SurfaceOrganicMatter SurfOM;
-		
-				
-		[Description("Initial Root Depth")]
-		public double InitialRootDepth { get; set; }
-		[Description("Cultivar name")]
-		public string Cultivar { get; set; }
-		[Description("Sowing Date")]
-		public DateTime SowingDate { get; set; }
-		
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Clock.Today.Date == SowingDate)
-			{
-				Barley.Sow(cultivar: Cultivar, population: 9, depth: InitialRootDepth, rowSpacing: 500);
-				
-			}
-					
-			
-		}
-	}
-}
-				
-	
-        
-]]></Code>
-          </Manager>
-          <Manager>
-            <Name>Harvesting</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Barley;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-			{
-				Barley.Harvest();
-				Barley.EndCrop();
-			}
-		}
-	}
-}
-	   ]]></Code>
-          </Manager>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
@@ -11420,7 +11284,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>CPT</TableName>
+            <TableName>EndTrialReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -11589,7 +11453,7 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_omSD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May03</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -12279,9 +12143,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Omaka</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13124,7 +12988,7 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_opSD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May03</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13861,9 +13725,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Optic</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -14673,7 +14537,7 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_pySD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May05</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -15389,9 +15253,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2005-05-27</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Pyramid</Cultivar>
+              <SowingDate>2005-05-27</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -16201,7 +16065,7 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_shSD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May03</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -16905,9 +16769,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Sherwood</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -17750,7 +17614,7 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_taSD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May03</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -18454,9 +18318,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Tavern</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -19299,7 +19163,7 @@ namespace Models
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_voSD</Name>
+          <Name>_</Name>
           <Factor>
             <Name>May03</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -19996,9 +19860,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Vortex</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -20842,7 +20706,7 @@ namespace Models
   <Folder>
     <Name>New Zealand RainShelter Trials</Name>
     <Experiment>
-      <Name>RS_Barley_9596</Name>
+      <Name>RS1995_96</Name>
       <Memo>
         <Name>Experiment</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -20866,7 +20730,7 @@ This is a water response trial conducted inside and outside the rain shelter at 
         <Factor>
           <Name>_</Name>
           <Factor>
-            <Name>Rainfed_150ND3</Name>
+            <Name>Rainfed</Name>
             <Water>
               <Name>Water</Name>
               <SoilCrop>
@@ -21021,7 +20885,7 @@ This is a water response trial conducted inside and outside the rain shelter at 
             </Specifications>
           </Factor>
           <Factor>
-            <Name>Fullirrigation_150NE3</Name>
+            <Name>Fullirrigation</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -21294,7 +21158,7 @@ namespace Models
             </Specifications>
           </Factor>
           <Factor>
-            <Name>Earlydrought_150NB3</Name>
+            <Name>Earlydrought</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -21567,7 +21431,7 @@ namespace Models
             </Specifications>
           </Factor>
           <Factor>
-            <Name>Latedrought_150NC3</Name>
+            <Name>Latedrought</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -21840,7 +21704,7 @@ namespace Models
             </Specifications>
           </Factor>
           <Factor>
-            <Name>Fulldrought_150NA3</Name>
+            <Name>Fulldrought</Name>
             <Operations>
               <Name>IrrigationEvents</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -24478,7 +24342,7 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Experiment>
     <Experiment>
-      <Name>RS_Barley_8889</Name>
+      <Name>RS1988_89</Name>
       <Memo>
         <Name>Memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -29763,7 +29627,7 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Experiment>
     <Experiment>
-      <Name>RS_Barley_1415</Name>
+      <Name>RS2014_15</Name>
       <Memo>
         <Name>Experiment</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -29787,7 +29651,7 @@ The treatments were monitored for:
       <Factors>
         <Name>Factors</Name>
         <Factor>
-          <Name>_Cv</Name>
+          <Name>_</Name>
           <Factor>
             <Name>Dash</Name>
             <Operations>
@@ -29855,7 +29719,7 @@ The treatments were monitored for:
               </Operation>
             </Operations>
             <Operations>
-              <Name>Mid</Name>
+              <Name>Med</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2014-11-18</Date>
@@ -30054,7 +29918,7 @@ The treatments were monitored for:
               </Operation>
             </Operations>
             <Operations>
-              <Name>Mid</Name>
+              <Name>Med</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Operation>
                 <Date>2014-11-18</Date>
@@ -30695,8 +30559,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <InitialRootDepth>40</InitialRootDepth>
                 <CropToSow>Dash</CropToSow>
+                <InitialRootDepth>40</InitialRootDepth>
                 <SowingDate>2014-10-14</SowingDate>
               </Script>
               <Code><![CDATA[using System;
@@ -32673,9 +32537,9 @@ namespace Models
   <Folder>
     <Name>New Zealand Field Trials</Name>
     <Folder>
-      <Name>Uni_Block_15_16</Name>
+      <Name>UniBlock15_16</Name>
       <Experiment>
-        <Name>Barley15_16</Name>
+        <Name>Field2015_16</Name>
         <Memo>
           <Name>Experiment</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -32693,7 +32557,7 @@ This is the mineral nitrogen (N) validation trial conducted at the Lincoln Unive
           <Factor>
             <Name>_</Name>
             <Factor>
-              <Name>ZeroN</Name>
+              <Name>0N</Name>
               <Operations>
                 <Name>FertiliserEvents</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -34078,9 +33942,9 @@ namespace Models
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
-      <Name>MCPD_09_10</Name>
+      <Name>MCPD09_10</Name>
       <Experiment>
-        <Name>Barley09</Name>
+        <Name>MCPD2009_10</Name>
         <Memo>
           <Name>Experiment</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -34755,9 +34619,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2009-10-01</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
+                  <SowingDate>2009-10-01</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -35611,7 +35475,7 @@ namespace Models
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
-      <Name>MCPD_10_11</Name>
+      <Name>MCPD10_11</Name>
       <Experiment>
         <Name>Barley10_11</Name>
         <Memo>
@@ -36173,9 +36037,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2010-08-26</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
+                  <SowingDate>2010-08-26</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -36980,7 +36844,7 @@ namespace Models
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
-      <Name>MCPD_11_12</Name>
+      <Name>MCPD11_12</Name>
       <Experiment>
         <Name>Barley11_12</Name>
         <Memo>
@@ -37585,9 +37449,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2011-07-13</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
+                  <SowingDate>2011-07-13</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
