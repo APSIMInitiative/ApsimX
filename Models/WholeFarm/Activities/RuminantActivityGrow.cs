@@ -195,8 +195,8 @@ namespace Models.WholeFarm.Activities
 						// Crude protein required generally 130g per kg of digestable feed.
 						double crudeProteinRequired = ind.BreedParams.ProteinCoefficient * ind.DietDryMatterDigestibility / 100;
 
-						// adjust for efficiency of use of protein, 90% degradable
-						double crudeProteinSupply = (ind.PercentNOfIntake * 62.5) * 0.9;
+						// adjust for efficiency of use of protein, (default 90%) degradable. now user param.
+						double crudeProteinSupply = (ind.PercentNOfIntake * 62.5) * ind.BreedParams.ProteinDegradability;
 						// This was proteinconcentration * 0.9
 
 						// prevent future divide by zero issues.

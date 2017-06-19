@@ -185,6 +185,13 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[Description("Protein requirement coeff (g/kg feed)")]
 		public double ProteinCoefficient { get; set; }
+
+		/// <summary>
+		/// Protein degradability
+		/// </summary>
+		[Description("Protein degradability")]
+		public double ProteinDegradability { get; set; }
+										   
 		/// <summary>
 		/// Weight(kg) of 1 animal equivalent(steer)
 		/// </summary>
