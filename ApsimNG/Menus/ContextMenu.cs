@@ -480,7 +480,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Include in documentation")]
+        [ContextMenu(MenuName = "Include in documentation", IsToggle=true)]
         public void IncludeInDocumentation(object sender, EventArgs e)
         {
             try
@@ -512,7 +512,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Show page of graphs in documentation",
+        [ContextMenu(MenuName = "Show page of graphs in documentation", IsToggle =true,
                      AppliesTo = new Type[] { typeof(Folder) })]
         public void ShowPageOfGraphs(object sender, EventArgs e)
         {
