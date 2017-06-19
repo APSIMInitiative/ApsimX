@@ -18,9 +18,6 @@ namespace Models.WholeFarm.Resources
     [ValidParent(ParentType = typeof(HumanFoodStore))]
     public class HumanFoodStoreType : WFModel, IResourceType, IResourceWithTransactionType
     {
-        //[Link]
-        //ISummary Summary = null;
-
         /// <summary>
         /// Dry Matter (%)
         /// </summary>
@@ -42,6 +39,7 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Current store nitrogen (%)
 		/// </summary>
+		[XmlIgnore]
 		[Description("Current store nitrogen (%)")]
 		public double CurrentStoreNitrogen { get; set; }
 
