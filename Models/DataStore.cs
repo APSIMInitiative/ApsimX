@@ -866,16 +866,15 @@ namespace Models
                                 names.Add(column.Name);
                                 types.Add(firstNonBlankValue.GetType());
                                 if (column.Units != null)
-                                //string unitString;
-                                //if (table.colUnitsMap.TryGetValue(column.Name, out unitString))
                                 {
-                                    string sql = string.Format("INSERT INTO " + UnitsTableName + " (SimulationID, TableName, ColumnHeading, Units) " +
-                                                               "VALUES ({0}, {1}, {2}, {3})",
-                                                               new object[] { GetSimulationID(table.SimulationName),
-                                                      "'" + table.TableName + "'",
-                                                      "'" + column.Name + "'",
-                                                      "'" + column.Units + "'"});
-                                    Connection.ExecuteNonQuery(sql);
+                                    string sql = "INSERT INTO " + UnitsTableName + " (SimulationID, TableName, ColumnHeading, Units) " +
+                                                               "VALUES (?, ?, ?, ?)";
+                                    IntPtr statement = Connection.Prepare(sql);
+                                    Connection.BindParametersAndRunQuery(statement, new object[] {
+                                                      GetSimulationID(table.SimulationName),
+                                                      table.TableName,
+                                                      column.Name,
+                                                      column.Units});
                                 }
                             }
                         }

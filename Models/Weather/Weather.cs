@@ -193,7 +193,7 @@ namespace Models
         /// Gets or sets the maximum temperature (oC)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-        [Units("oC")]
+        [Units("°C")]
         [XmlIgnore]
         public double MaxT
         {
@@ -213,7 +213,7 @@ namespace Models
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         [XmlIgnore]
-        [Units("oC")]
+        [Units("°C")]
         public double MinT
         {
             get
@@ -230,7 +230,7 @@ namespace Models
         /// Daily Mean temperature (oC)
         /// </summary>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-        [Units("oC")]
+        [Units("°C")]
         [XmlIgnore]
         public double MeanT { get { return (MaxT + MinT) / 2; } }
 
@@ -393,7 +393,7 @@ namespace Models
         /// <summary>
         /// Gets the average temperature
         /// </summary>
-        [Units("oC")]
+        [Units("°C")]
         public double Tav
         {
             get
