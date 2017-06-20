@@ -4540,9 +4540,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
-              <Cultivar>Valetta</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Valetta</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -5838,9 +5838,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2004-05-28</SowingDate>
-              <Cultivar>Cellar</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Cellar</Cultivar>
+              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -7506,9 +7506,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
-              <Cultivar>County</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>County</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -9088,9 +9088,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
-              <Cultivar>Dash</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Dash</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -10471,9 +10471,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2004-05-28</SowingDate>
-              <Cultivar>Doyen</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Doyen</Cultivar>
+              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -12132,9 +12132,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
-              <Cultivar>Omaka</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Omaka</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13714,9 +13714,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
-              <Cultivar>Optic</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Optic</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -15242,9 +15242,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2005-05-27</SowingDate>
-              <Cultivar>Pyramid</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Pyramid</Cultivar>
+              <SowingDate>2005-05-27</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -16758,9 +16758,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
-              <Cultivar>Sherwood</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Sherwood</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -18307,9 +18307,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
-              <Cultivar>Tavern</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Tavern</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -19849,9 +19849,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
-              <Cultivar>Vortex</Cultivar>
               <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Vortex</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -30645,8 +30645,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <CropToSow>Dash</CropToSow>
                 <InitialRootDepth>40</InitialRootDepth>
+                <CropToSow>Dash</CropToSow>
                 <SowingDate>2014-10-14</SowingDate>
               </Script>
               <Code><![CDATA[using System;
@@ -41287,9 +41287,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2010-08-26</SowingDate>
-                  <Cultivar>Dash</Cultivar>
                   <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Dash</Cultivar>
+                  <SowingDate>2010-08-26</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -42692,9 +42692,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2011-07-13</SowingDate>
-                  <Cultivar>Dash</Cultivar>
                   <InitialRootDepth>40</InitialRootDepth>
+                  <Cultivar>Dash</Cultivar>
+                  <SowingDate>2011-07-13</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
