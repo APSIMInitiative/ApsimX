@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Training</Name>
   <Folder>
     <Name>Soils</Name>
@@ -9,7 +9,6 @@
         <Name>Water</Name>
         <SoilCrop>
           <Name>WheatSoil</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LL>
             <double>0.22</double>
             <double>0.22</double>
@@ -40,7 +39,6 @@
         </SoilCrop>
         <SoilCrop>
           <Name>BarleySoil</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LL>
             <double>0.22</double>
             <double>0.22</double>
@@ -69,7 +67,6 @@
             <double>1</double>
           </XF>
         </SoilCrop>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -127,7 +124,7 @@
       </Water>
       <SoilWater>
         <Name>SoilWater</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <residueinterception>0</residueinterception>
         <SummerDate>1-Nov</SummerDate>
         <SummerU>6</SummerU>
         <SummerCona>3.5</SummerCona>
@@ -162,18 +159,15 @@
           <double>0.3</double>
           <double>0.3</double>
         </SWCON>
-        <residueinterception>0</residueinterception>
       </SoilWater>
       <InitialWater>
         <Name>InitialWater</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <PercentMethod>EvenlyDistributed</PercentMethod>
         <FractionFull>1</FractionFull>
         <DepthWetSoil>NaN</DepthWetSoil>
       </InitialWater>
       <Sample>
         <Name>InitialN</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -263,7 +257,6 @@
       </Sample>
       <SoilNitrogen>
         <Name>SoilNitrogen</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <fom_type>
           <string>default</string>
           <string>manure</string>
@@ -307,7 +300,6 @@
       </SoilNitrogen>
       <SoilOrganicMatter>
         <Name>SoilOrganicMatter</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RootCN>40</RootCN>
         <RootWt>1000</RootWt>
         <SoilCN>12</SoilCN>
@@ -362,7 +354,6 @@
       </SoilOrganicMatter>
       <Analysis>
         <Name>Analysis</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -384,11 +375,6 @@
         <PHUnits>Water</PHUnits>
         <BoronUnits>HotWater</BoronUnits>
       </Analysis>
-      <CERESSoilTemperature>
-        <Name>CERESSoilTemperature</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </CERESSoilTemperature>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
       <RecordNumber>50</RecordNumber>
       <ASCOrder>Vertosol</ASCOrder>
       <ASCSubOrder>Black</ASCSubOrder>
@@ -412,7 +398,6 @@
         <Name>Water</Name>
         <SoilCrop>
           <Name>WheatSoil</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LL>
             <double>0.03</double>
             <double>0.041</double>
@@ -438,7 +423,6 @@
             <double>1</double>
           </XF>
         </SoilCrop>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>100</double>
           <double>200</double>
@@ -490,7 +474,7 @@
       </Water>
       <SoilWater>
         <Name>SoilWater</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <residueinterception>0</residueinterception>
         <SummerDate>1-Nov</SummerDate>
         <SummerU>6</SummerU>
         <SummerCona>3.5</SummerCona>
@@ -523,18 +507,15 @@
           <double>0.5</double>
           <double>0.5</double>
         </SWCON>
-        <residueinterception>0</residueinterception>
       </SoilWater>
       <InitialWater>
         <Name>InitialWater</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <PercentMethod>EvenlyDistributed</PercentMethod>
         <FractionFull>1</FractionFull>
         <DepthWetSoil>NaN</DepthWetSoil>
       </InitialWater>
       <Sample>
         <Name>InitialN</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -624,7 +605,6 @@
       </Sample>
       <SoilNitrogen>
         <Name>SoilNitrogen</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <fom_type>
           <string>default</string>
           <string>manure</string>
@@ -668,7 +648,6 @@
       </SoilNitrogen>
       <SoilOrganicMatter>
         <Name>SoilOrganicMatter</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RootCN>40</RootCN>
         <RootWt>1000</RootWt>
         <SoilCN>12</SoilCN>
@@ -718,7 +697,6 @@
       </SoilOrganicMatter>
       <Analysis>
         <Name>Analysis</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>100</double>
           <double>200</double>
@@ -738,11 +716,6 @@
         <PHUnits>Water</PHUnits>
         <BoronUnits>HotWater</BoronUnits>
       </Analysis>
-      <CERESSoilTemperature>
-        <Name>CERESSoilTemperature</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-      </CERESSoilTemperature>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
       <RecordNumber>737</RecordNumber>
       <ASCOrder />
       <ASCSubOrder />
@@ -760,8 +733,6 @@
       <DataSource>DAFWA_A. Stuart-Street _ NEAR project Yield Prophet</DataSource>
       <Comments>YP11 - reticulite subsoil (coarse with sand seams)-estimated LL.  12/05/2010 Zvi Hochman modified values for kl(wheat), salb, DiffusConst, DiffusSlope, CN2Bare at request of DAFWA</Comments>
     </Soil>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <Folder>
     <Name>Completed Simulations</Name>
@@ -771,30 +742,24 @@
         <Name>Clay Fallow</Name>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1989-01-01T00:00:00</StartDate>
           <EndDate>1989-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
         </Weather>
         <Zone>
           <Name>Field</Name>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ExperimentFactorNames />
-            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Weather].Rain</string>
-              <string>sum([Soil].SoilWater.ESW)</string>
+              <string>[Soil].SoilWater.ESW</string>
               <string>[Soil].SoilWater.Es</string>
               <string>[Soil].SoilWater.Runoff</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -809,14 +774,11 @@
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -850,19 +812,22 @@
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Soil>
             <Name>Heavy Clay</Name>
@@ -870,7 +835,6 @@
               <Name>Water</Name>
               <SoilCrop>
                 <Name>WheatSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.22</double>
                   <double>0.22</double>
@@ -901,7 +865,6 @@
               </SoilCrop>
               <SoilCrop>
                 <Name>BarleySoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.22</double>
                   <double>0.22</double>
@@ -930,7 +893,6 @@
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -988,7 +950,7 @@
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -1023,11 +985,9 @@
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
-              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -1071,14 +1031,12 @@
             </SoilNitrogen>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PercentMethod>FilledFromTop</PercentMethod>
               <FractionFull>0.1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>InitialN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>1800</double>
                 <double>999999</double>
@@ -1114,7 +1072,6 @@
             </Sample>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -1169,7 +1126,6 @@
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -1191,11 +1147,6 @@
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>50</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -1213,61 +1164,11 @@
             <DataSource>CSIRO Sustainable Ecosystems, Toowoomba</DataSource>
             <Comments>oc and ph estimated</Comments>
           </Soil>
-          <SoluteManager>
-            <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
         <Graph>
           <Name>ESW</Name>
-          <Series>
-            <Name>Series1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.ESW</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Series2</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Bar</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Weather.Rain</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title>Date</Title>
@@ -1292,56 +1193,52 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>Runoff</Name>
           <Series>
-            <Name>Series1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Title>Series1</Title>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.Runoff</YFieldName>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.ESW</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
-            <CumulativeX>false</CumulativeX>
+            <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Name>Series2</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Title>Series2</Title>
             <Type>Bar</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
             <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Weather.Rain</YFieldName>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Weather.Rain</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Runoff</Name>
           <Axis>
             <Type>Bottom</Type>
             <Title>Date</Title>
@@ -1366,39 +1263,75 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <Series>
+            <Title>Series1</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.Runoff</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>true</Cumulative>
+          </Series>
+          <Series>
+            <Title>Series2</Title>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Weather.Rain</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
         </Graph>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <Simulation>
         <Name>Sand Fallow</Name>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1989-01-01T00:00:00</StartDate>
           <EndDate>1989-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
         </Weather>
         <Zone>
           <Name>Field</Name>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ExperimentFactorNames />
-            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Weather].Rain</string>
-              <string>sum([Soil].SoilWater.ESW)</string>
+              <string>[Soil].SoilWater.ESW</string>
               <string>[Soil].SoilWater.Es</string>
               <string>[Soil].SoilWater.Runoff</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -1413,14 +1346,11 @@
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -1454,19 +1384,22 @@
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Soil>
             <Name>Sand</Name>
@@ -1474,7 +1407,6 @@
               <Name>Water</Name>
               <SoilCrop>
                 <Name>WheatSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.03</double>
                   <double>0.041</double>
@@ -1500,7 +1432,6 @@
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -1552,7 +1483,7 @@
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -1585,11 +1516,9 @@
                 <double>0.5</double>
                 <double>0.5</double>
               </SWCON>
-              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -1633,14 +1562,12 @@
             </SoilNitrogen>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PercentMethod>FilledFromTop</PercentMethod>
               <FractionFull>0.1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>InitialN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>1800</double>
                 <double>999999</double>
@@ -1676,7 +1603,6 @@
             </Sample>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -1726,7 +1652,6 @@
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>100</double>
                 <double>200</double>
@@ -1746,11 +1671,6 @@
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>737</RecordNumber>
             <ASCOrder />
             <ASCSubOrder />
@@ -1768,61 +1688,11 @@
             <DataSource>DAFWA_A. Stuart-Street _ NEAR project Yield Prophet</DataSource>
             <Comments>YP11 - reticulite subsoil (coarse with sand seams)-estimated LL.  12/05/2010 Zvi Hochman modified values for kl(wheat), salb, DiffusConst, DiffusSlope, CN2Bare at request of DAFWA</Comments>
           </Soil>
-          <SoluteManager>
-            <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
         <Graph>
           <Name>ESW</Name>
-          <Series>
-            <Name>Series1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.ESW</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Series2</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Bar</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Weather.Rain</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title>Date</Title>
@@ -1847,56 +1717,52 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>Runoff</Name>
           <Series>
-            <Name>Series1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Title>Series1</Title>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.SoilWater.Runoff</YFieldName>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.ESW</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>true</Cumulative>
-            <CumulativeX>false</CumulativeX>
+            <Cumulative>false</Cumulative>
           </Series>
           <Series>
-            <Name>Series2</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Title>Series2</Title>
             <Type>Bar</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
             <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Weather.Rain</YFieldName>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Weather.Rain</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
             <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Runoff</Name>
           <Axis>
             <Type>Bottom</Type>
             <Title>Date</Title>
@@ -1921,58 +1787,55 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <Series>
+            <Title>Series1</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Soil.SoilWater.Runoff</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>true</Cumulative>
+          </Series>
+          <Series>
+            <Title>Series2</Title>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Weather.Rain</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>false</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
         </Graph>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Runoff</Name>
-        <Series>
-          <Name>Series1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.Runoff</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>true</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series2</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Bar</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Weather.Rain</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -1997,17 +1860,54 @@
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
+        <Series>
+          <Title>Series1</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Soil.SoilWater.Runoff</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>true</Cumulative>
+        </Series>
+        <Series>
+          <Title>Series2</Title>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Weather.Rain</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
       </Graph>
       <DataStore>
         <Name>DataStore</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <AutoExport>false</AutoExport>
-        <MaximumResultsPerPage>0</MaximumResultsPerPage>
       </DataStore>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
       <Name>Exercise 2</Name>
@@ -2015,30 +1915,24 @@
         <Name>Clay Fallow</Name>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1989-01-01T00:00:00</StartDate>
           <EndDate>1989-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
         </Weather>
         <Zone>
           <Name>Field</Name>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ExperimentFactorNames />
-            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Weather].Rain</string>
-              <string>sum([Soil].SoilWater.ESW)</string>
+              <string>[Soil].SoilWater.ESW</string>
               <string>[Soil].SoilWater.Es</string>
               <string>[Soil].SoilWater.Runoff</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -2053,14 +1947,11 @@
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -2094,19 +1985,22 @@
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Soil>
             <Name>Heavy Clay</Name>
@@ -2114,7 +2008,6 @@
               <Name>Water</Name>
               <SoilCrop>
                 <Name>WheatSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.22</double>
                   <double>0.22</double>
@@ -2145,7 +2038,6 @@
               </SoilCrop>
               <SoilCrop>
                 <Name>BarleySoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.22</double>
                   <double>0.22</double>
@@ -2174,7 +2066,6 @@
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -2232,7 +2123,7 @@
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -2267,11 +2158,9 @@
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
-              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -2315,14 +2204,12 @@
             </SoilNitrogen>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PercentMethod>FilledFromTop</PercentMethod>
               <FractionFull>0.1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>InitialN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>1800</double>
                 <double>999999</double>
@@ -2358,7 +2245,6 @@
             </Sample>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -2413,7 +2299,6 @@
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -2435,11 +2320,6 @@
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>50</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -2457,61 +2337,11 @@
             <DataSource>CSIRO Sustainable Ecosystems, Toowoomba</DataSource>
             <Comments>oc and ph estimated</Comments>
           </Soil>
-          <SoluteManager>
-            <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
         <Graph>
           <Name>SurfaceOrganicMatter Cover</Name>
-          <Series>
-            <Name>Series1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SurfaceOrganicMatter.Cover</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Series2</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Bar</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Weather.Rain</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title>Date</Title>
@@ -2536,45 +2366,79 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <Series>
+            <Title>Series1</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>SurfaceOrganicMatter.Cover</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Series2</Title>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Weather.Rain</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
         </Graph>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <DataStore>
         <Name>DataStore</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <AutoExport>false</AutoExport>
-        <MaximumResultsPerPage>0</MaximumResultsPerPage>
       </DataStore>
       <Simulation>
         <Name>Clay Residue</Name>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1989-01-01T00:00:00</StartDate>
           <EndDate>1989-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
         </Weather>
         <Zone>
           <Name>Field</Name>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ExperimentFactorNames />
-            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Weather].Rain</string>
-              <string>sum([Soil].SoilWater.ESW)</string>
+              <string>[Soil].SoilWater.ESW</string>
               <string>[Soil].SoilWater.Es</string>
               <string>[Soil].SoilWater.Runoff</string>
               <string>[Soil].SoilWater.Drainage</string>
@@ -2589,14 +2453,11 @@
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -2630,19 +2491,22 @@
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Soil>
             <Name>Heavy Clay</Name>
@@ -2650,7 +2514,6 @@
               <Name>Water</Name>
               <SoilCrop>
                 <Name>WheatSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.22</double>
                   <double>0.22</double>
@@ -2681,7 +2544,6 @@
               </SoilCrop>
               <SoilCrop>
                 <Name>BarleySoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.22</double>
                   <double>0.22</double>
@@ -2710,7 +2572,6 @@
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -2768,7 +2629,7 @@
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -2803,11 +2664,9 @@
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
-              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -2851,14 +2710,12 @@
             </SoilNitrogen>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PercentMethod>FilledFromTop</PercentMethod>
               <FractionFull>0.1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>InitialN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>1800</double>
                 <double>999999</double>
@@ -2894,7 +2751,6 @@
             </Sample>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -2949,7 +2805,6 @@
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -2971,11 +2826,6 @@
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>50</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -2993,61 +2843,11 @@
             <DataSource>CSIRO Sustainable Ecosystems, Toowoomba</DataSource>
             <Comments>oc and ph estimated</Comments>
           </Soil>
-          <SoluteManager>
-            <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
         <Graph>
           <Name>SurfaceOrganicMatter Cover</Name>
-          <Series>
-            <Name>Series1</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SurfaceOrganicMatter.Cover</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Series2</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Bar</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Right</YAxis>
-            <ColourArgb>-65536</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Weather.Rain</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title>Date</Title>
@@ -3072,58 +2872,55 @@
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <Series>
+            <Title>Series1</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>SurfaceOrganicMatter.Cover</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
+          <Series>
+            <Title>Series2</Title>
+            <Type>Bar</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Right</YAxis>
+            <ColourArgb>-65536</ColourArgb>
+            <Marker>None</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Weather.Rain</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
         </Graph>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>SurfaceOrganicMatter Cover</Name>
-        <Series>
-          <Name>Series1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SurfaceOrganicMatter.Cover</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series2</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Bar</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Weather.Rain</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -3148,56 +2945,52 @@
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>ESW</Name>
         <Series>
-          <Name>Series1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Title>Series1</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.ESW</YFieldName>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>SurfaceOrganicMatter.Cover</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Title>Series2</Title>
           <Type>Bar</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
           <ColourArgb>-65536</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Weather.Rain</YFieldName>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Weather.Rain</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>ESW</Name>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -3222,11 +3015,50 @@
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
+        <Series>
+          <Title>Series1</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Soil.SoilWater.ESW</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Series2</Title>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Weather.Rain</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
       </Graph>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
       <Name>Exercise 3</Name>
@@ -3234,31 +3066,25 @@
         <Name>Nitrogen Cycle</Name>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1989-01-01T00:00:00</StartDate>
           <EndDate>1989-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
         </Weather>
         <Zone>
           <Name>Field</Name>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ExperimentFactorNames />
-            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>[Weather].Rain</string>
               <string>[Soil].SoilWater.Drainage</string>
-              <string>sum([Soil].SoilWater.ESW)</string>
+              <string>[Soil].SoilWater.ESW</string>
               <string>sum([Soil].SoilNitrogen.NO3) as NO3Total</string>
               <string>sum([Soil].SoilNitrogen.NH4) as NH4Total</string>
               <string>sum([Soil].SoilNitrogen.Denitrification) as Denitrification</string>
@@ -3269,14 +3095,11 @@
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -3310,19 +3133,22 @@
           </SurfaceOrganicMatter>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Soil>
             <Name>Heavy Clay</Name>
@@ -3330,7 +3156,6 @@
               <Name>Water</Name>
               <SoilCrop>
                 <Name>SoilCrop</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.22</double>
                   <double>0.22</double>
@@ -3361,7 +3186,6 @@
               </SoilCrop>
               <SoilCrop>
                 <Name>SoilCrop</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.22</double>
                   <double>0.22</double>
@@ -3390,7 +3214,6 @@
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -3448,7 +3271,7 @@
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>6</SummerU>
               <SummerCona>3.5</SummerCona>
@@ -3483,11 +3306,9 @@
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
-              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -3531,14 +3352,12 @@
             </SoilNitrogen>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>0.5</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>InitialN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>1800</double>
                 <double>999999</double>
@@ -3574,7 +3393,6 @@
             </Sample>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -3629,7 +3447,6 @@
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -3651,11 +3468,6 @@
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>50</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -3673,69 +3485,18 @@
             <DataSource>CSIRO Sustainable Ecosystems, Toowoomba</DataSource>
             <Comments>oc and ph estimated</Comments>
           </Soil>
-          <SoluteManager>
-            <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <DataStore>
         <Name>DataStore</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <AutoExport>false</AutoExport>
-        <MaximumResultsPerPage>0</MaximumResultsPerPage>
       </DataStore>
       <Graph>
         <Name>Nitrogen</Name>
-        <Series>
-          <Name>Series1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>NO3Total</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series2</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>NH4Total</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -3760,100 +3521,52 @@
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>Denitrification</Name>
         <Series>
-          <Name>Series1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Bar</Type>
+          <Title>Series1</Title>
+          <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Weather.Rain</YFieldName>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>NO3Total</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
         </Series>
         <Series>
-          <Name>Series2</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Title>Series2</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
           <ColourArgb>-65536</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Denitrification</YFieldName>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>NH4Total</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
         </Series>
-        <Series>
-          <Name>Series3</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.SoilWater.ESW</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series4</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16744384</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>None</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>NO3Total</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Denitrification</Name>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -3878,11 +3591,90 @@
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
+        <Series>
+          <Title>Series1</Title>
+          <Type>Bar</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Weather.Rain</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Series2</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Right</YAxis>
+          <ColourArgb>-65536</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Denitrification</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Series3</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Soil.SoilWater.ESW</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
+        <Series>
+          <Title>Series4</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16744384</ColourArgb>
+          <Marker>None</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>NO3Total</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>false</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
       </Graph>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
       <Name>Exercise 4</Name>
@@ -3890,26 +3682,20 @@
         <Name>0N</Name>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1900-01-01T00:00:00</StartDate>
           <EndDate>2000-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
         </Weather>
         <Zone>
           <Name>Field</Name>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ExperimentFactorNames />
-            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Wheat.Zadok.Stage</string>
@@ -3931,7 +3717,6 @@
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <Soil>
             <Name>Soil</Name>
@@ -3939,7 +3724,6 @@
               <Name>Water</Name>
               <SoilCrop>
                 <Name>WheatSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.261</double>
                   <double>0.248</double>
@@ -3968,7 +3752,6 @@
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4035,7 +3818,7 @@
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -4070,11 +3853,9 @@
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
-              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -4118,7 +3899,6 @@
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -4173,7 +3953,6 @@
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4197,14 +3976,12 @@
             </Analysis>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>InitialN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4292,11 +4069,6 @@
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -4317,10 +4089,8 @@
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -4354,30 +4124,31 @@
           </SurfaceOrganicMatter>
           <Plant15>
             <Name>Wheat</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
             <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
           </Plant15>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Manager>
             <Name>SowingFertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <Amount>0</Amount>
               <CropName>wheat</CropName>
@@ -4418,7 +4189,6 @@ namespace Models
           </Manager>
           <Manager>
             <Name>SowingRule</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <StartDate>1-may</StartDate>
               <EndDate>10-jul</EndDate>
@@ -4495,39 +4265,12 @@ namespace Models
 }
 ]]></Code>
           </Manager>
-          <SoluteManager>
-            <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
         <Graph>
           <Name>Wheat Yield Time Series</Name>
-          <Series>
-            <Name>Wheat Yield</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Grain.Yield</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Title>Time Series of Wheat Yield from 1900 to 2000</Title>
           <Axis>
             <Type>Bottom</Type>
             <Title>Date</Title>
@@ -4544,41 +4287,55 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <Series>
+            <Title>Wheat Yield</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Wheat.Grain.Yield</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
         </Graph>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <DataStore>
         <Name>DataStore</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <AutoExport>false</AutoExport>
-        <MaximumResultsPerPage>0</MaximumResultsPerPage>
       </DataStore>
       <Simulation>
         <Name>40N</Name>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1900-01-01T00:00:00</StartDate>
           <EndDate>2000-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
         </Weather>
         <Zone>
           <Name>Field</Name>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ExperimentFactorNames />
-            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Wheat.Zadok.Stage</string>
@@ -4600,7 +4357,6 @@ namespace Models
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <Soil>
             <Name>Soil</Name>
@@ -4608,7 +4364,6 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>WheatSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.261</double>
                   <double>0.248</double>
@@ -4637,7 +4392,6 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4704,7 +4458,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -4739,11 +4493,9 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
-              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -4787,7 +4539,6 @@ namespace Models
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -4842,7 +4593,6 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4866,14 +4616,12 @@ namespace Models
             </Analysis>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>InitialN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -4961,11 +4709,6 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -4986,10 +4729,8 @@ namespace Models
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -5023,30 +4764,31 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant15>
             <Name>Wheat</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
             <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
           </Plant15>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Manager>
             <Name>SowingFertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <Amount>40</Amount>
               <CropName>wheat</CropName>
@@ -5087,7 +4829,6 @@ namespace Models
           </Manager>
           <Manager>
             <Name>SowingRule</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <StartDate>1-may</StartDate>
               <EndDate>10-jul</EndDate>
@@ -5164,39 +4905,12 @@ namespace Models
 }
 ]]></Code>
           </Manager>
-          <SoluteManager>
-            <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
         <Graph>
           <Name>Wheat Yield Time Series</Name>
-          <Series>
-            <Name>Wheat Yield</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Grain.Yield</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Title>Time Series of Wheat Yield from 1900 to 2000</Title>
           <Axis>
             <Type>Bottom</Type>
             <Title>Date</Title>
@@ -5213,35 +4927,51 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <Series>
+            <Title>Wheat Yield</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Wheat.Grain.Yield</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
         </Graph>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <Simulation>
         <Name>80N</Name>
         <Clock>
           <Name>Clock</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1900-01-01T00:00:00</StartDate>
           <EndDate>2000-12-31T00:00:00</EndDate>
         </Clock>
         <Summary>
           <Name>SummaryFile</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Summary>
         <Weather>
           <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
         </Weather>
         <Zone>
           <Name>Field</Name>
           <Report>
             <Name>Report</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ExperimentFactorNames />
-            <ExperimentFactorValues />
             <VariableNames>
               <string>[Clock].Today</string>
               <string>Wheat.Zadok.Stage</string>
@@ -5263,7 +4993,6 @@ namespace Models
           </Report>
           <Fertiliser>
             <Name>Fertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
           </Fertiliser>
           <Soil>
             <Name>Soil</Name>
@@ -5271,7 +5000,6 @@ namespace Models
               <Name>Water</Name>
               <SoilCrop>
                 <Name>WheatSoil</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <LL>
                   <double>0.261</double>
                   <double>0.248</double>
@@ -5300,7 +5028,6 @@ namespace Models
                   <double>1</double>
                 </XF>
               </SoilCrop>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -5367,7 +5094,7 @@ namespace Models
             </Water>
             <SoilWater>
               <Name>SoilWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <residueinterception>0</residueinterception>
               <SummerDate>1-Nov</SummerDate>
               <SummerU>5</SummerU>
               <SummerCona>5</SummerCona>
@@ -5402,11 +5129,9 @@ namespace Models
                 <double>0.3</double>
                 <double>0.3</double>
               </SWCON>
-              <residueinterception>0</residueinterception>
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -5450,7 +5175,6 @@ namespace Models
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <RootCN>40</RootCN>
               <RootWt>1000</RootWt>
               <SoilCN>12</SoilCN>
@@ -5505,7 +5229,6 @@ namespace Models
             </SoilOrganicMatter>
             <Analysis>
               <Name>Analysis</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -5529,14 +5252,12 @@ namespace Models
             </Analysis>
             <InitialWater>
               <Name>InitialWater</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PercentMethod>EvenlyDistributed</PercentMethod>
               <FractionFull>1</FractionFull>
               <DepthWetSoil>NaN</DepthWetSoil>
             </InitialWater>
             <Sample>
               <Name>InitialN</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Thickness>
                 <double>150</double>
                 <double>150</double>
@@ -5624,11 +5345,6 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
-            <CERESSoilTemperature>
-              <Name>CERESSoilTemperature</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </CERESSoilTemperature>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <ASCOrder>Vertosol</ASCOrder>
             <ASCSubOrder>Black</ASCSubOrder>
@@ -5649,10 +5365,8 @@ namespace Models
           </Soil>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResidueTypes>
               <Name>ResidueTypes</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LoadFromResource>ResidueTypes</LoadFromResource>
             </ResidueTypes>
             <Pools>
@@ -5686,30 +5400,31 @@ namespace Models
           </SurfaceOrganicMatter>
           <Plant15>
             <Name>Wheat</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
             <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
           </Plant15>
           <MicroClimate>
             <Name>MicroClimate</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <air_pressure>1010</air_pressure>
+            <soil_emissivity>0.96</soil_emissivity>
+            <sun_angle>15</sun_angle>
+            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+            <night_interception_fraction>0.5</night_interception_fraction>
+            <windspeed_default>3</windspeed_default>
+            <refheight>2</refheight>
+            <albedo>0.15</albedo>
+            <emissivity>0.96</emissivity>
+            <gsmax>0.01</gsmax>
+            <r50>200</r50>
             <a_interception>0</a_interception>
             <b_interception>1</b_interception>
             <c_interception>0</c_interception>
             <d_interception>0</d_interception>
             <soil_albedo>0.3</soil_albedo>
-            <sun_angle>15</sun_angle>
-            <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-            <night_interception_fraction>0.5</night_interception_fraction>
-            <refheight>2</refheight>
-            <albedo>0.15</albedo>
-            <emissivity>0.96</emissivity>
-            <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
           <Manager>
             <Name>SowingFertiliser</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <Amount>80</Amount>
               <CropName>wheat</CropName>
@@ -5750,7 +5465,6 @@ namespace Models
           </Manager>
           <Manager>
             <Name>SowingRule</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <StartDate>1-may</StartDate>
               <EndDate>10-jul</EndDate>
@@ -5827,39 +5541,12 @@ namespace Models
 }
 ]]></Code>
           </Manager>
-          <SoluteManager>
-            <Name>SoluteManager</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoluteManager>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
         <Graph>
           <Name>Wheat Yield Time Series</Name>
-          <Series>
-            <Name>Wheat Yield</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Grain.Yield</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Title>Time Series of Wheat Yield from 1900 to 2000</Title>
           <Axis>
             <Type>Bottom</Type>
             <Title>Date</Title>
@@ -5876,36 +5563,36 @@ namespace Models
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
+          <Series>
+            <Title>Wheat Yield</Title>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16776961</ColourArgb>
+            <Marker>FilledCircle</Marker>
+            <Line>Solid</Line>
+            <X>
+              <TableName>Report</TableName>
+              <FieldName>Clock.Today</FieldName>
+            </X>
+            <Y>
+              <TableName>Report</TableName>
+              <FieldName>Wheat.Grain.Yield</FieldName>
+            </Y>
+            <ShowRegressionLine>false</ShowRegressionLine>
+            <ShowInLegend>true</ShowInLegend>
+            <Cumulative>false</Cumulative>
+          </Series>
           <LegendPosition>TopLeft</LegendPosition>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <DisabledSeries />
         </Graph>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Area>0</Area>
+        <Slope>0</Slope>
       </Simulation>
       <Graph>
         <Name>Wheat Yield Time Series</Name>
-        <Series>
-          <Name>Wheat Yield</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-          <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Wheat.Grain.Yield</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Title>Time Series of Wheat Yield from 1900 to 2000</Title>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -5922,34 +5609,33 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
-        <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
-      </Graph>
-      <Graph>
-        <Name>Soil Organic Carbon</Name>
         <Series>
-          <Name>Wheat Yield</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Title>Wheat Yield</Title>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16776961</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
-          <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SoilCtpha</YFieldName>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>Wheat.Grain.Yield</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
           <ShowInLegend>true</ShowInLegend>
-          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
+        <DisabledSeries />
+      </Graph>
+      <Graph>
+        <Name>Soil Organic Carbon</Name>
+        <Title>Time Series of Wheat Yield from 1900 to 2000</Title>
         <Axis>
           <Type>Bottom</Type>
           <Title>Date</Title>
@@ -5966,15 +5652,31 @@ namespace Models
           <Maximum>NaN</Maximum>
           <Interval>NaN</Interval>
         </Axis>
+        <Series>
+          <Title>Wheat Yield</Title>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16776961</ColourArgb>
+          <Marker>FilledCircle</Marker>
+          <Line>Solid</Line>
+          <X>
+            <TableName>Report</TableName>
+            <FieldName>Clock.Today</FieldName>
+          </X>
+          <Y>
+            <TableName>Report</TableName>
+            <FieldName>SoilCtpha</FieldName>
+          </Y>
+          <ShowRegressionLine>false</ShowRegressionLine>
+          <ShowInLegend>true</ShowInLegend>
+          <Cumulative>false</Cumulative>
+        </Series>
         <LegendPosition>TopLeft</LegendPosition>
+        <ShowRegressionLine>false</ShowRegressionLine>
         <DisabledSeries />
       </Graph>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
-  <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>282</ExplorerWidth>
+  <ExplorerWidth>0</ExplorerWidth>
 </Simulations>
