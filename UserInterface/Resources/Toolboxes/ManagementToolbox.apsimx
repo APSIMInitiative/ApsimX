@@ -1,8 +1,9 @@
-<?xml version="1.0"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
   <Name>Management toolbox</Name>
   <Manager>
     <Name>Sow on a fixed date</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Script>
       <Crop>Chickpea</Crop>
       <SowDate>24-Jul</SowDate>
@@ -11,8 +12,7 @@
       <RowSpacing>750</RowSpacing>
       <Population>6</Population>
     </Script>
-    <Code>
-      <![CDATA[using System;
+    <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
@@ -58,12 +58,14 @@ namespace Models
 		
 	}
 }
-]]>
-    </Code>
+]]></Code>
   </Manager>
   <Manager>
     <Name>Sow using a variable rule</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Script>
+      <Crop>
+      </Crop>
       <StartDate>1-nov</StartDate>
       <EndDate>10-jan</EndDate>
       <MinESW>100</MinESW>
@@ -73,11 +75,8 @@ namespace Models
       <SowingDepth>30</SowingDepth>
       <RowSpacing>750</RowSpacing>
       <Population>6</Population>
-      <Crop>
-      </Crop>
     </Script>
-    <Code>
-      <![CDATA[using System;
+    <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
@@ -142,16 +141,15 @@ namespace Models
 		
 	}
 }
-]]>
-    </Code>
+]]></Code>
   </Manager>
   <Manager>
     <Name>Harvesting</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Script>
       <Crop>Maize</Crop>
     </Script>
-    <Code>
-      <![CDATA[using System;
+    <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
@@ -177,18 +175,17 @@ namespace Models
 		}
 	}
 }
-	   ]]>
-    </Code>
-  </Manager>  
+	   ]]></Code>
+  </Manager>
   <Manager>
     <Name>Fertilise on a fixed date</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Script>
-      <Amount>160</Amount>
       <FertDate>
       </FertDate>
+      <Amount>160</Amount>
     </Script>
-    <Code>
-      <![CDATA[using System;
+    <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using APSIM.Shared.Utilities;
@@ -216,17 +213,16 @@ namespace Models
 		}
 	}
 }
-]]>
-    </Code>
+]]></Code>
   </Manager>
   <Manager>
     <Name>Fertilise at sowing</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Script>
       <Crop>Maize</Crop>
       <Amount>160</Amount>
     </Script>
-    <Code>
-      <![CDATA[using System;
+    <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 namespace Models
@@ -253,20 +249,19 @@ namespace Models
 		
 	}
 }
-]]>
-    </Code>
+]]></Code>
   </Manager>
   <Manager>
     <Name>Irrigate on a fixed date</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Script>
-      <Amount>160</Amount>
       <IrrigateDate>1-feb</IrrigateDate>
+      <Amount>160</Amount>
       <Depth>0</Depth>
       <Efficiency>1</Efficiency>
       <WillRunoff>False</WillRunoff>
     </Script>
-    <Code>
-      <![CDATA[using System;
+    <Code><![CDATA[using System;
 using Models.Core;
 using Models.PMF;
 using APSIM.Shared.Utilities;
@@ -303,11 +298,11 @@ namespace Models
 		}
 	}
 }
-]]>
-    </Code>
+]]></Code>
   </Manager>
   <Manager>
     <Name>Automatic irrigation based on water deficit</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Script>
       <FASW>0</FASW>
       <WaterDeficit>0</WaterDeficit>
@@ -315,8 +310,7 @@ namespace Models
       <FASWThreshold>0.9</FASWThreshold>
       <FASWDepth>600</FASWDepth>
     </Script>
-    <Code>
-      <![CDATA[using System;
+    <Code><![CDATA[using System;
 using Models.Core;
 using System.Collections.Generic;
 using System.Text;
@@ -401,7 +395,8 @@ namespace Models
 
 	}
 }
-	   ]]>
-    </Code>
+	   ]]></Code>
   </Manager>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
