@@ -277,8 +277,7 @@ namespace Models.WholeFarm.Activities
 					// should keep pregnant females... and young...
 					// this will currently remove pregnant females and females with suckling calf
 
-					//add 5% extra to the number of breeders to sell.
-					int numberToRemove = Convert.ToInt32((numberFemaleInHerd-MaximumBreedersKept)*1.05);
+					int numberToRemove = Convert.ToInt32((numberFemaleInHerd-MaximumBreedersKept));
 					foreach (var female in herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating).OrderByDescending(a => a.Age).Take(numberToRemove))
 					{
 						female.SaleFlag = HerdChangeReason.ExcessBreederSale;
@@ -302,7 +301,8 @@ namespace Models.WholeFarm.Activities
 							int ageOfHeifer = 12;
 							double weightOfHeifer = 260;
 
-							int numberToBuy = Convert.ToInt32((MinimumBreedersKept - numberFemaleInHerd));
+							// buy 5% more to account for deaths before these individuals grow to breeding age
+							int numberToBuy = Convert.ToInt32((MinimumBreedersKept - numberFemaleInHerd)*1.05);
 
 							for (int i = 0; i < numberToBuy; i++)
 							{
