@@ -1,4 +1,4 @@
-SimulationName	Clock.Today	Barley.Phenology.FlagLeafDAS	Barley.Phenology.FloweringDAS	Barley.Structure.LeafTipsAppeared
+SimulationName	Clock.Today	Barley.Phenology.FlagLeafDAS.Value()	Barley.Phenology.FloweringDAS.Value()	Barley.Structure.LeafTipsAppeared
 ()	()	()	()	()
 Boss_May03	2003-10-21	153	*	*
 Boss_May04	2004-10-26	151	*	*
