@@ -1033,7 +1033,7 @@ namespace UserInterface.Views
             if (this.DataSource != null)
             {
                 string oldtext = AsString(this.DataSource.Rows[where.RowIndex][where.ColumnIndex]);
-                if (oldtext != newText)
+                if (oldtext != newText && newText != null)
                 {
                     try
                     {
