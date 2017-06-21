@@ -32,24 +32,21 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// The burn interval (in months, 1 monthly, 12 annual, 24 biennially)
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(24)]
 		[Description("The burn interval (in months, 12 annual, 24 biennially)")]
 		public int BurnInterval { get; set; }
 
 		/// <summary>
 		/// Month to perform burn
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(9)]
 		[Description("Month to perform burn")]
 		public int BurnMonth { get; set; }
-
-		///// <summary>
-		///// Amount payable
-		///// </summary>
-		//[Description("Amount payable")]
-		//public double Amount { get; set; }
 
 		/// <summary>
 		/// Minimum proportion green for fire to carry
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(0.5)]
 		[Description("Minimum proportion green for fire to carry")]
 		public double MinimumProportionGreen { get; set; }
 
@@ -69,6 +66,14 @@ namespace Models.WholeFarm.Activities
 		private List<LabourFilterGroupSpecified> labour { get; set; }
 		private GreenhouseGasesType methane { get; set; }
 		private GreenhouseGasesType nox { get; set; }
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public PastureActivityBurn()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

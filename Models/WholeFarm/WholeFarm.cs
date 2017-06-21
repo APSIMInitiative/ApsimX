@@ -25,6 +25,7 @@ namespace Models.WholeFarm
 		/// <summary>
 		/// Seed for random number generator (0 uses clock)
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(1)]
 		[Description("Random number generator seed (0 to use clock)")]
 		public int RandomSeed { get; set; }
 
@@ -33,6 +34,7 @@ namespace Models.WholeFarm
 		/// <summary>
 		/// Access the WholeFarm random number generator
 		/// </summary>
+		[XmlIgnore]
 		[Description("Random number generator for simulation")]
 		public static Random RandomGenerator { get { return randomGenerator; } }
 
@@ -45,12 +47,14 @@ namespace Models.WholeFarm
 		/// <summary>
 		/// Ecological indicators calculation interval (in months, 1 monthly, 12 annual)
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
 		public int EcologicalIndicatorsCalculationInterval { get; set; }
 
 		/// <summary>
 		/// End of month to calculate ecological indicators
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(7)]
 		[Description("End of month to calculate ecological indicators")]
 		public int EcologicalIndicatorsCalculationMonth { get; set; }
 
@@ -59,6 +63,14 @@ namespace Models.WholeFarm
 		/// </summary>
 		[XmlIgnore]
 		public DateTime EcologicalIndicatorsNextDueDate { get; set; }
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public WholeFarm()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>
@@ -112,6 +124,40 @@ namespace Models.WholeFarm
 			}
 
 		}
+
+		/// <summary>
+		/// Method to set defaults from   
+		/// </summary>
+		public void SetDefaults()
+		{
+			foreach (var property in GetType().GetProperties())
+			{
+				foreach (Attribute attr in property.GetCustomAttributes(true))
+				{
+					if (attr is System.ComponentModel.DefaultValueAttribute)
+					{
+						System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
+						try
+						{
+							if (property.PropertyType.IsArray)
+							{
+								property.SetValue(this, dv.Value, null);
+							}
+							else
+							{
+								property.SetValue(this, dv.Value, null);
+							}
+						}
+						catch (Exception ex)
+						{
+							Summary.WriteWarning(this, ex.Message);
+							//eat it... Or maybe Debug.Writeline(ex);
+						}
+					}
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Method to determine if this is the month to calculate ecological indicators

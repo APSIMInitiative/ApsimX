@@ -35,24 +35,33 @@ namespace Models.WholeFarm.Activities
 		[Description("Feed type name in Animal Food Store")]
 		public string FeedTypeName { get; set; }
 
-		private IResourceType FoodSource { get; set; }
-
-		/// <summary>
-		/// Feed type
-		/// </summary>
-		[XmlIgnore]
-		public IFeedType FeedType { get; set; }
-
 		/// <summary>
 		/// Feeding style to use
 		/// </summary>
 		[Description("Feeding style to use")]
+		[System.ComponentModel.DefaultValueAttribute(OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount)]
 		public OtherAnimalsFeedActivityTypes FeedStyle { get; set; }
 
 		/// <summary>
 		/// Labour settings
 		/// </summary>
 		private List<LabourFilterGroupSpecified> labour { get; set; }
+
+		private IResourceType FoodSource { get; set; }
+		/// <summary>
+		/// Feed type
+		/// </summary>
+		[XmlIgnore]
+		public IFeedType FeedType { get; set; }
+
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public OtherAnimalsActivityFeed()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

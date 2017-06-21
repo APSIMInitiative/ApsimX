@@ -31,9 +31,18 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Gross energy content of forage (MJ/kg DM)
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(18.4)]
 		[Description("Gross energy content of forage")]
 		[Units("MJ/kg DM")]
 		public double EnergyGross { get; set; }
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public RuminantActivityGrow()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

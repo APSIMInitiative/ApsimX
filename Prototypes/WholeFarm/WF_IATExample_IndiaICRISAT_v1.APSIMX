@@ -3,14 +3,6 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>WF_IATExample_IndiaICRISAT_v1</Name>
-    <FileAPSIMCrop>
-      <Name>File APSIM Crop</Name>
-      <FileName>C:\Temp\WholeFarm\Crop_Inputs.prn</FileName>
-    </FileAPSIMCrop>
-    <FileAPSIMForage>
-      <Name>File APSIM Forage</Name>
-      <FileName>C:\Temp\WholeFarm\Forage_Inputs.prn</FileName>
-    </FileAPSIMForage>
     <Clock>
       <Name>clock</Name>
       <StartDate>1993-09-21T00:00:00</StartDate>
@@ -28,34 +20,28 @@
           <LandType>
             <Name>Land1 interbund</Name>
             <LandArea>1.8</LandArea>
-            <UnusablePortion>0</UnusablePortion>
             <SoilType>1</SoilType>
           </LandType>
           <LandType>
             <Name>Land1 bund</Name>
             <LandArea>0.2</LandArea>
-            <UnusablePortion>0</UnusablePortion>
             <SoilType>1</SoilType>
           </LandType>
           <LandType>
             <Name>Land2 interbund</Name>
             <LandArea>1.425</LandArea>
-            <UnusablePortion>0</UnusablePortion>
             <SoilType>1</SoilType>
           </LandType>
           <LandType>
             <Name>Land2 bund</Name>
             <LandArea>0.075</LandArea>
-            <UnusablePortion>0</UnusablePortion>
             <SoilType>1</SoilType>
           </LandType>
           <LandType>
             <Name>Common land</Name>
             <LandArea>0.075</LandArea>
-            <UnusablePortion>0</UnusablePortion>
             <SoilType>1</SoilType>
           </LandType>
-          <UnitOfArea>Hectares</UnitOfArea>
         </Land>
         <Labour>
           <Name>Labour</Name>
@@ -188,7 +174,6 @@
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAge>0</StartingAge>
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
@@ -197,7 +182,6 @@
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAge>0</StartingAge>
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
@@ -206,7 +190,6 @@
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAge>0</StartingAge>
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
@@ -215,7 +198,6 @@
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAge>0</StartingAge>
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
@@ -227,7 +209,6 @@
             <DryMatter>91</DryMatter>
             <DMD>52</DMD>
             <Nitrogen>1.66</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -235,7 +216,6 @@
             <DryMatter>91</DryMatter>
             <DMD>52</DMD>
             <Nitrogen>1.66</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -243,7 +223,6 @@
             <DryMatter>89</DryMatter>
             <DMD>55</DMD>
             <Nitrogen>2</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -251,7 +230,6 @@
             <DryMatter>89</DryMatter>
             <DMD>55</DMD>
             <Nitrogen>2</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -259,7 +237,6 @@
             <DryMatter>91</DryMatter>
             <DMD>52</DMD>
             <Nitrogen>1.66</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -277,7 +254,6 @@
             <DryMatter>91</DryMatter>
             <DMD>60</DMD>
             <Nitrogen>2.5</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -285,7 +261,6 @@
             <DryMatter>91</DryMatter>
             <DMD>52</DMD>
             <Nitrogen>1.66</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
@@ -341,6 +316,7 @@
             <IntakeCoefficient>0.024</IntakeCoefficient>
             <IntakeIntercept>1.7</IntakeIntercept>
             <ProteinCoefficient>90</ProteinCoefficient>
+            <ProteinDegradability>0</ProteinDegradability>
             <BaseAnimalEquivalent>0</BaseAnimalEquivalent>
             <GreenDietMax>98</GreenDietMax>
             <GreenDietCoefficient>0.08</GreenDietCoefficient>
@@ -440,6 +416,7 @@
             <IntakeCoefficient>0.024</IntakeCoefficient>
             <IntakeIntercept>1.7</IntakeIntercept>
             <ProteinCoefficient>90</ProteinCoefficient>
+            <ProteinDegradability>0</ProteinDegradability>
             <BaseAnimalEquivalent>0</BaseAnimalEquivalent>
             <GreenDietMax>0</GreenDietMax>
             <GreenDietCoefficient>0</GreenDietCoefficient>
@@ -539,6 +516,7 @@
             <IntakeCoefficient>0.033</IntakeCoefficient>
             <IntakeIntercept>1.9</IntakeIntercept>
             <ProteinCoefficient>90</ProteinCoefficient>
+            <ProteinDegradability>0</ProteinDegradability>
             <BaseAnimalEquivalent>0</BaseAnimalEquivalent>
             <GreenDietMax>98</GreenDietMax>
             <GreenDietCoefficient>0.08</GreenDietCoefficient>
@@ -602,6 +580,7 @@
             <Name>General account</Name>
             <OpeningBalance>10000</OpeningBalance>
             <WithdrawalLimit>0</WithdrawalLimit>
+            <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
             <InterestRateCharged>0</InterestRateCharged>
             <InterestRatePaid>0</InterestRatePaid>
           </FinanceType>
@@ -615,7 +594,6 @@
             <Name>General farm maintenance</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
-            <MonthDue>1</MonthDue>
             <Amount>200</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayOverhead>
@@ -623,7 +601,6 @@
             <Name>Machinery maintenance</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
-            <MonthDue>1</MonthDue>
             <Amount>500</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayOverhead>
@@ -631,7 +608,6 @@
             <Name>Electricity</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>3</PaymentInterval>
-            <MonthDue>1</MonthDue>
             <Amount>1000</Amount>
             <AccountName>General account</AccountName>
           </FinanceActivityPayOverhead>
@@ -650,47 +626,25 @@
           <IATGrowCrop>
             <Name>Grow cotton</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Region>1</Region>
-            <LandTypeNameToUse>Land1 interbund</LandTypeNameToUse>
-            <FeedTypeName>Cotton</FeedTypeName>
-            <ResidueKept>0</ResidueKept>
-            <UnitsOfArea>Hectares</UnitsOfArea>
-            <AreaRequested>1.54</AreaRequested>
+            <Store>HumanFoodStore</Store>
+            <PercentKept>0</PercentKept>
           </IATGrowCrop>
           <IATGrowCrop>
             <Name>Grow sorghum</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Region>1</Region>
-            <LandTypeNameToUse>Land1 interbund</LandTypeNameToUse>
-            <FeedTypeName>SorghumGrain</FeedTypeName>
-            <ResidueKept>0</ResidueKept>
-            <UnitsOfArea>Hectares</UnitsOfArea>
-            <AreaRequested>0.26</AreaRequested>
+            <Store>HumanFoodStore</Store>
+            <PercentKept>0</PercentKept>
           </IATGrowCrop>
           <IATGrowCrop>
             <Name>Grow maize</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <Region>1</Region>
-            <LandTypeNameToUse>Land2 interbund</LandTypeNameToUse>
-            <FeedTypeName>Maize</FeedTypeName>
-            <ResidueKept>0</ResidueKept>
-            <UnitsOfArea>Hectares</UnitsOfArea>
-            <AreaRequested>1.425</AreaRequested>
+            <Store>HumanFoodStore</Store>
+            <PercentKept>0</PercentKept>
           </IATGrowCrop>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
         <ActivityFolder>
           <Name>Manage pasture</Name>
-          <IATGrowForage>
-            <Name>Grow native pasture</Name>
-            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-            <Region>1</Region>
-            <LandTypeNameToUse>Common land</LandTypeNameToUse>
-            <FeedTypeName>Native</FeedTypeName>
-            <ResidueKept>0</ResidueKept>
-            <UnitsOfArea>Hectares</UnitsOfArea>
-            <AreaRequested>200</AreaRequested>
-          </IATGrowForage>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
         <ActivityFolder>
@@ -789,6 +743,7 @@
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>Buffalo</HerdName>
             <MaximumBreedersKept>5</MaximumBreedersKept>
+            <MinimumBreedersKept>0</MinimumBreedersKept>
             <MaximumBreederAge>150</MaximumBreederAge>
             <MaximumSiresKept>0</MaximumSiresKept>
             <MaximumBullAge>96</MaximumBullAge>
@@ -896,6 +851,7 @@
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>Cows</HerdName>
             <MaximumBreedersKept>5</MaximumBreedersKept>
+            <MinimumBreedersKept>0</MinimumBreedersKept>
             <MaximumBreederAge>150</MaximumBreederAge>
             <MaximumSiresKept>0</MaximumSiresKept>
             <MaximumBullAge>96</MaximumBullAge>
@@ -986,6 +942,7 @@
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>Buffalo</HerdName>
             <MaximumBreedersKept>60</MaximumBreedersKept>
+            <MinimumBreedersKept>0</MinimumBreedersKept>
             <MaximumBreederAge>120</MaximumBreederAge>
             <MaximumSiresKept>5</MaximumSiresKept>
             <MaximumBullAge>96</MaximumBullAge>
@@ -1002,7 +959,6 @@
           <RuminantActivityGrow>
             <Name>Grow all Ruminants</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <EnergyGross>18.4</EnergyGross>
           </RuminantActivityGrow>
           <SummariseRuminantHerd>
             <Name>SummariseHerd</Name>
@@ -1136,7 +1092,6 @@
       <Slope>0</Slope>
       <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationInterval>12</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>6</EcologicalIndicatorsCalculationMonth>
     </WholeFarm>
     <Graph>

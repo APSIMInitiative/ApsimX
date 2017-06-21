@@ -47,12 +47,14 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Start breeding month
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(1)]
 		[Description("First month of breeding")]
 		public int StartBreedingMonth { get; set; }
 
 		/// <summary>
 		/// Breeding interval (months)
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("Breeding interval (months)")]
 		public int BreedingInterval { get; set; }
 
@@ -89,6 +91,14 @@ namespace Models.WholeFarm.Activities
 		/// Labour settings
 		/// </summary>
 		private List<LabourFilterGroupSpecified> labour { get; set; }
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public OtherAnimalsActivityBreed()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

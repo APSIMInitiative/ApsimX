@@ -20,9 +20,6 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(ActivityFolder))]
 	public class FinanceActivityPayOverhead : WFActivityBase
 	{
-		/// <summary>
-		/// Get the Clock.
-		/// </summary>
 		[XmlIgnore]
 		[Link]
 		Clock Clock = null;
@@ -36,12 +33,14 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// The payment interval (in months, 1 monthly, 12 annual)
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("The payment interval (in months, 1 monthly, 12 annual)")]
 		public int PaymentInterval { get; set; }
 
 		/// <summary>
 		/// First month to pay overhead
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(1)]
 		[Description("First month to pay overhead (1-12)")]
 		public int MonthDue { get; set; }
 
@@ -67,6 +66,14 @@ namespace Models.WholeFarm.Activities
 		/// Store finance type to use
 		/// </summary>
 		private FinanceType bankAccount;
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public FinanceActivityPayOverhead()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

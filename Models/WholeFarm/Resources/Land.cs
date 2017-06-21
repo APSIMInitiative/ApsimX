@@ -27,8 +27,17 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Unit of area to be used in this simulation
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(UnitsOfAreaType.Hectares)]
 		[Description("Unit of area to be used in this simulation")]
 		public UnitsOfAreaType UnitsOfArea { get; set; }
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public Land()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

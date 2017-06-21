@@ -38,12 +38,6 @@ namespace Models.WholeFarm.Activities
         [Description("Climate Region Number")]
         public int Region { get; set; }
 
-        ///// <summary>
-        ///// Number for the Soil Type for the pasture.
-        ///// </summary>
-        //[Description("Soil Type")]
-        //public int SoilNumber { get; set; }
-
         /// <summary>
         /// Name of land type where pasture is located
         /// </summary>
@@ -93,24 +87,23 @@ namespace Models.WholeFarm.Activities
         [XmlIgnore]
 		public double Perennials { get; set; }
 
-
 		/// <summary>
 		/// Area requested
 		/// </summary>
 		[Description("Area requested")]
 		public double AreaRequested { get; set; }
 
-		/// <summary>
-		/// Month for ecological indicators calculation (end of month)
-		/// </summary>
-		[Description("Month for ecological indicators calculation (end of month)")]
-		public int EcolCalculationMonth { get; set; }
+		///// <summary>
+		///// Month for ecological indicators calculation (end of month)
+		///// </summary>
+		//[Description("Month for ecological indicators calculation (end of month)")]
+		//public int EcolCalculationMonth { get; set; }
 
-		/// <summary>
-		/// Ecological indicators calculation interval (months)
-		/// </summary>
-		[Description("Ecological indicators calculation interval (months)")]
-		public int EcolCalculationInterval { get; set; }
+		///// <summary>
+		///// Ecological indicators calculation interval (months)
+		///// </summary>
+		//[Description("Ecological indicators calculation interval (months)")]
+		//public int EcolCalculationInterval { get; set; }
 
 		/// <summary>
 		/// Feed type
@@ -118,14 +111,10 @@ namespace Models.WholeFarm.Activities
 		[XmlIgnore]
 		public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
 
-
-
         /// <summary>
         /// Units of area to use for this run
         /// </summary>
         private UnitsOfAreaType unitsOfArea;
-
-
 
 		// private properties
 		private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
@@ -440,7 +429,7 @@ namespace Models.WholeFarm.Activities
             pkStkRate = (int)Math.Round(stockingRate);
 
 			PastureDataList = FileGRASP.GetIntervalsPastureData(Region, soilIndex, 1,
-               pkGrassBA, pkLandCon, pkStkRate, Clock.Today, EcolCalculationInterval);
+               pkGrassBA, pkLandCon, pkStkRate, Clock.Today, WholeFarm.EcologicalIndicatorsCalculationInterval);
         }
 
 

@@ -31,22 +31,17 @@ namespace Models.WholeFarm.Resources
         [Description("Gender")]
         public Sex Gender { get; set; }
 
-        ///// <summary>
-        ///// Name of each column in the grid. Used as the column header.
-        ///// </summary>
-        //[Description("Column Names")]
-        //public string[] ColumnNames { get; set; }
-
-        /// <summary>
-        /// Maximum Labour Supply (in days) for each month of the year. 
-        /// </summary>
-        [Description("Max Labour Supply (in days) for each month of the year")]
+		/// <summary>
+		/// Maximum Labour Supply (in days) for each month of the year. 
+		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(new double[] { 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4, 30.4 })]
+		[Description("Max Labour Supply (in days) for each month of the year")]
         public double[] MaxLabourSupply { get; set; }
 
-        /// <summary>
-        /// Age in years.
-        /// </summary>
-        [XmlIgnore]
+		/// <summary>
+		/// Age in years.
+		/// </summary>
+		[XmlIgnore]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
 
 		/// <summary>
@@ -73,6 +68,14 @@ namespace Models.WholeFarm.Resources
 		[XmlIgnore]
         public double AvailableDays { get { return availableDays; } }
         private double availableDays;
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public LabourType()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>
 		/// Reset the available days for a given month

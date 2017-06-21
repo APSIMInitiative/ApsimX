@@ -18,9 +18,6 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(RuminantActivityBreed))]
 	public class ControlledMatingSettings: WFModel
 	{
-		/// <summary>
-		/// Get the Clock.
-		/// </summary>
 		[XmlIgnore]
 		[Link]
 		Clock Clock = null;
@@ -32,12 +29,14 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// The payment interval (in months, 1 monthly, 12 annual)
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("Breeding interval (in months, 1 monthly, 12 annual)")]
 		public int BreedInterval { get; set; }
 
 		/// <summary>
-		/// First month to pay overhead
+		/// First month to perform breeding
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(6)]
 		[Description("First month to perform breeding (1-12)")]
 		public int MonthDue { get; set; }
 
@@ -46,6 +45,14 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[XmlIgnore]
 		public DateTime NextDueDate { get; set; }
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public ControlledMatingSettings()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

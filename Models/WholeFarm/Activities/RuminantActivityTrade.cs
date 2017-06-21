@@ -61,6 +61,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Purchase month
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(11)]
 		[Description("Purchase month")]
 		public int PurchaseMonth { get; set; }
 
@@ -68,6 +69,13 @@ namespace Models.WholeFarm.Activities
 		// stocking rate for paddock
 		// fixed number
 
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public RuminantActivityTrade()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to call for all herd management activities</summary>
 		/// <param name="sender">The sender.</param>

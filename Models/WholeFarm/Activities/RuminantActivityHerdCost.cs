@@ -36,12 +36,14 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// The payment interval (in months, 1 monthly, 12 annual)
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(12)]
 		[Description("The payment interval (in months, 1 monthly, 12 annual)")]
 		public int PaymentInterval { get; set; }
 
 		/// <summary>
 		/// First month to pay overhead
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(6)]
 		[Description("First month to pay expense (1-12)")]
 		public int MonthDue { get; set; }
 
@@ -54,6 +56,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Payment style
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(AnimalPaymentStyleType.perHead)]
 		[Description("Payment style")]
 		public AnimalPaymentStyleType PaymentStyle { get; set; }
 
@@ -68,6 +71,14 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[XmlIgnore]
 		public DateTime NextDueDate { get; set; }
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public RuminantActivityHerdCost()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

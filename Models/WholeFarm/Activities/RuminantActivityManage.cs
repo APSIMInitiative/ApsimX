@@ -82,6 +82,7 @@ namespace Models.WholeFarm.Activities
 		/// Month to undertake management (1-12) and assign costs
 		/// </summary>
 		[Description("Month to undertake management (1-12) and assign costs")]
+		[System.ComponentModel.DefaultValueAttribute(12)]
 		public int ManagementMonth { get; set; }
 
 		/// <summary>
@@ -124,6 +125,14 @@ namespace Models.WholeFarm.Activities
 		/// Store graze 
 		/// </summary>
 		private GrazeFoodStoreType foodStore;
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public RuminantActivityManage()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

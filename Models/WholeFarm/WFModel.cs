@@ -46,8 +46,7 @@ namespace Models.WholeFarm
 							//Is it an array?
 							if (property.PropertyType.IsArray)
 							{
-								//Use set value for arrays
-								property.SetValue(this, null, (object[])dv.Value);
+								property.SetValue(this, dv.Value, null);
 							}
 							else
 							{

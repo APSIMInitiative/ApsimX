@@ -13,11 +13,12 @@ namespace Models.WholeFarm.Activities
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(RuminantActivityBuySell))]
-	public class RuminantSaleFee: Model
+	public class RuminantSaleFee: WFModel
 	{
 		/// <summary>
 		/// Payment style
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(AnimalPaymentStyleType.perHead)]
 		[Description("Payment style")]
 		public AnimalPaymentStyleType PaymentStyle { get; set; }
 
@@ -26,5 +27,14 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		[Description("Amount")]
 		public double Amount { get; set; }
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public RuminantSaleFee()
+		{
+			this.SetDefaults();
+		}
+
 	}
 }

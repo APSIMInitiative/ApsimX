@@ -61,6 +61,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Feeding style to use
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(RuminantFeedActivityTypes.SpecifiedDailyAmount)]
 		[Description("Feeding style to use")]
 		public RuminantFeedActivityTypes FeedStyle { get; set; }
 
@@ -68,6 +69,14 @@ namespace Models.WholeFarm.Activities
 		/// Labour settings
 		/// </summary>
 		private List<LabourFilterGroupSpecified> labour { get; set; }
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public RuminantActivityFeed()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

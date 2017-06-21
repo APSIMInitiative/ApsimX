@@ -37,6 +37,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Month for assessing dry season feed requirements
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(5)]
 		[Description("Month for assessing dry season feed requirements (1-12)")]
 		public int AssessmentMonth { get; set; }
 
@@ -113,6 +114,14 @@ namespace Models.WholeFarm.Activities
 		/// Store graze 
 		/// </summary>
 		private GrazeFoodStoreType foodStore;
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public RuminantActivityPredictiveStockingENSO()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>An event handler to allow us to initialise ourselves.</summary>
 		/// <param name="sender">The sender.</param>

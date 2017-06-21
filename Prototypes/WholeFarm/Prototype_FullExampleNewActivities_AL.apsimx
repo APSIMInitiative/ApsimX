@@ -3,11 +3,6 @@
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
-    <FileAPSIM>
-      <Name>File APSIM</Name>
-      <ErrorMessage />
-      <FileName>forage.out</FileName>
-    </FileAPSIM>
     <FileGRASP>
       <Name>File GRASP</Name>
       <ErrorMessage />
@@ -31,6 +26,7 @@
             <Name>General account</Name>
             <OpeningBalance>10000</OpeningBalance>
             <WithdrawalLimit>-5000</WithdrawalLimit>
+            <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
             <InterestRateCharged>7.5</InterestRateCharged>
             <InterestRatePaid>2</InterestRatePaid>
           </FinanceType>
@@ -164,20 +160,14 @@
           <LandType>
             <Name>Sandy loam country</Name>
             <LandArea>100</LandArea>
-            <UnusablePortion>0</UnusablePortion>
-            <BundedPortion>0</BundedPortion>
             <SoilType>1</SoilType>
-            <NDecline>1000</NDecline>
           </LandType>
           <LandType>
             <Name>Cracking clay plains</Name>
             <LandArea>50</LandArea>
-            <UnusablePortion>0</UnusablePortion>
-            <BundedPortion>0</BundedPortion>
             <SoilType>2</SoilType>
-            <NDecline>1000</NDecline>
           </LandType>
-          <UnitOfArea>Hectares</UnitOfArea>
+          <UnitsOfArea>Hectares</UnitsOfArea>
         </Land>
         <Labour>
           <Name>Labour</Name>
@@ -199,6 +189,20 @@
               <double>25</double>
               <double>25</double>
             </MaxLabourSupply>
+            <MinLabourSupply>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+            </MinLabourSupply>
             <Individuals>1</Individuals>
           </LabourType>
           <LabourType>
@@ -219,6 +223,20 @@
               <double>25</double>
               <double>25</double>
             </MaxLabourSupply>
+            <MinLabourSupply>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+              <double>30.4</double>
+            </MinLabourSupply>
             <Individuals>1</Individuals>
           </LabourType>
           <AllowAging>false</AllowAging>
@@ -227,36 +245,36 @@
           <Name>Ruminants</Name>
           <RuminantType>
             <Name>Breeding</Name>
-						<RuminantInitialCohorts>
-							<Name>Initial cohorts</Name>
-								<RuminantTypeCohort>
-								<Name>CalfF</Name>
-								<Gender>Female</Gender>
-								<StartingAge>0</StartingAge>
-								<StartingNumber>1</StartingNumber>
-								<StartingWeight>40</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>true</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>WeanerF</Name>
-								<Gender>Female</Gender>
-								<StartingAge>8</StartingAge>
-								<StartingNumber>0</StartingNumber>
-								<StartingWeight>0</StartingWeight>
-								<StartingWeightSD>180</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-							<RuminantTypeCohort>
-								<Name>Female1_2</Name>
-								<Gender>Female</Gender>
-								<StartingAge>18</StartingAge>
-								<StartingNumber>1</StartingNumber>
-								<StartingWeight>270</StartingWeight>
-								<StartingWeightSD>0</StartingWeightSD>
-								<Suckling>false</Suckling>
-							</RuminantTypeCohort>
-						</RuminantInitialCohorts>	
+            <RuminantInitialCohorts>
+              <Name>Initial cohorts</Name>
+              <RuminantTypeCohort>
+                <Name>CalfF</Name>
+                <Gender>Female</Gender>
+                <StartingAge>0</StartingAge>
+                <StartingNumber>1</StartingNumber>
+                <StartingWeight>40</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>true</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>WeanerF</Name>
+                <Gender>Female</Gender>
+                <StartingAge>8</StartingAge>
+                <StartingNumber>0</StartingNumber>
+                <StartingWeight>0</StartingWeight>
+                <StartingWeightSD>180</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Female1_2</Name>
+                <Gender>Female</Gender>
+                <StartingAge>18</StartingAge>
+                <StartingNumber>1</StartingNumber>
+                <StartingWeight>270</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>false</Suckling>
+              </RuminantTypeCohort>
+            </RuminantInitialCohorts>
             <AnimalPricing>
               <Name>Prices</Name>
               <AnimalPriceEntry>
@@ -337,6 +355,7 @@
             <IntakeCoefficient>0.024</IntakeCoefficient>
             <IntakeIntercept>1.7</IntakeIntercept>
             <ProteinCoefficient>120</ProteinCoefficient>
+            <ProteinDegradability>0</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
             <GreenDietMax>98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
@@ -426,6 +445,7 @@
               <SaleFlag>None</SaleFlag>
             </OtherAnimalsTypeCohort>
             <AgeWhenAdult>12</AgeWhenAdult>
+            <MaxAge>0</MaxAge>
           </OtherAnimalsType>
           <OtherAnimalsType>
             <Name>Chickens</Name>
@@ -448,6 +468,7 @@
               <SaleFlag>None</SaleFlag>
             </OtherAnimalsTypeCohort>
             <AgeWhenAdult>10</AgeWhenAdult>
+            <MaxAge>0</MaxAge>
           </OtherAnimalsType>
         </OtherAnimals>
         <GreenhouseGases>
@@ -672,7 +693,7 @@
             </LabourFilterGroup>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <FeedTypeName>Lucerne</FeedTypeName>
-            <LabourFilterList />
+            <ProportionTramplingWastage>0</ProportionTramplingWastage>
             <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
           </RuminantActivityFeed>
           <RuminantActivityGrow>
@@ -705,6 +726,7 @@
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>Breeding</HerdName>
             <MaximumBreedersKept>60</MaximumBreedersKept>
+            <MinimumBreedersKept>0</MinimumBreedersKept>
             <MaximumBreederAge>120</MaximumBreederAge>
             <MaximumSiresKept>5</MaximumSiresKept>
             <MaximumBullAge>96</MaximumBullAge>
@@ -718,66 +740,61 @@
             <MinimumPastureBeforeRestock>0</MinimumPastureBeforeRestock>
             <SellFemalesLikeMales>false</SellFemalesLikeMales>
           </RuminantActivityManage>
-					<RuminantActivityBuySell>
-						<Name>Buy and sell Bos indicus with trucking</Name>
-						<OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-						<BreedName>Bos indicus</BreedName>
-						<BreedingSirePrice>4500</BreedingSirePrice>
-						<BankAccountName>General account</BankAccountName>
-						<TruckingSettings>
-							<Name>Trucking details</Name>
-							<DistanceToMarket>200</DistanceToMarket>
-							<CostPerKmTrucking>1.9</CostPerKmTrucking>
-							<Number450kgPerTruck>20</Number450kgPerTruck>
-							<MinimumTrucksBeforeSelling>0</MinimumTrucksBeforeSelling>
-							<MinimumLoadBeforeSelling>0</MinimumLoadBeforeSelling>
-						</TruckingSettings>
-						<RuminantSaleFee>
-							<Name>MLA Fee</Name>
-							<Amount>2</Amount>
-							<PaymentStyle>perHead</PaymentStyle>
-						</RuminantSaleFee>
-						<RuminantSaleFee>
-							<Name>Yard Fees</Name>
-							<Amount>2</Amount>
-							<PaymentStyle>perHead</PaymentStyle>
-						</RuminantSaleFee>
-						<RuminantSaleFee>
-							<Name>Sales commission</Name>
-							<Amount>0.02</Amount>
-							<PaymentStyle>ProportionOfTotalSales</PaymentStyle>
-						</RuminantSaleFee>
-					</RuminantActivityBuySell>
-					<RuminantActivityBuySell>
-						<Name>Buy and sell Bos indicus</Name>
-						<OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-						<BreedName>Bos indicus</BreedName>
-						<BreedingSirePrice>4500</BreedingSirePrice>
-						<BankAccountName>General account</BankAccountName>
-						<RuminantSaleFee>
-							<Name>MLA Fee</Name>
-							<Amount>2</Amount>
-							<PaymentStyle>perHead</PaymentStyle>
-						</RuminantSaleFee>
-						<RuminantSaleFee>
-							<Name>Yard Fees</Name>
-							<Amount>2</Amount>
-							<PaymentStyle>perHead</PaymentStyle>
-						</RuminantSaleFee>
-						<RuminantSaleFee>
-							<Name>Sales commission</Name>
-							<Amount>0.02</Amount>
-							<PaymentStyle>ProportionOfTotalSales</PaymentStyle>
-						</RuminantSaleFee>
-					</RuminantActivityBuySell>
-					<RuminantActivityMilking>
-            <Name>Milking</Name>
+          <RuminantActivityBuySell>
+            <Name>Buy and sell Bos indicus with trucking</Name>
+            <TruckingSettings>
+              <Name>Trucking details</Name>
+              <DistanceToMarket>200</DistanceToMarket>
+              <CostPerKmTrucking>1.9</CostPerKmTrucking>
+              <Number450kgPerTruck>20</Number450kgPerTruck>
+              <MinimumTrucksBeforeSelling>0</MinimumTrucksBeforeSelling>
+              <MinimumLoadBeforeSelling>0</MinimumLoadBeforeSelling>
+            </TruckingSettings>
+            <RuminantSaleFee>
+              <Name>MLA Fee</Name>
+              <PaymentStyle>perHead</PaymentStyle>
+              <Amount>2</Amount>
+            </RuminantSaleFee>
+            <RuminantSaleFee>
+              <Name>Yard Fees</Name>
+              <PaymentStyle>perHead</PaymentStyle>
+              <Amount>2</Amount>
+            </RuminantSaleFee>
+            <RuminantSaleFee>
+              <Name>Sales commission</Name>
+              <PaymentStyle>ProportionOfTotalSales</PaymentStyle>
+              <Amount>0.02</Amount>
+            </RuminantSaleFee>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-						<HerdName>Breeding</HerdName>
-						<LabourFilterGroupSpecified>
-							<UnitType>perHead</UnitType>
-							<UnitSize>300</UnitSize>
-							<LabourPerUnit>0.5</LabourPerUnit>
+            <BreedName>Bos indicus</BreedName>
+            <BreedingSirePrice>4500</BreedingSirePrice>
+            <BankAccountName>General account</BankAccountName>
+          </RuminantActivityBuySell>
+          <RuminantActivityBuySell>
+            <Name>Buy and sell Bos indicus</Name>
+            <RuminantSaleFee>
+              <Name>MLA Fee</Name>
+              <PaymentStyle>perHead</PaymentStyle>
+              <Amount>2</Amount>
+            </RuminantSaleFee>
+            <RuminantSaleFee>
+              <Name>Yard Fees</Name>
+              <PaymentStyle>perHead</PaymentStyle>
+              <Amount>2</Amount>
+            </RuminantSaleFee>
+            <RuminantSaleFee>
+              <Name>Sales commission</Name>
+              <PaymentStyle>ProportionOfTotalSales</PaymentStyle>
+              <Amount>0.02</Amount>
+            </RuminantSaleFee>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <BreedName>Bos indicus</BreedName>
+            <BreedingSirePrice>4500</BreedingSirePrice>
+            <BankAccountName>General account</BankAccountName>
+          </RuminantActivityBuySell>
+          <RuminantActivityMilking>
+            <Name>Milking</Name>
+            <LabourFilterGroupSpecified>
               <Name>Labour details</Name>
               <LabourFilter>
                 <Name>Filter[Name=Joe B]</Name>
@@ -785,8 +802,13 @@
                 <Operator>Equal</Operator>
                 <Value>Joe B</Value>
               </LabourFilter>
-						</LabourFilterGroupSpecified>
-					</RuminantActivityMilking>
+              <UnitType>perHead</UnitType>
+              <UnitSize>300</UnitSize>
+              <LabourPerUnit>0.5</LabourPerUnit>
+            </LabourFilterGroupSpecified>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <HerdName>Breeding</HerdName>
+          </RuminantActivityMilking>
           <RuminantActivityPredictiveStocking>
             <Name>Dry season stocking</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
@@ -809,46 +831,10 @@
             <SellWetCows>false</SellWetCows>
             <SellSteers>true</SellSteers>
             <MonthlySIOFile>ENSO.txt</MonthlySIOFile>
+            <GrazeFoodStoreName>Native pasture</GrazeFoodStoreName>
             <MeanSOIForLaNina>7</MeanSOIForLaNina>
             <MeanSOIForElNino>7</MeanSOIForElNino>
-						<GrazeFoodStoreName>Native pasture</GrazeFoodStoreName>
-						<MeanSOIForLaNina>
-							<Name>LaNina pasture to herd change</Name>
-              <StartingValue>0</StartingValue>
-              <Minumum>1.0</Minumum>
-              <Maximum>1.2</Maximum>
-              <XValues>
-                <double>1000</double>
-                <double>1000.5</double>
-                <double>3000</double>
-                <double>3000.5</double>
-              </XValues>
-              <YValues>
-                <double>1.0</double>
-                <double>1.1</double>
-                <double>1.1</double>
-                <double>1.2</double>
-              </YValues>							
-						</MeanSOIForLaNina>
-						<MeanSOIForElNino>
-							<Name>ElNino pasture to herd change</Name>
-              <StartingValue>0</StartingValue>
-              <Minumum>0.7</Minumum>
-              <Maximum>0.9</Maximum>
-              <XValues>
-                <double>1000</double>
-                <double>1000.5</double>
-                <double>3000</double>
-                <double>3000.5</double>
-              </XValues>
-              <YValues>
-                <double>0.7</double>
-                <double>0.8</double>
-                <double>0.8</double>
-                <double>0.9</double>
-              </YValues>							
-						</MeanSOIForElNino>
-					</RuminantActivityPredictiveStockingENSO>
+          </RuminantActivityPredictiveStockingENSO>
           <RuminantActivityHerdCost>
             <Name>Vet costs</Name>
             <RuminantFilterGroup>
@@ -986,11 +972,12 @@
                 <double>0.75</double>
               </YValues>
             </Relationship>
-						<OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
-						<LandTypeNameToUse>Sandy loam country</LandTypeNameToUse>
+            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <Region>0</Region>
+            <LandTypeNameToUse>Sandy loam country</LandTypeNameToUse>
             <FeedTypeName>Native Pasture</FeedTypeName>
             <StartingAmount>2000</StartingAmount>
-            <UnitsOfArea>Hectares</UnitsOfArea>
+            <StartingStockingRate>0</StartingStockingRate>
             <AreaRequested>50</AreaRequested>
             <EcolCalculationMonth>9</EcolCalculationMonth>
             <EcolCalculationInterval>12</EcolCalculationInterval>
@@ -1137,10 +1124,10 @@
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Clock].Today as Date</string>
-						<string>[Activities].LastShortfallResourceRequest.ResourceType.Name as Resource</string>
-						<string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
-						<string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
-						<string>[Activities].LastShortfallResourceRequest.Required as Required</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceType.Name as Resource</string>
+            <string>[Activities].LastShortfallResourceRequest.ResourceTypeName as Type</string>
+            <string>[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity</string>
+            <string>[Activities].LastShortfallResourceRequest.Required as Required</string>
             <string>[Activities].LastShortfallResourceRequest.Available as Available</string>
           </VariableNames>
           <EventNames>
@@ -1195,6 +1182,7 @@
       <Area>1</Area>
       <Slope>0</Slope>
       <RandomSeed>1</RandomSeed>
+      <ClimateRegion>0</ClimateRegion>
       <EcologicalIndicatorsCalculationInterval>12</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
     </WholeFarm>

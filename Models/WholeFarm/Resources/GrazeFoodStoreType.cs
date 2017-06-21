@@ -46,12 +46,6 @@ namespace Models.WholeFarm.Resources
 		[Description("Nitrogen of new growth (%)")]
 		public double GreenNitrogen { get; set; }
 
-		///// <summary>
-		///// DMD of new growth (%)
-		///// </summary>
-		//[Description("DMD of new growth (%)")]
-		//public double GreenDMD { get; set; }
-
 		/// <summary>
 		/// Proportion Nitrogen loss each month from pools
 		/// </summary>
