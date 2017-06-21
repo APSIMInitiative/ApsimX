@@ -19,6 +19,7 @@ namespace UserInterface.Views
     using Glade;
     using Gtk;
     using Interfaces;
+    using Models.Core;
 
     /// <summary>
     /// A grid control that implements the grid view interface.
@@ -463,16 +464,16 @@ namespace UserInterface.Views
                                 cell.Visible = false;
                                 col.CellRenderers[1].Visible = false;
                                 comboRend.Visible = true;
-                                comboRend.Text = dataVal.ToString();
+                                comboRend.Text = AsString(dataVal);
                                 return;
                             }
                         }
-                        text = dataVal.ToString();
+                        text = AsString(dataVal);
                     }
                 }
                 else
                 {
-                    text = dataVal.ToString();
+                    text = AsString(dataVal);
                 }
             }
             cell.Visible = true;
@@ -640,6 +641,23 @@ namespace UserInterface.Views
         public IGridCell GetCell(int columnIndex, int rowIndex)
         {
             return new GridCell(this, columnIndex, rowIndex);
+        }
+
+        /// <summary>
+        /// Returns the string representation of an object. For most objects,
+        /// this will be the same as "ToString()", but for Crops, it will give
+        /// the crop name
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private string AsString(object obj)
+        {
+            string result;
+            if (obj is ICrop)
+                result = (obj as IModel).Name;
+            else
+                result = obj.ToString();
+            return result;
         }
 
         /// <summary>
@@ -1014,7 +1032,7 @@ namespace UserInterface.Views
             // Put the new value into the table on the correct row.
             if (this.DataSource != null)
             {
-                string oldtext = this.DataSource.Rows[where.RowIndex][where.ColumnIndex].ToString();
+                string oldtext = AsString(this.DataSource.Rows[where.RowIndex][where.ColumnIndex]);
                 if (oldtext != newText)
                 {
                     try
@@ -1286,7 +1304,7 @@ namespace UserInterface.Views
                                         {
                                             try
                                             {
-                                                if (cell.Value == null || cell.Value.ToString() != words[i])
+                                                if (cell.Value == null || AsString(cell.Value) != words[i])
                                                 {
                                                     // We are pasting a new value for this cell. Put the new
                                                     // value into the cell.
@@ -1359,7 +1377,7 @@ namespace UserInterface.Views
                         for (int iCol = 0; iCol < nCols; iCol++)
                         {
                             object dataVal = this.DataSource.Rows[iRow][iCol];
-                            buffer.Append(dataVal.ToString());
+                            buffer.Append(AsString(dataVal));
                             if (iCol == nCols - 1)
                                 buffer.Append('\n');
                             else
