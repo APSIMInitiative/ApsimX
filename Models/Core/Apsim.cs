@@ -142,6 +142,22 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Clears the cached scoping values for the simulation 
+        /// We need to do this when models have been added or deleted,
+        /// as the cache will then be incorrect
+        /// </summary>
+        /// <param name="model"></param>
+        public static void ClearScopeCache(IModel model)
+        {
+            var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
+            if (simulation != null && simulation.Scope != null)
+            {
+                simulation.ClearScopingRules();
+            }
+        }
+
+
+        /// <summary>
         /// Locates and returns all models in scope of the specified type.
         /// </summary>
         /// <param name="model">The reference model</param>
@@ -253,6 +269,7 @@ namespace Models.Core
             modelToAdd.Parent = parent;
             Apsim.ParentAllChildren(modelToAdd);
             parent.Children.Add(modelToAdd as Model);
+            Apsim.ClearScopeCache(modelToAdd);
         }
 
         /// <summary>Deletes the specified model.</summary>
@@ -260,6 +277,7 @@ namespace Models.Core
         public static bool Delete(IModel model)
         {
             Locator(model.Parent).Clear();
+            Apsim.ClearScopeCache(model);
             return model.Parent.Children.Remove(model as Model);
         }
 
