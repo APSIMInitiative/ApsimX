@@ -30,12 +30,14 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Unusable Portion - Buildings, paths etc. (%)
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(0.0)]
 		[Description("Buildings - proportion taken up with bldgs, paths (%)")]
         public double UnusablePortion { get; set; }
 
 		/// <summary>
 		/// Allocate proportion of Total Area
 		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(1.0)]
 		[Description("Proportion of Total Area to assign")]
 		public double ProportionOfTotalArea { get; set; }
 
@@ -63,6 +65,14 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[XmlIgnore]
 		public double UsableArea { get { return (this.LandArea * (1.0 - (UnusablePortion / 100)))*ProportionOfTotalArea; }  }
+
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		public LandType()
+		{
+			this.SetDefaults();
+		}
 
 		/// <summary>
 		/// Initialise the current state to the starting amount of fodder
