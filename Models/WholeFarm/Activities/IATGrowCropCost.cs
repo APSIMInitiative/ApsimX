@@ -51,13 +51,13 @@ namespace Models.WholeFarm.Activities
         /// <summary>
         /// Units Per Hectare 
         /// </summary>
-        [Description("Units [eg. tonnes, kgs, bags] per Ha or Tree")]
+        [Description("Units [eg. tonnes, kgs, bags] perHa or perTree")]
         public double UnitsPerHaOrTree { get; set; }
 
         /// <summary>
         /// Cost Per Unit
         /// </summary>
-        [Description("Cost (per Unit or fixed) ($)")]
+        [Description("Cost [per unit or fixed] ($)")]
         public double CostPerUnit { get; set; }
 
         /// <summary>
@@ -195,12 +195,19 @@ namespace Models.WholeFarm.Activities
                         break;
                     case CropPaymentStyleType.perHa:
                         totalcost = CostPerUnit * UnitsPerHaOrTree * grandParentCropLand.Area;
-                        reason = "Crop cost (per Ha) - " + cropName;
+                        reason = "Crop cost (perHa) - " + cropName;
                         break;
-                    //case CropPaymentStyleType.perTree:
-                    //    totalcost = CostPerUnit * UnitsPerHaOrTree * ParentGrowCrop.Trees;
-                    //    reason = "Crop cost (per Tree) - " + cropName;
-                    //    break;
+                    case CropPaymentStyleType.perTree:
+                        if (parentGrowCrop.IsTreeCrop)
+                        {
+                            totalcost = CostPerUnit * UnitsPerHaOrTree * parentGrowCrop.TreesPerHa * grandParentCropLand.Area;
+                            reason = "Crop cost (perTree) - " + cropName;
+                        }
+                        else
+                        {
+                            throw new Exception(String.Format("{0} is not a Tree Crop, so CropPaymentStyleType {1} is not supported for {2}", parentGrowCrop.Name, PaymentStyle, this.Name));
+                        }
+                        break;
                     default:
                         throw new Exception(String.Format("CropPaymentStyleType {0} is not supported for {1}", PaymentStyle, this.Name));
                 }

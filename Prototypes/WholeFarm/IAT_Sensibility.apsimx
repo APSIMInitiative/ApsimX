@@ -104,6 +104,15 @@
             <StartingAge>0</StartingAge>
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
+          <HumanFoodStoreType>
+            <Name>TreeFruit</Name>
+            <DryMatter>50</DryMatter>
+            <DMD>50</DMD>
+            <Nitrogen>20</Nitrogen>
+            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
+            <StartingAge>0</StartingAge>
+            <StartingAmount>100</StartingAmount>
+          </HumanFoodStoreType>
         </HumanFoodStore>
         <AnimalFoodStore>
           <Name>AnimalFoodStore</Name>
@@ -458,13 +467,13 @@
       <ActivitiesHolder>
         <Name>Activities</Name>
         <IATCropLand>
-          <Name>TopPaddock</Name>
+          <Name>ClayPlains</Name>
           <IATGrowCrop>
             <Name>MaizeGrain</Name>
             <ActivityFolder>
               <Name>Sowing</Name>
               <IATGrowCropCost>
-                <Name>Bags and Labels</Name>
+                <Name>BagsAndLabels</Name>
                 <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
                 <PaymentStyle>Fixed</PaymentStyle>
@@ -482,6 +491,23 @@
                 <AccountName>General account</AccountName>
               </IATGrowCropCost>
               <IATGrowCropLabour>
+                <Name>BaggingAndLabelling</Name>
+                <LabourFilterGroupSpecified>
+                  <Name>Labour details</Name>
+                  <LabourFilter>
+                    <Name>Filter[Name=Joe B]</Name>
+                    <Parameter>Name</Parameter>
+                    <Operator>Equal</Operator>
+                    <Value>Joe B</Value>
+                  </LabourFilter>
+                  <LabourPerUnit>2</LabourPerUnit>
+                  <UnitSize>1</UnitSize>
+                  <UnitType>Fixed</UnitType>
+                </LabourFilterGroupSpecified>
+                <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+              </IATGrowCropLabour>
+              <IATGrowCropLabour>
                 <Name>HandSowing</Name>
                 <LabourFilterGroupSpecified>
                   <Name>Labour details</Name>
@@ -491,9 +517,9 @@
                     <Operator>Equal</Operator>
                     <Value>Joe B</Value>
                   </LabourFilter>
-                  <UnitType>Fixed</UnitType>
+                  <LabourPerUnit>0.01</LabourPerUnit>
                   <UnitSize>1</UnitSize>
-                  <LabourPerUnit>2</LabourPerUnit>
+                  <UnitType>perHa</UnitType>
                 </LabourFilterGroupSpecified>
                 <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
@@ -506,6 +532,7 @@
             <Store>HumanFoodStore</Store>
             <StoreItemName>MaizeNewName</StoreItemName>
             <PercentKept>100</PercentKept>
+            <TreesPerHa>0</TreesPerHa>
           </IATGrowCrop>
           <IATGrowCrop>
             <Name>MaizeResidue</Name>
@@ -515,6 +542,73 @@
             <Store>AnimalFoodStore</Store>
             <StoreItemName>MaizeNewName</StoreItemName>
             <PercentKept>100</PercentKept>
+            <TreesPerHa>0</TreesPerHa>
+          </IATGrowCrop>
+          <IATGrowCrop>
+            <Name>TreeFruit</Name>
+            <ActivityFolder>
+              <Name>Growing</Name>
+              <IATGrowCropCost>
+                <Name>CostFruitPacking</Name>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+                <PaymentStyle>Fixed</PaymentStyle>
+                <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
+                <CostPerUnit>11</CostPerUnit>
+                <AccountName>General account</AccountName>
+              </IATGrowCropCost>
+              <IATGrowCropCost>
+                <Name>CostPruning</Name>
+                <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+                <PaymentStyle>perTree</PaymentStyle>
+                <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
+                <CostPerUnit>10</CostPerUnit>
+                <AccountName>General account</AccountName>
+              </IATGrowCropCost>
+              <IATGrowCropLabour>
+                <Name>LabourFruitPacking</Name>
+                <LabourFilterGroupSpecified>
+                  <Name>Labour details</Name>
+                  <LabourFilter>
+                    <Name>Filter[Name=Jill]</Name>
+                    <Parameter>Name</Parameter>
+                    <Operator>Equal</Operator>
+                    <Value>Jill</Value>
+                  </LabourFilter>
+                  <LabourPerUnit>2</LabourPerUnit>
+                  <UnitSize>1</UnitSize>
+                  <UnitType>Fixed</UnitType>
+                </LabourFilterGroupSpecified>
+                <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+              </IATGrowCropLabour>
+              <IATGrowCropLabour>
+                <Name>LabourPruning</Name>
+                <LabourFilterGroupSpecified>
+                  <Name>Labour details</Name>
+                  <LabourFilter>
+                    <Name>Filter[Name=Jill]</Name>
+                    <Parameter>Name</Parameter>
+                    <Operator>Equal</Operator>
+                    <Value>Jill</Value>
+                  </LabourFilter>
+                  <LabourPerUnit>0.01</LabourPerUnit>
+                  <UnitSize>1</UnitSize>
+                  <UnitType>perTree</UnitType>
+                </LabourFilterGroupSpecified>
+                <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+              </IATGrowCropLabour>
+              <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            </ActivityFolder>
+            <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
+            <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
+            <CropName>Arachide</CropName>
+            <Store>HumanFoodStore</Store>
+            <StoreItemName>TreeFruit</StoreItemName>
+            <PercentKept>100</PercentKept>
+            <TreesPerHa>10</TreesPerHa>
           </IATGrowCrop>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           <LandItemNameToUse>NthQld_CrackingClayPlains</LandItemNameToUse>
@@ -811,6 +905,22 @@
           </EventNames>
         </Report>
         <Report>
+          <Name>HumanFoodLedger</Name>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].HumanFoodStore.LastTransaction.Credit as Credit</string>
+            <string>[Resources].HumanFoodStore.LastTransaction.Debit as Debit</string>
+            <string>[Resources].HumanFoodStore.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].HumanFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].HumanFoodStore.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].HumanFoodStore.TransactionOccurred</string>
+          </EventNames>
+        </Report>
+        <Report>
           <Name>AnimalFoodLedger</Name>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
@@ -820,6 +930,7 @@
             <string>[Resources].AnimalFoodStore.LastTransaction.Debit as Debit</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.ResourceType as Resource</string>
             <string>[Resources].AnimalFoodStore.LastTransaction.Activity as Activity</string>
+            <string>[Resources].AnimalFoodStore.LastTransaction.Reason as Reason</string>
           </VariableNames>
           <EventNames>
             <string>[Resources].AnimalFoodStore.TransactionOccurred</string>

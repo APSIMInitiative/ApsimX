@@ -1,12 +1,16 @@
 ﻿using Models.Core;
 using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
+using APSIM.Shared.Utilities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+
+
 
 namespace Models.WholeFarm.Activities
 {
@@ -50,9 +54,14 @@ namespace Models.WholeFarm.Activities
 
 
         /// <summary>
-        /// Parent of this model
+        /// Parent somewhere above this model.
         /// </summary>
         private IATGrowCrop parentGrowCrop;
+
+        /// <summary>
+        /// Parent above ParentGrowCrop.
+        /// </summary>
+        private IATCropLand grandParentCropLand;
 
         /// <summary>
         /// Labour settings
@@ -74,6 +83,8 @@ namespace Models.WholeFarm.Activities
                 Summary.WriteWarning(this, String.Format("Unable to find a parent IATGrowCrop anywhere above ({0}).", this.Name));
                 throw new ApsimXException(this, String.Format("Unable to find a parent IATGrowCrop anywhere above ({0}).", this.Name));
             }
+
+            grandParentCropLand = (IATCropLand)parentGrowCrop.Parent;
 
             // get labour specifications
             labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
@@ -143,15 +154,33 @@ namespace Models.WholeFarm.Activities
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
                 string cropName = parentGrowCrop.CropName;
+                double daysNeeded = 0;
+                string reason;
 
                 // for each labour item specified
                 foreach (var item in labour)
                 {
-                    double daysNeeded = 0;
+
                     switch (item.UnitType)
                     {
                         case LabourUnitType.Fixed:
                             daysNeeded = item.LabourPerUnit;
+                            reason = "Crop labour (fixed) - " + cropName;
+                            break; 
+                        case LabourUnitType.perHa:
+                            daysNeeded = item.LabourPerUnit  * MathUtilities.Divide(grandParentCropLand.Area, item.UnitSize, 0);
+                            reason = "Crop labour (perHa) - " + cropName;
+                            break;
+                        case LabourUnitType.perTree:
+                            if (parentGrowCrop.IsTreeCrop)
+                            {
+                                daysNeeded = item.LabourPerUnit * MathUtilities.Divide((parentGrowCrop.TreesPerHa * grandParentCropLand.Area), item.UnitSize, 0);
+                                reason = "Crop labour (perTree) - " + cropName;
+                            }
+                            else
+                            {
+                                throw new Exception(String.Format("{0} is not a Tree Crop, so LabourUnitType {1} is not supported for {2}", parentGrowCrop.Name, item.UnitType, this.Name));
+                            }
                             break;
                         default:
                             throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
@@ -166,7 +195,7 @@ namespace Models.WholeFarm.Activities
                             ResourceType = typeof(Labour),
                             ResourceTypeName = "",
                             ActivityModel = this,
-                            Reason = "Crop labour (fixed) - " + cropName,
+                            Reason = reason,
                             FilterDetails = new List<object>() { item }
                         }
                         );
