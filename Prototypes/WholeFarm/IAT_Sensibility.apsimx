@@ -34,10 +34,8 @@
           <LandType>
             <Name>NthQld_CrackingClayPlains</Name>
             <LandArea>250</LandArea>
-            <UnusablePortion>0</UnusablePortion>
             <SoilType>3</SoilType>
           </LandType>
-          <UnitsOfArea>Hectares</UnitsOfArea>
         </Land>
         <Labour>
           <Name>Labour</Name>
@@ -89,6 +87,7 @@
             <Name>General account</Name>
             <OpeningBalance>10000000</OpeningBalance>
             <WithdrawalLimit>-5000</WithdrawalLimit>
+            <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
             <InterestRateCharged>7.5</InterestRateCharged>
             <InterestRatePaid>2</InterestRatePaid>
           </FinanceType>
@@ -100,7 +99,6 @@
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAge>0</StartingAge>
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
@@ -109,7 +107,6 @@
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAge>0</StartingAge>
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
@@ -121,7 +118,6 @@
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>10000</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -129,7 +125,6 @@
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -137,7 +132,6 @@
             <DryMatter>80</DryMatter>
             <DMD>47</DMD>
             <Nitrogen>0.7</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -145,7 +139,6 @@
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>10000</StartingAmount>
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
@@ -153,7 +146,6 @@
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
-            <CurrentStoreNitrogen>0</CurrentStoreNitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
         </AnimalFoodStore>
@@ -397,6 +389,7 @@
             <IntakeCoefficient>0.024</IntakeCoefficient>
             <IntakeIntercept>1.7</IntakeIntercept>
             <ProteinCoefficient>120</ProteinCoefficient>
+            <ProteinDegradability>0</ProteinDegradability>
             <BaseAnimalEquivalent>450</BaseAnimalEquivalent>
             <GreenDietMax>98</GreenDietMax>
             <GreenDietCoefficient>0.15</GreenDietCoefficient>
@@ -620,78 +613,78 @@
             <Name>Bank interest</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
           </FinanceActivityCalculateInterest>
-          <FinanceActivityPayOverhead>
+          <FinanceActivityPayExpense>
             <Name>General farm maintenance</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>40000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Fuel costs</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>30000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Pest control</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>12</MonthDue>
             <Amount>5000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Contractors</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>10</MonthDue>
             <Amount>30000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Administration</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>1666.67</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Rates and Fees</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>7</MonthDue>
             <Amount>15000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Insurance</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>12</PaymentInterval>
             <MonthDue>12</MonthDue>
             <Amount>20000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Electricity</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>3</PaymentInterval>
             <MonthDue>1</MonthDue>
             <Amount>2000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
-          <FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
+          <FinanceActivityPayExpense>
             <Name>Living costs</Name>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>6</PaymentInterval>
             <MonthDue>6</MonthDue>
             <Amount>1000</Amount>
             <AccountName>General account</AccountName>
-          </FinanceActivityPayOverhead>
+          </FinanceActivityPayExpense>
           <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
         </ActivityFolder>
         <ActivityFolder>
@@ -729,13 +722,11 @@
           <RuminantActivityGrow>
             <Name>Grow all ruminants</Name>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
-            <EnergyGross>18.4</EnergyGross>
           </RuminantActivityGrow>
           <RuminantActivityBreed>
             <Name>Breed Bos indicus</Name>
             <ControlledMatingSettings>
               <Name>Controlled mating</Name>
-              <BreedInterval>12</BreedInterval>
               <MonthDue>8</MonthDue>
             </ControlledMatingSettings>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
@@ -747,6 +738,7 @@
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>BosIndicus</HerdName>
             <MaximumBreedersKept>1800</MaximumBreedersKept>
+            <MinimumBreedersKept>0</MinimumBreedersKept>
             <MaximumBreederAge>120</MaximumBreederAge>
             <MaximumSiresKept>60</MaximumSiresKept>
             <MaximumBullAge>96</MaximumBullAge>
@@ -764,12 +756,10 @@
             <Name>Buy and sell Bos indicus</Name>
             <RuminantSaleFee>
               <Name>MLA Fee</Name>
-              <PaymentStyle>perHead</PaymentStyle>
               <Amount>2</Amount>
             </RuminantSaleFee>
             <RuminantSaleFee>
               <Name>Yard Fees</Name>
-              <PaymentStyle>perHead</PaymentStyle>
               <Amount>2</Amount>
             </RuminantSaleFee>
             <RuminantSaleFee>
@@ -797,7 +787,6 @@
             <PaymentInterval>6</PaymentInterval>
             <MonthDue>2</MonthDue>
             <Amount>2</Amount>
-            <PaymentStyle>perHead</PaymentStyle>
             <AccountName>General account</AccountName>
           </RuminantActivityHerdCost>
           <RuminantActivityHerdCost>
@@ -821,7 +810,6 @@
               </RuminantFilter>
             </RuminantFilterGroup>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>12</PaymentInterval>
             <MonthDue>5</MonthDue>
             <Amount>5</Amount>
             <PaymentStyle>perAE</PaymentStyle>
@@ -982,7 +970,6 @@
       <Slope>0</Slope>
       <RandomSeed>0</RandomSeed>
       <ClimateRegion>0</ClimateRegion>
-      <EcologicalIndicatorsCalculationInterval>12</EcologicalIndicatorsCalculationInterval>
       <EcologicalIndicatorsCalculationMonth>9</EcologicalIndicatorsCalculationMonth>
     </WholeFarm>
     <Graph>
