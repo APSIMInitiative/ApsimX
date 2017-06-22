@@ -174,10 +174,18 @@ namespace Models.WholeFarm
 		/// Fixed price
 		/// </summary>
 		Fixed,
-		/// <summary>
-		/// Labour per head
-		/// </summary>
-		perHead,
+        /// <summary>
+        /// Labour per hectare
+        /// </summary>
+        perHa,
+        /// <summary>
+        /// Labour per Tree
+        /// </summary>
+        perTree,
+        /// <summary>
+        /// Labour per head
+        /// </summary>
+        perHead,
 		/// <summary>
 		/// Labour per adult equivilant
 		/// </summary>

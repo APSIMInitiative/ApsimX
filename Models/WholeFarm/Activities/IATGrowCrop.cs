@@ -59,7 +59,7 @@ namespace Models.WholeFarm.Activities
         /// <summary>
         /// Item name (in the store) to put crop growth into
         /// </summary>
-        [Description("Item name (in the store) to put crop growth into")]
+        [Description("Item name [in the store] to put crop growth into")]
         public string StoreItemName { get; set; }
 
         /// <summary>
@@ -69,9 +69,20 @@ namespace Models.WholeFarm.Activities
         public double PercentKept { get; set; }
 
 
+        /// <summary>
+        /// Number of Trees per Hectare 
+        /// </summary>
+        [Description("Number of Trees (perHa) [0 if not a tree crop]")]
+        public double TreesPerHa { get; set; }
 
 
 
+
+        /// <summary>
+        /// Is this a tree crop.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsTreeCrop;
 
 
         /// <summary>
@@ -129,7 +140,6 @@ namespace Models.WholeFarm.Activities
             {
                 case StoresForCrops.HumanFoodStore:
                     LinkedHumanFoodItem = Resources.GetResourceItem(this, typeof(HumanFoodStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
-                    LinkedAnimalFoodItem = Resources.GetResourceItem(this, typeof(AnimalFoodStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as AnimalFoodStoreType;
                     break;
                 case StoresForCrops.AnimalFoodStore:
                     LinkedAnimalFoodItem = Resources.GetResourceItem(this, typeof(AnimalFoodStore), StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as AnimalFoodStoreType;
@@ -147,13 +157,13 @@ namespace Models.WholeFarm.Activities
             // Retrieve harvest data from the forage file for the entire run. 
             HarvestData = fileCrop.GetCropDataForEntireRun(cropLand.LinkedLandItem.SoilType, CropName, 
                                                                Clock.StartDate, Clock.EndDate);
-            if (HarvestData == null)
+            if ((HarvestData == null) || (HarvestData.Count == 0))
             {
                 throw new ApsimXException(this, String.Format("Unable to locate in crop file {0} any harvest data for SoilType {1}, CropName {2} between the dates {3} and {4}", 
                     fileCrop.FileName, cropLand.LinkedLandItem.SoilType, CropName, Clock.StartDate, Clock.EndDate));
             }
-            
-            
+
+            IsTreeCrop = (TreesPerHa == 0) ? false : true;  //using this boolean just makes things more readable.
         }
 
 
@@ -225,7 +235,12 @@ namespace Models.WholeFarm.Activities
                 //if this month is a harvest month for this crop
                 if ((year == nextHarvest.Year) && (month == nextHarvest.Month))
                 {
-                    double totalamount = nextHarvest.AmtKg * cropLand.Area * (PercentKept / 100);
+                    double totalamount;
+                    if (IsTreeCrop)
+                        totalamount = nextHarvest.AmtKg * TreesPerHa * cropLand.Area * (PercentKept / 100);
+                    else
+                        totalamount = nextHarvest.AmtKg * cropLand.Area * (PercentKept / 100);
+
 
                     switch (Store)
                     {

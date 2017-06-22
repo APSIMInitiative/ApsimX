@@ -24,23 +24,24 @@ namespace Models.WholeFarm.Groupings
 	[ValidParent(ParentType = typeof(OtherAnimalsActivityFeed))]
 	public class LabourFilterGroupSpecified: LabourFilterGroup
 	{
-		/// <summary>
-		/// Labour unit type
-		/// </summary>
-		[Description("Labour unit")]
+
+        /// <summary>
+        /// Days labour required per unit or fixed (days)
+        /// </summary>
+        [Description("Days labour required [per unit or fixed] (days)")]
+        public double LabourPerUnit { get; set; }
+
+        /// <summary>
+        /// Size of unit
+        /// </summary>
+        [Description("Size of unit")]
+        public double UnitSize { get; set; }
+
+        /// <summary>
+        /// Labour unit type
+        /// </summary>
+        [Description("Units for 'Size of unit'")]
 		public LabourUnitType UnitType { get; set; }
-
-		/// <summary>
-		/// Size of unit
-		/// </summary>
-		[Description("Size of unit")]
-		public double UnitSize { get; set; }
-
-		/// <summary>
-		/// Days labour required per unit or fixed (days)
-		/// </summary>
-		[Description("Days labour required per unit or fixed (days)")]
-		public double LabourPerUnit { get; set; }
 
 	}
 }
