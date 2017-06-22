@@ -518,7 +518,7 @@ namespace UserInterface.Presenters
         /// The view wants us to return a list of menu descriptions for the
         /// currently selected Node.
         /// </summary>
-        private void PopulateContextMenu(string nodePath)
+        public void PopulateContextMenu(string nodePath)
         {
             List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
             // Get the selected model.
@@ -549,25 +549,24 @@ namespace UserInterface.Presenters
                         desc.Name = contextMenuAttr.MenuName;
                         desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
                         desc.ShortcutKey = contextMenuAttr.ShortcutKey;
+                        desc.ShowCheckbox = contextMenuAttr.IsToggle;
 
-                        // Check for an enabled method.
-                        MethodInfo enabledMethod = typeof(ContextMenu).GetMethod(desc.ResourceNameForImage + "Enabled");
-                        if (enabledMethod != null)
-                        {
-                            desc.Enabled = (bool)enabledMethod.Invoke(this.contextMenu, null);
-                        }
+                        // Check for an enable method
+                        MethodInfo enableMethod = typeof(ContextMenu).GetMethod(method.Name + "Enabled");
+                        if (enableMethod != null)
+                            desc.Enabled = (bool)enableMethod.Invoke(this.contextMenu, null);
                         else
-                        {
                             desc.Enabled = true;
-                        }
+
+                        // Check for an checked method
+                        MethodInfo checkMethod = typeof(ContextMenu).GetMethod(method.Name + "Checked");
+                        if (checkMethod != null)
+                            desc.Checked = (bool)checkMethod.Invoke(this.contextMenu, null);
+                        else
+                            desc.Checked = false;
 
                         EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.contextMenu, method);
                         desc.OnClick = handler;
-
-                        if (desc.Name == "Advanced mode")
-                        {
-                            desc.Checked = this.advancedMode;
-                        }
 
                         descriptions.Add(desc);
                     }

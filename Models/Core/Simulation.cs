@@ -212,6 +212,13 @@ namespace Models.Core
             Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(this.FileName) + ", Simulation " + this.Name + " complete. Time: " + timer.Elapsed.TotalSeconds.ToString("0.00 sec"));
         }
 
+        /// <summary>
+        /// Clears the existing Scoping Rules
+        /// </summary>
+        public void ClearScopingRules()
+        {
+            scope = new ScopingRules();
+        }
 
         /// <summary>Connect all links and events in simulation</summary>
         public void ConnectLinksAndEvents()

@@ -180,13 +180,13 @@ namespace UserInterface.Views
 
         public int Width
         {
-            get { return this.plot1.Allocation.Width; }
+            get { return this.plot1.Allocation.Width > 1 ? this.plot1.Allocation.Width : this.plot1.ChildRequisition.Width; }
             set { this.plot1.WidthRequest = value; }
         }
 
         public int Height
         {
-            get { return this.plot1.Allocation.Height; }
+            get { return this.plot1.Allocation.Height > 1 ? this.plot1.Allocation.Height : this.plot1.ChildRequisition.Height; }
             set { this.plot1.HeightRequest = value; }
         }
 
@@ -471,6 +471,7 @@ namespace UserInterface.Views
                 yPosition = (double)y;
             annotation.TextPosition = new DataPoint(xPosition, yPosition);
             annotation.TextColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+            annotation.Text += "\r\n\r\n";
             this.plot1.Model.Annotations.Add(annotation);
         }
         /// <summary>
@@ -561,7 +562,7 @@ namespace UserInterface.Views
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
             if (oxyAxis != null)
             {
-                oxyAxis.Title = title;
+                oxyAxis.Title = title.Trim();
                 oxyAxis.MinorTickSize = 0;
                 oxyAxis.AxislineStyle = LineStyle.Solid;
                 oxyAxis.AxisTitleDistance = 10;
@@ -608,6 +609,8 @@ namespace UserInterface.Views
         public void FormatTitle(string text)
         {
             this.plot1.Model.Title = text;
+            this.plot1.Model.TitleFont = Font;
+            this.plot1.Model.TitleFontSize = FontSize;
         }
 
         /// <summary>

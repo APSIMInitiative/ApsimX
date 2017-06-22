@@ -161,8 +161,8 @@ namespace UserInterface.Views
                     OxyPlot.Annotations.TextAnnotation textAnnotation = annotation as OxyPlot.Annotations.TextAnnotation;
                     if (textAnnotation != null)
                         textAnnotation.FontSize = FontSize;
+                    }
                 }
-            }
 
             this.plot1.Model.InvalidatePlot(true);
         }
@@ -385,7 +385,7 @@ namespace UserInterface.Views
                 yPosition = (double)y;
             annotation.TextPosition = new DataPoint(xPosition, yPosition);
             annotation.TextColor = ConverterExtensions.ToOxyColor(colour);
-            //annotation.Text += "\r\n\r\n";
+            annotation.Text += "\r\n\r\n";
             this.plot1.Model.Annotations.Add(annotation);
         }
 
@@ -477,7 +477,7 @@ namespace UserInterface.Views
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
             if (oxyAxis != null)
             {
-                oxyAxis.Title = title;
+                oxyAxis.Title = title.Trim();
                 oxyAxis.MinorTickSize = 0;
                 oxyAxis.AxislineStyle = LineStyle.Solid;
                 oxyAxis.AxisTitleDistance = 10;
@@ -524,6 +524,8 @@ namespace UserInterface.Views
         public void FormatTitle(string text)
         {
             this.plot1.Model.Title = text;
+            this.plot1.Model.TitleFont = Font;
+            this.plot1.Model.TitleFontSize = FontSize;
         }
 
         /// <summary>
@@ -580,11 +582,9 @@ namespace UserInterface.Views
         /// <param name="legendOutside">Put legend outside of graph?</param>
         public void Export(Bitmap bitmap, Rectangle r, bool legendOutside)
         {
-            this.plot1.Dock = DockStyle.None;
             this.plot1.Width = r.Width;
             this.plot1.Height = r.Height;
             this.plot1.DrawToBitmap(bitmap, r);
-            this.plot1.Dock = DockStyle.Fill;
         }
 
         public void ExportToClipboard()
