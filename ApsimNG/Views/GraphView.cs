@@ -458,7 +458,7 @@ namespace UserInterface.Views
             if (x is DateTime)
                 xPosition = DateTimeAxis.ToDouble(x);
             else
-                xPosition = Convert.ToDouble(x);
+                xPosition = Convert.ToDouble(x, System.Globalization.CultureInfo.InvariantCulture);
             double yPosition = 0.0;
             if ((double)y == double.MinValue)
             {
@@ -500,7 +500,7 @@ namespace UserInterface.Views
             if (x1 is DateTime)
                 x1Position = DateTimeAxis.ToDouble(x1);
             else
-                x1Position = Convert.ToDouble(x1);
+                x1Position = Convert.ToDouble(x1, System.Globalization.CultureInfo.InvariantCulture);
             double y1Position = 0.0;
             if ((double)y1 == double.MinValue)
                 y1Position = AxisMinimum(Models.Graph.Axis.AxisType.Left);
@@ -512,7 +512,7 @@ namespace UserInterface.Views
             if (x2 is DateTime)
                 x2Position = DateTimeAxis.ToDouble(x2);
             else
-                x2Position = Convert.ToDouble(x2);
+                x2Position = Convert.ToDouble(x2, System.Globalization.CultureInfo.InvariantCulture);
             double y2Position = 0.0;
             if ((double)y2 == double.MinValue)
                 y2Position = AxisMinimum(Models.Graph.Axis.AxisType.Left);
@@ -865,7 +865,8 @@ namespace UserInterface.Views
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do
-                    dataPointValues.Add(Convert.ToDouble(enumerator.Current));
+                    dataPointValues.Add(Convert.ToDouble(enumerator.Current, 
+                                                         System.Globalization.CultureInfo.InvariantCulture));
                 while (enumerator.MoveNext());
             }
             else

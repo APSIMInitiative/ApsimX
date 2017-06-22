@@ -32,9 +32,10 @@ namespace Models.PMF.Functions
             if (o is IFunction)
                 return (o as IFunction).Value(arrayIndex);
             else if (o is Array)
-                return Convert.ToDouble((o as Array).GetValue(arrayIndex));
+                return Convert.ToDouble((o as Array).GetValue(arrayIndex), 
+                                        System.Globalization.CultureInfo.InvariantCulture);
             else
-                return Convert.ToDouble(o);
+                return Convert.ToDouble(o, System.Globalization.CultureInfo.InvariantCulture);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

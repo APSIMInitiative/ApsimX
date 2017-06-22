@@ -762,8 +762,8 @@ namespace Models
                 values = this.reader.GetNextLineOfData();
                 curDate = this.reader.GetDateFromValues(values);
                 int yearIndex = curDate.Year - start.Year;
-                maxt = Convert.ToDouble(values[this.maximumTemperatureIndex]);
-                mint = Convert.ToDouble(values[this.minimumTemperatureIndex]);
+                maxt = Convert.ToDouble(values[this.maximumTemperatureIndex], System.Globalization.CultureInfo.InvariantCulture);
+                mint = Convert.ToDouble(values[this.minimumTemperatureIndex], System.Globalization.CultureInfo.InvariantCulture);
 
                 // accumulate the daily mean for each month
                 if (curMonth != curDate.Month)

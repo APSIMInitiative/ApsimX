@@ -1376,7 +1376,8 @@ namespace Models.GrazPlan
                         {
                             try
                             {
-                                fValue = System.Convert.ToDouble(sValue);
+                                fValue = System.Convert.ToDouble(sValue, 
+                                                                 System.Globalization.CultureInfo.InvariantCulture);
                                 setRealParam(sTagList, fValue);
                             }
                             catch

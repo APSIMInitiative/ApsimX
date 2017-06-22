@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Maize</Name>
@@ -13,7 +13,8 @@
     </Summary>
     <Weather>
       <Name>Weather</Name>
-      <FileName>%root%\Examples\WeatherFiles\Dalby.met</FileName>
+      <FileName>WeatherFiles/Dalby.xlsx</FileName>
+      <ExcelWorkSheetName>Sheet1</ExcelWorkSheetName>
     </Weather>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
@@ -393,6 +394,9 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+        </CERESSoilTemperature>
         <RecordNumber>0</RecordNumber>
         <ASCOrder>Vertosol</ASCOrder>
         <ASCSubOrder>Black</ASCSubOrder>
@@ -573,7 +577,7 @@ namespace Models
 			
 			if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
 			    !Maize.IsAlive &&
-			    Soil.SoilWater.ESW > MinESW &&
+			    MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&
 			    accumulatedRain.Sum > MinRain)
 			{
 				Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
@@ -631,6 +635,9 @@ namespace Models
 }
 	   ]]></Code>
       </Manager>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+      </SoluteManager>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
