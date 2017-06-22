@@ -1085,13 +1085,25 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </MultiplyFunction>
           <WhenToHold>Flowering</WhenToHold>
         </HoldFunction>
-        <WangEngelTempFunction>
+        <MultiplyFunction>
           <Name>MaintenanceRespirationFunction</Name>
-          <MinTemp>-50</MinTemp>
-          <OptTemp>48</OptTemp>
-          <MaxTemp>60</MaxTemp>
-          <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
-        </WangEngelTempFunction>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <FixedValue>0.1</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <MinTemp>-50</MinTemp>
+            <OptTemp>48</OptTemp>
+            <MaxTemp>60</MaxTemp>
+            <RefTemp>20</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
+        </MultiplyFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
@@ -1352,12 +1364,32 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <XProperty>[SoilWaterScale]</XProperty>
         </LinearInterpolationFunction>
         <WangEngelTempFunction>
-          <Name>MaintenanceRespirationFunction</Name>
+          <Name>MaintenanceRespirationFunction0</Name>
           <MinTemp>-50</MinTemp>
           <OptTemp>48</OptTemp>
           <MaxTemp>60</MaxTemp>
+          <RefTemp>0</RefTemp>
           <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
         </WangEngelTempFunction>
+        <MultiplyFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <FixedValue>0.1</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <MinTemp>-50</MinTemp>
+            <OptTemp>48</OptTemp>
+            <MaxTemp>60</MaxTemp>
+            <RefTemp>20</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
+        </MultiplyFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
@@ -1825,6 +1857,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <MinTemp>-50</MinTemp>
             <OptTemp>48</OptTemp>
             <MaxTemp>60</MaxTemp>
+            <RefTemp>60</RefTemp>
             <MaximumTemperatureWeighting>0.71</MaximumTemperatureWeighting>
           </WangEngelTempFunction>
         </LeafCohortParameters>
@@ -1836,27 +1869,21 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </Model>
           <Model xsi:type="LeafLightUseEfficiency">
             <Name>LeafLightUseEfficiency</Name>
+            <LUEref>0.48</LUEref>
             <pathway>C3</pathway>
           </Model>
           <Model xsi:type="LeafMaxGrossPhotosynthesis">
             <Name>LeafMaxGrossPhotosynthesis</Name>
             <WangEngelTempFunction>
               <Name>TemperatureResponse</Name>
-              <WangEngelTempFunction>
-                <Name>TemperatureResponse</Name>
-                <MinTemp>0</MinTemp>
-                <OptTemp>27</OptTemp>
-                <MaxTemp>35</MaxTemp>
-                <MaximumTemperatureWeighting>0.71</MaximumTemperatureWeighting>
-              </WangEngelTempFunction>
               <MinTemp>0</MinTemp>
-              <OptTemp>27</OptTemp>
+              <OptTemp>27.5</OptTemp>
               <MaxTemp>35</MaxTemp>
+              <RefTemp>27.5</RefTemp>
               <MaximumTemperatureWeighting>0.71</MaximumTemperatureWeighting>
             </WangEngelTempFunction>
             <Pgmmax>40</Pgmmax>
-            <CO2Cmp>50</CO2Cmp>
-            <CO2R>38</CO2R>
+            <pathway>C3</pathway>
           </Model>
           <GrossPhotosynthesis>0</GrossPhotosynthesis>
         </CanopyPhotosynthesis>
@@ -1936,6 +1963,25 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>DMConversionEfficiencyFunction</Name>
           <FixedValue>1</FixedValue>
         </Constant>
+        <MultiplyFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <FixedValue>0.1</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <MinTemp>-50</MinTemp>
+            <OptTemp>48</OptTemp>
+            <MaxTemp>60</MaxTemp>
+            <RefTemp>20</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
+        </MultiplyFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
@@ -2107,12 +2153,32 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableName>[Structure].TotalStemPopn</VariableName>
         </VariableReference>
         <WangEngelTempFunction>
-          <Name>MaintenanceRespirationFunction</Name>
+          <Name>RespirationFunction</Name>
           <MinTemp>-50</MinTemp>
           <OptTemp>48</OptTemp>
           <MaxTemp>60</MaxTemp>
+          <RefTemp>0</RefTemp>
           <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
         </WangEngelTempFunction>
+        <MultiplyFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <FixedValue>0.1</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <MinTemp>-50</MinTemp>
+            <OptTemp>48</OptTemp>
+            <MaxTemp>60</MaxTemp>
+            <RefTemp>20</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
+        </MultiplyFunction>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -2324,12 +2390,32 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>0-1</Units>
         </Constant>
         <WangEngelTempFunction>
-          <Name>MaintenanceRespirationFunction</Name>
+          <Name>MaintenanceRespirationFunction0</Name>
           <MinTemp>-50</MinTemp>
           <OptTemp>48</OptTemp>
           <MaxTemp>60</MaxTemp>
+          <RefTemp>60</RefTemp>
           <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
         </WangEngelTempFunction>
+        <MultiplyFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <FixedValue>0.1</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <MinTemp>-50</MinTemp>
+            <OptTemp>48</OptTemp>
+            <MaxTemp>60</MaxTemp>
+            <RefTemp>20</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
+        </MultiplyFunction>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -6390,7 +6476,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6412,7 +6498,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6975,7 +7061,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -6996,7 +7082,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7038,7 +7124,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7059,7 +7145,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7101,7 +7187,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7122,7 +7208,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7164,7 +7250,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-8388608</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7185,7 +7271,7 @@ namespace Models
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
-              <ColourArgb>-16776961</ColourArgb>
+              <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7229,7 +7315,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7250,7 +7336,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-8388608</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -7423,15 +7509,15 @@ Emergence was recorded as the 28th of May for the first planting.  The model was
               <Manager>
                 <Name>Fertilise</Name>
                 <Script>
-                  <FertDate1>05-Aug</FertDate1>
-                  <FertDate2>01-Oct</FertDate2>
-                  <FertDate3>20-Oct</FertDate3>
-                  <FertDate4>25-Nov</FertDate4>
+                  <SDSwitch>0</SDSwitch>
                   <Amount1>0</Amount1>
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
+                  <FertDate1>05-Aug</FertDate1>
+                  <FertDate2>01-Oct</FertDate2>
+                  <FertDate3>20-Oct</FertDate3>
+                  <FertDate4>25-Nov</FertDate4>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -8772,7 +8858,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -8794,7 +8880,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8836,7 +8922,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -8858,7 +8944,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8900,7 +8986,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -8922,7 +9008,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8964,7 +9050,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -8986,7 +9072,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -9028,7 +9114,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -9050,7 +9136,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -9092,7 +9178,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
@@ -9114,7 +9200,7 @@ namespace Models
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
                 <YAxis>Left</YAxis>
-                <ColourArgb>0</ColourArgb>
+                <ColourArgb>-16777216</ColourArgb>
                 <FactorIndexToVaryColours>2</FactorIndexToVaryColours>
                 <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
                 <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -10737,5 +10823,5 @@ namespace Models
       </Graph>
     </Folder>
   </Folder>
-  <ExplorerWidth>442</ExplorerWidth>
+  <ExplorerWidth>340</ExplorerWidth>
 </Simulations>
