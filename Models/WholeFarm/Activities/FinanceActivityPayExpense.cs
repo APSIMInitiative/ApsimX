@@ -9,9 +9,10 @@ using System.Xml.Serialization;
 
 namespace Models.WholeFarm.Activities
 {
-	/// <summary>Activity to arrange and pay an enterprise overhead</summary>
+	/// <summary>Activity to arrange and pay an enterprise expenses
+	/// Expenses can be flagged as overheads for accounting
+	/// </summary>
 	/// <version>1.0</version>
-	/// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]

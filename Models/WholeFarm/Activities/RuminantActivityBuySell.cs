@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 namespace Models.WholeFarm.Activities
 {
 	/// <summary>Ruminant sales activity</summary>
-	/// <summary>This activity undertakes the sale and transport of any individuals f;agged for sale.</summary>
+	/// <summary>This activity undertakes the sale and transport of any individuals flagged for sale.</summary>
 	/// <version>1.0</version>
 	/// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
 	[Serializable]
