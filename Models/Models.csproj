@@ -483,7 +483,7 @@
     <Compile Include="WholeFarm\Activities\IATGrowCropCost.cs" />
     <Compile Include="WholeFarm\Activities\ActivityFolder.cs" />
     <Compile Include="WholeFarm\Activities\ControlledMatingSettings.cs" />
-    <Compile Include="WholeFarm\Activities\FinanceActivityPayOverhead.cs" />
+    <Compile Include="WholeFarm\Activities\FinanceActivityPayExpense.cs" />
     <Compile Include="WholeFarm\Activities\GrazeBreedPoolLimit.cs" />
     <Compile Include="WholeFarm\Activities\IATGrowCrop.cs" />
     <Compile Include="WholeFarm\Activities\LabourActivityOffFarm.cs" />

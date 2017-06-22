@@ -254,7 +254,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.WholeFarm.FileGRASP))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.Finance))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.FinanceActivityCalculateInterest))]
-		[XmlElement(typeof(Models.WholeFarm.Activities.FinanceActivityPayOverhead))]
+		[XmlElement(typeof(Models.WholeFarm.Activities.FinanceActivityPayExpense))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.FinanceType))]
 		[XmlElement(typeof(Models.WholeFarm.Groupings.FodderLimitsFilterGroup))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.GrazeFoodStore))]

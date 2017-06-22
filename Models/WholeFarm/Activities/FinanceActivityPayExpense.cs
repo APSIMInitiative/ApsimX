@@ -18,7 +18,7 @@ namespace Models.WholeFarm.Activities
 	[ValidParent(ParentType = typeof(WFActivityBase))]
 	[ValidParent(ParentType = typeof(ActivitiesHolder))]
 	[ValidParent(ParentType = typeof(ActivityFolder))]
-	public class FinanceActivityPayOverhead : WFActivityBase
+	public class FinanceActivityPayExpense : WFActivityBase
 	{
 		[XmlIgnore]
 		[Link]
@@ -57,6 +57,12 @@ namespace Models.WholeFarm.Activities
 		public string AccountName { get; set; }
 
 		/// <summary>
+		/// Farm overhead
+		/// </summary>
+		[Description("Farm overhead")]
+		public bool IsOverhead { get; set; }
+
+		/// <summary>
 		/// Month this overhead is next due.
 		/// </summary>
 		[XmlIgnore]
@@ -70,7 +76,7 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public FinanceActivityPayOverhead()
+		public FinanceActivityPayExpense()
 		{
 			this.SetDefaults();
 		}
@@ -125,9 +131,8 @@ namespace Models.WholeFarm.Activities
 					AllowTransmutation = false,
 					Required = this.Amount,
 					ResourceTypeName = this.AccountName,
-//					ActivityName = "Overheads",
 					ActivityModel = this,
-					Reason = "Pay overhead"
+					Reason = ((IsOverhead)?"Overhead":"Expense")
 				}
 				);
 			}
