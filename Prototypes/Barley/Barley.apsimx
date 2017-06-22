@@ -2282,7 +2282,7 @@ N conc values are from Zhao et al 2009
             <Constant>
               <Name>Multiplier</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>3</FixedValue>
+              <FixedValue>1</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
