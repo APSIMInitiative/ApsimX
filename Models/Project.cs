@@ -28,6 +28,8 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+			Thread.CurrentThread.CurrentCulture.ClearCachedData();
+			Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             string tempFolder = Path.Combine(Path.GetTempPath(), "ApsimX");
             Directory.CreateDirectory(tempFolder);
             Environment.SetEnvironmentVariable("TMP", tempFolder, EnvironmentVariableTarget.Process);

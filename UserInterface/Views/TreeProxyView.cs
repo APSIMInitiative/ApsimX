@@ -775,7 +775,8 @@ namespace UserInterface.Views
                 {
                     if (rowShade[i].ToString() == "")
                         return;
-                    yShade[i - 1] = Convert.ToDouble(rowShade[i]);
+                    yShade[i - 1] = Convert.ToDouble(rowShade[i], 
+                                                     System.Globalization.CultureInfo.InvariantCulture);
                 }
 
                 for (int i = 0; i < x.Length; i++)
@@ -826,7 +827,8 @@ namespace UserInterface.Views
                     double[] data = new double[table.Rows.Count - 4];
                     for (int j = 4; j < table.Rows.Count; j++)
                     {
-                        data[j - 4] = Convert.ToDouble(table.Rows[j].Field<string>(i));
+                        data[j - 4] = Convert.ToDouble(table.Rows[j].Field<string>(i), 
+                                                       System.Globalization.CultureInfo.InvariantCulture);
                     }
 
                     List<DataPoint> points = new List<DataPoint>();
@@ -874,7 +876,8 @@ namespace UserInterface.Views
             foreach (DataGridViewRow row in dgvHeights.Rows)
             {
                 if (row.Cells[1].Value != null)
-                    heights.Add(Convert.ToDouble(row.Cells[1].Value.ToString()) * 1000);
+                    heights.Add(Convert.ToDouble(row.Cells[1].Value.ToString(), 
+                                                 System.Globalization.CultureInfo.InvariantCulture) * 1000);
             }
             return heights.ToArray();
         }
@@ -884,7 +887,8 @@ namespace UserInterface.Views
             foreach (DataGridViewRow row in dgvHeights.Rows)
             {
                 if (row.Cells[2].Value != null)
-                    NDemands.Add(Convert.ToDouble(row.Cells[2].Value.ToString()));
+                    NDemands.Add(Convert.ToDouble(row.Cells[2].Value.ToString(), 
+                                                  System.Globalization.CultureInfo.InvariantCulture));
             }
             return NDemands.ToArray();
         }
@@ -894,7 +898,8 @@ namespace UserInterface.Views
             foreach (DataGridViewRow row in dgvHeights.Rows)
             {
                 if (row.Cells[2].Value != null)
-                    CanopyWidths.Add(Convert.ToDouble(row.Cells[3].Value.ToString()));
+                    CanopyWidths.Add(Convert.ToDouble(row.Cells[3].Value.ToString(), 
+                                                      System.Globalization.CultureInfo.InvariantCulture));
             }
             return CanopyWidths.ToArray();
         }
@@ -904,7 +909,8 @@ namespace UserInterface.Views
             foreach (DataGridViewRow row in dgvHeights.Rows)
             {
                 if (row.Cells[2].Value != null)
-                    TreeLeafAreas.Add(Convert.ToDouble(row.Cells[4].Value.ToString()));
+                    TreeLeafAreas.Add(Convert.ToDouble(row.Cells[4].Value.ToString(), 
+                                                       System.Globalization.CultureInfo.InvariantCulture));
             }
             return TreeLeafAreas.ToArray();
         }

@@ -12336,7 +12336,7 @@ namespace Models
 
             CheckAllNUptakeOptionalsReadIn();   //sugar_read_constants() - (this is what is left of sugar_read_constants() that can't be done using [Param])
 
-            g_current_stage = Convert.ToDouble(crop_end);
+            g_current_stage = Convert.ToDouble(crop_end, System.Globalization.CultureInfo.InvariantCulture);
             g_crop_status = crop_out;
 
             }

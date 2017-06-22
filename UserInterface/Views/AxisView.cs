@@ -136,7 +136,8 @@ namespace UserInterface.Views
                 if (textBox1.Text == string.Empty)
                     return double.NaN;
                 else
-                    return Convert.ToDouble(textBox1.Text);
+                    return Convert.ToDouble(textBox1.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
             
             set
@@ -158,7 +159,8 @@ namespace UserInterface.Views
                 if (textBox2.Text == string.Empty)
                     return double.NaN;
                 else
-                    return Convert.ToDouble(textBox2.Text);
+                    return Convert.ToDouble(textBox2.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
             
             set
@@ -180,7 +182,8 @@ namespace UserInterface.Views
                 if (textBox3.Text == string.Empty)
                     return double.NaN;
                 else
-                    return Convert.ToDouble(textBox3.Text);
+                    return Convert.ToDouble(textBox3.Text, 
+                                            System.Globalization.CultureInfo.InvariantCulture);
             }
 
             set

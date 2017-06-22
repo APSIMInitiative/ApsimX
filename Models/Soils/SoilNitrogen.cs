@@ -180,10 +180,13 @@ namespace Models.Soils
 
     /// <summary>
     /// Initially ported from Fortran SoilN model by Eric Zurcher Sept/Oct-2010.
-    /// Code tidied up by RCichota on Aug/Sep-2012: mostly modifying how some variables are handled (substitute 'get's by [input]), added regions
-    /// to ease access, updated error messages, moved all soilTemp code to a separate class (the idea is to eliminate it in the future), also added
+    /// Code tidied up by RCichota on Aug/Sep-2012: mostly modifying how some variables are handled 
+    /// (substitute 'get's by [input]), added regions
+    /// to ease access, updated error messages, moved all soilTemp code to a separate class 
+    /// (the idea is to eliminate it in the future), also added
     /// some of the constants to xml.
-    /// Changes on Sep/Oct-2012 by RCichota, add patch capability: move all code for soil C and N to a separate class (SoilCNPatch), allow several
+    /// Changes on Sep/Oct-2012 by RCichota, add patch capability: 
+    /// move all code for soil C and N to a separate class (SoilCNPatch), allow several
     /// instances to be initialised, modified inputs to handle the partitioning of incoming N, also modified outputs to sum up the pools from the
     /// several instances (patches)
     /// </summary>

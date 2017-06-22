@@ -174,7 +174,8 @@ namespace Models.Core
 
                 try
                 {
-                    double area = Convert.ToDouble(areaString);
+                    double area = Convert.ToDouble(areaString, 
+                                                   System.Globalization.CultureInfo.InvariantCulture);
                     if (area <= 0)
                         XmlUtilities.SetValue(zoneNode, "Area", "1");
                 }
