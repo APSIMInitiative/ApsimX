@@ -645,6 +645,6 @@
     <SGen Condition="'$(OS)' == 'Windows_NT'" BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(TargetFrameworkSDKToolsDirectory)" Platform="$(Platform)">
       <Output TaskParameter="SerializationAssembly" ItemName="SerializationAssembly" />
     </SGen>
-    <Exec Condition="'$(OS)' == 'Unix' AND Exists('$(TargetDir)sgen.exe')" Command="mono $(TargetDir)/sgen.exe /force $(TargetFileName)" WorkingDirectory="$(TargetDir)" />
+    <Exec Condition="'$(OS)' == 'Unix' AND Exists('$(ProjectDir)sgen.exe')" Command="'mono $(ProjectDir)/sgen.exe' /force '$(TargetFileName)'" WorkingDirectory="$(TargetDir)" />
   </Target>
 </Project>
