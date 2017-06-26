@@ -33,9 +33,10 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            kgha = Apsim.Get(soil, "Initial" + Name + "N", true) as double[];
-            if (kgha == null)
-                kgha = new double[soil.Thickness.Length];
+            double[] initialppm = Apsim.Get(soil, "Initial" + Name + "N", true) as double[];
+            if (initialppm == null)
+                initialppm = new double[soil.Thickness.Length];
+            kgha = soil.ppm2kgha(initialppm);
         }
     }
 }

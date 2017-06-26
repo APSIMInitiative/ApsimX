@@ -333,7 +333,7 @@ namespace UserInterface.Presenters
             List<string> dataSources = new List<string>();
             foreach (string tableName in dataStore.TableNames)
             {
-                if (tableName != "Messages" && tableName != "InitialConditions")
+                if (tableName != "Messages" && tableName != "InitialConditions" && tableName != DataStore.UnitsTableName)
                     dataSources.Add(tableName);
             }
             dataSources.Sort();

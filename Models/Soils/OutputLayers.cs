@@ -43,10 +43,10 @@ namespace Models.Soils
 
         ///<summary> Soil water content (mm) of each layer mapped onto specified layering to match observations</summary>
         [XmlIgnore]
-        public double[] NO3 { get { return Soil.Map(Soil.SoilNitrogen.NO3, Soil.Thickness, Thickness, Soil.MapType.Mass); } }
+        public double[] NO3 { get { return Soil.Map(Soil.NO3N, Soil.Thickness, Thickness, Soil.MapType.Mass); } }
         ///<summary> Soil water content (mm) of each layer mapped onto specified layering to match observations</summary>
         [XmlIgnore]
-        public double[] NH4 { get { return Soil.Map(Soil.SoilNitrogen.NH4, Soil.Thickness, Thickness, Soil.MapType.Mass); } }
+        public double[] NH4 { get { return Soil.Map(Soil.NH4N, Soil.Thickness, Thickness, Soil.MapType.Mass); } }
 
     }
 }

@@ -9,6 +9,8 @@ namespace Models.Soils.Arbitrator
     using System.Collections.Generic;
     using Models.Core;
     using Interfaces;
+    using System.Linq;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The APSIM farming systems model has a long history of use for simulating mixed or intercropped systems.  Doing this requires methods for simulating the competition of above and below ground resources.  Above ground competition for light has been calculated within APSIM assuming a mixed turbid medium using the Beer-Lambert analogue as described by [Keating1993Intercropping].  The MicroClimate [Snow2004Micromet] model now used within APSIM builds upon this by also calculating the impact of mutual shading on canopy conductance and partitions aerodynamic conductance to individual species in applying the Penman-Monteith model for calculating potential crop water use.  The arbitration of below ground resources of water and nitrogen is calculated by this model.
@@ -54,8 +56,8 @@ namespace Models.Soils.Arbitrator
     /// 5) The approach will automatically arbitrate supply of N between zones, layers, and types (nitrate vs ammonium) with the preferences of all derived by the plant model code.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    //[ViewName("UserInterface.Views.GridView")]
+    //[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     public class SoilArbitrator : Model
@@ -104,7 +106,8 @@ namespace Models.Soils.Arbitrator
             Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate2 * 0.5, uptakeModels);
             Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate3, uptakeModels);
 
-            List<CropUptakes> UptakesFinal = new List<CropUptakes>();
+            List<ZoneWaterAndN> listOfZoneWaterAndNs = new List<ZoneWaterAndN>();
+            List <CropUptakes> UptakesFinal = new List<CropUptakes>();
             foreach (CropUptakes U in UptakeEstimate1.Values)
             {
                 CropUptakes CWU = new CropUptakes();
@@ -116,10 +119,13 @@ namespace Models.Soils.Arbitrator
                                        + UptakeEstimate3.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 3.0)
                                        + UptakeEstimate4.UptakeZone(CWU.Crop, ZW1.Zone.Name) * (1.0 / 6.0);
                     CWU.Zones.Add(NewZ);
+                    listOfZoneWaterAndNs.Add(NewZ);
                 }
 
                 UptakesFinal.Add(CWU);
             }
+
+            ScaleWaterAndNIfNecessary(InitialSoilState.Zones, listOfZoneWaterAndNs);
 
             foreach (CropUptakes Uptake in UptakesFinal)
             {
@@ -127,6 +133,66 @@ namespace Models.Soils.Arbitrator
                     Uptake.Crop.SetSWUptake(Uptake.Zones);
                 else
                     Uptake.Crop.SetNUptake(Uptake.Zones);
+            }
+        }
+
+        /// <summary>
+        /// Scale the water and n values if the total uptake exceeds the amounts available.
+        /// </summary>
+        /// <param name="zones">List of zones to check.</param>
+        /// <param name="uptakes">List of all potential uptakes</param>
+        private static void ScaleWaterAndNIfNecessary(List<ZoneWaterAndN> zones, List<ZoneWaterAndN> uptakes)
+        {
+            foreach (ZoneWaterAndN uniqueZone in zones)
+            {
+                double[] totalWaterUptake = new double[uniqueZone.Water.Length];
+                double[] totalNO3Uptake = new double[uniqueZone.Water.Length];
+                double[] totalNH4Uptake = new double[uniqueZone.Water.Length];
+                foreach (ZoneWaterAndN zone in uptakes)
+                {
+                    if (zone.Zone == uniqueZone.Zone)
+                    {
+                        totalWaterUptake = MathUtilities.Add(totalWaterUptake, zone.Water);
+                        totalNO3Uptake = MathUtilities.Add(totalNO3Uptake, zone.NO3N);
+                        totalNH4Uptake = MathUtilities.Add(totalNH4Uptake, zone.NH4N);
+                    }
+                }
+
+                for (int i = 0; i < uniqueZone.Water.Length; i++)
+                {
+                    if (uniqueZone.Water[i] < totalWaterUptake[i] && totalWaterUptake[i] > 0)
+                    {
+                        // Scale water
+                        double scale = uniqueZone.Water[i] / totalWaterUptake[i];
+                        foreach (ZoneWaterAndN zone in uptakes)
+                        {
+                            if (zone.Zone == uniqueZone.Zone)
+                                zone.Water[i] *= scale;
+                        }
+                    }
+
+                    if (uniqueZone.NO3N[i] < totalNO3Uptake[i] && totalNO3Uptake[i] > 0)
+                    {
+                        // Scale NO3
+                        double scale = uniqueZone.NO3N[i] / totalNO3Uptake[i];
+                        foreach (ZoneWaterAndN zone in uptakes)
+                        {
+                            if (zone.Zone == uniqueZone.Zone)
+                                zone.NO3N[i] *= scale;
+                        }
+                    }
+
+                    if (uniqueZone.NH4N[i] < totalNH4Uptake[i] && totalNH4Uptake[i] > 0)
+                    {
+                        // Scale NH4
+                        double scale = uniqueZone.NH4N[i] / totalNH4Uptake[i];
+                        foreach (ZoneWaterAndN zone in uptakes)
+                        {
+                            if (zone.Zone == uniqueZone.Zone)
+                                zone.NH4N[i] *= scale;
+                        }
+                    }
+                }
             }
         }
     }

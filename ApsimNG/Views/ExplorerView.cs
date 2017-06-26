@@ -169,13 +169,13 @@ namespace UserInterface.Views
         {
             foreach (Widget w in Popup)
             {
-                if (w is ImageMenuItem)
+                if (w is MenuItem)
                 {
                     PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
                     if (pi != null)
                     {
                         System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
+                        if (w is ImageMenuItem && handlers != null && handlers.ContainsKey("activate"))
                         {
                             EventHandler handler = (EventHandler)handlers["activate"];
                             (w as ImageMenuItem).Activated -= handler;
@@ -387,9 +387,23 @@ namespace UserInterface.Views
             ClearPopup();
             foreach (MenuDescriptionArgs Description in menuDescriptions)
             {
-                ImageMenuItem item = new ImageMenuItem(Description.Name);
-                if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
-                    item.Image = new Image(null, Description.ResourceNameForImage);
+                MenuItem item;
+                if (Description.ShowCheckbox)
+                {
+                    CheckMenuItem checkItem = new CheckMenuItem(Description.Name);
+                    checkItem.Active = Description.Checked;
+                    item = checkItem;
+                }
+                else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
+                {
+                    ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
+                    imageItem.Image = new Image(null, Description.ResourceNameForImage);
+                    item = imageItem;
+                }
+                else
+                {
+                    item = new MenuItem(Description.Name);
+                }
                 if (!String.IsNullOrEmpty(Description.ShortcutKey))
                 {
                     string keyName = String.Empty;

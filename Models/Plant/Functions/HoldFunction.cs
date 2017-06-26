@@ -68,7 +68,10 @@ namespace Models.PMF.Functions
             // add a heading.
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
             // Describe the function
-            tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as " + (ValueToHold as IModel).Name + " until it reaches " + WhenToHold + " stage when it fixes its value", indent));
+            if (ValueToHold != null)
+            {
+                tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as " + (ValueToHold as IModel).Name + " until it reaches " + WhenToHold + " stage when it fixes its value", indent));
+            }
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 child.Document(tags, headingLevel + 1, indent + 1);

@@ -62,6 +62,10 @@ namespace UserInterface.Presenters
             this.managerView.Editor.Text = this.manager.Code;
             this.managerView.Editor.ContextItemsNeeded += this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor += this.OnEditorLeave;
+            this.managerView.Editor.AddContextSeparator();
+            this.managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
+            this.managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
+            this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
         }
 
         /// <summary>
@@ -69,9 +73,10 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            propertyPresenter.Detach();
             this.BuildScript();  // compiles and saves the script
+            propertyPresenter.Detach();
 
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.CommandHistory_ModelChanged;
             this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor -= this.OnEditorLeave;
         }
@@ -149,14 +154,11 @@ namespace UserInterface.Presenters
         /// </summary>
         private void BuildScript()
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.CommandHistory_ModelChanged;
 
             try
             {
-                // format the code first.
                 string code = this.managerView.Editor.Text;
-                code = new CSharpFormatter(FormattingOptionsFactory.CreateAllman()).Format(code);
-
                 // set the code property manually first so that compile error can be trapped via
                 // an exception.
                 this.manager.Code = code;
@@ -174,7 +176,7 @@ namespace UserInterface.Presenters
                 else
                     this.explorerPresenter.MainPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.Message), DataStore.ErrorLevel.Error);
             }
-            this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
         }
 
         /// <summary>
@@ -184,7 +186,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The arguments</param>
         public void OnEditorLeave(object sender, EventArgs e)
         {
-            // this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            // this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
             BuildScript();
             if (this.manager.Script != null)
             {
@@ -201,12 +203,29 @@ namespace UserInterface.Presenters
         {
             if (changedModel == this.manager)
                 this.managerView.Editor.Text = this.manager.Code;
+            else if (changedModel == this.manager.Script)
+            {
+                this.propertyPresenter.UpdateModel(manager.Script);
+            }
         }
 
         /// <summary>Get a screen shot of the manager grid.</summary>
         public Image GetScreenshot()
         {
             return managerView.GridView.GetScreenshot();
+        }
+
+        private void OnDoCompile(object sender, EventArgs e)
+        {
+            BuildScript();
+        }
+
+        private void OnDoReformat(object sender, EventArgs e)
+        {
+            CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
+            string newText = formatter.Format(this.managerView.Editor.Text);
+            this.managerView.Editor.Text = newText;
+            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", newText));
         }
     }
 }

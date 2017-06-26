@@ -85,6 +85,7 @@ namespace UserInterface.Presenters
 
             string[] split;
 
+            grid.NumericFormat = "G6"; 
             this.FindAllProperties(this.model);
             if (this.grid.DataSource == null)
             {
@@ -130,8 +131,9 @@ namespace UserInterface.Presenters
             table.Columns.Add("Description", typeof(string));
             table.Columns.Add("Value", typeof(object));
 
+            this.grid.PropertyMode = true;
             this.FillTable(table);
-             this.FormatGrid();
+            this.FormatGrid();
             if (selectedCell != null)
                 this.grid.GetCurrentCell = selectedCell;
             this.grid.ResizeControls();
@@ -227,7 +229,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private void FormatGrid()
         {
-            string[] fieldNames = null;
             for (int i = 0; i < this.properties.Count; i++)
             {
                 IGridCell cell = this.grid.GetCell(1, i);
@@ -237,12 +238,6 @@ namespace UserInterface.Presenters
                     DataStore dataStore = new DataStore(this.model);
                     cell.EditorType = EditorTypeEnum.DropDown;
                     cell.DropDownStrings = dataStore.TableNames;
-                    if (cell.Value != null && cell.Value.ToString() != string.Empty)
-                    {
-                        DataTable data = dataStore.RunQuery("SELECT * FROM " + cell.Value.ToString() + " LIMIT 1");
-                        if (data != null)
-                            fieldNames = DataTableUtilities.GetColumnNames(data);
-                    }
                     dataStore.Disconnect();
                 }
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
@@ -262,6 +257,7 @@ namespace UserInterface.Presenters
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FieldName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
+                    string[] fieldNames = GetFieldNames();
                     if (fieldNames != null)
                         cell.DropDownStrings = fieldNames;
                 }
@@ -334,6 +330,31 @@ namespace UserInterface.Presenters
             return new string[0];
         }
 
+        /// <summary>Get a list of database fieldnames. 
+        /// Returns the names associated with the first table name in the property list
+        /// </summary>
+        /// <returns>A list of fieldnames.</returns>
+        private string[] GetFieldNames()
+        {
+            string[] fieldNames = null;
+            for (int i = 0; i < this.properties.Count; i++)
+            {
+                if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
+                {
+                    DataStore dataStore = new DataStore(this.model);
+                    IGridCell cell = this.grid.GetCell(1, i);
+                    if (cell.Value != null && cell.Value.ToString() != string.Empty)
+                    {
+                        DataTable data = dataStore.RunQuery("SELECT * FROM " + cell.Value.ToString() + " LIMIT 1");
+                        if (data != null)
+                            fieldNames = DataTableUtilities.GetColumnNames(data);
+                    }
+                    dataStore.Disconnect();
+                }
+            }
+            return fieldNames;
+        }
+
         /// <summary>
         /// Go find a crop property in the specified list of properties or if not
         /// found, find the first crop in scope.
@@ -369,6 +390,8 @@ namespace UserInterface.Presenters
 
             foreach (IGridCell cell in e.ChangedCells)
             {
+                if (e.invalidValue)
+                    this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
                 this.SetPropertyValue(this.properties[cell.RowIndex], cell.Value);
             }
             
@@ -406,6 +429,10 @@ namespace UserInterface.Presenters
             {
                 value = Apsim.Find(this.model, value.ToString()) as ICrop;
             }
+            else if (property.DataType == typeof(DateTime))
+            {
+                value = Convert.ToDateTime(value);
+            }
             else if (property.DataType.IsEnum)
             {
                 value = Enum.Parse(property.DataType, value.ToString());
@@ -440,6 +467,42 @@ namespace UserInterface.Presenters
                 e.ChangedCells[0].Value = fileName;
                 OnCellValueChanged(sender, e);
                 PopulateGrid(model);
+            }
+        }
+
+        /// <summary>
+        /// Updates the lists of Cultivar and Field names in the model.
+        /// This is used when the model has been changed. For example, when a 
+        /// new crop has been selecled.
+        /// </summary>
+        /// <param name="model">The new model</param>
+        public void UpdateModel(Model model)
+        {
+            this.model = model;
+            if (this.model != null)
+            {
+                IGridCell curCell = this.grid.GetCurrentCell;
+                for (int i = 0; i < this.properties.Count; i++)
+                {
+                    IGridCell cell = this.grid.GetCell(1, i);
+                    if (cell.RowIndex == curCell.RowIndex && cell.ColumnIndex == curCell.ColumnIndex)
+                        continue;
+                    if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
+                    {
+                        ICrop crop = GetCrop(properties);
+                        if (crop != null)
+                        {
+                            cell.DropDownStrings = GetCultivarNames(crop);
+                        }
+
+                    }
+                    else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.FieldName)
+                    {
+                        string[] fieldNames = GetFieldNames();
+                        if (fieldNames != null)
+                            cell.DropDownStrings = fieldNames;
+                    }
+                }
             }
         }
     }
