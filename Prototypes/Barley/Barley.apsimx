@@ -257,7 +257,7 @@ Note.  Effectively Mid winter thermal time approaces 0, whereas midsummer approa
 ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>6</FixedValue>
+          <FixedValue>9</FixedValue>
           <Units>Leaves</Units>
         </Constant>
         <Constant>
@@ -391,6 +391,20 @@ Duration is (TS-6)*Phyllocgron]]></MemoText>
               <Name>SubtractFunction</Name>
               <VariableReference>
                 <Name>TST</Name>
+                <SubtractFunction>
+                  <Name>SubtractFunction</Name>
+                  <VariableReference>
+                    <Name>TST</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[Structure].TSLN.Value()</VariableName>
+                  </VariableReference>
+                  <Constant>
+                    <Name>Six</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <FixedValue>6</FixedValue>
+                  </Constant>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </SubtractFunction>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Structure].TSLN.Value()</VariableName>
               </VariableReference>
@@ -406,6 +420,31 @@ Duration is (TS-6)*Phyllocgron]]></MemoText>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Structure].BasePhyllochron.Value()</VariableName>
             </VariableReference>
+            <LinearInterpolationFunction>
+              <Name>LeafStageFactor</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>2</double>
+                  <double>4</double>
+                  <double>6</double>
+                  <double>8</double>
+                  <double>14</double>
+                </X>
+                <Y>
+                  <double>0.75</double>
+                  <double>0.75</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Leaf].AppearedCohortNo</XProperty>
+            </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -671,9 +710,9 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>0.75</double>
                 <double>0.75</double>
                 <double>1</double>
-                <double>1.4</double>
-                <double>1.4</double>
-                <double>1.4</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1255,7 +1294,7 @@ TSLN = FLN*0.995 - 1.95 ]]></MemoText>
 ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>100</FixedValue>
+          <FixedValue>70</FixedValue>
           <Units>oC.d</Units>
         </Constant>
         <Constant>
@@ -3082,7 +3121,7 @@ N conc values are from Zhao et al 2009
             <Constant>
               <Name>Fraction</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>1</FixedValue>
+              <FixedValue>0.7</FixedValue>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>Flowering</Start>
@@ -3093,7 +3132,7 @@ N conc values are from Zhao et al 2009
             <Constant>
               <Name>Fraction</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>1</FixedValue>
+              <FixedValue>0.7</FixedValue>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>EndGrainFill</Start>
@@ -3548,10 +3587,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Cultivar>
           <Name>Dash</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
-          <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].BasePhyllochron.FixedValue = 80</Command>
+          <Command />
         </Cultivar>
         <Cultivar>
           <Name>Doyen</Name>
@@ -3564,10 +3600,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Cultivar>
           <Name>Omaka</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
-          <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].BasePhyllochron.FixedValue = 80</Command>
+          <Command />
         </Cultivar>
         <Cultivar>
           <Name>Optic</Name>
@@ -4736,9 +4769,9 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
+                <InitialRootDepth>40</InitialRootDepth>
                 <Cultivar>Dash</Cultivar>
                 <SowingDate>2009-10-01</SowingDate>
-                <InitialRootDepth>40</InitialRootDepth>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6916,9 +6949,9 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
+                <InitialRootDepth>40</InitialRootDepth>
                 <Cultivar>Omaka</Cultivar>
                 <SowingDate>2009-10-01</SowingDate>
-                <InitialRootDepth>40</InitialRootDepth>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -12054,9 +12087,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <InitialRootDepth>40</InitialRootDepth>
-              <Cultivar>Valetta</Cultivar>
               <SowingDate>2003-05-21</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Dash</Cultivar>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13291,9 +13324,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <InitialRootDepth>40</InitialRootDepth>
-              <Cultivar>Cellar</Cultivar>
               <SowingDate>2004-05-28</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Dash</Cultivar>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -14754,9 +14787,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <InitialRootDepth>40</InitialRootDepth>
-              <Cultivar>County</Cultivar>
               <SowingDate>2003-05-21</SowingDate>
+              <InitialRootDepth>40</InitialRootDepth>
+              <Cultivar>Dash</Cultivar>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -16131,9 +16164,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <InitialRootDepth>40</InitialRootDepth>
-              <Cultivar>Dash</Cultivar>
               <SowingDate>2003-05-21</SowingDate>
+              <InitialRootDepth>20</InitialRootDepth>
+              <Cultivar>Dash</Cultivar>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -16533,6 +16566,138 @@ namespace Models
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
         </Graph>
+        <Graph>
+          <Name>Leaftips</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>CombinedData</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Leaftips1</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>CombinedData</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -16757,6 +16922,167 @@ namespace Models
           <Axis>
             <Type>Left</Type>
             <Title>Days to flowering</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>FloweringDAS1</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Barley.Phenology.Zadok.Stage</XFieldName>
+            <YFieldName>Barley.Phenology.FloweringDAS.Value()</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObservedPhenology</TableName>
+            <XFieldName>Barley.Phenonology.Zadok.Stage</XFieldName>
+            <YFieldName>Barley.Phenology.FloweringDAS.Value()</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Days to flowering</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>FloweringDAS2</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObservedPhenology</TableName>
+            <XFieldName>Observed.Barley.Phenology.FloweringDAS.Value()</XFieldName>
+            <YFieldName>Predicted.Barley.Phenology.FloweringDAS.Value()</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Left</Type>
+            <Title>plants/m2</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>FlagLeafDAS1</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObservedPhenology</TableName>
+            <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
+            <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -17309,9 +17635,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Doyen</Cultivar>
-              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -18765,9 +19091,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Omaka</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -20142,9 +20468,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Optic</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -21465,9 +21791,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2005-05-27</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Pyramid</Cultivar>
-              <SowingDate>2005-05-27</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -22776,9 +23102,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Sherwood</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -24120,9 +24446,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Tavern</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -25457,9 +25783,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Vortex</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -26170,7 +26496,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
-          <Title>plants/m2</Title>
+          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -26266,7 +26592,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Left</Type>
-          <Title>plants/m2</Title>
+          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -42230,9 +42556,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -44375,9 +44701,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Omaka</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -47031,9 +47357,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -50035,9 +50361,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Sherwood</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -52962,9 +53288,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -55527,9 +55853,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
