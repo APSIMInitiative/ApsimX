@@ -1360,7 +1360,7 @@ N conc values are from Zhao et al 2009
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.043</FixedValue>
+          <FixedValue>0.065</FixedValue>
           <Units>g</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -1404,76 +1404,97 @@ N conc values are from Zhao et al 2009
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </AirTemperatureFunction>
-        <PartitionFractionDemandFunction>
+        <PhaseLookup>
           <Name>DMDemandFunction</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[Currently using Partitioning model based on SIRIUS rather tha grin filling model.
-]]></MemoText>
-          </Memo>
-          <PhaseLookup>
-            <Name>PartitionFraction</Name>
-            <PhaseLookupValue>
-              <Name>InitialPhase</Name>
-              <Constant>
-                <Name>Constant</Name>
+          <PhaseLookupValue>
+            <Name>InitialPhase</Name>
+            <FillingRateFunction>
+              <Name>FillingRateFunction</Name>
+              <VariableReference>
+                <Name>NumberFunction</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.01</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>Flowering</Start>
-              <End>StartGrainFill</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>LinearPhase</Name>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>FillingDuration</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Phenology].GrainDevelopment.Target.Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+              </VariableReference>
               <MultiplyFunction>
-                <Name>MultiplyFunction</Name>
-                <Constant>
-                  <Name>Constant</Name>
+                <Name>PotentialSizeIncrement</Name>
+                <VariableReference>
+                  <Name>InitialProportion</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <FixedValue>0.6</FixedValue>
-                </Constant>
-                <LinearInterpolationFunction>
-                  <Name>FW</Name>
-                  <XYPairs>
-                    <Name>XYPairs</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <X>
-                      <double>0</double>
-                      <double>0.5</double>
-                      <double>1</double>
-                    </X>
-                    <Y>
-                      <double>1.5</double>
-                      <double>1</double>
-                      <double>1</double>
-                    </Y>
-                  </XYPairs>
+                  <VariableName>[Grain].InitialGrainProportion.Value()</VariableName>
+                </VariableReference>
+                <VariableReference>
+                  <Name>MaximumSize</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <XProperty>[Leaf].Fw</XProperty>
-                </LinearInterpolationFunction>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
+                </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </MultiplyFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>StartGrainFill</Start>
-              <End>EndGrainFill</End>
-            </PhaseLookupValue>
-            <PhaseLookupValue>
-              <Name>Ripening</Name>
-              <Constant>
-                <Name>Constant</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0</FixedValue>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Start>EndGrainFill</Start>
-              <End>HarvestRipe</End>
-            </PhaseLookupValue>
+            </FillingRateFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-          </PhaseLookup>
+            <Start>Flowering</Start>
+            <End>StartGrainFill</End>
+          </PhaseLookupValue>
+          <PhaseLookupValue>
+            <Name>LinearPhase</Name>
+            <FillingRateFunction>
+              <Name>FillingRateFunction</Name>
+              <VariableReference>
+                <Name>NumberFunction</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>FillingDuration</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
+              </VariableReference>
+              <VariableReference>
+                <Name>ThermalTime</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+              </VariableReference>
+              <MultiplyFunction>
+                <Name>PotentialSizeIncrement</Name>
+                <SubtractFunction>
+                  <Name>ProportionLinearPhase</Name>
+                  <Constant>
+                    <Name>One</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <FixedValue>1</FixedValue>
+                  </Constant>
+                  <VariableReference>
+                    <Name>InitialProportion</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[Grain].InitialGrainProportion.Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </SubtractFunction>
+                <VariableReference>
+                  <Name>MaximumSize</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </MultiplyFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </FillingRateFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Start>StartGrainFill</Start>
+            <End>EndGrainFill</End>
+          </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </PartitionFractionDemandFunction>
+        </PhaseLookup>
         <ExpressionFunction>
           <Name>Protein</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1623,7 +1644,7 @@ N conc values are from Zhao et al 2009
             <Constant>
               <Name>GrainsPerGramOfStem</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>22</FixedValue>
+              <FixedValue>50</FixedValue>
               <Units>grains</Units>
             </Constant>
             <VariableReference>
@@ -4120,6 +4141,12 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
       <ObservedTableName>BaselinData</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
+    <Input>
+      <Name>Barley1112</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\Observations\BarleyObservedData11_12.txt' because it is being used by another process.</ErrorMessage>
+      <FileName>Observations\BarleyObservedData11_12.txt</FileName>
+    </Input>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>5000</MaximumResultsPerPage>
@@ -56491,6 +56518,72 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
+            <Name>GrainWt</Name>
+            <Series>
+              <Name>Predicted</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Barley.Grain.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Observed</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledDiamond</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Barley1112</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Barley.Grain.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Title />
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
             <Name>StemWt</Name>
             <Series>
               <Name>Predicted</Name>
@@ -56688,407 +56781,6 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
           </Graph>
-          <Graph>
-            <Name>GrainWt</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Barley.Grain.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Observed</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledDiamond</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>CombinedData</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Barley.Grain.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Folder>
-            <Name>Biomass</Name>
-            <Graph>
-              <Name>AboveGroundWt</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>TotalAboveGroundWt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>CombinedData</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>TotalAboveGroundWt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Axis>
-                <Type>Bottom</Type>
-                <Title />
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Left</Type>
-                <Title />
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-            </Graph>
-            <Graph>
-              <Name>StemWt</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Stem.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>CombinedData</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Stem.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Axis>
-                <Type>Bottom</Type>
-                <Title />
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Stem weight</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>600</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-            </Graph>
-            <Graph>
-              <Name>LeafWt</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Leaf.Live.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>CombinedData</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Leaf.Live.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Axis>
-                <Type>Bottom</Type>
-                <Title />
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Leaf weight</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>300</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-            </Graph>
-            <Graph>
-              <Name>EarWt</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Ear.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledCircle</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>CombinedData</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Ear.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Axis>
-                <Type>Bottom</Type>
-                <Title />
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Left</Type>
-                <Title>Ear weight</Title>
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>1000</Maximum>
-                <Interval>200</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-            </Graph>
-            <Graph>
-              <Name>GrainWt</Name>
-              <Series>
-                <Name>Predicted</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>None</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>Solid</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>DailyReport</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Grain.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <Series>
-                <Name>Observed</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Type>Scatter</Type>
-                <XAxis>Bottom</XAxis>
-                <YAxis>Left</YAxis>
-                <ColourArgb>-16777216</ColourArgb>
-                <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-                <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                <Marker>FilledDiamond</Marker>
-                <MarkerSize>Normal</MarkerSize>
-                <Line>None</Line>
-                <LineThickness>Normal</LineThickness>
-                <TableName>CombinedData</TableName>
-                <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Grain.Wt</YFieldName>
-                <ShowInLegend>true</ShowInLegend>
-                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                <Cumulative>false</Cumulative>
-                <CumulativeX>false</CumulativeX>
-              </Series>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Axis>
-                <Type>Bottom</Type>
-                <Title />
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <Axis>
-                <Type>Left</Type>
-                <Title />
-                <Inverted>false</Inverted>
-                <Minimum>NaN</Minimum>
-                <Maximum>NaN</Maximum>
-                <Interval>NaN</Interval>
-              </Axis>
-              <LegendPosition>TopLeft</LegendPosition>
-              <DisabledSeries />
-            </Graph>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ShowPageOfGraphs>true</ShowPageOfGraphs>
-          </Folder>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
@@ -82268,5 +81960,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>562</ExplorerWidth>
+  <ExplorerWidth>463</ExplorerWidth>
 </Simulations>
