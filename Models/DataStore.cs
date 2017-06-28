@@ -46,6 +46,10 @@ namespace Models
         /// <summary>A collection of datatables that need writing.</summary>
         public static List<ReportTable> TablesToWrite = new List<ReportTable>();
 
+        /// <summary>
+        /// Name of the database table holding information on units of measurement
+        /// </summary>
+        public static string UnitsTableName = "_Units";
 
         /// <summary>
         /// This class encapsulates a simple lock mechanism. It is used by DataStore to
@@ -209,6 +213,7 @@ namespace Models
                 // Simulations table.
                 string[] simulationNames = this.SimulationNames;
                 string sql = string.Empty;
+                int j = 0;
                 foreach (string simulationNameToKeep in simulationNamesToKeep)
                 {
                     if (!StringUtilities.Contains(simulationNames, simulationNameToKeep))
@@ -217,6 +222,14 @@ namespace Models
                             sql += "),(";
                         sql += "'" + simulationNameToKeep + "'";
                     }
+                    if (j == 100)
+                    {
+                        if (sql != string.Empty)
+                            RunQueryWithNoReturnData("INSERT INTO [Simulations] (Name) VALUES (" + sql + ")");
+                        sql = string.Empty;
+                        j = 0;
+                    }
+                    j++;
                 }
 
                 if (sql != string.Empty)
@@ -248,19 +261,32 @@ namespace Models
                 foreach (string simulationNameToBeRun in simulationNamesToBeRun)
                     idsToDelete.Add(GetSimulationID(simulationNameToBeRun));
 
-                idString = "";
+                idString = string.Empty;
+                j = 0;
                 for (int i = 0; i < idsToDelete.Count; i++)
                 {
-                    if (i > 0)
+                    if (j > 0)
                         idString += " OR ";
                     idString += "SimulationID = " + idsToDelete[i].ToString();
+
+                    if (j == 100 || j == idsToDelete.Count-1)
+                    {
+                        foreach (string tableName in TableNames)
+                        {
+                            // delete this simulation
+                            RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
+                        }
+
+                        if (TableNames.Contains(UnitsTableName))
+                            RunQueryWithNoReturnData("DELETE FROM " + UnitsTableName + " WHERE " + idString);
+
+                        idString = string.Empty;
+                        j = 0;
+                    }
+                    else
+                        j++;
                 }
 
-                foreach (string tableName in TableNames)
-                {
-                    // delete this simulation
-                    RunQueryWithNoReturnData("DELETE FROM " + tableName + " WHERE " + idString);
-                }
             }
             finally
             {
@@ -663,22 +689,15 @@ namespace Models
                     Locks[Filename].Aquire();
                     try
                     {
-                        if (!File.Exists(Filename))
-                        {
-                            Connection = new SQLite();
-                            Connection.OpenDatabase(Filename, readOnly: false);
-                            Connection.ExecuteNonQuery("CREATE TABLE Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
-                            Connection.ExecuteNonQuery("CREATE TABLE Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                        Connection = new SQLite();
+                        Connection.OpenDatabase(Filename, readOnly: false);
+                        Connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
+                        Connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                        Connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS " + UnitsTableName + " (SimulationID INTEGER, TableName TEXT, ColumnHeading TEXT, Units TEXT)");
 
-                            if (!forWriting)
-                            {
-                                Connection.CloseDatabase();
-                                Connection.OpenDatabase(Filename, readOnly: !forWriting);
-                            }
-                        }
-                        else
+                        if (!forWriting)
                         {
-                            Connection = new SQLite();
+                            Connection.CloseDatabase();
                             Connection.OpenDatabase(Filename, readOnly: !forWriting);
                         }
 
@@ -822,38 +841,52 @@ namespace Models
                 table.Columns.Insert(0, new ReportColumnConstantValue("SimulationID", simulationID));
             }
 
-            // Get a list of all names and datatypes for each field in this table.
-            List<string> names = new List<string>();
-            List<Type> types = new List<Type>();
-            foreach (ReportTable table in tables)
-                foreach (IReportColumn column in table.Columns)
-                {
-                    if (!names.Contains(column.Name))
-                    {
-                        object firstNonBlankValue = column.Values.Find(value => value != null);
-                        if (firstNonBlankValue != null)
-                        {
-                            names.Add(column.Name);
-                            types.Add(firstNonBlankValue.GetType());
-                        }
-                    }
-                }
-
             // Open the .db for writing.
             Open(forWriting: true);
-
-            // Create the table.
-            string tableName = tables[0].TableName;
-            CreateTable(tableName, names.ToArray(), types.ToArray());
-
-            // Prepare the insert query sql
-            IntPtr query = PrepareInsertIntoTable(Connection, tableName, names.ToArray());
 
             // Tell SQLite that we're beginning a transaction.
             Connection.ExecuteNonQuery("BEGIN");
 
+            IntPtr query = IntPtr.Zero;
+
             try
             {
+                // Get a list of all names and datatypes for each field in this table.
+                List<string> names = new List<string>();
+                List<Type> types = new List<Type>();
+                List<string> units = new List<string>();
+                foreach (ReportTable table in tables)
+                    foreach (IReportColumn column in table.Columns)
+                    {
+                        if (!names.Contains(column.Name))
+                        {
+                            object firstNonBlankValue = column.Values.Find(value => value != null);
+                            if (firstNonBlankValue != null)
+                            {
+                                names.Add(column.Name);
+                                types.Add(firstNonBlankValue.GetType());
+                                if (column.Units != null)
+                                {
+                                    string sql = "INSERT INTO " + UnitsTableName + " (SimulationID, TableName, ColumnHeading, Units) " +
+                                                               "VALUES (?, ?, ?, ?)";
+                                    IntPtr statement = Connection.Prepare(sql);
+                                    Connection.BindParametersAndRunQuery(statement, new object[] {
+                                                      GetSimulationID(table.SimulationName),
+                                                      table.TableName,
+                                                      column.Name,
+                                                      column.Units});
+                                }
+                            }
+                        }
+                    }
+
+                // Create the table.
+                string tableName = tables[0].TableName;
+                CreateTable(tableName, names.ToArray(), types.ToArray());
+
+                // Prepare the insert query sql
+                query = PrepareInsertIntoTable(Connection, tableName, names.ToArray());
+
                 // Write each row to the .db
                 foreach (ReportTable table in tables)
                 {
@@ -894,7 +927,8 @@ namespace Models
                 Connection.ExecuteNonQuery("END");
 
                 // finalise our query.
-                Connection.Finalize(query);
+                if (query != IntPtr.Zero)
+                    Connection.Finalize(query);
             }
         }
 
@@ -943,7 +977,7 @@ namespace Models
             // Write out each table for this simulation.
             foreach (string tableName in dataStore.TableNames)
             {
-                if (tableName != "Messages" && tableName != "InitialConditions")
+                if (tableName != "Messages" && tableName != "InitialConditions" && tableName != UnitsTableName)
                 {
                     DataTable firstRowOfTable = dataStore.RunQuery("SELECT * FROM " + tableName + " LIMIT 1");
                     if (firstRowOfTable != null)
@@ -1092,6 +1126,48 @@ namespace Models
             else
                 return "char(50)";
         }
+
+        /// <summary>
+        /// Obtain the units for a column of data
+        /// </summary>
+        /// <param name="simulationId">The simulation ID</param>
+        /// <param name="tableName">Name of the table</param>
+        /// <param name="columnHeading">Name of the data column</param>
+        /// <returns>The units (with surrounding parentheses), or null if not available</returns>
+        public string GetUnits(int simulationId, string tableName, string columnHeading)
+        {
+            string query = "SELECT Units FROM " + UnitsTableName + " WHERE SimulationId = " +
+                simulationId.ToString() + " AND TableName = '" + tableName +
+                "' AND ColumnHeading = '" + columnHeading + "'";
+            DataTable DB = Connection.ExecuteQuery(query);
+            if (DB.Rows.Count > 0)
+                return (string)DB.Rows[0][0];
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Obtain the units for a column of data
+        /// </summary>
+        /// <param name="simulationName">The name of the simulation</param>
+        /// <param name="tableName">Name of the table</param>
+        /// <param name="columnHeading">Name of the data column</param>
+        /// <returns>The units (with surrounding parentheses), or null if not available</returns>
+        public string GetUnits(string simulationName, string tableName, string columnHeading)
+        {
+            string result = null;
+            if (TableNames.Contains(UnitsTableName))
+            {
+                string query = "SELECT U.Units FROM " + UnitsTableName + " U, Simulations S " +
+                      "WHERE U.SimulationID = S.ID AND U.TableName = '" + tableName +
+                      "' AND U.ColumnHeading = '" + columnHeading + "'";
+                DataTable DB = Connection.ExecuteQuery(query);
+                if (DB.Rows.Count > 0)
+                    result = (string)DB.Rows[0][0];
+            }
+            return result;
+        }
+
         #endregion
     }
 }

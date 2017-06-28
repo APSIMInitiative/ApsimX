@@ -28,17 +28,6 @@ namespace UserInterface.Commands
     {
         private ExplorerPresenter ExplorerPresenter;
 
-        // Setup a list of model types that we will recurse down through.
-        private static Type[] modelTypesToRecurseDown = new Type[] {//typeof(Folder),
-                                                                    typeof(Simulations),
-                                                                    typeof(Simulation),
-                                                                    typeof(Experiment),
-                                                                    typeof(Zone),
-                                                                    typeof(AgroforestrySystem),
-                                                                    typeof(CircularZone),
-                                                                    typeof(RectangularZone),
-                                                                    typeof(PredictedObserved)};
-
         /// <summary>A .bib file instance.</summary>
         private BibTeX bibTeX;
 
@@ -125,36 +114,45 @@ namespace UserInterface.Commands
         /// <returns>True if something was written to index.</returns>
         private void AddValidationTags(List<AutoDocumentation.ITag> tags, IModel modelToExport, int headingLevel, string workingDirectory)
         {
+
+            // Setup a list of model types that we will recurse down through.
+            Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
+                                                         typeof(Simulation),
+                                                         typeof(Experiment),
+                                                         typeof(Zone),
+                                                         typeof(AgroforestrySystem),
+                                                         typeof(CircularZone),
+                                                         typeof(RectangularZone),
+                                                         typeof(PredictedObserved)};
+            Type[] modelTypesToDocument = new Type[] { typeof(Graph),
+                                                       typeof(Folder),
+                                                       typeof(Memo),
+                                                       typeof(Map),
+                                                       typeof(Tests)}; 
+
             // Look for child models that are a folder or simulation etc
             // that we need to recurse down through.
             foreach (Model child in modelToExport.Children)
             {
-                bool ignoreChild = (child is Simulation);
+                bool recurseDown = Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1;
+                bool doDocument = Array.IndexOf(modelTypesToDocument, child.GetType()) != -1;
 
-                if (!ignoreChild)
+                if (child.Name == "TitlePage" || child.Name == "Introduction")
+                    doDocument = false;
+
+                if (child is Graph && child.Parent is Folder && (child.Parent as Folder).ShowPageOfGraphs)
+                    doDocument = false; // The graph will be shown in parent folder
+
+                if (child is Memo && child.Parent is Folder && (child.Parent as Folder).ShowPageOfGraphs)
+                    doDocument = false; // The memo will be shown in parent folder
+
+                if (child.IncludeInDocumentation)
                 {
-                    if (child.Name == "Validation" || Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1)
-                    {
-                        tags.Add(new AutoDocumentation.Heading(child.Name, headingLevel));
-                        string childFolderPath = Path.Combine(workingDirectory, child.Name);
-                        AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
+                    if (doDocument)
+                        child.Document(tags, headingLevel, 0);
 
-                        if (child.Name == "Validation")
-                        {
-                            IModel dataStore = Apsim.Child(modelToExport, "DataStore");
-                            if (dataStore != null)
-                            {
-                                tags.Add(new AutoDocumentation.NewPage());
-                                tags.Add(new AutoDocumentation.Heading("Statistics", headingLevel + 1));
-                                AddValidationTags(tags, dataStore, headingLevel + 2, workingDirectory);
-                            }
-                        }
-                    }
-                    else if (child is Graph && (child as Graph).IncludeInDocumentation)
-                        child.Document(tags, headingLevel, 0);
-                    else if (child.Name != "TitlePage" && child.Name != "Introduction" &&
-                             (child is Folder || child is Memo || child is Map || child is Tests))
-                        child.Document(tags, headingLevel, 0);
+                    if (recurseDown)
+                        AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
                 }
             }
         }
@@ -199,10 +197,21 @@ namespace UserInterface.Commands
 
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
 
-            // See if there is a title page. If so do it first.
-            IModel titlePage = Apsim.Find(ExplorerPresenter.ApsimXFile, "TitlePage");
+            IModel titlePage = Apsim.Child(ExplorerPresenter.ApsimXFile, "TitlePage");
             if (titlePage != null)
                 titlePage.Document(tags, 1, 0);
+            else
+            {
+                // See if there is a title page. If so do it first.
+                foreach (IModel memo in Apsim.FindAll(ExplorerPresenter.ApsimXFile, typeof(Memo)))
+                {
+                    if (memo.Name == "TitlePage" && memo.Parent.Name == modelNameToExport)
+                    {
+                        memo.Document(tags, 1, 0);
+                        break;
+                    }
+                }
+            }
             AddBackground(tags);
 
             // See if there is a title page. If so do it first.
@@ -220,13 +229,22 @@ namespace UserInterface.Commands
             tags.Add(new AutoDocumentation.Heading("Model description", 1));
             ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
 
+            // If no model was documented then remove the 'Model description' tag.
+            if (modelDescriptionIndex == tags.Count - 1)
+                tags.RemoveAt(modelDescriptionIndex);
+
             // If 'Model description tag is imediately followed by a another heading at the same level.
             // then the model must have writen its own name as a heading. We don't want that.
-            if (tags[modelDescriptionIndex+1] is AutoDocumentation.Heading && (tags[modelDescriptionIndex+1] as AutoDocumentation.Heading).headingLevel == 1)
-                tags.RemoveAt(modelDescriptionIndex+1);
+            if (modelDescriptionIndex + 1 < tags.Count &&
+                tags[modelDescriptionIndex + 1] is AutoDocumentation.Heading &&
+                (tags[modelDescriptionIndex + 1] as AutoDocumentation.Heading).headingLevel == 1)
+                tags.RemoveAt(modelDescriptionIndex + 1);
 
             // Document model validation.
             AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
+
+            // Add statistics
+            AddStatistics(tags);
 
             // Move cultivars to end.
             MoveCultivarsToEnd(tags);
@@ -255,6 +273,22 @@ namespace UserInterface.Commands
 
             // Remove temporary working directory.
             Directory.Delete(workingDirectory, true);
+        }
+
+        /// <summary>Add statistics</summary>
+        /// <param name="tags">Document tags to add to.</param>
+        private void AddStatistics(List<AutoDocumentation.ITag> tags)
+        {
+            IModel dataStore = Apsim.Child(ExplorerPresenter.ApsimXFile, "DataStore");
+            if (dataStore != null)
+            {
+                List<IModel> tests = Apsim.ChildrenRecursively(dataStore, typeof(Tests));
+                if (tests.Count > 0)
+                    tags.Add(new AutoDocumentation.Heading("Statistics", 2));
+
+                foreach (Tests test in tests)
+                    test.Document(tags, 3, 0);
+            }
         }
 
         /// <summary>Add user documentation, based on the example.</summary>
@@ -459,8 +493,10 @@ namespace UserInterface.Commands
                                               graphAndTable.xyPairs.Parent.Parent.Name + graphAndTable.xyPairs.Parent.Name + ".png");
 
             // Setup graph.
-            GraphView graph = new GraphView(null);
+            GraphView graph = new GraphView();
             graph.Clear();
+            graph.Width = 400;
+            graph.Height = 250;
 
             // Create a line series.
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y,
@@ -476,10 +512,17 @@ namespace UserInterface.Commands
             graph.Refresh();
 
             // Export graph to bitmap file.
-            Bitmap image = new Bitmap(400, 250);
+            Bitmap image = new Bitmap(graph.Width, graph.Height);
+            using (Graphics gfx = Graphics.FromImage(image))
+            using (SolidBrush brush = new SolidBrush(System.Drawing.Color.White))
+            {
+                gfx.FillRectangle(brush, 0, 0, image.Width, image.Height);
+            }
             graph.Export(ref image, new Rectangle(0, 0, image.Width, image.Height), false);
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
-            row.Cells[0].AddImage(PNGFileName);
+            MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = row.Cells[0].AddImage(PNGFileName);
+            sectionImage.LockAspectRatio = true;
+            sectionImage.Width = "8cm";
 
             // Add x/y data.
             Paragraph xyParagraph = row.Cells[1].AddParagraph();
@@ -505,45 +548,57 @@ namespace UserInterface.Commands
         /// <param name="workingDirectory">The working directory.</param>
         private void CreateGraphPage(Section section, GraphPage graphPage, string workingDirectory)
         {
-            int numColumns = 2;
-            int numRows = 3;
-
-            // Export graph to bitmap file.
-            Bitmap image = new Bitmap(700, 850);
-
-            GraphPresenter graphPresenter = new GraphPresenter();
-            GraphView graphView = new GraphView();
-            graphView.BackColor = OxyPlot.OxyColors.White;
-            graphView.FontSize = 10;
-            graphView.MarkerSize = 4;
-            graphView.Width = image.Width / numColumns;
-            graphView.Height = image.Height / numRows;
-
-            int col = 0;
-            int row = 0;
-            for (int i = 0; i < graphPage.graphs.Count; i++)
+            int numGraphsToPrint = graphPage.graphs.FindAll(g => g.IncludeInDocumentation).Count;
+            if (numGraphsToPrint > 0)
             {
-                if (graphPage.graphs[i].IncludeInDocumentation)
+                int numColumns = 2;
+                int numRows = (numGraphsToPrint + 1) / numColumns;
+
+                // Export graph to bitmap file.
+                Bitmap image = new Bitmap(1800, numRows * 600);
+                using (Graphics gfx = Graphics.FromImage(image))
+                using (SolidBrush brush = new SolidBrush(System.Drawing.Color.White))
                 {
-                    graphPresenter.Attach(graphPage.graphs[i], graphView, ExplorerPresenter);
-                    Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height,
-                                                graphView.Width, graphView.Height);
-                    graphView.Export(ref image, r, false);
-                    graphPresenter.Detach();
-                    col++;
-                    if (col >= numColumns)
+                    gfx.FillRectangle(brush, 0, 0, image.Width, image.Height);
+                }
+                GraphPresenter graphPresenter = new GraphPresenter();
+                GraphView graphView = new GraphView();
+                graphView.BackColor = OxyPlot.OxyColors.White;
+                graphView.FontSize = 22;
+                graphView.MarkerSize = 8;
+                graphView.Width = image.Width / numColumns;
+                graphView.Height = image.Height / numRows;
+                graphView.LeftRightPadding = 0;
+
+                int col = 0;
+                int row = 0;
+                for (int i = 0; i < graphPage.graphs.Count; i++)
+                {
+                    if (graphPage.graphs[i].IncludeInDocumentation)
                     {
-                        col = 0;
-                        row++;
+                        graphPresenter.Attach(graphPage.graphs[i], graphView, ExplorerPresenter);
+                        Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height,
+                                                    graphView.Width, graphView.Height);
+                        graphView.Export(ref image, r, false);
+                        graphPresenter.Detach();
+                        col++;
+                        if (col >= numColumns)
+                        {
+                            col = 0;
+                            row++;
+                        }
                     }
                 }
+
+                string PNGFileName = Path.Combine(workingDirectory, graphPage.name + ".png");
+                image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
+
+                MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = section.AddImage(PNGFileName);
+                sectionImage.LockAspectRatio = true;
+                sectionImage.Width = "19cm";
             }
-
-            string PNGFileName = Path.Combine(workingDirectory, graphPage.name + ".png");
-            image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
-            section.AddImage(PNGFileName);
-
         }
+
         /// <summary>Creates the table.</summary>
         /// <param name="section">The section.</param>
         /// <param name="tableObj">The table to convert to html.</param>
@@ -553,7 +608,7 @@ namespace UserInterface.Commands
             // Create a 2 column, 1 row table. Image in first cell, X/Y data in second cell.
             Table table = section.AddTable();
             table.Style = "Table";
-            table.Rows.LeftIndent = "1cm";
+            table.Rows.LeftIndent = "3cm";
 
             foreach (List<string> column in tableObj.data)
             {
@@ -570,10 +625,10 @@ namespace UserInterface.Commands
                     string cellText = tableObj.data[columnIndex][rowIndex];
                     row.Cells[columnIndex].AddParagraph(cellText);
                 }
-
+                
             }
 
-
+            
         }
 
 
@@ -648,7 +703,7 @@ namespace UserInterface.Commands
                 else if (tag is Graph)
                 {
                     GraphPresenter graphPresenter = new GraphPresenter();
-                    GraphView graphView = new GraphView(null);
+                    GraphView graphView = new GraphView();
                     graphView.BackColor = OxyPlot.OxyColors.White;
                     graphView.FontSize = 12;
                     graphView.Width = 500;

@@ -191,9 +191,19 @@ namespace UserInterface.Presenters
                 foreach (SeriesDefinition definition in seriesDefinitions)
                 {
                     if (definition.x != null && definition.xAxis == axis.Type && definition.xFieldName != null)
-                        names.Add(definition.xFieldName);
+                    {
+                        string xName = definition.xFieldName;
+                        if (definition.xFieldUnits != null)
+                            xName = xName + " " + definition.xFieldUnits;
+                        names.Add(xName);
+                    }
                     if (definition.y != null && definition.yAxis == axis.Type && definition.yFieldName != null)
-                        names.Add(definition.yFieldName);
+                    {
+                        string yName = definition.yFieldName;
+                        if (definition.yFieldUnits != null)
+                            yName = yName + " " + definition.yFieldUnits;
+                        names.Add(yName);
+                    }
                 }
 
                 // Create a default title by appending all 'names' together.
