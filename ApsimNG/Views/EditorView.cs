@@ -356,11 +356,14 @@
                 // This should probably be done a bit more intelligently to detect when we are too near the bottom or right
                 // of the screen, and move accordingly. Left as an exercise for the student.
                 Cairo.Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
+                p.Y += (int)textEditor.LineHeight; 
                 // Need to convert to screen coordinates....
                 int x, y;
-                textEditor.GdkWindow.GetOrigin(out x, out y);
+                int frameX, frameY;
+                mainWindow.GetOrigin(out frameX, out frameY);
+                textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
                 CompletionForm.TransientFor = MainWidget.Toplevel as Window;
-                CompletionForm.Move(p.X + x, p.Y + y + 20);
+                CompletionForm.Move(frameX + x, frameY + y);
                 CompletionForm.ShowAll();
                 CompletionForm.Resize(CompletionView.Requisition.Width, 300);
                 if (CompletionForm.GdkWindow != null)
