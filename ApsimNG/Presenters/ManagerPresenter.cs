@@ -161,10 +161,12 @@ namespace UserInterface.Presenters
                 string code = this.managerView.Editor.Text;
                 // set the code property manually first so that compile error can be trapped via
                 // an exception.
+                bool codeChanged = this.manager.Code != code;
                 this.manager.Code = code;
 
                 // If it gets this far then compiles ok.
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", code));
+                if (codeChanged)
+                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", code));
 
                 this.explorerPresenter.MainPresenter.ShowMessage("Manager script compiled successfully", DataStore.ErrorLevel.Information);
             }
