@@ -23988,7 +23988,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ShowPageOfGraphs>false</ShowPageOfGraphs>
+            <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
           <Folder>
             <Name>PlantWtStructure</Name>
@@ -26715,7 +26715,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ShowPageOfGraphs>false</ShowPageOfGraphs>
+            <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
           <Folder>
             <Name>Harvests</Name>
@@ -27677,7 +27677,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ShowPageOfGraphs>false</ShowPageOfGraphs>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Experiment>
@@ -30738,7 +30738,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ShowPageOfGraphs>false</ShowPageOfGraphs>
+            <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
           <Folder>
             <Name>PlantWtStructure</Name>
@@ -33465,7 +33465,7 @@ namespace Models
               <DisabledSeries />
             </Graph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ShowPageOfGraphs>false</ShowPageOfGraphs>
+            <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
           <Folder>
             <Name>Harvests</Name>
@@ -34514,7 +34514,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ShowPageOfGraphs>false</ShowPageOfGraphs>
+          <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Experiment>
