@@ -12,19 +12,17 @@ namespace Models.PMF.Organs
     using System.Xml.Serialization;
 
     ///<summary>
-    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent 
-    /// root length density.
+    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density.
     /// 
     /// **Root Growth**
     /// 
-    /// Roots grow downward through the soil profile and rate is determined by RootFrontVelocity. The RootFrontVelocity 
-    /// is also influenced by the extension resistance posed by the soil, paramterised using the soil XF value.
+    /// Roots grow downward through the soil profile and rate is determined by RootFrontVelocity. The RootFrontVelocity is also influenced by the extension resistance posed by the soil, parameterised using the soil XF value.
     /// 
     /// **Dry Matter Demands**
     /// 
-    /// 100% of the dry matter (DM) demanded from the root is structural. The daily DM demand from root is calculated as a 
-    /// proportion of total DM supply using a PartitionFraction function. The daily loss of roots is calculated using
-    /// a SenescenceRate function.
+    /// 100% of the dry matter (DM) demanded from the root is structural.  
+    /// The daily DM demand from root is calculated as a proportion of total DM supply using a PartitionFraction function.  
+    /// The daily loss of roots is calculated using a SenescenceRate function.
     /// 
     /// **Nitrogen Demands**
     /// 
@@ -32,19 +30,19 @@ namespace Models.PMF.Organs
     /// 
     /// **Nitrogen Uptake**
     /// 
-    /// Potential N uptake by the root system is calculated for each soil layer that the roots have extended into.
-    /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor 
-    /// controlling the rate of extraction (kNO<sub>3</sub> and kNH<sub>4</sub>), the concentration of of N (ppm) 
-    /// and a soil moisture factor which decreases as the soil dries. Nitrogen uptake demand is limited to the maximum 
-    /// of potential uptake and the plants N demand.  Uptake N demand is then passed to the soil arbitrator which 
-    /// determines how much of their Nitrogen uptake demand each plant instance will be allowed to take up.
+    /// Potential N uptake by the root system is calculated for each soil layer that the roots have extended into.  
+    /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer,  
+    /// a factor controlling the rate of extraction (kNO<sub>3</sub> and kNH<sub>4</sub>), the concentration of of N (ppm)  
+    /// and a soil moisture factor which decreases as the soil dries.  
+    /// Nitrogen uptake demand is limited to the maximum of potential uptake and the plants N demand. 
+    /// Uptake N demand is then passed to the soil arbitrator which determines how much of their Nitrogen uptake demand each plant instance will be allowed to take up.
     /// 
     /// **Water Uptake**
     /// 
-    /// Potential water uptake by the root system is calculated for each soil layer that the roots have extended into.
-    /// In each layer potential uptake is calculated as the product of the available Water in the layer, and a factor 
-    /// controlling the rate of extraction (KL). The KL values are set in the soil and may be further modified by the crop
-    /// via KLModifier, KNO3 and KN4.
+    /// Potential water uptake by the root system is calculated for each soil layer that the roots have extended into.  
+    /// In each layer potential uptake is calculated as the product of the available water in the layer and a factor controlling the rate of extraction (KL). 
+    /// The KL values are set in the soil and may be further modified by the crop via KLModifier, KNO3 and KN4.  
+    /// 
     ///</summary>
     [Serializable]
     [Description("Root Class")]
