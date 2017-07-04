@@ -12,6 +12,7 @@ namespace UserInterface.Presenters
     using System.Reflection;
     using EventArguments;
     using Interfaces;
+    using Views;
     using Models;
     using Models.Core;
     using APSIM.Shared.Utilities;
@@ -456,13 +457,14 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Called when user clicks on a file name.
+        /// Does creation of the dialog belong here, or in the view?
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
         {
-            string fileName = explorerPresenter.MainPresenter.AskUserForOpenFileName("Select file");
-            if (fileName != null)
+            string fileName = ViewBase.AskUserForFileName("Select file path", "", Gtk.FileChooserAction.Open, e.ChangedCells[0].Value.ToString());
+            if (fileName != null && fileName != e.ChangedCells[0].Value.ToString())
             {
                 e.ChangedCells[0].Value = fileName;
                 OnCellValueChanged(sender, e);
@@ -485,7 +487,7 @@ namespace UserInterface.Presenters
                 for (int i = 0; i < this.properties.Count; i++)
                 {
                     IGridCell cell = this.grid.GetCell(1, i);
-                    if (cell.RowIndex == curCell.RowIndex && cell.ColumnIndex == curCell.ColumnIndex)
+                    if (curCell != null && cell.RowIndex == curCell.RowIndex && cell.ColumnIndex == curCell.ColumnIndex)
                         continue;
                     if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
                     {
