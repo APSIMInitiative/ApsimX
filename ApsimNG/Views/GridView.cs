@@ -22,6 +22,22 @@ namespace UserInterface.Views
     using Models.Core;
 
     /// <summary>
+    /// We want to have a "button" we can press within a grid cell. We could use a Gtk CellRendererPixbuf for this, 
+    /// but that doesn't provide an easy way to detect a button press, so instead we can use a "toggle", but 
+    /// override the Render function to simply display our Pixbuf
+    /// </summary>
+    public class CellRendererActiveButton : CellRendererToggle
+    {
+        protected override void Render(Gdk.Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
+        {
+            Gdk.GC gc = new Gdk.GC(window);
+            window.DrawPixbuf(gc, pixbuf, 0, 0, cell_area.X, cell_area.Y, pixbuf.Width, pixbuf.Height, Gdk.RgbDither.Normal, 0, 0);
+        }
+
+        public Gdk.Pixbuf pixbuf { get; set;  }
+    }
+
+    /// <summary>
     /// A grid control that implements the grid view interface.
     /// </summary>
     public class GridView : ViewBase, IGridView
@@ -84,6 +100,7 @@ namespace UserInterface.Views
         private ListStore gridmodel = new ListStore(typeof(string));
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
         internal Dictionary<Tuple<int, int>, ListStore> comboLookup = new Dictionary<Tuple<int, int>, ListStore>();
+        internal List<Tuple<int, int>> buttonList = new List<Tuple<int, int>>();
         private Menu Popup = new Menu();
         private AccelGroup accel = new AccelGroup();
         private GridCell popupCell = null;
@@ -307,6 +324,9 @@ namespace UserInterface.Views
                 comboRender.Edited += ComboRender_Edited;
                 comboRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 1.0f; // Left or right align, as appropriate
                 comboRender.Visible = false;
+                CellRendererActiveButton pixbufRender = new CellRendererActiveButton();
+                pixbufRender.pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
+                pixbufRender.Toggled += PixbufRender_Toggled;
 
                 colLookup.Add(textRender, i);
 
@@ -322,6 +342,8 @@ namespace UserInterface.Views
                 column.PackStart(textRender, true);     // 0
                 column.PackStart(toggleRender, true);   // 1
                 column.PackStart(comboRender, true);    // 2
+                column.PackStart(pixbufRender, false);  // 3
+
                 column.Sizing = TreeViewColumnSizing.Autosize;
                 //column.FixedWidth = 100;
                 column.Resizable = true;
@@ -424,6 +446,7 @@ namespace UserInterface.Views
                 {
                     col.CellRenderers[1].Visible = false;
                     col.CellRenderers[2].Visible = false;
+                    col.CellRenderers[3].Visible = false;
                 }
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 Type dataType = dataVal.GetType();
@@ -451,8 +474,9 @@ namespace UserInterface.Views
                     }
                     else
                     {   // This assumes that combobox grid cells are based on the "string" type
+                        Tuple<int, int> location = new Tuple<int, int>(rowNo, colNo);
                         ListStore store;
-                        if (comboLookup.TryGetValue(new Tuple<int, int>(rowNo, colNo), out store))
+                        if (comboLookup.TryGetValue(location, out store))
                         {
                             CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
                             if (comboRend != null)
@@ -466,6 +490,14 @@ namespace UserInterface.Views
                                 comboRend.Visible = true;
                                 comboRend.Text = AsString(dataVal);
                                 return;
+                            }
+                        }
+                        if (buttonList.Contains(location))
+                        {
+                            CellRendererActiveButton buttonRend = col.CellRenderers[3] as CellRendererActiveButton;
+                            if (buttonRend != null)
+                            {
+                                buttonRend.Visible = true;
                             }
                         }
                         text = AsString(dataVal);
@@ -1439,15 +1471,12 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// User has clicked a cell.
+        /// User has clicked a "button".
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="DataGridViewCellEventArgs"/> instance containing the event data.</param>
-        private void OnCellContentClick(object sender, /* TBI DataGridViewCell */ EventArgs e)
+        private void PixbufRender_Toggled(object o, ToggledArgs args)
+
         {
-            // Probably not needed in the Gtk implementation
-            /* TBI
-            IGridCell cell = this.GetCell(e.ColumnIndex, e.RowIndex);
+            IGridCell cell = GetCurrentCell;
             if (cell != null && cell.EditorType == EditorTypeEnum.Button)
             {
                 GridCellsChangedArgs cellClicked = new GridCellsChangedArgs();
@@ -1455,7 +1484,6 @@ namespace UserInterface.Views
                 cellClicked.ChangedCells.Add(cell);
                 ButtonClick(this, cellClicked);
             }
-            */
         }
 
         /// <summary>
