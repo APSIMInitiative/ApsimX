@@ -235,6 +235,7 @@ namespace UserInterface.Views
             {
                 TreeViewColumn col = gridview.GetColumn(0);
                 foreach (CellRenderer render in col.CellRenderers)
+                {
                     if (render is CellRendererText)
                     {
                         CellRendererText textRender = render as CellRendererText;
@@ -243,6 +244,19 @@ namespace UserInterface.Views
                         textRender.Edited -= OnCellValueChanged;
                         col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
                     }
+                    else if (render is CellRendererActiveButton)
+                    {
+                        (render as CellRendererActiveButton).Toggled -= PixbufRender_Toggled;
+                    }
+                    else if (render is CellRendererToggle)
+                    {
+                        (render as CellRendererToggle).Toggled -= ToggleRender_Toggled;
+                    }
+                    else if (render is CellRendererCombo)
+                    {
+                        (render as CellRendererCombo).Edited -= ComboRender_Edited;
+                    }
+                }
                 gridview.RemoveColumn(gridview.GetColumn(0));
             }
             while (fixedcolview.Columns.Length > 0)

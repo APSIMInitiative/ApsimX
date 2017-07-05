@@ -59,6 +59,8 @@ namespace Models.Core
                         field.SetValue(model, null);
                 }
             }
+            if (allModels != null)
+                allModels.Clear();
         }
 
         /// <summary>

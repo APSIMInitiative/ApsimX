@@ -346,6 +346,16 @@ namespace Models.Core
         public bool IncludeInDocumentation { get; set; }
 
         /// <summary>
+        /// A cleanup routine, in which we clear our child list recursively
+        /// </summary>
+        public void ClearChildLists()
+        {
+            foreach (Model child in Children)
+                child.ClearChildLists();
+            Children.Clear();
+        }
+
+        /// <summary>
         /// Return the current APSIM version number.
         /// </summary>
         public string ApsimVersion
