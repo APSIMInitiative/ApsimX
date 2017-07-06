@@ -519,6 +519,7 @@ namespace UserInterface.Commands
                 gfx.FillRectangle(brush, 0, 0, image.Width, image.Height);
             }
             graph.Export(ref image, new Rectangle(0, 0, image.Width, image.Height), false);
+            graph.MainWidget.Destroy();
             image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
             MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = row.Cells[0].AddImage(PNGFileName);
             sectionImage.LockAspectRatio = true;

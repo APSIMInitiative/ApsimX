@@ -129,7 +129,10 @@ namespace UserInterface.Presenters
             if (this.view is Views.ExplorerView)
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
             this.contextMenu = null;
+            this.mainMenu = null;
             this.CommandHistory.Clear();
+            this.ApsimXFile.ClearSimulationReferences();
+            this.ApsimXFile = null;
         }
 
         /// <summary>Toggle advanced mode.</summary>
