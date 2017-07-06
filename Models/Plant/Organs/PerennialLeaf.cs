@@ -306,6 +306,9 @@ namespace Models.PMF.Organs
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
 
+        /// <summary>Apex number by age</summary>
+        /// <param name="age">Threshold age</param>
+        public double ApexNumByAge(double age) { return 0; }
         #endregion
 
         #region Arbitrator Methods
