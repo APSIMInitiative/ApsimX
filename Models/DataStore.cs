@@ -444,7 +444,7 @@ namespace Models
 
                 if (simulationName == null || simulationName == "*")
                 {
-                    sql = "SELECT S.Name as SimName, T.* FROM " + tableName + " T" + ", Simulations S " +
+                    sql = "SELECT S.Name as SimulationName, T.* FROM " + tableName + " T" + ", Simulations S " +
                           "WHERE SimulationID = ID";
                 }
                 else

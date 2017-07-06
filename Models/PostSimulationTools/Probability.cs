@@ -59,7 +59,7 @@ namespace Models.PostSimulationTools
                 DataView view = new DataView(simulationData);
                 foreach (string simulationName in simulationNames)
                 {
-                    view.RowFilter = "SimName = '" + simulationName + "'";
+                    view.RowFilter = "SimulationName = '" + simulationName + "'";
 
                     int startRow = probabilityData.Rows.Count;
 
