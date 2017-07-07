@@ -15,14 +15,13 @@ namespace Models.Core
     using System.Reflection;
     using System.IO;
     using System.Text.RegularExpressions;
-
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 7; } }
+        public static int LastestVersion { get { return 8; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -232,6 +231,27 @@ namespace Models.Core
                 SearchReplaceManagerCode(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
                 SearchReplaceReportCode(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
+        }
+
+        private static void UpgradeToVersion8(XmlNode node)
+        {
+            XmlNode apex = XmlUtilities.CreateNode(node.OwnerDocument, "ApexStandard", "");
+            XmlNode stemSen = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "");
+            XmlElement name = node.OwnerDocument.CreateElement("Name");
+            XmlElement element = node.OwnerDocument.CreateElement("FixedValue");
+            name.InnerText = "StemSenescenceAge";
+            element.InnerText = "0";
+            stemSen.AppendChild(name);
+            stemSen.AppendChild(element);
+
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "Leaf"))
+            {
+                n.AppendChild(apex);
+            }
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "Structure"))
+            {
+                n.AppendChild(stemSen);
+            }
         }
 
         /// <summary>
