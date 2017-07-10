@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -452,6 +452,7 @@ The crops are simple instances of a static plant model and so the crop type is o
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -518,6 +519,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         </SimpleTree>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Zone>
         <Name>Field2</Name>
@@ -943,6 +945,7 @@ The crops are simple instances of a static plant model and so the crop type is o
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -1017,6 +1020,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         </SimpleTree>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Zone>
         <Name>Field3</Name>
@@ -1474,6 +1478,7 @@ The crops are simple instances of a static plant model and so the crop type is o
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -1556,6 +1561,7 @@ The crops are simple instances of a static plant model and so the crop type is o
         </SimpleTree>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
     </Simulation>
     <Graph>
@@ -2652,6 +2658,7 @@ namespace Models
           <LocationAccuracy> +/- 20m</LocationAccuracy>
           <DataSource>CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011</DataSource>
           <Comments>OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1</Comments>
+          <CERESSoilTemperature />
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
@@ -2744,13 +2751,13 @@ zone.Set("Slurp.Leaf.HeightFunction.FixedValue", HeightResetValue);<br>
           </Memo>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
-    <PrioritythenRelativeAllocation>
-      <Name>NArbitrator</Name>
-    </PrioritythenRelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
-	</OrganArbitrator>
+            <PrioritythenRelativeAllocation>
+              <Name>NArbitrator</Name>
+            </PrioritythenRelativeAllocation>
+            <RelativeAllocation>
+              <Name>DMArbitrator</Name>
+            </RelativeAllocation>
+          </OrganArbitrator>
           <Root>
             <Name>Root</Name>
             <Memo>
@@ -2866,7 +2873,7 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>0.02</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Root].RootLengthDenisty</XProperty>
+              <XProperty>[Root].LengthDensity</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>KNH4</Name>
@@ -2881,7 +2888,7 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>0</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Root].RootLengthDenisty</XProperty>
+              <XProperty>[Root].LengthDensity</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>NUptakeSWFactor</Name>
@@ -3203,12 +3210,12 @@ zone.Set("Slurp.Leaf.HeightFunction.FixedValue", HeightResetValue);<br>
           </Memo>
           <OrganArbitrator>
             <Name>Arbitrator</Name>
-    <PrioritythenRelativeAllocation>
-      <Name>NArbitrator</Name>
-    </PrioritythenRelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+            <PrioritythenRelativeAllocation>
+              <Name>NArbitrator</Name>
+            </PrioritythenRelativeAllocation>
+            <RelativeAllocation>
+              <Name>DMArbitrator</Name>
+            </RelativeAllocation>
           </OrganArbitrator>
           <Root>
             <Name>Root</Name>
@@ -3325,7 +3332,7 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>0.02</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Root].RootLengthDenisty</XProperty>
+              <XProperty>[Root].LengthDensity</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>KNH4</Name>
@@ -3340,7 +3347,7 @@ This is important in SLURP as it is set for each species to represent their diff
                   <double>0</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Root].RootLengthDenisty</XProperty>
+              <XProperty>[Root].LengthDensity</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>NUptakeSWFactor</Name>
@@ -3773,6 +3780,7 @@ namespace Models
         </Fertiliser>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <Graph>
         <Name>Water Demand and Uptakes</Name>
