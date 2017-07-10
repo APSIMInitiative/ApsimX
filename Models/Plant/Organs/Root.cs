@@ -12,36 +12,39 @@ namespace Models.PMF.Organs
     using System.Xml.Serialization;
 
     ///<summary>
-    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density.
+    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each sol layer. 
     /// 
     /// **Root Growth**
     /// 
-    /// Roots grow downward through the soil profile and rate is determined by RootFrontVelocity. The RootFrontVelocity is also influenced by the extension resistance posed by the soil, parameterised using the soil XF value.
+    /// Roots grow downwards through the soil profile, with initial depth determined by sowng depth and the growth rate determined by RootFrontVelocity. 
+    /// The RootFrontVelocity is modified by multiplying it by the soil's XF value; which represents any resistance posed by the soil to root extension. 
     /// 
     /// **Dry Matter Demands**
     /// 
-    /// 100% of the dry matter (DM) demanded from the root is structural.  
+    /// By default, 100% of the dry matter (DM) demanded from the root is structural, but this can be modified by using StructuralFraction different than one.  
     /// The daily DM demand from root is calculated as a proportion of total DM supply using a PartitionFraction function.  
-    /// The daily loss of roots is calculated using a SenescenceRate function.
+    /// The daily loss of roots is calculated using a SenescenceRate function.  All senesced material is automatically detached and added to the soil FOM.  
     /// 
     /// **Nitrogen Demands**
     /// 
-    /// The daily structural N demand from root is the product of total DM demand and a nitrogen concentration of MinimumNConc%.
+    /// The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered NonStructural 
+    /// and can be used for retranslocation and/or reallocation is the respective factors are set to values other then zero.  
     /// 
     /// **Nitrogen Uptake**
     /// 
     /// Potential N uptake by the root system is calculated for each soil layer that the roots have extended into.  
-    /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer,  
-    /// a factor controlling the rate of extraction (kNO<sub>3</sub> and kNH<sub>4</sub>), the concentration of of N (ppm)  
-    /// and a soil moisture factor which decreases as the soil dries.  
-    /// Nitrogen uptake demand is limited to the maximum of potential uptake and the plants N demand. 
-    /// Uptake N demand is then passed to the soil arbitrator which determines how much of their Nitrogen uptake demand each plant instance will be allowed to take up.
+    /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
+    /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
+    /// Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plants N demand. 
+    /// The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand
+    /// each plant instance will be allowed to take up.
     /// 
     /// **Water Uptake**
     /// 
     /// Potential water uptake by the root system is calculated for each soil layer that the roots have extended into.  
-    /// In each layer potential uptake is calculated as the product of the available water in the layer and a factor controlling the rate of extraction (KL). 
-    /// The KL values are set in the soil and may be further modified by the crop via KLModifier, KNO3 and KN4.  
+    /// In each layer potential uptake is calculated as the product of the available water in the layer (water above LL limit) 
+    /// and a factor controlling the rate of extraction (KL).  The values of both LL and KL are set in the soil interface and
+    /// KL may be further modified by the crop via the KLModifier function.  
     /// 
     ///</summary>
     [Serializable]
