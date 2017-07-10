@@ -19,7 +19,7 @@ namespace Models.Report
         public string Units { get; private set; }
 
         /// <summary>The constant value</summary>
-        public List<object> Values { get; set; }
+        private object value;
 
         /// <summary>
         /// Constructor for a plain report variable.
@@ -31,8 +31,13 @@ namespace Models.Report
         {
             Name = columnName;
             Units = units;
-            Values = new List<object>();
-            Values.Add(constantValue);
+            value = constantValue;
+        }
+
+        /// <summary>Retrieve the current value</summary>
+        public object GetValue()
+        {
+            return value;
         }
     }
 }

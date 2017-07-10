@@ -28,16 +28,16 @@ namespace Models.Report
         /// <summary>Flatten the table i.e. turn arrays and structures into a flat table.</summary>
         public void Flatten()
         {
-            List<IReportColumn> flattenedColumns = new List<Models.Report.IReportColumn>();
-            foreach (IReportColumn column in Columns)
-            {
-                if (column is ReportColumnConstantValue)
-                    flattenedColumns.Add(column);
-                else
-                    for (int rowIndex = 0; rowIndex < column.Values.Count; rowIndex++)
-                        FlattenValue(column.Name, column.Units, column.Values[rowIndex], rowIndex, flattenedColumns);
-            }
-            Columns = flattenedColumns;
+            //List<IReportColumn> flattenedColumns = new List<Models.Report.IReportColumn>();
+            //foreach (IReportColumn column in Columns)
+            //{
+            //    if (column is ReportColumnConstantValue)
+            //        flattenedColumns.Add(column);
+            //    else
+            //        for (int rowIndex = 0; rowIndex < column.Values.Count; rowIndex++)
+            //            FlattenValue(column.Name, column.Units, column.Values[rowIndex], rowIndex, flattenedColumns);
+            //}
+            //Columns = flattenedColumns;
         }
 
         /// <summary>
@@ -52,81 +52,81 @@ namespace Models.Report
         /// <returns>The list of values that can be written to a data table</returns>
         private static void FlattenValue(string name, string units, object value, int rowIndex, List<IReportColumn> flattenedColumns)
         {
-            if (value == null || value.GetType() == typeof(DateTime) || value.GetType() == typeof(string) || !value.GetType().IsClass)
-            {
-                // Scalar
-                IReportColumn flattenedColumn = flattenedColumns.Find(col => col.Name == name);
-                if (flattenedColumn == null)
-                {
-                    flattenedColumn = new ReportColumnWithValues(name, units);
-                    InsertColumn(flattenedColumn, flattenedColumns);
-                }
+            //if (value == null || value.GetType() == typeof(DateTime) || value.GetType() == typeof(string) || !value.GetType().IsClass)
+            //{
+            //    // Scalar
+            //    IReportColumn flattenedColumn = flattenedColumns.Find(col => col.Name == name);
+            //    if (flattenedColumn == null)
+            //    {
+            //        flattenedColumn = new ReportColumnWithValues(name, units);
+            //        InsertColumn(flattenedColumn, flattenedColumns);
+            //    }
 
-                // Ensure all columns have the correct number of values.
-                foreach (IReportColumn column in flattenedColumns)
-                {
-                    if (column is ReportColumnConstantValue)
-                    { }
-                    else
-                        while (column.Values.Count <= rowIndex)
-                            column.Values.Add(null);
-                }
+            //    // Ensure all columns have the correct number of values.
+            //    foreach (IReportColumn column in flattenedColumns)
+            //    {
+            //        if (column is ReportColumnConstantValue)
+            //        { }
+            //        else
+            //            while (column.Values.Count <= rowIndex)
+            //                column.Values.Add(null);
+            //    }
 
-                flattenedColumn.Values[rowIndex] = value;
-            }
-            else if (value.GetType().IsArray)
-            {
-                // Array
-                Array array = value as Array;
+            //    flattenedColumn.Values[rowIndex] = value;
+            //}
+            //else if (value.GetType().IsArray)
+            //{
+            //    // Array
+            //    Array array = value as Array;
 
-                for (int columnIndex = 0; columnIndex < array.Length; columnIndex++)
-                {
-                    string heading = name;
-                    heading += "(" + (columnIndex + 1).ToString() + ")";
+            //    for (int columnIndex = 0; columnIndex < array.Length; columnIndex++)
+            //    {
+            //        string heading = name;
+            //        heading += "(" + (columnIndex + 1).ToString() + ")";
 
-                    object arrayElement = array.GetValue(columnIndex);
-                    FlattenValue(heading, units, arrayElement, rowIndex, flattenedColumns);  // recursion
-                }
-            }
-            else if (value.GetType().GetInterface("IList") != null)
-            {
-                // List
-                IList array = value as IList;
-                for (int columnIndex = 0; columnIndex < array.Count; columnIndex++)
-                {
-                    string heading = name;
-                    heading += "(" + (columnIndex + 1).ToString() + ")";
+            //        object arrayElement = array.GetValue(columnIndex);
+            //        FlattenValue(heading, units, arrayElement, rowIndex, flattenedColumns);  // recursion
+            //    }
+            //}
+            //else if (value.GetType().GetInterface("IList") != null)
+            //{
+            //    // List
+            //    IList array = value as IList;
+            //    for (int columnIndex = 0; columnIndex < array.Count; columnIndex++)
+            //    {
+            //        string heading = name;
+            //        heading += "(" + (columnIndex + 1).ToString() + ")";
 
-                    object arrayElement = array[columnIndex];
-                    FlattenValue(heading, units, arrayElement, rowIndex, flattenedColumns);  // recursion
-                }
-            }
-            else
-            {
-                // A struct or class
-                foreach (PropertyInfo property in ReflectionUtilities.GetPropertiesSorted(value.GetType(), BindingFlags.Instance | BindingFlags.Public))
-                {
-                    object[] attrs = property.GetCustomAttributes(true);
-                    string propUnits = null;
-                    bool ignore = false;
-                    foreach (object attr in attrs)
-                    {
-                        if (attr is XmlIgnoreAttribute)
-                        {
-                            ignore = true;
-                            continue;
-                        }
-                        Core.UnitsAttribute unitsAttr = attr as Core.UnitsAttribute;
-                        if (unitsAttr != null)
-                            propUnits = unitsAttr.ToString();
-                    }
-                    if (ignore)
-                        continue;
-                    string heading = name + "." + property.Name;
-                    object classElement = property.GetValue(value, null);
-                    FlattenValue(heading, propUnits, classElement, rowIndex, flattenedColumns);
-                }
-            }
+            //        object arrayElement = array[columnIndex];
+            //        FlattenValue(heading, units, arrayElement, rowIndex, flattenedColumns);  // recursion
+            //    }
+            //}
+            //else
+            //{
+            //    // A struct or class
+            //    foreach (PropertyInfo property in ReflectionUtilities.GetPropertiesSorted(value.GetType(), BindingFlags.Instance | BindingFlags.Public))
+            //    {
+            //        object[] attrs = property.GetCustomAttributes(true);
+            //        string propUnits = null;
+            //        bool ignore = false;
+            //        foreach (object attr in attrs)
+            //        {
+            //            if (attr is XmlIgnoreAttribute)
+            //            {
+            //                ignore = true;
+            //                continue;
+            //            }
+            //            Core.UnitsAttribute unitsAttr = attr as Core.UnitsAttribute;
+            //            if (unitsAttr != null)
+            //                propUnits = unitsAttr.ToString();
+            //        }
+            //        if (ignore)
+            //            continue;
+            //        string heading = name + "." + property.Name;
+            //        object classElement = property.GetValue(value, null);
+            //        FlattenValue(heading, propUnits, classElement, rowIndex, flattenedColumns);
+            //    }
+            //}
         }
 
         /// <summary>

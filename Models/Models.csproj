@@ -159,6 +159,8 @@
     <Compile Include="Core\Runners\RunOrganiser.cs" />
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
+    <Compile Include="Report\ReportTable.cs" />
+    <Compile Include="Storage\DataStore2.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
@@ -271,11 +273,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Core\IEvent.cs" />
+    <Compile Include="Core\ILocator.cs" />
     <Compile Include="Report\IReportColumn.cs" />
+    <Compile Include="Core\IStorage.cs" />
     <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />
-    <Compile Include="Report\ReportTable.cs" />
     <Compile Include="Soils\Nutrient\NFlow.cs" />
     <Compile Include="Soils\Nutrient\CFlow.cs" />
     <Compile Include="Soils\Nutrient\NutrientPool.cs" />
