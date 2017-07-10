@@ -185,13 +185,11 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[Description("Protein requirement coeff (g/kg feed)")]
 		public double ProteinCoefficient { get; set; }
-
 		/// <summary>
 		/// Protein degradability
 		/// </summary>
 		[Description("Protein degradability")]
 		public double ProteinDegradability { get; set; }
-										   
 		/// <summary>
 		/// Weight(kg) of 1 animal equivalent(steer)
 		/// </summary>
@@ -288,7 +286,6 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[Description("Maximum size of individual relative to SRW")]
 		public double MaximumSizeOfIndividual { get; set; }
-
 		/// <summary>
 		/// Mortality rate base
 		/// </summary>
@@ -309,7 +306,6 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[Description("Mortality rate exponent")]
 		public double MortalityExponent { get; set; }
-
 		/// <summary>
 		/// Juvenile mortality rate coefficient
 		/// </summary>
@@ -325,19 +321,16 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[Description("Juvenile mortality rate exponent")]
 		public double JuvenileMortalityExponent { get; set; }
-
 		/// <summary>
 		/// Wool coefficient
 		/// </summary>
 		[Description("Wool coefficient")]
 		public double WoolCoefficient { get; set; }
-
 		/// <summary>
 		/// Cashmere coefficient
 		/// </summary>
 		[Description("Cashmere coefficient")]
 		public double CashmereCoefficient { get; set; }
-
 		#endregion
 
 		#region Breed activity
@@ -397,6 +390,11 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[Description("Minimum size for 1st mating, proportion of SRW")]
 		public double MinimumSize1stMating { get; set; }
+		/// <summary>
+		/// Minimum number of days between last birth and reconception
+		/// </summary>
+		[Description("Minimum number of days between last birth and reconception")]
+		public double MinimumDaysBirthToConception { get; set; }
 		/// <summary>
 		/// Rate at which twins are concieved
 		/// </summary>

@@ -301,11 +301,14 @@ namespace Models.WholeFarm.Activities
 			else
 			{
 				double IPIcurrent = Math.Pow(female.BreedParams.InterParturitionIntervalIntercept * (female.Weight / female.StandardReferenceWeight), female.BreedParams.InterParturitionIntervalCoefficient) * 30.64;
-				// restrict minimum period between births
 				// calculate inter-parturition interval
 				IPIcurrent = Math.Max(IPIcurrent, female.BreedParams.GestationLength + 61);
 				double ageNextConception = female.AgeAtLastConception + (IPIcurrent / 30.4);
-				isConceptionReady = (female.Age >= ageNextConception);
+				// restrict minimum period between births
+				if (ageNextConception - female.AgeAtLastBirth >= female.BreedParams.MinimumDaysBirthToConception)
+				{
+					isConceptionReady = (female.Age >= ageNextConception);
+				}
 			}
 
 			// if first mating and of age or suffcient time since last birth/conception
