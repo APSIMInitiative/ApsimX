@@ -80,6 +80,11 @@ namespace UserInterface.Views
         /// </summary>
         private string defaultNumericFormat = "F2";
 
+        /// <summary>
+        /// Flag to keep track of whether a cursor move was initiated internally
+        /// </summary>
+        private bool selfCursorMove = false;
+
         [Widget]
         private ScrolledWindow scrolledwindow1 = null;
         // [Widget]
@@ -125,60 +130,14 @@ namespace UserInterface.Views
             fixedcolview.ButtonPressEvent += OnButtonDown;
             gridview.FocusInEvent += FocusInEvent;
             gridview.FocusOutEvent += FocusOutEvent;
+            gridview.KeyPressEvent += Gridview_KeyPressEvent;
+            gridview.EnableSearch = false;
             fixedcolview.FocusInEvent += FocusInEvent;
             fixedcolview.FocusOutEvent += FocusOutEvent;
+            fixedcolview.EnableSearch = false;
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
-        }
-
-        /// <summary>
-        /// Flag to keep track of whether a cursor move was initiated internally
-        /// </summary>
-        private bool selfCursorMove = false;
-
-        /// <summary>
-        /// Repsonds to selection changes in the "fixed" columns area by
-        /// selecting corresponding rows in the main grid
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Fixedcolview_CursorChanged(object sender, EventArgs e)
-        {
-            if (!selfCursorMove)
-            {
-                selfCursorMove = true;
-                TreeSelection fixedSel = fixedcolview.Selection;
-                TreePath[] selPaths = fixedSel.GetSelectedRows();
-
-                TreeSelection gridSel = gridview.Selection;
-                gridSel.UnselectAll();
-                foreach (TreePath path in selPaths)
-                    gridSel.SelectPath(path);
-                selfCursorMove = false;
-            }
-        }
-
-        /// <summary>
-        /// Repsonds to selection changes in the main grid by
-        /// selecting corresponding rows in the "fixed columns" grid
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Gridview_CursorChanged(object sender, EventArgs e)
-        {
-            if (fixedcolview.Visible && !selfCursorMove)
-            {
-                selfCursorMove = true;
-                TreeSelection gridSel = gridview.Selection;
-                TreePath[] selPaths = gridSel.GetSelectedRows();
-
-                TreeSelection fixedSel = fixedcolview.Selection;
-                fixedSel.UnselectAll();
-                foreach (TreePath path in selPaths)
-                    fixedSel.SelectPath(path);
-                selfCursorMove = false;
-            }
         }
 
         /// <summary>
@@ -199,6 +158,7 @@ namespace UserInterface.Views
             fixedcolview.ButtonPressEvent -= OnButtonDown;
             gridview.FocusInEvent -= FocusInEvent;
             gridview.FocusOutEvent -= FocusOutEvent;
+            gridview.KeyPressEvent -= Gridview_KeyPressEvent;
             fixedcolview.FocusInEvent -= FocusInEvent;
             fixedcolview.FocusOutEvent -= FocusOutEvent;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
@@ -275,6 +235,138 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Intercepts key press events
+        /// The main reason for doing this is to allow the user to move to the "next" cell
+        /// when editing, and either the tab or return key is pressed.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        [GLib.ConnectBefore]
+        private void Gridview_KeyPressEvent(object o, KeyPressEventArgs args)
+        {
+            string keyName = Gdk.Keyval.Name(args.Event.KeyValue);
+            IGridCell cell = GetCurrentCell;
+            if (cell == null)
+                return;
+            int iRow = cell.RowIndex;
+            int iCol = cell.ColumnIndex;
+
+            if (keyName == "F2" && !userEditingCell) // Allow f2 to initiate cell editing
+            {
+                if (!this.GetColumn(iCol).ReadOnly)
+                {
+                    gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
+                }
+            }
+            if ((keyName == "Return" || keyName == "Tab") && userEditingCell)
+            {
+                bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
+                int nextRow = iRow;
+                int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                int nextCol = iCol;
+                if (shifted) // Move backwards
+                {
+                    do
+                    {
+                        if (keyName == "Tab") // Move horizontally
+                        {
+                            if (--nextCol < 0)
+                            {
+                                if (--nextRow < 0)
+                                    nextRow = RowCount - 1;
+                                nextCol = nCols - 1;
+                            }
+                        }
+                        else if (keyName == "Return") // Move vertically
+                        {
+                            if (--nextRow < 0)
+                            {
+                                if (--nextCol < 0)
+                                    nextCol = nCols - 1;
+                                nextRow = RowCount - 1;
+                            }
+                        }
+                    }
+                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                }
+                else
+                {
+                    do
+                    {
+                        if (keyName == "Tab") // Move horizontally
+                        {
+                            if (++nextCol >= nCols)
+                            {
+                                if (++nextRow >= RowCount)
+                                    nextRow = 0;
+                                nextCol = 0;
+                            }
+                        }
+                        else if (keyName == "Return") // Move vertically
+                        {
+                            if (++nextRow >= RowCount)
+                            {
+                                if (++nextCol >= nCols)
+                                    nextCol = 0;
+                                nextRow = 0;
+                            }
+                        }
+                    }
+                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                }
+                EndEdit();
+                while (GLib.MainContext.Iteration())
+                    ;
+                if (nextRow != iRow || nextCol != iCol)
+                    gridview.SetCursor(new TreePath(new int[1] { nextRow }), gridview.GetColumn(nextCol), true);
+                args.RetVal = true;
+            }
+        } 
+
+        /// <summary>
+        /// Repsonds to selection changes in the "fixed" columns area by
+        /// selecting corresponding rows in the main grid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Fixedcolview_CursorChanged(object sender, EventArgs e)
+        {
+            if (!selfCursorMove)
+            {
+                selfCursorMove = true;
+                TreeSelection fixedSel = fixedcolview.Selection;
+                TreePath[] selPaths = fixedSel.GetSelectedRows();
+
+                TreeSelection gridSel = gridview.Selection;
+                gridSel.UnselectAll();
+                foreach (TreePath path in selPaths)
+                    gridSel.SelectPath(path);
+                selfCursorMove = false;
+            }
+        }
+
+        /// <summary>
+        /// Repsonds to selection changes in the main grid by
+        /// selecting corresponding rows in the "fixed columns" grid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Gridview_CursorChanged(object sender, EventArgs e)
+        {
+            if (fixedcolview.Visible && !selfCursorMove)
+            {
+                selfCursorMove = true;
+                TreeSelection gridSel = gridview.Selection;
+                TreePath[] selPaths = gridSel.GetSelectedRows();
+
+                TreeSelection fixedSel = fixedcolview.Selection;
+                fixedSel.UnselectAll();
+                foreach (TreePath path in selPaths)
+                    fixedSel.SelectPath(path);
+                selfCursorMove = false;
+            }
+        }
 
         private int numberLockedCols = 0;
 
@@ -434,6 +526,7 @@ namespace UserInterface.Views
         private void TextRender_EditingCanceled(object sender, EventArgs e)
         {
             this.userEditingCell = false;
+            (this.editControl as Widget).KeyPressEvent -= Gridview_KeyPressEvent;
             this.editControl = null;
         }
 
@@ -993,6 +1086,7 @@ namespace UserInterface.Views
             this.userEditingCell = true;
             this.editPath = e.Path;
             this.editControl = e.Editable;
+            (this.editControl as Widget).KeyPressEvent += Gridview_KeyPressEvent;
             this.editSender = sender;
             IGridCell where = GetCurrentCell;
             if (where.RowIndex >= DataSource.Rows.Count)
@@ -1196,7 +1290,7 @@ namespace UserInterface.Views
                     newValue = string.Empty;
                 }
 
-                if (this.CellsChanged != null && this.valueBeforeEdit != newValue)
+                if (this.CellsChanged != null && this.valueBeforeEdit.ToString() != newValue.ToString())
                 {
                     GridCellsChangedArgs args = new GridCellsChangedArgs();
                     args.ChangedCells = new List<IGridCell>();
