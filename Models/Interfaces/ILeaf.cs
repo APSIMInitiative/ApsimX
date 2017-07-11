@@ -21,7 +21,7 @@ namespace Models.Interfaces
         /// <summary>
         /// 
         /// </summary>
-        double InitialisedCohortNo { get;}
+        double InitialisedCohortNo { get; }
         /// <summary>
         /// 
         /// </summary>
@@ -41,6 +41,9 @@ namespace Models.Interfaces
         /// </summary>
         /// <param name="ProportionRemoved"></param>
         void DoThin(double ProportionRemoved);
+
+        /// <summary>Apex number by age</summary>
+        /// <param name="age">Threshold age</param>
+        double ApexNumByAge(double age);
     }
 }
-
