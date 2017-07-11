@@ -89,7 +89,7 @@ namespace UserInterface.Views
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
             column.PackStart(iconRender, false);
             textRender = new Gtk.CellRendererText();
-            textRender.Editable = true;
+            textRender.Editable = false;
             textRender.EditingStarted += OnBeforeLabelEdit;
             textRender.Edited += OnAfterLabelEdit;
             column.PackStart(textRender, true);
@@ -258,6 +258,7 @@ namespace UserInterface.Views
         /// <summary>Puts the current node into edit mode so user can rename it.</summary>
         public void BeginRenamingCurrentNode()
         {
+            textRender.Editable = true;
             TreePath selPath;
             TreeViewColumn selCol;
             treeview1.GetCursor(out selPath, out selCol);
@@ -825,11 +826,12 @@ namespace UserInterface.Views
             // e.CancelEdit = false;
         }
         
-        /// <summary>User has finished renamed a node.</summary>
+        /// <summary>User has finished renaming a node.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
         private void OnAfterLabelEdit(object sender, EditedArgs e)
         {
+            textRender.Editable = false;
             // TreeView.ContextMenuStrip = this.PopupMenu;
             if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
             {
