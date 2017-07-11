@@ -133,10 +133,12 @@ namespace Models.Core
         public static List<IModel> FindAll(IModel model)
         {
             var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
-            if (simulation == null || simulation.Scope == null)
+            if (simulation == null)
             {
                 ScopingRules scope = new ScopingRules();
-                return scope.FindAll(model).ToList();
+                List<IModel>result = scope.FindAll(model).ToList();
+                scope.Clear();
+                return result;
             }
             return simulation.Scope.FindAll(model).ToList();
         }
@@ -147,12 +149,12 @@ namespace Models.Core
         /// as the cache will then be incorrect
         /// </summary>
         /// <param name="model"></param>
-        public static void ClearScopeCache(IModel model)
+        public static void ClearCaches(IModel model)
         {
             var simulation = Apsim.Parent(model, typeof(Simulation)) as Simulation;
             if (simulation != null && simulation.Scope != null)
             {
-                simulation.ClearScopingRules();
+                simulation.ClearCaches();
             }
         }
 
@@ -269,7 +271,7 @@ namespace Models.Core
             modelToAdd.Parent = parent;
             Apsim.ParentAllChildren(modelToAdd);
             parent.Children.Add(modelToAdd as Model);
-            Apsim.ClearScopeCache(modelToAdd);
+            Apsim.ClearCaches(modelToAdd);
         }
 
         /// <summary>Deletes the specified model.</summary>
@@ -277,7 +279,7 @@ namespace Models.Core
         public static bool Delete(IModel model)
         {
             Locator(model.Parent).Clear();
-            Apsim.ClearScopeCache(model);
+            Apsim.ClearCaches(model);
             return model.Parent.Children.Remove(model as Model);
         }
 

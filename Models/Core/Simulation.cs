@@ -56,7 +56,17 @@ namespace Models.Core
         public event EventHandler Completed;
 
         /// <summary>Returns the object responsible for scoping rules.</summary>
-        public ScopingRules Scope { get { return scope; } }
+        public ScopingRules Scope
+        {
+            get
+            {
+                if (scope == null)
+                {
+                    scope = new ScopingRules();
+                }
+                return scope;
+            }
+        }
 
         /// <summary>A locater object for finding models and variables.</summary>
         [NonSerialized]
@@ -151,7 +161,10 @@ namespace Models.Core
                                err.ToString();
 
                 ISummary summary = Apsim.Find(this, typeof(Summary)) as ISummary;
-                summary.WriteMessage(this, ErrorMessage);
+                if (summary != null)
+                {
+                    summary.WriteMessage(this, ErrorMessage);
+                }
                 CleanupRun();
 
                 throw new Exception(ErrorMessage);
@@ -163,7 +176,10 @@ namespace Models.Core
                                err.ToString();
 
                 ISummary summary = Apsim.Find(this, typeof(Summary)) as ISummary;
-                summary.WriteMessage(this, ErrorMessage);
+                if (summary != null)
+                {
+                    summary.WriteMessage(this, ErrorMessage);
+                }
                 CleanupRun();
 
                 throw new Exception(ErrorMessage);
@@ -207,6 +223,7 @@ namespace Models.Core
                 Completed.Invoke(this, null);
 
             DisconnectLinksAndEvents();
+            ClearCaches();
 
             timer.Stop();
             Console.WriteLine("File: " + Path.GetFileNameWithoutExtension(this.FileName) + ", Simulation " + this.Name + " complete. Time: " + timer.Elapsed.TotalSeconds.ToString("0.00 sec"));
@@ -215,15 +232,16 @@ namespace Models.Core
         /// <summary>
         /// Clears the existing Scoping Rules
         /// </summary>
-        public void ClearScopingRules()
+        public void ClearCaches()
         {
-            scope = new ScopingRules();
+            Scope.Clear();
+            Locater.Clear();
         }
 
         /// <summary>Connect all links and events in simulation</summary>
         public void ConnectLinksAndEvents()
         {
-            scope = new ScopingRules();
+            Scope.Clear();
             events = new Events(this);
             events.ConnectEvents();
             links = new Core.Links();

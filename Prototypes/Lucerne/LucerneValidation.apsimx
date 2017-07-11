@@ -2408,12 +2408,221 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
     <Factors>
       <Name>Factors</Name>
       <Factor>
+        <Name>SowingDate</Name>
+        <Factor>
+          <Name>SD1</Name>
+          <Operations>
+            <Name>Cutting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2001-01-24</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-03-07</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-05-02</Date>
+              <Action> [Mower].Script.Cut();  </Action>
+            </Operation>
+            <Operation>
+              <Date>2001-07-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-09-29</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-11-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-12-21</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-01-31</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-04-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-06-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[LucerneSowingRule].Script.SowingDate = 2000-10-24</string>
+            <string>[Clock].StartDate = 2000-10-24</string>
+            <string>[Cutting]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>SD2</Name>
+          <Operations>
+            <Name>Cutting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2001-02-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-05-02</Date>
+              <Action> [Mower].Script.Cut();  </Action>
+            </Operation>
+            <Operation>
+              <Date>2001-07-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-09-29</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-11-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-12-21</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-01-31</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-04-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-06-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[LucerneSowingRule].Script.SowingDate = 2000-11-14</string>
+            <string>[Clock].StartDate = 2000-11-14</string>
+            <string>[Cutting]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>SD3</Name>
+          <Operations>
+            <Name>Cutting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2001-03-07</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-05-02</Date>
+              <Action> [Mower].Script.Cut();  </Action>
+            </Operation>
+            <Operation>
+              <Date>2001-07-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-09-29</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-11-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-12-21</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-01-31</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-04-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-06-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[LucerneSowingRule].Script.SowingDate = 2000-12-05</string>
+            <string>[Clock].StartDate = 2000-12-05</string>
+            <string>[Cutting]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>SD4</Name>
+          <Operations>
+            <Name>Cutting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2001-03-28</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-05-02</Date>
+              <Action> [Mower].Script.Cut();  </Action>
+            </Operation>
+            <Operation>
+              <Date>2001-07-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-09-29</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-11-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-12-21</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-01-31</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-04-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-06-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[LucerneSowingRule].Script.SowingDate = 2000-12-27</string>
+            <string>[Clock].StartDate = 2000-12-27</string>
+            <string>[Cutting]</string>
+          </Specifications>
+        </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Specifications />
+      </Factor>
+      <Factor>
         <Name>Water</Name>
         <Factor>
           <Name>dry</Name>
           <Operations>
             <Name>IrrigationEvents</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2001-08-11</Date>
+              <Action>[Irrigation].Apply(70);</Action>
+            </Operation>
           </Operations>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
@@ -2465,54 +2674,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
               <Date>2001-12-20</Date>
               <Action>[Irrigation].Apply(80);</Action>
             </Operation>
-            <Operation>
-              <Date>2002-09-12</Date>
-              <Action>[Irrigation].Apply(42);</Action>
-            </Operation>
-            <Operation>
-              <Date>2002-10-11</Date>
-              <Action>[Irrigation].Apply(40);</Action>
-            </Operation>
-            <Operation>
-              <Date>2002-12-31</Date>
-              <Action>[Irrigation].Apply(47);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-01-19</Date>
-              <Action>[Irrigation].Apply(40);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-02-12</Date>
-              <Action>[Irrigation].Apply(45);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-02-28</Date>
-              <Action>[Irrigation].Apply(45);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-03-14</Date>
-              <Action>[Irrigation].Apply(50);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-03-27</Date>
-              <Action>[Irrigation].Apply(40);</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-11-27</Date>
-              <Action>[Irrigation].Apply(35);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-01-02</Date>
-              <Action>[Irrigation].Apply(40);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-01-14</Date>
-              <Action>[Irrigation].Apply(40);</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-02-15</Date>
-              <Action>[Irrigation].Apply(40);</Action>
-            </Operation>
           </Operations>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Specifications>
@@ -2530,7 +2691,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <Name>clock</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartDate>2000-10-24T00:00:00</StartDate>
-        <EndDate>2003-07-01T00:00:00</EndDate>
+        <EndDate>2002-07-01T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
@@ -2580,34 +2741,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </InitialWater>
           <Water>
             <Name>Water</Name>
-            <SoilCrop>
-              <Name>LucerneSoil</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <LL>
-                <double>0.13</double>
-                <double>0.13</double>
-                <double>0.1</double>
-                <double>0.08</double>
-                <double>0.11</double>
-                <double>0.11</double>
-              </LL>
-              <KL>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.06</double>
-              </KL>
-              <XF>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-                <double>1</double>
-              </XF>
-            </SoilCrop>
             <SoilCrop>
               <Name>LucerneSoil</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3147,11 +3280,11 @@ namespace Models
           <Name>LucerneSowingRule</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <SowingDate>2000-10-24</SowingDate>
             <RowSpacing>150</RowSpacing>
             <SowingDepth>20</SowingDepth>
             <SowingRate>100</SowingRate>
             <CultivarName>Kaituna</CultivarName>
+            <SowingDate>2000-10-24</SowingDate>
           </Script>
           <Code><![CDATA[
 using System;
@@ -3254,106 +3387,6 @@ namespace Models
         <Operations>
           <Name>Cutting</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Operation>
-            <Date>2001-01-24</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2001-03-07</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2001-05-02</Date>
-            <Action> [Mower].Script.Cut();  </Action>
-          </Operation>
-          <Operation>
-            <Date>2001-07-04</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2001-09-29</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2001-11-14</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2001-12-21</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2002-01-31</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2002-04-04</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2002-06-14</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2002-10-06</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2002-11-17</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2002-12-28</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2003-02-11</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2003-03-23</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2003-05-05</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2003-06-13</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2003-10-06</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2003-11-13</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2003-12-29</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2004-02-08</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2004-03-20</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2004-05-03</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2004-06-12</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2004-10-03</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
         </Operations>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Area>1</Area>
@@ -5283,7 +5316,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
           <Marker>None</Marker>
@@ -5350,11 +5383,11 @@ namespace Models
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>Solid</Line>
+          <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
@@ -5394,8 +5427,8 @@ namespace Models
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
@@ -5403,7 +5436,7 @@ namespace Models
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>LAI</YFieldName>
-          <ShowInLegend>false</ShowInLegend>
+          <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -5461,7 +5494,7 @@ namespace Models
           <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
@@ -5527,7 +5560,7 @@ namespace Models
           <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
@@ -5593,7 +5626,7 @@ namespace Models
           <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
@@ -5659,7 +5692,7 @@ namespace Models
           <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
@@ -5679,9 +5712,9 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16747854</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
@@ -6908,11 +6941,11 @@ namespace Models
           <Name>LucerneSowingRule</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <SowingDate>2000-10-24</SowingDate>
             <RowSpacing>150</RowSpacing>
             <SowingDepth>20</SowingDepth>
             <SowingRate>100</SowingRate>
             <CultivarName>Kaituna</CultivarName>
+            <SowingDate>2000-10-24</SowingDate>
           </Script>
           <Code><![CDATA[
 using System;
@@ -10199,11 +10232,11 @@ namespace Models
           <Name>LucerneSowingRule</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <SowingDate>1996-10-31</SowingDate>
             <RowSpacing>150</RowSpacing>
             <SowingDepth>20</SowingDepth>
             <SowingRate>450</SowingRate>
             <CultivarName>Kaituna</CultivarName>
+            <SowingDate>1996-10-31</SowingDate>
           </Script>
           <Code><![CDATA[
 using System;
@@ -14513,11 +14546,11 @@ namespace Models
           <Name>LucerneSowingRule</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <SowingDate>2000-10-24</SowingDate>
             <RowSpacing>150</RowSpacing>
             <SowingDepth>20</SowingDepth>
             <SowingRate>480</SowingRate>
             <CultivarName>Kaituna</CultivarName>
+            <SowingDate>2000-10-24</SowingDate>
           </Script>
           <Code><![CDATA[
 using System;

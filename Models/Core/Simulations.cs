@@ -270,6 +270,22 @@ namespace Models.Core
                     (simulation as Simulation).FileName = FileName;
         }
 
+        /// <summary>
+        /// A cleanup routine to be used when we close this set of simulations
+        /// The goal is to avoid cyclic references that can prevent the garbage collector
+        /// from clearing the memory we have used
+        /// </summary>
+        public void ClearSimulationReferences()
+        {
+            // Clears the locator caches for our Simulations.
+            // These caches may result in cyclic references and memory leaks if not cleared
+            foreach (Model simulation in Apsim.ChildrenRecursively(this))
+                if (simulation is Simulation)
+                    (simulation as Simulation).ClearCaches();
+            // Explicitly clear the child lists
+            ClearChildLists();
+        }
+
         /// <summary>Documents the specified model.</summary>
         /// <param name="modelNameToDocument">The model name to document.</param>
         /// <param name="tags">The auto doc tags.</param>
