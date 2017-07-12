@@ -602,19 +602,14 @@ namespace Models.Soils
 
             // Get potential residue decomposition from surfaceom.
             SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp = SurfaceOrganicMatter.PotentialDecomposition();
-
             OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
-
             num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
 
+            // get the current soil water content
             sw_dep = Soil.Water;
 
             // calculate C and N processes
             EvaluateProcesses();
-
-            // send actual decomposition back to surface OM
-            if (!isPondActive) 
-                SendActualResidueDecompositionCalculated();
         }
 
         /// <summary>Performs every-day calculations - end of day processes</summary>
@@ -726,53 +721,44 @@ namespace Models.Soils
         /// <summary>
         /// Sends back to SurfaceOM the information about residue decomposition
         /// </summary>
-        private void SendActualResidueDecompositionCalculated()
+        public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
             // Note:
-            //    - Potential decomposition was given to this module by a residue/surfaceOM module. This module evaluated
-            //        whether the conditions (C-N balance) allowed the decomposition to happen.
-            //      - Now we explicitly tell the sender module the actual decomposition rate for each of its residues.
-            //    - If there wasn't enough mineral N to decompose, the rate will be reduced to zero !!  - MUST CHECK THE VALIDITY OF THIS
+            //   - Potential decomposition was given to this module by a residue/surfaceOM module. This module evaluated
+            //       whether the conditions (C-N balance) allowed the decomposition to happen.
+            //   - Now we explicitly tell the sender module the actual decomposition rate for each of its residues.
+            //   - If there wasn't enough mineral N to decompose, the rate will be reduced to zero !!  - MUST CHECK THE VALIDITY OF THIS
 
+            int nLayers = dlayer.Length;
+            SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
+            Array.Resize(ref ActualSOMDecomp.Pool, num_residues);
+
+            for (int residue = 0; residue < num_residues; residue++)
             {
-                int nLayers = dlayer.Length;
-                num_residues = residueName.Length;
-                SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
-                //SurfOMDecomposed.Pool = new SurfaceOrganicMatterDecompPoolType[num_residues];
-                Array.Resize(ref ActualSOMDecomp.Pool, num_residues);
-
-                //SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
-                //Array.Resize(ref ActualSOMDecomp.Pool, num_residues);
-
-
-
-                for (int residue = 0; residue < num_residues; residue++)
+                // get the total amount decomposed over all existing patches
+                double c_summed = 0.0;
+                double n_summed = 0.0;
+                for (int k = 0; k < Patch.Count; k++)
                 {
-                    // get the total amount decomposed over all existing patches
-                    double c_summed = 0.0;
-                    double n_summed = 0.0;
-                    for (int k = 0; k < Patch.Count; k++)
-                    {
-                        c_summed += Patch[k].SurfOMActualDecomposition.Pool[residue].FOM.C * Patch[k].RelativeArea;
-                        n_summed += Patch[k].SurfOMActualDecomposition.Pool[residue].FOM.N * Patch[k].RelativeArea;
-                    }
-
-                    // pack up the structure to return decompositions to SurfaceOrganicMatter
-                    ActualSOMDecomp.Pool[residue] = new SurfaceOrganicMatterDecompPoolType();
-                    ActualSOMDecomp.Pool[residue].FOM = new FOMType();
-                    ActualSOMDecomp.Pool[residue].Name = Patch[0].SurfOMActualDecomposition.Pool[residue].Name;
-                    ActualSOMDecomp.Pool[residue].OrganicMatterType = Patch[0].SurfOMActualDecomposition.Pool[residue].OrganicMatterType;
-                    ActualSOMDecomp.Pool[residue].FOM.amount = 0.0F;
-                    ActualSOMDecomp.Pool[residue].FOM.C = (float)c_summed;
-                    ActualSOMDecomp.Pool[residue].FOM.N = (float)n_summed;
-                    ActualSOMDecomp.Pool[residue].FOM.P = 0.0F;
-                    ActualSOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
-                    // Note: The values for 'amount', 'P', and 'AshAlk' will not be collected by SurfaceOrganicMatter, so send zero as default.
-
+                    c_summed += Patch[k].SurfOMActualDecomposition.Pool[residue].FOM.C * Patch[k].RelativeArea;
+                    n_summed += Patch[k].SurfOMActualDecomposition.Pool[residue].FOM.N * Patch[k].RelativeArea;
                 }
-                // raise the event
-                SurfaceOrganicMatter.ActualSOMDecomp = ActualSOMDecomp;
+
+                // pack up the structure to return decompositions to SurfaceOrganicMatter
+                ActualSOMDecomp.Pool[residue] = new SurfaceOrganicMatterDecompPoolType();
+                ActualSOMDecomp.Pool[residue].FOM = new FOMType();
+                ActualSOMDecomp.Pool[residue].Name = Patch[0].SurfOMActualDecomposition.Pool[residue].Name;
+                ActualSOMDecomp.Pool[residue].OrganicMatterType = Patch[0].SurfOMActualDecomposition.Pool[residue].OrganicMatterType;
+                ActualSOMDecomp.Pool[residue].FOM.amount = 0.0F;
+                ActualSOMDecomp.Pool[residue].FOM.C = (float)c_summed;
+                ActualSOMDecomp.Pool[residue].FOM.N = (float)n_summed;
+                ActualSOMDecomp.Pool[residue].FOM.P = 0.0F;
+                ActualSOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
+                // Note: The values for 'amount', 'P', and 'AshAlk' will not be collected by SurfaceOrganicMatter, so send zero as default.
+
             }
+
+            return ActualSOMDecomp;
         }
 
         /// <summary>
@@ -1516,5 +1502,4 @@ namespace Models.Soils
 
         #endregion Aux functions
     }
-
 }
