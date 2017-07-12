@@ -765,110 +765,13 @@ namespace Models.Soils
         /// Passes the instructions to incorporate FOM to the soil - simple FOM
         /// </summary>
         /// <remarks>
-        /// In this event, the FOM is given as a single amount, so it will be assumed that the CN ratios of all fractions are equal
-        /// Notes:
-        ///  - if N (or CNR) values are not given, no FOM will not be added to soil
-        ///  - if both CNR and N values are given, CNR is used and N is overwritten
+        /// The use of this events is to be avoided, one should use the method IncorporateFOM
         /// </remarks>
         /// <param name="inFOMdata">Data about the FOM to be added to the soil</param>
         [EventSubscribe("IncorpFOM")]
         private void OnIncorpFOM(FOMLayerType inFOMdata)
         {
-            int nLayers = dlayer.Length;
-
-            // get the total amount to be added
-            double totalCAmount = 0.0;
-            double totalNAmount = 0.0;
-            double amountCnotAdded = 0.0;
-            double amountNnotAdded = 0.0;
-            for (int layer = 0; layer < inFOMdata.Layer.Length; layer++)
-            {
-                if (layer < nLayers)
-                {
-                    if (inFOMdata.Layer[layer].FOM.amount >= epsilon)
-                    {
-                        inFOMdata.Layer[layer].FOM.C = inFOMdata.Layer[layer].FOM.amount * (float)defaultCarbonInFOM;
-                        if (inFOMdata.Layer[layer].CNR > epsilon)
-                        {   // we have C:N info - note that this has precedence over N amount
-                            totalCAmount += inFOMdata.Layer[layer].FOM.C;
-                            inFOMdata.Layer[layer].FOM.N = inFOMdata.Layer[layer].FOM.C / inFOMdata.Layer[layer].CNR;
-                            totalNAmount += inFOMdata.Layer[layer].FOM.N;
-                        }
-                        else if (inFOMdata.Layer[layer].FOM.N > epsilon)
-                        {   // we have N info
-                            totalCAmount += inFOMdata.Layer[layer].FOM.C;
-                            totalNAmount += inFOMdata.Layer[layer].FOM.N;
-                        }
-                        else
-                        {   // no info for N
-                            amountCnotAdded += inFOMdata.Layer[layer].FOM.C;
-                        }
-                    }
-                    else if (inFOMdata.Layer[layer].FOM.N >= epsilon)
-                    {   // no info for C
-                        amountNnotAdded += inFOMdata.Layer[layer].FOM.N;
-                    }
-                }
-                else
-                    Console.WriteLine(" IncorpFOM: information passed contained more layers than the soil, these will be ignored");
-            }
-
-            // If any FOM was passed, make the partition into FOM pools
-            if (totalCAmount >= epsilon)
-            {
-                // check whether a valid FOM type was given
-                fom_type = 0;   // use the default if fom_type was not given
-                for (int i = 0; i < fom_types.Length; i++)
-                {
-                    if (inFOMdata.Type == fom_types[i])
-                    {
-                        fom_type = i;
-                        break;
-                    }
-                }
-
-                // Pack the handled values of fom, so they can be added to the soil
-                FOMPoolType myFOMPoolData = new FOMPoolType();
-                myFOMPoolData.Layer = new FOMPoolLayerType[inFOMdata.Layer.Length];
-
-                // Now partition the .C and .N amounts into FOM pools
-                for (int layer = 0; layer < inFOMdata.Layer.Length; layer++)
-                {
-                    if (layer < nLayers)
-                    {
-                        myFOMPoolData.Layer[layer] = new FOMPoolLayerType();
-                        myFOMPoolData.Layer[layer].Pool = new FOMType[3];
-                        myFOMPoolData.Layer[layer].Pool[0] = new FOMType();
-                        myFOMPoolData.Layer[layer].Pool[1] = new FOMType();
-                        myFOMPoolData.Layer[layer].Pool[2] = new FOMType();
-
-                        if (inFOMdata.Layer[layer].FOM.C > epsilon)
-                        {
-                            myFOMPoolData.Layer[layer].nh4 = 0.0F;
-                            myFOMPoolData.Layer[layer].no3 = 0.0F;
-                            myFOMPoolData.Layer[layer].Pool[0].C = (float)(inFOMdata.Layer[layer].FOM.C * fract_carb[fom_type]);
-                            myFOMPoolData.Layer[layer].Pool[1].C = (float)(inFOMdata.Layer[layer].FOM.C * fract_cell[fom_type]);
-                            myFOMPoolData.Layer[layer].Pool[2].C = (float)(inFOMdata.Layer[layer].FOM.C * fract_lign[fom_type]);
-
-                            myFOMPoolData.Layer[layer].Pool[0].N = (float)(inFOMdata.Layer[layer].FOM.N * fract_carb[fom_type]);
-                            myFOMPoolData.Layer[layer].Pool[1].N = (float)(inFOMdata.Layer[layer].FOM.N * fract_cell[fom_type]);
-                            myFOMPoolData.Layer[layer].Pool[2].N = (float)(inFOMdata.Layer[layer].FOM.N * fract_lign[fom_type]);
-                        }
-                    }
-                }
-
-                // actually add the FOM to soil
-                IncorporateFOM(myFOMPoolData);
-            }
-            else
-                mySummary.WriteMessage(this, "IncorpFOM: action was not carried out because no amount was given");
-
-            // let the user know of any issues
-            if ((amountCnotAdded >= epsilon) | (amountNnotAdded >= epsilon))
-            {
-                mySummary.WriteMessage(this, "IncorpFOM - Warning Error: The amounts of " + amountCnotAdded.ToString("#0.00") +
-                "kgC/ha and " + amountCnotAdded.ToString("#0.00") + "were not added because some information was missing");
-            }
+            DoIncorpFOM(inFOMdata);
         }
 
         /// <summary>
@@ -909,16 +812,190 @@ namespace Models.Soils
             }
 
             // add FOM to soil layers, if given
-            if (totalCAmount >= epsilon)
+            if ((totalCAmount >= epsilon) && (totalNAmount >= epsilon))
                 IncorporateFOM(inFOMPoolData);
             else
-                mySummary.WriteMessage(this, "IncorpFOMPool: action was not carried out because no amount was given");
-
-            // let the user know of any issues
-            if ((amountCnotAdded >= epsilon) | (amountNnotAdded >= epsilon))
             {
-                mySummary.WriteMessage(this, "IncorpFOMPool - Warning Error: The amounts of " + amountCnotAdded.ToString("#0.00") +
-                "kgC/ha and " + amountCnotAdded.ToString("#0.00") + "were not added because some information was missing");
+                // let the user know of any issues
+                string aMessage;
+                if (amountCnotAdded >= epsilon)
+                    aMessage = "only C amount was given (" + amountCnotAdded.ToString("#0.00") + "kg/ha)";
+                else if (amountNnotAdded >= epsilon)
+                    aMessage = "only N amount was given (" + amountNnotAdded.ToString("#0.00") + "kg/ha)";
+                else
+                    aMessage = "no amount was given";
+
+                mySummary.WriteWarning(this, "FOM addition was not carried out because " + aMessage);
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the data and forward instructions to incorporate FOM to the soil - simple FOM
+        /// </summary>
+        /// <remarks>
+        /// The data given here contains FOM as a single amount, not split into pools.
+        /// This will be partitioned here based on the given fom_type (or default if not given).
+        /// The values for C as well as N (or CN ratio) must be supplied or the action is not performed.
+        /// Both C an N are partitioned equally, thus the CN ratios of all pools are assumed equal.
+        /// If both N and CN ratio are given, the valu of CN ratio is used.
+        /// </remarks>
+        /// <param name="inFOMdata">Data about the FOM to be added to the soil</param>
+        public void DoIncorpFOM(FOMLayerType inFOMdata)
+        {
+            int nLayers = dlayer.Length;
+
+            // get the total amount to be added
+            double totalCAmount = 0.0;
+            double totalNAmount = 0.0;
+            double amountCnotAdded = 0.0;
+            double amountNnotAdded = 0.0;
+            for (int layer = 0; layer < inFOMdata.Layer.Length; layer++)
+            {
+                if (layer < nLayers)
+                {
+                    if (inFOMdata.Layer[layer].FOM.amount >= epsilon)
+                    {
+                        inFOMdata.Layer[layer].FOM.C = inFOMdata.Layer[layer].FOM.amount * (float)defaultCarbonInFOM;
+                        if (inFOMdata.Layer[layer].CNR > epsilon)
+                        {   // we have C:N info - note that this has precedence over N amount
+                            totalCAmount += inFOMdata.Layer[layer].FOM.C;
+                            inFOMdata.Layer[layer].FOM.N = inFOMdata.Layer[layer].FOM.C / inFOMdata.Layer[layer].CNR;
+                            totalNAmount += inFOMdata.Layer[layer].FOM.N;
+                        }
+                        else if (inFOMdata.Layer[layer].FOM.N > epsilon)
+                        {   // we have N info
+                            totalCAmount += inFOMdata.Layer[layer].FOM.C;
+                            totalNAmount += inFOMdata.Layer[layer].FOM.N;
+                        }
+                        else
+                        {   // no info for N, C will not be added
+                            amountCnotAdded += inFOMdata.Layer[layer].FOM.C;
+                        }
+                    }
+                    else if (inFOMdata.Layer[layer].FOM.N >= epsilon)
+                    {   // no info for C, N will not be added
+                        amountNnotAdded += inFOMdata.Layer[layer].FOM.N;
+                    }
+                }
+                else
+                    Console.WriteLine("Information passed contained more layers than the soil, these will be ignored");
+            }
+
+            // If any FOM was passed, make the partition into FOM pools
+            if ((totalCAmount >= epsilon) && (totalNAmount >= epsilon))
+            {
+                // check whether a valid FOM type was given
+                fom_type = 0;   // use the default if no fom_type was given
+                for (int i = 0; i < fom_types.Length; i++)
+                {
+                    if (inFOMdata.Type == fom_types[i])
+                    {
+                        fom_type = i;
+                        break;
+                    }
+                }
+
+                // initialise data pack to hole values of fom
+                FOMPoolType myFOMPoolData = new FOMPoolType();
+                myFOMPoolData.Layer = new FOMPoolLayerType[inFOMdata.Layer.Length];
+
+                // partition the C and N amounts into FOM pools
+                for (int layer = 0; layer < inFOMdata.Layer.Length; layer++)
+                {
+                    if (layer < nLayers)
+                    {
+                        myFOMPoolData.Layer[layer] = new FOMPoolLayerType();
+                        myFOMPoolData.Layer[layer].Pool = new FOMType[3];
+                        myFOMPoolData.Layer[layer].Pool[0] = new FOMType();
+                        myFOMPoolData.Layer[layer].Pool[1] = new FOMType();
+                        myFOMPoolData.Layer[layer].Pool[2] = new FOMType();
+
+                        if (inFOMdata.Layer[layer].FOM.C > epsilon)
+                        {
+                            myFOMPoolData.Layer[layer].nh4 = 0.0F;
+                            myFOMPoolData.Layer[layer].no3 = 0.0F;
+                            myFOMPoolData.Layer[layer].Pool[0].C = (float)(inFOMdata.Layer[layer].FOM.C * fract_carb[fom_type]);
+                            myFOMPoolData.Layer[layer].Pool[1].C = (float)(inFOMdata.Layer[layer].FOM.C * fract_cell[fom_type]);
+                            myFOMPoolData.Layer[layer].Pool[2].C = (float)(inFOMdata.Layer[layer].FOM.C * fract_lign[fom_type]);
+
+                            myFOMPoolData.Layer[layer].Pool[0].N = (float)(inFOMdata.Layer[layer].FOM.N * fract_carb[fom_type]);
+                            myFOMPoolData.Layer[layer].Pool[1].N = (float)(inFOMdata.Layer[layer].FOM.N * fract_cell[fom_type]);
+                            myFOMPoolData.Layer[layer].Pool[2].N = (float)(inFOMdata.Layer[layer].FOM.N * fract_lign[fom_type]);
+                        }
+                    }
+                }
+
+                // actually add the FOM to soil
+                IncorporateFOM(myFOMPoolData);
+            }
+            else
+            {
+                // let the user know of any issues
+                string aMessage;
+                if (amountCnotAdded >= epsilon)
+                    aMessage = "only C amount was given (" + amountCnotAdded.ToString("#0.00") + "kg/ha)";
+                else if (amountNnotAdded >= epsilon)
+                    aMessage = "only N amount was given (" + amountNnotAdded.ToString("#0.00") + "kg/ha)";
+                else
+                    aMessage = "no amount was given";
+
+                mySummary.WriteWarning(this, "FOM addition was not carried out because " + aMessage);
+            }
+        }
+
+        /// <summary>
+        /// Gets the data and forward instructions to incorporate FOM to the soil - FOM pools
+        /// </summary>
+        /// <remarks>
+        /// In this event, the FOM amount is given already partitioned into pools
+        /// The values for C as well as N must be supplied or the action is not performed.
+        /// </remarks>
+        /// <param name="inFOMData">Data about the FOM to be added to the soil</param>
+        public void DoIncorpPool(FOMPoolType inFOMData)
+        {
+            // get the total amount to be added
+            double totalCAmount = 0.0;
+            double totalNAmount = 0.0;
+            double amountCnotAdded = 0.0;
+            double amountNnotAdded = 0.0;
+            for (int layer = 0; layer < inFOMData.Layer.Length; layer++)
+            {
+                if (layer < dlayer.Length)
+                {
+                    for (int pool = 0; pool < 3; pool++)
+                    {
+                        if (inFOMData.Layer[layer].Pool[pool].C >= epsilon)
+                        {   // we have both C and N, can add
+                            totalCAmount += inFOMData.Layer[layer].Pool[pool].C;
+                            totalNAmount += inFOMData.Layer[layer].Pool[pool].N;
+                        }
+                        else
+                        {   // some data is mising, cannot add
+                            amountCnotAdded += inFOMData.Layer[layer].Pool[pool].C;
+                            amountNnotAdded += inFOMData.Layer[layer].Pool[pool].N;
+                        }
+                    }
+                }
+                else
+                    mySummary.WriteMessage(this, " Information passed contained more layers than the soil, these will be ignored");
+            }
+
+            // actually add the FOM to soil, if valid
+            if ((totalCAmount >= epsilon) && (totalNAmount >= epsilon))
+                IncorporateFOM(inFOMData);
+            else
+            {
+                // let the user know of any issues
+                string aMessage;
+                if (amountCnotAdded >= epsilon)
+                    aMessage = "only C amount was given (" + amountCnotAdded.ToString("#0.00") + "kg/ha)";
+                else if (amountNnotAdded >= epsilon)
+                    aMessage = "only N amount was given (" + amountNnotAdded.ToString("#0.00") + "kg/ha)";
+                else
+                    aMessage = "no amount was given";
+
+                mySummary.WriteWarning(this, "FOM addition was not carried out because " + aMessage);
             }
         }
 
