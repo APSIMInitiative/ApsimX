@@ -19,11 +19,12 @@ namespace Models.Soils
     /// Implements internal 'patches', which are replicates of state variables and processes used for simulating soil variability
     /// 
     /// Based on a more-or-less direct port of the Fortran SoilN model  -  Ported by Eric Zurcher Sept/Oct 2010
-    /// Code tidied up by RCichota initially on Aug/Sep-2012 (updates in Feb-Mar/2014)
+    /// Code tidied up by RCichota initially on Aug/Sep-2012 (updates in Feb-Mar/2014 and 2016)
+    /// Ported into ApsimX by Russel McAuliffe in 2017, tidied up by RCichota (July/2017)
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    public partial class SoilNitrogen : Model, ISolute
+    public partial class SoilNitrogen : Model, ISolute, INutrient
     {
         /// <summary>Initializes a new instance of the <see cref="SoilNitrogen"/> class.</summary>
         public SoilNitrogen()
