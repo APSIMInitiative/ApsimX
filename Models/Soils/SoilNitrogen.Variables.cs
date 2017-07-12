@@ -34,6 +34,10 @@ namespace Models.Soils
         [Link]
         public IWeather MetFile = null;
 
+        /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
+        [Link]
+        private ISummary mySummary = null;
+
         /// <summary>The surface organic matter</summary>
         [Link]
         public SurfaceOrganicMatter SurfaceOrganicMatter = null;
@@ -1804,7 +1808,7 @@ namespace Models.Soils
                 if (!initDone)
                     reset_ureappm = value;    // check is done on InitCalc
                 else
-                    writeMessage("An external module attempted to change the value of urea during simulation, the command will be ignored");
+                    mySummary.WriteMessage(this, "An external module attempted to change the value of urea during simulation, the command will be ignored");
             }
         }
 
@@ -1834,7 +1838,7 @@ namespace Models.Soils
                 if (!initDone)
                     reset_nh4ppm = value;
                 else
-                    writeMessage("An external module attempted to change the value of NH4 during simulation, the command will be ignored");
+                    mySummary.WriteMessage(this, "An external module attempted to change the value of NH4 during simulation, the command will be ignored");
             }
         }
 
@@ -1864,7 +1868,7 @@ namespace Models.Soils
                 if (!initDone)
                     reset_no3ppm = value;
                 else
-                    writeMessage("An external module attempted to change the value of NO3 during simulation, the command will be ignored");
+                    mySummary.WriteMessage(this, "An external module attempted to change the value of NO3 during simulation, the command will be ignored");
             }
         }
 
@@ -2451,7 +2455,7 @@ namespace Models.Soils
             }
             set
             {
-                if (hasValues(value, EPSILON))
+                /*if (hasValues(value, EPSILON))
                 {
                     double[] delta = MathUtilities.Subtract(value, urea);
                     // 3.1- send incoming dlt to be partitioned amongst patches
@@ -2459,7 +2463,10 @@ namespace Models.Soils
                     // 3.2- send dlt's to each patch
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_urea = newDelta[k];
-                }
+                }*/
+                for (int k = 0; k < Patch.Count; k++)
+                    Patch[k].urea = value;
+
             }
         }
         /// <summary>
@@ -2511,15 +2518,17 @@ namespace Models.Soils
             }
             set
             {
-                if (hasValues(value, EPSILON))
-                {
-                    double[] delta = MathUtilities.Subtract(value, NO3);
-                    // 3.1- send incoming dlt to be partitioned amongst patches
-                    double[][] newDelta = partitionDelta(delta, "NO3", NPartitionApproach.ToLower());
-                    // 3.2- send dlt's to each patch
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].dlt_no3 = newDelta[k];
-                }
+                /* if (hasValues(value, EPSILON))
+                 {
+                     double[] delta = MathUtilities.Subtract(value, NO3);
+                     // 3.1- send incoming dlt to be partitioned amongst patches
+                     double[][] newDelta = partitionDelta(delta, "NO3", NPartitionApproach.ToLower());
+                     // 3.2- send dlt's to each patch
+                     for (int k = 0; k < Patch.Count; k++)
+                         Patch[k].dlt_no3 = newDelta[k];
+                 } */
+                for (int k = 0; k < Patch.Count; k++)
+                    Patch[k].no3 = value;
             }
         }
 

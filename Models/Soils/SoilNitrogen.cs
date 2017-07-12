@@ -875,12 +875,12 @@ namespace Models.Soils
                 IncorporateFOM(myFOMPoolData);
             }
             else
-                writeMessage("IncorpFOM: action was not carried out because no amount was given");
+                mySummary.WriteMessage(this, "IncorpFOM: action was not carried out because no amount was given");
 
             // let the user know of any issues
             if ((amountCnotAdded >= epsilon) | (amountNnotAdded >= epsilon))
             {
-                writeMessage("IncorpFOM - Warning Error: The amounts of " + amountCnotAdded.ToString("#0.00") +
+                mySummary.WriteMessage(this, "IncorpFOM - Warning Error: The amounts of " + amountCnotAdded.ToString("#0.00") +
                 "kgC/ha and " + amountCnotAdded.ToString("#0.00") + "were not added because some information was missing");
             }
         }
@@ -919,19 +919,19 @@ namespace Models.Soils
                     }
                 }
                 else
-                    Console.WriteLine(" IncorpFOMPool: information passed contained more layers than the soil, these will be ignored");
+                    mySummary.WriteMessage(this, " IncorpFOMPool: information passed contained more layers than the soil, these will be ignored");
             }
 
             // add FOM to soil layers, if given
             if (totalCAmount >= epsilon)
                 IncorporateFOM(inFOMPoolData);
             else
-                writeMessage("IncorpFOMPool: action was not carried out because no amount was given");
+                mySummary.WriteMessage(this, "IncorpFOMPool: action was not carried out because no amount was given");
 
             // let the user know of any issues
             if ((amountCnotAdded >= epsilon) | (amountNnotAdded >= epsilon))
             {
-                writeMessage("IncorpFOMPool - Warning Error: The amounts of " + amountCnotAdded.ToString("#0.00") +
+                mySummary.WriteMessage(this, "IncorpFOMPool - Warning Error: The amounts of " + amountCnotAdded.ToString("#0.00") +
                 "kgC/ha and " + amountCnotAdded.ToString("#0.00") + "were not added because some information was missing");
             }
         }
@@ -1243,12 +1243,12 @@ namespace Models.Soils
             {
                 if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
                 {
-                    writeMessage(" Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
                     isDataOK = false;
                 }
                 else if (PatchtoAdd.AreaNewPatch <= 0.0)
                 {
-                    writeMessage(" Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
                     isDataOK = false;
                 }
             }
@@ -1256,7 +1256,7 @@ namespace Models.Soils
             {
                 if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
                 {
-                    writeMessage(" Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
                     isDataOK = false;
                 }
             }
@@ -1264,7 +1264,7 @@ namespace Models.Soils
             {
                 if (PatchtoAdd.AreaNewPatch <= 0.0)
                 {
-                    writeMessage(" Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
                     isDataOK = false;
                 }
             }
@@ -1274,7 +1274,7 @@ namespace Models.Soils
             }
             else
             {
-                writeMessage(" Command to add patch did not supply a valid DepositionType. Command will be ignored.");
+                mySummary.WriteMessage(this, " Command to add patch did not supply a valid DepositionType. Command will be ignored.");
                 isDataOK = false;
             }
 
@@ -1375,16 +1375,6 @@ namespace Models.Soils
         #region >>  Auxiliary functions
 
         /// <summary>
-        /// Print a message to the summaryfile
-        /// </summary>
-        /// <param name="myMessage">The message to be printed below the date and module info</param>
-        private void writeMessage(string myMessage)
-        {
-            Console.WriteLine(Clock.Today.ToString("dd MMMM yyyy") + " (Day of year=" + Clock.Today.DayOfYear.ToString() + "), SoilNitrogen:");
-            Console.WriteLine("  " + myMessage);
-        }
-
-        /// <summary>
         /// Checks whether the variable is significantly negative, considering thresholds
         /// </summary>
         /// <remarks>
@@ -1419,7 +1409,7 @@ namespace Models.Soils
                                  + ") below the warning threshold (" + WarningNegativeThreshold.ToString()
                                  + ". Value will be reset to zero.";
                 TheValue = 0.0;
-                writeMessage(myMessage);
+                mySummary.WriteMessage(this, myMessage);
             }
             else if (TheValue < 0.0)
             {

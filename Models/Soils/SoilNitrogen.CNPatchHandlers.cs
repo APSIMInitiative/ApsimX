@@ -166,7 +166,7 @@ namespace Models.Soils
                         idPatchesJustAdded.Add(k);
                         if (PatchtoAdd.SuppressMessages.ToLower() != "yes")
                         {
-                            writeMessage("create new patch, with area = " + NewPatch_NewArea.ToString("#0.00#") +
+                            mySummary.WriteMessage(this, "create new patch, with area = " + NewPatch_NewArea.ToString("#0.00#") +
                                          ", based on existing patch(" + idPatchesAffected[i].ToString() +
                                          ") - Old area = " + OldPatch_OldArea.ToString("#0.00#") +
                                          ", new area = " + OldPatch_NewArea.ToString("#0.00#"));
@@ -256,7 +256,7 @@ namespace Models.Soils
                             int j = MergingPatches[k][i];
                             MergeCNValues(k, j);
                             PatchesToDelete.Add(j);
-                            writeMessage("merging patch(" + j + ") into patch(" + k + "). New patch area = " +
+                            mySummary.WriteMessage(this, "merging patch(" + j + ") into patch(" + k + "). New patch area = " +
                                          Patch[k].RelativeArea.ToString("#0.00#"));
                         }
                     }
@@ -285,7 +285,7 @@ namespace Models.Soils
                         {
                             int j = PatchesToDelete[i];
                             MergeCNValues(k, j);
-                            writeMessage("merging patch(" + j + ") into patch(" + k + "). New patch area = " +
+                            mySummary.WriteMessage(this, "merging patch(" + j + ") into patch(" + k + "). New patch area = " +
                                          Patch[k].RelativeArea.ToString("#0.00#"));
                         }
                         // B3.2. Delete merged patches
@@ -315,7 +315,7 @@ namespace Models.Soils
                         {
                             // C3.1. Copy values between patches
                             MergeCNValues(k, j);
-                            writeMessage("merging patch(" + j + ") into patch(" + k + "). New patch area = " +
+                            mySummary.WriteMessage(this, "merging patch(" + j + ") into patch(" + k + "). New patch area = " +
                                          Patch[k].RelativeArea.ToString("#0.00#"));
                             PatchesToDelete.Add(j);
                         }
@@ -363,7 +363,7 @@ namespace Models.Soils
                 {
                     int j = PatchesToDelete[i];
                     MergeCNValues(k, j);
-                    writeMessage("merging patch(" + j + ") into patch(" + k + "). New patch area = " +
+                    mySummary.WriteMessage(this, "merging patch(" + j + ") into patch(" + k + "). New patch area = " +
                                  Patch[k].RelativeArea.ToString("#0.00#"));
                 }
 
@@ -388,7 +388,7 @@ namespace Models.Soils
                 MergeCNValues(k, j);
                 if (SuppressMessages.ToLower() != "yes")
                 {
-                    writeMessage("merging patch(" + j + ") into patch(" + k + "). New patch area = " +
+                    mySummary.WriteMessage(this, "merging patch(" + j + ") into patch(" + k + "). New patch area = " +
                                  Patch[k].RelativeArea.ToString("#0.00#"));
                 }
                 PatchesToDelete.Add(j);                             // add reference to patch to be deleted
@@ -742,8 +742,7 @@ namespace Models.Soils
 
             if (SelectedIDs.Count == 0)
             { // no valid patch was found, notify user
-                string myMessage = " No valid patch was found to base the new patch being added - operation will be ignored";
-                writeMessage(myMessage);
+                mySummary.WriteMessage(this, " No valid patch was found to base the new patch being added - operation will be ignored");
             }
             return SelectedIDs;
         }
