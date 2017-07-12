@@ -37,6 +37,11 @@ namespace UserInterface.Presenters
         /// <summary>Hold the last date in datatable, for use in the graphs</summary>
         private DateTime dataLastDate;
 
+        /// <summary>Hold the first date in datatable; may include partial years/summary>
+        private DateTime dataStartDate;
+        /// <summary>Hold the last date in datatable; may include partial years</summary>
+        private DateTime dataEndDate;
+
         /// <summary>Hold an array of months for the graph,  by default, is set to will Jan yyyy to Dec yyyy, except where
         /// data being displays is not for full year</summary>
         private string[] monthsToDisplay = DateUtilities.LowerCaseMonths;
@@ -174,15 +179,24 @@ namespace UserInterface.Presenters
                         weatherDataView.BrowsePanelControlHeight = 41;
                     }
 
-                    this.weatherData.ExcelWorkSheetName = sheetName;
-                    this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                    try
+                    {
+                        this.weatherData.ExcelWorkSheetName = sheetName;
+                        this.weatherData.FullFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
 
-                    DataTable data = this.weatherData.GetAllData();
+                        DataTable data = this.weatherData.GetAllData();
 
-                    this.WriteTable(data);
-                    this.WriteSummary(data);
-                    this.DisplayDetailedGraphs(data);
-                    this.explorerPresenter.MainPresenter.ShowMessage(" ", DataStore.ErrorLevel.Information);
+                        this.dataStartDate = this.weatherData.StartDate;
+                        this.dataEndDate = this.weatherData.EndDate;
+                        this.WriteTable(data);
+                        this.WriteSummary(data);
+                        this.DisplayDetailedGraphs(data);
+                        this.explorerPresenter.MainPresenter.ShowMessage(" ", DataStore.ErrorLevel.Information);
+                    }
+                    finally
+                    {
+                        this.weatherData.CloseDataFile();
+                    }
 
                 }
                 catch (Exception err)
@@ -264,8 +278,8 @@ namespace UserInterface.Presenters
             summary.AppendLine("Latitude  : " + this.weatherData.Latitude.ToString());
             summary.AppendLine("TAV       : " + String.Format("{0, 2:f2}", this.weatherData.Tav));
             summary.AppendLine("AMP       : " + String.Format("{0, 2:f2}", this.weatherData.Amp));
-            summary.AppendLine("Start     : " + this.weatherData.StartDate.ToShortDateString());
-            summary.AppendLine("End       : " + this.weatherData.EndDate.ToShortDateString());
+            summary.AppendLine("Start     : " + this.dataStartDate.ToShortDateString());
+            summary.AppendLine("End       : " + this.dataEndDate.ToShortDateString());
             summary.AppendLine("");
 
             if (table != null && table.Rows.Count > 0)
@@ -502,32 +516,32 @@ namespace UserInterface.Presenters
             //else is greater than max, then do max first, then value set value to max, set min, then reset value
             //if greater than current but less than max, then set value first, then min, then max
 
-            if (this.weatherData.StartDate.Year < weatherDataView.GraphStartYearMinValue)
+            if (this.dataStartDate.Year < weatherDataView.GraphStartYearMinValue)
             {
-                weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
-                weatherDataView.GraphStartYearValue = this.weatherData.StartDate.Year;
-                weatherDataView.GraphStartYearMaxValue = this.weatherData.EndDate.Year;
+                weatherDataView.GraphStartYearMinValue = this.dataStartDate.Year;
+                weatherDataView.GraphStartYearValue = this.dataStartDate.Year;
+                weatherDataView.GraphStartYearMaxValue = this.dataEndDate.Year;
             }
-            else if (weatherDataView.GraphStartYearMinValue >= this.weatherData.EndDate.Year)
+            else if (weatherDataView.GraphStartYearMinValue >= this.dataEndDate.Year)
             {
-                weatherDataView.GraphStartYearMaxValue = this.weatherData.EndDate.Year;
-                weatherDataView.GraphStartYearValue = this.weatherData.EndDate.Year;
-                weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
-                weatherDataView.GraphStartYearValue = this.weatherData.StartDate.Year;
+                weatherDataView.GraphStartYearMaxValue = this.dataEndDate.Year;
+                weatherDataView.GraphStartYearValue = this.dataEndDate.Year;
+                weatherDataView.GraphStartYearMinValue = this.dataStartDate.Year;
+                weatherDataView.GraphStartYearValue = this.dataStartDate.Year;
             }
             else  //we are between our original range
             {
-                if (weatherDataView.GraphStartYearMinValue < this.weatherData.StartDate.Year)
+                if (weatherDataView.GraphStartYearMinValue < this.dataStartDate.Year)
                 {
-                    weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
-                    weatherDataView.GraphStartYearValue = this.weatherData.StartDate.Year;
+                    weatherDataView.GraphStartYearMinValue = this.dataStartDate.Year;
+                    weatherDataView.GraphStartYearValue = this.dataStartDate.Year;
                 }
                 else
                 {
-                    weatherDataView.GraphStartYearValue = this.weatherData.StartDate.Year;
-                    weatherDataView.GraphStartYearMinValue = this.weatherData.StartDate.Year;
+                    weatherDataView.GraphStartYearValue = this.dataStartDate.Year;
+                    weatherDataView.GraphStartYearMinValue = this.dataStartDate.Year;
                 }
-                weatherDataView.GraphStartYearMaxValue = this.weatherData.EndDate.Year;
+                weatherDataView.GraphStartYearMaxValue = this.dataEndDate.Year;
             }
         }
 

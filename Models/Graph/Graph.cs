@@ -83,11 +83,6 @@ namespace Models.Graph
         /// </summary>
         public List<string> DisabledSeries { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
-        /// </summary>
-        public bool IncludeInDocumentation { get; set; }
-
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
         public List<SeriesDefinition> GetDefinitionsToGraph()

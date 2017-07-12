@@ -75,16 +75,6 @@
         /// Add a delta value to the top layer of a solute. Will throw if solute not found.
         /// </summary>
         /// <param name="name">Name of solute</param>
-        /// <param name="delta">Value to be added to top layer of solute</param>
-        public void AddToTopLayer(string name, double delta)
-        {
-            AddToLayer(0, name, delta);
-        }
-
-        /// <summary>
-        /// Add a delta value to the top layer of a solute. Will throw if solute not found.
-        /// </summary>
-        /// <param name="name">Name of solute</param>
         /// <param name="layerIndex">Layer index to add delta to</param>
         /// <param name="delta">Value to be added to top layer of solute</param>
         public void AddToLayer(int layerIndex, string name, double delta)
@@ -93,15 +83,9 @@
             if (foundSolute == null)
                 throw new Exception("Cannot find solute: " + name);
 
-            // Check to see if there is a 'AddToTopLayer' method.
-            if (foundSolute.addToTopLayerMethod == null)
-            {
-                double[] values = foundSolute.Value;
-                values[layerIndex] += delta;
-                foundSolute.Value = values;
-            }
-            else
-                foundSolute.addToTopLayerMethod.Invoke(foundSolute.model, new object[] { delta });
+            double[] values = foundSolute.Value;
+            values[layerIndex] += delta;
+            foundSolute.Value = values;
         }
 
 

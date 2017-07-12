@@ -9,7 +9,7 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Soil carbon model
+    /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]

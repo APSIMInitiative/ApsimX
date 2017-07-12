@@ -18,5 +18,6 @@ namespace UserInterface.EventArguments
         /// Gets or sets a list of the cells that have changed.
         /// </summary>
         public List<IGridCell> ChangedCells { get; set; }
+        public bool invalidValue { get; set; }
     }  
 }

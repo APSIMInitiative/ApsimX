@@ -466,7 +466,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                if (CurrentPhaseIndex >= Phases.Count)
+                if (Phases == null || CurrentPhaseIndex >= Phases.Count)
                     return null;
                 else
                     return Phases[CurrentPhaseIndex];

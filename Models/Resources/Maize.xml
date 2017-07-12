@@ -261,6 +261,11 @@ Though tillering is common in some maize varieties under certain agronomic condi
 ]]>
       </MemoText>
     </Memo>
+    <Constant>
+      <Name>StemSenescenceAge</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
     <VariableReference>
       <Name>ThermalTime</Name>
       <VariableName>[Phenology].ThermalTime.Value()</VariableName>
@@ -927,6 +932,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
   </Root>
   <Leaf>
     <Name>Leaf</Name>
+    <ApexStandard>
+      <Name>ApexStandard</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </ApexStandard>    
     <LeafCohort>
       <Name>InitialLeaves[1]</Name>
       <Rank>1</Rank>

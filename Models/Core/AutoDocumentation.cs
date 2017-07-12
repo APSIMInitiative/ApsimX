@@ -156,6 +156,22 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Document all child members of the specified model.
+        /// </summary>
+        /// <param name="model">The parent model</param>
+        /// <param name="tags">Documentation elements</param>
+        /// <param name="headingLevel">Heading level</param>
+        /// <param name="indent">Indent level</param>
+        /// <param name="childTypesToExclude">An optional list of Types to exclude from documentation.</param>
+        public static void DocumentChildren(IModel model, List<AutoDocumentation.ITag> tags, int headingLevel, int indent, Type[] childTypesToExclude = null)
+        {
+            foreach (IModel child in model.Children)
+                if (child.IncludeInDocumentation && 
+                    (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
+                    child.Document(tags, headingLevel + 1, indent);
+        }
+
+        /// <summary>
         /// Describes an interface for a auto-doc command.
         /// </summary>
         public interface ITag
