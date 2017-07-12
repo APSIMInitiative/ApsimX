@@ -28,5 +28,10 @@ namespace Models.Core
         /// Key to be treated as a shortcut for the menu item.
         /// </summary>
         public string ShortcutKey { get; set; }
+
+        /// <summary>
+        /// Indicates whether this item can toggle between "on" and "off" states
+        /// </summary>
+        public bool IsToggle { get; set;  }
     } 
 }

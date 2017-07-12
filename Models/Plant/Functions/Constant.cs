@@ -32,10 +32,6 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
             // get description and units.
             string description = AutoDocumentation.GetDescription(Parent, Name);
             string units = Units;
@@ -44,9 +40,18 @@ namespace Models.PMF.Functions
             if (units != string.Empty)
                 units = " (" + units + ")";
 
-            if (description != string.Empty)
+            if (!(Parent is IFunction))
+            {
+                tags.Add(new AutoDocumentation.Heading(Name + " = " + FixedValue + units, headingLevel));
                 tags.Add(new AutoDocumentation.Paragraph(description, indent));
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + FixedValue + units + "</i>", indent));
+            }
+            else
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + FixedValue + units + "</i>", indent));
+
+            // write memos.
+            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                memo.Document(tags, -1, indent);
+
         }
     }
 }

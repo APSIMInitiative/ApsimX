@@ -23,16 +23,19 @@ namespace Models.PMF.Organs
     /// 
     /// **Nitrogen Demands**
     /// 
-    /// The daily structural N demand of this organ is the product of Total DM demand and a maximum Nitrogen concentration.  The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
+    /// The daily nonstructural N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
+    /// The daily structural N demand is the product of Total DM demand and a Minimum N concentration. 
+    /// The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
     /// 
     /// **Nitrogen Supplies**
     /// 
-    /// N is not reallocated from  this organ.  Nonstructural N is not available for retranslocation to other organs.
+    /// As the organ senesces a fraction of senesced N is made available to the arbitrator as NReallocationSupply.
+    /// A fraction of nonstructural N is made available to the arbitrator as NRetranslocationSupply
     /// 
     /// **Biomass Senescence and Detachment**
     /// 
-    /// No senescence occurs from this organ.  
-    /// No detachment occurs from this organ.
+    /// Senescence is calculated as a proportion of the live dry matter.
+    /// Detachment of biomass into the surface organic matter pool is calculated daily as a proportion of the dead DM.
     /// 
     /// **Canopy**
     /// 
@@ -82,6 +85,10 @@ namespace Models.PMF.Organs
         /// </summary>
         /// <param name="proprtionRemoved"></param>
         public void DoThin(double proprtionRemoved) { }
+
+        /// <summary>Apex number by age</summary>
+        /// <param name="age">Threshold age</param>
+        public double ApexNumByAge(double age) { return 0; }
         #endregion
 
         #region Canopy interface
@@ -217,7 +224,7 @@ namespace Models.PMF.Organs
                 return WaterDemandFunction.Value();
             else
             {
-               return PotentialEP;
+                return PotentialEP;
             }
         }
         /// <summary>Gets the transpiration.</summary>
@@ -227,7 +234,15 @@ namespace Models.PMF.Organs
         public double Fw { get { return MathUtilities.Divide(WaterAllocation, CalculateWaterDemand(), 1); } }
 
         /// <summary>Gets the function.</summary>
-        public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value(), 1); } }
+        public double Fn
+        {
+            get
+            {
+                if (Live != null)
+                    return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value(), 1);
+                return 0;
+            }
+        }
 
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }

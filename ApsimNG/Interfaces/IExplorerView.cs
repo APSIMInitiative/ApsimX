@@ -36,6 +36,8 @@ namespace UserInterface.Interfaces
         public string ResourceNameForImage;
         /// <summary>The on click</summary>
         public EventHandler OnClick;
+        /// <summary>Flags whether this item should show a checkbox</summary>
+        public bool ShowCheckbox;
         /// <summary>The checked</summary>
         public bool Checked;
         /// <summary>The shortcut key</summary>

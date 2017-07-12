@@ -40,7 +40,8 @@ namespace UserInterface.Presenters
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
-            dataStore = Apsim.Child(simulations, typeof(DataStore)) as DataStore;
+            if (simulations != null)
+                dataStore = Apsim.Child(simulations, typeof(DataStore)) as DataStore;
             /// TBI this.view.VariableList.SetSyntaxHighlighter("Report");
 
             dataStorePresenter = new DataStorePresenter();

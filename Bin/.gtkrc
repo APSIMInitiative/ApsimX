@@ -19,7 +19,7 @@ gtk-error-bell = 0
 
 style "msw-default"
 {
-  font_name="'segoe ui' 10.5"
+  font_name="Segoe UI 10.5"
   GtkWidget::interior-focus = 1
   GtkOptionMenu::indicator-size = { 9, 5 }
   GtkOptionMenu::indicator-spacing = { 7, 5, 2, 2 }

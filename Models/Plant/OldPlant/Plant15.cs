@@ -70,27 +70,27 @@ namespace Models.PMF.OldPlant
     public class AvailableToAnimalelementType
     {
         /// <summary>The cohort identifier</summary>
-        public String CohortID = "";
+        public String CohortID { get; set; }
         /// <summary>The organ</summary>
-        public String Organ = "";
+        public String Organ { get; set; }
         /// <summary>The age identifier</summary>
-        public String AgeID = "";
+        public String AgeID { get; set; }
         /// <summary>The bottom</summary>
-        public Double Bottom;
+        public Double Bottom { get; set;  }
         /// <summary>The top</summary>
-        public Double Top;
+        public Double Top { get; set; }
         /// <summary>The chem</summary>
-        public String Chem = "";
+        public String Chem { get; set; }
         /// <summary>The weight</summary>
-        public Double Weight;
+        public Double Weight { get; set; }
         /// <summary>The n</summary>
-        public Double N;
+        public Double N { get; set; }
         /// <summary>The p</summary>
-        public Double P;
+        public Double P { get; set; }
         /// <summary>The s</summary>
-        public Double S;
+        public Double S { get; set; }
         /// <summary>The ash alk</summary>
-        public Double AshAlk;
+        public Double AshAlk { get; set; }
     }
     /// <summary>
     /// 
@@ -99,7 +99,7 @@ namespace Models.PMF.OldPlant
     public class AvailableToAnimalType
     {
         /// <summary>The element</summary>
-        public AvailableToAnimalelementType[] element;
+        public AvailableToAnimalelementType[] element { get; set; }
     }
 
 
@@ -107,8 +107,8 @@ namespace Models.PMF.OldPlant
     /// The generic plant15 crop model
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    //[ViewName("UserInterface.Views.GridView")]
+    //[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ScopedModel]
     public class Plant15 : ModelCollectionFromResource, ICrop, IUptake
@@ -479,7 +479,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Gets the biomass.</summary>
         /// <value>The biomass.</value>
         [Units("kg/ha")]
-        public double Biomass { get { return AboveGround.Wt * 10; } } // convert to kg/ha
+        public double Biomass { get { return AboveGround == null ? 0.0 : AboveGround.Wt * 10; } } // convert to kg/ha
 
         /// <summary>Gets or sets the organ1s.</summary>
         /// <value>The organ1s.</value>
