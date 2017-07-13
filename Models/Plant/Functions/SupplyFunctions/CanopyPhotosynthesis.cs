@@ -9,16 +9,14 @@ using Models.Interfaces;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
-    /// Biomass accumulation is the product of the amount of intercepted radiation and its 
-    /// conversion efficiency, the radiation use efficiency (RUE) [Monteith1977].  
-    /// This approach simulates net photosynthesis rather than providing separate estimates 
-    /// of growth and respiration.  RUE is calculated from a potential value which is discounted 
-    /// using stress factors that account for plant nutrition (Fn), air temperature(Ft), vapour pressure deficit (Fvpd), water supply (Fw) and atmospheric CO2 concentration (Fco2).
+    /// Daily gross CO2 assimilation and biomass growth is simulated using a canopy photosynthesis model adopted from SPASS, which was a modified version of the original SUCROS model.
+    /// The daily gross photosynthesis is called in reponse to event DoPotentialPlantGrowth.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ILeaf))]
+
     public class CanopyPhotosynthesis : Model, IFunction
     {
         /// <summary>The Plant</summary>
@@ -33,32 +31,27 @@ namespace Models.PMF.Functions.SupplyFunctions
         /// <summary>The Weather file</summary>
         [Link]
         public Clock Clock = null;
-        /// <summary>
-        /// 
-        /// </summary>
+
+        /// <summary>Link to the hourly photosynthesis model </summary>
         [Link]
         private CanopyGrossPhotosynthesisHourly HourlyGrossCanopyPhotosythesis = null;
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Link to the light use efficiency at low light </summary>
         [Link]
         private LeafLightUseEfficiency LightUseEfficiencyLeaf = null;
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Link to the leaf maximum gross photosynthesis rate</summary>
         [Link]
         private LeafMaxGrossPhotosynthesis MaxGrossPhotosynthesisLeaf = null;
 
 
-        /// <summary>
-        /// The amount of DM that is fixed by photosynthesis
-        /// </summary>
+        /// <summary> The amount of DM that is fixed by photosynthesis </summary>
         public double GrossPhotosynthesis { get; set; }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+
         [EventSubscribe("DoPotentialPlantGrowth")]
+
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             if (Plant.IsEmerged)
@@ -71,7 +64,7 @@ namespace Models.PMF.Functions.SupplyFunctions
                                                       Weather.MinT,
                                                       Weather.CO2,
                                                       1.0) * 30/ 44 * 0.1;     
-                       
+                //30/44 converts CO2 to CH2O, 0.1 converts from kg/ha to g/m2                      
 
             }
         }
