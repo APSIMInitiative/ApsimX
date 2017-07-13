@@ -830,7 +830,6 @@ namespace Models.Soils
             }
         }
 
-
         /// <summary>
         /// Gets the data and forward instructions to incorporate FOM to the soil - simple FOM
         /// </summary>
@@ -916,13 +915,13 @@ namespace Models.Soils
                         {
                             myFOMPoolData.Layer[layer].nh4 = 0.0F;
                             myFOMPoolData.Layer[layer].no3 = 0.0F;
-                            myFOMPoolData.Layer[layer].Pool[0].C = (float)(inFOMdata.Layer[layer].FOM.C * fract_carb[fom_type]);
-                            myFOMPoolData.Layer[layer].Pool[1].C = (float)(inFOMdata.Layer[layer].FOM.C * fract_cell[fom_type]);
-                            myFOMPoolData.Layer[layer].Pool[2].C = (float)(inFOMdata.Layer[layer].FOM.C * fract_lign[fom_type]);
+                            myFOMPoolData.Layer[layer].Pool[0].C = inFOMdata.Layer[layer].FOM.amount * defaultCarbonInFOM * fract_carb[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[1].C = inFOMdata.Layer[layer].FOM.amount * defaultCarbonInFOM * fract_cell[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[2].C = inFOMdata.Layer[layer].FOM.amount * defaultCarbonInFOM * fract_lign[fom_type];
 
-                            myFOMPoolData.Layer[layer].Pool[0].N = (float)(inFOMdata.Layer[layer].FOM.N * fract_carb[fom_type]);
-                            myFOMPoolData.Layer[layer].Pool[1].N = (float)(inFOMdata.Layer[layer].FOM.N * fract_cell[fom_type]);
-                            myFOMPoolData.Layer[layer].Pool[2].N = (float)(inFOMdata.Layer[layer].FOM.N * fract_lign[fom_type]);
+                            myFOMPoolData.Layer[layer].Pool[0].N = inFOMdata.Layer[layer].FOM.N * fract_carb[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[1].N = inFOMdata.Layer[layer].FOM.N * fract_cell[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[2].N = inFOMdata.Layer[layer].FOM.N * fract_lign[fom_type];
                         }
                     }
                 }
