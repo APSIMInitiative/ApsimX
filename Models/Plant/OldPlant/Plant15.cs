@@ -479,7 +479,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Gets the biomass.</summary>
         /// <value>The biomass.</value>
         [Units("kg/ha")]
-        public double Biomass { get { return AboveGround.Wt * 10; } } // convert to kg/ha
+        public double Biomass { get { return AboveGround == null ? 0.0 : AboveGround.Wt * 10; } } // convert to kg/ha
 
         /// <summary>Gets or sets the organ1s.</summary>
         /// <value>The organ1s.</value>

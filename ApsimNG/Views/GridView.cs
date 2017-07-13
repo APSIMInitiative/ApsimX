@@ -22,6 +22,22 @@ namespace UserInterface.Views
     using Models.Core;
 
     /// <summary>
+    /// We want to have a "button" we can press within a grid cell. We could use a Gtk CellRendererPixbuf for this, 
+    /// but that doesn't provide an easy way to detect a button press, so instead we can use a "toggle", but 
+    /// override the Render function to simply display our Pixbuf
+    /// </summary>
+    public class CellRendererActiveButton : CellRendererToggle
+    {
+        protected override void Render(Gdk.Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
+        {
+            Gdk.GC gc = new Gdk.GC(window);
+            window.DrawPixbuf(gc, pixbuf, 0, 0, cell_area.X, cell_area.Y, pixbuf.Width, pixbuf.Height, Gdk.RgbDither.Normal, 0, 0);
+        }
+
+        public Gdk.Pixbuf pixbuf { get; set;  }
+    }
+
+    /// <summary>
     /// A grid control that implements the grid view interface.
     /// </summary>
     public class GridView : ViewBase, IGridView
@@ -64,6 +80,11 @@ namespace UserInterface.Views
         /// </summary>
         private string defaultNumericFormat = "F2";
 
+        /// <summary>
+        /// Flag to keep track of whether a cursor move was initiated internally
+        /// </summary>
+        private bool selfCursorMove = false;
+
         [Widget]
         private ScrolledWindow scrolledwindow1 = null;
         // [Widget]
@@ -84,6 +105,7 @@ namespace UserInterface.Views
         private ListStore gridmodel = new ListStore(typeof(string));
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
         internal Dictionary<Tuple<int, int>, ListStore> comboLookup = new Dictionary<Tuple<int, int>, ListStore>();
+        internal List<Tuple<int, int>> buttonList = new List<Tuple<int, int>>();
         private Menu Popup = new Menu();
         private AccelGroup accel = new AccelGroup();
         private GridCell popupCell = null;
@@ -108,17 +130,199 @@ namespace UserInterface.Views
             fixedcolview.ButtonPressEvent += OnButtonDown;
             gridview.FocusInEvent += FocusInEvent;
             gridview.FocusOutEvent += FocusOutEvent;
+            gridview.KeyPressEvent += Gridview_KeyPressEvent;
+            gridview.EnableSearch = false;
             fixedcolview.FocusInEvent += FocusInEvent;
             fixedcolview.FocusOutEvent += FocusOutEvent;
+            fixedcolview.EnableSearch = false;
             image1.Pixbuf = null;
             image1.Visible = false;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
-        /// Flag to keep track of whether a cursor move was initiated internally
+        /// Does cleanup when the main widget is destroyed
         /// </summary>
-        private bool selfCursorMove = false;
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _mainWidget_Destroyed(object sender, EventArgs e)
+        {
+            if (numberLockedCols > 0)
+            {
+                gridview.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
+                gridview.Selection.Changed -= Gridview_CursorChanged;
+                fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
+                fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
+            }
+            gridview.ButtonPressEvent -= OnButtonDown;
+            fixedcolview.ButtonPressEvent -= OnButtonDown;
+            gridview.FocusInEvent -= FocusInEvent;
+            gridview.FocusOutEvent -= FocusOutEvent;
+            gridview.KeyPressEvent -= Gridview_KeyPressEvent;
+            fixedcolview.FocusInEvent -= FocusInEvent;
+            fixedcolview.FocusOutEvent -= FocusOutEvent;
+            // It's good practice to disconnect the event handlers, as it makes memory leaks
+            // less likely. However, we may not "own" the event handlers, so how do we 
+            // know what to disconnect?
+            // We can do this via reflection. Here's how it currently can be done in Gtk#.
+            // Windows.Forms would do it differently.
+            // This may break if Gtk# changes the way they implement event handlers.
+            foreach (Widget w in Popup)
+            {
+                if (w is ImageMenuItem)
+                {
+                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (pi != null)
+                    {
+                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                        if (handlers != null && handlers.ContainsKey("activate"))
+                        {
+                            EventHandler handler = (EventHandler)handlers["activate"];
+                            (w as ImageMenuItem).Activated -= handler;
+                        }
+                    }
+                }
+            }
+            ClearGridColumns();
+        }
+
+        /// <summary>
+        /// Removes all grid columns, and cleans up any associated event handlers
+        /// </summary>
+        private void ClearGridColumns()
+        {
+            while (gridview.Columns.Length > 0)
+            {
+                TreeViewColumn col = gridview.GetColumn(0);
+                foreach (CellRenderer render in col.CellRenderers)
+                {
+                    if (render is CellRendererText)
+                    {
+                        CellRendererText textRender = render as CellRendererText;
+                        textRender.EditingStarted -= OnCellBeginEdit;
+                        textRender.EditingCanceled -= TextRender_EditingCanceled;
+                        textRender.Edited -= OnCellValueChanged;
+                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
+                    }
+                    else if (render is CellRendererActiveButton)
+                    {
+                        (render as CellRendererActiveButton).Toggled -= PixbufRender_Toggled;
+                    }
+                    else if (render is CellRendererToggle)
+                    {
+                        (render as CellRendererToggle).Toggled -= ToggleRender_Toggled;
+                    }
+                    else if (render is CellRendererCombo)
+                    {
+                        (render as CellRendererCombo).Edited -= ComboRender_Edited;
+                    }
+                }
+                gridview.RemoveColumn(gridview.GetColumn(0));
+            }
+            while (fixedcolview.Columns.Length > 0)
+            {
+                TreeViewColumn col = fixedcolview.GetColumn(0);
+                foreach (CellRenderer render in col.CellRenderers)
+                    if (render is CellRendererText)
+                    {
+                        CellRendererText textRender = render as CellRendererText;
+                        textRender.EditingStarted -= OnCellBeginEdit;
+                        textRender.EditingCanceled -= TextRender_EditingCanceled;
+                        textRender.Edited -= OnCellValueChanged;
+                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
+                    }
+                fixedcolview.RemoveColumn(fixedcolview.GetColumn(0));
+            }
+        }
+
+        /// <summary>
+        /// Intercepts key press events
+        /// The main reason for doing this is to allow the user to move to the "next" cell
+        /// when editing, and either the tab or return key is pressed.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        [GLib.ConnectBefore]
+        private void Gridview_KeyPressEvent(object o, KeyPressEventArgs args)
+        {
+            string keyName = Gdk.Keyval.Name(args.Event.KeyValue);
+            IGridCell cell = GetCurrentCell;
+            if (cell == null)
+                return;
+            int iRow = cell.RowIndex;
+            int iCol = cell.ColumnIndex;
+
+            if (keyName == "F2" && !userEditingCell) // Allow f2 to initiate cell editing
+            {
+                if (!this.GetColumn(iCol).ReadOnly)
+                {
+                    gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
+                }
+            }
+            if ((keyName == "Return" || keyName == "Tab") && userEditingCell)
+            {
+                bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
+                int nextRow = iRow;
+                int nCols = DataSource != null ? this.DataSource.Columns.Count : 0;
+                int nextCol = iCol;
+                if (shifted) // Move backwards
+                {
+                    do
+                    {
+                        if (keyName == "Tab") // Move horizontally
+                        {
+                            if (--nextCol < 0)
+                            {
+                                if (--nextRow < 0)
+                                    nextRow = RowCount - 1;
+                                nextCol = nCols - 1;
+                            }
+                        }
+                        else if (keyName == "Return") // Move vertically
+                        {
+                            if (--nextRow < 0)
+                            {
+                                if (--nextCol < 0)
+                                    nextCol = nCols - 1;
+                                nextRow = RowCount - 1;
+                            }
+                        }
+                    }
+                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                }
+                else
+                {
+                    do
+                    {
+                        if (keyName == "Tab") // Move horizontally
+                        {
+                            if (++nextCol >= nCols)
+                            {
+                                if (++nextRow >= RowCount)
+                                    nextRow = 0;
+                                nextCol = 0;
+                            }
+                        }
+                        else if (keyName == "Return") // Move vertically
+                        {
+                            if (++nextRow >= RowCount)
+                            {
+                                if (++nextCol >= nCols)
+                                    nextCol = 0;
+                                nextRow = 0;
+                            }
+                        }
+                    }
+                    while (this.GetColumn(nextCol).ReadOnly || !(new GridCell(this, nextCol, nextRow).EditorType == EditorTypeEnum.TextBox));
+                }
+                EndEdit();
+                while (GLib.MainContext.Iteration())
+                    ;
+                if (nextRow != iRow || nextCol != iCol)
+                    gridview.SetCursor(new TreePath(new int[1] { nextRow }), gridview.GetColumn(nextCol), true);
+                args.RetVal = true;
+            }
+        } 
 
         /// <summary>
         /// Repsonds to selection changes in the "fixed" columns area by
@@ -163,87 +367,6 @@ namespace UserInterface.Views
                 selfCursorMove = false;
             }
         }
-
-        /// <summary>
-        /// Does cleanup when the main widget is destroyed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void _mainWidget_Destroyed(object sender, EventArgs e)
-        {
-            if (numberLockedCols > 0)
-            {
-                gridview.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
-                gridview.Selection.Changed -= Gridview_CursorChanged;
-                fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
-                fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
-            }
-            gridview.ButtonPressEvent -= OnButtonDown;
-            fixedcolview.ButtonPressEvent -= OnButtonDown;
-            gridview.FocusInEvent -= FocusInEvent;
-            gridview.FocusOutEvent -= FocusOutEvent;
-            fixedcolview.FocusInEvent -= FocusInEvent;
-            fixedcolview.FocusOutEvent -= FocusOutEvent;
-            // It's good practice to disconnect the event handlers, as it makes memory leaks
-            // less likely. However, we may not "own" the event handlers, so how do we 
-            // know what to disconnect?
-            // We can do this via reflection. Here's how it currently can be done in Gtk#.
-            // Windows.Forms would do it differently.
-            // This may break if Gtk# changes the way they implement event handlers.
-            foreach (Widget w in Popup)
-            {
-                if (w is ImageMenuItem)
-                {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as ImageMenuItem).Activated -= handler;
-                        }
-                    }
-                }
-            }
-            ClearGridColumns();
-        }
-
-        /// <summary>
-        /// Removes all grid columns, and cleans up any associated event handlers
-        /// </summary>
-        private void ClearGridColumns()
-        {
-            while (gridview.Columns.Length > 0)
-            {
-                TreeViewColumn col = gridview.GetColumn(0);
-                foreach (CellRenderer render in col.CellRenderers)
-                    if (render is CellRendererText)
-                    {
-                        CellRendererText textRender = render as CellRendererText;
-                        textRender.EditingStarted -= OnCellBeginEdit;
-                        textRender.EditingCanceled -= TextRender_EditingCanceled;
-                        textRender.Edited -= OnCellValueChanged;
-                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
-                    }
-                gridview.RemoveColumn(gridview.GetColumn(0));
-            }
-            while (fixedcolview.Columns.Length > 0)
-            {
-                TreeViewColumn col = fixedcolview.GetColumn(0);
-                foreach (CellRenderer render in col.CellRenderers)
-                    if (render is CellRendererText)
-                    {
-                        CellRendererText textRender = render as CellRendererText;
-                        textRender.EditingStarted -= OnCellBeginEdit;
-                        textRender.EditingCanceled -= TextRender_EditingCanceled;
-                        textRender.Edited -= OnCellValueChanged;
-                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
-                    }
-                fixedcolview.RemoveColumn(fixedcolview.GetColumn(0));
-            }
-        }
-
 
         private int numberLockedCols = 0;
 
@@ -307,6 +430,9 @@ namespace UserInterface.Views
                 comboRender.Edited += ComboRender_Edited;
                 comboRender.Xalign = ((i == 1) && isPropertyMode) ? 0.0f : 1.0f; // Left or right align, as appropriate
                 comboRender.Visible = false;
+                CellRendererActiveButton pixbufRender = new CellRendererActiveButton();
+                pixbufRender.pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
+                pixbufRender.Toggled += PixbufRender_Toggled;
 
                 colLookup.Add(textRender, i);
 
@@ -322,6 +448,8 @@ namespace UserInterface.Views
                 column.PackStart(textRender, true);     // 0
                 column.PackStart(toggleRender, true);   // 1
                 column.PackStart(comboRender, true);    // 2
+                column.PackStart(pixbufRender, false);  // 3
+
                 column.Sizing = TreeViewColumnSizing.Autosize;
                 //column.FixedWidth = 100;
                 column.Resizable = true;
@@ -398,6 +526,7 @@ namespace UserInterface.Views
         private void TextRender_EditingCanceled(object sender, EventArgs e)
         {
             this.userEditingCell = false;
+            (this.editControl as Widget).KeyPressEvent -= Gridview_KeyPressEvent;
             this.editControl = null;
         }
 
@@ -424,6 +553,7 @@ namespace UserInterface.Views
                 {
                     col.CellRenderers[1].Visible = false;
                     col.CellRenderers[2].Visible = false;
+                    col.CellRenderers[3].Visible = false;
                 }
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 Type dataType = dataVal.GetType();
@@ -451,8 +581,9 @@ namespace UserInterface.Views
                     }
                     else
                     {   // This assumes that combobox grid cells are based on the "string" type
+                        Tuple<int, int> location = new Tuple<int, int>(rowNo, colNo);
                         ListStore store;
-                        if (comboLookup.TryGetValue(new Tuple<int, int>(rowNo, colNo), out store))
+                        if (comboLookup.TryGetValue(location, out store))
                         {
                             CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
                             if (comboRend != null)
@@ -466,6 +597,14 @@ namespace UserInterface.Views
                                 comboRend.Visible = true;
                                 comboRend.Text = AsString(dataVal);
                                 return;
+                            }
+                        }
+                        if (buttonList.Contains(location))
+                        {
+                            CellRendererActiveButton buttonRend = col.CellRenderers[3] as CellRendererActiveButton;
+                            if (buttonRend != null)
+                            {
+                                buttonRend.Visible = true;
                             }
                         }
                         text = AsString(dataVal);
@@ -947,6 +1086,7 @@ namespace UserInterface.Views
             this.userEditingCell = true;
             this.editPath = e.Path;
             this.editControl = e.Editable;
+            (this.editControl as Widget).KeyPressEvent += Gridview_KeyPressEvent;
             this.editSender = sender;
             IGridCell where = GetCurrentCell;
             if (where.RowIndex >= DataSource.Rows.Count)
@@ -1150,7 +1290,7 @@ namespace UserInterface.Views
                     newValue = string.Empty;
                 }
 
-                if (this.CellsChanged != null && this.valueBeforeEdit != newValue)
+                if (this.CellsChanged != null && this.valueBeforeEdit.ToString() != newValue.ToString())
                 {
                     GridCellsChangedArgs args = new GridCellsChangedArgs();
                     args.ChangedCells = new List<IGridCell>();
@@ -1439,15 +1579,12 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// User has clicked a cell.
+        /// User has clicked a "button".
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="DataGridViewCellEventArgs"/> instance containing the event data.</param>
-        private void OnCellContentClick(object sender, /* TBI DataGridViewCell */ EventArgs e)
+        private void PixbufRender_Toggled(object o, ToggledArgs args)
+
         {
-            // Probably not needed in the Gtk implementation
-            /* TBI
-            IGridCell cell = this.GetCell(e.ColumnIndex, e.RowIndex);
+            IGridCell cell = GetCurrentCell;
             if (cell != null && cell.EditorType == EditorTypeEnum.Button)
             {
                 GridCellsChangedArgs cellClicked = new GridCellsChangedArgs();
@@ -1455,7 +1592,6 @@ namespace UserInterface.Views
                 cellClicked.ChangedCells.Add(cell);
                 ButtonClick(this, cellClicked);
             }
-            */
         }
 
         /// <summary>
