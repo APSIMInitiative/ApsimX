@@ -60,51 +60,55 @@ namespace Models.Soils
                 {
                     // There is a pond in the system, the POND module will decompose residues - not SoilNitrogen
                     //   the pond module computes the amounts of C added to the soil, here these are added to the top layer
-                    //   with the C:N ratio of the respective SOM pools (Not sure how N balance is kept here)
+                    //   with the C:N ratio of the respective SOM pools (Not sure how N balance is kept here, or whether it is)
 
                     dlt_c_res_to_biom[0] += g.pond_biom_C;   // humic material from breakdown of residues in pond
                     dlt_c_res_to_hum[0] += g.pond_hum_C;     // biom material from breakdown of residues in pond
                 }
                 else
                 {
-                    // Without a pond, decomposition of surface residues is done in tandem by SurfaceOM and SoilN
+                    // There is no pond, decomposition of surface residues is done in tandem by SurfaceOM and SoilN
                     // check whether there is any potential residue decomposition
                     if (g.SumDoubleArray(g.pot_c_decomp) > -g.epsilon) 
                     {
                         // Surface OM sent some potential decomposition, here we verify the C-N balance over the immobilisation layer
 
-                        int ImmobilisationLayer = g.getCumulativeIndex(g.ImmobilisationDepth, g.dlayer);  // soil layer down to which soil N is available for decemposition
-                        double[] fracLayer = g.FractionLayer(g.ImmobilisationDepth);          // fraction of each layer that is within immobilisation depth
-
                         double[] no3_available = new double[nLayers];          // no3 available for mineralisation
                         double[] nh4_available = new double[nLayers];          // nh4 available for mineralisation
                         double[] dltC_into_biom = new double[nResidues];         // C mineralized converted to biomass
                         double[] dltC_into_hum = new double[nResidues];       // C mineralized converted to humus
+                        int ImmobilisationLayer = g.getCumulativeIndex(g.ImmobilisationDepth, g.dlayer);  // soil layer down to which soil N is available for decemposition
 
-                        // 2.1. get the available mineral N in the soil close to surface (mineralisation depth)
-                        for (int layer = 0; layer <= ImmobilisationLayer; layer++)
-                        {
-                            no3_available[layer] = Math.Max(0.0, no3[layer]) * fracLayer[layer];
-                            nh4_available[layer] = Math.Max(0.0, nh4[layer]) * fracLayer[layer];
-                        }
-
-                        // 2.2. get the potential transfers to m. biomass and humic pools
+                        // 2.1. get the potential transfers to m. biomass and humic pools
                         for (int residue = 0; residue < nResidues; residue++)
                         {
                             dltC_into_biom[residue] = g.pot_c_decomp[residue] * (1.0 - g.ResiduesRespirationFactor) * g.ResiduesFractionIntoBiomass;
                             dltC_into_hum[residue] = g.pot_c_decomp[residue] * (1.0 - g.ResiduesRespirationFactor) * (1.0 - g.ResiduesFractionIntoBiomass);
                         }
 
-                        // 2.3. test whether there is adequate N available to meet immobilization demand
+                        // 2.2. test whether there is adequate N available to meet immobilization demand
 
-                        // 2.3.1. potential N demanded for conversion of residues into soil OM
-                        double NDemand = MathUtilities.Divide(g.SumDoubleArray(dltC_into_biom), g.MBiomassCNr, 0.0) +
-                                          MathUtilities.Divide(g.SumDoubleArray(dltC_into_hum), g.hum_cn, 0.0);
-                        // 2.3.2. total available N for this process
-                        double MineralNAvailable = g.SumDoubleArray(nh4_available) + g.SumDoubleArray(no3_available);
+                        // 2.2.1. get the available mineral N in the soil close to surface (mineralisation depth)
+                        double MineralNAvailable = 0.0;
+                        double cumDepth = 0.0;
+                        double[] fracLayer = new double[nLayers];
+                        for (int layer = 0; layer <= ImmobilisationLayer; layer++)
+                        {
+                            fracLayer[layer] = Math.Min(1.0, MathUtilities.Divide(g.ImmobilisationDepth - cumDepth, g.dlayer[layer], 0.0));
+                            cumDepth += g.dlayer[layer];
+                            no3_available[layer] = Math.Max(0.0, no3[layer]) * fracLayer[layer];
+                            nh4_available[layer] = Math.Max(0.0, nh4[layer]) * fracLayer[layer];
+                            MineralNAvailable += nh4_available[layer] + no3_available[layer];
+                        }
+
+                        // 2.2.2. total available N for this process
                         double NAvailable = MineralNAvailable + g.SumDoubleArray(g.pot_n_decomp);
 
-                        // 2.3.3. factor to reduce mineralization rate if insufficient N is available
+                        // 2.2.3. potential N demanded for conversion of residues into soil OM
+                        double NDemand = MathUtilities.Divide(g.SumDoubleArray(dltC_into_biom), g.MBiomassCNr, 0.0) +
+                                          MathUtilities.Divide(g.SumDoubleArray(dltC_into_hum), g.hum_cn, 0.0);
+
+                        // 2.2.4. factor to reduce mineralization rate, if N available is insufficient
                         double ReductionFactor = 1.0;
                         if (NDemand > NAvailable)
                         {
@@ -112,16 +116,16 @@ namespace Models.Soils
                             ReductionFactor = Math.Max(0.0, Math.Min(1.0, ReductionFactor));
                         }
 
-                        // 2,4. partition the additions of C and N to layers
+                        // 2.3. partition the additions of C and N to layers
                         double dltN_decomp_tot = 0.0;
                         double dltC_into_atm = 0.0;
                         double fractionIntoLayer = 1.0;
                         for (int layer = 0; layer <= ImmobilisationLayer; layer++)
                         {
-                            // 2.4.1. fraction of mineralised stuff going in this layer
+                            // 2.3.1. fraction of mineralised stuff going in this layer
                             fractionIntoLayer = MathUtilities.Divide(g.dlayer[layer] * fracLayer[layer], g.ImmobilisationDepth, 0.0);
 
-                            //2.4.2. adjust C and N amounts for each residue and add to soil OM pools
+                            //2.3.2. adjust C and N amounts for each residue and add to soil OM pools
                             for (int residue = 0; residue < nResidues; residue++)
                             {
                                 dlt_c_decomp[residue][layer] = g.pot_c_decomp[residue] * ReductionFactor * fractionIntoLayer;
@@ -135,13 +139,13 @@ namespace Models.Soils
                             }
                         }
 
-                        // 2.5. get the net N mineralised/immobilised (hg/ha) - positive means mineralisation, negative is immobilisation
+                        // 2.4. get the net N mineralised/immobilised (hg/ha) - positive means mineralisation, negative is immobilisation
                         double dlt_MineralN = dltN_decomp_tot - NDemand * ReductionFactor;
 
-                        // 2.6. partition mineralised/immobilised N into mineral forms
+                        // 2.5. partition mineralised/immobilised N into mineral forms
                         if (dlt_MineralN > g.epsilon)
                         {
-                            // 2.6.1. we have mineralisation into NH4, distribute it over the layers
+                            // 2.5.1. we have mineralisation into NH4, distribute it over the layers
                             for (int layer = 0; layer <= ImmobilisationLayer; layer++)
                             {
                                 fractionIntoLayer = MathUtilities.Divide(g.dlayer[layer] * fracLayer[layer], g.ImmobilisationDepth, 0.0);
@@ -150,7 +154,7 @@ namespace Models.Soils
                         }
                         else if (dlt_MineralN < -g.epsilon)
                         {
-                            // 2.6.2. we have immobilisation, soak up any N required from NH4 then NO3
+                            // 2.5.2. we have immobilisation, soak up any N required from NH4 then NO3
                             for (int layer = 0; layer <= ImmobilisationLayer; layer++)
                             {
                                 dlt_res_nh4_min[layer] = -Math.Min(nh4_available[layer], Math.Abs(dlt_MineralN));
@@ -163,19 +167,19 @@ namespace Models.Soils
                                 dlt_MineralN -= dlt_res_no3_min[layer];
                             }
 
-                            // 2.6.3. check that there is no remaining immobilization demand
+                            // 2.5.3. check that there is no remaining immobilization demand
                             if (Math.Abs(dlt_MineralN) >= g.epsilon)
                                 throw new Exception("Value for remaining immobilization is out of range");
                         }
                         // else, there is no net N transformation
 
-                        // 2.7. Pack information to send back to surfaceOM
+                        // 2.6. Pack information to send back to surfaceOM
                         PackActualResidueDecomposition();
                     }
                     // else, there is no residue decomposition
                 }
 
-                // 8. Update variables - add/remove C and N in appropriate pools
+                // 3. Update variables - add/remove C and N in appropriate pools
                 if (g.SumDoubleArray(dlt_c_res_to_biom) + g.SumDoubleArray(dlt_c_res_to_hum) >= g.epsilon)
                 {
                     for (int layer = 0; layer < nLayers; layer++)
