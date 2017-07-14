@@ -6320,7 +6320,9 @@ namespace Models.Soils
         #endregion
     }
 
-    #region classes to organise
+    #region classes for organising data
+
+    #region CNPatches
 
     /// <summary>
     /// CNPatchPoolVariablePatchPool
@@ -6370,195 +6372,6 @@ namespace Models.Soils
     {
         /// <summary>The Patch</summary>
         public CNPatchVariablePatchType[] Patch;
-    }
-
-    /// <summary>
-    /// FOMType
-    /// </summary>
-    [Serializable]
-    public class FOMType
-    {
-        /// <summary>The amount</summary>
-        public double amount;
-        /// <summary>The c</summary>
-        public double C;
-        /// <summary>The n</summary>
-        public double N;
-        /// <summary>The p</summary>
-        public double P;
-        /// <summary>The ash alk</summary>
-        public double AshAlk;
-    }
-
-    /// <summary>
-    /// FOMPoolType
-    /// </summary>
-    [Serializable]
-    public class FOMPoolType
-    {
-        /// <summary>The layer</summary>
-        public FOMPoolLayerType[] Layer;
-    }
-
-    /// <summary>
-    /// FOMPoolLayerType
-    /// </summary>
-    [Serializable]
-    public class FOMPoolLayerType
-    {
-        /// <summary>The thickness</summary>
-        public double thickness;
-        /// <summary>The no3</summary>
-        public double no3;
-        /// <summary>The NH4</summary>
-        public double nh4;
-        /// <summary>The po4</summary>
-        public double po4;
-        /// <summary>The pool</summary>
-        public FOMType[] Pool;
-    }
-
-    /// <summary>
-    /// FOMLayerType
-    /// </summary>
-    [Serializable]
-    public class FOMLayerType
-    {
-        /// <summary>The type</summary>
-        public string Type = "";
-        /// <summary>The layer</summary>
-        public FOMLayerLayerType[] Layer;
-    }
-
-    /// <summary>
-    /// SurfaceOrganicMatterDecompPoolType
-    /// </summary>
-    [Serializable]
-    public class SurfaceOrganicMatterDecompPoolType
-    {
-        /// <summary>The name</summary>
-        public string Name = "";
-        /// <summary>The organic matter type</summary>
-        public string OrganicMatterType = "";
-        /// <summary>The fom</summary>
-        public FOMType FOM;
-    }
-
-    /// <summary>
-    /// SurfaceOrganicMatterDecompType
-    /// </summary>
-    [Serializable]
-    public class SurfaceOrganicMatterDecompType
-    {
-        /// <summary>The pool</summary>
-        public SurfaceOrganicMatterDecompPoolType[] Pool;
-    }
-
-    /// <summary>
-    /// FOMLayerLayerType
-    /// </summary>
-    public class FOMLayerLayerType
-    {
-        /// <summary>The fom</summary>
-        public FOMType FOM;
-        /// <summary>The CNR</summary>
-        public double CNR;
-        /// <summary>The labile p</summary>
-        public double LabileP;
-    }
-
-    /// <summary>
-    /// NitrogenChangedType
-    /// </summary>
-    public class NitrogenChangedType
-    {
-        /// <summary>The sender</summary>
-        public string Sender = "";
-        /// <summary>The sender type</summary>
-        public string SenderType = "";
-        /// <summary>The delta n o3</summary>
-        public double[] DeltaNO3;
-        /// <summary>The delta n h4</summary>
-        public double[] DeltaNH4;
-        /// <summary>The delta urea</summary>
-        public double[] DeltaUrea;
-    }
-
-    /// <summary>
-    /// NitrogenChangedDelegate
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void NitrogenChangedDelegate(NitrogenChangedType Data);
-
-    /// <summary>
-    /// AddUrineType
-    /// </summary>
-    public class AddUrineType
-    {
-        /// <summary>The urinations</summary>
-        public double Urinations;
-        /// <summary>The volume per urination</summary>
-        public double VolumePerUrination;
-        /// <summary>The area per urination</summary>
-        public double AreaPerUrination;
-        /// <summary>The eccentricity</summary>
-        public double Eccentricity;
-        /// <summary>The urea</summary>
-        public double Urea;
-        /// <summary>The pox</summary>
-        public double POX;
-        /// <summary>The s o4</summary>
-        public double SO4;
-        /// <summary>The ash alk</summary>
-        public double AshAlk;
-    }
-
-    /// <summary>
-    /// SoilOrganicMaterial
-    /// </summary>
-    public class SoilOrganicMaterialType
-    {
-        /// <summary>The Name</summary>
-        public String Name = "";
-        /// <summary>The Type</summary>
-        public String Type = "";
-        /// <summary>The C</summary>
-        public Double[] C;
-        /// <summary>The N</summary>
-        public Double[] N;
-        /// <summary>The P</summary>
-        public Double[] P;
-        /// <summary>The S</summary>
-        public Double[] S;
-        /// <summary>The AshAlk</summary>
-        public Double[] AshAlk;
-    }
-
-    /// <summary>
-    /// SoilOrganicMaterialDelegate
-    /// </summary>
-    /// <param name="Data">The data.</param>
-    public delegate void SoilOrganicMaterialDelegate(SoilOrganicMaterialType Data);
-
-    /// <summary>
-    /// ExternalMassFlowType
-    /// </summary>
-    public class ExternalMassFlowType
-    {
-        /// <summary>The pool class</summary>
-        public string PoolClass = "";
-        /// <summary>The flow type</summary>
-        public string FlowType = "";
-        /// <summary>The c</summary>
-        public double C;
-        /// <summary>The n</summary>
-        public double N;
-        /// <summary>The p</summary>
-        public double P;
-        /// <summary>The dm</summary>
-        public double DM;
-        /// <summary>The sw</summary>
-        public double SW;
     }
 
     /// <summary>
@@ -6691,6 +6504,105 @@ namespace Models.Soils
     /// <param name="Data">The data.</param>
     public delegate void AddSoilCNPatchDelegate(AddSoilCNPatchType Data);
 
+    #endregion
+
+    #region Organic matter types
+
+    /// <summary>
+    /// FOMType
+    /// </summary>
+    [Serializable]
+    public class FOMType
+    {
+        /// <summary>The amount</summary>
+        public double amount;
+        /// <summary>The c</summary>
+        public double C;
+        /// <summary>The n</summary>
+        public double N;
+        /// <summary>The p</summary>
+        public double P;
+        /// <summary>The ash alk</summary>
+        public double AshAlk;
+    }
+
+    /// <summary>
+    /// FOMPoolType
+    /// </summary>
+    [Serializable]
+    public class FOMPoolType
+    {
+        /// <summary>The layer</summary>
+        public FOMPoolLayerType[] Layer;
+    }
+
+    /// <summary>
+    /// FOMLayerType
+    /// </summary>
+    [Serializable]
+    public class FOMLayerType
+    {
+        /// <summary>The type</summary>
+        public string Type = "";
+        /// <summary>The layer</summary>
+        public FOMLayerLayerType[] Layer;
+    }
+
+    /// <summary>
+    /// FOMPoolLayerType
+    /// </summary>
+    [Serializable]
+    public class FOMPoolLayerType
+    {
+        /// <summary>The thickness</summary>
+        public double thickness;
+        /// <summary>The no3</summary>
+        public double no3;
+        /// <summary>The NH4</summary>
+        public double nh4;
+        /// <summary>The po4</summary>
+        public double po4;
+        /// <summary>The pool</summary>
+        public FOMType[] Pool;
+    }
+
+    /// <summary>
+    /// FOMLayerLayerType
+    /// </summary>
+    public class FOMLayerLayerType
+    {
+        /// <summary>The fom</summary>
+        public FOMType FOM;
+        /// <summary>The CNR</summary>
+        public double CNR;
+        /// <summary>The labile p</summary>
+        public double LabileP;
+    }
+
+    /// <summary>
+    /// SurfaceOrganicMatterDecompPoolType
+    /// </summary>
+    [Serializable]
+    public class SurfaceOrganicMatterDecompPoolType
+    {
+        /// <summary>The name</summary>
+        public string Name = "";
+        /// <summary>The organic matter type</summary>
+        public string OrganicMatterType = "";
+        /// <summary>The fom</summary>
+        public FOMType FOM;
+    }
+
+    /// <summary>
+    /// SurfaceOrganicMatterDecompType
+    /// </summary>
+    [Serializable]
+    public class SurfaceOrganicMatterDecompType
+    {
+        /// <summary>The pool</summary>
+        public SurfaceOrganicMatterDecompPoolType[] Pool;
+    }
+
     /// <summary>
     /// FOMdecompData
     /// </summary>
@@ -6708,6 +6620,118 @@ namespace Models.Soils
         /// <summary>The dlt_n_min</summary>
         public double dlt_n_min;
     }
+
+    /// <summary>
+    /// SoilOrganicMaterial
+    /// </summary>
+    /// <remarks>
+    /// This was a trial and was meant to replace FOM type (RCichota)
+    /// </remarks>
+    public class SoilOrganicMaterialType
+    {
+        /// <summary>The Name</summary>
+        public String Name = "";
+        /// <summary>The Type</summary>
+        public String Type = "";
+        /// <summary>The C</summary>
+        public Double[] C;
+        /// <summary>The N</summary>
+        public Double[] N;
+        /// <summary>The P</summary>
+        public Double[] P;
+        /// <summary>The S</summary>
+        public Double[] S;
+        /// <summary>The AshAlk</summary>
+        public Double[] AshAlk;
+    }
+
+    /// <summary>
+    /// SoilOrganicMaterialDelegate
+    /// </summary>
+    /// <param name="Data">The data.</param>
+    public delegate void SoilOrganicMaterialDelegate(SoilOrganicMaterialType Data);
+
+    #endregion
+
+    #region Apsim stuff
+
+    /// <summary>
+    /// NitrogenChangedType
+    /// </summary>
+    public class NitrogenChangedType
+    {
+        /// <summary>The sender</summary>
+        public string Sender = "";
+        /// <summary>The sender type</summary>
+        public string SenderType = "";
+        /// <summary>The delta n o3</summary>
+        public double[] DeltaNO3;
+        /// <summary>The delta n h4</summary>
+        public double[] DeltaNH4;
+        /// <summary>The delta urea</summary>
+        public double[] DeltaUrea;
+    }
+
+    /// <summary>
+    /// NitrogenChangedDelegate
+    /// </summary>
+    /// <param name="Data">The data.</param>
+    public delegate void NitrogenChangedDelegate(NitrogenChangedType Data);
+
+    /// <summary>
+    /// AddUrineType
+    /// </summary>
+    /// <remarks>
+    /// This was used in an early attempt to add excreta to SoilNitrogen in classic Apsim.
+    /// It was never really implemented and was superseeded (partially anyways) by CNPatches
+    /// It probably can be eliminated, or fully developed
+    /// </remarks>
+    public class AddUrineType
+    {
+        /// <summary>The urinations</summary>
+        public double Urinations;
+        /// <summary>The volume per urination</summary>
+        public double VolumePerUrination;
+        /// <summary>The area per urination</summary>
+        public double AreaPerUrination;
+        /// <summary>The eccentricity</summary>
+        public double Eccentricity;
+        /// <summary>The urea</summary>
+        public double Urea;
+        /// <summary>The pox</summary>
+        public double POX;
+        /// <summary>The s o4</summary>
+        public double SO4;
+        /// <summary>The ash alk</summary>
+        public double AshAlk;
+    }
+
+    /// <summary>
+    /// ExternalMassFlowType
+    /// </summary>
+    /// <remarks>
+    /// This was used in classic Apsim to send mass balance info to SysBal.
+    /// It is not used currently, and perhaps should be deleted
+    /// </remarks>
+    public class ExternalMassFlowType
+    {
+        /// <summary>The pool class</summary>
+        public string PoolClass = "";
+        /// <summary>The flow type</summary>
+        public string FlowType = "";
+        /// <summary>The c</summary>
+        public double C;
+        /// <summary>The n</summary>
+        public double N;
+        /// <summary>The p</summary>
+        public double P;
+        /// <summary>The dm</summary>
+        public double DM;
+        /// <summary>The sw</summary>
+        public double SW;
+    }
+
+    #endregion
 
     #endregion
 }
