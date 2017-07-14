@@ -152,12 +152,13 @@ namespace Models.WholeFarm.Activities
 						{
 							// Reference: Intake multiplier for lactating cow (M.Freer)
 							// TODO: Need to look at equation to fix Math.Pow() ^ issue
-							//					double intakeMilkMultiplier = 1 + 0.57 * Math.Pow((dayOfLactation / 81.0), 0.7) * Math.Exp(0.7 * (1 - (dayOfLactation / 81.0)));
+							// double intakeMilkMultiplier = 1 + 0.57 * Math.Pow((dayOfLactation / 81.0), 0.7) * Math.Exp(0.7 * (1 - (dayOfLactation / 81.0)));
 							double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB)));
 							// To make this flexible for sheep and goats, added three new Ruminant Coeffs
 							// Feeding standard values for Beef, Dairy suck, Dairy non-suck and sheep are:
 							// For 0.57 (A) use .42, .58, .85 and .69; for 0.7 (B) use 1.7, 0.7, 0.7 and 1.4, for 81 (C) use 62, 81, 81, 28
 							// added LactatingPotentialModifierConstantA, LactatingPotentialModifierConstantB and LactatingPotentialModifierConstantC
+							// replaces 
 							potentialIntake *= intakeMilkMultiplier;
 						}
 					}
