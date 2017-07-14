@@ -147,6 +147,13 @@ namespace Models.Soils
             swpsf_dnit_swpx = new double[] { 0, 28, 88, 100 };
             swpsf_dnit_y = new double[] { 0.1, 0.1, 1, 1.18 };
 
+            if (Soil.SoilType != null && Soil.SoilType.Equals("Sand", StringComparison.CurrentCultureIgnoreCase))
+            {
+                MBiomassTurnOverRate = new double[] { 0.0324, 0.015 };
+                swf_MinerSOM_y = new double[] { 0.05, 0.05, 1, 1, 0.5 };
+                swf_DecompFOM_y = new double[] { 0.05, 0.05, 1, 1, 0.5 };
+            }
+
             // set the creation date
             Patch[0].CreationDate = Clock.Today;
 
