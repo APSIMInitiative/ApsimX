@@ -37,6 +37,7 @@ namespace Models.PMF.Functions.SupplyFunctions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CanopyPhotosynthesis))]
+
     public class CanopyGrossPhotosynthesisHourly : Model
     {
         /// <summary>

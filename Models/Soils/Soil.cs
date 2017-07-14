@@ -27,10 +27,18 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
-    public class Soil : Model
+    public class Soil : Model, ISoil
     {
         /// <summary>Gets the water.</summary>
         private Water waterNode;
+
+
+        /// <summary>
+        /// Soil Nitrogen model
+        /// </summary>
+        [XmlIgnore]
+        public SoilNitrogen SoilNitrogen { get; private set; }
+
 
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
@@ -131,7 +139,7 @@ namespace Models.Soils
         [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
 
         /// <summary>Gets the soil nitrogen.</summary>
-        [XmlIgnore] public SoilNitrogen SoilNitrogen { get; private set; }
+        private SoluteManager SoluteManager;
 
         /// <summary>Gets the soil nitrogen.</summary>
         private ISoilTemperature temperatureModel;
@@ -160,6 +168,7 @@ namespace Models.Soils
             structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
+            SoluteManager = Apsim.Find(this, typeof(SoluteManager)) as SoluteManager;
             SoilNitrogen = Apsim.Child(this, typeof(SoilNitrogen)) as SoilNitrogen;
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
             }
@@ -176,6 +185,7 @@ namespace Models.Soils
 
 
         /// <summary>Return the soil layer thicknesses (mm)</summary>
+        [Units("mm")]
         public double[] Thickness 
         {
             get
@@ -188,9 +198,11 @@ namespace Models.Soils
         }
 
         /// <summary>Gets the depth mid points (mm).</summary>
+        [Units("mm")]
         public double[] DepthMidPoints { get { return Soil.ToMidPoints(Thickness); } }
 
         /// <summary>Gets the depths (mm) of each layer.</summary>
+        [Units("mm")]
         [Description("Depth")]
         public string[] Depth
         {
@@ -201,6 +213,7 @@ namespace Models.Soils
         }
 
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
+        [Units("mm/mm")]
         public double[] BD
         {
             get
@@ -215,6 +228,7 @@ namespace Models.Soils
         }
 
         /// <summary>Soil water at standard thickness. Units: mm/mm</summary>
+        [Units("mm/mm")]
         public double[] InitialWaterVolumetric
         {
             get
@@ -227,6 +241,7 @@ namespace Models.Soils
         }
 
         /// <summary>Gets or sets the soil water for each layer (mm)</summary>
+        [Units("mm")]
         [XmlIgnore]
         public double[] Water
         {
@@ -268,9 +283,11 @@ namespace Models.Soils
         }
 
         /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
+        [Units("mm/mm")]
         public double[] AirDry { get { return Map(waterNode.AirDry, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
+        [Units("mm/mm")]
         public double[] LL15
         {
             get
@@ -283,6 +300,7 @@ namespace Models.Soils
         }
 
         /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
+        [Units("mm/mm")]
         public double[] DUL
         {
             get
@@ -295,6 +313,7 @@ namespace Models.Soils
         }
 
         /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
+        [Units("mm/mm")]
         public double[] SAT
         {
             get
@@ -307,9 +326,11 @@ namespace Models.Soils
         }
 
         /// <summary>KS at standard thickness. Units: mm/mm</summary>
+        [Units("mm/mm")]
         public double[] KS { get { return Map(waterNode.KS, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>SWCON at standard thickness. Units: 0-1</summary>
+        [Units("0-1")]
         internal double[] SWCON 
         { 
             get 
@@ -322,6 +343,7 @@ namespace Models.Soils
         /// <summary>
         /// KLAT at standard thickness. Units: 0-1
         /// </summary>
+        [Units("0-1")]
         internal double[] KLAT
             {
             get
@@ -334,6 +356,7 @@ namespace Models.Soils
 
 
         /// <summary>Return the plant available water CAPACITY at standard thickness. Units: mm/mm</summary>
+        [Units("mm/mm")]
         public double[] PAWC
         {
             get
@@ -400,6 +423,7 @@ namespace Models.Soils
         }
 
         /// <summary>Plant available water at standard thickness. Units:mm/mm</summary>
+        [Units("mm/mm")]
         public double[] PAW
         {
             get
@@ -412,6 +436,7 @@ namespace Models.Soils
         }
 
         /// <summary>Plant available water at standard thickness. Units:mm/mm</summary>
+        [Units("mm/mm")]
         public double[] PAWInitial
         {
             get
@@ -422,7 +447,9 @@ namespace Models.Soils
                                 null);
             }
         }
+
         /// <summary>Return the plant available water CAPACITY at water node thickness. Units: mm/mm</summary>
+        [Units("mm/mm")]
         public double[] PAWCAtWaterThickness
         {
             get
@@ -435,6 +462,7 @@ namespace Models.Soils
         }
 
         /// <summary>Return the plant available water CAPACITY at water node thickenss. Units: mm</summary>
+        [Units("mm")]
         public double[] PAWCmmAtWaterThickness
         {
             get
@@ -444,6 +472,7 @@ namespace Models.Soils
         }
 
         /// <summary>Plant available water at standard thickness at water node thickness. Units:mm/mm</summary>
+        [Units("mm/mm")]
         public double[] PAWAtWaterThickness
         {
             get
@@ -819,6 +848,7 @@ namespace Models.Soils
         #region Soil organic matter
         /// <summary>Organic carbon. Units: %</summary>
         /// <value>The oc.</value>
+        [Units("%")]
         public double[] OC
         {
             get
@@ -840,6 +870,7 @@ namespace Models.Soils
 
         /// <summary>FBiom. Units: 0-1</summary>
         /// <value>The f biom.</value>
+        [Units("0-1")]
         public double[] FBiom
         {
             get
@@ -852,6 +883,7 @@ namespace Models.Soils
 
         /// <summary>FInert. Units: 0-1</summary>
         /// <value>The f inert.</value>
+        [Units("0-1")]
         public double[] FInert
         {
             get
@@ -866,6 +898,7 @@ namespace Models.Soils
         #region Analysis
         /// <summary>Rocks. Units: %</summary>
         /// <value>The rocks.</value>
+        [Units("0-1")]
         public double[] Rocks 
         { 
             get 
@@ -931,6 +964,7 @@ namespace Models.Soils
         }
 
         /// <summary>Nitrate (ppm).</summary>
+        [Units("ppm")]
         public double[] InitialNO3N
         {
             get
@@ -950,16 +984,19 @@ namespace Models.Soils
 
         /// <summary>Gets or sets the nitrate N for each layer (kg/ha)</summary>
         [XmlIgnore]
-        public double[] NO3N { get { return SoilNitrogen.NO3; } set { SoilNitrogen.NO3 = value; } }
+        [Units("kg/ha")]
+        public double[] NO3N { get { return SoluteManager.GetSolute("NO3"); } set { SoluteManager.SetSolute("NO3",value); } }
 
         /// <summary>Gets the ammonia N for each layer (kg/ha)</summary>
         [XmlIgnore]
-        public double[] NH4N { get { return SoilNitrogen.NH4; } }
+        [Units("kg/ha")]
+        public double[] NH4N { get { return SoluteManager.GetSolute("NH4"); } set { SoluteManager.SetSolute("NH4", value); } }
 
         /// <summary>Gets the temperature of each layer</summary>
         public double[] Temperature { get { return temperatureModel.Value; } }
 
         /// <summary>Ammonia (ppm).</summary>
+        [Units("ppm")]
         public double[] InitialNH4N
         {
             get
@@ -978,6 +1015,7 @@ namespace Models.Soils
         }
 
         /// <summary>Cloride from either a sample or from Analysis. Units: mg/kg</summary>
+        [Units("mg/kg")]
         public double[] Cl
         {
             get
@@ -999,6 +1037,7 @@ namespace Models.Soils
         }
 
         /// <summary>ESP from either a sample or from Analysis. Units: %</summary>
+        [Units("%")]
         public double[] ESP
         {
             get
@@ -1699,9 +1738,22 @@ namespace Models.Soils
         /// <returns></returns>
         public double[] kgha2ppm(double[] values)
         {
+            double[] ppm = new double[values.Length];
             for (int i = 0; i < values.Length; i++)
-                values[i] *= MathUtilities.Divide(100.0, BD[i] * Thickness[i], 0.0);
-            return values;
+                ppm[i] = values[i] * MathUtilities.Divide(100.0, BD[i] * Thickness[i], 0.0);
+            return ppm;
+        }
+        /// <summary>
+        /// Calculate conversion factor from ppm to kg/ha
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public double[] ppm2kgha(double[] values)
+        {
+            double[] kgha = new double[values.Length];
+            for (int i = 0; i < values.Length; i++)
+                kgha[i] = values[i] * MathUtilities.Divide(BD[i] * Thickness[i], 100, 0.0);
+            return kgha;
         }
         #endregion
 

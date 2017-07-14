@@ -170,10 +170,12 @@
     <Compile Include="IIrrigation.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISoilTemperature.cs" />
+    <Compile Include="Interfaces\ISoil.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
     <Compile Include="Interfaces\ISoilWater.cs" />
     <Compile Include="Interfaces\ISolute.cs" />
+    <Compile Include="Interfaces\INutrient.cs" />
     <Compile Include="Interfaces\IWeather.cs" />
     <Compile Include="Lifecycle\Cohort.cs" />
     <Compile Include="Lifecycle\Lifecycle.cs" />
@@ -205,12 +207,15 @@
     <Compile Include="Plant\Functions\DemandFunctions\FillingRateFunction.cs" />
     <Compile Include="Plant\Functions\MovingSum.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\CanopyPhotosynthesis.cs" />
+    <Compile Include="Plant\Interfaces\IApex.cs" />
     <Compile Include="Plant\Interfaces\IWaterNitrogenUptake.cs" />
     <Compile Include="Plant\Interfaces\IHasWaterDemand.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Library\BiomassRemoval.cs" />
+    <Compile Include="Plant\Organs\ApexStandard.cs" />
+    <Compile Include="Plant\Organs\ApexTiller.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
     <Compile Include="Plant\Organs\RootZoneState.cs" />
     <Compile Include="Plant\Phenology\ExpressionPhase.cs" />
@@ -647,11 +652,12 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>-->
-  <Target Name="AfterBuild" DependsOnTargets="AssignTargetPaths;Compile;ResolveKeySource" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
-    <!-- Delete the file because I can't figure out how to force the SGen task. -->
+  <Target Name="AfterBuild" DependsOnTargets="AssignTargetPaths;Compile" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
+	<!-- Delete the file because I can't figure out how to force the SGen task. -->
     <Delete Files="$(TargetDir)$(TargetName).XmlSerializers.dll" ContinueOnError="true" />
-    <SGen BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(TargetFrameworkSDKToolsDirectory)" Platform="$(Platform)">
+    <SGen Condition="'$(OS)' == 'Windows_NT' OR '$(OS)' == 'WINDOWS'" BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(TargetFrameworkSDKToolsDirectory)" Platform="$(Platform)">
       <Output TaskParameter="SerializationAssembly" ItemName="SerializationAssembly" />
     </SGen>
+    <Exec Condition="'$(OS)' == 'Unix' AND Exists('$(ProjectDir)sgen.exe')" Command="mono '$(ProjectDir)/sgen.exe' /force '$(TargetFileName)'" WorkingDirectory="$(TargetDir)" />
   </Target>
 </Project>

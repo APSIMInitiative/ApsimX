@@ -776,6 +776,9 @@
     <EmbeddedResource Include="Resources\TreeViewImages\FactorValue.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CarbonFlow.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Solute.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\NFlow.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LinearAfterThresholdFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Evapotranspiration.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\LayerStructure.png" />

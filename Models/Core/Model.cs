@@ -29,6 +29,7 @@ namespace Models.Core
             this.Name = GetType().Name;
             this.IsHidden = false;
             this.Children = new List<Model>();
+            IncludeInDocumentation = true;
         }
 
         /// <summary>
@@ -135,6 +136,8 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.Leaf))]
         [XmlElement(typeof(Models.PMF.Organs.LeafCohort))]
         [XmlElement(typeof(Models.PMF.Organs.Leaf.LeafCohortParameters))]
+        [XmlElement(typeof(Models.PMF.Organs.ApexStandard))]
+        [XmlElement(typeof(Models.PMF.Organs.ApexTiller))]
         [XmlElement(typeof(Models.PMF.Organs.Nodule))]
         [XmlElement(typeof(Models.PMF.Organs.ReproductiveOrgan))]
         [XmlElement(typeof(Models.PMF.Organs.Root))]
@@ -350,6 +353,21 @@ namespace Models.Core
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 child.Document(tags, headingLevel + 1, indent);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
+        /// </summary>
+        public bool IncludeInDocumentation { get; set; }
+
+        /// <summary>
+        /// A cleanup routine, in which we clear our child list recursively
+        /// </summary>
+        public void ClearChildLists()
+        {
+            foreach (Model child in Children)
+                child.ClearChildLists();
+            Children.Clear();
         }
 
         /// <summary>

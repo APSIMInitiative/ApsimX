@@ -257,7 +257,7 @@ namespace Models.Soils
                             double soiln2_fac = 100.0 / (BD[i] * Thickness[i]);
                             double oc_ppm = OCTotal[i] / 100 * ppm;
                             double carbon_tot = oc_ppm / soiln2_fac;
-                            HumC[i] = carbon_tot - BiomC[i] - InertC[i];
+                            HumC[i] = carbon_tot - BiomC[i];
                         }
                     }
                     return HumC;

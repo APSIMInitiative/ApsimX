@@ -18,25 +18,31 @@ namespace Models.PMF.Organs
     /// This organ is simulated using a generic organ type.
     ///   
     /// **Dry Matter Demands**
+    /// 
     /// A given fraction of daily DM demand is determined to be structural and the remainder is non-structural.
     /// 
     /// **Dry Matter Supplies**
+    /// 
     /// A given fraction of Nonstructural DM is made available to the arbitrator as DMReTranslocationSupply.
     /// 
     /// **Nitrogen Demands**
+    /// 
     /// The daily nonstructural N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
     /// The daily structural N demand is the product of Total DM demand and a Minimum N concentration. 
     /// The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
     /// 
     /// **Nitrogen Supplies**
+    /// 
     /// As the organ senesces a fraction of senesced N is made available to the arbitrator as NReallocationSupply.
     /// A fraction of nonstructural N is made available to the arbitrator as NRetranslocationSupply
     /// 
     /// **Biomass Senescence and Detachment**
+    /// 
     /// Senescence is calculated as a proportion of the live dry matter.
     /// Detachment of biomass into the surface organic matter pool is calculated daily as a proportion of the dead DM.
     /// 
     /// **Canopy**
+    /// 
     /// The user can model the canopy by specifying either the LAI and an extinction coefficient, or by specifying the canopy cover directly.  If the cover is specified, LAI is calculated using an inverted Beer-Lambert equation with the specified cover value.
     /// 
     /// The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop.

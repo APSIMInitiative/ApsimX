@@ -89,7 +89,7 @@ namespace UserInterface.Views
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
             column.PackStart(iconRender, false);
             textRender = new Gtk.CellRendererText();
-            textRender.Editable = true;
+            textRender.Editable = false;
             textRender.EditingStarted += OnBeforeLabelEdit;
             textRender.Edited += OnAfterLabelEdit;
             column.PackStart(textRender, true);
@@ -169,13 +169,13 @@ namespace UserInterface.Views
         {
             foreach (Widget w in Popup)
             {
-                if (w is ImageMenuItem)
+                if (w is MenuItem)
                 {
                     PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
                     if (pi != null)
                     {
                         System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
+                        if (w is ImageMenuItem && handlers != null && handlers.ContainsKey("activate"))
                         {
                             EventHandler handler = (EventHandler)handlers["activate"];
                             (w as ImageMenuItem).Activated -= handler;
@@ -258,6 +258,7 @@ namespace UserInterface.Views
         /// <summary>Puts the current node into edit mode so user can rename it.</summary>
         public void BeginRenamingCurrentNode()
         {
+            textRender.Editable = true;
             TreePath selPath;
             TreeViewColumn selCol;
             treeview1.GetCursor(out selPath, out selCol);
@@ -387,9 +388,23 @@ namespace UserInterface.Views
             ClearPopup();
             foreach (MenuDescriptionArgs Description in menuDescriptions)
             {
-                ImageMenuItem item = new ImageMenuItem(Description.Name);
-                if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
-                    item.Image = new Image(null, Description.ResourceNameForImage);
+                MenuItem item;
+                if (Description.ShowCheckbox)
+                {
+                    CheckMenuItem checkItem = new CheckMenuItem(Description.Name);
+                    checkItem.Active = Description.Checked;
+                    item = checkItem;
+                }
+                else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
+                {
+                    ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
+                    imageItem.Image = new Image(null, Description.ResourceNameForImage);
+                    item = imageItem;
+                }
+                else
+                {
+                    item = new MenuItem(Description.Name);
+                }
                 if (!String.IsNullOrEmpty(Description.ShortcutKey))
                 {
                     string keyName = String.Empty;
@@ -811,11 +826,12 @@ namespace UserInterface.Views
             // e.CancelEdit = false;
         }
         
-        /// <summary>User has finished renamed a node.</summary>
+        /// <summary>User has finished renaming a node.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
         private void OnAfterLabelEdit(object sender, EditedArgs e)
         {
+            textRender.Editable = false;
             // TreeView.ContextMenuStrip = this.PopupMenu;
             if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
             {

@@ -87,9 +87,9 @@ namespace Models.PostSimulationTools
                 }
 
                 query.Append("FROM " + ObservedTableName + " I INNER JOIN " + PredictedTableName + " R USING (SimulationID) WHERE I.'@match1' = R.'@match1'");
-                if (FieldName2UsedForMatch != null)
+                if (FieldName2UsedForMatch != null && FieldName2UsedForMatch != string.Empty)
                     query.Append(" AND I.'@match2' = R.'@match2'");
-                if (FieldName3UsedForMatch != null)
+                if (FieldName3UsedForMatch != null && FieldName3UsedForMatch != string.Empty)
                     query.Append(" AND I.'@match3' = R.'@match3'");
                 query.Replace(", FROM", " FROM"); // get rid of the last comma
                 query.Replace("I.'SimulationID' AS 'Observed.SimulationID', R.'SimulationID' AS 'Predicted.SimulationID'", "I.'SimulationID' AS 'SimulationID'");

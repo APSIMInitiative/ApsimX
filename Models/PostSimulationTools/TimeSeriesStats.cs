@@ -71,7 +71,7 @@ namespace Models.PostSimulationTools
                                 foreach (string simulationName in simulationNames)
                                 {
                                     string seriesName = simulationName;
-                                    view.RowFilter = "SimName = '" + simulationName + "'";
+                                    view.RowFilter = "SimulationName = '" + simulationName + "'";
                                     CalcStatsRow(view, observedColumnName, predictedColumnName, seriesName, statsData);
                                 }
 
