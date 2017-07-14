@@ -1247,6 +1247,8 @@ namespace UserInterface.Views
             if (this.userEditingCell)
             {
                 IGridCell where = GetCurrentCell;
+                if (where == null)
+                    return;
                  
                 object oldValue = this.valueBeforeEdit;
                 
