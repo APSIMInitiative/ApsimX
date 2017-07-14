@@ -57,6 +57,9 @@ namespace Models.PMF.Organs
         [Link]
         private Leaf Leaf = null;
 
+        [Link]
+        private IApex Apex = null;
+
         /// <summary>The clock</summary>
         [Link]
         public Clock Clock = null;
@@ -73,7 +76,7 @@ namespace Models.PMF.Organs
         public Biomass Dead = new Biomass();
 
         /// <summary>The live start</summary>
-        private Biomass LiveStart = null;
+        public Biomass LiveStart = null;
 
         #endregion
 
@@ -93,16 +96,16 @@ namespace Models.PMF.Organs
         public double Age;
 
         /// <summary>The n reallocation factor</summary>
-        private double NReallocationFactor;
+        public double NReallocationFactor;
 
         /// <summary>The dm reallocation factor</summary>
-        private double DMReallocationFactor;
+        public double DMReallocationFactor;
 
         /// <summary>The n retranslocation factor</summary>
-        private double NRetranslocationFactor;
+        public double NRetranslocationFactor;
 
         /// <summary>The dm retranslocation factor</summary>
-        private double DMRetranslocationFactor;
+        public double DMRetranslocationFactor;
 
         /// <summary>The functional n conc</summary>
         private double FunctionalNConc;
@@ -192,10 +195,10 @@ namespace Models.PMF.Organs
         public double CoverAbove { get; set; }
 
         /// <summary>The shade induced sen rate</summary>
-        private double ShadeInducedSenRate;
+        public double ShadeInducedSenRate;
 
         /// <summary>The senesced frac</summary>
-        private double SenescedFrac;
+        public double SenescedFrac;
 
         /// <summary>The detached frac</summary>
         private double DetachedFrac;
@@ -295,7 +298,7 @@ namespace Models.PMF.Organs
         public Biomass Removed { get; set; }
 
         /// <summary>The delta potential area</summary>
-        private double DeltaPotentialArea;
+        public double DeltaPotentialArea;
 
         /// <summary>The delta water constrained area</summary>
         public double DeltaWaterConstrainedArea;
@@ -303,43 +306,41 @@ namespace Models.PMF.Organs
         /// <summary>The delta carbon constrained area</summary>
         public double DeltaCarbonConstrainedArea;
 
-        //private double StructuralDMDemand;
-        //private double MetabolicDMDemand;
         /// <summary>The potential structural dm allocation</summary>
-        private double PotentialStructuralDMAllocation;
+        public double PotentialStructuralDMAllocation;
 
         /// <summary>The potential metabolic dm allocation</summary>
-        private double PotentialMetabolicDMAllocation;
+        public double PotentialMetabolicDMAllocation;
 
         /// <summary>The metabolic n reallocated</summary>
-        private double MetabolicNReallocated;
+        public double MetabolicNReallocated;
 
         /// <summary>The metabolic wt reallocated</summary>
-        private double MetabolicWtReallocated;
+        public double MetabolicWtReallocated;
 
         /// <summary>The non structural n reallocated</summary>
-        private double NonStructuralNReallocated;
+        public double NonStructuralNReallocated;
 
         /// <summary>The non structural wt reallocated</summary>
-        private double NonStructuralWtReallocated;
+        public double NonStructuralWtReallocated;
 
         /// <summary>The metabolic n retranslocated</summary>
-        private double MetabolicNRetranslocated;
+        public double MetabolicNRetranslocated;
 
         /// <summary>The non structural n retrasnlocated</summary>
-        private double NonStructuralNRetrasnlocated;
+        public double NonStructuralNRetrasnlocated;
 
         /// <summary>The dm retranslocated</summary>
-        private double DMRetranslocated;
+        public double DMRetranslocated;
 
         /// <summary>The metabolic n allocation</summary>
-        private double MetabolicNAllocation;
+        public double MetabolicNAllocation;
 
         /// <summary>The structural dm allocation</summary>
-        private double StructuralDMAllocation;
+        public double StructuralDMAllocation;
 
         /// <summary>The metabolic dm allocation</summary>
-        private double MetabolicDMAllocation;
+        public double MetabolicDMAllocation;
 
         #endregion
 
@@ -730,7 +731,8 @@ namespace Models.PMF.Organs
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
             if (CohortPopulation == 0)
-                CohortPopulation = Structure.TotalStemPopn;
+                CohortPopulation = Apex.Appearance(Structure.ApexNum, Plant.Population, Structure.TotalStemPopn);
+                
             MaxArea = leafCohortParameterseafCohortParameters.MaxArea.Value() * CellDivisionStressFactor*leafFraction;
             //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
             GrowthDuration = leafCohortParameterseafCohortParameters.GrowthDuration.Value() * leafFraction;
@@ -775,15 +777,18 @@ namespace Models.PMF.Organs
         {
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
-            if (Structure.ProportionPlantMortality > 0)
-                CohortPopulation -= CohortPopulation*Structure.ProportionPlantMortality;
+            if (!(Apex is ApexTiller))
+            {
+                if (Structure.ProportionPlantMortality > 0)
+                    CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
 
-            //Reduce leaf Population in Cohort  due to branch mortality
-            if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
-                //Ensure we there are some branches.
-                CohortPopulation -= CohortPopulation*Structure.ProportionBranchMortality;
+                //Reduce leaf Population in Cohort  due to branch mortality
+                if ((Structure.ProportionBranchMortality > 0) && (CohortPopulation > Structure.MainStemPopn))
+                    //Ensure we there are some branches.
+                    CohortPopulation -= CohortPopulation * Structure.ProportionBranchMortality;
+            }
 
-            double propnStemMortality = (startPopulation - CohortPopulation)/startPopulation;
+            double propnStemMortality = (startPopulation - CohortPopulation) / startPopulation;
 
             //Calculate Accumulated Stress Factor for reducing potential leaf size
             if (IsNotAppeared)
@@ -798,16 +803,16 @@ namespace Models.PMF.Organs
                 //Accelerate thermal time accumulation if crop is water stressed.
                 double thermalTime;
                 if (IsFullyExpanded && IsNotSenescing)
-                    thermalTime = tt*leafCohortParameters.DroughtInducedLagAcceleration.Value();
+                    thermalTime = tt * leafCohortParameters.DroughtInducedLagAcceleration.Value();
                 else if (IsSenescing)
                     thermalTime = tt * leafCohortParameters.DroughtInducedSenAcceleration.Value();
                 else thermalTime = tt;
 
                 //Leaf area growth parameters
                 DeltaPotentialArea = PotentialAreaGrowthFunction(thermalTime);
-                    //Calculate delta leaf area in the absence of water stress
-                DeltaWaterConstrainedArea = DeltaPotentialArea*leafCohortParameters.ExpansionStress.Value();
-                    //Reduce potential growth for water stress
+                //Calculate delta leaf area in the absence of water stress
+                DeltaWaterConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStress.Value();
+                //Reduce potential growth for water stress
 
                 CoverAbove = Leaf.CoverAboveCohort(Rank); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRate.Value();
@@ -826,8 +831,8 @@ namespace Models.PMF.Organs
                 {
                     // DM to reallocate.
 
-                    LeafStartMetabolicDMReallocationSupply = LiveStart.MetabolicWt*SenescedFrac*DMReallocationFactor;
-                    LeafStartNonStructuralDMReallocationSupply = LiveStart.NonStructuralWt*SenescedFrac*
+                    LeafStartMetabolicDMReallocationSupply = LiveStart.MetabolicWt * SenescedFrac * DMReallocationFactor;
+                    LeafStartNonStructuralDMReallocationSupply = LiveStart.NonStructuralWt * SenescedFrac *
                                                                  DMReallocationFactor;
 
                     LeafStartDMReallocationSupply = LeafStartMetabolicDMReallocationSupply +
@@ -842,15 +847,15 @@ namespace Models.PMF.Organs
                         LeafStartNonStructuralDMReallocationSupply = LeafStartDMReallocationSupply = 0;
                 }
 
-                LeafStartDMRetranslocationSupply = liveBiomass.NonStructuralWt*DMRetranslocationFactor;
+                LeafStartDMRetranslocationSupply = liveBiomass.NonStructuralWt * DMRetranslocationFactor;
                 //Nretranslocation is that which occurs before uptake (senessed metabolic N and all non-structuralN)
-                LeafStartMetabolicNReallocationSupply = SenescedFrac*liveBiomass.MetabolicN*NReallocationFactor;
-                LeafStartNonStructuralNReallocationSupply = SenescedFrac*liveBiomass.NonStructuralN*NReallocationFactor;
+                LeafStartMetabolicNReallocationSupply = SenescedFrac * liveBiomass.MetabolicN * NReallocationFactor;
+                LeafStartNonStructuralNReallocationSupply = SenescedFrac * liveBiomass.NonStructuralN * NReallocationFactor;
                 //Retranslocated N is only that which occurs after N uptake. Both Non-structural and metabolic N are able to be retranslocated but metabolic N will only be moved if remobilisation of non-structural N does not meet demands
                 LeafStartMetabolicNRetranslocationSupply = Math.Max(0.0,
-                    liveBiomass.MetabolicN*NRetranslocationFactor - LeafStartMetabolicNReallocationSupply);
+                    liveBiomass.MetabolicN * NRetranslocationFactor - LeafStartMetabolicNReallocationSupply);
                 LeafStartNonStructuralNRetranslocationSupply = Math.Max(0.0,
-                    liveBiomass.NonStructuralN*NRetranslocationFactor - LeafStartNonStructuralNReallocationSupply);
+                    liveBiomass.NonStructuralN * NRetranslocationFactor - LeafStartNonStructuralNReallocationSupply);
                 LeafStartNReallocationSupply = LeafStartNonStructuralNReallocationSupply + LeafStartMetabolicNReallocationSupply;
                 LeafStartNRetranslocationSupply = LeafStartNonStructuralNRetranslocationSupply + LeafStartMetabolicNRetranslocationSupply;
 
