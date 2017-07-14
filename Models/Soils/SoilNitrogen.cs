@@ -127,9 +127,9 @@ namespace Models.Soils
             Nitritation_phx = new double[] { 0, 4.5, 6, 8, 9, 14 };
             Nitritation_phy = new double[] { 0, 0, 1, 1, 0, 0 };
 
-            TOptmimunCodenitrififaction = new double[] { 50.056, 50.056 };
+            TOptmimunCodenitrififaction = new double[] { 50.0561976737836, 50.0561976737836 };
             FactorZeroCodenitrification = new double[] { 0.1, 0.1 };
-            ExponentCodenitrification = new double[] { 68350, 68350 };
+            ExponentCodenitrification = new double[] { 67108874, 67108874 };
             Codenitrification_swx = new double[] { 0, 2, 3 };
             Codenitrification_swy = new double[] { 0, 0, 1 };
             Codenitrification_phx = new double[] { 0, 4.5, 6, 8, 9, 14 };
@@ -137,9 +137,11 @@ namespace Models.Soils
             Codenitrification_NHNOx = new double[] { 0, 4.5, 6, 8, 9, 14 };
             Codenitrification_NHNOy = new double[] { 0, 0, 1, 1, 0, 0 };
 
-            stf_dnit_Topt = new double[] { 50.056, 50.0056 };
+            //// NOTE: the values for Topt and CvExp given here reproduce best the original function (it was an exponential, now a power)
+            ////  however, values like 50.06 and 1000, or even more sane 50 and 100 should be good enough
+            stf_dnit_Topt = new double[] { 50.0561976737836, 50.0561976737836 };
             stf_dnit_FctrZero = new double[] { 0.1, 0.1 };
-            stf_dnit_CvExp = new double[] { 68350, 68350 };
+            stf_dnit_CvExp = new double[] { 67108874, 67108874 };
             swf_dnit_swx = new double[] { 0, 2, 3 };
             swf_dnit_y = new double[] { 0, 0, 1 };
             swpsf_dnit_swpx = new double[] { 0, 28, 88, 100 };

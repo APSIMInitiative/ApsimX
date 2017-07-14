@@ -607,8 +607,8 @@ namespace Models.Soils
                 // index = 0 for aerobic and 1 for anaerobic conditions
                 int index = (!g.isPondActive) ? 0 : 1;
 
-                //if (_urea[layer]< 0.1)
-                if (MathUtilities.Divide(urea[layer], g.SoilDensity[layer] * g.dlayer[layer], 0.0) < 0.0001) // 0.01ppm
+                if (urea[layer]< 0.1)
+                //if (MathUtilities.Divide(urea[layer], g.SoilDensity[layer] * g.dlayer[layer], 0.0) < 0.0001) // 0.01ppm
                 {
                     // urea amount is too small, all will be hydrolysed
                     result = urea[layer];
@@ -617,6 +617,7 @@ namespace Models.Soils
                 {
                     // potential fraction of urea being hydrolysed
                     double totalC = (hum_c[layer] + biom_c[layer]) * g.convFactor[layer] / 10000;  // (100/1000000) = convert to ppm and then to %
+                    totalC = g.reset_oc[layer];
                     double pot_hydrol_rate = g.potHydrol_parmA + g.potHydrol_parmB * totalC +
                              g.potHydrol_parmC * g.ph[layer] + g.potHydrol_parmD * totalC * g.ph[layer];
                     pot_hydrol_rate = Math.Max(g.potHydrol_min, Math.Min(1.0, pot_hydrol_rate));
@@ -752,8 +753,8 @@ namespace Models.Soils
                 {
                     // get the soil temperature factor
                     double stf = SoilTempFactor(layer, index, g.TempFactorData_Denit);
+                    stf = Math.Max(0.0, Math.Min(1.0, 0.1 * Math.Exp(0.046 * g.Soil.Temperature[layer])));
 
-                    
                     // get the soil water factor
                     double swf = SoilMoistFactor(layer, index, g.MoistFactorData_Denit);
 
