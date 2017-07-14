@@ -160,6 +160,16 @@ namespace Models.Graph
         /// <summary>Gets the t field name.</summary>
         public string yFieldName;
 
+        /// <summary>
+        /// Units of measurement for X
+        /// </summary>
+        public string xFieldUnits;
+
+        /// <summary>
+        /// Units of measurement for Y
+        /// </summary>
+        public string yFieldUnits;
+
         /// <summary>Gets a value indicating whether this series should be shown in the level.</summary>
         public bool showInLegend;
 

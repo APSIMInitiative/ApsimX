@@ -6,7 +6,7 @@ using Models.Core;
 namespace Models.PMF.Functions.DemandFunctions
 {
     /// <summary>
-    /// the Partition Fraction Demand Function which returns the product of its PartitionFraction and the total DM supplied to the arbitrator by all organs
+    /// This is the Partition Fraction Demand Function which returns the product of its PartitionFraction and the total DM supplied to the arbitrator by all organs
     /// </summary>
     [Serializable]
     [Description("Demand is calculated as a fraction of the total plant supply term.")]

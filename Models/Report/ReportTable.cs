@@ -10,7 +10,7 @@ namespace Models.Report
     using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
-    using System.Threading.Tasks;
+    using System.Xml.Serialization;
 
     /// <summary>A class for holding data for a .db table.</summary>
     [Serializable]
@@ -35,9 +35,8 @@ namespace Models.Report
                     flattenedColumns.Add(column);
                 else
                     for (int rowIndex = 0; rowIndex < column.Values.Count; rowIndex++)
-                        FlattenValue(column.Name, column.Values[rowIndex], rowIndex, flattenedColumns);
+                        FlattenValue(column.Name, column.Units, column.Values[rowIndex], rowIndex, flattenedColumns);
             }
-
             Columns = flattenedColumns;
         }
 
@@ -46,11 +45,12 @@ namespace Models.Report
         /// to a data table.
         /// </summary>
         /// <param name="name">Column name where the value came from.</param>
+        /// <param name="units">Units of measurement; null if not applicable</param>
         /// <param name="value">The object to be analyzed and flattened</param>
         /// <param name="rowIndex">The row index of the specified value.</param>
         /// <param name="flattenedColumns">The returned flattened columns.</param>
         /// <returns>The list of values that can be written to a data table</returns>
-        private static void FlattenValue(string name, object value, int rowIndex, List<IReportColumn> flattenedColumns)
+        private static void FlattenValue(string name, string units, object value, int rowIndex, List<IReportColumn> flattenedColumns)
         {
             if (value == null || value.GetType() == typeof(DateTime) || value.GetType() == typeof(string) || !value.GetType().IsClass)
             {
@@ -58,7 +58,7 @@ namespace Models.Report
                 IReportColumn flattenedColumn = flattenedColumns.Find(col => col.Name == name);
                 if (flattenedColumn == null)
                 {
-                    flattenedColumn = new ReportColumnWithValues(name);
+                    flattenedColumn = new ReportColumnWithValues(name, units);
                     InsertColumn(flattenedColumn, flattenedColumns);
                 }
 
@@ -85,7 +85,7 @@ namespace Models.Report
                     heading += "(" + (columnIndex + 1).ToString() + ")";
 
                     object arrayElement = array.GetValue(columnIndex);
-                    FlattenValue(heading, arrayElement, rowIndex, flattenedColumns);  // recursion
+                    FlattenValue(heading, units, arrayElement, rowIndex, flattenedColumns);  // recursion
                 }
             }
             else if (value.GetType().GetInterface("IList") != null)
@@ -98,7 +98,7 @@ namespace Models.Report
                     heading += "(" + (columnIndex + 1).ToString() + ")";
 
                     object arrayElement = array[columnIndex];
-                    FlattenValue(heading, arrayElement, rowIndex, flattenedColumns);  // recursion
+                    FlattenValue(heading, units, arrayElement, rowIndex, flattenedColumns);  // recursion
                 }
             }
             else
@@ -106,9 +106,25 @@ namespace Models.Report
                 // A struct or class
                 foreach (PropertyInfo property in ReflectionUtilities.GetPropertiesSorted(value.GetType(), BindingFlags.Instance | BindingFlags.Public))
                 {
+                    object[] attrs = property.GetCustomAttributes(true);
+                    string propUnits = null;
+                    bool ignore = false;
+                    foreach (object attr in attrs)
+                    {
+                        if (attr is XmlIgnoreAttribute)
+                        {
+                            ignore = true;
+                            continue;
+                        }
+                        Core.UnitsAttribute unitsAttr = attr as Core.UnitsAttribute;
+                        if (unitsAttr != null)
+                            propUnits = unitsAttr.ToString();
+                    }
+                    if (ignore)
+                        continue;
                     string heading = name + "." + property.Name;
                     object classElement = property.GetValue(value, null);
-                    FlattenValue(heading, classElement, rowIndex, flattenedColumns);
+                    FlattenValue(heading, propUnits, classElement, rowIndex, flattenedColumns);
                 }
             }
         }

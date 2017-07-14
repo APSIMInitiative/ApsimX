@@ -14,6 +14,9 @@ namespace Models.Report
         /// <summary>Name of column.</summary>
         string Name { get; }
 
+        /// <summary>Units of measurement</summary>
+        string Units { get; }
+
         /// <summary>Values for each row of this column.</summary>
         List<object> Values { get; }
     }

@@ -11,6 +11,7 @@ namespace UserInterface.Classes
     using Interfaces;
     using Views;
     using APSIM.Shared.Utilities;
+    using Models.Core;
 
     /// <summary>
     /// Represents a grid cell.
@@ -225,7 +226,10 @@ namespace UserInterface.Classes
 
             set
             {
-                this.gridView.Grid[this.ColumnIndex, this.RowIndex].Value = value;
+                if (value is ICrop)
+                    this.gridView.Grid[this.ColumnIndex, this.RowIndex].Value = (value as IModel).Name;
+                else
+                    this.gridView.Grid[this.ColumnIndex, this.RowIndex].Value = value;
             }
         }
     }

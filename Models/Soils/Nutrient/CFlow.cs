@@ -5,39 +5,38 @@ namespace Models.Soils.Nutrient
     using Models.PMF.Functions;
     using System;
     using APSIM.Shared.Utilities;
+    using System.Collections.Generic;
 
     /// <summary>
-    /// Encapsulates a carbon flow between pools.
+    /// Encapsulates a carbon and nutrient flow between pools.  This flow is characterised in terms of the rate of flow (fraction of the pool per day).  Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(Nutrient))]
+    [ValidParent(ParentType = typeof(NutrientPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
     public class CarbonFlow : Model
     {
-        private NutrientPool source = null;
-        private NutrientPool destination = null;
+        private List<NutrientPool> destinations = new List<NutrientPool>();
 
-        [Link]
-        private IFunction rate = null;
+        [ChildLinkByName]
+        private IFunction Rate = null;
 
-        [Link]
+        [ChildLinkByName]
         private IFunction CO2Efficiency = null;
 
         [Link]
         private SoluteManager solutes = null;
 
         /// <summary>
-        /// Name of source pool
-        /// </summary>
-        [Description("Name of source pool")]
-        public string sourceName { get; set; }
-
-        /// <summary>
         /// Name of destination pool
         /// </summary>
-        [Description("Name of destination pool")]
-        public string destinationName { get; set; }
+        [Description("Names of destination pools (CSV)")]
+        public string[] destinationNames { get; set; }
+        /// <summary>
+        /// Fractions for each destination pool
+        /// </summary>
+        [Description("Fractions of flow to each pool (CSV)")]
+        public double[] destinationFraction { get; set; }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -45,13 +44,13 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            source = Apsim.Find(this, sourceName) as NutrientPool;
-            if (source == null)
-                throw new Exception("Cannot find source pool with name: " + sourceName);
-
-            destination = Apsim.Find(this, destinationName) as NutrientPool;
-            if (destination == null)
-                throw new Exception("Cannot find destination pool with name: " + destinationName);
+            foreach (string destinationName in destinationNames)
+            {
+                NutrientPool destination = Apsim.Find(this, destinationName) as NutrientPool;
+                if (destination == null)
+                    throw new Exception("Cannot find destination pool with name: " + destinationName);
+                destinations.Add(destination);
+            }
         }
 
         /// <summary>
@@ -62,21 +61,74 @@ namespace Models.Soils.Nutrient
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
-            for (int i= 0; i < source.C.Length; i++)
+            NutrientPool source = Parent as NutrientPool;
+            double[] NH4 = solutes.GetSolute("NH4");
+            double[] NO3 = solutes.GetSolute("NO3");
+
+            for (int i = 0; i < source.C.Length; i++)
             {
-                double carbonFlow = rate.Value(i) * source.C[i];
-                double nitrogenFlow = MathUtilities.Divide(carbonFlow, source.CNRatio[i],0);
-                double carbonFlowToDestination = carbonFlow * CO2Efficiency.Value(i);
-                double nitrogenFlowToDestination = carbonFlowToDestination / destination.CNRatio[i];
-                source.C[i] -= carbonFlow;
-                source.N[i] -= nitrogenFlow;
-                destination.C[i] += carbonFlowToDestination;
-                destination.N[i] += nitrogenFlowToDestination;
-                if (nitrogenFlowToDestination <= nitrogenFlow)
-                    solutes.AddToLayer(i, "NH4", nitrogenFlow - nitrogenFlowToDestination);
+                double carbonFlowFromSource = Rate.Value(i) * source.C[i];
+                double nitrogenFlowFromSource = MathUtilities.Divide(carbonFlowFromSource, source.CNRatio[i], 0);
+
+                double[] carbonFlowToDestination = new double[destinations.Count];
+                double[] nitrogenFlowToDestination = new double[destinations.Count];
+
+                for (int j = 0; j < destinations.Count; j++)
+                {
+                    carbonFlowToDestination[j] = carbonFlowFromSource * CO2Efficiency.Value(i) * destinationFraction[j];
+                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j],destinations[j].CNRatio[i],0.0);
+                }
+
+                double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
+                double NSupply = nitrogenFlowFromSource + NO3[i] + NH4[i];
+
+                if (MathUtilities.Sum(nitrogenFlowToDestination) > NSupply)
+                {
+                    double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(NO3[i] + NH4[i], TotalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
+
+                    for (int j = 0; j < destinations.Count; j++)
+                    {
+                        carbonFlowToDestination[j] *= NSupplyFactor;
+                        nitrogenFlowToDestination[j] *= NSupplyFactor;
+                        if (nitrogenFlowToDestination[j] > 0.5)
+                        { }
+                    }
+                    TotalNitrogenFlowToDestinations *= NSupplyFactor;
+
+                    carbonFlowFromSource *= NSupplyFactor;
+                    nitrogenFlowFromSource *= NSupplyFactor;
+
+                }
+
+                source.C[i] -= carbonFlowFromSource;
+                source.N[i] -= nitrogenFlowFromSource;
+                for (int j = 0; j < destinations.Count; j++)
+                {
+                    destinations[j].C[i] += carbonFlowToDestination[j];
+                    destinations[j].N[i] += nitrogenFlowToDestination[j];
+                }
+
+
+                if (TotalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
+                    NH4[i] += nitrogenFlowFromSource - TotalNitrogenFlowToDestinations;
                 else
-                    throw new NotImplementedException();
+                {
+                    double NDeficit = TotalNitrogenFlowToDestinations - nitrogenFlowFromSource;
+                    double NH4Immobilisation = Math.Min(NH4[i], NDeficit);
+                    NH4[i] -= NH4Immobilisation;
+                    NDeficit -= NH4Immobilisation;
+
+                    double NO3Immobilisation = Math.Min(NO3[i], NDeficit);
+                    NO3[i] -= NO3Immobilisation;
+                    NDeficit -= NO3Immobilisation;
+
+                    if (MathUtilities.IsGreaterThan(NDeficit, 0.0))
+                        throw new Exception("Insufficient mineral N for immobilisation demand for C flow " + Name);
+                }
+
             }
+            solutes.SetSolute("NH4", NH4);
+            solutes.SetSolute("NO3", NO3);
         }
 
 
