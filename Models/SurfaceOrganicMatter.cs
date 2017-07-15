@@ -1410,6 +1410,9 @@
         {
             if (IncorpFOMPool != null)
                 IncorpFOMPool.Invoke(data);
+            //TODO: figure out why the above code stopped working, or whether the code below is better
+            soil.SoilNitrogen.IncorporateFOM(data);
+
         }
 
         /// <summary>
