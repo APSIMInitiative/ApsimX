@@ -26,7 +26,7 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public partial class SoilNitrogen : Model, ISolute, INutrient
     {
-        /// <summary>Initializes a new instance of the <see cref="SoilNitrogen"/> class.</summary>
+        /// <summary>Initialises a new instance of the <see cref="SoilNitrogen"/> class.</summary>
         public SoilNitrogen()
         {
             Patch = new List<soilCNPatch>();
@@ -93,65 +93,65 @@ namespace Models.Soils
             enr_a_coeff = SoilOrganicMatter.EnrACoeff;
             enr_b_coeff = SoilOrganicMatter.EnrBCoeff;
 
-            stf_DecompFOM_Topt = new double[] { 32, 32 };
-            stf_DecompFOM_FctrZero = new double[] { 0, 0 };
-            stf_DecompFOM_CvExp = new double[] { 2, 2 };
-            swf_DecompFOM_swx = new double[] { 0, 1, 1.5, 2, 3};
-            swf_DecompFOM_y = new double[] { 0, 0, 1, 1, 0.5};
+            FOMDecomp_TOptimum = new double[] { 32, 32 };
+            FOMDecomp_FactorAtZero = new double[] { 0, 0 };
+            FMDecomp_CurveCoeff = new double[] { 2, 2 };
+            FOMDecomp_NormWaterContents = new double[] { 0, 1, 1.5, 2, 3};
+            FOMDecomp_MoistureFactors = new double[] { 0, 0, 1, 1, 0.5};
 
-            stf_MinerSOM_Topt = new double[] { 32, 32 };
-            stf_MinerSOM_FctrZero = new double[] { 0, 0 };
-            stf_MinerSOM_CvExp = new double[] { 2, 2 };
-            swf_MinerSOM_swx = new double[] { 0, 1, 1.5, 2, 3 };
-            swf_MinerSOM_y = new double[] { 0, 0, 1, 1, 0.5 };
+            SOMMiner_TOptimum = new double[] { 32, 32 };
+            SOMMiner_FactorAtZero = new double[] { 0, 0 };
+            SOMMiner_CurveCoeff = new double[] { 2, 2 };
+            SOMMiner_NormWaterContents = new double[] { 0, 1, 1.5, 2, 3 };
+            SOMMiner_MoistureFactors = new double[] { 0, 0, 1, 1, 0.5 };
 
-            stf_Hydrol_Topt = new double[] { 32, 32 };
-            stf_Hydrol_FctrZero = new double[] { 0.2, 0.2 };
-            stf_Hydrol_CvExp = new double[] { 1, 1 };
-            swf_Hydrol_swx = new double[] { 0, 1, 1.4, 2.4, 3 };
-            swf_Hydrol_y = new double[] { 0.2, 0.2, 1.0, 1.0, 0.7 };
+            UreaHydrol_TOptimum = new double[] { 32, 32 };
+            UreaHydrol_FactorAtZero = new double[] { 0.2, 0.2 };
+            UreaHydrol_CurveCoeff = new double[] { 1, 1 };
+            UreaHydrol_NormWaterContents = new double[] { 0, 1, 1.4, 2.4, 3 };
+            UreaHydrol_MoistureFactors = new double[] { 0.2, 0.2, 1.0, 1.0, 0.7 };
 
-            stf_Nitrif_Topt = new double[] { 32, 32 };
-            stf_Nitrif_FctrZero = new double[] { 0, 0 };
-            stf_Nitrif_CvExp = new double[] { 2, 2 };
-            swf_Nitrif_swx = new double[] { 0, 1, 1.25, 2, 3 };
-            swf_Nitrif_y = new double[] { 0, 0, 1, 1, 0 };
-            phf_Nitrif_phx = new double[] { 0, 4.5, 6, 8, 9, 14 };
-            phf_Nitrif_y = new double[] { 0, 0, 1, 1, 0, 0 };
+            Nitrification_TOptimum = new double[] { 32, 32 };
+            Nitrification_FactorAtZero = new double[] { 0, 0 };
+            Nitrification_CurveCoeff = new double[] { 2, 2 };
+            Nitrification_NormWaterContents = new double[] { 0, 1, 1.25, 2, 3 };
+            Nitrification_MoistureFactors = new double[] { 0, 0, 1, 1, 0 };
+            Nitrification_pHValues = new double[] { 0, 4.5, 6, 8, 9, 14 };
+            Nitrification_pHFactors = new double[] { 0, 0, 1, 1, 0, 0 };
 
-            TOptmimunNitrififaction = new double[] { 32, 32 };
-            FactorZeroNitrification = new double[] { 0, 0 };
-            ExponentNitrification = new double[] { 2, 2 };
-            Nitrification_swx = new double[] { 0, 1, 1.25, 2, 3 };
-            Nitrification_swy = new double[] { 0, 0, 1, 1, 0 };
-            Nitritation_phx = new double[] { 0, 4.5, 6, 8, 9, 14 };
-            Nitritation_phy = new double[] { 0, 0, 1, 1, 0, 0 };
+            TOptimunNitrification2 = new double[] { 32, 32 };
+            FactorAtZeroNitrification2 = new double[] { 0, 0 };
+            CurveCoeffNitrification2 = new double[] { 2, 2 };
+            NormWaterContentsNitrification2 = new double[] { 0, 1, 1.25, 2, 3 };
+            MoistureFactorsNitrification2 = new double[] { 0, 0, 1, 1, 0 };
+            Nitritation_pHValues = new double[] { 0, 4.5, 6, 8, 9, 14 };
+            Nitritation_pHFactors = new double[] { 0, 0, 1, 1, 0, 0 };
 
             TOptmimunCodenitrififaction = new double[] { 50.0561976737836, 50.0561976737836 };
-            FactorZeroCodenitrification = new double[] { 0.1, 0.1 };
-            ExponentCodenitrification = new double[] { 67108874, 67108874 };
-            Codenitrification_swx = new double[] { 0, 2, 3 };
-            Codenitrification_swy = new double[] { 0, 0, 1 };
-            Codenitrification_phx = new double[] { 0, 4.5, 6, 8, 9, 14 };
-            Codenitrification_phy = new double[] { 0, 0, 1, 1, 0, 0 };
-            Codenitrification_NHNOx = new double[] { 0, 4.5, 6, 8, 9, 14 };
-            Codenitrification_NHNOy = new double[] { 0, 0, 1, 1, 0, 0 };
+            FactorAtZeroCodenitrification = new double[] { 0.1, 0.1 };
+            CurveCoeffCodenitrification = new double[] { 67108874, 67108874 };
+            Codenitrification_NormWaterContents = new double[] { 0, 2, 3 };
+            Codenitrification_MoistureFactors = new double[] { 0, 0, 1 };
+            Codenitrification_pHValues = new double[] { 0, 4.5, 6, 8, 9, 14 };
+            Codenitrification_pHFactors = new double[] { 0, 0, 1, 1, 0, 0 };
+            Codenitrification_NHNOValues = new double[] { 0, 4.5, 6, 8, 9, 14 };
+            Codenitrification_NHNOFactors = new double[] { 0, 0, 1, 1, 0, 0 };
 
             //// NOTE: the values for Topt and CvExp given here reproduce best the original function (it was an exponential, now a power)
             ////  however, values like 50.06 and 1000, or even more sane 50 and 100 should be good enough
-            stf_dnit_Topt = new double[] { 50.0561976737836, 50.0561976737836 };
-            stf_dnit_FctrZero = new double[] { 0.1, 0.1 };
-            stf_dnit_CvExp = new double[] { 67108874, 67108874 };
-            swf_dnit_swx = new double[] { 0, 2, 3 };
-            swf_dnit_y = new double[] { 0, 0, 1 };
-            swpsf_dnit_swpx = new double[] { 0, 28, 88, 100 };
-            swpsf_dnit_y = new double[] { 0.1, 0.1, 1, 1.18 };
+            Denit_TOptimum = new double[] { 50.0561976737836, 50.0561976737836 };
+            Denit_FactorAtZero = new double[] { 0.1, 0.1 };
+            Denit_CurveCoeff = new double[] { 67108874, 67108874 };
+            Denit_NormWaterContents = new double[] { 0, 2, 3 };
+            Denit_MoistureFactors = new double[] { 0, 0, 1 };
+            Denit_WPFSValues = new double[] { 0, 28, 88, 100 };
+            Denit_WFPSFactors = new double[] { 0.1, 0.1, 1, 1.18 };
 
             if (Soil.SoilType != null && Soil.SoilType.Equals("Sand", StringComparison.CurrentCultureIgnoreCase))
             {
                 MBiomassTurnOverRate = new double[] { 0.0324, 0.015 };
-                swf_MinerSOM_y = new double[] { 0.05, 0.05, 1, 1, 0.5 };
-                swf_DecompFOM_y = new double[] { 0.05, 0.05, 1, 1, 0.5 };
+                SOMMiner_MoistureFactors = new double[] { 0.05, 0.05, 1, 1, 0.5 };
+                FOMDecomp_MoistureFactors = new double[] { 0.05, 0.05, 1, 1, 0.5 };
             }
 
             // set the creation date

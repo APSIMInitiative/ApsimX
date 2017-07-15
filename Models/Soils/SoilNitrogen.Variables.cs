@@ -185,7 +185,7 @@ namespace Models.Soils
         public double MBiomassCNr = 8.0;
 
         /// <summary>
-        /// Proportion of biomass-C in the initial mineralizable humic-C (0-1)
+        /// Proportion of biomass-C in the initial mineralisable humic-C (0-1)
         /// </summary>
         [Bounds(Lower = 0, Upper = 1)]
         [XmlIgnore]
@@ -315,20 +315,21 @@ namespace Models.Soils
         #region Surface OM
 
         /// <summary>
-        /// Fraction of residue C mineralised retained in the soil OM (0-1)
+        /// Fraction of residue C mineralised retained in the soil OM (g/g)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("g/g")]
         [XmlIgnore]
         public double ResiduesRespirationFactor = 0.6;
 
         /// <summary>
-        /// Fraction of retained residue C transferred to biomass (0-1)
+        /// Fraction of retained residue C transferred to microbial biomass (g/g)
         /// </summary>
         /// <remarks>
-        /// Remaining will got into humus
+        /// the remaining will go into humus
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("g/g")]
         [XmlIgnore]
         public double ResiduesFractionIntoBiomass = 0.9;
 
@@ -338,129 +339,140 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("mm")]
         [XmlIgnore]
-        public double ImmobilisationDepth = 100;
+        public double ResiduesDecompDepth = 100;
 
         #endregion
 
         #region Fresh OM
 
         /// <summary>
-        /// Optimum rate for decomposition of FOM pools [carbohydrate component] (0-1)
+        /// Optimum rate for decomposition of FOM pool 1 [carbohydrate], aerobic and anaerobic conditions (/day)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("/day")]
         [XmlIgnore]
-        public double[] FOMCarbTurnOverRate = { 0.2, 0.1 };
+        public double[] Pool1FOMTurnOverRate = { 0.2, 0.1 };
 
         /// <summary>
-        /// Optimum rate for decomposition of FOM pools [cellulose component] (0-1)
+        /// Optimum rate for decomposition of FOM pool 2 [cellulose], aerobic and anaerobic conditions  (/day)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("/day")]
         [XmlIgnore]
-        public double[] FOMCellTurnOverRate = { 0.05, 0.25 };
+        public double[] Pool2FOMTurnOverRate = { 0.05, 0.25 };
 
         /// <summary>
-        /// Optimum rate for decomposition of FOM pools [lignin component] (0-1)
+        /// Optimum rate for decomposition of FOM pool 3 [lignin], aerobic and anaerobic conditions  (/day)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("/day")]
         [XmlIgnore]
-        public double[] FOMLignTurnOverRate = { 0.0095, 0.003 };
+        public double[] Pool3FOMTurnOverRate = { 0.0095, 0.003 };
 
         /// <summary>
-        /// Fraction of the FOM C decomposed retained in the soil OM (0-1)
+        /// Fraction of the FOM C decomposed retained in the soil OM (g/g)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("g/g")]
         [XmlIgnore]
         public double FOMRespirationFactor = 0.6;
 
         /// <summary>
-        /// Fraction of the retained FOM C transferred to biomass (0-1)
+        /// Fraction of the retained FOM C transferred to biomass (g/g)
         /// </summary>
+        /// <remarks>
+        /// the remaining will go into humus
+        /// </remarks>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("g/g")]
         [XmlIgnore]
         public double FOMFractionIntoBiomass = 0.9;
 
         #region Limiting factors
 
         /// <summary>
-        /// Coeff. to determine the magnitude of C:N effects on decomposition of FOM
+        /// Coefficient for the exponential phase of C:N effects on decomposition of FOM
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 10.0)]
+        [Units("")]
         [XmlIgnore]
-        public double cnrf_ReductionCoeff = 0.693;
+        public double FOMDecomp_CNCoefficient = 0.693;
 
         /// <summary>
-        /// C:N above which decomposition rate of FOM declines
+        /// Value of C:N ratio above which decomposition rate of FOM declines
         /// </summary>
         [Bounds(Lower = 5.0, Upper = 100.0)]
+        [Units("g/g")]
         [XmlIgnore]
-        public double cnrf_CNthreshold = 25.0;
+        public double FOMDecomp_CNThreshold = 25.0;
 
         /// <summary>
         /// Data for calculating the temperature effect on FOM decomposition
         /// </summary>
-        private BentStickData TempFactorData_DecompFOM = new BentStickData();
+        private BentStickData FOMDecomp_TemperatureFactorData = new BentStickData();
 
         /// <summary>
-        /// parameters for the temperature factor, optimum temperature (aerobic and anaerobic conditions)
+        /// Optimum temperature for FOM decomposition, aerobic and anaerobic conditions (oC)
         /// </summary>
         [Units("oC")]
         [XmlIgnore]
-        public double[] stf_DecompFOM_Topt
+        public double[] FOMDecomp_TOptimum
         {
-            get { return TempFactorData_DecompFOM.xValueForOptimum; }
-            set { TempFactorData_DecompFOM.xValueForOptimum = value; }
+            get { return FOMDecomp_TemperatureFactorData.xValueForOptimum; }
+            set { FOMDecomp_TemperatureFactorData.xValueForOptimum = value; }
         }
 
         /// <summary>
-        /// Temperature factor for decomposition of FOM at zero degrees
+        /// Temperature factor for FOM decomposition at zero degrees, aerobic and anaerobic conditions 
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
+        [Units("")]
         [XmlIgnore]
-        public double[] stf_DecompFOM_FctrZero
+        public double[] FOMDecomp_FactorAtZero
         {
-            get { return TempFactorData_DecompFOM.yValueAtZero; }
-            set { TempFactorData_DecompFOM.yValueAtZero = value; }
+            get { return FOMDecomp_TemperatureFactorData.yValueAtZero; }
+            set { FOMDecomp_TemperatureFactorData.yValueAtZero = value; }
         }
 
         /// <summary>
-        /// Curve exponent for temperature factor for decomposition of FOM
+        /// Curve coefficient for temperature factor of FOM decomposition, aerobic and anaerobic conditions 
         /// </summary>
+        [Units("")]
         [XmlIgnore]
-        public double[] stf_DecompFOM_CvExp
+        public double[] FMDecomp_CurveCoeff
         {
-            get { return TempFactorData_DecompFOM.CurveExponent; }
-            set { TempFactorData_DecompFOM.CurveExponent = value; }
+            get { return FOMDecomp_TemperatureFactorData.CurveExponent; }
+            set { FOMDecomp_TemperatureFactorData.CurveExponent = value; }
         }
 
         /// <summary>
         /// Parameters for calculating the soil moisture factor for FOM decomposition
         /// </summary>
-        private BrokenStickData MoistFactorData_DecompFOM = new BrokenStickData();
+        private BrokenStickData FOMDecomp_MoistureFactorData = new BrokenStickData();
 
         /// <summary>
-        /// Values of modified soil water content at which the moisture factor is given
+        /// Values of the modified normalised soil water content at which the moisture factor is given
         /// </summary>
         /// <remarks>
-        /// X values for the moisture factor function
+        /// X values for the moisture factor function, with: 0=dry, 1=LL, 2=DUL, 3=sat
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
-        public double[] swf_DecompFOM_swx
-        { set { MoistFactorData_DecompFOM.xVals = value; } }
+        [Units("")]
+        [XmlIgnore]
+        public double[] FOMDecomp_NormWaterContents
+        { set { FOMDecomp_MoistureFactorData.xVals = value; } }
 
         /// <summary>
-        /// Moiture factor values for the given modified soil water content
+        /// Moiture factor values for the given values of normalised soil water content
         /// </summary>
         /// <remarks>
         /// Y values for the moisture factor function
         /// </remarks>
-        [Units("0-1")]
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        public double[] swf_DecompFOM_y
-        { set { MoistFactorData_DecompFOM.yVals = value; } }
+        [Units("")]
+        [XmlIgnore]
+        public double[] FOMDecomp_MoistureFactors
+        { set { FOMDecomp_MoistureFactorData.yVals = value; } }
 
         #endregion
 
@@ -471,42 +483,42 @@ namespace Models.Soils
         #region Parameters for SOM mineralisation/immobilisation process
 
         /// <summary>
-        /// Potential rate of soil biomass mineralisation (fraction per day) (aerobic and anaerobic conditions)
+        /// Potential rate of soil biomass mineralisation, aerobic and anaerobic conditions (/day)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("/day")]
         [XmlIgnore]
         public double[] MBiomassTurnOverRate = { 0.0081, 0.004 };
 
         /// <summary>
-        /// Fraction of biomass C mineralised retained in soil OM (0-1)
+        /// Fraction of microbial biomass C mineralised retained in soil OM (g/g)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("g/g")]
         [XmlIgnore]
         public double MBiomassRespirationFactor = 0.6;
 
         /// <summary>
-        /// Fraction of retained biomass C returned to biomass (0-1)
+        /// Fraction of microbial biomass C mineralised that is lost to the atmosphere (g/g)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("g/g")]
         [XmlIgnore]
         public double MBiomassFractionIntoBiomass = 0.6;
 
         /// <summary>
-        /// potential daily rate of humus mineralization (aerobic and anaerobic conditions)
+        /// Potential rate of active humus mineralisation, aerobic and anaerobic conditions (/day)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("/day")]
         [XmlIgnore]
         public double[] AHumusTurnOverRate = { 0.00015, 0.00007 };
 
         /// <summary>
-        /// fraction of humic C mineralized retained in system (0-1)
+        /// Fraction of active humic C mineralised that is lost to the atmosphere (g/g)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("/g/")]
         [XmlIgnore]
         public double AHumusRespirationFactor = 0.6;
 
@@ -515,63 +527,64 @@ namespace Models.Soils
         /// <summary>
         /// Data to calculate the temperature effect on soil OM mineralisation
         /// </summary>
-        private BentStickData TempFactorData_MinerSOM = new BentStickData();
+        private BentStickData SOMMiner_TempFactorData = new BentStickData();
 
         /// <summary>
-        /// Optimum temperature for soil OM mineralisation
+        /// Optimum temperature for soil OM mineralisation (oC)
         /// </summary>
         [Units("oC")]
         [XmlIgnore]
-        public double[] stf_MinerSOM_Topt
+        public double[] SOMMiner_TOptimum
         {
-            get { return TempFactorData_MinerSOM.xValueForOptimum; }
-            set { TempFactorData_MinerSOM.xValueForOptimum = value; }
+            get { return SOMMiner_TempFactorData.xValueForOptimum; }
+            set { SOMMiner_TempFactorData.xValueForOptimum = value; }
         }
 
         /// <summary>
         /// Temperature factor for soil OM mineralisation at zero degree
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("")]
         [XmlIgnore]
-        public double[] stf_MinerSOM_FctrZero
+        public double[] SOMMiner_FactorAtZero
         {
-            get { return TempFactorData_MinerSOM.yValueAtZero; }
-            set { TempFactorData_MinerSOM.yValueAtZero = value; }
+            get { return SOMMiner_TempFactorData.yValueAtZero; }
+            set { SOMMiner_TempFactorData.yValueAtZero = value; }
         }
 
         /// <summary>
-        /// Curve exponent to calculate temperature factor for soil OM mineralisation
+        /// Curve coefficient to calculate temperature factor for soil OM mineralisation
         /// </summary>
+        [Units("")]
         [XmlIgnore]
-        public double[] stf_MinerSOM_CvExp
+        public double[] SOMMiner_CurveCoeff
         {
-            get { return TempFactorData_MinerSOM.CurveExponent; }
-            set { TempFactorData_MinerSOM.CurveExponent = value; }
+            get { return SOMMiner_TempFactorData.CurveExponent; }
+            set { SOMMiner_TempFactorData.CurveExponent = value; }
         }
 
         /// <summary>
         /// Parameters to calculate soil moisture factor for soil OM mineralisation
         /// </summary>
-        /// <remarks>
-        /// These are pairs of points representing a broken stick function
-        /// </remarks>
-        private BrokenStickData MoistFactorData_MinerSOM = new BrokenStickData();
+        private BrokenStickData SOMMiner_MoistureFactorData = new BrokenStickData();
 
         /// <summary>
-        /// Values of the modified soil water content at which misture factor is known
+        /// Values of the modified normalised soil water content at which moisture factor is given
         /// </summary>
+        /// <remarks>
+        /// X values for the moisture factor function, with: 0=dry, 1=LL, 2=DUL, 3=SAT
+        /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
         [XmlIgnore]
-        public double[] swf_MinerSOM_swx
+        public double[] SOMMiner_NormWaterContents
         {
-            get { return MoistFactorData_MinerSOM.xVals; }
-            set { MoistFactorData_MinerSOM.xVals = value; }
+            get { return SOMMiner_MoistureFactorData.xVals; }
+            set { SOMMiner_MoistureFactorData.xVals = value; }
         }
 
         /// <summary>
-        /// Values of the moisture factor at the given modified water content
+        /// Values of the moisture factor at given values of the normalised water content
         /// </summary>
         /// <remarks>
         /// Y values for the moisture factor function
@@ -579,10 +592,10 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [XmlIgnore]
-        public double[] swf_MinerSOM_y
+        public double[] SOMMiner_MoistureFactors
         {
-            get { return MoistFactorData_MinerSOM.yVals; }
-            set { MoistFactorData_MinerSOM.yVals = value; }
+            get { return SOMMiner_MoistureFactorData.yVals; }
+            set { SOMMiner_MoistureFactorData.yVals = value; }
         }
 
         #endregion
@@ -594,64 +607,65 @@ namespace Models.Soils
         /// <summary>
         /// Parameters to calculate the temperature effect on urea hydrolysis
         /// </summary>
-        private BentStickData TempFactorData_UHydrol = new BentStickData();
+        private BentStickData UreaHydrolysis_TempFactorData = new BentStickData();
 
         /// <summary>
-        /// Optimum temperature for urea hydrolisys
+        /// Optimum temperature for urea hydrolisys (oC)
         /// </summary>
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
         [XmlIgnore]
-        public double[] stf_Hydrol_Topt
+        public double[] UreaHydrol_TOptimum
         {
-            get { return TempFactorData_UHydrol.xValueForOptimum; }
-            set { TempFactorData_UHydrol.xValueForOptimum = value; }
+            get { return UreaHydrolysis_TempFactorData.xValueForOptimum; }
+            set { UreaHydrolysis_TempFactorData.xValueForOptimum = value; }
         }
 
         /// <summary>
         /// Temperature factor for urea hydrolisys at zero degrees
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("")]
         [XmlIgnore]
-        public double[] stf_Hydrol_FctrZero
+        public double[] UreaHydrol_FactorAtZero
         {
-            get { return TempFactorData_UHydrol.yValueAtZero; }
-            set { TempFactorData_UHydrol.yValueAtZero = value; }
+            get { return UreaHydrolysis_TempFactorData.yValueAtZero; }
+            set { UreaHydrolysis_TempFactorData.yValueAtZero = value; }
         }
 
         /// <summary>
-        /// Curve exponent to calculate the temperature factor for urea hydrolisys
+        /// Curve coefficient to calculate the temperature factor for urea hydrolisys
         /// </summary>
+        [Units("")]
         [XmlIgnore]
-        public double[] stf_Hydrol_CvExp
+        public double[] UreaHydrol_CurveCoeff
         {
-            get { return TempFactorData_UHydrol.CurveExponent; }
-            set { TempFactorData_UHydrol.CurveExponent = value; }
+            get { return UreaHydrolysis_TempFactorData.CurveExponent; }
+            set { UreaHydrolysis_TempFactorData.CurveExponent = value; }
         }
 
         /// <summary>
         /// Parameters to calculate the moisture effect on urea hydrolysis
         /// </summary>
-        private BrokenStickData MoistFactorData_UHydrol = new BrokenStickData();
+        private BrokenStickData UreaHydrolysis_MoistureFactorData = new BrokenStickData();
 
         /// <summary>
-        /// Values of the modified soil water content at which factor is known
+        /// Values of the modified normalised soil water content at which factor is given
         /// </summary>
         /// <remarks>
-        /// X values for the moisture factor function
+        /// X values for the moisture factor function, with: 0=dry, 1=LL, 2=DUL, 3=SAT
         /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
         [XmlIgnore]
-        public double[] swf_Hydrol_swx
+        public double[] UreaHydrol_NormWaterContents
         {
-            get { return MoistFactorData_UHydrol.xVals; }
-            set { MoistFactorData_UHydrol.xVals = value; }
+            get { return UreaHydrolysis_MoistureFactorData.xVals; }
+            set { UreaHydrolysis_MoistureFactorData.xVals = value; }
         }
 
         /// <summary>
-        /// Values of the modified moisture factor at given water content
+        /// Values of the moisture factor at given values of the normalised water content
         /// </summary>
         /// <remarks>
         /// Y values for the moisture factor function
@@ -659,56 +673,56 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [XmlIgnore]
-        public double[] swf_Hydrol_y
+        public double[] UreaHydrol_MoistureFactors
         {
-            get { return MoistFactorData_UHydrol.yVals; }
-            set { MoistFactorData_UHydrol.yVals = value; }
+            get { return UreaHydrolysis_MoistureFactorData.yVals; }
+            set { UreaHydrolysis_MoistureFactorData.yVals = value; }
         }
 
-        /// Parameters for calculating the potential urea hydrolisys
+        //// Parameters for calculating the potential urea hydrolysis
 
         /// <summary>
-        /// minimum potential hydrolysis rate for urea (/day)
+        /// Minimum potential hydrolysis rate for urea (/day)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("/day")]
         [XmlIgnore]
-        public double potHydrol_min = 0.25;
+        public double UreaHydrol_MinRate = 0.25;
 
         /// <summary>
-        /// parameter A for potential urea hydrolysis function
+        /// Parameter A for potential urea hydrolysis function
         /// </summary>
         [Units("")]
         [XmlIgnore]
-        public double potHydrol_parmA = -1.12;
+        public double UreaHydrol_parmA = -1.12;
 
         /// <summary>
-        /// parameter B for potential urea hydrolysis function
+        /// Parameter B for potential urea hydrolysis function
         /// </summary>
         [Units("")]
         [XmlIgnore]
-        public double potHydrol_parmB = 1.31;
+        public double UreaHydrol_parmB = 1.31;
 
         /// <summary>
-        /// parameter C for potential urea hydrolysis function
+        /// Parameter C for potential urea hydrolysis function
         /// </summary>
         [Units("")]
         [XmlIgnore]
-        public double potHydrol_parmC = 0.203;
+        public double UreaHydrol_parmC = 0.203;
 
         /// <summary>
-        /// parameter D for potential urea hydrolysis function
+        /// Parameter D for potential urea hydrolysis function
         /// </summary>
         [Units("")]
         [XmlIgnore]
-        public double potHydrol_parmD = -0.155;
+        public double UreaHydrol_parmD = -0.155;
 
         #endregion params for hydrolysis
 
         #region Parameters for nitrification process
 
         /// <summary>
-        /// Soil Nitrification potential (ug NH4/g soil)
+        /// maximum soil nitrification potential, Michaelis-Menten dynamics (ug NH4/g soil)
         /// </summary>
         /// <remarks>
         /// This is the parameter M on Michaelis-Menten equation
@@ -716,10 +730,10 @@ namespace Models.Soils
         /// </remarks>
         [Units("ppm/day")]
         [XmlIgnore]
-        public double nitrification_pot = 40;
+        public double NitrificationMaxPotential = 40.0;
 
         /// <summary>
-        /// NH4 concentration at half potential nitrification (Michaelis-Menten kinetics)
+        /// NH4 concentration at half potential nitrification, Michaelis-Menten dynamics (ppm)
         /// </summary>
         /// <remarks>
         /// This is the parameter k on Michaelis-Menten equation
@@ -728,103 +742,107 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 200.0)]
         [Units("ppm")]
         [XmlIgnore]
-        public double nh4_at_half_pot = 90;
+        public double NitrificationNH4ForHalf = 90.0;
 
         /// <summary>
         /// Parameters to calculate the temperature effect on nitrification
         /// </summary>
-        private BentStickData TempFactorData_Nitrif = new BentStickData();
+        private BentStickData Nitrification_TemperatureFactorData = new BentStickData();
 
         /// <summary>
-        /// Optimum temperature for nitrification
+        /// Optimum temperature for nitrification (oC)
         /// </summary>
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
         [XmlIgnore]
-        public double[] stf_Nitrif_Topt
+        public double[] Nitrification_TOptimum
         {
-            get { return TempFactorData_Nitrif.xValueForOptimum; }
-            set { TempFactorData_Nitrif.xValueForOptimum = value; }
+            get { return Nitrification_TemperatureFactorData.xValueForOptimum; }
+            set { Nitrification_TemperatureFactorData.xValueForOptimum = value; }
         }
 
         /// <summary>
         /// Temperature factor for nitrification at zero degrees
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("")]
         [XmlIgnore]
-        public double[] stf_Nitrif_FctrZero
+        public double[] Nitrification_FactorAtZero
         {
-            get { return TempFactorData_Nitrif.yValueAtZero; }
-            set { TempFactorData_Nitrif.yValueAtZero = value; }
+            get { return Nitrification_TemperatureFactorData.yValueAtZero; }
+            set { Nitrification_TemperatureFactorData.yValueAtZero = value; }
         }
 
         /// <summary>
-        /// Curve exponent for calculating the temperature factor for nitrification
+        /// Curve coefficient for calculating the temperature factor for nitrification
         /// </summary>
         [Units("")]
         [XmlIgnore]
-        public double[] stf_Nitrif_CvExp
+        public double[] Nitrification_CurveCoeff
         {
-            get { return TempFactorData_Nitrif.CurveExponent; }
-            set { TempFactorData_Nitrif.CurveExponent = value; }
+            get { return Nitrification_TemperatureFactorData.CurveExponent; }
+            set { Nitrification_TemperatureFactorData.CurveExponent = value; }
         }
 
         /// <summary>
         /// Parameters to calculate the soil moisture factor for nitrification
         /// </summary>
-        private BrokenStickData MoistFactorData_Nitrif = new BrokenStickData();
+        private BrokenStickData Nitrification_MoistureFactorData = new BrokenStickData();
 
         /// <summary>
-        /// Values of the modified soil water content at which the moisture factor is known
+        /// Values of the modified normalised soil water content at which the moisture factor is given
         /// </summary>
+        /// <remarks>
+        /// X values for the moisture factor function, with: 0=dry, 1=LL, 2=DUL, 3=SAT
+        /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
         [XmlIgnore]
-        public double[] swf_Nitrif_swx
+        public double[] Nitrification_NormWaterContents
         {
-            get { return MoistFactorData_Nitrif.xVals; }
-            set { MoistFactorData_Nitrif.xVals = value; }
+            get { return Nitrification_MoistureFactorData.xVals; }
+            set { Nitrification_MoistureFactorData.xVals = value; }
         }
 
         /// <summary>
-        /// Values of the moisture factor at given water content
+        /// Values of the moisture factor at given values of the normalised water content
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [XmlIgnore]
-        public double[] swf_Nitrif_y
+        public double[] Nitrification_MoistureFactors
         {
-            get { return MoistFactorData_Nitrif.yVals; }
-            set { MoistFactorData_Nitrif.yVals = value; }
+            get { return Nitrification_MoistureFactorData.yVals; }
+            set { Nitrification_MoistureFactorData.yVals = value; }
         }
 
         /// <summary>
         /// Parameters to calculate the soil pH factor for nitrification
         /// </summary>
-        private BrokenStickData pHFactorData_Nitrif = new BrokenStickData();
+        private BrokenStickData Nitrification_pHFactorData = new BrokenStickData();
 
         /// <summary>
-        /// Values of pH at which factors is known
+        /// Values of pH at which the pH factor is given
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 14.0)]
+        [Units("")]
         [XmlIgnore]
-        public double[] phf_Nitrif_phx
+        public double[] Nitrification_pHValues
         {
-            get { return pHFactorData_Nitrif.xVals; }
-            set { pHFactorData_Nitrif.xVals = value; }
+            get { return Nitrification_pHFactorData.xVals; }
+            set { Nitrification_pHFactorData.xVals = value; }
         }
 
         /// <summary>
         /// Values of pH factor at given pH values
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
+        [Units("")]
         [XmlIgnore]
-        public double[] phf_Nitrif_y
+        public double[] Nitrification_pHFactors
         {
-            get { return pHFactorData_Nitrif.yVals; }
-            set { pHFactorData_Nitrif.yVals = value; }
+            get { return Nitrification_pHFactorData.yVals; }
+            set { Nitrification_pHFactorData.yVals = value; }
         }
 
         #region Parameters for Nitritation + Nitration processes
@@ -838,10 +856,10 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 200.0)]
         [Units("ppm/day")]
         [XmlIgnore]
-        public double NitritationPotential = 40;
+        public double NitritationMaxPotential = 40.0;
 
         /// <summary>
-        /// NH4 concentration when nitritation is half of potential (Michaelis-Menten kinetics)
+        /// NH4 concentration when nitritation is half of potential, Michaelis-Menten dynamics (ppm)
         /// </summary>
         /// <remarks>
         /// This is the parameter k on Michaelis-Menten equation, r = MC/(k+C)
@@ -849,7 +867,7 @@ namespace Models.Soils
         [Units("ppm")]
         [Bounds(Lower = 0.0, Upper = 200.0)]
         [XmlIgnore]
-        public double NH4AtHalfNitritationPot = 90;
+        public double NH4AtHalfNitritationPot = 90.0;
 
         /// <summary>
         /// Maximum soil potential nitratation rate (ug NO2/g soil/day)
@@ -860,10 +878,10 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1000.0)]
         [Units("ppm/day")]
         [XmlIgnore]
-        public double NitratationPotential = 400;
+        public double NitratationMaxPotential = 400.0;
 
         /// <summary>
-        /// NO2 concentration when nitratation is half of potential (Michaelis-Menten kinetics)
+        /// NO2 concentration when nitratation is half of potential, Michaelis-Menten dynamics (ppm)
         /// </summary>
         /// <remarks>
         /// This is the parameter k on Michaelis-Menten equation, r = MC/(k+C)
@@ -871,7 +889,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 500.0)]
         [Units("ppm")]
         [XmlIgnore]
-        public double NO2AtHalfNitratationPot = 90;
+        public double NO2AtHalfNitratationPot = 90.0;
 
         /// <summary>
         /// Parameter to determine the base fraction of ammonia oxidate lost as N2O
@@ -890,9 +908,9 @@ namespace Models.Soils
         public double AmmoxLossParam2 = 0.45;
 
         /// <summary>
-        /// Parameters to calculate the temperature effect on nitrification
+        /// Parameters to calculate the temperature effect on nitrification (Nitrition + Nitration)
         /// </summary>
-        private BentStickData TempFactorData_Nitrification = new BentStickData();
+        private BentStickData TemperatureFactorData_Nitrification2 = new BentStickData();
 
         /// <summary>
         /// Optimum temperature for nitrification (Nitrition + Nitration)
@@ -900,10 +918,10 @@ namespace Models.Soils
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
         [XmlIgnore]
-        public double[] TOptmimunNitrififaction
+        public double[] TOptimunNitrification2
         {
-            get { return TempFactorData_Nitrification.xValueForOptimum; }
-            set { TempFactorData_Nitrification.xValueForOptimum = value; }
+            get { return TemperatureFactorData_Nitrification2.xValueForOptimum; }
+            set { TemperatureFactorData_Nitrification2.xValueForOptimum = value; }
         }
 
         /// <summary>
@@ -911,50 +929,53 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
-        public double[] FactorZeroNitrification
+        public double[] FactorAtZeroNitrification2
         {
-            get { return TempFactorData_Nitrification.yValueAtZero; }
-            set { TempFactorData_Nitrification.yValueAtZero = value; }
+            get { return TemperatureFactorData_Nitrification2.yValueAtZero; }
+            set { TemperatureFactorData_Nitrification2.yValueAtZero = value; }
         }
 
         /// <summary>
-        /// Curve exponent for calculating the temperature factor for nitrification (Nitrition + Nitration)
+        /// Curve coefficient for calculating the temperature factor for nitrification (Nitrition + Nitration)
         /// </summary>
         [Units("")]
         [XmlIgnore]
-        public double[] ExponentNitrification
+        public double[] CurveCoeffNitrification2
         {
-            get { return TempFactorData_Nitrification.CurveExponent; }
-            set { TempFactorData_Nitrification.CurveExponent = value; }
+            get { return TemperatureFactorData_Nitrification2.CurveExponent; }
+            set { TemperatureFactorData_Nitrification2.CurveExponent = value; }
         }
 
         /// <summary>
         /// Parameters to calculate the soil moisture factor for nitrification (Nitrition + Nitration)
         /// </summary>
-        private BrokenStickData MoistFactorData_Nitrification = new BrokenStickData();
+        private BrokenStickData MoistureFactorData_Nitrification2 = new BrokenStickData();
 
         /// <summary>
-        /// Values of the modified soil water content at which the moisture factor is known
+        /// Values of the modified soil water content at which the moisture factor is given
         /// </summary>
+        /// <remarks>
+        /// X values for the moisture factor function, with: 0=dry, 1=LL, 2=DUL, 3=SAT
+        /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
         [XmlIgnore]
-        public double[] Nitrification_swx
+        public double[] NormWaterContentsNitrification2
         {
-            get { return MoistFactorData_Nitrification.xVals; }
-            set { MoistFactorData_Nitrification.xVals = value; }
+            get { return MoistureFactorData_Nitrification2.xVals; }
+            set { MoistureFactorData_Nitrification2.xVals = value; }
         }
 
         /// <summary>
-        /// Values of the moisture factor at given water content
+        /// Values of the moisture factor at given normalised water content values
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [XmlIgnore]
-        public double[] Nitrification_swy
+        public double[] MoistureFactorsNitrification2
         {
-            get { return MoistFactorData_Nitrification.yVals; }
-            set { MoistFactorData_Nitrification.yVals = value; }
+            get { return MoistureFactorData_Nitrification2.yVals; }
+            set { MoistureFactorData_Nitrification2.yVals = value; }
         }
 
         /// <summary>
@@ -967,7 +988,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 14.0)]
         [XmlIgnore]
-        public double[] Nitritation_phx
+        public double[] Nitritation_pHValues
         {
             get { return pHFactorData_Nitritation.xVals; }
             set { pHFactorData_Nitritation.xVals = value; }
@@ -978,7 +999,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
-        public double[] Nitritation_phy
+        public double[] Nitritation_pHFactors
         {
             get { return pHFactorData_Nitritation.yVals; }
             set { pHFactorData_Nitritation.yVals = value; }
@@ -994,7 +1015,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 14.0)]
         [XmlIgnore]
-        public double[] Nitratation_phx
+        public double[] Nitratation_pHValues
         {
             get { return pHFactorData_Nitratation.xVals; }
             set { pHFactorData_Nitratation.xVals = value; }
@@ -1005,7 +1026,7 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
-        public double[] Nitratation_phy
+        public double[] Nitratation_pHFactors
         {
             get { return pHFactorData_Nitratation.yVals; }
             set { pHFactorData_Nitratation.yVals = value; }
@@ -1018,17 +1039,17 @@ namespace Models.Soils
         #region Parameters for codenitrification and N2O emission processes
 
         /// <summary>
-        /// denitrification rate coefficient (kg soil/mg C per day)
+        /// Denitrification rate coefficient (kg soil/mg C per day)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("")]
+        [Units("kgsoil/mgC/day")]
         [XmlIgnore]
         public double CodenitRateCoefficient = 0.0006;
 
         /// <summary>
         /// Parameters to calculate the temperature effect on codenitrification
         /// </summary>
-        private BentStickData TempFactorData_Codenit = new BentStickData();
+        private BentStickData TemperatureFactorData_Codenitrification = new BentStickData();
 
         /// <summary>
         /// Optimum temperature for codenitrification
@@ -1038,8 +1059,8 @@ namespace Models.Soils
         [XmlIgnore]
         public double[] TOptmimunCodenitrififaction
         {
-            get { return TempFactorData_Codenit.xValueForOptimum; }
-            set { TempFactorData_Codenit.xValueForOptimum = value; }
+            get { return TemperatureFactorData_Codenitrification.xValueForOptimum; }
+            set { TemperatureFactorData_Codenitrification.xValueForOptimum = value; }
         }
 
         /// <summary>
@@ -1048,27 +1069,27 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [XmlIgnore]
-        public double[] FactorZeroCodenitrification
+        public double[] FactorAtZeroCodenitrification
         {
-            get { return TempFactorData_Codenit.yValueAtZero; }
-            set { TempFactorData_Codenit.yValueAtZero = value; }
+            get { return TemperatureFactorData_Codenitrification.yValueAtZero; }
+            set { TemperatureFactorData_Codenitrification.yValueAtZero = value; }
         }
 
         /// <summary>
-        /// Curve exponent for calculating the temperature factor for codenitrification
+        /// Curve coefficient for calculating the temperature factor for codenitrification
         /// </summary>
         [Units("")]
         [XmlIgnore]
-        public double[] ExponentCodenitrification
+        public double[] CurveCoeffCodenitrification
         {
-            get { return TempFactorData_Codenit.CurveExponent; }
-            set { TempFactorData_Codenit.CurveExponent = value; }
+            get { return TemperatureFactorData_Codenitrification.CurveExponent; }
+            set { TemperatureFactorData_Codenitrification.CurveExponent = value; }
         }
 
         /// <summary>
         /// Parameters to calculate the soil moisture factor for codenitrification
         /// </summary>
-        private BrokenStickData MoistFactorData_Codenit = new BrokenStickData();
+        private BrokenStickData MoistureFactorData_Codenitrification = new BrokenStickData();
 
         /// <summary>
         /// Values of modified soil water content at which the moisture factor is known
@@ -1076,10 +1097,10 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
         [XmlIgnore]
-        public double[] Codenitrification_swx
+        public double[] Codenitrification_NormWaterContents
         {
-            get { return MoistFactorData_Codenit.xVals; }
-            set { MoistFactorData_Codenit.xVals = value; }
+            get { return MoistureFactorData_Codenitrification.xVals; }
+            set { MoistureFactorData_Codenitrification.xVals = value; }
         }
 
         /// <summary>
@@ -1088,16 +1109,16 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [XmlIgnore]
-        public double[] Codenitrification_swy
+        public double[] Codenitrification_MoistureFactors
         {
-            get { return MoistFactorData_Codenit.yVals; }
-            set { MoistFactorData_Codenit.yVals = value; }
+            get { return MoistureFactorData_Codenitrification.yVals; }
+            set { MoistureFactorData_Codenitrification.yVals = value; }
         }
 
         /// <summary>
         /// Parameters to calculate the soil moisture factor for codenitrification
         /// </summary>
-        private BrokenStickData pHFactorData_Codenit = new BrokenStickData();
+        private BrokenStickData pHFactorData_Codenitrification = new BrokenStickData();
 
         /// <summary>
         /// Values of soil pH at which the pH factor is known
@@ -1105,10 +1126,10 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [Units("0-3")]
         [XmlIgnore]
-        public double[] Codenitrification_phx
+        public double[] Codenitrification_pHValues
         {
-            get { return pHFactorData_Codenit.xVals; }
-            set { pHFactorData_Codenit.xVals = value; }
+            get { return pHFactorData_Codenitrification.xVals; }
+            set { pHFactorData_Codenitrification.xVals = value; }
         }
 
         /// <summary>
@@ -1117,16 +1138,16 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [XmlIgnore]
-        public double[] Codenitrification_phy
+        public double[] Codenitrification_pHFactors
         {
-            get { return pHFactorData_Codenit.yVals; }
-            set { pHFactorData_Codenit.yVals = value; }
+            get { return pHFactorData_Codenitrification.yVals; }
+            set { pHFactorData_Codenitrification.yVals = value; }
         }
 
         /// <summary>
         /// Parameters to calculate the N2:N2O ratio during denitrification
         /// </summary>
-        private BrokenStickData NH3NO2FactorData_Codenit = new BrokenStickData();
+        private BrokenStickData NH3NO2FactorData_Codenitrification = new BrokenStickData();
 
         /// <summary>
         /// Values of soil NH3+NO2 at which the N2 fraction is known
@@ -1134,10 +1155,10 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("ppm")]
         [XmlIgnore]
-        public double[] Codenitrification_NHNOx
+        public double[] Codenitrification_NHNOValues
         {
-            get { return NH3NO2FactorData_Codenit.xVals; }
-            set { NH3NO2FactorData_Codenit.xVals = value; }
+            get { return NH3NO2FactorData_Codenitrification.xVals; }
+            set { NH3NO2FactorData_Codenitrification.xVals = value; }
         }
 
         /// <summary>
@@ -1146,10 +1167,10 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [XmlIgnore]
-        public double[] Codenitrification_NHNOy
+        public double[] Codenitrification_NHNOFactors
         {
-            get { return NH3NO2FactorData_Codenit.yVals; }
-            set { NH3NO2FactorData_Codenit.yVals = value; }
+            get { return NH3NO2FactorData_Codenitrification.yVals; }
+            set { NH3NO2FactorData_Codenitrification.yVals = value; }
         }
 
         #endregion params for codenitrification
@@ -1162,7 +1183,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("kg/mg")]
         [XmlIgnore]
-        public double DenitRateCoefficient = 0.0006;
+        public double DenitrificationRateCoefficient = 0.0006;
 
         /// <summary>
         /// Fraction of nitrification lost as denitrification
@@ -1170,7 +1191,7 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
         [XmlIgnore]
-        public double n2oLossFactor = 0;
+        public double Denit_LossFactorNitrif = 0;
 
         /// <summary>
         /// Parameter k1 from Thorburn et al (2010) for N2O model
@@ -1178,16 +1199,16 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("")]
         [XmlIgnore]
-        public double dnit_k1 = 25.1;
+        public double Denit_k1 = 25.1;
 
         /// <summary>
-        /// parameter A in the equation computing the N2:N2O ratio
+        /// Parameter A in the equation computing the N2:N2O ratio
         /// </summary>
         [XmlIgnore]
         public double N2N2O_parmA = 0.16;
 
         /// <summary>
-        /// parameter B in the equation computing the N2:N2O ratio
+        /// Parameter B in the equation computing the N2:N2O ratio
         /// </summary>
         [XmlIgnore]
         public double N2N2O_parmB = -0.80;
@@ -1221,25 +1242,25 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// parameter A to compute active carbon
+        /// Parameter A to compute active carbon
         /// </summary>
         [XmlIgnore]
         public double actC_parmA = 24.5;
 
         /// <summary>
-        /// parameter B to compute active carbon
+        /// Parameter B to compute active carbon
         /// </summary>
         [XmlIgnore]
         public double actC_parmB = 0.0031;
 
         /// <summary>
-        /// parameter A of exponential function to compute active carbon
+        /// Parameter A of exponential function to compute active carbon
         /// </summary>
         [XmlIgnore]
         public double actCExp_parmA = 0.011;
 
         /// <summary>
-        /// parameter B of exponential function to compute active carbon
+        /// Parameter B of exponential function to compute active carbon
         /// </summary>
         [XmlIgnore]
         public double actCExp_parmB = 0.895;
@@ -1247,18 +1268,18 @@ namespace Models.Soils
         /// <summary>
         /// Parameters to calculate the temperature effect on denitrification
         /// </summary>
-        private BentStickData TempFactorData_Denit = new BentStickData();
+        private BentStickData Denitrification_TemperatureFactorData = new BentStickData();
 
         /// <summary>
-        /// Optimum temperature for denitrification
+        /// Optimum temperature for denitrification (oC)
         /// </summary>
         [Bounds(Lower = 5.0, Upper = 100.0)]
         [Units("oC")]
         [XmlIgnore]
-        public double[] stf_dnit_Topt
+        public double[] Denit_TOptimum
         {
-            get { return TempFactorData_Denit.xValueForOptimum; }
-            set { TempFactorData_Denit.xValueForOptimum = value; }
+            get { return Denitrification_TemperatureFactorData.xValueForOptimum; }
+            set { Denitrification_TemperatureFactorData.xValueForOptimum = value; }
         }
 
         /// <summary>
@@ -1266,53 +1287,56 @@ namespace Models.Soils
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
-        public double[] stf_dnit_FctrZero
+        public double[] Denit_FactorAtZero
         {
-            get { return TempFactorData_Denit.yValueAtZero; }
-            set { TempFactorData_Denit.yValueAtZero = value; }
+            get { return Denitrification_TemperatureFactorData.yValueAtZero; }
+            set { Denitrification_TemperatureFactorData.yValueAtZero = value; }
         }
 
         /// <summary>
-        /// Curve exponent for calculating the temperature factor for denitrification
+        /// Curve coefficient for calculating the temperature factor for denitrification
         /// </summary>
         [XmlIgnore]
-        public double[] stf_dnit_CvExp
+        public double[] Denit_CurveCoeff
         {
-            get { return TempFactorData_Denit.CurveExponent; }
-            set { TempFactorData_Denit.CurveExponent = value; }
+            get { return Denitrification_TemperatureFactorData.CurveExponent; }
+            set { Denitrification_TemperatureFactorData.CurveExponent = value; }
         }
 
         /// <summary>
         /// Parameters to calculate the soil moisture factor for denitrification
         /// </summary>
-        private BrokenStickData MoistFactorData_Denit = new BrokenStickData();
+        private BrokenStickData Denitrification_MoistureFactorData = new BrokenStickData();
 
         /// <summary>
-        /// Values of modified soil water content at which the moisture factor is known
+        /// Values of modified soil water content at which the moisture factor is given
         /// </summary>
+        /// <remarks>
+        /// X values for the moisture factor function, with: 0=dry, 1=LL, 2=DUL, 3=SAT
+        /// </remarks>
         [Bounds(Lower = 0.0, Upper = 3.0)]
         [XmlIgnore]
-        public double[] swf_dnit_swx
+        public double[] Denit_NormWaterContents
         {
-            get { return MoistFactorData_Denit.xVals; }
-            set { MoistFactorData_Denit.xVals = value; }
+            get { return Denitrification_MoistureFactorData.xVals; }
+            set { Denitrification_MoistureFactorData.xVals = value; }
         }
 
         /// <summary>
-        /// Values of the moisture factor at given water content values
+        /// Values of the moisture factor at given normalised water content values
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
-        public double[] swf_dnit_y
+        public double[] Denit_MoistureFactors
         {
-            get { return MoistFactorData_Denit.yVals; }
-            set { MoistFactorData_Denit.yVals = value; }
+            get { return Denitrification_MoistureFactorData.yVals; }
+            set { Denitrification_MoistureFactorData.yVals = value; }
         }
 
         /// <summary>
         /// Parameters to calculate the N2:N2O ratio during denitrification
         /// </summary>
-        private BrokenStickData WFPSFactorData_Denit = new BrokenStickData();
+        private BrokenStickData Denitrification_WFPSFactorData = new BrokenStickData();
 
         /// <summary>
         /// Values of soil water filled pore sapce at which the WFPS factor is known
@@ -1320,10 +1344,10 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 100.0)]
         [Units("%")]
         [XmlIgnore]
-        public double[] swpsf_dnit_swpx
+        public double[] Denit_WPFSValues
         {
-            get { return WFPSFactorData_Denit.xVals; }
-            set { WFPSFactorData_Denit.xVals = value; }
+            get { return Denitrification_WFPSFactorData.xVals; }
+            set { Denitrification_WFPSFactorData.xVals = value; }
         }
 
         /// <summary>
@@ -1332,10 +1356,10 @@ namespace Models.Soils
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("0-1")]
         [XmlIgnore]
-        public double[] swpsf_dnit_y
+        public double[] Denit_WFPSFactors
         {
-            get { return WFPSFactorData_Denit.yVals; }
-            set { WFPSFactorData_Denit.yVals = value; }
+            get { return Denitrification_WFPSFactorData.yVals; }
+            set { Denitrification_WFPSFactorData.yVals = value; }
         }
 
         #endregion params for denitrification
@@ -6289,7 +6313,7 @@ namespace Models.Soils
             /// </summary>
             public double[] yValueAtZero;
             /// <summary>
-            /// Exponent defining the curvature of the factors
+            /// Exponent defining the curvature of the factor
             /// </summary>
             public double[] CurveExponent;
         }
@@ -6310,6 +6334,7 @@ namespace Models.Soils
             public double[] yVals;
         }
 
+        
         #endregion
 
         #region Useful constants
