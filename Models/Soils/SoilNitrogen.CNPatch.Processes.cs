@@ -174,9 +174,12 @@ namespace Models.Soils
                         // else, there is no net N transformation
 
                         // 2.6. Pack information to send back to surfaceOM
-                        PackActualResidueDecomposition();
+                        //PackActualResidueDecomposition();
                     }
                     // else, there is no residue decomposition
+
+                    PackActualResidueDecomposition();
+
                 }
 
                 // 3. Update variables - add/remove C and N in appropriate pools
