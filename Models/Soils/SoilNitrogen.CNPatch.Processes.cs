@@ -91,10 +91,12 @@ namespace Models.Soils
                         // 2.2.1. get the available mineral N in the soil close to surface (mineralisation depth)
                         double MineralNAvailable = 0.0;
                         double cumDepth = 0.0;
+                        double cumFrac = 0.0;
                         double[] fracLayer = new double[nLayers];
                         for (int layer = 0; layer <= ImmobilisationLayer; layer++)
                         {
                             fracLayer[layer] = Math.Min(1.0, MathUtilities.Divide(g.ResiduesDecompDepth - cumDepth, g.dlayer[layer], 0.0));
+                            cumFrac += fracLayer[layer];
                             cumDepth += g.dlayer[layer];
                             no3_available[layer] = Math.Max(0.0, no3[layer]) * fracLayer[layer];
                             nh4_available[layer] = Math.Max(0.0, nh4[layer]) * fracLayer[layer];
@@ -123,7 +125,8 @@ namespace Models.Soils
                         for (int layer = 0; layer <= ImmobilisationLayer; layer++)
                         {
                             // 2.3.1. fraction of mineralised stuff going in this layer
-                            fractionIntoLayer = MathUtilities.Divide(g.dlayer[layer] * fracLayer[layer], g.ResiduesDecompDepth, 0.0);
+                            //fractionIntoLayer = MathUtilities.Divide(g.dlayer[layer] * fracLayer[layer], g.ResiduesDecompDepth, 0.0);
+                            fractionIntoLayer = MathUtilities.Divide(fracLayer[layer], cumFrac, 0.0);
 
                             //2.3.2. adjust C and N amounts for each residue and add to soil OM pools
                             for (int residue = 0; residue < nResidues; residue++)
