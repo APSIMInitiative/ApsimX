@@ -170,7 +170,7 @@ namespace Models.Soils
             SetInitialValues();
             
             // print SoilN report
-            WriteSummaryReport();
+            //WriteSummaryReport();
             
         }
 
