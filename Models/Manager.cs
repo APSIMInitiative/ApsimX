@@ -42,10 +42,10 @@ namespace Models
 
         // ----------------- Parameters (XML serialisation)
         /// <summary>Gets or sets the elements.</summary>
-        [XmlAnyElement]
+        [XmlAnyElement(Name = "Script")]
         public XmlElement[] elements 
         { 
-            get 
+            get
             {
                 // Capture the current values of all parameters.
                 EnsureParametersAreCurrent();
@@ -54,9 +54,15 @@ namespace Models
             } 
             
             set 
-            { 
-                _elements = value; 
-            } 
+            {
+                if (value != null && value.Length > 1)
+                {
+                    _elements = new XmlElement[1];
+                    _elements[0] = value[value.Length - 1];
+                }
+                else
+                    _elements = value;
+            }
         }
 
         /// <summary>Gets or sets the code c data.</summary>
@@ -123,8 +129,7 @@ namespace Models
         [EventSubscribe("Serialising")]
         private void OnSerialising(bool xmlSerialisation)
         {
-            if (Script != null)
-                 Children.Remove(Script);
+            Children.RemoveAll(x => x.GetType().Name == "Script");
         }
 
         /// <summary>Serialisation has completed. Read our 'Script' model if necessary.</summary>
