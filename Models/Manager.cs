@@ -42,7 +42,7 @@ namespace Models
 
         // ----------------- Parameters (XML serialisation)
         /// <summary>Gets or sets the elements.</summary>
-        [XmlAnyElement(Name="Script")]
+        [XmlAnyElement]
         public XmlElement[] elements 
         { 
             get 
@@ -55,13 +55,7 @@ namespace Models
             
             set 
             {
-                if (value != null && value.Length > 1)
-                {
-                    _elements = new XmlElement[1];
-                    _elements[0] = value[value.Length - 1];
-                }
-                else
-                    _elements = value; 
+               _elements = value; 
             } 
         }
 
