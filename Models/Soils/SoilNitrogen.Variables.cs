@@ -84,21 +84,6 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Indicates whether simpleSoilTemp is allowed
-        /// </summary>
-        /// <remarks>
-        /// When 'yes', soil temperature may be computed internally, if an external value is not supplied.
-        /// If 'no', a value for soil temperature must be supplied or an fatal error will occur.
-        /// </remarks>
-        [Units("yes/no")]
-        [XmlIgnore]
-        public string allowSimpleSoilTemp
-        {
-            get { return (SimpleSoilTempAllowed) ? "yes" : "no"; }
-            set { SimpleSoilTempAllowed = value.ToLower().Contains("yes"); }
-        }
-
-        /// <summary>
         /// Indicates whether soil profile reduction is allowed ('on')
         /// </summary>
         [Units("yes/no")]
@@ -1722,14 +1707,6 @@ namespace Models.Soils
         #endregion
 
         #region Soil physics data
-
-        /// <summary>
-        /// Soil albedo (0-1)
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("0-1")]
-        [XmlIgnore]
-        public double salb;
 
         /// <summary>
         /// Soil temperature (oC), as computed by an external module (SoilTemp)
@@ -6126,21 +6103,6 @@ namespace Models.Soils
         /// It should always be false, as organic solutes are not implemented yet
         /// </remarks>
         private bool useOrganicSolutes = false;
-
-        /// <summary>
-        /// Indicates whether simpleSoilTemp is allowed
-        /// </summary>
-        private bool SimpleSoilTempAllowed = true;
-
-        /// <summary>
-        /// Marker for whether external soil temperature is supplied, otherwise use internal
-        /// </summary>
-        private bool usingSimpleSoilTemp = false;
-
-        /// <summary>
-        /// Marker for whether external ph is supplied, otherwise default is used
-        /// </summary>
-        private bool usingSimpleSoilpH = false;
 
         /// <summary>
         /// whether water soluble carbon calcualtion uses new C pools

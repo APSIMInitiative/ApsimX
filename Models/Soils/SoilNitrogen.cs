@@ -64,38 +64,76 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Patch = new List<soilCNPatch>();
-
-            soilCNPatch newPatch = new soilCNPatch(this);
-            Patch.Add(newPatch);
-            Patch[0].RelativeArea = 1.0;
+            // initialise basic patch values
             Patch[0].PatchName = "base";
+            Patch[0].RelativeArea = 1.0;
             Patch[0].CreationDate = Clock.Today;
 
             // Variable handling when using APSIMX
-            initDone = false;
+            //initDone = false;
+
+            // check few initialisation parameters
+            CheckParameters();
+
+            // set the size of some arrays
+            ResizeLayeredVariables(nLayers);
+
+            // check the initial values of some basic variables
+            CheckInitialVariables();
+
+            // set the variables up with their the initial values
+            SetInitialValues();
+        }
+
+        /// <summary>Reset the state values to those set during the initialisation</summary>
+        public void Reset()
+        {
+            isResetting = true;
+
+            // Save the present C and N status
+            StoreStatus();
+
+            // reset the size of arrays
+            ResizeLayeredVariables(nLayers);
+
+            // reset C and N variables, i.e. redo initialisation and setup
+            SetInitialValues();
+
+            // get the changes of state and publish (let other component to know)
+            SendDeltaState();
+
+            Console.WriteLine();
+            Console.WriteLine("        - Re-setting SoilNitrogen state variables");
+
+            isResetting = false;
+        }
+
+        /// <summary>
+        /// Checks general initialisation parameters, and let user know of some settings
+        /// </summary>
+        private void CheckParameters()
+        {
+            // Get the layering info and set the layer count
             dlayer = Soil.Thickness;
-            // and the layer count
             nLayers = dlayer.Length;
             for (int k = 0; k < Patch.Count; k++)
                 Patch[k].nLayers = nLayers;
 
+            // get the initial values 
             oc = Soil.OC;
-            ph = Soil.PH;
-            salb = Soil.SoilWater.Salb;
-            NO3ppm = Soil.InitialNO3N;
-            NH4ppm = Soil.InitialNH4N;
-            ureappm = new double[Soil.Thickness.Length];
-
             fbiom = Soil.FBiom;
             finert = Soil.FInert;
-
             soil_cn = SoilOrganicMatter.SoilCN;
             root_wt = SoilOrganicMatter.RootWt;
             root_cn = SoilOrganicMatter.RootCN;
             enr_a_coeff = SoilOrganicMatter.EnrACoeff;
             enr_b_coeff = SoilOrganicMatter.EnrBCoeff;
+            ph = Soil.PH;
+            NO3ppm = Soil.InitialNO3N;
+            NH4ppm = Soil.InitialNH4N;
+            ureappm = new double[Soil.Thickness.Length];
 
+            // This is needed to initialise values in ApsimX, (they were done in xml file before)
             FOMDecomp_TOptimum = new double[] { 32, 32 };
             FOMDecomp_FactorAtZero = new double[] { 0, 0 };
             FMDecomp_CurveCoeff = new double[] { 2, 2 };
@@ -150,102 +188,26 @@ namespace Models.Soils
             Denit_WPFSValues = new double[] { 0, 28, 88, 100 };
             Denit_WFPSFactors = new double[] { 0.1, 0.1, 1, 1.18 };
 
+            // update few parameters if soil type is Sand (for compatibility with classic apsim)
             if (Soil.SoilType != null && Soil.SoilType.Equals("Sand", StringComparison.CurrentCultureIgnoreCase))
             {
+                SoilNParameterSet = "sand";
                 MBiomassTurnOverRate = new double[] { 0.0324, 0.015 };
                 SOMMiner_MoistureFactors = new double[] { 0.05, 0.05, 1, 1, 0.5 };
                 FOMDecomp_MoistureFactors = new double[] { 0.05, 0.05, 1, 1, 0.5 };
             }
 
-            // check few initialisation parameters
-            CheckParameters();
-
-            // set the size of arrays
-            ResizeLayeredVariables(nLayers);
-
-            // check the initial values of some basic variables
-            CheckInitialVariables();
-
-            // set the variables up with their the initial values
-            SetInitialValues();
-
-            // print SoilN report
-            //WriteSummaryReport();
-        }
-
-        /// <summary>Reset the state values to those set during the initialisation</summary>
-        public void Reset()
-        {
-            isResetting = true;
-
-            // Save the present C and N status
-            StoreStatus();
-
-            // reset the size of arrays
-            ResizeLayeredVariables(nLayers);
-
-            // reset C and N variables, i.e. redo initialisation and setup
-            SetInitialValues();
-
-            // get the changes of state and publish (let other component to know)
-            SendDeltaState();
-
-            Console.WriteLine();
-            Console.WriteLine("        - Re-setting SoilNitrogen state variables");
-
-            // print SoilN report
-            //WriteSummaryReport();
-
-            isResetting = false;
-        }
-
-        /// <summary>
-        /// Checks general initialisation parameters, and let user know of some settings
-        /// </summary>
-        private void CheckParameters()
-        {
-            string myMessage = "";
-
-            Console.WriteLine();
-            myMessage = "        - Reading/checking parameters";
-            Console.WriteLine(myMessage);
-            Console.WriteLine();
-
-            SoilNParameterSet = SoilNParameterSet.Trim();
-            myMessage = "          - Using " + SoilNParameterSet + " SoilN parameter set specification";
-            Console.WriteLine(myMessage);
-
-            // check whether soil temperature is present. If not, check whether the basic params for simpleSoilTemp have been supplied
-            if (SimpleSoilTempAllowed)
-                usingSimpleSoilTemp = (ave_soil_temp == null);
-            if (usingSimpleSoilTemp)
-                myMessage = "           + Soil temperature calculated internally";
-            else
-                myMessage = "           + Soil temperature supplied by apsim";
-            Console.WriteLine(myMessage);
-
-            // check whether ph is supplied, use a default if not - might be better to throw an exception?
-            usingSimpleSoilpH = (ph == null);
-            if (usingSimpleSoilpH)
+            // check whether ph was supplied, use a default if not - would it be better to throw an exception?
+            if (ph == null)
             {
                 ph = new double[nLayers];
                 for (int layer = 0; layer < nLayers; ++layer)
                     ph[layer] = defaultInitialpH;
-                myMessage = "          + Soil pH was not supplied, the value " + defaultInitialpH.ToString("0.00") + " will be used for all layers";
+                mySummary.WriteWarning(this, "Soil pH was not supplied to SoilNitrogen, the default value (" 
+                    + defaultInitialpH.ToString("0.00") + ") will be used for all layers");
             }
-            else
-                myMessage = "           + Soil pH supplied by apsim";
-            Console.WriteLine(myMessage);
-
-            // Check if all fom values have been supplied
-            if (fract_carb.Length != fom_types.Length)
-                throw new Exception("Number of \"fract_carb\" different to \"fom_type\"");
-            if (fract_cell.Length != fom_types.Length)
-                throw new Exception("Number of \"fract_cell\" different to \"fom_type\"");
-            if (fract_lign.Length != fom_types.Length)
-                throw new Exception("Number of \"fract_lign\" different to \"fom_type\"");
-
-            // Check if all C:N values have been supplied. If not use average C:N ratio in all pools
+            
+            // Check whether C:N values have been supplied. If not use average C:N ratio in all pools
             if (fomPoolsCNratio == null || fomPoolsCNratio.Length < 3)
             {
                 fomPoolsCNratio = new double[3];
@@ -257,7 +219,7 @@ namespace Models.Soils
             if (iniFomDepth <= epsilon)
                 iniFomDepth = SumDoubleArray(dlayer);
 
-            // Check if initial root depth has been supplied, if not use whole profile
+            // Check if initial root depth has been supplied, if not use whole profile (used to compute plant available N - patches)
             if (rootDepth <= epsilon)
                 rootDepth = SumDoubleArray(dlayer);
 
@@ -286,45 +248,44 @@ namespace Models.Soils
         {
             // ensure that array for initial OC have a value for each layer
             if (reset_oc.Length < nLayers)
-                Console.WriteLine("           + Values supplied for the initial OC content do not cover all layers - zero will be assumed");
+                mySummary.WriteWarning(this, "Values supplied for the initial OC content do not cover all layers - zeroes will be assumed");
             else if (reset_oc.Length > nLayers)
-                Console.WriteLine("           + More values were supplied for the initial OC content than the number of layers - excess will ignored");
+                mySummary.WriteWarning(this, "More values were supplied for the initial OC content than the number of layers - excess will ignored");
 
             Array.Resize(ref reset_oc, nLayers);
 
             // ensure that array for initial urea content have a value for each layer
             if (reset_ureappm == null)
-                Console.WriteLine("           + No values were supplied for the initial content of urea - zero will be assumed");
+                mySummary.WriteWarning(this, "No values were supplied for the initial content of urea - zero will be assumed");
             else if (reset_ureappm.Length < nLayers)
-                Console.WriteLine("           + Values supplied for the initial content of urea do not cover all layers - zero will be assumed");
+                mySummary.WriteWarning(this, "Values supplied for the initial content of urea do not cover all layers - zeroes will be assumed");
             else if (reset_ureappm.Length > nLayers)
-                Console.WriteLine("           + More values were supplied for the initial content of urea than the number of layers - excess will ignored");
+                mySummary.WriteWarning(this, "More values were supplied for the initial content of urea than the number of layers - excess will ignored");
 
             Array.Resize(ref reset_ureappm, nLayers);
 
             // ensure that array for initial content of NH4 have a value for each layer
             if (reset_nh4ppm == null)
-                Console.WriteLine("           + No values were supplied for the initial content of nh4 - zero will be assumed");
+                mySummary.WriteWarning(this, "No values were supplied for the initial content of nh4 - zero will be assumed");
             else if (reset_nh4ppm.Length < nLayers)
-                Console.WriteLine("           + Values supplied for the initial content of nh4 do not cover all layers - zero will be assumed");
+                mySummary.WriteWarning(this, "Values supplied for the initial content of nh4 do not cover all layers - zeroes will be assumed");
             else if (reset_nh4ppm.Length > nLayers)
-                Console.WriteLine("           + More values were supplied for the initial content of nh4 than the number of layers - excess will ignored");
+                mySummary.WriteWarning(this, "More values were supplied for the initial content of nh4 than the number of layers - excess will ignored");
 
             Array.Resize(ref reset_nh4ppm, nLayers);
 
             // ensure that array for initial content of NO3 have a value for each layer
             if (reset_no3ppm == null)
-                Console.WriteLine("           + No values were supplied for the initial content of no3 - zero will be assumed");
+                mySummary.WriteWarning(this, "No values were supplied for the initial content of no3 - zero will be assumed");
             else if (reset_no3ppm.Length < nLayers)
-                Console.WriteLine("           + Values supplied for the initial content of no3 do not cover all layers - zero will be assumed");
+                mySummary.WriteWarning(this, "Values supplied for the initial content of no3 do not cover all layers - zeroes will be assumed");
             else if (reset_no3ppm.Length > nLayers)
-                Console.WriteLine("           + More values were supplied for the initial content of no3 than the number of layers - excess will ignored");
+                mySummary.WriteWarning(this, "More values were supplied for the initial content of no3 than the number of layers - excess will ignored");
 
             Array.Resize(ref reset_no3ppm, nLayers);
 
-            // compute initial FOM distribution in the soil (FOM fraction)
+            // compute initial FOM distribution in the soil (FOM fractions)
             FOMiniFraction = new double[nLayers];
-
             double totFOMfraction = 0.0;
             int deepestLayer = getCumulativeIndex(iniFomDepth, dlayer);
             double cumDepth = 0.0;
@@ -336,14 +297,12 @@ namespace Models.Soils
                 FOMiniFraction[layer] = FracLayer * Math.Exp(-FOMDistributionCoefficient * Math.Min(1.0, MathUtilities.Divide(cumDepth, iniFomDepth, 0.0)));
             }
 
-            // distribute FOM through layers
+            // get the actuall FOM distribution through layers (adds up to one)
             totFOMfraction = SumDoubleArray(FOMiniFraction);
             for (int layer = 0; layer <= deepestLayer; layer++)
-            {
                 FOMiniFraction[layer] /= totFOMfraction;
-            }
 
-            // initialise some residue decomposition variables
+            // initialise some residue decomposition variables (others are set on DailyInitialisation)
             residueName = new string[1] { "none" };
         }
 
@@ -358,8 +317,8 @@ namespace Models.Soils
             // convert and set C an N values over the profile
             for (int layer = 0; layer < nLayers; layer++)
             {
-                // convert the amounts of mineral N
-                double iniUrea = MathUtilities.Divide(reset_ureappm[layer], convFactor[layer], 0.0);       // convert from ppm to kg/ha
+                // get the initial amounts of mineral N (convert from ppm to kg/ha)
+                double iniUrea = MathUtilities.Divide(reset_ureappm[layer], convFactor[layer], 0.0);
                 double iniNH4 = MathUtilities.Divide(reset_nh4ppm[layer], convFactor[layer], 0.0);
                 double iniNO3 = MathUtilities.Divide(reset_no3ppm[layer], convFactor[layer], 0.0);
 
@@ -375,7 +334,7 @@ namespace Models.Soils
                 double BiomassC = MathUtilities.Divide((Soil_OC - InertC) * fbiom[layer], 1.0 + fbiom[layer], 0.0);
                 double BiomassN = MathUtilities.Divide(BiomassC, MBiomassCNr, 0.0);
 
-                // calculate C and N values for active humus
+                // calculate C and N values for humus
                 double HumusC = Soil_OC - BiomassC;
                 double HumusN = MathUtilities.Divide(HumusC, hum_cn, 0.0);
 
@@ -385,30 +344,33 @@ namespace Models.Soils
                 fomPool[1] = iniFomWt * FOMiniFraction[layer] * fract_cell[FOMtypeID_reset] * defaultCarbonInFOM;
                 fomPool[2] = iniFomWt * FOMiniFraction[layer] * fract_lign[FOMtypeID_reset] * defaultCarbonInFOM;
 
-                // set the initial values across patches - assume there is only one patch (as it is initialisation)
-                int k = 0;
-                Patch[k].urea[layer] = iniUrea;
-                Patch[k].nh4[layer] = iniNH4;
-                Patch[k].no3[layer] = iniNO3;
-                Patch[k].inert_c[layer] = InertC;
-                Patch[k].inert_n[layer] = InertN;
-                Patch[k].biom_c[layer] = BiomassC;
-                Patch[k].biom_n[layer] = BiomassN;
-                Patch[k].hum_c[layer] = HumusC;
-                Patch[k].hum_n[layer] = HumusN;
-                Patch[k].fom_c[0][layer] = fomPool[0];
-                Patch[k].fom_c[1][layer] = fomPool[1];
-                Patch[k].fom_c[2][layer] = fomPool[2];
-                Patch[k].fom_n[0][layer] = MathUtilities.Divide(fomPool[0], fomPoolsCNratio[0], 0.0);
-                Patch[k].fom_n[1][layer] = MathUtilities.Divide(fomPool[1], fomPoolsCNratio[1], 0.0);
-                Patch[k].fom_n[2][layer] = MathUtilities.Divide(fomPool[2], fomPoolsCNratio[2], 0.0);
+                // set the initial values across patches
+                for (int k = 0; k < Patch.Count; k++)
+                {
+                    Patch[k].urea[layer] = iniUrea;
+                    Patch[k].nh4[layer] = iniNH4;
+                    Patch[k].no3[layer] = iniNO3;
+                    Patch[k].inert_c[layer] = InertC;
+                    Patch[k].inert_n[layer] = InertN;
+                    Patch[k].biom_c[layer] = BiomassC;
+                    Patch[k].biom_n[layer] = BiomassN;
+                    Patch[k].hum_c[layer] = HumusC;
+                    Patch[k].hum_n[layer] = HumusN;
+                    Patch[k].fom_c[0][layer] = fomPool[0];
+                    Patch[k].fom_c[1][layer] = fomPool[1];
+                    Patch[k].fom_c[2][layer] = fomPool[2];
+                    Patch[k].fom_n[0][layer] = MathUtilities.Divide(fomPool[0], fomPoolsCNratio[0], 0.0);
+                    Patch[k].fom_n[1][layer] = MathUtilities.Divide(fomPool[1], fomPoolsCNratio[1], 0.0);
+                    Patch[k].fom_n[2][layer] = MathUtilities.Divide(fomPool[2], fomPoolsCNratio[2], 0.0);
+                }
 
                 // set maximum uptake rates for N forms (only really used for AgPasture when patches exist)
                 MaximumNH4UptakeRate[layer] = reset_MaximumNH4Uptake / convFactor[layer];
                 MaximumNO3UptakeRate[layer] = reset_MaximumNO3Uptake / convFactor[layer];
             }
 
-            Patch[0].CalcTotalMineralNInRootZone();
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].CalcTotalMineralNInRootZone();
 
             initDone = true;
 
@@ -424,56 +386,7 @@ namespace Models.Soils
         /// <param name="nLayers">The number of layers</param>
         private void ResizeLayeredVariables(int nLayers)
         {
-            // Amounts - N
-            //Array.Resize(ref _nh4, nLayers);
-            //Array.Resize(ref _no3, nLayers);
-            //Array.Resize(ref _urea, nLayers);
-            //Array.Resize(ref TodaysInitialNO3, nLayers);
-            //Array.Resize(ref TodaysInitialNH4, nLayers);
-            //Array.Resize(ref fom_n_pool[0], nLayers);
-            //Array.Resize(ref fom_n_pool[1], nLayers);
-            //Array.Resize(ref fom_n_pool[2], nLayers);
-            //Array.Resize(ref biom_n, nLayers);
-            //Array.Resize(ref hum_n, nLayers);
-
-            //// Amounts - C
-            //Array.Resize(ref fom_c_pool[0], nLayers);
-            //Array.Resize(ref fom_c_pool[1], nLayers);
-            //Array.Resize(ref fom_c_pool[2], nLayers);
-            //Array.Resize(ref inert_c, nLayers);
-            //Array.Resize(ref biom_c, nLayers);
-            //Array.Resize(ref hum_c, nLayers);
-
-            //// deltas
-            //Array.Resize(ref dlt_c_res_to_biom, nLayers);
-            //Array.Resize(ref dlt_c_res_to_hum, nLayers);
-            //Array.Resize(ref dlt_c_res_to_atm, nLayers);
-            //Array.Resize(ref dlt_res_nh4_min, nLayers);
-            //Array.Resize(ref dlt_res_no3_min, nLayers);
-
-            //Array.Resize(ref dlt_urea_hydrolysis, nLayers);
-            //Array.Resize(ref dlt_nitrification, nLayers);
-            //Array.Resize(ref dlt_n2o_nitrif, nLayers);
-            //Array.Resize(ref dlt_no3_dnit, nLayers);
-            //Array.Resize(ref dlt_n2o_dnit, nLayers);
-            //Array.Resize(ref dlt_fom_n_min, nLayers);
-            //Array.Resize(ref dlt_biom_n_min, nLayers);
-            //Array.Resize(ref dlt_hum_n_min, nLayers);
-            //Array.Resize(ref nh4_deficit_immob, nLayers);
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    Array.Resize(ref dlt_c_fom_to_biom[i], nLayers);
-            //    Array.Resize(ref dlt_c_fom_to_hum[i], nLayers);
-            //    Array.Resize(ref dlt_c_fom_to_atm[i], nLayers);
-            //    Array.Resize(ref dlt_n_fom[i], nLayers);
-            //}
-            //Array.Resize(ref dlt_biom_c_hum, nLayers);
-            //Array.Resize(ref dlt_biom_c_atm, nLayers);
-            //Array.Resize(ref dlt_hum_c_biom, nLayers);
-            //Array.Resize(ref dlt_hum_c_atm, nLayers);
-
             Array.Resize(ref InhibitionFactor_Nitrification, nLayers);
-
             Array.Resize(ref MaximumNH4UptakeRate, nLayers);
             Array.Resize(ref MaximumNO3UptakeRate, nLayers);
 
