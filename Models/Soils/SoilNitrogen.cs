@@ -11,13 +11,12 @@ using Models.Interfaces;
 
 namespace Models.Soils
 {
-
     /// <summary>
     /// Computes the soil C and N processes
     /// </summary>
     /// <remarks>
     /// Implements internal 'patches', which are replicates of state variables and processes used for simulating soil variability
-    /// 
+    ///
     /// Based on a more-or-less direct port of the Fortran SoilN model  -  Ported by Eric Zurcher Sept/Oct 2010
     /// Code tidied up by RCichota initially on Aug/Sep-2012 (updates in Feb-Mar/2014 and 2016)
     /// Ported into ApsimX by Russel McAuliffe in 2017, tidied up by RCichota (July/2017)
@@ -30,11 +29,11 @@ namespace Models.Soils
         public SoilNitrogen()
         {
             Patch = new List<soilCNPatch>();
+
             soilCNPatch newPatch = new soilCNPatch(this);
             Patch.Add(newPatch);
             Patch[0].RelativeArea = 1.0;
             Patch[0].PatchName = "base";
-
         }
 
         #region >>  Events which we publish
@@ -62,8 +61,8 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            Patch = new List<soilCNPatch>();
 
-            Patch = new List<soilCNPatch>();  
             soilCNPatch newPatch = new soilCNPatch(this);
             Patch.Add(newPatch);
             Patch[0].RelativeArea = 1.0;
@@ -83,7 +82,7 @@ namespace Models.Soils
             NO3ppm = Soil.InitialNO3N;
             NH4ppm = Soil.InitialNH4N;
             ureappm = new double[Soil.Thickness.Length];
-            
+
             fbiom = Soil.FBiom;
             finert = Soil.FInert;
 
@@ -96,8 +95,8 @@ namespace Models.Soils
             FOMDecomp_TOptimum = new double[] { 32, 32 };
             FOMDecomp_FactorAtZero = new double[] { 0, 0 };
             FMDecomp_CurveCoeff = new double[] { 2, 2 };
-            FOMDecomp_NormWaterContents = new double[] { 0, 1, 1.5, 2, 3};
-            FOMDecomp_MoistureFactors = new double[] { 0, 0, 1, 1, 0.5};
+            FOMDecomp_NormWaterContents = new double[] { 0, 1, 1.5, 2, 3 };
+            FOMDecomp_MoistureFactors = new double[] { 0, 0, 1, 1, 0.5 };
 
             SOMMiner_TOptimum = new double[] { 32, 32 };
             SOMMiner_FactorAtZero = new double[] { 0, 0 };
@@ -168,10 +167,9 @@ namespace Models.Soils
 
             // set the variables up with their the initial values
             SetInitialValues();
-            
+
             // print SoilN report
             //WriteSummaryReport();
-            
         }
 
         /// <summary>Reset the state values to those set during the initialisation</summary>
@@ -273,7 +271,6 @@ namespace Models.Soils
                 LayerDepthToTestDiffs = dlayer.Length - 1;
             else
                 LayerDepthToTestDiffs = getCumulativeIndex(DepthToTestByLayer, dlayer);
-
         }
 
         /// <summary>
@@ -325,10 +322,12 @@ namespace Models.Soils
 
             // compute initial FOM distribution in the soil (FOM fraction)
             FOMiniFraction = new double[nLayers];
+
             double totFOMfraction = 0.0;
             int deepestLayer = getCumulativeIndex(iniFomDepth, dlayer);
             double cumDepth = 0.0;
             double FracLayer = 0.0;
+
             for (int layer = 0; layer <= deepestLayer; layer++)
             {
                 FracLayer = Math.Min(1.0, MathUtilities.Divide(iniFomDepth - cumDepth, dlayer[layer], 0.0));
@@ -345,7 +344,6 @@ namespace Models.Soils
 
             // initialise some residue decomposition variables
             residueName = new string[1] { "none" };
-            pot_c_decomp = new double[1] { 0.0 };
         }
 
         /// <summary>
@@ -417,7 +415,6 @@ namespace Models.Soils
             initDone = true;
 
             StoreStatus();
-
         }
 
         /// <summary>
@@ -494,10 +491,14 @@ namespace Models.Soils
         /// </remarks>
         private void ClearDeltaVariables()
         {
-            // residue decomposition
-            Array.Clear(pot_c_decomp, 0, pot_c_decomp.Length);
+            //Reset potential decomposition variables
+            num_residues = 0;
+            Array.Resize(ref pot_c_decomp, 0);
+            Array.Resize(ref pot_n_decomp, 0);
+            Array.Resize(ref pot_p_decomp, 0);
             // this is also cleared onPotentialResidueDecompositionCalculated, but it is here to ensure it will be reset every timestep
 
+            //Reset variables in each patch
             for (int k = 0; k < Patch.Count; k++)
                 Patch[k].ClearDeltaVariables();
         }
@@ -559,6 +560,7 @@ namespace Models.Soils
 ");
 
             double TotalFomC = 0.0;
+
             for (int layer = 0; layer < dlayer.Length; ++layer)
             {
                 TotalFomC += FOMC[layer];
@@ -582,9 +584,8 @@ namespace Models.Soils
         /// <summary>
         /// Sets the commands for each timestep - at very beginning of of it
         /// </summary>
-        [EventSubscribe("DoDailyInitialisation")]  
-        
-        private void OnTick(object sender, EventArgs e)        
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (initDone)
             {
@@ -593,23 +594,14 @@ namespace Models.Soils
                 // clear variables holding deltas
                 ClearDeltaVariables();
             }
-
-            // +  Purpose:
-            //      Reset potential decomposition variables
-            num_residues = 0;
-            Array.Resize(ref pot_c_decomp, 0);
-            Array.Resize(ref pot_n_decomp, 0);
-            Array.Resize(ref pot_p_decomp, 0);
-
         }
 
         /// <summary>
         /// Sets the commands for each timestep - at the main process phase
         /// </summary>
-        [EventSubscribe("DoSoilOrganicMatter")]  
+        [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
-
             // Get potential residue decomposition from surfaceom.
             SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp = SurfaceOrganicMatter.PotentialDecomposition();
             OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
@@ -641,12 +633,11 @@ namespace Models.Soils
             }
         }
 
-
         /// <summary>Check whether patch amalgamation by age is allowed (done on a monthly basis)</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("EndOfMonth")]
-        private void OnEndOfMonth (object sender, EventArgs e)
+        private void OnEndOfMonth(object sender, EventArgs e)
         {
             // Check whether patch amalgamation by age is allowed (done on a monthly basis)
             if (AllowPatchAmalgamationByAge.ToLower() == "yes") CheckPatchAgeAmalgamation();
@@ -704,7 +695,6 @@ namespace Models.Soils
         [EventSubscribe("PotentialResidueDecompositionCalculated")]
         public void OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp)
         {
-
             // number of residues being considered
             int nResidues = SurfaceOrganicMatterDecomp.Pool.Length;
 
@@ -727,7 +717,6 @@ namespace Models.Soils
             }
         }
 
-
         /// <summary>
         /// Sends back to SurfaceOM the information about residue decomposition
         /// </summary>
@@ -748,6 +737,7 @@ namespace Models.Soils
                 // get the total amount decomposed over all existing patches
                 double c_summed = 0.0;
                 double n_summed = 0.0;
+
                 for (int k = 0; k < Patch.Count; k++)
                 {
                     c_summed += Patch[k].SurfOMActualDecomposition.Pool[residue].FOM.C * Patch[k].RelativeArea;
@@ -765,7 +755,6 @@ namespace Models.Soils
                 ActualSOMDecomp.Pool[residue].FOM.P = 0.0F;
                 ActualSOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
                 // Note: The values for 'amount', 'P', and 'AshAlk' will not be collected by SurfaceOrganicMatter, so send zero as default.
-
             }
 
             return ActualSOMDecomp;
@@ -799,6 +788,7 @@ namespace Models.Soils
             double totalNAmount = 0.0;
             double amountCnotAdded = 0.0;
             double amountNnotAdded = 0.0;
+
             for (int layer = 0; layer < inFOMPoolData.Layer.Length; layer++)
             {
                 if (layer < dlayer.Length)
@@ -828,6 +818,7 @@ namespace Models.Soils
             {
                 // let the user know of any issues
                 string aMessage;
+
                 if (amountCnotAdded >= epsilon)
                     aMessage = "only C amount was given (" + amountCnotAdded.ToString("#0.00") + "kg/ha)";
                 else if (amountNnotAdded >= epsilon)
@@ -859,6 +850,7 @@ namespace Models.Soils
             double totalNAmount = 0.0;
             double amountCnotAdded = 0.0;
             double amountNnotAdded = 0.0;
+
             for (int layer = 0; layer < inFOMdata.Layer.Length; layer++)
             {
                 if (layer < nLayers)
@@ -942,6 +934,7 @@ namespace Models.Soils
             {
                 // let the user know of any issues
                 string aMessage;
+
                 if (amountCnotAdded >= epsilon)
                     aMessage = "only C amount was given (" + amountCnotAdded.ToString("#0.00") + "kg/ha)";
                 else if (amountNnotAdded >= epsilon)
@@ -968,6 +961,7 @@ namespace Models.Soils
             double totalNAmount = 0.0;
             double amountCnotAdded = 0.0;
             double amountNnotAdded = 0.0;
+
             for (int layer = 0; layer < inFOMData.Layer.Length; layer++)
             {
                 if (layer < dlayer.Length)
@@ -997,6 +991,7 @@ namespace Models.Soils
             {
                 // let the user know of any issues
                 string aMessage;
+
                 if (amountCnotAdded >= epsilon)
                     aMessage = "only C amount was given (" + amountCnotAdded.ToString("#0.00") + "kg/ha)";
                 else if (amountNnotAdded >= epsilon)
@@ -1082,6 +1077,7 @@ namespace Models.Soils
                 // check for variations in the soil profile. and update the C and N amounts appropriately
                 // Are these changes mainly (only) due to by erosion? what else??
                 double[] new_dlayer = new double[NewProfile.dlayer.Length];
+
                 for (int layer = 0; layer < new_dlayer.Length; layer++)
                     new_dlayer[layer] = (double)NewProfile.dlayer[layer];
 
@@ -1127,7 +1123,7 @@ namespace Models.Soils
         ///  be handled (partioned).  This will be done based on soil N concentration
         /// </remarks>
         /// <param name="NitrogenChanges">The variation (delta) for each mineral N form</param>
-        /// 
+        ///
         [EventSubscribe("NitrogenChanged")]
         public void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
         {
@@ -1145,6 +1141,7 @@ namespace Models.Soils
                 {
                     // the values come from a module that requires partition
                     double[][] newDelta = partitionDelta(NitrogenChanges.DeltaUrea, "Urea", PatchNPartitionApproach.ToLower());
+
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_urea = newDelta[k];
                 }
@@ -1163,6 +1160,7 @@ namespace Models.Soils
                 {
                     // the values come from a module that requires partition
                     double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNH4, "NH4", PatchNPartitionApproach.ToLower());
+
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_nh4 = newDelta[k];
                 }
@@ -1181,6 +1179,7 @@ namespace Models.Soils
                 {
                     // the values come from a module that requires partition
                     double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNO3, "NO3", PatchNPartitionApproach.ToLower());
+
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_no3 = newDelta[k];
                 }
@@ -1197,7 +1196,7 @@ namespace Models.Soils
         /// <summary>
         /// Get the information about urine being added
         /// </summary>
-        /// <param name="UrineAdded">Urine deposition data (includes urea N amount, volume, area affected, etc)</param>         
+        /// <param name="UrineAdded">Urine deposition data (includes urea N amount, volume, area affected, etc)</param>
         public void AddUrine(AddUrineType UrineAdded)
         {
             // Starting with the minimalist version. To be updated by Val's group to include a urine patch algorithm
@@ -1261,7 +1260,6 @@ namespace Models.Soils
                 PatchData.FOM.Pool[pool] = new SoilOrganicMaterialType();
 
             OnAddSoilCNPatchwithFOM(PatchData);
-
         }
 
         /// <summary>
@@ -1306,7 +1304,6 @@ namespace Models.Soils
             //      .P: amount of phosphorus (kgC/ha), not handled here
             //      .S: amount of sulphur (kgC/ha), not handled here
             //      .AshAlk: amount of alkaline ash (kg/ha), not handled here
-
 
             // check that required data is supplied
             bool isDataOK = true;
@@ -1387,6 +1384,7 @@ namespace Models.Soils
         public void OnMergeSoilCNPatch(MergeSoilCNPatchType MergeCNPatch)
         {
             List<int> PatchesToMerge = new List<int>();
+
             if (MergeCNPatch.MergeAll)
             {
                 // all patches will be merged
@@ -1409,10 +1407,10 @@ namespace Models.Soils
         /// <param name="dltC">C changes</param>
         private void SendExternalMassFlowC(double dltC)
         {
-
             if (ExternalMassFlow != null)
             {
                 ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
+
                 if (Math.Abs(dltC) <= EPSILON)
                     dltC = 0.0;
                 massBalanceChange.FlowType = dltC >= 0 ? "gain" : "loss";
@@ -1429,6 +1427,7 @@ namespace Models.Soils
         private void SendExternalMassFlowN(double dltN)
         {
             ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
+
             if (Math.Abs(dltN) < epsilon)
                 dltN = 0.0;
             massBalanceChange.FlowType = dltN >= epsilon ? "gain" : "loss";
@@ -1501,6 +1500,7 @@ namespace Models.Soils
             double cumDepth = 0.0;
             double[] result = new double[dlayer.Length];
             int maxLayer = getCumulativeIndex(maxDepth, dlayer);
+
             for (int layer = 0; layer <= maxLayer; layer++)
             {
                 result[layer] = Math.Min(1.0, MathUtilities.Divide(maxDepth - cumDepth, dlayer[layer], 0.0));
@@ -1517,6 +1517,7 @@ namespace Models.Soils
         private int getCumulativeIndex(double sumTarget, double[] anArray)
         {
             double cum = 0.0f;
+
             for (int i = 0; i < anArray.Length; i++)
             {
                 cum += anArray[i];
@@ -1535,6 +1536,7 @@ namespace Models.Soils
         private bool hasSignificantValues(double[] anArray, double MinValue)
         {
             bool result = false;
+
             if (anArray != null)
             {
                 for (int i = 0; i < anArray.Length; i++)
@@ -1557,6 +1559,7 @@ namespace Models.Soils
         private double SumDoubleArray(double[] anArray)
         {
             double result = 0.0;
+
             if (anArray != null)
             {
                 for (int i = 0; i < anArray.Length; i++)
@@ -1572,6 +1575,7 @@ namespace Models.Soils
         private bool hasValues(double[] anArray, double Lowerue)
         {
             bool result = false;
+
             if (anArray != null)
             {
                 foreach (double Value in anArray)
