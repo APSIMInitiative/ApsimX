@@ -12,7 +12,6 @@ using APSIM.Shared.Utilities;
 namespace Models.Soils
 {
 
-
     /// <remarks>
     /// This partial class contains the various methods to handle patches
     /// </remarks>
@@ -196,7 +195,7 @@ namespace Models.Soils
             int k = Patch.Count - 1;
 
             // set the size of arrays
-            Patch[k].ResizeLayeredVariables(dlayer.Length);
+            Patch[k].ResizeLayeredVariables(nLayers);
 
             // copy the state variables from original patch in to the new one
             CopyCNValuesToPatch(k, j);
@@ -373,7 +372,7 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>   
+        /// <summary>
         /// Controls the merging of a list of patches into a single one
         /// </summary>
         // /// <param name="PatchesToMerge">List of patches to merge</param>
@@ -383,7 +382,7 @@ namespace Models.Soils
             int k = PatchesToMerge[0];  // receiver patch
             while (PatchesToMerge.Count > 1)
             {
-                //MergePatches(PatchesToMerge[0], PatchesToMerge[1]); 
+                //MergePatches(PatchesToMerge[0], PatchesToMerge[1]);
                 int j = PatchesToMerge[1];  // Patch being merged
                 MergeCNValues(k, j);
                 if (SuppressMessages.ToLower() != "yes")
@@ -421,7 +420,7 @@ namespace Models.Soils
         /// <param name="MultiplyingFactor">A multiplying factor (optional)</param>
         private void CopyCNValuesToPatch(int k, int j, double MultiplyingFactor = 1.0)
         {
-            for (int layer = 0; layer < dlayer.Length; layer++)
+            for (int layer = 0; layer < nLayers; layer++)
             {
                 // Mineral N
                 Patch[k].urea[layer] += Patch[j].urea[layer] * MultiplyingFactor;
@@ -459,7 +458,7 @@ namespace Models.Soils
             if (1.0 - NewPatchArea < -MinimumPatchArea)
                 throw new Exception("THe merge of patch " + j + " into patch " + k + " resulted in area greater than one");
 
-            for (int layer = 0; layer < dlayer.Length; layer++)
+            for (int layer = 0; layer < nLayers; layer++)
             {
                 // Mineral N
                 Patch[k].urea[layer] = (Patch[k].urea[layer] * Patch[k].RelativeArea + Patch[j].urea[layer] * Patch[j].RelativeArea) / NewPatchArea;
@@ -756,7 +755,6 @@ namespace Models.Soils
         /// <returns>The values of dlt partitioned for each existing patch</returns>
         private double[][] partitionDelta(double[] incomingDelta, string SoluteName, string PartitionType)
         {
-            int nLayers = dlayer.Length;
             int nPatches = Patch.Count;
 
             // 1. initialise the result array

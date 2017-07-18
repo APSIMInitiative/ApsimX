@@ -11,6 +11,7 @@ using Models.Interfaces;
 
 namespace Models.Soils
 {
+
     /// <summary>
     /// Computes the soil C and N processes
     /// </summary>
@@ -25,6 +26,7 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public partial class SoilNitrogen : Model, ISolute, INutrient
     {
+
         /// <summary>Initialises a new instance of the <see cref="SoilNitrogen"/> class.</summary>
         public SoilNitrogen()
         {
@@ -43,6 +45,7 @@ namespace Models.Soils
         /// </summary>
         /// <param name="Data">The data.</param>
         public delegate void ExternalMassFlowDelegate(ExternalMassFlowType Data);
+
         /// <summary>Occurs when [external mass flow].</summary>
         public event ExternalMassFlowDelegate ExternalMassFlow;
 
@@ -67,15 +70,16 @@ namespace Models.Soils
             Patch.Add(newPatch);
             Patch[0].RelativeArea = 1.0;
             Patch[0].PatchName = "base";
+            Patch[0].CreationDate = Clock.Today;
 
             // Variable handling when using APSIMX
             initDone = false;
             dlayer = Soil.Thickness;
-            SoilDensity = Soil.BD;
-            sat_dep = MathUtilities.Multiply(Soil.SAT, Soil.Thickness);
-            dul_dep = MathUtilities.Multiply(Soil.DUL, Soil.Thickness);
-            ll15_dep = MathUtilities.Multiply(Soil.LL15, Soil.Thickness);
-            sw_dep = MathUtilities.Multiply(Soil.InitialWaterVolumetric, Soil.Thickness);
+            // and the layer count
+            nLayers = dlayer.Length;
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].nLayers = nLayers;
+
             oc = Soil.OC;
             ph = Soil.PH;
             salb = Soil.SoilWater.Salb;
@@ -153,14 +157,11 @@ namespace Models.Soils
                 FOMDecomp_MoistureFactors = new double[] { 0.05, 0.05, 1, 1, 0.5 };
             }
 
-            // set the creation date
-            Patch[0].CreationDate = Clock.Today;
-
             // check few initialisation parameters
             CheckParameters();
 
             // set the size of arrays
-            ResizeLayeredVariables(dlayer.Length);
+            ResizeLayeredVariables(nLayers);
 
             // check the initial values of some basic variables
             CheckInitialVariables();
@@ -181,7 +182,7 @@ namespace Models.Soils
             StoreStatus();
 
             // reset the size of arrays
-            ResizeLayeredVariables(dlayer.Length);
+            ResizeLayeredVariables(nLayers);
 
             // reset C and N variables, i.e. redo initialisation and setup
             SetInitialValues();
@@ -193,7 +194,7 @@ namespace Models.Soils
             Console.WriteLine("        - Re-setting SoilNitrogen state variables");
 
             // print SoilN report
-            WriteSummaryReport();
+            //WriteSummaryReport();
 
             isResetting = false;
         }
@@ -204,7 +205,6 @@ namespace Models.Soils
         private void CheckParameters()
         {
             string myMessage = "";
-            int nLayers = dlayer.Length;
 
             Console.WriteLine();
             myMessage = "        - Reading/checking parameters";
@@ -264,11 +264,11 @@ namespace Models.Soils
             // Calculate conversion factor from kg/ha to ppm (mg/kg)
             convFactor = new double[nLayers];
             for (int layer = 0; layer < nLayers; ++layer)
-                convFactor[layer] = MathUtilities.Divide(100.0, SoilDensity[layer] * dlayer[layer], 0.0);
+                convFactor[layer] = MathUtilities.Divide(100.0, Soil.BD[layer] * dlayer[layer], 0.0);
 
             // Check parameters for patches
             if (DepthToTestByLayer <= epsilon)
-                LayerDepthToTestDiffs = dlayer.Length - 1;
+                LayerDepthToTestDiffs = nLayers - 1;
             else
                 LayerDepthToTestDiffs = getCumulativeIndex(DepthToTestByLayer, dlayer);
         }
@@ -284,13 +284,12 @@ namespace Models.Soils
         /// </remarks>
         private void CheckInitialVariables()
         {
-            int nLayers = dlayer.Length;
-
             // ensure that array for initial OC have a value for each layer
             if (reset_oc.Length < nLayers)
                 Console.WriteLine("           + Values supplied for the initial OC content do not cover all layers - zero will be assumed");
             else if (reset_oc.Length > nLayers)
                 Console.WriteLine("           + More values were supplied for the initial OC content than the number of layers - excess will ignored");
+
             Array.Resize(ref reset_oc, nLayers);
 
             // ensure that array for initial urea content have a value for each layer
@@ -300,6 +299,7 @@ namespace Models.Soils
                 Console.WriteLine("           + Values supplied for the initial content of urea do not cover all layers - zero will be assumed");
             else if (reset_ureappm.Length > nLayers)
                 Console.WriteLine("           + More values were supplied for the initial content of urea than the number of layers - excess will ignored");
+
             Array.Resize(ref reset_ureappm, nLayers);
 
             // ensure that array for initial content of NH4 have a value for each layer
@@ -309,6 +309,7 @@ namespace Models.Soils
                 Console.WriteLine("           + Values supplied for the initial content of nh4 do not cover all layers - zero will be assumed");
             else if (reset_nh4ppm.Length > nLayers)
                 Console.WriteLine("           + More values were supplied for the initial content of nh4 than the number of layers - excess will ignored");
+
             Array.Resize(ref reset_nh4ppm, nLayers);
 
             // ensure that array for initial content of NO3 have a value for each layer
@@ -318,6 +319,7 @@ namespace Models.Soils
                 Console.WriteLine("           + Values supplied for the initial content of no3 do not cover all layers - zero will be assumed");
             else if (reset_no3ppm.Length > nLayers)
                 Console.WriteLine("           + More values were supplied for the initial content of no3 than the number of layers - excess will ignored");
+
             Array.Resize(ref reset_no3ppm, nLayers);
 
             // compute initial FOM distribution in the soil (FOM fraction)
@@ -327,7 +329,6 @@ namespace Models.Soils
             int deepestLayer = getCumulativeIndex(iniFomDepth, dlayer);
             double cumDepth = 0.0;
             double FracLayer = 0.0;
-
             for (int layer = 0; layer <= deepestLayer; layer++)
             {
                 FracLayer = Math.Min(1.0, MathUtilities.Divide(iniFomDepth - cumDepth, dlayer[layer], 0.0));
@@ -354,9 +355,6 @@ namespace Models.Soils
         /// </remarks>
         private void SetInitialValues()
         {
-            // general variables
-            int nLayers = dlayer.Length;
-
             // convert and set C an N values over the profile
             for (int layer = 0; layer < nLayers; layer++)
             {
@@ -492,7 +490,7 @@ namespace Models.Soils
         private void ClearDeltaVariables()
         {
             //Reset potential decomposition variables
-            num_residues = 0;
+            nResidues = 0;
             Array.Resize(ref pot_c_decomp, 0);
             Array.Resize(ref pot_n_decomp, 0);
             Array.Resize(ref pot_p_decomp, 0);
@@ -527,54 +525,6 @@ namespace Models.Soils
             SendExternalMassFlowC(dltC);
         }
 
-        /// <summary>
-        /// Writes in the summaryfile a report about setup and status of SoilNitrogen
-        /// </summary>
-        private void WriteSummaryReport()
-        {
-            Console.WriteLine();
-
-            Console.Write(@"
-                      Soil Profile Properties
-          ------------------------------------------------
-           Layer    pH    OC     NO3     NH4    Urea
-                         (%) (kg/ha) (kg/ha) (kg/ha)
-          ------------------------------------------------
-");
-            for (int layer = 0; layer < dlayer.Length; ++layer)
-            {
-                Console.WriteLine("          {0,4:d1}     {1,4:F2}  {2,4:F2}  {3,6:F2}  {4,6:F2}  {5,6:F2}",
-                layer + 1, ph[layer], oc[layer], NO3[layer], NH4[layer], urea[layer]);
-            }
-            Console.WriteLine("          ------------------------------------------------");
-            Console.WriteLine("           Totals              {0,6:F2}  {1,6:F2}  {2,6:F2}",
-                      SumDoubleArray(NO3), SumDoubleArray(NH4), SumDoubleArray(urea));
-            Console.WriteLine("          ------------------------------------------------");
-            Console.WriteLine();
-            Console.Write(@"
-                  Initial Soil Organic Matter Status
-          ---------------------------------------------------------
-           Layer      Hum-C   Hum-N  Biom-C  Biom-N   FOM-C   FOM-N
-                    (kg/ha) (kg/ha) (kg/ha) (kg/ha) (kg/ha) (kg/ha)
-          ---------------------------------------------------------
-");
-
-            double TotalFomC = 0.0;
-
-            for (int layer = 0; layer < dlayer.Length; ++layer)
-            {
-                TotalFomC += FOMC[layer];
-                Console.WriteLine("          {0,4:d1}   {1,10:F1}{2,8:F1}{3,8:F1}{4,8:F1}{5,8:F1}{6,8:F1}",
-                layer + 1, HumicC[layer], HumicN[layer], MicrobialC[layer], MicrobialN[layer], FOMC[layer], FOMN[layer]);
-            }
-            Console.WriteLine("          ---------------------------------------------------------");
-            Console.WriteLine("           Totals{0,10:F1}{1,8:F1}{2,8:F1}{3,8:F1}{4,8:F1}{5,8:F1}",
-                SumDoubleArray(HumicC), SumDoubleArray(HumicN), SumDoubleArray(MicrobialC),
-                SumDoubleArray(MicrobialN), TotalFomC, SumDoubleArray(FOMN));
-            Console.WriteLine("          ---------------------------------------------------------");
-            Console.WriteLine();
-        }
-
         #endregion setup events
 
         #region >>  Process events handlers and methods
@@ -582,8 +532,10 @@ namespace Models.Soils
         #region »   Recurrent processes (each timestep)
 
         /// <summary>
-        /// Sets the commands for each timestep - at very beginning of of it
+        /// Sets the procedures for the beginning of each time-step
         /// </summary>
+        /// <param name="sender">The sender model.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
@@ -591,31 +543,31 @@ namespace Models.Soils
             {
                 // store some initial values, so they may be for mass balance
                 StoreStatus();
+
                 // clear variables holding deltas
                 ClearDeltaVariables();
             }
         }
 
         /// <summary>
-        /// Sets the commands for each timestep - at the main process phase
+        /// Sets the procedures for the main phase of each time-step
         /// </summary>
+        /// <param name="sender">The sender model.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
-            // Get potential residue decomposition from surfaceom.
+            // Get potential residue decomposition from SurfaceOrganicMatter
             SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp = SurfaceOrganicMatter.PotentialDecomposition();
+            nResidues = SurfaceOrganicMatterDecomp.Pool.Length;
             OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
-            num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
-
-            // get the current soil water content
-            sw_dep = Soil.Water;
 
             // calculate C and N processes
             EvaluateProcesses();
         }
 
-        /// <summary>Performs every-day calculations - end of day processes</summary>
-        /// <param name="sender">The sender.</param>
+        /// <summary>Stes the procedures for the end of each time-step</summary>
+        /// <param name="sender">The sender model.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoUpdate")]
         private void OnDoUpdate(object sender, EventArgs e)
@@ -634,13 +586,14 @@ namespace Models.Soils
         }
 
         /// <summary>Check whether patch amalgamation by age is allowed (done on a monthly basis)</summary>
-        /// <param name="sender">The sender.</param>
+        /// <param name="sender">The sender model.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("EndOfMonth")]
         private void OnEndOfMonth(object sender, EventArgs e)
         {
             // Check whether patch amalgamation by age is allowed (done on a monthly basis)
-            if (AllowPatchAmalgamationByAge.ToLower() == "yes") CheckPatchAgeAmalgamation();
+            if (AllowPatchAmalgamationByAge.ToLower() == "yes")
+                CheckPatchAgeAmalgamation();
         }
 
         /// <summary>
@@ -728,11 +681,10 @@ namespace Models.Soils
             //   - Now we explicitly tell the sender module the actual decomposition rate for each of its residues.
             //   - If there wasn't enough mineral N to decompose, the rate will be reduced to zero !!  - MUST CHECK THE VALIDITY OF THIS
 
-            int nLayers = dlayer.Length;
             SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
-            Array.Resize(ref ActualSOMDecomp.Pool, num_residues);
+            Array.Resize(ref ActualSOMDecomp.Pool, nResidues);
 
-            for (int residue = 0; residue < num_residues; residue++)
+            for (int residue = 0; residue < nResidues; residue++)
             {
                 // get the total amount decomposed over all existing patches
                 double c_summed = 0.0;
@@ -791,7 +743,7 @@ namespace Models.Soils
 
             for (int layer = 0; layer < inFOMPoolData.Layer.Length; layer++)
             {
-                if (layer < dlayer.Length)
+                if (layer < nLayers)
                 {
                     for (int pool = 0; pool < 3; pool++)
                     {
@@ -843,8 +795,6 @@ namespace Models.Soils
         /// <param name="inFOMdata">Data about the FOM to be added to the soil</param>
         public void DoIncorpFOM(FOMLayerType inFOMdata)
         {
-            int nLayers = dlayer.Length;
-
             // get the total amount to be added
             double totalCAmount = 0.0;
             double totalNAmount = 0.0;
@@ -964,7 +914,7 @@ namespace Models.Soils
 
             for (int layer = 0; layer < inFOMData.Layer.Length; layer++)
             {
-                if (layer < dlayer.Length)
+                if (layer < nLayers)
                 {
                     for (int pool = 0; pool < 3; pool++)
                     {
@@ -1024,6 +974,7 @@ namespace Models.Soils
                         CheckNegativeValues(ref Patch[k].fom_c[pool][layer], layer, "fom_c[" + (pool + 1).ToString() + "]", "Patch[" + Patch[k].PatchName + "].IncorporateFOM");
                         CheckNegativeValues(ref Patch[k].fom_n[pool][layer], layer, "fom_n[" + (pool + 1).ToString() + "]", "Patch[" + Patch[k].PatchName + "].IncorporateFOM");
                     }
+
                     // update mineral N forms and check values
                     Patch[k].nh4[layer] += FOMPoolData.Layer[layer].nh4;
                     Patch[k].no3[layer] += FOMPoolData.Layer[layer].no3;
@@ -1048,17 +999,17 @@ namespace Models.Soils
         {
             // get the basic soil data info
             int nLayers = NewProfile.dlayer.Length;
-            Array.Resize(ref SoilDensity, nLayers);
-            Array.Resize(ref ll15_dep, nLayers);
-            Array.Resize(ref dul_dep, nLayers);
-            Array.Resize(ref sat_dep, nLayers);
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                SoilDensity[layer] = (double)NewProfile.bd[layer];
-                ll15_dep[layer] = (double)NewProfile.ll15_dep[layer];
-                dul_dep[layer] = (double)NewProfile.dul_dep[layer];
-                sat_dep[layer] = (double)NewProfile.sat_dep[layer];
-            }
+            //Array.Resize(ref SoilDensity, nLayers);
+            //Array.Resize(ref ll15_dep, nLayers);
+            //Array.Resize(ref dul_dep, nLayers);
+            //Array.Resize(ref sat_dep, nLayers);
+            //for (int layer = 0; layer < nLayers; layer++)
+            //{
+            //    SoilDensity[layer] = (double)NewProfile.bd[layer];
+            //    ll15_dep[layer] = (double)NewProfile.ll15_dep[layer];
+            //    dul_dep[layer] = (double)NewProfile.dul_dep[layer];
+            //    sat_dep[layer] = (double)NewProfile.sat_dep[layer];
+            //}
 
             // check the layer structure
             if (dlayer == null)
@@ -1105,6 +1056,11 @@ namespace Models.Soils
             // now update the layer structure
             for (int layer = 0; layer < new_dlayer.Length; layer++)
                 dlayer[layer] = new_dlayer[layer];
+
+            // and the layer count
+            nLayers = dlayer.Length;
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].nLayers = nLayers;
         }
 
         /// <summary>Gets the changes in mineral N made by other modules</summary>
@@ -1256,6 +1212,7 @@ namespace Models.Soils
             PatchData.FOM = new AddSoilCNPatchwithFOMFOMType();
             PatchData.FOM.Type = "none";
             PatchData.FOM.Pool = new SoilOrganicMaterialType[3];
+
             for (int pool = 0; pool < 3; pool++)
                 PatchData.FOM.Pool[pool] = new SoilOrganicMaterialType();
 
@@ -1480,7 +1437,7 @@ namespace Models.Soils
                                  + ") below the warning threshold (" + WarningNegativeThreshold.ToString()
                                  + ". Value will be reset to zero.";
                 TheValue = 0.0;
-                mySummary.WriteMessage(this, myMessage);
+                mySummary.WriteWarning(this, myMessage);
             }
             else if (TheValue < 0.0)
             {
@@ -1498,13 +1455,14 @@ namespace Models.Soils
         private double[] FractionLayer(double maxDepth)
         {
             double cumDepth = 0.0;
-            double[] result = new double[dlayer.Length];
+            double[] result = new double[nLayers];
             int maxLayer = getCumulativeIndex(maxDepth, dlayer);
 
             for (int layer = 0; layer <= maxLayer; layer++)
             {
                 result[layer] = Math.Min(1.0, MathUtilities.Divide(maxDepth - cumDepth, dlayer[layer], 0.0));
             }
+
             return result;
         }
 
@@ -1524,6 +1482,7 @@ namespace Models.Soils
                 if (cum >= sumTarget)
                     return i;
             }
+
             return anArray.Length - 1;
         }
 
@@ -1548,6 +1507,7 @@ namespace Models.Soils
                     }
                 }
             }
+
             return result;
         }
 
@@ -1565,6 +1525,7 @@ namespace Models.Soils
                 for (int i = 0; i < anArray.Length; i++)
                     result += anArray[i];
             }
+
             return result;
         }
 
@@ -1587,6 +1548,7 @@ namespace Models.Soils
                     }
                 }
             }
+
             return result;
         }
 

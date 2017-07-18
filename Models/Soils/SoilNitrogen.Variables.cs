@@ -19,6 +19,7 @@ namespace Models.Soils
     /// </remarks>
     public partial class SoilNitrogen
     {
+
         #region Links to other modules
 
         /// <summary>
@@ -423,7 +424,7 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Temperature factor for FOM decomposition at zero degrees, aerobic and anaerobic conditions 
+        /// Temperature factor for FOM decomposition at zero degrees, aerobic and anaerobic conditions
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("")]
@@ -435,7 +436,7 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Curve coefficient for temperature factor of FOM decomposition, aerobic and anaerobic conditions 
+        /// Curve coefficient for temperature factor of FOM decomposition, aerobic and anaerobic conditions
         /// </summary>
         [Units("")]
         [XmlIgnore]
@@ -1435,7 +1436,7 @@ namespace Models.Soils
                 reset_MaximumNH4Uptake = value;
                 if (initDone)
                 { // after initialisation done, the setting has to be here
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                     {
                         // set maximum uptake rates for N forms (only really used for AgPasture when patches exist)
                         MaximumNH4UptakeRate[layer] = reset_MaximumNH4Uptake / convFactor[layer];
@@ -1458,7 +1459,7 @@ namespace Models.Soils
                 reset_MaximumNO3Uptake = value;
                 if (initDone)
                 { // after initialisation done, the setting has to be here
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                     {
                         // set maximum uptake rates for N forms (only really used for AgPasture when patches exist)
                         MaximumNO3UptakeRate[layer] = reset_MaximumNO3Uptake / convFactor[layer];
@@ -1723,13 +1724,6 @@ namespace Models.Soils
         #region Soil physics data
 
         /// <summary>
-        /// Today's soil water amount (mm)
-        /// </summary>
-        [Units("mm")]
-        [XmlIgnore]
-        public double[] sw_dep;
-
-        /// <summary>
         /// Soil albedo (0-1)
         /// </summary>
         [Bounds(Lower = 0.0, Upper = 1.0)]
@@ -1769,11 +1763,10 @@ namespace Models.Soils
             get
             {
                 double[] result;
-
                 if (initDone)
                 {
-                    result = new double[dlayer.Length];
-                    for (int layer = 0; layer < dlayer.Length; ++layer)
+                    result = new double[nLayers];
+                    for (int layer = 0; layer < nLayers; ++layer)
                         result[layer] = (HumicC[layer] + MicrobialC[layer]) * convFactor[layer] / 10000;  // (100/1000000) = convert to ppm and then to %
                 }
                 else
@@ -1781,6 +1774,7 @@ namespace Models.Soils
                     // no value has been asigned yet, return null
                     result = reset_oc;
                 }
+
                 return result;
             }
             set
@@ -1814,15 +1808,15 @@ namespace Models.Soils
             get
             {
                 double[] result;
-
                 if (initDone)
                 {
-                    result = new double[dlayer.Length];
-                    for (int layer = 0; layer < dlayer.Length; ++layer)
+                    result = new double[nLayers];
+                    for (int layer = 0; layer < nLayers; ++layer)
                         result[layer] = urea[layer] * convFactor[layer];
                 }
                 else
                     result = reset_ureappm;
+
                 return result;
             }
             set
@@ -1845,15 +1839,15 @@ namespace Models.Soils
             get
             {
                 double[] result;
-
                 if (initDone)
                 {
-                    result = new double[dlayer.Length];
-                    for (int layer = 0; layer < dlayer.Length; ++layer)
+                    result = new double[nLayers];
+                    for (int layer = 0; layer < nLayers; ++layer)
                         result[layer] = NH4[layer] * convFactor[layer];
                 }
                 else
                     result = reset_nh4ppm;
+
                 return result;
             }
             set
@@ -1876,15 +1870,15 @@ namespace Models.Soils
             get
             {
                 double[] result;
-
                 if (initDone)
                 {
-                    result = new double[dlayer.Length];
-                    for (int layer = 0; layer < dlayer.Length; ++layer)
+                    result = new double[nLayers];
+                    for (int layer = 0; layer < nLayers; ++layer)
                         result[layer] = NO3[layer] * convFactor[layer];
                 }
                 else
                     result = reset_no3ppm;
+
                 return result;
             }
             set
@@ -1941,7 +1935,7 @@ namespace Models.Soils
 
         /// <summary>
         /// Amount of C decomposed in pond that is added to soil humus
-        /// </summary>  
+        /// </summary>
         [Units("kg/ha")]
         [XmlIgnore]
         public double pond_hum_C;
@@ -1961,7 +1955,7 @@ namespace Models.Soils
             {
                 if (initDone)
                 {
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                     {
                         if (layer < value.Length)
                         {
@@ -2024,6 +2018,7 @@ namespace Models.Soils
 
                 for (int k = 0; k < Patch.Count; k++)
                     result += Patch[k].dlt_n_loss_in_sed * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2036,9 +2031,8 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].nh4[layer] - Patch[k].TodaysInitialNH4[layer]) * Patch[k].RelativeArea;
                 return result;
@@ -2053,9 +2047,8 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_res_nh4_min[layer] +
                                          Patch[k].dlt_n_fom_to_min[layer] +
@@ -2065,6 +2058,7 @@ namespace Models.Soils
                                          Patch[k].dlt_urea_hydrolysis[layer] +
                                          Patch[k].nh4_deficit_immob[layer]) *
                                          Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2077,11 +2071,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].no3[layer] - Patch[k].TodaysInitialNO3[layer]) * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2094,9 +2088,8 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_res_no3_min[layer] -
                                          Patch[k].dlt_no3_dnit[layer] +
@@ -2104,6 +2097,7 @@ namespace Models.Soils
                                          Patch[k].dlt_n2o_nitrif[layer] -
                                          Patch[k].nh4_deficit_immob[layer]) *
                                          Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2116,14 +2110,14 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_n_hum_to_min[layer] +
                                           Patch[k].dlt_n_biom_to_min[layer] +
                                           Patch[k].dlt_n_fom_to_min[layer]) *
                                           Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2136,11 +2130,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_res_no3_min[layer] + Patch[k].dlt_res_nh4_min[layer]) * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2153,11 +2147,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_res_nh4_min[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2173,11 +2167,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_res_no3_min[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2190,11 +2184,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_n_fom_to_min[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2210,11 +2204,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_n_hum_to_min[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2227,11 +2221,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_n_biom_to_min[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2244,9 +2238,8 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_n_hum_to_min[layer] +
                                           Patch[k].dlt_n_biom_to_min[layer] +
@@ -2254,6 +2247,7 @@ namespace Models.Soils
                                           Patch[k].dlt_res_no3_min[layer] +
                                           Patch[k].dlt_res_nh4_min[layer]) *
                                           Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2266,11 +2260,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_urea_hydrolysis[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2283,11 +2277,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_nitrification[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2300,11 +2294,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_nitrification[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2317,11 +2311,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_nitrification[layer] - Patch[k].dlt_n2o_nitrif[layer]) * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2334,11 +2328,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_n2o_nitrif[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2365,11 +2359,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_no3_dnit[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2382,11 +2376,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_n2o_dnit[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2399,11 +2393,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_n2o_dnit[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2416,11 +2410,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_n2o_dnit[layer] + Patch[k].dlt_n2o_nitrif[layer]) * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2433,11 +2427,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_no3_dnit[layer] - Patch[k].dlt_n2o_dnit[layer]) * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2450,11 +2444,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_no3_dnit[layer] + Patch[k].dlt_n2o_nitrif[layer]) * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2467,11 +2461,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].nh4_deficit_immob[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2491,13 +2485,14 @@ namespace Models.Soils
             {
                 if (dlayer != null)
                 {
-                    double[] result = new double[dlayer.Length];
-
+                    double[] result = new double[nLayers];
                     for (int k = 0; k < Patch.Count; k++)
-                        for (int layer = 0; layer < dlayer.Length; ++layer)
+                        for (int layer = 0; layer < nLayers; ++layer)
                             result[layer] += Patch[k].urea[layer] * Patch[k].RelativeArea;
+
                     return result;
                 }
+
                 return null;
             }
             set
@@ -2525,11 +2520,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].nh4[layer] + Patch[k].nh3[layer]) * Patch[k].RelativeArea;
+
                 return result;
             }
             set  // should this be private?
@@ -2555,13 +2550,14 @@ namespace Models.Soils
             {
                 if (dlayer != null)
                 {
-                    double[] result = new double[dlayer.Length];
-
-                    for (int layer = 0; layer < dlayer.Length; ++layer)
+                    double[] result = new double[nLayers];
+                    for (int layer = 0; layer < nLayers; ++layer)
                         for (int k = 0; k < Patch.Count; k++)
                             result[layer] += Patch[k].no3[layer] * Patch[k].RelativeArea;
+
                     return result;
                 }
+
                 return null;
             }
             set
@@ -2588,20 +2584,17 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-                //for (int layer = 0; layer < dlayer.Length; layer++)
-                //    for (int k = 0; k < Patch.Count; k++)
-                //        result[layer] += Math.Min(Patch[k].nh4[layer], MaximumNH4UptakeRate[layer]) * Patch[k].RelativeArea;
-
+                double[] result = new double[nLayers];
                 if (initDone)
                 {
                     for (int k = 0; k < Patch.Count; k++)
                     {
                         Patch[k].CalcTotalMineralNInRootZone();
-                        for (int layer = 0; layer < dlayer.Length; layer++)
+                        for (int layer = 0; layer < nLayers; layer++)
                             result[layer] += Patch[k].nh4AvailableToPlants[layer] * Patch[k].RelativeArea;
                     }
                 }
+
                 return result;
             }
         }
@@ -2614,17 +2607,17 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
+                double[] result = new double[nLayers];
                 if (initDone)
                 {
                     for (int k = 0; k < Patch.Count; k++)
                     {
                         Patch[k].CalcTotalMineralNInRootZone();
-                        for (int layer = 0; layer < dlayer.Length; layer++)
+                        for (int layer = 0; layer < nLayers; layer++)
                             result[layer] += Patch[k].no3AvailableToPlants[layer] * Patch[k].RelativeArea;
                     }
                 }
+
                 return result;
             }
         }
@@ -2641,12 +2634,12 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         for (int pool = 0; pool < Patch[k].fom_n.Length; pool++)
                             result[layer] += Patch[k].fom_n[pool][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2659,11 +2652,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].fom_n[0][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2676,11 +2669,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].fom_n[1][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2693,11 +2686,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].fom_n[2][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2710,11 +2703,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].hum_n[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2727,11 +2720,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].inert_n[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2744,11 +2737,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].biom_n[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2761,11 +2754,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].urea[layer] + Patch[k].nh4[layer] + Patch[k].no3[layer] + Patch[k].nh3[layer] + Patch[k].no2[layer]) * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2778,15 +2771,15 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].fom_n[0][layer]
                                        + Patch[k].fom_n[1][layer]
                                        + Patch[k].fom_n[2][layer]
                                        + Patch[k].hum_n[layer]
                                        + Patch[k].biom_n[layer]) * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2803,11 +2796,12 @@ namespace Models.Soils
 
                 if (dlayer != null)
                 {
-                    result = new double[dlayer.Length];
-                    for (int layer = 0; layer < dlayer.Length; ++layer)
+                    result = new double[nLayers];
+                    for (int layer = 0; layer < nLayers; ++layer)
                         for (int k = 0; k < Patch.Count; k++)
                             result[layer] = Patch[k].nit_tot[layer] * Patch[k].RelativeArea;
                 }
+
                 return result;
             }
         }
@@ -2826,7 +2820,7 @@ namespace Models.Soils
             {
                 double Nlosses = 0.0;
 
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         Nlosses += (Patch[k].dlt_n2o_nitrif[layer] + Patch[k].dlt_no3_dnit[layer]) * Patch[k].RelativeArea;  // exchange with 'outside' world computed by soilN
 
@@ -2883,6 +2877,7 @@ namespace Models.Soils
 
                 for (int k = 0; k < Patch.Count; k++)
                     result += Patch[k].dlt_c_loss_in_sed * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2895,12 +2890,12 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         for (int pool = 0; pool < 3; pool++)
                             result[layer] += Patch[k].dlt_c_fom_to_hum[pool][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2913,12 +2908,12 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         for (int pool = 0; pool < 3; pool++)
                             result[layer] += Patch[k].dlt_c_fom_to_biom[pool][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2931,12 +2926,12 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         for (int pool = 0; pool < 3; pool++)
                             result[layer] += Patch[k].dlt_c_fom_to_atm[pool][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2949,11 +2944,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_c_hum_to_biom[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2966,11 +2961,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_c_hum_to_atm[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -2983,11 +2978,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_c_biom_to_hum[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3000,11 +2995,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_c_biom_to_atm[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3017,11 +3012,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_c_res_to_biom[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3034,11 +3029,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_c_res_to_hum[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3051,12 +3046,12 @@ namespace Models.Soils
         {
             get
             {
-                //double[] result = new double[dlayer.Length];
                 double result = 0.0;
 
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result += Patch[k].dlt_c_res_to_atm[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3069,14 +3064,14 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_c_fom_to_hum[0][layer] +
                                           Patch[k].dlt_c_fom_to_biom[0][layer] +
                                           Patch[k].dlt_c_fom_to_atm[0][layer]) *
                                           Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3089,14 +3084,14 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_c_fom_to_hum[1][layer] +
                                           Patch[k].dlt_c_fom_to_biom[1][layer] +
                                           Patch[k].dlt_c_fom_to_atm[1][layer]) *
                                           Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3109,14 +3104,14 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += (Patch[k].dlt_c_fom_to_hum[2][layer] +
                                           Patch[k].dlt_c_fom_to_biom[2][layer] +
                                           Patch[k].dlt_c_fom_to_atm[2][layer]) *
                                           Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3129,11 +3124,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_c_res_to_biom[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3146,11 +3141,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_c_res_to_hum[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3163,11 +3158,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].dlt_c_res_to_atm[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3180,11 +3175,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].co2_atm[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3201,12 +3196,12 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         for (int pool = 0; pool < 3; pool++)
                             result[layer] += Patch[k].fom_c[pool][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3219,11 +3214,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].fom_c[0][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3236,11 +3231,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].fom_c[1][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3253,11 +3248,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].fom_c[2][layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3270,11 +3265,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].hum_c[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3287,11 +3282,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].inert_c[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3304,11 +3299,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].biom_c[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3321,11 +3316,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].waterSoluble_c[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3338,11 +3333,11 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].carbon_tot[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3361,7 +3356,7 @@ namespace Models.Soils
             {
                 double Closses = 0.0;
 
-                for (int layer = 0; layer < dlayer.Length; layer++)
+                for (int layer = 0; layer < nLayers; layer++)
                     for (int k = 0; k < Patch.Count; k++)
                         Closses += (Patch[k].dlt_c_res_to_atm[layer] +
                                     Patch[k].dlt_c_fom_to_atm[0][layer] +
@@ -3390,18 +3385,18 @@ namespace Models.Soils
         {
             get
             {
-                double[] result = new double[dlayer.Length];
-
-                for (int layer = 0; layer < dlayer.Length; ++layer)
+                double[] result = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
                     for (int k = 0; k < Patch.Count; k++)
                         result[layer] += Patch[k].soilp_dlt_org_p[layer] * Patch[k].RelativeArea;
+
                 return result;
             }
         }
 
         #endregion
 
-        #region Outputs related to internal patches    * * * * * * * * * * * * * * 
+        #region Outputs related to internal patches    * * * * * * * * * * * * * *
 
         #region General variables
 
@@ -3424,6 +3419,7 @@ namespace Models.Soils
 
                 for (int k = 0; k < Patch.Count; k++)
                     result[k] = Patch[k].RelativeArea;
+
                 return result;
             }
         }
@@ -3439,6 +3435,7 @@ namespace Models.Soils
 
                 for (int k = 0; k < Patch.Count; k++)
                     result[k] = Patch[k].PatchName;
+
                 return result;
             }
         }
@@ -3455,6 +3452,7 @@ namespace Models.Soils
 
                 for (int k = 0; k < Patch.Count; k++)
                     result[k] = (Clock.Today - Patch[k].CreationDate).TotalDays + 1;
+
                 return result;
             }
         }
@@ -3480,6 +3478,7 @@ namespace Models.Soils
 
                 for (int k = 0; k < nPatches; k++)
                     result[k] = Patch[k].dlt_n_loss_in_sed;
+
                 return result;
             }
         }
@@ -3498,8 +3497,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_res_no3_min[layer] + Patch[k].dlt_res_nh4_min[layer];
+
                 return result;
             }
         }
@@ -3516,8 +3516,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_n_fom_to_min[layer];
+
                 return result;
             }
         }
@@ -3534,8 +3535,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_n_hum_to_min[layer];
+
                 return result;
             }
         }
@@ -3552,8 +3554,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_n_biom_to_min[layer];
+
                 return result;
             }
         }
@@ -3570,8 +3573,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_n_biom_to_min[layer];
+
                 return result;
             }
         }
@@ -3588,8 +3592,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_urea_hydrolysis[layer];
+
                 return result;
             }
         }
@@ -3606,8 +3611,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_nitrification[layer];
+
                 return result;
             }
         }
@@ -3624,8 +3630,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_nitrification[layer] - Patch[k].dlt_n2o_nitrif[layer];
+
                 return result;
             }
         }
@@ -3642,8 +3649,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_n2o_nitrif[layer];
+
                 return result;
             }
         }
@@ -3660,8 +3668,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_no3_dnit[layer];
+
                 return result;
             }
         }
@@ -3678,8 +3687,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_n2o_dnit[layer];
+
                 return result;
             }
         }
@@ -3696,8 +3706,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_n2o_dnit[layer] + Patch[k].dlt_n2o_nitrif[layer];
+
                 return result;
             }
         }
@@ -3714,8 +3725,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_no3_dnit[layer] - Patch[k].dlt_n2o_dnit[layer];
+
                 return result;
             }
         }
@@ -3732,8 +3744,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_no3_dnit[layer] + Patch[k].dlt_n2o_nitrif[layer];
+
                 return result;
             }
         }
@@ -3750,7 +3763,8 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    result[k] += Patch[k].urea_flow[dlayer.Length - 1];
+                    result[k] += Patch[k].urea_flow[nLayers - 1];
+
                 return result;
             }
         }
@@ -3767,7 +3781,8 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    result[k] += Patch[k].nh4_flow[dlayer.Length - 1];
+                    result[k] += Patch[k].nh4_flow[nLayers - 1];
+
                 return result;
             }
         }
@@ -3784,7 +3799,8 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    result[k] += Patch[k].no3_flow[dlayer.Length - 1];
+                    result[k] += Patch[k].no3_flow[nLayers - 1];
+
                 return result;
             }
         }
@@ -3801,8 +3817,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].urea_uptake[layer];
+
                 return result;
             }
         }
@@ -3819,8 +3836,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].nh4_uptake[layer];
+
                 return result;
             }
         }
@@ -3837,8 +3855,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].no3_uptake[layer];
+
                 return result;
             }
         }
@@ -3855,8 +3874,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].urea_fertiliser[layer];
+
                 return result;
             }
         }
@@ -3873,8 +3893,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].nh4_fertiliser[layer];
+
                 return result;
             }
         }
@@ -3891,8 +3912,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].no3_fertiliser[layer];
+
                 return result;
             }
         }
@@ -3909,8 +3931,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].urea_ChangedOther[layer];
+
                 return result;
             }
         }
@@ -3927,8 +3950,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].nh4_ChangedOther[layer];
+
                 return result;
             }
         }
@@ -3945,8 +3969,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].no3_ChangedOther[layer];
+
                 return result;
             }
         }
@@ -3965,7 +3990,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -3975,6 +3999,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_res_no3_min[layer] + Patch[k].dlt_res_nh4_min[layer];
                 }
+
                 return result;
             }
         }
@@ -3988,7 +4013,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -3998,6 +4022,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_n_fom_to_min[layer];
                 }
+
                 return result;
             }
         }
@@ -4011,7 +4036,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4021,6 +4045,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_n_hum_to_min[layer];
                 }
+
                 return result;
             }
         }
@@ -4034,7 +4059,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4044,6 +4068,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_n_biom_to_min[layer];
                 }
+
                 return result;
             }
         }
@@ -4057,7 +4082,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4071,6 +4095,7 @@ namespace Models.Soils
                                                        Patch[k].dlt_res_no3_min[layer] +
                                                        Patch[k].dlt_res_nh4_min[layer];
                 }
+
                 return result;
             }
         }
@@ -4084,7 +4109,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4094,6 +4118,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_urea_hydrolysis[layer];
                 }
+
                 return result;
             }
         }
@@ -4107,7 +4132,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4117,6 +4141,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_nitrification[layer];
                 }
+
                 return result;
             }
         }
@@ -4130,7 +4155,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4140,6 +4164,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_nitrification[layer] - Patch[k].dlt_n2o_nitrif[layer];
                 }
+
                 return result;
             }
         }
@@ -4153,7 +4178,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4163,6 +4187,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_n2o_nitrif[layer];
                 }
+
                 return result;
             }
         }
@@ -4176,7 +4201,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4186,6 +4210,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_no3_dnit[layer];
                 }
+
                 return result;
             }
         }
@@ -4199,7 +4224,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4209,6 +4233,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_n2o_dnit[layer];
                 }
+
                 return result;
             }
         }
@@ -4222,7 +4247,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4232,6 +4256,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_n2o_dnit[layer] + Patch[k].dlt_n2o_nitrif[layer];
                 }
+
                 return result;
             }
         }
@@ -4245,7 +4270,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4255,6 +4279,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_no3_dnit[layer] - Patch[k].dlt_n2o_dnit[layer];
                 }
+
                 return result;
             }
         }
@@ -4268,7 +4293,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4278,6 +4302,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_no3_dnit[layer] + Patch[k].dlt_n2o_nitrif[layer];
                 }
+
                 return result;
             }
         }
@@ -4291,7 +4316,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4301,6 +4325,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_no3_dnit[layer] + Patch[k].dlt_n2o_nitrif[layer];
                 }
+
                 return result;
             }
         }
@@ -4318,7 +4343,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4328,6 +4352,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].urea_flow[layer];
                 }
+
                 return result;
             }
         }
@@ -4341,7 +4366,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4351,6 +4375,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].nh4_flow[layer];
                 }
+
                 return result;
             }
         }
@@ -4364,7 +4389,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4374,6 +4398,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].no3_flow[layer];
                 }
+
                 return result;
             }
         }
@@ -4387,7 +4412,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4397,6 +4421,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].urea_uptake[layer];
                 }
+
                 return result;
             }
         }
@@ -4410,7 +4435,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4420,6 +4444,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].nh4_uptake[layer];
                 }
+
                 return result;
             }
         }
@@ -4433,7 +4458,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4443,6 +4467,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].no3_uptake[layer];
                 }
+
                 return result;
             }
         }
@@ -4456,7 +4481,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4466,6 +4490,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].urea_fertiliser[layer];
                 }
+
                 return result;
             }
         }
@@ -4479,7 +4504,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4489,6 +4513,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].nh4_fertiliser[layer];
                 }
+
                 return result;
             }
         }
@@ -4502,7 +4527,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4512,6 +4536,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].no3_fertiliser[layer];
                 }
+
                 return result;
             }
         }
@@ -4525,7 +4550,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4535,6 +4559,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].urea_ChangedOther[layer];
                 }
+
                 return result;
             }
         }
@@ -4548,7 +4573,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4558,6 +4582,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].nh4_ChangedOther[layer];
                 }
+
                 return result;
             }
         }
@@ -4571,7 +4596,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4581,6 +4605,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].no3_ChangedOther[layer];
                 }
+
                 return result;
             }
         }
@@ -4602,7 +4627,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4629,7 +4653,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4639,6 +4662,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].nh4[layer];
                 }
+
                 return result;
             }
         }
@@ -4652,7 +4676,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4662,6 +4685,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].no3[layer];
                 }
+
                 return result;
             }
         }
@@ -4675,7 +4699,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4689,6 +4712,7 @@ namespace Models.Soils
                             result.Patch[k].Value[layer] = Patch[k].nh4AvailableToPlants[layer];
                     }
                 }
+
                 return result;
             }
         }
@@ -4702,7 +4726,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4716,6 +4739,7 @@ namespace Models.Soils
                             result.Patch[k].Value[layer] = Patch[k].no3AvailableToPlants[layer];
                     }
                 }
+
                 return result;
             }
         }
@@ -4732,8 +4756,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].urea[layer];
+
                 return result;
             }
         }
@@ -4750,8 +4775,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].nh4[layer];
+
                 return result;
             }
         }
@@ -4768,8 +4794,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].no3[layer];
+
                 return result;
             }
         }
@@ -4790,10 +4817,11 @@ namespace Models.Soils
                     for (int k = 0; k < nPatches; k++)
                     {
                         Patch[k].CalcTotalMineralNInRootZone();
-                        for (int layer = 0; layer < dlayer.Length; layer++)
+                        for (int layer = 0; layer < nLayers; layer++)
                             result[k] += Patch[k].nh4AvailableToPlants[layer];
                     }
                 }
+
                 return result;
             }
         }
@@ -4814,10 +4842,11 @@ namespace Models.Soils
                     for (int k = 0; k < nPatches; k++)
                     {
                         Patch[k].CalcTotalMineralNInRootZone();
-                        for (int layer = 0; layer < dlayer.Length; layer++)
+                        for (int layer = 0; layer < nLayers; layer++)
                             result[k] += Patch[k].no3AvailableToPlants[layer];
                     }
                 }
+
                 return result;
             }
         }
@@ -4836,7 +4865,6 @@ namespace Models.Soils
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
                 int nPools = 3;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchPoolVariableType result = new CNPatchPoolVariableType();
                 result.Patch = new CNPatchPoolVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4851,6 +4879,7 @@ namespace Models.Soils
                             result.Patch[k].Pool[pool].Value[layer] = Patch[k].fom_n[pool][layer];
                     }
                 }
+
                 return result;
             }
         }
@@ -4864,7 +4893,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4874,6 +4902,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].hum_n[layer];
                 }
+
                 return result;
             }
         }
@@ -4887,7 +4916,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4897,6 +4925,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].inert_n[layer];
                 }
+
                 return result;
             }
         }
@@ -4910,7 +4939,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4920,6 +4948,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].biom_n[layer];
                 }
+
                 return result;
             }
         }
@@ -4933,7 +4962,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4943,6 +4971,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].urea[layer] + Patch[k].nh4[layer] + Patch[k].no3[layer] + Patch[k].nh3[layer] + Patch[k].no2[layer];
                 }
+
                 return result;
             }
         }
@@ -4956,7 +4985,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4970,6 +4998,7 @@ namespace Models.Soils
                                                      + Patch[k].hum_n[layer]
                                                      + Patch[k].biom_n[layer];
                 }
+
                 return result;
             }
         }
@@ -4983,7 +5012,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -4993,6 +5021,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].nit_tot[layer];
                 }
+
                 return result;
             }
         }
@@ -5009,8 +5038,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].fom_n[0][layer] + Patch[k].fom_n[1][layer] + Patch[k].fom_n[2][layer];
+
                 return result;
             }
         }
@@ -5027,8 +5057,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].hum_n[layer];
+
                 return result;
             }
         }
@@ -5045,8 +5076,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].inert_n[layer];
+
                 return result;
             }
         }
@@ -5063,8 +5095,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].biom_n[layer];
+
                 return result;
             }
         }
@@ -5081,7 +5114,7 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].urea[layer] + Patch[k].nh4[layer] + Patch[k].no3[layer] + Patch[k].nh3[layer] + Patch[k].no2[layer];
 
                 return result;
@@ -5100,9 +5133,10 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].fom_n[0][layer] + Patch[k].fom_n[1][layer] + Patch[k].fom_n[2][layer] +
                                      Patch[k].hum_n[layer] + Patch[k].biom_n[layer];
+
                 return result;
             }
         }
@@ -5119,8 +5153,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].nit_tot[layer];
+
                 return result;
             }
         }
@@ -5138,19 +5173,18 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 double[] result = new double[nLayers];
-
                 for (int k = 0; k < Patch.Count; k++)
                 {
                     double Nlosses = 0.0;
 
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         Nlosses += (Patch[k].dlt_n2o_nitrif[layer] + Patch[k].dlt_no3_dnit[layer]);
 
                     double deltaN = SumDoubleArray(TotalN) - TodaysInitialN;
                     result[k] = -(Nlosses + deltaN);
                 }
+
                 return result;
             }
         }
@@ -5176,6 +5210,7 @@ namespace Models.Soils
 
                 for (int k = 0; k < nPatches; k++)
                     result[k] = Patch[k].dlt_c_loss_in_sed;
+
                 return result;
             }
         }
@@ -5189,7 +5224,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5200,6 +5234,7 @@ namespace Models.Soils
                         for (int pool = 0; pool < 3; pool++)
                             result.Patch[k].Value[layer] = Patch[k].dlt_c_fom_to_hum[pool][layer];
                 }
+
                 return result;
             }
         }
@@ -5213,7 +5248,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5224,6 +5258,7 @@ namespace Models.Soils
                         for (int pool = 0; pool < 3; pool++)
                             result.Patch[k].Value[layer] = Patch[k].dlt_c_fom_to_biom[pool][layer];
                 }
+
                 return result;
             }
         }
@@ -5237,7 +5272,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5248,6 +5282,7 @@ namespace Models.Soils
                         for (int pool = 0; pool < 3; pool++)
                             result.Patch[k].Value[layer] = Patch[k].dlt_c_fom_to_atm[pool][layer];
                 }
+
                 return result;
             }
         }
@@ -5261,7 +5296,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5271,6 +5305,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_c_hum_to_biom[layer];
                 }
+
                 return result;
             }
         }
@@ -5284,7 +5319,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5294,6 +5328,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_c_hum_to_atm[layer];
                 }
+
                 return result;
             }
         }
@@ -5307,7 +5342,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5317,6 +5351,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_c_biom_to_hum[layer];
                 }
+
                 return result;
             }
         }
@@ -5330,7 +5365,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5340,6 +5374,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_c_biom_to_atm[layer];
                 }
+
                 return result;
             }
         }
@@ -5353,7 +5388,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5363,6 +5397,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_c_res_to_biom[layer];
                 }
+
                 return result;
             }
         }
@@ -5376,7 +5411,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5386,6 +5420,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_c_res_to_hum[layer];
                 }
+
                 return result;
             }
         }
@@ -5399,7 +5434,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5409,6 +5443,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].dlt_c_res_to_atm[layer];
                 }
+
                 return result;
             }
         }
@@ -5422,7 +5457,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5432,6 +5466,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].co2_atm[layer];
                 }
+
                 return result;
             }
         }
@@ -5448,9 +5483,10 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         for (int pool = 0; pool < 3; pool++)
                             result[k] += Patch[k].dlt_c_fom_to_hum[pool][layer];
+
                 return result;
             }
         }
@@ -5467,9 +5503,10 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         for (int pool = 0; pool < 3; pool++)
                             result[k] += Patch[k].dlt_c_fom_to_biom[pool][layer];
+
                 return result;
             }
         }
@@ -5486,9 +5523,10 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         for (int pool = 0; pool < 3; pool++)
                             result[k] += Patch[k].dlt_c_fom_to_atm[pool][layer];
+
                 return result;
             }
         }
@@ -5505,8 +5543,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_c_hum_to_biom[layer];
+
                 return result;
             }
         }
@@ -5523,8 +5562,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_c_hum_to_atm[layer];
+
                 return result;
             }
         }
@@ -5541,8 +5581,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_c_biom_to_hum[layer];
+
                 return result;
             }
         }
@@ -5559,8 +5600,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_c_biom_to_atm[layer];
+
                 return result;
             }
         }
@@ -5577,8 +5619,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_c_res_to_biom[layer];
+
                 return result;
             }
         }
@@ -5595,8 +5638,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_c_res_to_hum[layer];
+
                 return result;
             }
         }
@@ -5613,8 +5657,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].dlt_c_res_to_atm[layer];
+
                 return result;
             }
         }
@@ -5631,8 +5676,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].co2_atm[layer];
+
                 return result;
             }
         }
@@ -5651,7 +5697,6 @@ namespace Models.Soils
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
                 int nPools = 3;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchPoolVariableType result = new CNPatchPoolVariableType();
                 result.Patch = new CNPatchPoolVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5666,6 +5711,7 @@ namespace Models.Soils
                             result.Patch[k].Pool[pool].Value[layer] = Patch[k].fom_c[pool][layer];
                     }
                 }
+
                 return result;
             }
         }
@@ -5679,7 +5725,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5689,6 +5734,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].hum_c[layer];
                 }
+
                 return result;
             }
         }
@@ -5702,7 +5748,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5712,6 +5757,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].inert_c[layer];
                 }
+
                 return result;
             }
         }
@@ -5725,7 +5771,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5735,6 +5780,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].biom_c[layer];
                 }
+
                 return result;
             }
         }
@@ -5748,7 +5794,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5758,6 +5803,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].waterSoluble_c[layer];
                 }
+
                 return result;
             }
         }
@@ -5771,7 +5817,6 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 CNPatchVariableType result = new CNPatchVariableType();
                 result.Patch = new CNPatchVariablePatchType[nPatches];
                 for (int k = 0; k < nPatches; k++)
@@ -5781,6 +5826,7 @@ namespace Models.Soils
                     for (int layer = 0; layer < nLayers; layer++)
                         result.Patch[k].Value[layer] = Patch[k].carbon_tot[layer];
                 }
+
                 return result;
             }
         }
@@ -5797,8 +5843,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].fom_c[0][layer] + Patch[k].fom_c[1][layer] + Patch[k].fom_c[2][layer];
+
                 return result;
             }
         }
@@ -5815,8 +5862,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].hum_c[layer];
+
                 return result;
             }
         }
@@ -5833,8 +5881,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].inert_c[layer];
+
                 return result;
             }
         }
@@ -5851,8 +5900,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].biom_c[layer];
+
                 return result;
             }
         }
@@ -5869,8 +5919,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].waterSoluble_c[layer];
+
                 return result;
             }
         }
@@ -5887,8 +5938,9 @@ namespace Models.Soils
                 double[] result = new double[nPatches];
 
                 for (int k = 0; k < nPatches; k++)
-                    for (int layer = 0; layer < dlayer.Length; layer++)
+                    for (int layer = 0; layer < nLayers; layer++)
                         result[k] += Patch[k].carbon_tot[layer];
+
                 return result;
             }
         }
@@ -5906,9 +5958,7 @@ namespace Models.Soils
             get
             {
                 int nPatches = (Patch != null) ? Patch.Count : 1;
-                int nLayers = (dlayer != null) ? dlayer.Length : 0;
                 double[] result = new double[nLayers];
-
                 for (int k = 0; k < nPatches; k++)
                 {
                     double CLosses = 0.0;
@@ -5924,6 +5974,7 @@ namespace Models.Soils
                     double deltaC = SumDoubleArray(Patch[k].carbon_tot) - Patch[k].TodaysInitialC;
                     result[k] = -(CLosses + deltaC);
                 }
+
                 return result;
             }
         }
@@ -5932,7 +5983,7 @@ namespace Models.Soils
 
         #endregion
 
-        #endregion outputs from patches      * * * * * * * * * * * * * * * * * * 
+        #endregion outputs from patches      * * * * * * * * * * * * * * * * * *
 
         #endregion outputs
 
@@ -5969,22 +6020,8 @@ namespace Models.Soils
         [Units("mm")]
         private double[] dlayer;
 
-        /// <summary>
-        /// Soil bulk density for each layer (g/cm3)
-        /// </summary>
-        private double[] SoilDensity;
-
-        /// <summary>Soil water amount at saturation (mm)</summary>
-        [Units("mm")]
-        private double[] sat_dep;
-
-        /// <summary>Soil water amount at drainage upper limit (mm)</summary>
-        [Units("mm")]
-        private double[] dul_dep;
-
-        /// <summary>Soil water amount at drainage lower limit (mm)</summary>
-        [Units("mm")]
-        private double[] ll15_dep;
+        /// <summary>Number layers in the soil</summary>
+        private int nLayers;
 
         #endregion
 
@@ -6013,35 +6050,6 @@ namespace Models.Soils
         #endregion
 
         #region Mineral N amounts
-
-        ///// <summary>
-        ///// Internal variable holding the urea amounts
-        ///// </summary>
-        //private double[] _urea;
-
-        ///// <summary>
-        ///// Internal variable holding the nh4 amounts
-        ///// </summary>
-        //private double[] _nh4;
-
-        ///// <summary>
-        ///// Internal variable holding the no3 amounts
-        ///// </summary>
-        //private double[] _no3 = null;
-
-        #endregion
-
-        #region Organic C and N amounts
-
-        ///// <summary>
-        ///// Carbon amount in FOM pools
-        ///// </summary>
-        //private double[][] fom_c_pool = new double[3][];
-
-        ///// <summary>
-        ///// Nitrogen amount in FOM pools
-        ///// </summary>
-        //private double[][] fom_n_pool = new double[3][];
 
         #endregion
 
@@ -6108,7 +6116,7 @@ namespace Models.Soils
 
         /// <summary>
         /// Indicates whether soil profile reduction is allowed (from erosion)
-        /// </summary> 
+        /// </summary>
         private bool ProfileReductionAllowed = false;
 
         /// <summary>
@@ -6200,7 +6208,7 @@ namespace Models.Soils
         private int fom_type;
 
         /// <summary>Number of surface residues whose decomposition is being calculated</summary>
-        private int num_residues = 0;
+        private int nResidues = 0;
 
         /// <summary>
         /// The C:N ratio of each fom pool
@@ -6334,7 +6342,6 @@ namespace Models.Soils
             public double[] yVals;
         }
 
-        
         #endregion
 
         #region Useful constants
@@ -6351,7 +6358,7 @@ namespace Models.Soils
 
     /// <summary>
     /// CNPatchPoolVariablePatchPool
-    /// </summary>    
+    /// </summary>
     public class CNPatchPoolVariablePatchPoolType
     {
         /// <summary>The Value</summary>
@@ -6360,7 +6367,7 @@ namespace Models.Soils
 
     /// <summary>
     /// CNPatchPoolVariablePatch
-    /// </summary>       
+    /// </summary>
     public class CNPatchPoolVariablePatchType
     {
         /// <summary>The Pool</summary>
@@ -6369,7 +6376,7 @@ namespace Models.Soils
 
     /// <summary>
     /// CNPatchPoolVariableType
-    /// </summary>    
+    /// </summary>
     public class CNPatchPoolVariableType
     {
         /// <summary>The Patch</summary>
@@ -6378,7 +6385,7 @@ namespace Models.Soils
 
     /// <summary>
     /// CNPatchVariablePatchType
-    /// </summary>    
+    /// </summary>
     public class CNPatchVariablePatchType
     {
         /// <summary>The Value</summary>
@@ -6387,7 +6394,7 @@ namespace Models.Soils
 
     /// <summary>
     /// CNPatchVariablePatchDelegate
-    /// </summary>    
+    /// </summary>
     public delegate void CNPatchVariablePatchDelegate(CNPatchVariablePatchType Data);
 
     /// <summary>

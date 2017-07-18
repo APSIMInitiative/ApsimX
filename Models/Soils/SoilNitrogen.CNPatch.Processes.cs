@@ -34,9 +34,8 @@ namespace Models.Soils
             /// </remarks>
             public void DecomposeResidues()
             {
-                if (g.residueName.Length == 0) return;  
+                if (g.residueName.Length == 0) return;
 
-                int nLayers = g.dlayer.Length;          // number of layers in the soil
                 int nResidues = 1;                    // number of residues being considered
                 if (g.residueName[0] != "none")
                     nResidues = g.residueName.Length;
@@ -69,7 +68,7 @@ namespace Models.Soils
                 {
                     // There is no pond, decomposition of surface residues is done in tandem by SurfaceOM and SoilN
                     // check whether there is any potential residue decomposition
-                    if (g.SumDoubleArray(g.pot_c_decomp) > -g.epsilon) 
+                    if (g.SumDoubleArray(g.pot_c_decomp) > -g.epsilon)
                     {
                         // Surface OM sent some potential decomposition, here we verify the C-N balance over the immobilisation layer
 
@@ -211,7 +210,6 @@ namespace Models.Soils
             /// </summary>
             public void ConvertSoilOM()
             {
-                int nLayers = g.dlayer.Length;          // number of layers in the soil
                 if (g.SumDoubleArray(hum_c) >= g.epsilon)
                 {
                     // there is some humus in the soil
@@ -490,7 +488,6 @@ namespace Models.Soils
             /// </summary>
             public void ConvertUrea()
             {
-                int nLayers = g.dlayer.Length;          // number of layers in the soil
                 if (g.SumDoubleArray(urea) >= g.epsilon)
                 {
                     // there is some urea in the soil
@@ -512,7 +509,6 @@ namespace Models.Soils
             /// </summary>
             public void ConvertAmmonium()
             {
-                int nLayers = g.dlayer.Length;          // number of layers in the soil
                 if (g.SumDoubleArray(nh4) >= g.epsilon)
                 {
                     // there is some ammonium in the soil
@@ -575,7 +571,6 @@ namespace Models.Soils
             /// </summary>
             public void ConvertNitrate()
             {
-                int nLayers = g.dlayer.Length;          // number of layers in the soil
                 if (g.SumDoubleArray(no3) >= g.epsilon)
                 {
                     // there is some nitrate in the soil
@@ -718,7 +713,7 @@ namespace Models.Soils
             private double Denitrification(int layer)
             {
                 // Notes:
-                //   Denitrification will happend whenever: 
+                //   Denitrification will happend whenever:
                 //       - the soil water in the layer > the drained upper limit (Godwin et al., 1984),
                 //       - the NO3 nitrogen concentration > 1 mg N/kg soil,
                 //       - the soil temperature >= a minimum temperature.
@@ -732,7 +727,7 @@ namespace Models.Soils
                 //     Reference: Rolston DE, Rao PSC, Davidson JM, Jessup RE (1984). "Simulation of denitrification losses of Nitrate fertiliser applied
                 //      to uncropped, cropped, and manure-amended field plots". Soil Science Vol 137, No 4, pp 270-278.
                 //
-                //     Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "Carbon transformations in land areas receiving 
+                //     Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "Carbon transformations in land areas receiving
                 //      organic wastes in relation to nonpoint source pollution: A conceptual model".  J.Environ. Qual. 9:434-442.
 
                 double result;
@@ -790,7 +785,7 @@ namespace Models.Soils
                 //int index = 0; // denitrification calcs are not different whether there is pond or not. use 0 as default
 
                 // the water filled pore space (%)
-                double WFPS = g.sw_dep[layer] / g.sat_dep[layer] * 100.0;
+                double WFPS = g.Soil.SoilWater.SWmm[layer] / g.Soil.SoilWater.SATmm[layer] * 100.0;
 
                 // CO2 production today (kgC/ha)
                 double CO2_prod = co2_atm[layer];
@@ -1024,8 +1019,8 @@ namespace Models.Soils
 
                     // get the modified soil water variable
                     double[] yVals = { 0.0, 1.0, 2.0, 3.0 };
-                    double[] xVals = { 0.0, g.ll15_dep[layer], g.dul_dep[layer], g.sat_dep[layer] };
-                    double myX = MathUtilities.LinearInterpReal(g.sw_dep[layer], xVals, yVals, out didInterpolate);
+                    double[] xVals = { 0.0, g.Soil.SoilWater.LL15mm[layer], g.Soil.SoilWater.DULmm[layer], g.Soil.SoilWater.SATmm[layer] };
+                    double myX = MathUtilities.LinearInterpReal(g.Soil.SoilWater.SWmm[layer], xVals, yVals, out didInterpolate);
 
                     // get the soil moist factor
                     return MathUtilities.LinearInterpReal(myX, Parameters.xVals, Parameters.yVals, out didInterpolate);
@@ -1053,7 +1048,7 @@ namespace Models.Soils
                     bool didInterpolate;
 
                     // get the WFPS value (%)
-                    double WFPS = g.sw_dep[layer] / g.sat_dep[layer] * 100.0;
+                    double WFPS = g.Soil.SoilWater.SWmm[layer] / g.Soil.SoilWater.SATmm[layer] * 100.0;
 
                     // get the WFPS factor
                     return MathUtilities.LinearInterpReal(WFPS, Parameters.xVals, Parameters.yVals, out didInterpolate);
