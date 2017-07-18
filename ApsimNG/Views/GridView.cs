@@ -14,7 +14,7 @@ namespace UserInterface.Views
     using System.Reflection;
     using System.Text;
     using Classes;
-    using DataGridViewAutoFilter;
+    //using DataGridViewAutoFilter;
     using EventArguments;
     using Glade;
     using Gtk;
@@ -71,7 +71,8 @@ namespace UserInterface.Views
         private DataTable table;
 
         /// <summary>
-        /// A value indicating whether auto filter is turned on.
+        /// A value indicating whether auto filter (whatever that is) is turned on.
+        /// We don't currently use this in the Gtk GUI.
         /// </summary>
         private bool isAutoFilterOn = false;
 
@@ -322,7 +323,20 @@ namespace UserInterface.Views
                     gridview.SetCursor(new TreePath(new int[1] { nextRow }), gridview.GetColumn(nextCol), true);
                 args.RetVal = true;
             }
-        } 
+        }
+
+        /// <summary>
+        /// Ensure that we save any changes made when the editing control loses focus
+        /// Note that we need to handle loss of the editing control's focus, not that
+        /// of the gridview overall
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        [GLib.ConnectBefore]
+        private void GridViewCell_FocusOutEvent(object o, FocusOutEventArgs args)
+        {
+            EndEdit();
+        }
 
         /// <summary>
         /// Repsonds to selection changes in the "fixed" columns area by
@@ -390,6 +404,9 @@ namespace UserInterface.Views
 
         /// <summary>
         /// Populate the grid from the DataSource.
+        /// Note that we don't statically set the contents of the grid cells, but rather do this 
+        /// dynamically in OnSetCellData. However, we do set up appropriate attributes for 
+        /// cell columns, and a set of cell renderers.
         /// </summary>
         private void PopulateGrid()
         {
@@ -523,23 +540,46 @@ namespace UserInterface.Views
                 mainWindow.Cursor = null;
         }
 
+        /// <summary>
+        /// Clean up "stuff" when the editing control is closed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TextRender_EditingCanceled(object sender, EventArgs e)
         {
             this.userEditingCell = false;
             (this.editControl as Widget).KeyPressEvent -= Gridview_KeyPressEvent;
+            (this.editControl as Widget).FocusOutEvent -= GridViewCell_FocusOutEvent;
             this.editControl = null;
         }
 
+        /// <summary>
+        /// Handle vertical scrolling changes to keep the gridview and fixedcolview at the same scrolled position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
         {
             gridview.Vadjustment.Value = fixedcolview.Vadjustment.Value;
         }
 
+        /// <summary>
+        /// Handle vertical scrolling changes to keep the gridview and fixedcolview at the same scrolled position
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Gridview_Vadjustment_Changed(object sender, EventArgs e)
         {
             fixedcolview.Vadjustment.Value = gridview.Vadjustment.Value;
         }
 
+        /// <summary>
+        /// Sets the contents of a cell being display on a grid
+        /// </summary>
+        /// <param name="col"></param>
+        /// <param name="cell"></param>
+        /// <param name="model"></param>
+        /// <param name="iter"></param>
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
             TreePath path = model.GetPath(iter);
@@ -692,7 +732,9 @@ namespace UserInterface.Views
             }
         }
 
-
+        /// <summary>
+        /// Stores whether our grid is readonly. Internal value.
+        /// </summary>
         private bool isReadOnly = false;
 
         /// <summary>
@@ -751,7 +793,7 @@ namespace UserInterface.Views
                 TreePath path;
                 TreeViewColumn col;
                 gridview.GetCursor(out path, out col);
-                if (path != null && col.Cells.Length > 0)
+                if (path != null && col != null && col.Cells.Length > 0)
                 {
                     int colNo, rowNo;
                     rowNo = path.Indices[0];
@@ -1087,6 +1129,7 @@ namespace UserInterface.Views
             this.editPath = e.Path;
             this.editControl = e.Editable;
             (this.editControl as Widget).KeyPressEvent += Gridview_KeyPressEvent;
+            (this.editControl as Widget).FocusOutEvent += GridViewCell_FocusOutEvent;
             this.editSender = sender;
             IGridCell where = GetCurrentCell;
             if (where.RowIndex >= DataSource.Rows.Count)
@@ -1204,6 +1247,8 @@ namespace UserInterface.Views
             if (this.userEditingCell)
             {
                 IGridCell where = GetCurrentCell;
+                if (where == null)
+                    return;
                  
                 object oldValue = this.valueBeforeEdit;
                 
