@@ -568,9 +568,6 @@ namespace Models.Soils
         [EventSubscribe("PotentialResidueDecompositionCalculated")]
         public void OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp)
         {
-            // number of residues being considered
-            int nResidues = SurfaceOrganicMatterDecomp.Pool.Length;
-
             // zero variables by assigning new array
             residueName = new string[nResidues];
             residueType = new string[nResidues];
@@ -593,12 +590,14 @@ namespace Models.Soils
         /// <summary>
         /// Sends back to SurfaceOM the information about residue decomposition
         /// </summary>
+        /// <remarks>
+        /// Potential decomposition was gathered early on from the surfaceOM module. SoilNitrogen evaluated whether the 
+        /// conditions (C-N balance) allowed the decomposition to happen, and made the changes in the soil accordingly.
+        /// Now the actual decomposition rate for each of the residues is sent back to SurfaceOM.
+        /// </remarks>
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
             // Note:
-            //   - Potential decomposition was given to this module by a residue/surfaceOM module. This module evaluated
-            //       whether the conditions (C-N balance) allowed the decomposition to happen.
-            //   - Now we explicitly tell the sender module the actual decomposition rate for each of its residues.
             //   - If there wasn't enough mineral N to decompose, the rate will be reduced to zero !!  - MUST CHECK THE VALIDITY OF THIS
 
             SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();

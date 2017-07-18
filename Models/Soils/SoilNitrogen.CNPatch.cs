@@ -655,9 +655,6 @@ namespace Models.Soils
             /// </summary>
             public double[] TodaysInitialNO3;
 
-            ///// <summary>Number of surface residues whose decomposition is being calculated</summary>
-            //private int nResidues = 0;
-
             #endregion
 
             #endregion
@@ -806,53 +803,47 @@ namespace Models.Soils
             /// <summary>
             /// Gather the information about actual residue decomposition, to be sent back to surface OM
             /// </summary>
+            /// <remarks>
+            /// Currently P is not computed in SoilNitrogen, so the corresponding variables are set to zero here 
+            /// </remarks>
             private void PackActualResidueDecomposition()
             {
-                // Notes:
-                //    Potential decomposition was given to this module by a residue/surfaceOM module.  Now we explicitly tell the
-                //    module the actual decomposition rate for each of its residues.
-
                 soilp_dlt_org_p = new double[nLayers];
+                double soilp_cpr = MathUtilities.Divide(g.SumDoubleArray(g.pot_p_decomp), g.SumDoubleArray(g.pot_c_decomp), 0.0);
+                SurfOMActualDecomposition = new SurfaceOrganicMatterDecompType();
+                Array.Resize(ref SurfOMActualDecomposition.Pool, g.nResidues);
 
-                //if (g.SumDoubleArray(g.pot_c_decomp) >= g.epsilon)  // RJM removed
-                //{
-                    int nResidues = g.residueName.Length;    // number of residues in the simulation
-                    double soilp_cpr = MathUtilities.Divide(g.SumDoubleArray(g.pot_p_decomp), g.SumDoubleArray(g.pot_c_decomp), 0.0);  // C:P ratio for potential decomposition
+                for (int residue = 0; residue < g.nResidues; residue++)
+                {
+                    double c_summed = g.SumDoubleArray(dlt_c_decomp[residue]);
+                    if (Math.Abs(c_summed) < g.epsilon)
+                        c_summed = 0.0;
+                    double n_summed = g.SumDoubleArray(dlt_n_decomp[residue]);
+                    if (Math.Abs(n_summed) < g.epsilon)
+                        n_summed = 0.0;
 
-                    SurfOMActualDecomposition = new SurfaceOrganicMatterDecompType();
-                    Array.Resize(ref SurfOMActualDecomposition.Pool, nResidues);
+                    // pack up the structure to return decompositions to SurfaceOrganicMatter
+                    SurfOMActualDecomposition.Pool[residue] = new SurfaceOrganicMatterDecompPoolType();
+                    SurfOMActualDecomposition.Pool[residue].FOM = new FOMType();
+                    SurfOMActualDecomposition.Pool[residue].Name = g.residueName[residue];
+                    SurfOMActualDecomposition.Pool[residue].OrganicMatterType = g.residueType[residue];
+                    SurfOMActualDecomposition.Pool[residue].FOM.amount = 0.0F;
+                    SurfOMActualDecomposition.Pool[residue].FOM.C = (float)c_summed;
+                    SurfOMActualDecomposition.Pool[residue].FOM.N = (float)n_summed;
+                    SurfOMActualDecomposition.Pool[residue].FOM.P = 0.0F;
+                    SurfOMActualDecomposition.Pool[residue].FOM.AshAlk = 0.0F;
+                    // Note: The values for 'amount', 'P', and 'AshAlk' will not be collected by SurfaceOrganicMatter, so send zero as default.
+                }
 
-                    for (int residue = 0; residue < nResidues; residue++)
-                    {
-                        double c_summed = g.SumDoubleArray(dlt_c_decomp[residue]);
-                        if (Math.Abs(c_summed) < g.epsilon)
-                            c_summed = 0.0;
-                        double n_summed = g.SumDoubleArray(dlt_n_decomp[residue]);
-                        if (Math.Abs(n_summed) < g.epsilon)
-                            n_summed = 0.0;
-
-                        // pack up the structure to return decompositions to SurfaceOrganicMatter
-                        SurfOMActualDecomposition.Pool[residue] = new SurfaceOrganicMatterDecompPoolType();
-                        SurfOMActualDecomposition.Pool[residue].FOM = new FOMType();
-                        SurfOMActualDecomposition.Pool[residue].Name = g.residueName[residue];
-                        SurfOMActualDecomposition.Pool[residue].OrganicMatterType = g.residueType[residue];
-                        SurfOMActualDecomposition.Pool[residue].FOM.amount = 0.0F;
-                        SurfOMActualDecomposition.Pool[residue].FOM.C = (float)c_summed;
-                        SurfOMActualDecomposition.Pool[residue].FOM.N = (float)n_summed;
-                        SurfOMActualDecomposition.Pool[residue].FOM.P = 0.0F;
-                        SurfOMActualDecomposition.Pool[residue].FOM.AshAlk = 0.0F;
-                        // Note: The values for 'amount', 'P', and 'AshAlk' will not be collected by SurfaceOrganicMatter, so send zero as default.
-                    }
-                    // dsg 131004  calculate the old dlt_org_p (from the old Decomposed event sent by residue2) for getting by soilp
-                    double act_c_decomp = 0.0;
-                    double tot_pot_c_decomp = g.SumDoubleArray(g.pot_c_decomp);
-                    double tot_pot_p_decomp = g.SumDoubleArray(g.pot_p_decomp);
-                    for (int layer = 0; layer < nLayers; layer++)
-                    {
-                        act_c_decomp = dlt_c_res_to_biom[layer] + dlt_c_res_to_hum[layer] + dlt_c_res_to_atm[layer];
-                        soilp_dlt_org_p[layer] = tot_pot_p_decomp * MathUtilities.Divide(act_c_decomp, tot_pot_c_decomp, 0.0);
-                    }
-               // }
+                // dsg 131004  calculate the old dlt_org_p (from the old Decomposed event sent by residue2) for getting by soilp
+                double act_c_decomp = 0.0;
+                double tot_pot_c_decomp = g.SumDoubleArray(g.pot_c_decomp);
+                double tot_pot_p_decomp = g.SumDoubleArray(g.pot_p_decomp);
+                for (int layer = 0; layer < nLayers; layer++)
+                {
+                    act_c_decomp = dlt_c_res_to_biom[layer] + dlt_c_res_to_hum[layer] + dlt_c_res_to_atm[layer];
+                    soilp_dlt_org_p[layer] = tot_pot_p_decomp * MathUtilities.Divide(act_c_decomp, tot_pot_c_decomp, 0.0);
+                }
             }
 
             /// <summary>

@@ -34,21 +34,15 @@ namespace Models.Soils
             /// </remarks>
             public void DecomposeResidues()
             {
-                if (g.residueName.Length == 0) return;
-
-                int nResidues = 1;                    // number of residues being considered
-                if (g.residueName[0] != "none")
-                    nResidues = g.residueName.Length;
-
                 // 1. clear some deltas
                 Array.Clear(dlt_c_res_to_biom, 0, dlt_c_res_to_biom.Length);
                 Array.Clear(dlt_c_res_to_hum, 0, dlt_c_res_to_hum.Length);
                 Array.Clear(dlt_c_res_to_atm, 0, dlt_c_res_to_atm.Length);
                 Array.Clear(dlt_res_nh4_min, 0, dlt_res_nh4_min.Length);
                 Array.Clear(dlt_res_no3_min, 0, dlt_res_no3_min.Length);
-                dlt_c_decomp = new double[nResidues][];
-                dlt_n_decomp = new double[nResidues][];
-                for (int residue = 0; residue < nResidues; residue++)
+                dlt_c_decomp = new double[g.nResidues][];
+                dlt_n_decomp = new double[g.nResidues][];
+                for (int residue = 0; residue < g.nResidues; residue++)
                 {
                     dlt_c_decomp[residue] = new double[nLayers];
                     dlt_n_decomp[residue] = new double[nLayers];
@@ -74,12 +68,12 @@ namespace Models.Soils
 
                         double[] no3_available = new double[nLayers];          // no3 available for mineralisation
                         double[] nh4_available = new double[nLayers];          // nh4 available for mineralisation
-                        double[] dltC_into_biom = new double[nResidues];         // C mineralized converted to biomass
-                        double[] dltC_into_hum = new double[nResidues];       // C mineralized converted to humus
+                        double[] dltC_into_biom = new double[g.nResidues];         // C mineralized converted to biomass
+                        double[] dltC_into_hum = new double[g.nResidues];       // C mineralized converted to humus
                         int ImmobilisationLayer = g.getCumulativeIndex(g.ResiduesDecompDepth, g.dlayer);  // soil layer down to which soil N is available for decemposition
 
                         // 2.1. get the potential transfers to m. biomass and humic pools
-                        for (int residue = 0; residue < nResidues; residue++)
+                        for (int residue = 0; residue < g.nResidues; residue++)
                         {
                             dltC_into_biom[residue] = g.pot_c_decomp[residue] * (1.0 - g.ResiduesRespirationFactor) * g.ResiduesFractionIntoBiomass;
                             dltC_into_hum[residue] = g.pot_c_decomp[residue] * (1.0 - g.ResiduesRespirationFactor) * (1.0 - g.ResiduesFractionIntoBiomass);
@@ -128,7 +122,7 @@ namespace Models.Soils
                             fractionIntoLayer = MathUtilities.Divide(fracLayer[layer], cumFrac, 0.0);
 
                             //2.3.2. adjust C and N amounts for each residue and add to soil OM pools
-                            for (int residue = 0; residue < nResidues; residue++)
+                            for (int residue = 0; residue < g.nResidues; residue++)
                             {
                                 dlt_c_decomp[residue][layer] = g.pot_c_decomp[residue] * ReductionFactor * fractionIntoLayer;
                                 dlt_n_decomp[residue][layer] = g.pot_n_decomp[residue] * ReductionFactor * fractionIntoLayer;
@@ -174,17 +168,14 @@ namespace Models.Soils
                                 throw new Exception("Value for remaining immobilisation is out of range");
                         }
                         // else, there is no net N transformation
-
-                        // 2.6. Pack information to send back to surfaceOM
-                        //PackActualResidueDecomposition();
                     //}
                     // else, there is no residue decomposition
 
+                    // 3. Pack information to send back to surfaceOM
                     PackActualResidueDecomposition();
-
                 }
 
-                // 3. Update variables - add/remove C and N in appropriate pools
+                // 4. Update variables - add/remove C and N in appropriate pools
                 if (g.SumDoubleArray(dlt_c_res_to_biom) + g.SumDoubleArray(dlt_c_res_to_hum) >= g.epsilon)
                 {
                     for (int layer = 0; layer < nLayers; layer++)
@@ -197,7 +188,7 @@ namespace Models.Soils
                         hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.hum_cn, 0.0);
                         biom_n[layer] = MathUtilities.Divide(biom_c[layer], g.MBiomassCNr, 0.0);
 
-                        // update soil mineral N
+                        // soil mineral N
                         nh4[layer] += dlt_res_nh4_min[layer];
                         no3[layer] += dlt_res_no3_min[layer];
                     }
