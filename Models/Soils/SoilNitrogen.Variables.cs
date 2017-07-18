@@ -1709,6 +1709,13 @@ namespace Models.Soils
         #region Soil physics data
 
         /// <summary>
+        /// Today's soil water amount (mm)
+        /// </summary>
+        [Units("mm")]
+        [XmlIgnore]
+        public double[] sw_dep;
+
+        /// <summary>
         /// Soil temperature (oC), as computed by an external module (SoilTemp)
         /// </summary>
         [Units("oC")]
@@ -5999,6 +6006,18 @@ namespace Models.Soils
 
         /// <summary>Number layers in the soil</summary>
         private int nLayers;
+
+        /// <summary>Soil water amount at saturation (mm)</summary>
+        [Units("mm")]
+        private double[] sat_dep;
+
+        /// <summary>Soil water amount at drainage upper limit (mm)</summary>
+        [Units("mm")]
+        private double[] dul_dep;
+
+        /// <summary>Soil water amount at drainage lower limit (mm)</summary>
+        [Units("mm")]
+        private double[] ll15_dep;
 
         #endregion
 
