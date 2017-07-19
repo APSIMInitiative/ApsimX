@@ -627,6 +627,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Maize.xml" />
+    <None Include="Resources\Chicory.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -644,7 +645,7 @@
   <Target Name="BeforeBuild">
   </Target>-->
   <Target Name="AfterBuild" DependsOnTargets="AssignTargetPaths;Compile" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
-	<!-- Delete the file because I can't figure out how to force the SGen task. -->
+    <!-- Delete the file because I can't figure out how to force the SGen task. -->
     <Delete Files="$(TargetDir)$(TargetName).XmlSerializers.dll" ContinueOnError="true" />
     <SGen Condition="'$(OS)' == 'Windows_NT' OR '$(OS)' == 'WINDOWS'" BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(TargetFrameworkSDKToolsDirectory)" Platform="$(Platform)">
       <Output TaskParameter="SerializationAssembly" ItemName="SerializationAssembly" />
