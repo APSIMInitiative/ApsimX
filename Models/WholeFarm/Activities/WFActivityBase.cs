@@ -38,7 +38,15 @@ namespace Models.WholeFarm.Activities
 		/// Method to cascade calls for resources for all activities in the UI tree. 
 		/// Responds to WFInitialiseActivity in the Activity model holing top level list of activities
 		/// </summary>
-		public void GetResourcesForAllActivityInitialisation()
+		public virtual void GetResourcesForAllActivityInitialisation()
+		{
+			ResourcesForAllActivityInitialisation();
+		}
+
+		/// <summary>
+		/// Protected method to cascade calls for resources for all activities in the UI tree. 
+		/// </summary>
+		protected void ResourcesForAllActivityInitialisation()
 		{
 			// Get resources needed and use substitution if needed and provided, then move through children getting their resources.
 			GetResourcesRequiredForInitialisation();
@@ -62,7 +70,15 @@ namespace Models.WholeFarm.Activities
 		/// Method to cascade calls for resources for all activities in the UI tree. 
 		/// Responds to WFGetResourcesRequired in the Activity model holing top level list of activities
 		/// </summary>
-		public void GetResourcesForAllActivities()
+		public virtual void GetResourcesForAllActivities()
+		{
+			ResourcesForAllActivities();
+		}
+
+		/// <summary>
+		/// protected method to cascade calls for resources for all activities in the UI tree. 
+		/// </summary>
+		protected void ResourcesForAllActivities()
 		{
 			// Get resources needed and use substitution if needed and provided, then move through children getting their resources.
 			GetResourcesRequiredForActivity();
@@ -85,7 +101,15 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method to get required resources for initialisation of this activity. 
 		/// </summary>
-		public void GetResourcesRequiredForInitialisation()
+		public virtual void GetResourcesRequiredForInitialisation()
+		{
+			ResourcesRequiredForInitialisation();
+		}
+
+		/// <summary>
+		/// Protected method to get required resources for initialisation of this activity. 
+		/// </summary>
+		protected void ResourcesRequiredForInitialisation()
 		{
 			// determine what resources are needed for initialisation
 			ResourceRequestList = GetResourcesNeededForinitialisation();
@@ -106,27 +130,35 @@ namespace Models.WholeFarm.Activities
 		/// <summary>
 		/// Method to get this time steps current required resources for this activity. 
 		/// </summary>
-		public void GetResourcesRequiredForActivity()
+		public virtual void GetResourcesRequiredForActivity()
         {
-            // determine what resources are needed
-            ResourceRequestList = GetResourcesNeededForActivity();
+			ResourcesRequiredForActivity();
+        }
 
-            bool tookRequestedResources = TakeResources(ResourceRequestList);
+		/// <summary>
+		/// Protected method to get this time steps current required resources for this activity. 
+		/// </summary>
+		protected void ResourcesRequiredForActivity()
+		{
+			// determine what resources are needed
+			ResourceRequestList = GetResourcesNeededForActivity();
+
+			bool tookRequestedResources = TakeResources(ResourceRequestList);
 
 			// if no resources required perform Activity if code is present.
 			// if resources are returned (all available or UseResourcesAvailable action) perform Activity
 			// if reportErrorAndStop or SkipActivity do not perform Activity
-            if (tookRequestedResources || (ResourceRequestList == null))
-                DoActivity();
-        }
+			if (tookRequestedResources || (ResourceRequestList == null))
+				DoActivity();
+		}
 
-        /// <summary>
-        /// Try to take the Resources based on Resource Request List provided.
-        /// Returns true if it was able to take the resources it needed.
-        /// Returns false if it was unable to take the resources it needed.
-        /// </summary>
-        /// <param name="ResourceRequestList"></param>
-        public bool TakeResources(List<ResourceRequest> ResourceRequestList)
+		/// <summary>
+		/// Try to take the Resources based on Resource Request List provided.
+		/// Returns true if it was able to take the resources it needed.
+		/// Returns false if it was unable to take the resources it needed.
+		/// </summary>
+		/// <param name="ResourceRequestList"></param>
+		public bool TakeResources(List<ResourceRequest> ResourceRequestList)
         {
             bool resourceAvailable = false;
 

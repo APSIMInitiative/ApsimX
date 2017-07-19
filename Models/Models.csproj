@@ -503,6 +503,8 @@
     <Compile Include="WholeFarm\Activities\RuminantActivityMilking.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityPredictiveStockingENSO.cs" />
     <Compile Include="WholeFarm\Activities\RuminantSaleFee.cs" />
+    <Compile Include="WholeFarm\Activities\TimingActivityDateRange.cs" />
+    <Compile Include="WholeFarm\Activities\TimingActivityMonthRange.cs" />
     <Compile Include="WholeFarm\Activities\TruckingSettings.cs" />
     <Compile Include="WholeFarm\FileCrop.cs" />
     <Compile Include="WholeFarm\Groupings\LabourFilterGroupSpecified.cs" />
@@ -653,7 +655,7 @@
   <Target Name="BeforeBuild">
   </Target>-->
   <Target Name="AfterBuild" DependsOnTargets="AssignTargetPaths;Compile" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
-	<!-- Delete the file because I can't figure out how to force the SGen task. -->
+    <!-- Delete the file because I can't figure out how to force the SGen task. -->
     <Delete Files="$(TargetDir)$(TargetName).XmlSerializers.dll" ContinueOnError="true" />
     <SGen Condition="'$(OS)' == 'Windows_NT' OR '$(OS)' == 'WINDOWS'" BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(TargetFrameworkSDKToolsDirectory)" Platform="$(Platform)">
       <Output TaskParameter="SerializationAssembly" ItemName="SerializationAssembly" />

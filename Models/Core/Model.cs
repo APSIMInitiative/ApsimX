@@ -315,6 +315,8 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Resources.RuminantType))]
         [XmlElement(typeof(Models.WholeFarm.Resources.RuminantTypeCohort))]
 		[XmlElement(typeof(Models.WholeFarm.SummariseRuminantHerd))]
+		[XmlElement(typeof(Models.WholeFarm.Activities.TimingActivityDateRange))]
+		[XmlElement(typeof(Models.WholeFarm.Activities.TimingActivityMonthRange))]
 		[XmlElement(typeof(Models.WholeFarm.Transmutation))]
 		[XmlElement(typeof(Models.WholeFarm.TransmutationCost))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.TruckingSettings))]
