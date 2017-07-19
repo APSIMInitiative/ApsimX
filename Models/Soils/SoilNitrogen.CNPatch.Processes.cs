@@ -745,7 +745,6 @@ namespace Models.Soils
                 {
                     // get the soil temperature factor
                     double stf = SoilTempFactor(layer, index, g.Denitrification_TemperatureFactorData);
-                    stf = Math.Max(0.0, Math.Min(1.0, 0.1 * Math.Exp(0.046 * g.Soil.Temperature[layer])));
 
                     // get the soil water factor
                     double swf = SoilMoistFactor(layer, index, g.Denitrification_MoistureFactorData);
