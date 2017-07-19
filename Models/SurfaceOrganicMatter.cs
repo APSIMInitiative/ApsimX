@@ -1405,14 +1405,14 @@
         public event FOMPoolDelegate IncorpFOMPool;
 
         /// <summary>Publishes the fom pool.</summary>
-        /// <param name="data">The data.</param>
+        /// <param name="data">The fom data.</param>
         private void PublishFOMPool(FOMPoolType data)
         {
             if (IncorpFOMPool != null)
                 IncorpFOMPool.Invoke(data);
             else
-                soil.SoilNitrogen.IncorporateFOM(data);
-            //TODO: figure out why the event above code stopped working, or whether the code below is better
+                soil.SoilNitrogen.DoIncorpFOM(data);
+            //TODO: figure out why the event above stopped working, or whether the code below is better
         }
 
         /// <summary>

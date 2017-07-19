@@ -649,51 +649,7 @@ namespace Models.Soils
         [EventSubscribe("IncorpFOMPool")]
         public void OnIncorpFOMPool(FOMPoolType inFOMPoolData)
         {
-            // get the total amount to be added
-            double totalCAmount = 0.0;
-            double totalNAmount = 0.0;
-            double amountCnotAdded = 0.0;
-            double amountNnotAdded = 0.0;
-
-            for (int layer = 0; layer < inFOMPoolData.Layer.Length; layer++)
-            {
-                if (layer < nLayers)
-                {
-                    for (int pool = 0; pool < 3; pool++)
-                    {
-                        if (inFOMPoolData.Layer[layer].Pool[pool].C >= epsilon)
-                        {   // we have both C and N, can add
-                            totalCAmount += inFOMPoolData.Layer[layer].Pool[pool].C;
-                            totalNAmount += inFOMPoolData.Layer[layer].Pool[pool].N;
-                        }
-                        else
-                        {   // some data is mising, cannot add
-                            amountCnotAdded += inFOMPoolData.Layer[layer].Pool[pool].C;
-                            amountNnotAdded += inFOMPoolData.Layer[layer].Pool[pool].N;
-                        }
-                    }
-                }
-                else
-                    mySummary.WriteMessage(this, " Information passed contained more layers than the soil, these will be ignored");
-            }
-
-            // actually add the FOM to soil, if valid
-            if ((totalCAmount >= epsilon) && (totalNAmount >= epsilon))
-                IncorporateFOM(inFOMPoolData);
-            else
-            {
-                // let the user know of any issues
-                string aMessage;
-
-                if (amountCnotAdded >= epsilon)
-                    aMessage = "only C amount was given (" + amountCnotAdded.ToString("#0.00") + "kg/ha)";
-                else if (amountNnotAdded >= epsilon)
-                    aMessage = "only N amount was given (" + amountNnotAdded.ToString("#0.00") + "kg/ha)";
-                else
-                    aMessage = "no amount was given";
-
-                mySummary.WriteWarning(this, "FOM addition was not carried out because " + aMessage);
-            }
+            DoIncorpFOM(inFOMPoolData);
         }
 
         /// <summary>
@@ -818,7 +774,7 @@ namespace Models.Soils
         /// The values for C as well as N must be supplied or the action is not performed.
         /// </remarks>
         /// <param name="inFOMData">Data about the FOM to be added to the soil</param>
-        public void DoIncorpPool(FOMPoolType inFOMData)
+        public void DoIncorpFOM(FOMPoolType inFOMData)
         {
             // get the total amount to be added
             double totalCAmount = 0.0;
