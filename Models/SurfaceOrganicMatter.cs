@@ -1410,8 +1410,8 @@
         {
             if (IncorpFOMPool != null)
                 IncorpFOMPool.Invoke(data);
-            else
-                soil.SoilNitrogen.DoIncorpFOM(data);
+            //else
+            //    soil.SoilNitrogen.DoIncorpFOM(data);
             //TODO: figure out why the event above stopped working, or whether the code below is better
         }
 

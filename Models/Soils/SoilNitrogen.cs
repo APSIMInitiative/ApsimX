@@ -561,7 +561,7 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="SurfaceOrganicMatterDecomp">Data about the potential decomposition of each residue type on soil surface</param>
         [EventSubscribe("PotentialResidueDecompositionCalculated")]
-        public void OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp)
+        private void OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp)
         {
             // zero variables by assigning new array
             residueName = new string[nResidues];
@@ -647,7 +647,7 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="inFOMPoolData">Data about the FOM to be added to the soil</param>
         [EventSubscribe("IncorpFOMPool")]
-        public void OnIncorpFOMPool(FOMPoolType inFOMPoolData)
+        private void OnIncorpFOMPool(FOMPoolType inFOMPoolData)
         {
             DoIncorpFOM(inFOMPoolData);
         }
@@ -865,7 +865,7 @@ namespace Models.Soils
         /// </remarks>
         /// <param name="NewProfile">Data about the new soil profile</param>
         [EventSubscribe("NewProfile")]
-        public void OnNew_profile(NewProfileType NewProfile)
+        private void OnNew_profile(NewProfileType NewProfile)
         {
             // get the basic soil data info
             int nLayers = NewProfile.dlayer.Length;
@@ -951,7 +951,7 @@ namespace Models.Soils
         /// <param name="NitrogenChanges">The variation (delta) for each mineral N form</param>
         ///
         [EventSubscribe("NitrogenChanged")]
-        public void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
+        private void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
         {
             // get the type of module sending this change
             senderModule = NitrogenChanges.SenderType.ToLower();
@@ -1034,7 +1034,7 @@ namespace Models.Soils
         /// </summary>
         /// <param name="PatchtoAdd">Patch data</param>
         [EventSubscribe("AddSoilCNPatch")]  // RJM TODO check name
-        public void OnAddSoilCNPatch(AddSoilCNPatchType PatchtoAdd)
+        private void OnAddSoilCNPatch(AddSoilCNPatchType PatchtoAdd)
         {
             // data passed with this event:
             //.Sender: the name of the module that raised this event
@@ -1094,7 +1094,7 @@ namespace Models.Soils
         /// </summary>
         /// <param name="PatchtoAdd">Patch data</param>
         [EventSubscribe("AddSoilCNPatchwithFOM")]  // RJM TODO check name
-        public void OnAddSoilCNPatchwithFOM(AddSoilCNPatchwithFOMType PatchtoAdd)
+        private void OnAddSoilCNPatchwithFOM(AddSoilCNPatchwithFOMType PatchtoAdd)
         {
             // data passed with this event:
             //.Sender: the name of the module that raised this event
@@ -1208,7 +1208,7 @@ namespace Models.Soils
         /// </summary>
         /// <param name="MergeCNPatch">The list of CNPatches to merge</param>
         [EventSubscribe("MergeSoilCNPatch")]  // RJM TODO check name
-        public void OnMergeSoilCNPatch(MergeSoilCNPatchType MergeCNPatch)
+        private void OnMergeSoilCNPatch(MergeSoilCNPatchType MergeCNPatch)
         {
             List<int> PatchesToMerge = new List<int>();
 
