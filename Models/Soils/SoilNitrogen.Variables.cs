@@ -111,7 +111,9 @@ namespace Models.Soils
         /// <summary>
         /// factor to convert organic carbon to organic matter
         /// </summary>
-        [Bounds(Lower = 0.0, Upper = 3.0)]
+        [Units("g/g")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
+        [XmlIgnore]
         public double defaultCarbonInSoilOM = 0.588;
 
         /// <summary>
@@ -120,7 +122,8 @@ namespace Models.Soils
         /// <remarks>
         /// Used to convert FOM amount into fom_c
         /// </remarks>
-        [Units("0-1")]
+        [Units("g/g")]
+        [Bounds(Lower = 0.0, Upper = 1.0)]
         [XmlIgnore]
         public double defaultCarbonInFOM = 0.4;
 
@@ -273,11 +276,7 @@ namespace Models.Soils
                 if (InitialFOMType != fom_types[FOMtypeID_reset])
                 {   // no valid FOM type was given, use default
                     FOMtypeID_reset = 0;
-                    // let the user know that the default type will be used
-                    Console.WriteLine("  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    Console.WriteLine("                 APSIM Warning Error");
-                    Console.WriteLine("   The initial FOM type was not found, the default type will be used");
-                    Console.WriteLine("  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    mySummary.WriteWarning(this,"   The initial FOM type was not found, the default type will be used");
                 }
             }
         }
@@ -1200,34 +1199,6 @@ namespace Models.Soils
         public double N2N2O_parmB = -0.80;
 
         /// <summary>
-        /// Flag whether water soluble carbon is computed using newly defined pools
-        /// </summary>
-        /// <remarks>
-        /// Classic definition uses all humus and all FOM
-        /// New definition uses active humus, biomass and pool1 of FOM (carbohydrate)
-        /// </remarks>
-        [XmlIgnore]
-        public string allowNewPools
-        {
-            get { return (usingNewPools) ? "yes" : "no"; }
-            set { usingNewPools = value.ToLower().Contains("yes"); }
-        }
-
-        /// <summary>
-        /// Flag whether an exponential function is used to compute water soluble C
-        /// </summary>
-        /// <remarks>
-        /// Classic approach is a linear function (soluble carbon is not zero when total C is zero)
-        /// New exponential function is quite similar, but ensures zero soluble C
-        /// </remarks>
-        [XmlIgnore]
-        public string allowExpFunction
-        {
-            get { return (usingExpFunction) ? "yes" : "no"; }
-            set { usingExpFunction = value.ToLower().Contains("yes"); }
-        }
-
-        /// <summary>
         /// Parameter A to compute active carbon
         /// </summary>
         [XmlIgnore]
@@ -1239,15 +1210,11 @@ namespace Models.Soils
         [XmlIgnore]
         public double actC_parmB = 0.0031;
 
-        /// <summary>
-        /// Parameter A of exponential function to compute active carbon
-        /// </summary>
+        /// <summary>Parameter A of exponential function to compute active carbon</summary>
         [XmlIgnore]
         public double actCExp_parmA = 0.011;
 
-        /// <summary>
-        /// Parameter B of exponential function to compute active carbon
-        /// </summary>
+        /// <summary>Parameter B of exponential function to compute active carbon</summary>
         [XmlIgnore]
         public double actCExp_parmB = 0.895;
 
@@ -1765,7 +1732,7 @@ namespace Models.Soils
             {
                 if (initDone)
                 {
-                    Console.WriteLine(" Attempt to assign values for OC during simulation, "
+                    mySummary.WriteMessage(this, " Attempt to assign values for OC during simulation, "
                                      + "this operation is not valid and will be ignored");
                 }
                 else
@@ -1947,12 +1914,12 @@ namespace Models.Soils
                             if (InhibitionFactor_Nitrification[layer] < -epsilon)
                             {
                                 InhibitionFactor_Nitrification[layer] = 0.0;
-                                Console.WriteLine("Value for nitrification inhibition is below lower limit, value will be adjusted to 0.0");
+                                mySummary.WriteWarning(this, "Value for nitrification inhibition is below lower limit, value will be adjusted to 0.0");
                             }
                             else if (InhibitionFactor_Nitrification[layer] > 1.0)
                             {
                                 InhibitionFactor_Nitrification[layer] = 1.0;
-                                Console.WriteLine("Value for nitrification inhibition is above upper limit, value will be adjusted to 1.0");
+                                mySummary.WriteWarning(this, "Value for nitrification inhibition is above upper limit, value will be adjusted to 1.0");
                             }
                         }
                         else
@@ -6106,11 +6073,6 @@ namespace Models.Soils
         private bool initDone = false;
 
         /// <summary>
-        /// Marker for whether a reset is going on
-        /// </summary>
-        public bool isResetting = false;
-
-        /// <summary>
         /// Indicates whether soil profile reduction is allowed (from erosion)
         /// </summary>
         private bool ProfileReductionAllowed = false;
@@ -6122,16 +6084,6 @@ namespace Models.Soils
         /// It should always be false, as organic solutes are not implemented yet
         /// </remarks>
         private bool useOrganicSolutes = false;
-
-        /// <summary>
-        /// whether water soluble carbon calcualtion uses new C pools
-        /// </summary>
-        private bool usingNewPools = false;
-
-        /// <summary>
-        /// whether exponential function is used to compute water soluble carbon
-        /// </summary>
-        private bool usingExpFunction = false;
 
         #endregion
 

@@ -92,8 +92,6 @@ namespace Models.Soils
         /// <summary>Reset the state values to those set during the initialisation</summary>
         public void Reset()
         {
-            isResetting = true;
-
             // Save the present C and N status
             StoreStatus();
 
@@ -106,10 +104,7 @@ namespace Models.Soils
             // get the changes of state and publish (let other component to know)
             SendDeltaState();
 
-            Console.WriteLine();
-            Console.WriteLine("        - Re-setting SoilNitrogen state variables");
-
-            isResetting = false;
+            mySummary.WriteWarning(this, "Re - setting SoilNitrogen state variables");
         }
 
         /// <summary>
@@ -679,10 +674,10 @@ namespace Models.Soils
                     }
                 }
                 else
-                    mySummary.WriteMessage(this, " IncorpFOMPool: information passed contained more layers than the soil, these will be ignored");
+                    mySummary.WriteMessage(this, " Information passed contained more layers than the soil, these will be ignored");
             }
 
-            // add FOM to soil layers, if given
+            // actually add the FOM to soil, if valid
             if ((totalCAmount >= epsilon) && (totalNAmount >= epsilon))
                 IncorporateFOM(inFOMPoolData);
             else
@@ -749,7 +744,7 @@ namespace Models.Soils
                     }
                 }
                 else
-                    Console.WriteLine("Information passed contained more layers than the soil, these will be ignored");
+                    mySummary.WriteWarning(this, "Information passed contained more layers than the soil, these will be ignored");
             }
 
             // If any FOM was passed, make the partition into FOM pools

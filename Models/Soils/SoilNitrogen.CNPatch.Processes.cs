@@ -724,19 +724,15 @@ namespace Models.Soils
                 double result;
                 int index = 0; // denitrification calcs are not different whether there is pond or not. use 0 as default
 
-                // get available carbon from soil organic pools
-                double totalC = 0.0;//(hum_c[layer] + fom_c[0][layer] + fom_c[1][layer] + fom_c[2][layer]) * g.convFactor[layer];
-                if (g.usingNewPools)
-                    totalC = (hum_c[layer] - inert_c[layer] + biom_c[layer] + fom_c[0][layer]) * g.convFactor[layer];
-                else
-                    totalC = (hum_c[layer] + fom_c[0][layer] + fom_c[1][layer] + fom_c[2][layer]) * g.convFactor[layer];
+                // get available carbon from soil organic pools (ppm)
+                double totalC = (hum_c[layer] + fom_c[0][layer] + fom_c[1][layer] + fom_c[2][layer]) * g.convFactor[layer];
+                //// Note: Ceres wheat has active_c = 0.4* fom_C_pool1 + 0.0031 * 0.58 * hum_C_conc + 24.5
+                //// Suggest use new definition, but this need test and probably reparameterisation
+                //// totalC = (hum_c[layer] - inert_c[layer] + biom_c[layer] + fom_c[0][layer]) * g.convFactor[layer];
 
-                //double active_c = 0.0;  replaced by waterSoluble_c
-                if (g.usingExpFunction)
-                    waterSoluble_c[layer] = g.actCExp_parmA * Math.Pow(totalC, g.actCExp_parmB);
-                else
-                    waterSoluble_c[layer] = g.actC_parmA + g.actC_parmB * totalC;
-                // Note: Ceres wheat has active_c = 0.4* fom_C_pool1 + 0.0031 * 0.58 * hum_C_conc + 24.5
+                waterSoluble_c[layer] = g.actC_parmA + g.actC_parmB * totalC;
+                //// Note: this calculation would be better using a power function, ensuring zero if no C is available
+                //// waterSoluble_c[layer] = g.actCExp_parmA * Math.Pow(totalC, g.actCExp_parmB);
 
                 // get the potential denitrification rate
                 double pot_denit_rate = g.DenitrificationRateCoefficient * waterSoluble_c[layer];
@@ -744,7 +740,8 @@ namespace Models.Soils
                 if (pot_denit_rate >= g.epsilon)
                 {
                     // get the soil temperature factor
-                    double stf = SoilTempFactor(layer, index, g.Denitrification_TemperatureFactorData);
+                    //double stf = SoilTempFactor(layer, index, g.Denitrification_TemperatureFactorData);
+                    double stf = Math.Max(0.0, Math.Min(1.0, 0.1 * Math.Exp(0.046 * g.Soil.Temperature[layer])));
 
                     // get the soil water factor
                     double swf = SoilMoistFactor(layer, index, g.Denitrification_MoistureFactorData);

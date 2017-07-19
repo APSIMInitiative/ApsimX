@@ -118,9 +118,7 @@ namespace Models.Soils
                     else if (OldPatch_NewArea < MinimumPatchArea)
                     {
                         // remaining area is too small or negative, patch will be created but old one will be deleted
-                        Console.WriteLine(Clock.Today.ToString("dd MMMM yyyy") + "(Day of year="
-                                          + Clock.Today.DayOfYear.ToString() + "), SoilNitrogen.AddCNPatch:");
-                        Console.WriteLine(" attempt to set the area of existing patch(" + idPatchesAffected[i].ToString()
+                        mySummary.WriteWarning(this, " attempt to set the area of existing patch(" + idPatchesAffected[i].ToString()
                                           + ") to a value too small or negative (" + OldPatch_NewArea.ToString("#0.00#")
                                           + "). The patch will be eliminated.");
 
