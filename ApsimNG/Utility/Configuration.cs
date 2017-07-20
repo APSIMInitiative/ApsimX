@@ -111,6 +111,25 @@ namespace Utility
             }
         }
 
+        /// <summary>Rename a specified file in the list</summary>
+        /// <param name="filename">The file name to rename</param>
+        /// <param name="newname">The new file name</param>
+        public void RenameMruFile(string filename, string newname)
+        {
+            if (filename.Length > 0)
+            {
+                if (MruList.Count > 0)
+                {
+                    int idx = MruList.IndexOf(filename);
+                    if (idx >= 0)
+                    {
+                        MruList.RemoveAt(idx);
+                        MruList.Insert(idx, newname);
+                    }
+                }
+            }
+        }
+
         /// <summary>Clean the list by removing missing files</summary>
         public void CleanMruList()
         {
@@ -197,7 +216,7 @@ namespace Utility
         }
 
         /// <summary>Store the configuration settings to file</summary>
-        private void Save()
+        public void Save()
         {
             string ConfigPath = Path.GetDirectoryName(ConfigurationFile);
             if (!Directory.Exists(ConfigPath))
