@@ -10,6 +10,7 @@ namespace UserInterface.Presenters
     using System.IO;
     using System.Xml;
     using Importer;
+    using Interfaces;
     using Models.Core;
     using Views;
     using System.Reflection;
@@ -64,8 +65,8 @@ namespace UserInterface.Presenters
 
             // Trap some events.
             this.view.AllowClose += OnClosing;
-            this.view.StartPage1.List.DoubleClicked += OnFileDoubleClicked1;
-            this.view.StartPage2.List.DoubleClicked += OnFileDoubleClicked2;
+            this.view.StartPage1.List.DoubleClicked += OnFileDoubleClicked;
+            this.view.StartPage2.List.DoubleClicked += OnFileDoubleClicked;
             this.view.TabClosing += OnTabClosing;
             this.view.Show();
 
@@ -78,8 +79,8 @@ namespace UserInterface.Presenters
         public void Detach(object view)
         {
             this.view.AllowClose -= OnClosing;
-            this.view.StartPage1.List.DoubleClicked -= OnFileDoubleClicked1;
-            this.view.StartPage2.List.DoubleClicked -= OnFileDoubleClicked2;
+            this.view.StartPage1.List.DoubleClicked -= OnFileDoubleClicked;
+            this.view.StartPage2.List.DoubleClicked -= OnFileDoubleClicked;
             this.view.TabClosing -= OnTabClosing;
         }
 
@@ -254,6 +255,148 @@ namespace UserInterface.Presenters
             
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
+
+            PopulatePopup(startPage);
+        }
+
+        private void PopulatePopup(IListButtonView startPage)
+        {
+            List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
+            MenuDescriptionArgs descOpen = new MenuDescriptionArgs();
+            descOpen.Name = "Open";
+            descOpen.Enabled = true;
+            descOpen.OnClick = OnOpen;
+            descriptions.Add(descOpen);
+
+            MenuDescriptionArgs descRemove = new MenuDescriptionArgs();
+            descRemove.Name = "Remove from recent file list";
+            descRemove.Enabled = true;
+            descRemove.OnClick = OnRemove;
+            descriptions.Add(descRemove);
+
+            MenuDescriptionArgs descClear = new MenuDescriptionArgs();
+            descClear.Name = "Clear recent file list";
+            descClear.Enabled = true;
+            descClear.OnClick = OnClear;
+            descriptions.Add(descClear);
+
+            MenuDescriptionArgs descRename = new MenuDescriptionArgs();
+            descRename.Name = "Rename";
+            descRename.Enabled = true;
+            descRename.OnClick = OnRename;
+            descriptions.Add(descRename);
+
+            MenuDescriptionArgs descCopy = new MenuDescriptionArgs();
+            descCopy.Name = "Copy";
+            descCopy.Enabled = true;
+            descCopy.OnClick = OnCopy;
+            descriptions.Add(descCopy);
+
+            MenuDescriptionArgs descDelete = new MenuDescriptionArgs();
+            descDelete.Name = "Delete";
+            descDelete.Enabled = true;
+            descDelete.OnClick = OnDelete;
+            descriptions.Add(descDelete);
+
+            startPage.List.PopulateContextMenu(descriptions);
+        }
+
+        private void OnOpen(object obj, EventArgs args)
+        {
+            string fileName = this.view.GetMenuItemFileName(obj);
+            if (fileName != null)
+            {
+                this.OpenApsimXFileInTab(fileName, this.view.IsControlOnLeft(obj));
+                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+            }
+        }
+
+        private void OnRemove(object obj, EventArgs args)
+        {
+            string fileName = this.view.GetMenuItemFileName(obj);
+            if (!String.IsNullOrEmpty(fileName))
+            {
+                Utility.Configuration.Settings.DelMruFile(fileName);
+                UpdateMRUDisplay();
+            }
+        }
+
+        private void OnClear(object obj, EventArgs args)
+        {
+            if (AskQuestion("Are you sure you want to completely clear the list of recently used files?") == QuestionResponseEnum.Yes)
+            {
+                string[] MRUFiles = Utility.Configuration.Settings.MruList.ToArray();
+                foreach (string fileName in MRUFiles)
+                    Utility.Configuration.Settings.DelMruFile(fileName);
+                UpdateMRUDisplay();
+            }
+        }
+
+        private void OnRename(object obj, EventArgs args)
+        {
+            string fileName = this.view.GetMenuItemFileName(obj);
+            if (!String.IsNullOrEmpty(fileName))
+            {
+                string newName = AskUserForSaveFileName("ApsimX files|*.apsimx", fileName);
+                if (!String.IsNullOrEmpty(newName) && newName != fileName)
+                {
+                    try
+                    {
+                        File.Move(fileName, newName);
+                        Utility.Configuration.Settings.RenameMruFile(fileName, newName);
+                        UpdateMRUDisplay();
+                    }
+                    catch (Exception)
+                    {
+                        view.ShowMessage("Error renaming file!", DataStore.ErrorLevel.Error);
+                    }
+                }
+            }
+        }
+
+        private void OnCopy(object obj, EventArgs args)
+        {
+            string fileName = this.view.GetMenuItemFileName(obj);
+            if (!String.IsNullOrEmpty(fileName))
+            {
+                string newFileName = "Copy of " + Path.GetFileName(fileName);
+                string newFilePath = Path.Combine(Path.GetDirectoryName(fileName), newFileName);
+                string copyName = AskUserForSaveFileName("ApsimX files|*.apsimx", newFilePath);
+                if (!String.IsNullOrEmpty(copyName))
+                {
+                    try
+                    {
+                        File.Copy(fileName, copyName);
+                        Utility.Configuration.Settings.AddMruFile(copyName);
+                        UpdateMRUDisplay();
+                    }
+                    catch (Exception)
+                    {
+                        view.ShowMessage("Error creating copy of file!", DataStore.ErrorLevel.Error);
+                    }
+                }
+            }
+        }
+
+        private void OnDelete(object obj, EventArgs args)
+        {
+            string fileName = this.view.GetMenuItemFileName(obj);
+            if (!String.IsNullOrEmpty(fileName))
+            {
+                if (AskQuestion("Are you sure you want to completely delete the file " + fileName + "?") == QuestionResponseEnum.Yes)
+                {
+                    try
+                    {
+                        File.Delete(fileName);
+                        Utility.Configuration.Settings.DelMruFile(fileName);
+                        UpdateMRUDisplay();
+                    }
+                    catch (Exception)
+                    {
+                        view.ShowMessage("Error deleting file!", DataStore.ErrorLevel.Error);
+                    }
+                }
+            }
         }
 
         /// <summary>Process the specified command line arguments. Will throw if there are errors during startup.</summary>
@@ -271,6 +414,17 @@ namespace UserInterface.Presenters
             }
         }
 
+        ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
+        {
+            List<ExplorerPresenter> presenters = onLeftTabControl ? presenters1 : presenters2;
+            foreach (ExplorerPresenter presenter in presenters)
+            {
+                if (presenter.ApsimXFile.FileName == fileName)
+                    return presenter;
+            }
+            return null;
+        }
+
         /// <summary>Open an .apsimx file into the current tab.</summary>
         /// <param name="fileName">The file to open</param>
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
@@ -279,12 +433,20 @@ namespace UserInterface.Presenters
             ExplorerPresenter presenter = null;
             if (fileName != null)
             {
+                presenter = PresenterForFile(fileName, onLeftTabControl);
+                if (presenter != null)
+                {
+                    view.SelectTabContaining(presenter.GetView().MainWidget);
+                    return presenter;
+                }
                 view.ShowWaitCursor(true);
                 try
                 {
                     Simulations simulations = Simulations.Read(fileName);
                     presenter = CreateNewTab(fileName, simulations, onLeftTabControl);
+                    // Add to MRU list and update display
                     Utility.Configuration.Settings.AddMruFile(fileName);
+                    UpdateMRUDisplay();
                 }
 
                 catch (Exception err)
@@ -296,6 +458,16 @@ namespace UserInterface.Presenters
             }
 
             return presenter;
+        }
+
+        /// <summary>
+        /// Updates display of the list of most-recently-used files
+        /// </summary>
+        public void UpdateMRUDisplay()
+        {
+            view.StartPage1.List.Values = Utility.Configuration.Settings.MruList.ToArray();
+            view.StartPage2.List.Values = Utility.Configuration.Settings.MruList.ToArray();
+            Utility.Configuration.Settings.Save();
         }
 
         /// <summary>Open an .apsimx file into the current tab.</summary>
@@ -355,31 +527,17 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Open a recently used file in panel 1
+        /// Open a recently used file
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="e">Event arguments</param>
-        private void OnFileDoubleClicked1(object sender, EventArgs e)
+        private void OnFileDoubleClicked(object sender, EventArgs e)
         {
-            string fileName = view.StartPage1.List.SelectedValue;
+            bool onLeftTabControl = this.view.IsControlOnLeft(sender);
+            string fileName = onLeftTabControl ? view.StartPage1.List.SelectedValue : view.StartPage2.List.SelectedValue;
             if (fileName != null)
             {
-                this.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
-                Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
-            }
-        }
-
-        /// <summary>
-        /// Open a recently used file in panel 2
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="e">Event arguments</param>
-        private void OnFileDoubleClicked2(object sender, EventArgs e)
-        {
-            string fileName = view.StartPage2.List.SelectedValue;
-            if (fileName != null)
-            {
-                this.OpenApsimXFileInTab(fileName, onLeftTabControl: false);
+                this.OpenApsimXFileInTab(fileName, onLeftTabControl);
                 Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
             }
         }

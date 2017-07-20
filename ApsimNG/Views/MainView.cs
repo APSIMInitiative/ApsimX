@@ -56,6 +56,8 @@ namespace UserInterface.Views
         /// </summary>
         bool IsControlOnLeft(object control);
 
+        string GetMenuItemFileName(object obj);
+
         /// <summary>Ask user for a filename to open.</summary>
         /// <param name="fileSpec">The file specification to use to filter the files.</param>
         /// <param name="initialDirectory">Optional Initial starting directory</param>
@@ -106,6 +108,12 @@ namespace UserInterface.Views
         /// <summary>Close a tab.</summary>
         /// <param name="o">A widget appearing on the tab</param>
         void CloseTabContaining(object o);
+
+        /// <summary>
+        /// Select a tab.
+        /// </summary>
+        /// <param name="o">A widget appearing on the tab</param>
+        void SelectTabContaining(object o);
 
         /// <summary>Invoked when application tries to close</summary>
         event EventHandler<AllowCloseArgs> AllowClose;
@@ -373,6 +381,15 @@ namespace UserInterface.Views
             }
         }
 
+        public void SelectTabContaining(object o)
+        {
+            Notebook notebook = null;
+            string tabText = null;
+            int tabPage = GetTabOfWidget(o, ref notebook, ref tabText);
+            if (tabPage >= 0 && notebook != null)
+                notebook.CurrentPage = tabPage;
+        }
+
         /// <summary>Gets or set the main window position.</summary>
         public Point WindowLocation
         {
@@ -454,10 +471,28 @@ namespace UserInterface.Views
         {
             if (control is Widget)
             {
+                if (control is MenuItem && (control as MenuItem).Parent is Menu)
+                {
+                    Widget menuOwner = ((control as MenuItem).Parent as Menu).AttachWidget;
+                    if (menuOwner != null)
+                        return menuOwner.IsAncestor(notebook1);
+                }
                 return (control as Widget).IsAncestor(notebook1);
             }
-            else
-                return false;
+            return false;
+        }
+
+        public string GetMenuItemFileName(object obj)
+        {
+            if (obj is MenuItem && (obj as MenuItem).Parent is Menu)
+            {
+                Widget menuOwner = ((obj as MenuItem).Parent as Menu).AttachWidget;
+                if (menuOwner.IsAncestor(notebook1))
+                    return StartPage1.List.SelectedValue;
+                else if (menuOwner.IsAncestor(notebook2))
+                    return StartPage2.List.SelectedValue;
+            }
+            return null;
         }
 
         /// <summary>Ask user for a filename to open.</summary>
