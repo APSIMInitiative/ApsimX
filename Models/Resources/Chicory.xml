@@ -97,7 +97,7 @@
       <Twilight>-6</Twilight>
       <DayLength>0</DayLength>
     </PhotoperiodFunction>
-    <Model xsi:type="VernalisationC">
+    <VernalisationC>
       <Name>Vernalisation</Name>
       <Memo>
         <Name>Description</Name>
@@ -158,7 +158,7 @@
       <StartStage>Emergence</StartStage>
       <EndStage>Bolting</EndStage>
       <ResetStage>Ripening</ResetStage>
-    </Model>
+    </VernalisationC>
     <GerminatingPhase>
       <Name>Germinating</Name>
       <Memo>
