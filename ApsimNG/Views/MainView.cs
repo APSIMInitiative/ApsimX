@@ -277,6 +277,12 @@ namespace UserInterface.Views
             MonoMac.AppKit.NSApplication.Init();
         }
 
+        /// <summary>
+        /// Handles button press event on the "tab" part of a tabbed page.
+        /// Currently responds by closing the tab if the middle button was pressed
+        /// </summary>
+        /// <param name="o">The object issuing the event</param>
+        /// <param name="e">Button press event arguments</param>
         public void on_eventbox1_button_press_event(object o, ButtonPressEventArgs e)
         {
             if (e.Event.Button == 2) // Let a center-button click on a tab close that tab.
@@ -356,6 +362,11 @@ namespace UserInterface.Views
             return -1;
         }
 
+        /// <summary>
+        /// Responds to presses of the "Close" button by closing the associated tab
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="e"></param>
         public void OnCloseBtnClick(object o, EventArgs e)
         {
             CloseTabContaining(o);
@@ -381,6 +392,10 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Looks for the tab holding the specified user interface object, and makes that the active tab
+        /// </summary>
+        /// <param name="o">The interface object being sought; normally will be a Gtk Widget</param>
         public void SelectTabContaining(object o)
         {
             Notebook notebook = null;
@@ -482,6 +497,12 @@ namespace UserInterface.Views
             return false;
         }
 
+        /// <summary>
+        /// Returns the file name associated with the currently selected object, given
+        /// a menu item from the popup menu for the more-recently-used file list
+        /// </summary>
+        /// <param name="obj">A menu item</param>
+        /// <returns></returns>
         public string GetMenuItemFileName(object obj)
         {
             if (obj is MenuItem && (obj as MenuItem).Parent is Menu)

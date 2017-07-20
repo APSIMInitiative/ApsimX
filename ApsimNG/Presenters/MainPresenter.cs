@@ -259,6 +259,11 @@ namespace UserInterface.Presenters
             PopulatePopup(startPage);
         }
 
+        /// <summary>
+        /// Defines the list of items to be included in a popup menu for the
+        /// most-recently-used file display
+        /// </summary>
+        /// <param name="startPage">The page to which the menu will be added</param>
         private void PopulatePopup(IListButtonView startPage)
         {
             List<MenuDescriptionArgs> descriptions = new List<MenuDescriptionArgs>();
@@ -301,6 +306,11 @@ namespace UserInterface.Presenters
             startPage.List.PopulateContextMenu(descriptions);
         }
 
+        /// <summary>
+        /// Handles the Open menu item of the MRU context menu
+        /// </summary>
+        /// <param name="obj">The object issuing the event</param>
+        /// <param name="args">Event parameters</param>
         private void OnOpen(object obj, EventArgs args)
         {
             string fileName = this.view.GetMenuItemFileName(obj);
@@ -311,6 +321,11 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Handles the Remove menu item of the MRU context menu
+        /// </summary>
+        /// <param name="obj">The object issuing the event</param>
+        /// <param name="args">Event parameters</param>
         private void OnRemove(object obj, EventArgs args)
         {
             string fileName = this.view.GetMenuItemFileName(obj);
@@ -321,6 +336,11 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Handles the Clear menu item of the MRU context menu
+        /// </summary>
+        /// <param name="obj">The object issuing the event</param>
+        /// <param name="args">Event parameters</param>
         private void OnClear(object obj, EventArgs args)
         {
             if (AskQuestion("Are you sure you want to completely clear the list of recently used files?") == QuestionResponseEnum.Yes)
@@ -332,6 +352,11 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Handles the Rename menu item of the MRU context menu
+        /// </summary>
+        /// <param name="obj">The object issuing the event</param>
+        /// <param name="args">Event parameters</param>
         private void OnRename(object obj, EventArgs args)
         {
             string fileName = this.view.GetMenuItemFileName(obj);
@@ -354,6 +379,11 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Handles the Copy menu item of the MRU context menu
+        /// </summary>
+        /// <param name="obj">The object issuing the event</param>
+        /// <param name="args">Event parameters</param>
         private void OnCopy(object obj, EventArgs args)
         {
             string fileName = this.view.GetMenuItemFileName(obj);
@@ -378,6 +408,11 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Handles the Delete menu item of the MRU context menu
+        /// </summary>
+        /// <param name="obj">The object issuing the event</param>
+        /// <param name="args">Event parameters</param>
         private void OnDelete(object obj, EventArgs args)
         {
             string fileName = this.view.GetMenuItemFileName(obj);
@@ -414,6 +449,13 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Returns the ExplorerPresenter for the specified file name, 
+        /// or null if the file is not currently open
+        /// </summary>
+        /// <param name="fileName">The file name being sought</param>
+        /// <param name="onLeftTabControl">If true, search the left screen, else search the right</param>
+        /// <returns></returns>
         ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
         {
             List<ExplorerPresenter> presenters = onLeftTabControl ? presenters1 : presenters2;
@@ -722,6 +764,10 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Closes the tab containing a specified object
+        /// </summary>
+        /// <param name="o">The object (normally a Gtk Widget) being sought</param>
         public void CloseTabContaining(object o)
         {
             view.CloseTabContaining(o);
