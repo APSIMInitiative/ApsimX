@@ -157,6 +157,7 @@ namespace Models.Soils
         private double hum_cn = 0.0;
         /// <summary>The C:N ratio of the soil OM, from xml/GUI (actually of humus)</summary>
         /// <value>The soil_cn.</value>
+        [Units("")]
         private double soil_cn
         {
             get { return hum_cn; }
@@ -170,6 +171,7 @@ namespace Models.Soils
         /// Remains fixed throughout the simulation
         /// </remarks>
         [Bounds(Lower = 1, Upper = 50)]
+        [Units("")]
         [XmlIgnore]
         public double MBiomassCNr = 8.0;
 
@@ -177,6 +179,7 @@ namespace Models.Soils
         /// Proportion of biomass-C in the initial mineralisable humic-C (0-1)
         /// </summary>
         [Bounds(Lower = 0, Upper = 1)]
+        [Units("g/g")]
         [XmlIgnore]
         public double[] fbiom = { 0.05, 0.01 };
 
@@ -184,6 +187,7 @@ namespace Models.Soils
         /// Proportion of the initial total soil C that is inert, not subject to mineralisation (0-1)
         /// </summary>
         [Bounds(Lower = 0, Upper = 1)]
+        [Units("g/g")]
         [XmlIgnore]
         public double[] finert = { 0.5, 0.95 };
 
@@ -201,6 +205,7 @@ namespace Models.Soils
 
         /// <summary>Gets or sets the root_wt.</summary>
         /// <value>The root_wt.</value>
+        [Units("kg/ha")]
         private double root_wt
         {
             get { return iniFomWt; }
@@ -220,6 +225,7 @@ namespace Models.Soils
 
         /// <summary>Gets or sets the root_depth.</summary>
         /// <value>The root_depth.</value>
+        [Units("mm")]
         [XmlIgnore]
         private double root_depth
         {
@@ -231,6 +237,7 @@ namespace Models.Soils
         private double iniFomCNratio = 40.0;
         /// <summary>Gets or sets the root_cn.</summary>
         /// <value>The root_cn.</value>
+        [Units("")]
         private double root_cn
         {
             get { return iniFomCNratio; }
@@ -244,6 +251,7 @@ namespace Models.Soils
         /// If not given, a default value  might be considered (3.0)
         /// </remarks>
         [Bounds(Lower = 0.01, Upper = 10.0)]
+        [Units("")]
         [XmlIgnore]
         public double FOMDistributionCoefficient = 3.0;
 
@@ -286,12 +294,15 @@ namespace Models.Soils
         public String[] fom_types = { "default", "manure", "mucuna", "lablab", "shemp", "stable" };
 
         /// <summary>Fraction of carbohydrate in FOM (0-1), for each FOM type</summary>
+        [Units("g/g")]
         public double[] fract_carb = { 0.2, 0.3, 0.54, 0.57, 0.45, 0.0 };
 
         /// <summary>Fraction of cellulose in FOM (0-1), for each FOM type</summary>
+        [Units("g/g")]
         public double[] fract_cell = { 0.7, 0.3, 0.37, 0.37, 0.47, 0.1 };
 
         /// <summary>Fraction of lignin in FOM (0-1), for each FOM type</summary>
+        [Units("g/g")]
         public double[] fract_lign = { 0.1, 0.4, 0.09, 0.06, 0.08, 0.9 };
         #endregion  params for FOM setup
 
@@ -6274,13 +6285,6 @@ namespace Models.Soils
             /// </summary>
             public double[] yVals;
         }
-
-        #endregion
-
-        #region Useful constants
-
-        /// <summary>Value to evaluate precision against floating point variables</summary>
-        private double EPSILON = Math.Pow(2, -24);
 
         #endregion
     }
