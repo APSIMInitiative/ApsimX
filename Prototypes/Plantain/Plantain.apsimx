@@ -3728,30 +3728,30 @@ Where:
           <RegrStats>
             <Name>CumulativeHarvestedWt</Name>
             <n>670</n>
-            <Slope>0.97310419186109454</Slope>
-            <Intercept>-29.972312705750539</Intercept>
-            <SEslope>0.014657196751642541</SEslope>
-            <SEintercept>9.4219604558958725</SEintercept>
-            <R2>0.86839380640419839</R2>
-            <RMSE>140.6452606631064</RMSE>
-            <NSE>0.83976252299618193</NSE>
-            <ME>-44.450424738134011</ME>
-            <MAE>102.11186611847353</MAE>
-            <RSR>0.39999789573243949</RSR>
+            <Slope>0.97263569898704016</Slope>
+            <Intercept>-29.850749109976277</Intercept>
+            <SEslope>0.014642539152171853</SEslope>
+            <SEintercept>9.4125382365635364</SEintercept>
+            <R2>0.86851238312953383</R2>
+            <RMSE>140.57184036782164</RMSE>
+            <NSE>0.83992977516087675</NSE>
+            <ME>-44.581052572411672</ME>
+            <MAE>102.08763310450753</MAE>
+            <RSR>0.39978908696434096</RSR>
           </RegrStats>
           <RegrStats>
             <Name>HarvestedWt</Name>
             <n>660</n>
-            <Slope>0.58690610959876366</Slope>
-            <Intercept>49.125935106446079</Intercept>
-            <SEslope>0.024033299329637478</SEslope>
-            <SEintercept>3.4323432376712191</SEintercept>
-            <R2>0.47543082892864763</R2>
-            <RMSE>59.166885858548724</RMSE>
-            <NSE>0.44928795890186723</NSE>
-            <ME>0.17869199412718081</ME>
-            <MAE>41.796910354695541</MAE>
-            <RSR>0.74153734155108519</RSR>
+            <Slope>0.58666543617089173</Slope>
+            <Intercept>49.1235910029763</Intercept>
+            <SEslope>0.024016648669865689</SEslope>
+            <SEintercept>3.4299652545784025</SEintercept>
+            <R2>0.47557193974502376</R2>
+            <RMSE>59.149202967143111</RMSE>
+            <NSE>0.44961708644941645</NSE>
+            <ME>0.14783064298488718</ME>
+            <MAE>41.795830500480371</MAE>
+            <RSR>0.74131572224336628</RSR>
           </RegrStats>
           <RegrStats>
             <Name>NRate</Name>
@@ -3770,30 +3770,30 @@ Where:
           <RegrStats>
             <Name>Plantain.AboveGround.Wt</Name>
             <n>786</n>
-            <Slope>0.60807106095182</Slope>
-            <Intercept>55.877120657013592</Intercept>
-            <SEslope>0.024203021671974072</SEslope>
-            <SEintercept>3.7177463835168036</SEintercept>
-            <R2>0.44601612033300453</R2>
-            <RMSE>46.759614955589882</RMSE>
-            <NSE>0.38708777917822224</NSE>
-            <ME>0.41164635805788319</ME>
-            <MAE>32.345143776909104</MAE>
-            <RSR>0.78238892775990387</RSR>
+            <Slope>0.60766610435356561</Slope>
+            <Intercept>55.886659751451234</Intercept>
+            <SEslope>0.024186567589407043</SEslope>
+            <SEintercept>3.7152189261279402</SEintercept>
+            <R2>0.44602297747566788</R2>
+            <RMSE>46.747520587257846</RMSE>
+            <NSE>0.38740479750708468</NSE>
+            <ME>0.363876314141972</ME>
+            <MAE>32.332655098789843</MAE>
+            <RSR>0.78218656296540723</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Plantain.AboveGroundLive.NConc</Name>
             <n>831</n>
-            <Slope>0.78146115814055039</Slope>
-            <Intercept>0.0021961510985444924</Intercept>
-            <SEslope>0.047188487269981177</SEslope>
-            <SEintercept>0.0014490006887662758</SEintercept>
-            <R2>0.24858202947192454</R2>
-            <RMSE>0.010451286654958579</RMSE>
-            <NSE>-1.2888737597863398</NSE>
-            <ME>-0.00434242325459598</ME>
-            <MAE>0.00870986051696</MAE>
-            <RSR>1.5119918647481458</RSR>
+            <Slope>0.78215234804982992</Slope>
+            <Intercept>0.0021820472221256992</Intercept>
+            <SEslope>0.0472087526432056</SEslope>
+            <SEintercept>0.0014496229706290594</SEintercept>
+            <R2>0.24875194521937127</R2>
+            <RMSE>0.010451488388894327</RMSE>
+            <NSE>-1.2889621217236962</NSE>
+            <ME>-0.0043358470698618484</ME>
+            <MAE>0.0087095523908045161</MAE>
+            <RSR>1.5120210496781705</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Plantain.Population</Name>
