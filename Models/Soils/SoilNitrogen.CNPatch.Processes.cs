@@ -739,8 +739,7 @@ namespace Models.Soils
                 if (pot_denit_rate >= g.epsilon)
                 {
                     // get the soil temperature factor
-                    //double stf = SoilTempFactor(layer, index, g.Denitrification_TemperatureFactorData);
-                    double stf = Math.Max(0.0, Math.Min(1.0, 0.1 * Math.Exp(0.046 * g.Soil.Temperature[layer])));
+                    double stf = SoilTempFactor(layer, index, g.Denitrification_TemperatureFactorData);
 
                     // get the soil water factor
                     double swf = SoilMoistFactor(layer, index, g.Denitrification_MoistureFactorData);
