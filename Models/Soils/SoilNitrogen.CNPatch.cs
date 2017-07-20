@@ -25,7 +25,7 @@ namespace Models.Soils
         [Serializable]
         public partial class soilCNPatch
         {
-            /// <summary>The soilCNPatch</summary>
+            /// <summary>The soilCNPatch constructor</summary>
             public soilCNPatch(SoilNitrogen MainSoilNitrogen)
             { g = MainSoilNitrogen; }
 
@@ -677,8 +677,6 @@ namespace Models.Soils
                 }
             }
 
-
-
             /// <summary>
             /// Sets the size of arrays (with nLayers)
             /// </summary>
@@ -987,9 +985,8 @@ namespace Models.Soils
                 return AmountLostTop;
             }
 
-
             /// <summary>
-            /// CheckVariables
+            /// Check that the values of variables are ok
             /// </summary>
             public void CheckVariables()
             {

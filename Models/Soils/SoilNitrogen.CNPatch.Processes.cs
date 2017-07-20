@@ -686,7 +686,6 @@ namespace Models.Soils
             /// </summary>
             /// <param name="layer">the soil layer index for which calculations will be made</param>
             /// <returns>delta N coverted into N2O during nitrification</returns>
-            /// <returns></returns>
             private double N2OProducedDuringNitrification(int layer)
             {
                 double result = dlt_nitrification[layer] * g.Denit_LossFactorNitrif;
@@ -875,9 +874,9 @@ namespace Models.Soils
             /// <summary>
             /// Calculate the amount of N2O produced during nitritation
             /// </summary>
-            // <param name="deltaNH3Oxidation">the deltaNH3Oxidation</param>
-            // <param name="layer">the node number representing soil layer for which calculations will be made</param>
-            // <returns>delta N coverted from NH2OH into N2O</returns>
+            /// <param name="deltaNH3Oxidation">the deltaNH3Oxidation</param>
+            /// <param name="layer">the node number representing soil layer for which calculations will be made</param>
+            /// <returns>delta N coverted from NH2OH into N2O</returns>
             private double N2OProducedDuringNitritation(double deltaNH3Oxidation, int layer)
             {
                 double result = g.AmmoxLossParam1 * (Math.Exp(deltaNH3Oxidation * g.AmmoxLossParam2) - 1.0);
