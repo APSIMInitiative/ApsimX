@@ -1238,7 +1238,7 @@ namespace Models.Soils
             {
                 ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
 
-                if (Math.Abs(dltC) <= EPSILON)
+                if (Math.Abs(dltC) <= epsilon)
                     dltC = 0.0;
                 massBalanceChange.FlowType = dltC >= 0 ? "gain" : "loss";
                 massBalanceChange.PoolClass = "soil";
