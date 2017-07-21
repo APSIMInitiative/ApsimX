@@ -70,7 +70,7 @@ namespace UserInterface
             if (!String.IsNullOrEmpty(fileSpec))
                 dialog.Filter = fileSpec + "|All files (*.*)|*.*";
 
-            if (File.Exists(initialPath))
+            if (!String.IsNullOrWhiteSpace(initialPath)  && (File.Exists(initialPath) || action == FileChooserAction.Save))
             {
                 dialog.InitialDirectory = Path.GetDirectoryName(initialPath);
                 dialog.FileName = Path.GetFileName(initialPath);
