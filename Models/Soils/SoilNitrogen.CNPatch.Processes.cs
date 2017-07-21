@@ -118,8 +118,7 @@ namespace Models.Soils
                         for (int layer = 0; layer <= ImmobilisationLayer; layer++)
                         {
                             // 2.3.1. fraction of mineralised stuff going in this layer
-                            //fractionIntoLayer = MathUtilities.Divide(g.dlayer[layer] * fracLayer[layer], g.ResiduesDecompDepth, 0.0);
-                            fractionIntoLayer = MathUtilities.Divide(fracLayer[layer], cumFrac, 0.0);
+                            fractionIntoLayer = MathUtilities.Divide(g.dlayer[layer] * fracLayer[layer], g.ResiduesDecompDepth, 0.0);
 
                             //2.3.2. adjust C and N amounts for each residue and add to soil OM pools
                             for (int residue = 0; residue < g.nResidues; residue++)
