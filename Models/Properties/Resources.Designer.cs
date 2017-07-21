@@ -61,6 +61,25 @@ namespace Models.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 
+        ///&lt;Plant&gt;
+        ///  &lt;Name&gt;Chicory&lt;/Name&gt;
+        ///  &lt;Memo&gt;
+        ///    &lt;Name&gt;GeneralDescription&lt;/Name&gt;
+        ///    &lt;IncludeInDocumentation&gt;true&lt;/IncludeInDocumentation&gt;
+        ///    &lt;MemoText&gt;
+        ///    &lt;![CDATA[
+        ///    ## Presentation
+        ///
+        ///    This model has been developed to simulate the growth of a forage chicory crop.  The chicory model focus, thus, on describing primarily the vegetative growth, with a simplified account of the reproductive phase, without explicit considering flowers and seeds (these may be included in future releases).  The model  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Chicory {
+            get {
+                return ResourceManager.GetString("Chicory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;Plant&gt;
         ///  &lt;Name&gt;Maize&lt;/Name&gt;
         ///  &lt;Memo&gt;
