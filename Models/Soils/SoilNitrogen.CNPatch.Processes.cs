@@ -598,8 +598,7 @@ namespace Models.Soils
                 // index = 0 for aerobic and 1 for anaerobic conditions
                 int index = (g.isPondActive) ? 1 : 0;
 
-                if (urea[layer]< 0.1)
-                //if (MathUtilities.Divide(urea[layer], g.SoilDensity[layer] * g.dlayer[layer], 0.0) < 0.0001) // 0.01ppm
+                if (urea[layer] < g.epsilon)
                 {
                     // urea amount is too small, all will be hydrolysed
                     result = urea[layer];
