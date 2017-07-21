@@ -608,7 +608,6 @@ namespace Models.Soils
                 {
                     // potential fraction of urea being hydrolysed
                     double totalC = (hum_c[layer] + biom_c[layer]) * g.convFactor[layer] / 10000;  // (100/1000000) = convert to ppm and then to %
-                    totalC = g.reset_oc[layer];
                     double pot_hydrol_rate = g.UreaHydrol_parmA + g.UreaHydrol_parmB * totalC +
                              g.UreaHydrol_parmC * g.ph[layer] + g.UreaHydrol_parmD * totalC * g.ph[layer];
                     pot_hydrol_rate = Math.Max(g.UreaHydrol_MinRate, Math.Min(1.0, pot_hydrol_rate));
