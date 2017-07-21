@@ -18,7 +18,7 @@
     <Weather>
       <Name>Weather</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>C:\ApsimX\Examples\WeatherFiles\lincoln.met</FileName>
+      <FileName>WeatherFiles\lincoln.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
     <Summary>
