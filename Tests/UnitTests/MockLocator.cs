@@ -1,0 +1,30 @@
+﻿using System;
+using Models.Core;
+using Models.Report;
+using System.Collections.Generic;
+
+namespace UnitTests
+{
+    internal class MockLocator : ILocator
+    {
+        public Dictionary<string, IVariable> Values = new Dictionary<string, IVariable>();
+
+        public MockLocator()
+        {
+        }
+
+        public object Get(string namePath)
+        {
+            if (Values.ContainsKey(namePath))
+                return Values[namePath].Value;
+            return null;
+        }
+
+        public IVariable GetObject(string namePath)
+        {
+            if (Values.ContainsKey(namePath))
+                return Values[namePath];
+            return null;
+        }
+    }
+}
