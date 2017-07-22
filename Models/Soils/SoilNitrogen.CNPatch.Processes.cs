@@ -101,7 +101,7 @@ namespace Models.Soils
 
                         // 2.2.3. potential N demanded for conversion of residues into soil OM
                         double NDemand = MathUtilities.Divide(g.SumDoubleArray(dltC_into_biom), g.MBiomassCNr, 0.0) +
-                                          MathUtilities.Divide(g.SumDoubleArray(dltC_into_hum), g.hum_cn, 0.0);
+                                          MathUtilities.Divide(g.SumDoubleArray(dltC_into_hum), g.HumusCNr, 0.0);
 
                         // 2.2.4. factor to reduce mineralisation rate, if N available is insufficient
                         double ReductionFactor = 1.0;
@@ -184,7 +184,7 @@ namespace Models.Soils
                         hum_c[layer] += dlt_c_res_to_hum[layer];
 
                         // organic N balance
-                        hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.hum_cn, 0.0);
+                        hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.HumusCNr, 0.0);
                         biom_n[layer] = MathUtilities.Divide(biom_c[layer], g.MBiomassCNr, 0.0);
 
                         // soil mineral N
@@ -257,7 +257,7 @@ namespace Models.Soils
                                        dlt_c_fom_to_hum[0][layer] + dlt_c_fom_to_hum[1][layer] + dlt_c_fom_to_hum[2][layer];
 
                         biom_n[layer] = MathUtilities.Divide(biom_c[layer], g.MBiomassCNr, 0.0);
-                        hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.hum_cn, 0.0);
+                        hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.HumusCNr, 0.0);
 
                         // update FOM pools
                         for (int pool = 0; pool < 3; pool++)
@@ -305,14 +305,14 @@ namespace Models.Soils
                 if (pot_miner >= g.epsilon)
                 {
                     // get the soil temperature factor
-                    double stf = SoilTempFactor(layer, index, g.SOMMiner_TempFactorData);
+                    double stf = SoilTempFactor(layer, index, g.SOMMiner_TemperatureFactorData);
 
                     // get the soil water factor
                     double swf = SoilMoistFactor(layer, index, g.SOMMiner_MoistureFactorData);
 
                     // compute the mineralisation amounts of C and N from the humic pool
                     double dlt_c_miner = pot_miner * stf * swf;
-                    double dlt_n_miner = MathUtilities.Divide(dlt_c_miner, g.hum_cn, 0.0);
+                    double dlt_n_miner = MathUtilities.Divide(dlt_c_miner, g.HumusCNr, 0.0);
 
                     // distribute the mineralised N and C
                     dlt_c_hum_to_biom[layer] = dlt_c_miner * (1.0 - g.AHumusRespirationFactor);
@@ -345,7 +345,7 @@ namespace Models.Soils
                 if (pot_miner >= g.epsilon)
                 {
                     // get the soil temperature factor
-                    double stf = SoilTempFactor(layer, index, g.SOMMiner_TempFactorData);
+                    double stf = SoilTempFactor(layer, index, g.SOMMiner_TemperatureFactorData);
 
                     // get the soil water factor
                     double swf = SoilMoistFactor(layer, index, g.SOMMiner_MoistureFactorData);
@@ -359,7 +359,7 @@ namespace Models.Soils
                     dlt_c_biom_to_atm[layer] = dlt_c_miner * g.MBiomassRespirationFactor;
 
                     // calculate net mineralisation
-                    dlt_n_biom_to_min[layer] = dlt_n_miner - MathUtilities.Divide(dlt_c_biom_to_hum[layer], g.hum_cn, 0.0) -
+                    dlt_n_biom_to_min[layer] = dlt_n_miner - MathUtilities.Divide(dlt_c_biom_to_hum[layer], g.HumusCNr, 0.0) -
                                        MathUtilities.Divide((dlt_c_miner - dlt_c_biom_to_atm[layer] - dlt_c_biom_to_hum[layer]), g.MBiomassCNr, 0.0);
                 }
                 else
@@ -436,7 +436,7 @@ namespace Models.Soils
 
                     // test whether there is adequate N available to meet immobilisation demand
                     double n_demand = MathUtilities.Divide(dlt_c_biom_tot, g.MBiomassCNr, 0.0) +
-                                      MathUtilities.Divide(dlt_c_hum_tot, g.hum_cn, 0.0);
+                                      MathUtilities.Divide(dlt_c_hum_tot, g.HumusCNr, 0.0);
                     double n_available = mineralN_available + dlt_n_fom_gross_miner;
 
                     // factor to reduce mineralisation rates if insufficient N to meet immobilisation demand
@@ -614,7 +614,7 @@ namespace Models.Soils
                     if (pot_hydrol_rate >= g.epsilon)
                     {
                         // get the soil temperature factor
-                        double stf = SoilTempFactor(layer, index, g.UreaHydrolysis_TempFactorData);
+                        double stf = SoilTempFactor(layer, index, g.UreaHydrolysis_TemperatureFactorData);
 
                         // get the soil water factor
                         double swf = SoilMoistFactor(layer, index, g.UreaHydrolysis_MoistureFactorData);
@@ -648,7 +648,7 @@ namespace Models.Soils
 
                 // get the potential rate of nitrification for layer
                 double nh4ppm = nh4[layer] * g.convFactor[layer];
-                double pot_nitrif_rate_ppm = MathUtilities.Divide(g.NitrificationMaxPotential * nh4ppm, nh4ppm + g.NitrificationNH4ForHalf, 0.0);
+                double pot_nitrif_rate_ppm = MathUtilities.Divide(g.NitrificationMaxPotential * nh4ppm, nh4ppm + g.NitrificationNH4ForHalfRate, 0.0);
 
                 if (pot_nitrif_rate_ppm >= g.epsilon)
                 {
@@ -665,7 +665,7 @@ namespace Models.Soils
                     double pni = Math.Min(swf, Math.Min(stf, phf));
 
                     // get the actual rate of nitrification
-                    double nitrif_rate = pot_nitrif_rate_ppm * pni * Math.Max(0.0, 1.0 - g.InhibitionFactor_Nitrification[layer]);
+                    double nitrif_rate = pot_nitrif_rate_ppm * pni * Math.Max(0.0, 1.0 - g.inhibitionFactor_Nitrification[layer]);
 
                     // check that the nitrification rate is not greater than nh4 content
                     nitrif_rate = Math.Min(nitrif_rate, nh4ppm);
@@ -685,7 +685,7 @@ namespace Models.Soils
             /// <returns>delta N coverted into N2O during nitrification</returns>
             private double N2OProducedDuringNitrification(int layer)
             {
-                double result = dlt_nitrification[layer] * g.Denit_LossFactorNitrif;
+                double result = dlt_nitrification[layer] * g.Nitrification_DenitLossFactor;
                 return result;
             }
 
@@ -796,24 +796,24 @@ namespace Models.Soils
 
                 // get the potential nitritation rate for this layer
                 double nh4ppm = nh4[layer] * g.convFactor[layer];
-                double potNitritationRate = MathUtilities.Divide(g.NitritationMaxPotential * nh4ppm, nh4ppm + g.NH4AtHalfNitritationPot, 0.0);
+                double potNitritationRate = MathUtilities.Divide(g.NitritationMaxPotential * nh4ppm, nh4ppm + g.NitritationNH4ForHalfRate, 0.0);
 
                 if (potNitritationRate >= g.epsilon)
                 {
                     // get the soil temperature factor
-                    double stf = SoilTempFactor(layer, 0, g.TemperatureFactorData_Nitrification2);
+                    double stf = SoilTempFactor(layer, 0, g.Nitrification2_TemperatureFactorData);
 
                     // get the soil water factor
-                    double swf = SoilMoistFactor(layer, 0, g.MoistureFactorData_Nitrification2);
+                    double swf = SoilMoistFactor(layer, 0, g.Nitrification2_MoistureFactorData);
 
                     // get the soil pH factor
-                    double phf = SoilpHFactor(layer, 0, g.pHFactorData_Nitritation);
+                    double phf = SoilpHFactor(layer, 0, g.Nitritation_pHFactorData);
 
                     // get most limiting factor
                     double limitingFactor = Math.Min(swf, Math.Min(stf, phf));
 
                     // get the actual rate of nitritation
-                    double nitritationRate = potNitritationRate * limitingFactor * Math.Max(0.0, 1.0 - g.InhibitionFactor_Nitrification[layer]);
+                    double nitritationRate = potNitritationRate * limitingFactor * Math.Max(0.0, 1.0 - g.inhibitionFactor_Nitrification[layer]);
 
                     // check that the nitritation rate is not greater than nh4 content
                     nitritationRate = Math.Min(nitritationRate, nh4ppm);
@@ -837,18 +837,18 @@ namespace Models.Soils
 
                 // get the potential nitratation rate for this layer
                 double no2ppm = no2[layer] * g.convFactor[layer];
-                double potNitratationRate = MathUtilities.Divide(g.NitritationMaxPotential * no2ppm, no2ppm + g.NO2AtHalfNitratationPot, 0.0);
+                double potNitratationRate = MathUtilities.Divide(g.NitritationMaxPotential * no2ppm, no2ppm + g.NitratationNH4ForHalfRate, 0.0);
 
                 if (potNitratationRate >= g.epsilon)
                 {
                     // get the soil temperature factor
-                    double stf = SoilTempFactor(layer, 0, g.TemperatureFactorData_Nitrification2);
+                    double stf = SoilTempFactor(layer, 0, g.Nitrification2_TemperatureFactorData);
 
                     // get the soil water factor
-                    double swf = SoilMoistFactor(layer, 0, g.MoistureFactorData_Nitrification2);
+                    double swf = SoilMoistFactor(layer, 0, g.Nitrification2_MoistureFactorData);
 
                     // get the soil pH factor
-                    double phf = SoilpHFactor(layer, 0, g.pHFactorData_Nitratation);
+                    double phf = SoilpHFactor(layer, 0, g.Nitratation_pHFactorData);
 
                     // get most limiting factor
                     double limitingFactor = Math.Min(swf, Math.Min(stf, phf));
@@ -898,19 +898,19 @@ namespace Models.Soils
                 double waterSolubleOrganicN = Math.Min(biom_n[layer] + fom_n[0][layer], nh3[layer]);
 
                 // get the potential codenitrification rate
-                double potCodenitrificationRate = g.CodenitRateCoefficient * waterSoluble_c[layer];
+                double potCodenitrificationRate = g.CodenitrificationRateCoefficient * waterSoluble_c[layer];
                 double potNCodenitrifiable = 2.0 * Math.Min(no2[layer], waterSolubleOrganicN);
 
                 if ((potCodenitrificationRate >= g.epsilon) && (potNCodenitrifiable >= g.epsilon))
                 {
                     // get the soil temperature factor
-                    double stf = SoilTempFactor(layer, 0, g.TemperatureFactorData_Codenitrification);
+                    double stf = SoilTempFactor(layer, 0, g.Codenitrification_TemperatureFactorData);
 
                     // get the soil water factor
-                    double swf = SoilMoistFactor(layer, 0, g.MoistureFactorData_Codenitrification);
+                    double swf = SoilMoistFactor(layer, 0, g.Codenitrification_MoistureFactorData);
 
                     // get the soil pH factor
-                    double phf = SoilpHFactor(layer, 0, g.pHFactorData_Codenitrification);
+                    double phf = SoilpHFactor(layer, 0, g.Codenitrification_pHFactorData);
 
                     // get most limiting factor
                     double limitingFactor = Math.Min(swf, Math.Min(stf, phf));
@@ -934,8 +934,8 @@ namespace Models.Soils
                 bool DidInterpolate;
                 double totalNN = (nh3[layer] + no2[layer]) * g.convFactor[layer];
                 double result = MathUtilities.LinearInterpReal(totalNN,
-                                g.NH3NO2FactorData_Codenitrification.xVals,
-                                g.NH3NO2FactorData_Codenitrification.yVals,
+                                g.Codenitrification_NH3NO2FactorData.xVals,
+                                g.Codenitrification_NH3NO2FactorData.yVals,
                                 out DidInterpolate);
                 return result;
             }

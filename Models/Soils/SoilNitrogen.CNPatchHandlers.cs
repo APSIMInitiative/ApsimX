@@ -87,7 +87,7 @@ namespace Models.Soils
             }
 
             // check that total area of affected patches is larger than new patch area
-            if (AreaAffected - PatchtoAdd.AreaNewPatch < -MinimumPatchArea)
+            if (AreaAffected - PatchtoAdd.AreaNewPatch < -minimumPatchArea)
             {
                 throw new Exception(" AddSoilCNPatch - area of selected patches (" + AreaAffected.ToString("#0.00#")
                                     + ") is smaller than area of new patch(" + PatchtoAdd.AreaNewPatch.ToString("#0.00#") +
@@ -101,21 +101,21 @@ namespace Models.Soils
                     double OldPatch_OldArea = Patch[idPatchesAffected[i]].RelativeArea;
                     double NewPatch_NewArea = PatchtoAdd.AreaNewPatch * (OldPatch_OldArea / AreaAffected);
                     double OldPatch_NewArea = OldPatch_OldArea - NewPatch_NewArea;
-                    if (NewPatch_NewArea < MinimumPatchArea)
+                    if (NewPatch_NewArea < minimumPatchArea)
                     {
                         // area of patch to create is too small, patch will not be created
                         throw new Exception("   attempt to create a new patch with area too small or negative ("
                                             + NewPatch_NewArea.ToString("#0.00#") +
                                             "). The patch will not be created. Command cannot be executed");
                     }
-                    else if (OldPatch_NewArea < -MinimumPatchArea)
+                    else if (OldPatch_NewArea < -minimumPatchArea)
                     {
                         // area of patch to create is too big, patch will not be created
                         throw new Exception("   attempt to create a new patch with area greater than the existing patch area ("
                                             + NewPatch_NewArea.ToString("#0.00#") +
                                             "). The patch will not be created. Command cannot be executed");
                     }
-                    else if (OldPatch_NewArea < MinimumPatchArea)
+                    else if (OldPatch_NewArea < minimumPatchArea)
                     {
                         // remaining area is too small or negative, patch will be created but old one will be deleted
                         mySummary.WriteWarning(this, " attempt to set the area of existing patch(" + idPatchesAffected[i].ToString()
@@ -212,7 +212,7 @@ namespace Models.Soils
         {
             int nPatches = Patch.Count;
 
-            if (PatchAmalgamationApproach.ToLower() == "CompareAll".ToLower())
+            if (patchAmalgamationApproach.ToLower() == "CompareAll".ToLower())
             {
                 // A1. initialise the lists, for each existing patch, of patches to be merged to it
                 List<List<int>> MergingPatches = new List<List<int>>();
@@ -261,7 +261,7 @@ namespace Models.Soils
                     DeletePatches(PatchesToDelete);
                 }
             }
-            else if (PatchAmalgamationApproach.ToLower() == "CompareBase".ToLower())
+            else if (patchAmalgamationApproach.ToLower() == "CompareBase".ToLower())
             {
                 // B1. initialise the list of patches to be merged/deleted
                 List<int> PatchesToDelete = new List<int>();
@@ -296,7 +296,7 @@ namespace Models.Soils
                     }
                 } while (k < nPatches - 1);
             }
-            else if (PatchAmalgamationApproach.ToLower() == "CompareMerge".ToLower())
+            else if (patchAmalgamationApproach.ToLower() == "CompareMerge".ToLower())
             {
                 // C1. initialise the list of patches to be deleted
                 List<int> PatchesToDelete = new List<int>();
@@ -453,7 +453,7 @@ namespace Models.Soils
         {
 
             double NewPatchArea = Patch[k].RelativeArea + Patch[j].RelativeArea;
-            if (1.0 - NewPatchArea < -MinimumPatchArea)
+            if (1.0 - NewPatchArea < -minimumPatchArea)
                 throw new Exception("THe merge of patch " + j + " into patch " + k + " resulted in area greater than one");
 
             for (int layer = 0; layer < nLayers; layer++)
@@ -555,10 +555,10 @@ namespace Models.Soils
             // Adjust factor for diffs
             //  it is used to differentiate whether the patch is the 'base'. The diffs can then be a bit less stringent
             double AdjustFactor = 1.0;
-            if (PatchbasePatchApproach == "IDBased")
+            if (patchbasePatchApproach == "IDBased")
                 if (k == 1)
                     AdjustFactor = DiffAdjustFactor;
-            if (PatchbasePatchApproach == "AreaBased")
+            if (patchbasePatchApproach == "AreaBased")
                 if (Patch[k].RelativeArea == Patch.Max(x => x.RelativeArea))
                     AdjustFactor = DiffAdjustFactor;
             //else {}  // do not use a different adjustFactor for the base patch
@@ -602,7 +602,7 @@ namespace Models.Soils
             AgreedCount += TestDelta(deltaValue, TotalValueBase, relativeDiff_TotalNO3, absoluteDiff_TotalNO3, AdjustFactor);
 
             // tests by layer (from surface down to a give depth to test) - these are tested im ppm, not kg/ha
-            for (int layer = 0; layer <= LayerDepthToTestDiffs; layer++)
+            for (int layer = 0; layer <= layerDepthToTestDiffs; layer++)
             {
                 // test M. biomass
                 deltaValue = MathUtilities.Divide(Math.Abs(Patch[k].biom_c[layer] - Patch[j].biom_c[layer]), convFactor[layer], 0.0);
@@ -818,7 +818,7 @@ namespace Models.Soils
                                 {
                                     thisLayerPatchSolute[k] += existingSoluteAmount[k][z];
                                     layerUsed += dlayer[z];
-                                    if ((layerNPartition > epsilon) && (layerUsed >= layerNPartition))
+                                    if ((LayerForNPartition > epsilon) && (layerUsed >= LayerForNPartition))
                                         // stop if thickness reaches a defined value
                                         z = -1;
                                 }

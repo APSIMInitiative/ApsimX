@@ -763,7 +763,7 @@ namespace Models.Soils
             public void ClearDeltaVariables()
             {
                 // miscelaneous
-                Array.Clear(g.InhibitionFactor_Nitrification, 0, g.InhibitionFactor_Nitrification.Length);
+                Array.Clear(g.inhibitionFactor_Nitrification, 0, g.inhibitionFactor_Nitrification.Length);
                 dlt_n_loss_in_sed = 0.0;
                 dlt_c_loss_in_sed = 0.0;
 
