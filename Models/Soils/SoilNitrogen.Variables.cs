@@ -161,7 +161,7 @@ namespace Models.Soils
         [Bounds(Lower = 5, Upper = 30)]
         [Units("g/g")]
         [XmlIgnore]
-        public double HumusCNr = 0.0;
+        public double HumusCNr = 11.0;
 
         /// <summary>
         /// The C:N ratio of soil microbial biomass.

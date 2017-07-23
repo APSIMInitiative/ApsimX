@@ -66,9 +66,9 @@ namespace Models.Soils
                     //{
                         // Surface OM sent some potential decomposition, here we verify the C-N balance over the immobilisation layer
 
-                        double[] no3_available = new double[nLayers];          // no3 available for mineralisation
-                        double[] nh4_available = new double[nLayers];          // nh4 available for mineralisation
-                        double[] dltC_into_biom = new double[g.nResidues];         // C mineralized converted to biomass
+                        double[] no3_available = new double[nLayers];           // no3 available for mineralisation
+                        double[] nh4_available = new double[nLayers];           // nh4 available for mineralisation
+                        double[] dltC_into_biom = new double[g.nResidues];      // C mineralized converted to biomass
                         double[] dltC_into_hum = new double[g.nResidues];       // C mineralized converted to humus
                         int ImmobilisationLayer = g.getCumulativeIndex(g.ResiduesDecompDepth, g.dlayer);  // soil layer down to which soil N is available for decemposition
 
@@ -84,12 +84,10 @@ namespace Models.Soils
                         // 2.2.1. get the available mineral N in the soil close to surface (mineralisation depth)
                         double MineralNAvailable = 0.0;
                         double cumDepth = 0.0;
-                        double cumFrac = 0.0;
                         double[] fracLayer = new double[nLayers];
                         for (int layer = 0; layer <= ImmobilisationLayer; layer++)
                         {
                             fracLayer[layer] = Math.Min(1.0, MathUtilities.Divide(g.ResiduesDecompDepth - cumDepth, g.dlayer[layer], 0.0));
-                            cumFrac += fracLayer[layer];
                             cumDepth += g.dlayer[layer];
                             no3_available[layer] = Math.Max(0.0, no3[layer]) * fracLayer[layer];
                             nh4_available[layer] = Math.Max(0.0, nh4[layer]) * fracLayer[layer];
@@ -120,7 +118,7 @@ namespace Models.Soils
                             // 2.3.1. fraction of mineralised stuff going in this layer
                             fractionIntoLayer = MathUtilities.Divide(g.dlayer[layer] * fracLayer[layer], g.ResiduesDecompDepth, 0.0);
 
-                            //2.3.2. adjust C and N amounts for each residue and add to soil OM pools
+                            // 2.3.2. adjust C and N amounts for each residue and add to soil OM pools
                             for (int residue = 0; residue < g.nResidues; residue++)
                             {
                                 dlt_c_decomp[residue][layer] = g.pot_c_decomp[residue] * ReductionFactor * fractionIntoLayer;
@@ -140,7 +138,7 @@ namespace Models.Soils
                         // 2.5. partition mineralised/immobilised N into mineral forms
                         if (dlt_MineralN > g.epsilon)
                         {
-                            // 2.5.1. we have mineralisation into NH4, distribute it over the layers
+                            // 2.5a. we have mineralisation into NH4, distribute it over the layers
                             for (int layer = 0; layer <= ImmobilisationLayer; layer++)
                             {
                                 fractionIntoLayer = MathUtilities.Divide(g.dlayer[layer] * fracLayer[layer], g.ResiduesDecompDepth, 0.0);
@@ -149,7 +147,7 @@ namespace Models.Soils
                         }
                         else if (dlt_MineralN < -g.epsilon)
                         {
-                            // 2.5.2. we have immobilisation, soak up any N required from NH4 then NO3
+                            // 2.5b. we have immobilisation, soak up any N required from NH4 then NO3
                             for (int layer = 0; layer <= ImmobilisationLayer; layer++)
                             {
                                 dlt_res_nh4_min[layer] = -Math.Min(nh4_available[layer], Math.Abs(dlt_MineralN));
@@ -162,7 +160,7 @@ namespace Models.Soils
                                 dlt_MineralN -= dlt_res_no3_min[layer];
                             }
 
-                            // 2.5.3. check that there is no remaining immobilisation demand
+                            // check that there is no remaining immobilisation demand
                             if (Math.Abs(dlt_MineralN) >= g.epsilon)
                                 throw new Exception("Value for remaining immobilisation is out of range");
                         }
@@ -200,11 +198,13 @@ namespace Models.Soils
             /// </summary>
             public void ConvertSoilOM()
             {
+                int poolsComputed = 0;      // number of SOM/FOM pools actually considered
+
+                // 1. get the mineralisation of humic pool
                 if (g.SumDoubleArray(hum_c) >= g.epsilon)
                 {
-                    // there is some humus in the soil
+                    poolsComputed += 1;
                     for (int layer = 0; layer < nLayers; layer++)
-                        // 1. get the mineralisation of humic pool
                         MineraliseHumus(layer);
                 }
                 else
@@ -214,11 +214,11 @@ namespace Models.Soils
                     Array.Clear(dlt_n_hum_to_min, 0, nLayers);
                 }
 
+                // 2. get the mineralisation of m. biomass pool
                 if (g.SumDoubleArray(biom_c) >= g.epsilon)
                 {
-                    // there is some m. biomass in the soil
+                    poolsComputed += 1;
                     for (int layer = 0; layer < nLayers; layer++)
-                        // 2. get the mineralisation of m. biomass pool
                         MineraliseMBiomass(layer);
                 }
                 else
@@ -227,11 +227,12 @@ namespace Models.Soils
                     Array.Clear(dlt_c_biom_to_atm, 0, nLayers);
                     Array.Clear(dlt_n_biom_to_min, 0, nLayers);
                 }
+
+                // 3. get the decomposition of FOM pools
                 if ((g.SumDoubleArray(fom_c[0]) + g.SumDoubleArray(fom_c[1]) + g.SumDoubleArray(fom_c[2])) >= g.epsilon)
                 {
-                    // there is some fresh OM in the soil
+                    poolsComputed += 1;
                     for (int layer = 0; layer < nLayers; layer++)
-                        // 3. get the decomposition of FOM pools
                         DecomposeFOM(layer);
                 }
                 else
@@ -245,12 +246,14 @@ namespace Models.Soils
                     }
                     Array.Clear(dlt_n_fom_to_min, 0, nLayers);
                 }
-                if (g.SumDoubleArray(hum_c) + g.SumDoubleArray(biom_c) + g.SumDoubleArray(fom_c[0]) + g.SumDoubleArray(fom_c[1]) + g.SumDoubleArray(fom_c[2]) >= g.epsilon)
+
+                // 4. make changes effective
+                if (poolsComputed > 0)
                 {
-                    // there is some OM in the soil
+                    // some of the OM pools has potentially changed
                     for (int layer = 0; layer < nLayers; layer++)
                     {
-                        // update SOM pools
+                        // 4.1. update SOM pools
                         biom_c[layer] += dlt_c_hum_to_biom[layer] - dlt_c_biom_to_hum[layer] - dlt_c_biom_to_atm[layer] +
                                        dlt_c_fom_to_biom[0][layer] + dlt_c_fom_to_biom[1][layer] + dlt_c_fom_to_biom[2][layer];
                         hum_c[layer] += dlt_c_biom_to_hum[layer] - dlt_c_hum_to_biom[layer] - dlt_c_hum_to_atm[layer] +
@@ -259,14 +262,14 @@ namespace Models.Soils
                         biom_n[layer] = MathUtilities.Divide(biom_c[layer], g.MBiomassCNr, 0.0);
                         hum_n[layer] = MathUtilities.Divide(hum_c[layer], g.HumusCNr, 0.0);
 
-                        // update FOM pools
+                        // 4.2. update FOM pools
                         for (int pool = 0; pool < 3; pool++)
                         {
                             fom_c[pool][layer] -= (dlt_c_fom_to_biom[pool][layer] + dlt_c_fom_to_hum[pool][layer] + dlt_c_fom_to_atm[pool][layer]);
                             fom_n[pool][layer] -= dlt_n_fom[pool][layer];
                         }
 
-                        // update soil mineral N after mineralisation/immobilisation
+                        // 4.3. update soil mineral N after mineralisation/immobilisation
                         // starts with nh4
                         nh4[layer] += dlt_n_hum_to_min[layer] + dlt_n_biom_to_min[layer] + dlt_n_fom_to_min[layer];
                         if (nh4[layer] < -g.epsilon)

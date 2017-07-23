@@ -802,7 +802,7 @@ namespace Models.Soils
             /// Gather the information about actual residue decomposition, to be sent back to surface OM
             /// </summary>
             /// <remarks>
-            /// Currently P is not computed in SoilNitrogen, so the corresponding variables are set to zero here 
+            /// Currently P is not being computed by SoilNitrogen, so the corresponding variables are set to zero here 
             /// </remarks>
             private void PackActualResidueDecomposition()
             {
