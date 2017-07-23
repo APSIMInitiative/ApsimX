@@ -120,80 +120,80 @@ namespace Models.Soils
 
             // get the initial values 
             oc = Soil.OC;
-            fbiom = Soil.FBiom;
-            finert = Soil.FInert;
-            soil_cn = SoilOrganicMatter.SoilCN;
-            root_wt = SoilOrganicMatter.RootWt;
-            root_cn = SoilOrganicMatter.RootCN;
-            enr_a_coeff = SoilOrganicMatter.EnrACoeff;
-            enr_b_coeff = SoilOrganicMatter.EnrBCoeff;
+            FBiom = Soil.FBiom;
+            FInert = Soil.FInert;
+            HumusCNr = Soil.SoilOrganicMatter.SoilCN;
+            InitialFOMWt = Soil.SoilOrganicMatter.RootWt;
+            InitialFOMCNr = Soil.SoilOrganicMatter.RootCN;
+            enr_a_coeff = Soil.SoilOrganicMatter.EnrACoeff;
+            enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
             ph = Soil.PH;
             NO3ppm = Soil.InitialNO3N;
             NH4ppm = Soil.InitialNH4N;
             ureappm = new double[Soil.Thickness.Length];
 
             // This is needed to initialise values in ApsimX, (they were done in xml file before)
-            FOMDecomp_TOptimum = new double[] { 32, 32 };
-            FOMDecomp_FactorAtZero = new double[] { 0, 0 };
-            FMDecomp_CurveCoeff = new double[] { 2, 2 };
-            FOMDecomp_NormWaterContents = new double[] { 0, 1, 1.5, 2, 3 };
-            FOMDecomp_MoistureFactors = new double[] { 0, 0, 1, 1, 0.5 };
+            FOMDecomp_TOptimum = new double[] { 32.0, 32.0 };
+            FOMDecomp_TFactorAtZero = new double[] { 0.0, 0.0 };
+            FOMDecomp_TCurveCoeff = new double[] { 2.0, 2.0 };
+            FOMDecomp_NormWaterContents = new double[] { 0.0, 1.0, 1.5, 2.0, 3.0 };
+            FOMDecomp_MoistureFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.5 };
 
-            SOMMiner_TOptimum = new double[] { 32, 32 };
-            SOMMiner_FactorAtZero = new double[] { 0, 0 };
-            SOMMiner_CurveCoeff = new double[] { 2, 2 };
-            SOMMiner_NormWaterContents = new double[] { 0, 1, 1.5, 2, 3 };
-            SOMMiner_MoistureFactors = new double[] { 0, 0, 1, 1, 0.5 };
+            SOMMiner_TOptimum = new double[] { 32.0, 32.0 };
+            SOMMiner_TFactorAtZero = new double[] { 0.0, 0.0 };
+            SOMMiner_TCurveCoeff = new double[] { 2.0, 2.0 };
+            SOMMiner_NormWaterContents = new double[] { 0.0, 1.0, 1.5, 2.0, 3.0 };
+            SOMMiner_MoistureFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.5 };
 
-            UreaHydrol_TOptimum = new double[] { 32, 32 };
-            UreaHydrol_FactorAtZero = new double[] { 0.2, 0.2 };
-            UreaHydrol_CurveCoeff = new double[] { 1, 1 };
-            UreaHydrol_NormWaterContents = new double[] { 0, 1, 1.4, 2.4, 3 };
+            UreaHydrol_TOptimum = new double[] { 32.0, 32.0 };
+            UreaHydrol_TFactorAtZero = new double[] { 0.2, 0.2 };
+            UreaHydrol_TCurveCoeff = new double[] { 1.0, 1.0 };
+            UreaHydrol_NormWaterContents = new double[] { 0.0, 1.0, 1.4, 2.4, 3.0 };
             UreaHydrol_MoistureFactors = new double[] { 0.2, 0.2, 1.0, 1.0, 0.7 };
 
-            Nitrification_TOptimum = new double[] { 32, 32 };
-            Nitrification_FactorAtZero = new double[] { 0, 0 };
-            Nitrification_CurveCoeff = new double[] { 2, 2 };
-            Nitrification_NormWaterContents = new double[] { 0, 1, 1.25, 2, 3 };
-            Nitrification_MoistureFactors = new double[] { 0, 0, 1, 1, 0 };
-            Nitrification_pHValues = new double[] { 0, 4.5, 6, 8, 9, 14 };
-            Nitrification_pHFactors = new double[] { 0, 0, 1, 1, 0, 0 };
+            Nitrification_TOptimum = new double[] { 32.0, 32.0 };
+            Nitrification_FactorAtZero = new double[] { 0.0, 0.0 };
+            Nitrification_CurveCoeff = new double[] { 2.0, 2.0 };
+            Nitrification_NormWaterContents = new double[] { 0.0, 1.0, 1.25, 2.0, 3.0 };
+            Nitrification_MoistureFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0 };
+            Nitrification_pHValues = new double[] { 0.0, 4.5, 6.0, 8.0, 9.0, 14.0 };
+            Nitrification_pHFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0, 0.0 };
 
-            TOptimunNitrification2 = new double[] { 32, 32 };
-            FactorAtZeroNitrification2 = new double[] { 0, 0 };
-            CurveCoeffNitrification2 = new double[] { 2, 2 };
-            NormWaterContentsNitrification2 = new double[] { 0, 1, 1.25, 2, 3 };
-            MoistureFactorsNitrification2 = new double[] { 0, 0, 1, 1, 0 };
-            Nitritation_pHValues = new double[] { 0, 4.5, 6, 8, 9, 14 };
-            Nitritation_pHFactors = new double[] { 0, 0, 1, 1, 0, 0 };
+            Nitrification2_TOptimum = new double[] { 32.0, 32.0 };
+            Nitrification2_TFactorAtZero = new double[] { 0.0, 0.0 };
+            Nitrification2_TCurveCoeff = new double[] { 2.0, 2.0 };
+            Nitrification2_NormWaterContents = new double[] { 0.0, 1.0, 1.25, 2.0, 3.0 };
+            Nitrification2_MoistureFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0 };
+            Nitritation_pHValues = new double[] { 0.0, 4.5, 6.0, 8.0, 9.0, 14.0 };
+            Nitritation_pHFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0, 0.0 };
 
-            TOptmimunCodenitrififaction = new double[] { 50.0561976737836, 50.0561976737836 };
-            FactorAtZeroCodenitrification = new double[] { 0.1, 0.1 };
-            CurveCoeffCodenitrification = new double[] { 67108874, 67108874 };
-            Codenitrification_NormWaterContents = new double[] { 0, 2, 3 };
-            Codenitrification_MoistureFactors = new double[] { 0, 0, 1 };
-            Codenitrification_pHValues = new double[] { 0, 4.5, 6, 8, 9, 14 };
-            Codenitrification_pHFactors = new double[] { 0, 0, 1, 1, 0, 0 };
-            Codenitrification_NHNOValues = new double[] { 0, 4.5, 6, 8, 9, 14 };
-            Codenitrification_NHNOFactors = new double[] { 0, 0, 1, 1, 0, 0 };
+            Codenitrification_TOptmimun = new double[] { 50.05, 50.05 };
+            Codenitrification_TFactorAtZero = new double[] { 0.1, 0.1 };
+            Codenitrification_TCurveCoeff = new double[] { 1000, 1000 };
+            Codenitrification_NormWaterContents = new double[] { 0.0, 2.0, 3.0 };
+            Codenitrification_MoistureFactors = new double[] { 0.0, 0.0, 1.0 };
+            Codenitrification_pHValues = new double[] { 0.0, 4.5, 6.0, 8.0, 9.0, 14.0 };
+            Codenitrification_pHFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0, 0.0 };
+            Codenitrification_NHNOValues = new double[] { 0.0, 4.5, 6.0, 8.0, 9.0, 14.0 };
+            Codenitrification_NHNOFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0, 0.0 };
 
             //// NOTE: the values for Topt and CvExp given here reproduce best the original function (it was an exponential, now a power)
             ////  however, values like 50.06 and 1000, or even more sane 50 and 100 should be good enough
-            Denit_TOptimum = new double[] { 50.0561976737836, 50.0561976737836 };
-            Denit_FactorAtZero = new double[] { 0.1, 0.1 };
-            Denit_CurveCoeff = new double[] { 67108874, 67108874 };
-            Denit_NormWaterContents = new double[] { 0, 2, 3 };
-            Denit_MoistureFactors = new double[] { 0, 0, 1 };
-            Denit_WPFSValues = new double[] { 0, 28, 88, 100 };
-            Denit_WFPSFactors = new double[] { 0.1, 0.1, 1, 1.18 };
+            Denitrification_TOptimum = new double[] { 50.0561976737836, 50.0561976737836 };
+            Denitrification_TFactorAtZero = new double[] { 0.1, 0.1 };
+            Denitrification_TCurveCoeff = new double[] { 67108874, 67108874 };
+            Denitrification_NormWaterContents = new double[] { 0.0, 2.0, 3.0 };
+            Denitrification_MoistureFactors = new double[] { 0.0, 0.0, 1.0 };
+            Denit_WPFSValues = new double[] { 0.0, 28.0, 88.0, 100.0 };
+            Denit_WFPSFactors = new double[] { 0.1, 0.1, 1.0, 1.18 };
 
             // update few parameters if soil type is Sand (for compatibility with classic apsim)
             if (Soil.SoilType != null && Soil.SoilType.Equals("Sand", StringComparison.CurrentCultureIgnoreCase))
             {
                 SoilNParameterSet = "sand";
                 MBiomassTurnOverRate = new double[] { 0.0324, 0.015 };
-                SOMMiner_MoistureFactors = new double[] { 0.05, 0.05, 1, 1, 0.5 };
-                FOMDecomp_MoistureFactors = new double[] { 0.05, 0.05, 1, 1, 0.5 };
+                SOMMiner_MoistureFactors = new double[] { 0.05, 0.05, 1.0, 1.0, 0.5 };
+                FOMDecomp_MoistureFactors = new double[] { 0.05, 0.05, 1.0, 1.0, 0.5 };
             }
 
             // check whether ph was supplied, use a default if not - would it be better to throw an exception?
@@ -201,9 +201,9 @@ namespace Models.Soils
             {
                 ph = new double[nLayers];
                 for (int layer = 0; layer < nLayers; ++layer)
-                    ph[layer] = defaultInitialpH;
+                    ph[layer] = DefaultInitialpH;
                 mySummary.WriteWarning(this, "Soil pH was not supplied to SoilNitrogen, the default value (" 
-                    + defaultInitialpH.ToString("0.00") + ") will be used for all layers");
+                    + DefaultInitialpH.ToString("0.00") + ") will be used for all layers");
             }
             
             // Check whether C:N values have been supplied. If not use average C:N ratio in all pools
@@ -211,12 +211,12 @@ namespace Models.Soils
             {
                 fomPoolsCNratio = new double[3];
                 for (int i = 0; i < 3; i++)
-                    fomPoolsCNratio[i] = iniFomCNratio;
+                    fomPoolsCNratio[i] = InitialFOMCNr;
             }
 
             // Check if initial fom depth has been supplied, if not assume that initial fom is distributed over the whole profile
-            if (iniFomDepth <= epsilon)
-                iniFomDepth = SumDoubleArray(dlayer);
+            if (InitialFOMDepth <= epsilon)
+                InitialFOMDepth = SumDoubleArray(dlayer);
 
             // Check if initial root depth has been supplied, if not use whole profile (used to compute plant available N - patches)
             if (rootDepth <= epsilon)
@@ -229,9 +229,9 @@ namespace Models.Soils
 
             // Check parameters for patches
             if (DepthToTestByLayer <= epsilon)
-                LayerDepthToTestDiffs = nLayers - 1;
+                layerDepthToTestDiffs = nLayers - 1;
             else
-                LayerDepthToTestDiffs = getCumulativeIndex(DepthToTestByLayer, dlayer);
+                layerDepthToTestDiffs = getCumulativeIndex(DepthToTestByLayer, dlayer);
         }
 
         /// <summary>
@@ -286,14 +286,14 @@ namespace Models.Soils
             // compute initial FOM distribution in the soil (FOM fractions)
             FOMiniFraction = new double[nLayers];
             double totFOMfraction = 0.0;
-            int deepestLayer = getCumulativeIndex(iniFomDepth, dlayer);
+            int deepestLayer = getCumulativeIndex(InitialFOMDepth, dlayer);
             double cumDepth = 0.0;
             double FracLayer = 0.0;
             for (int layer = 0; layer <= deepestLayer; layer++)
             {
-                FracLayer = Math.Min(1.0, MathUtilities.Divide(iniFomDepth - cumDepth, dlayer[layer], 0.0));
+                FracLayer = Math.Min(1.0, MathUtilities.Divide(InitialFOMDepth - cumDepth, dlayer[layer], 0.0));
                 cumDepth += dlayer[layer];
-                FOMiniFraction[layer] = FracLayer * Math.Exp(-FOMDistributionCoefficient * Math.Min(1.0, MathUtilities.Divide(cumDepth, iniFomDepth, 0.0)));
+                FOMiniFraction[layer] = FracLayer * Math.Exp(-InitialFOMDistCoefficient * Math.Min(1.0, MathUtilities.Divide(cumDepth, InitialFOMDepth, 0.0)));
             }
 
             // get the actuall FOM distribution through layers (adds up to one)
@@ -326,22 +326,22 @@ namespace Models.Soils
                 Soil_OC = MathUtilities.Divide(Soil_OC, convFactor[layer], 0.0);  //Convert from ppm to kg/ha
 
                 // calculate inert soil C
-                double InertC = finert[layer] * Soil_OC;
-                double InertN = MathUtilities.Divide(InertC, hum_cn, 0.0);
+                double InertC = FInert[layer] * Soil_OC;
+                double InertN = MathUtilities.Divide(InertC, HumusCNr, 0.0);
 
                 // calculate microbial biomass C and N
-                double BiomassC = MathUtilities.Divide((Soil_OC - InertC) * fbiom[layer], 1.0 + fbiom[layer], 0.0);
+                double BiomassC = MathUtilities.Divide((Soil_OC - InertC) * FBiom[layer], 1.0 + FBiom[layer], 0.0);
                 double BiomassN = MathUtilities.Divide(BiomassC, MBiomassCNr, 0.0);
 
                 // calculate C and N values for humus
                 double HumusC = Soil_OC - BiomassC;
-                double HumusN = MathUtilities.Divide(HumusC, hum_cn, 0.0);
+                double HumusN = MathUtilities.Divide(HumusC, HumusCNr, 0.0);
 
                 // distribute C over fom pools
                 double[] fomPool = new double[3];
-                fomPool[0] = iniFomWt * FOMiniFraction[layer] * fract_carb[FOMtypeID_reset] * defaultCarbonInFOM;
-                fomPool[1] = iniFomWt * FOMiniFraction[layer] * fract_cell[FOMtypeID_reset] * defaultCarbonInFOM;
-                fomPool[2] = iniFomWt * FOMiniFraction[layer] * fract_lign[FOMtypeID_reset] * defaultCarbonInFOM;
+                fomPool[0] = InitialFOMWt * FOMiniFraction[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[1] = InitialFOMWt * FOMiniFraction[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[2] = InitialFOMWt * FOMiniFraction[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
 
                 // set the initial values across patches
                 for (int k = 0; k < Patch.Count; k++)
@@ -364,8 +364,8 @@ namespace Models.Soils
                 }
 
                 // set maximum uptake rates for N forms (only really used for AgPasture when patches exist)
-                MaximumNH4UptakeRate[layer] = reset_MaximumNH4Uptake / convFactor[layer];
-                MaximumNO3UptakeRate[layer] = reset_MaximumNO3Uptake / convFactor[layer];
+                maximumNH4UptakeRate[layer] = reset_MaximumNH4Uptake / convFactor[layer];
+                maximumNO3UptakeRate[layer] = reset_MaximumNO3Uptake / convFactor[layer];
             }
 
             for (int k = 0; k < Patch.Count; k++)
@@ -385,9 +385,9 @@ namespace Models.Soils
         /// <param name="nLayers">The number of layers</param>
         private void ResizeLayeredVariables(int nLayers)
         {
-            Array.Resize(ref InhibitionFactor_Nitrification, nLayers);
-            Array.Resize(ref MaximumNH4UptakeRate, nLayers);
-            Array.Resize(ref MaximumNO3UptakeRate, nLayers);
+            Array.Resize(ref inhibitionFactor_Nitrification, nLayers);
+            Array.Resize(ref maximumNH4UptakeRate, nLayers);
+            Array.Resize(ref maximumNO3UptakeRate, nLayers);
 
             for (int k = 0; k < Patch.Count; k++)
                 Patch[k].ResizeLayeredVariables(nLayers);
@@ -488,12 +488,12 @@ namespace Models.Soils
         private void OnDoUpdate(object sender, EventArgs e)
         {
             // Check whether patch auto amalgamation is allowed
-            if ((Patch.Count > 1) && (PatchAutoAmalgamationAllowed))
+            if ((Patch.Count > 1) && (patchAutoAmalgamationAllowed))
             {
-                if ((PatchAmalgamationApproach.ToLower() == "CompareAll".ToLower()) ||
-                    (PatchAmalgamationApproach.ToLower() == "CompareBase".ToLower()) ||
-                    (PatchAmalgamationApproach.ToLower() == "CompareAge".ToLower()) ||
-                    (PatchAmalgamationApproach.ToLower() == "CompareMerge".ToLower()))
+                if ((patchAmalgamationApproach.ToLower() == "CompareAll".ToLower()) ||
+                    (patchAmalgamationApproach.ToLower() == "CompareBase".ToLower()) ||
+                    (patchAmalgamationApproach.ToLower() == "CompareAge".ToLower()) ||
+                    (patchAmalgamationApproach.ToLower() == "CompareMerge".ToLower()))
                 {
                     CheckPatchAutoAmalgamation();
                 }
@@ -616,8 +616,8 @@ namespace Models.Soils
                 ActualSOMDecomp.Pool[residue].Name = Patch[0].SurfOMActualDecomposition.Pool[residue].Name;
                 ActualSOMDecomp.Pool[residue].OrganicMatterType = Patch[0].SurfOMActualDecomposition.Pool[residue].OrganicMatterType;
                 ActualSOMDecomp.Pool[residue].FOM.amount = 0.0F;
-                ActualSOMDecomp.Pool[residue].FOM.C = (float)c_summed;
-                ActualSOMDecomp.Pool[residue].FOM.N = (float)n_summed;
+                ActualSOMDecomp.Pool[residue].FOM.C = c_summed;
+                ActualSOMDecomp.Pool[residue].FOM.N = n_summed;
                 ActualSOMDecomp.Pool[residue].FOM.P = 0.0F;
                 ActualSOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
                 // Note: The values for 'amount', 'P', and 'AshAlk' will not be collected by SurfaceOrganicMatter, so send zero as default.
@@ -677,7 +677,7 @@ namespace Models.Soils
                 {
                     if (inFOMdata.Layer[layer].FOM.amount >= epsilon)
                     {
-                        inFOMdata.Layer[layer].FOM.C = inFOMdata.Layer[layer].FOM.amount * (float)defaultCarbonInFOM;
+                        inFOMdata.Layer[layer].FOM.C = inFOMdata.Layer[layer].FOM.amount * DefaultCarbonInFOM;
                         if (inFOMdata.Layer[layer].CNR > epsilon)
                         {   // we have C:N info - note that this has precedence over N amount
                             totalCAmount += inFOMdata.Layer[layer].FOM.C;
@@ -736,9 +736,9 @@ namespace Models.Soils
                         {
                             myFOMPoolData.Layer[layer].nh4 = 0.0F;
                             myFOMPoolData.Layer[layer].no3 = 0.0F;
-                            myFOMPoolData.Layer[layer].Pool[0].C = inFOMdata.Layer[layer].FOM.amount * defaultCarbonInFOM * fract_carb[fom_type];
-                            myFOMPoolData.Layer[layer].Pool[1].C = inFOMdata.Layer[layer].FOM.amount * defaultCarbonInFOM * fract_cell[fom_type];
-                            myFOMPoolData.Layer[layer].Pool[2].C = inFOMdata.Layer[layer].FOM.amount * defaultCarbonInFOM * fract_lign[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[0].C = inFOMdata.Layer[layer].FOM.amount * DefaultCarbonInFOM * fract_carb[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[1].C = inFOMdata.Layer[layer].FOM.amount * DefaultCarbonInFOM * fract_cell[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[2].C = inFOMdata.Layer[layer].FOM.amount * DefaultCarbonInFOM * fract_lign[fom_type];
 
                             myFOMPoolData.Layer[layer].Pool[0].N = inFOMdata.Layer[layer].FOM.N * fract_carb[fom_type];
                             myFOMPoolData.Layer[layer].Pool[1].N = inFOMdata.Layer[layer].FOM.N * fract_cell[fom_type];
@@ -893,7 +893,7 @@ namespace Models.Soils
                     reset_dlayer[layer] = dlayer[layer];
                 }
             }
-            else if (soil_loss > epsilon && ProfileReductionAllowed)
+            else if (soil_loss > epsilon && profileReductionAllowed)
             {
                 // check for variations in the soil profile. and update the C and N amounts appropriately
                 // Are these changes mainly (only) due to by erosion? what else??
@@ -966,7 +966,7 @@ namespace Models.Soils
                 if ((Patch.Count > 1) && ((senderModule == "WaterModule".ToLower()) || (senderModule == "Plant".ToLower())))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaUrea, "Urea", PatchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaUrea, "Urea", patchNPartitionApproach.ToLower());
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_urea = newDelta[k];
@@ -985,7 +985,7 @@ namespace Models.Soils
                 if ((Patch.Count > 1) && ((senderModule == "WaterModule".ToLower()) || (senderModule == "Plant".ToLower())))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNH4, "NH4", PatchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNH4, "NH4", patchNPartitionApproach.ToLower());
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_nh4 = newDelta[k];
@@ -1004,7 +1004,7 @@ namespace Models.Soils
                 if ((Patch.Count > 1) && ((senderModule == "WaterModule".ToLower()) || (senderModule == "Plant".ToLower())))
                 {
                     // the values come from a module that requires partition
-                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNO3, "NO3", PatchNPartitionApproach.ToLower());
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNO3, "NO3", patchNPartitionApproach.ToLower());
 
                     for (int k = 0; k < Patch.Count; k++)
                         Patch[k].dlt_no3 = newDelta[k];
@@ -1242,7 +1242,7 @@ namespace Models.Soils
                     dltC = 0.0;
                 massBalanceChange.FlowType = dltC >= 0 ? "gain" : "loss";
                 massBalanceChange.PoolClass = "soil";
-                massBalanceChange.N = (float)Math.Abs(dltC);
+                massBalanceChange.N = Math.Abs(dltC);
                 ExternalMassFlow.Invoke(massBalanceChange);
             }
         }
@@ -1259,7 +1259,7 @@ namespace Models.Soils
                 dltN = 0.0;
             massBalanceChange.FlowType = dltN >= epsilon ? "gain" : "loss";
             massBalanceChange.PoolClass = "soil";
-            massBalanceChange.N = (float)Math.Abs(dltN);
+            massBalanceChange.N = Math.Abs(dltN);
             if (ExternalMassFlow != null)
             {
                 ExternalMassFlow.Invoke(massBalanceChange);

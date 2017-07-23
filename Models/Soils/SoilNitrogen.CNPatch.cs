@@ -763,7 +763,7 @@ namespace Models.Soils
             public void ClearDeltaVariables()
             {
                 // miscelaneous
-                Array.Clear(g.InhibitionFactor_Nitrification, 0, g.InhibitionFactor_Nitrification.Length);
+                Array.Clear(g.inhibitionFactor_Nitrification, 0, g.inhibitionFactor_Nitrification.Length);
                 dlt_n_loss_in_sed = 0.0;
                 dlt_c_loss_in_sed = 0.0;
 
@@ -802,7 +802,7 @@ namespace Models.Soils
             /// Gather the information about actual residue decomposition, to be sent back to surface OM
             /// </summary>
             /// <remarks>
-            /// Currently P is not computed in SoilNitrogen, so the corresponding variables are set to zero here 
+            /// Currently P is not being computed by SoilNitrogen, so the corresponding variables are set to zero here 
             /// </remarks>
             private void PackActualResidueDecomposition()
             {
@@ -826,8 +826,8 @@ namespace Models.Soils
                     SurfOMActualDecomposition.Pool[residue].Name = g.residueName[residue];
                     SurfOMActualDecomposition.Pool[residue].OrganicMatterType = g.residueType[residue];
                     SurfOMActualDecomposition.Pool[residue].FOM.amount = 0.0F;
-                    SurfOMActualDecomposition.Pool[residue].FOM.C = (float)c_summed;
-                    SurfOMActualDecomposition.Pool[residue].FOM.N = (float)n_summed;
+                    SurfOMActualDecomposition.Pool[residue].FOM.C = c_summed;
+                    SurfOMActualDecomposition.Pool[residue].FOM.N = n_summed;
                     SurfOMActualDecomposition.Pool[residue].FOM.P = 0.0F;
                     SurfOMActualDecomposition.Pool[residue].FOM.AshAlk = 0.0F;
                     // Note: The values for 'amount', 'P', and 'AshAlk' will not be collected by SurfaceOrganicMatter, so send zero as default.
