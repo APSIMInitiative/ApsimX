@@ -826,8 +826,8 @@ namespace Models.Soils
                     SurfOMActualDecomposition.Pool[residue].Name = g.residueName[residue];
                     SurfOMActualDecomposition.Pool[residue].OrganicMatterType = g.residueType[residue];
                     SurfOMActualDecomposition.Pool[residue].FOM.amount = 0.0F;
-                    SurfOMActualDecomposition.Pool[residue].FOM.C = (float)c_summed;
-                    SurfOMActualDecomposition.Pool[residue].FOM.N = (float)n_summed;
+                    SurfOMActualDecomposition.Pool[residue].FOM.C = c_summed;
+                    SurfOMActualDecomposition.Pool[residue].FOM.N = n_summed;
                     SurfOMActualDecomposition.Pool[residue].FOM.P = 0.0F;
                     SurfOMActualDecomposition.Pool[residue].FOM.AshAlk = 0.0F;
                     // Note: The values for 'amount', 'P', and 'AshAlk' will not be collected by SurfaceOrganicMatter, so send zero as default.

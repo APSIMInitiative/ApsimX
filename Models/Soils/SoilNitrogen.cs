@@ -616,8 +616,8 @@ namespace Models.Soils
                 ActualSOMDecomp.Pool[residue].Name = Patch[0].SurfOMActualDecomposition.Pool[residue].Name;
                 ActualSOMDecomp.Pool[residue].OrganicMatterType = Patch[0].SurfOMActualDecomposition.Pool[residue].OrganicMatterType;
                 ActualSOMDecomp.Pool[residue].FOM.amount = 0.0F;
-                ActualSOMDecomp.Pool[residue].FOM.C = (float)c_summed;
-                ActualSOMDecomp.Pool[residue].FOM.N = (float)n_summed;
+                ActualSOMDecomp.Pool[residue].FOM.C = c_summed;
+                ActualSOMDecomp.Pool[residue].FOM.N = n_summed;
                 ActualSOMDecomp.Pool[residue].FOM.P = 0.0F;
                 ActualSOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
                 // Note: The values for 'amount', 'P', and 'AshAlk' will not be collected by SurfaceOrganicMatter, so send zero as default.
@@ -677,7 +677,7 @@ namespace Models.Soils
                 {
                     if (inFOMdata.Layer[layer].FOM.amount >= epsilon)
                     {
-                        inFOMdata.Layer[layer].FOM.C = inFOMdata.Layer[layer].FOM.amount * (float)DefaultCarbonInFOM;
+                        inFOMdata.Layer[layer].FOM.C = inFOMdata.Layer[layer].FOM.amount * DefaultCarbonInFOM;
                         if (inFOMdata.Layer[layer].CNR > epsilon)
                         {   // we have C:N info - note that this has precedence over N amount
                             totalCAmount += inFOMdata.Layer[layer].FOM.C;
@@ -1242,7 +1242,7 @@ namespace Models.Soils
                     dltC = 0.0;
                 massBalanceChange.FlowType = dltC >= 0 ? "gain" : "loss";
                 massBalanceChange.PoolClass = "soil";
-                massBalanceChange.N = (float)Math.Abs(dltC);
+                massBalanceChange.N = Math.Abs(dltC);
                 ExternalMassFlow.Invoke(massBalanceChange);
             }
         }
@@ -1259,7 +1259,7 @@ namespace Models.Soils
                 dltN = 0.0;
             massBalanceChange.FlowType = dltN >= epsilon ? "gain" : "loss";
             massBalanceChange.PoolClass = "soil";
-            massBalanceChange.N = (float)Math.Abs(dltN);
+            massBalanceChange.N = Math.Abs(dltN);
             if (ExternalMassFlow != null)
             {
                 ExternalMassFlow.Invoke(massBalanceChange);
