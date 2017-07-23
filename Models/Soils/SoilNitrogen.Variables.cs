@@ -1684,12 +1684,12 @@ namespace Models.Soils
 
         #region Soil physics data
 
-        /// <summary>
-        /// Today's soil water amount (mm)
-        /// </summary>
-        [Units("mm")]
-        [XmlIgnore]
-        public double[] sw_dep;
+        ///// <summary>
+        ///// Today's soil water amount (mm)
+        ///// </summary>
+        //[Units("mm")]
+        //[XmlIgnore]
+        //public double[] sw_dep;
 
         #endregion physiscs data
 

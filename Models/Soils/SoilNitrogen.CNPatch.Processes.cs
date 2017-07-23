@@ -771,7 +771,8 @@ namespace Models.Soils
 
                 // the water filled pore space (%)
                 //double WFPS = g.Soil.SoilWater.SWmm[layer] / g.Soil.SoilWater.SATmm[layer] * 100.0;
-                double WFPS = g.sw_dep[layer] / g.sat_dep[layer] * 100.0;
+                double WFPS = g.Soil.SoilWater.SWmm[layer] / g.sat_dep[layer] * 100.0;
+                //double WFPS = g.sw_dep[layer] / g.sat_dep[layer] * 100.0;
 
                 // CO2 production today (kgC/ha)
                 double CO2_prod = co2_atm[layer];
@@ -1008,7 +1009,8 @@ namespace Models.Soils
                     //double[] xVals = { 0.0, g.Soil.SoilWater.LL15mm[layer], g.Soil.SoilWater.DULmm[layer], g.Soil.SoilWater.SATmm[layer] };
                     //double myX = MathUtilities.LinearInterpReal(g.Soil.SoilWater.SWmm[layer], xVals, yVals, out didInterpolate);
                     double[] xVals = { 0.0, g.ll15_dep[layer], g.dul_dep[layer], g.sat_dep[layer] };
-                    double myX = MathUtilities.LinearInterpReal(g.sw_dep[layer], xVals, yVals, out didInterpolate);
+                    double myX = MathUtilities.LinearInterpReal(g.Soil.SoilWater.SWmm[layer], xVals, yVals, out didInterpolate);
+                    //double myX = MathUtilities.LinearInterpReal(g.sw_dep[layer], xVals, yVals, out didInterpolate);
 
                     // get the soil moist factor
                     return MathUtilities.LinearInterpReal(myX, Parameters.xVals, Parameters.yVals, out didInterpolate);
