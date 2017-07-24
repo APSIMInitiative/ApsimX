@@ -1682,17 +1682,6 @@ namespace Models.Soils
 
         #endregion
 
-        #region Soil physics data
-
-        /// <summary>
-        /// Today's soil water amount (mm)
-        /// </summary>
-        [Units("mm")]
-        [XmlIgnore]
-        public double[] sw_dep;
-
-        #endregion physiscs data
-
         #region Soil pH data
 
         /// <summary>
@@ -5986,18 +5975,6 @@ namespace Models.Soils
         /// Number layers in the soil.
         /// </summary>
         private int nLayers;
-
-        /// <summary>Soil water amount at saturation (mm).</summary>
-        [Units("mm")]
-        private double[] sat_dep;
-
-        /// <summary>Soil water amount at drainage upper limit (mm).</summary>
-        [Units("mm")]
-        private double[] dul_dep;
-
-        /// <summary>Soil water amount at drainage lower limit (mm).</summary>
-        [Units("mm")]
-        private double[] ll15_dep;
 
         #endregion
 

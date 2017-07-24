@@ -69,13 +69,6 @@ namespace Models.Soils
             Patch[0].RelativeArea = 1.0;
             Patch[0].CreationDate = Clock.Today;
 
-            // Variable handling when using APSIMX
-            //initDone = false;
-            sat_dep = MathUtilities.Multiply(Soil.SAT, Soil.Thickness);
-            dul_dep = MathUtilities.Multiply(Soil.DUL, Soil.Thickness);
-            ll15_dep = MathUtilities.Multiply(Soil.LL15, Soil.Thickness);
-            sw_dep = MathUtilities.Multiply(Soil.InitialWaterVolumetric, Soil.Thickness);
-
             // check few initialisation parameters
             CheckParameters();
 
@@ -473,9 +466,6 @@ namespace Models.Soils
             SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp = SurfaceOrganicMatter.PotentialDecomposition();
             nResidues = SurfaceOrganicMatterDecomp.Pool.Length;
             OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
-
-            // get the current soil water content
-            sw_dep = Soil.Water;
 
             // calculate C and N processes
             EvaluateProcesses();
