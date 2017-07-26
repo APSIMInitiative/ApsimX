@@ -260,6 +260,8 @@ namespace UserInterface.Views
                     gridview.SetCursor(new TreePath(new int[1] { iRow }), gridview.GetColumn(iCol), true);
                 }
             }
+            if (keyName == "ISO_Left_Tab")
+                keyName = "Tab";
             if ((keyName == "Return" || keyName == "Tab") && userEditingCell)
             {
                 bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
