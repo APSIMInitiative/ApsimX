@@ -56,6 +56,8 @@ namespace UserInterface.Views
         /// </summary>
         bool IsControlOnLeft(object control);
 
+        string GetMenuItemFileName(object obj);
+
         /// <summary>Ask user for a filename to open.</summary>
         /// <param name="fileSpec">The file specification to use to filter the files.</param>
         /// <param name="initialDirectory">Optional Initial starting directory</param>
@@ -106,6 +108,12 @@ namespace UserInterface.Views
         /// <summary>Close a tab.</summary>
         /// <param name="o">A widget appearing on the tab</param>
         void CloseTabContaining(object o);
+
+        /// <summary>
+        /// Select a tab.
+        /// </summary>
+        /// <param name="o">A widget appearing on the tab</param>
+        void SelectTabContaining(object o);
 
         /// <summary>Invoked when application tries to close</summary>
         event EventHandler<AllowCloseArgs> AllowClose;
@@ -269,6 +277,12 @@ namespace UserInterface.Views
             MonoMac.AppKit.NSApplication.Init();
         }
 
+        /// <summary>
+        /// Handles button press event on the "tab" part of a tabbed page.
+        /// Currently responds by closing the tab if the middle button was pressed
+        /// </summary>
+        /// <param name="o">The object issuing the event</param>
+        /// <param name="e">Button press event arguments</param>
         public void on_eventbox1_button_press_event(object o, ButtonPressEventArgs e)
         {
             if (e.Event.Button == 2) // Let a center-button click on a tab close that tab.
@@ -348,6 +362,11 @@ namespace UserInterface.Views
             return -1;
         }
 
+        /// <summary>
+        /// Responds to presses of the "Close" button by closing the associated tab
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="e"></param>
         public void OnCloseBtnClick(object o, EventArgs e)
         {
             CloseTabContaining(o);
@@ -371,6 +390,19 @@ namespace UserInterface.Views
                     TabClosing.Invoke(this, args);
                 }
             }
+        }
+
+        /// <summary>
+        /// Looks for the tab holding the specified user interface object, and makes that the active tab
+        /// </summary>
+        /// <param name="o">The interface object being sought; normally will be a Gtk Widget</param>
+        public void SelectTabContaining(object o)
+        {
+            Notebook notebook = null;
+            string tabText = null;
+            int tabPage = GetTabOfWidget(o, ref notebook, ref tabText);
+            if (tabPage >= 0 && notebook != null)
+                notebook.CurrentPage = tabPage;
         }
 
         /// <summary>Gets or set the main window position.</summary>
@@ -454,10 +486,34 @@ namespace UserInterface.Views
         {
             if (control is Widget)
             {
+                if (control is MenuItem && (control as MenuItem).Parent is Menu)
+                {
+                    Widget menuOwner = ((control as MenuItem).Parent as Menu).AttachWidget;
+                    if (menuOwner != null)
+                        return menuOwner.IsAncestor(notebook1);
+                }
                 return (control as Widget).IsAncestor(notebook1);
             }
-            else
-                return false;
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the file name associated with the currently selected object, given
+        /// a menu item from the popup menu for the more-recently-used file list
+        /// </summary>
+        /// <param name="obj">A menu item</param>
+        /// <returns></returns>
+        public string GetMenuItemFileName(object obj)
+        {
+            if (obj is MenuItem && (obj as MenuItem).Parent is Menu)
+            {
+                Widget menuOwner = ((obj as MenuItem).Parent as Menu).AttachWidget;
+                if (menuOwner.IsAncestor(notebook1))
+                    return StartPage1.List.SelectedValue;
+                else if (menuOwner.IsAncestor(notebook2))
+                    return StartPage2.List.SelectedValue;
+            }
+            return null;
         }
 
         /// <summary>Ask user for a filename to open.</summary>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
   <Name>Simulations</Name>
   <Memo>
     <Name>Memo</Name>
@@ -264,14 +264,6 @@ However we have to report daily because we have observation data during the crop
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -4336,14 +4328,6 @@ nb. fertiliser amounts are in (kg/ha) and depths in (mm)
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -7606,14 +7590,6 @@ nb. irrigation amounts and depths are in (mm)
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -10881,14 +10857,6 @@ They are missing the word "tillage". This means these tillage events won't occur
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -14114,14 +14082,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -17387,14 +17347,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -20592,14 +20544,6 @@ However Automatic Irrigations are not possible in ApsimX yet.
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -23833,14 +23777,6 @@ All operation irrigations are Overhead, high pressure gun
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -27078,14 +27014,6 @@ All operation irrigations are Overhead, high pressure gun
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -30321,14 +30249,6 @@ All operation irrigations are Overhead, high pressure gun
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -33603,14 +33523,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -36853,14 +36765,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -40058,14 +39962,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -42913,14 +42809,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -45864,14 +45752,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -48799,14 +48679,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -51742,14 +51614,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -54605,14 +54469,6 @@ All operation irrigations are subsurface trickle irrigation unless stated otherw
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -58096,14 +57952,6 @@ Likewise fertiliser applications are subsurface fertigations except for the foll
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -61297,14 +61145,6 @@ However Automatic Irrigations are not possible in ApsimX yet.
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -64832,14 +64672,6 @@ Likewise fertiliser applications are subsurface fertigations except the followin
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -68238,14 +68070,6 @@ Unfortunately solute in irrigations is not possible in ApsimX yet.
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -71561,14 +71385,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -74914,14 +74730,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -78275,14 +78083,6 @@ All operation irrigations are subsurface trickle irrigation except for the follo
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -81733,14 +81533,6 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -84766,14 +84558,6 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -87699,14 +87483,6 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -90700,14 +90476,6 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -93447,16 +93215,16 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <RegrStats>
             <Name>biomass</Name>
             <n>189</n>
-            <Slope>0.98556804966410394</Slope>
-            <Intercept>16.911084264918372</Intercept>
-            <SEslope>0.027566863220185086</SEslope>
-            <SEintercept>116.7390126286445</SEintercept>
-            <R2>0.872372299568194</R2>
-            <RMSE>949.812485601906</RMSE>
-            <NSE>0.85752022913391812</NSE>
-            <ME>-32.245436500065523</ME>
-            <MAE>663.43422996742959</MAE>
-            <RSR>0.37646501782312813</RSR>
+            <Slope>0.9855649186447758</Slope>
+            <Intercept>16.89603451262019</Intercept>
+            <SEslope>0.027566965493812511</SEslope>
+            <SEintercept>116.73944573277348</SEintercept>
+            <R2>0.8723707660040263</R2>
+            <RMSE>949.81717479795191</RMSE>
+            <NSE>0.857518822293647</NSE>
+            <ME>-32.271150785779817</ME>
+            <MAE>663.43973261293252</MAE>
+            <RSR>0.37646687641974563</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cab_N</Name>
@@ -93475,58 +93243,58 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <RegrStats>
             <Name>cane_dmc</Name>
             <n>188</n>
-            <Slope>-0.51962907190811281</Slope>
-            <Intercept>0.45137108021114469</Intercept>
-            <SEslope>0.10718209247977376</SEslope>
-            <SEintercept>0.023514956334943</SEintercept>
-            <R2>0.11218893560233345</R2>
-            <RMSE>0.28699384283207052</RMSE>
-            <NSE>-5.6144739562570756</NSE>
-            <ME>0.16432284839228456</ME>
-            <MAE>0.16489293776287012</MAE>
-            <RSR>2.5650127844027071</RSR>
+            <Slope>-0.517471191848017</Slope>
+            <Intercept>0.4508211782953272</Intercept>
+            <SEslope>0.10733395815738113</SEslope>
+            <SEintercept>0.023548274538526197</SEintercept>
+            <R2>0.11108271160992322</R2>
+            <RMSE>0.28690166903331848</RMSE>
+            <NSE>-5.6102258979737361</NSE>
+            <ME>0.16418055624596808</ME>
+            <MAE>0.16475065715202758</MAE>
+            <RSR>2.5641889793696344</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_N</Name>
             <n>168</n>
-            <Slope>0.93112285741876433</Slope>
-            <Intercept>1.2889913593793594</Intercept>
-            <SEslope>0.04776048405716015</SEslope>
-            <SEintercept>0.51205284112760574</SEintercept>
-            <R2>0.69601597585823916</R2>
-            <RMSE>4.4975563370247471</RMSE>
-            <NSE>0.60594194607252827</NSE>
-            <ME>0.73964284894012022</ME>
-            <MAE>3.1805952205260595</MAE>
-            <RSR>0.62586937157296774</RSR>
+            <Slope>0.93111607571721333</Slope>
+            <Intercept>1.2889264010779815</Intercept>
+            <SEslope>0.0477612308939832</SEslope>
+            <SEintercept>0.512060848163645</SEintercept>
+            <R2>0.69600627688209293</R2>
+            <RMSE>4.4976096725526249</RMSE>
+            <NSE>0.60593259992214554</NSE>
+            <ME>0.73952380132107254</ME>
+            <MAE>3.180714268145107</MAE>
+            <RSR>0.62587679361970017</RSR>
           </RegrStats>
           <RegrStats>
             <Name>cane_wt</Name>
             <n>196</n>
-            <Slope>1.0516341698483056</Slope>
-            <Intercept>6.3243254330809577</Intercept>
-            <SEslope>0.030960850006655303</SEslope>
-            <SEintercept>98.107485251786642</SEintercept>
-            <R2>0.85605409565905455</R2>
-            <RMSE>891.48999447339622</RMSE>
-            <NSE>0.80714522414124823</NSE>
-            <ME>131.95607462201713</ME>
-            <MAE>605.51913310615419</MAE>
-            <RSR>0.43803061870227394</RSR>
+            <Slope>1.0516292508195617</Slope>
+            <Intercept>6.3182837798108267</Intercept>
+            <SEslope>0.030961345281556429</SEslope>
+            <SEintercept>98.109054658797348</SEintercept>
+            <R2>0.85604900040644183</R2>
+            <RMSE>891.499906251009</RMSE>
+            <NSE>0.80714093571560541</NSE>
+            <ME>131.93806441793552</ME>
+            <MAE>605.52581677962348</MAE>
+            <RSR>0.43803548882095961</RSR>
           </RegrStats>
           <RegrStats>
             <Name>canefw</Name>
             <n>188</n>
-            <Slope>0.86705661987838978</Slope>
-            <Intercept>-5.4662443762979223</Intercept>
-            <SEslope>0.0323561925155714</SEslope>
-            <SEintercept>4.0250303264983733</SEintercept>
-            <R2>0.79426872742341725</R2>
-            <RMSE>38.349235308205131</RMSE>
-            <NSE>0.71930321577486134</NSE>
-            <ME>-18.91615442902679</ME>
-            <MAE>28.819294594242738</MAE>
-            <RSR>0.52839730906197957</RSR>
+            <Slope>0.86705159740448723</Slope>
+            <Intercept>-5.4662740372798027</Intercept>
+            <SEslope>0.032356714537322737</SEslope>
+            <SEintercept>4.02509526471319</SEintercept>
+            <R2>0.79426156164200579</R2>
+            <RMSE>38.350021018607265</RMSE>
+            <NSE>0.719291713660634</NSE>
+            <ME>-18.916692214761969</ME>
+            <MAE>28.820011062014171</MAE>
+            <RSR>0.52840813502132011</RSR>
           </RegrStats>
           <RegrStats>
             <Name>das</Name>
@@ -93545,44 +93313,44 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <RegrStats>
             <Name>green_biomass</Name>
             <n>182</n>
-            <Slope>1.0165407880148518</Slope>
-            <Intercept>-47.220441781173122</Intercept>
-            <SEslope>0.031086172308144477</SEslope>
-            <SEintercept>116.36960845569696</SEintercept>
-            <R2>0.855923730734</R2>
-            <RMSE>905.47586941683437</RMSE>
-            <NSE>0.82578114914340606</NSE>
-            <ME>3.2421487552508386</ME>
-            <MAE>649.83873003236522</MAE>
-            <RSR>0.41624704734486212</RSR>
+            <Slope>1.0165353980971104</Slope>
+            <Intercept>-47.225316916286829</Intercept>
+            <SEslope>0.031086333924071608</SEslope>
+            <SEintercept>116.37021345723829</SEintercept>
+            <R2>0.8559211407391939</R2>
+            <RMSE>905.48003013492166</RMSE>
+            <NSE>0.8257795480467589</NSE>
+            <ME>3.2208300739322078</ME>
+            <MAE>649.83949926313414</MAE>
+            <RSR>0.4162489600260027</RSR>
           </RegrStats>
           <RegrStats>
             <Name>green_biomass_n</Name>
             <n>166</n>
-            <Slope>0.81997764097852821</Slope>
-            <Intercept>1.5805287958497498</Intercept>
-            <SEslope>0.04545335185192103</SEslope>
-            <SEintercept>0.86133151717108836</SEintercept>
-            <R2>0.66492382377931</R2>
-            <RMSE>6.22478830554513</RMSE>
-            <NSE>0.61131739105350924</NSE>
-            <ME>-1.3189156550743502</ME>
+            <Slope>0.81994659557454319</Slope>
+            <Intercept>1.5807878500187531</Intercept>
+            <SEslope>0.045453118731167919</SEslope>
+            <SEintercept>0.86132709958154252</SEintercept>
+            <R2>0.66490923770214749</R2>
+            <RMSE>6.2249010484679443</RMSE>
+            <NSE>0.61130331134249838</NSE>
+            <ME>-1.3191566189297721</ME>
             <MAE>4.6512048478945172</MAE>
-            <RSR>0.62156347016761937</RSR>
+            <RSR>0.62157472788095869</RSR>
           </RegrStats>
           <RegrStats>
             <Name>lai</Name>
             <n>185</n>
-            <Slope>0.77313690302697935</Slope>
-            <Intercept>0.76590173820833884</Intercept>
-            <SEslope>0.044156067081608</SEslope>
-            <SEintercept>0.20714137642027816</SEintercept>
-            <R2>0.62620387077942574</R2>
-            <RMSE>1.2936015801820378</RMSE>
-            <NSE>0.5820676656698992</NSE>
-            <ME>-0.19666611986268573</ME>
-            <MAE>0.97852384862153141</MAE>
-            <RSR>0.64472726065447183</RSR>
+            <Slope>0.77312632087349131</Slope>
+            <Intercept>0.765903476177701</Intercept>
+            <SEslope>0.044156271638122212</SEslope>
+            <SEintercept>0.20714233601928028</SEintercept>
+            <R2>0.6261952943396305</R2>
+            <RMSE>1.2936206897588354</RMSE>
+            <NSE>0.58205531786644671</NSE>
+            <ME>-0.19670928139858676</ME>
+            <MAE>0.97854213840227222</MAE>
+            <RSR>0.64473678481190155</RSR>
           </RegrStats>
           <RegrStats>
             <Name>leaf_N</Name>
@@ -93601,44 +93369,44 @@ All operation irrigations are subsurface trickle irrigation unless stated below,
           <RegrStats>
             <Name>scmst</Name>
             <n>143</n>
-            <Slope>0.94627158466987238</Slope>
-            <Intercept>-0.011837222942572112</Intercept>
-            <SEslope>0.044884375808657284</SEslope>
-            <SEintercept>0.016853855890294447</SEintercept>
-            <R2>0.75916732808933562</R2>
-            <RMSE>0.10561920301088912</RMSE>
-            <NSE>0.68920814978737943</NSE>
-            <ME>-0.02925574979485673</ME>
-            <MAE>0.071054475457585489</MAE>
-            <RSR>0.5555344099429973</RSR>
+            <Slope>0.94627797480083375</Slope>
+            <Intercept>-0.011837156728847442</Intercept>
+            <SEslope>0.044884686758221416</SEslope>
+            <SEintercept>0.016853972650281608</SEintercept>
+            <R2>0.75916726415911118</R2>
+            <RMSE>0.10561916296173471</RMSE>
+            <NSE>0.68920838548217889</NSE>
+            <ME>-0.029253611927481906</ME>
+            <MAE>0.0710536261404617</MAE>
+            <RSR>0.55553419929301384</RSR>
           </RegrStats>
           <RegrStats>
             <Name>scmstf</Name>
             <n>143</n>
-            <Slope>0.9959368889277358</Slope>
-            <Intercept>0.010715408830899831</Intercept>
-            <SEslope>0.047934061269220646</SEslope>
-            <SEintercept>0.0048633191341844228</SEintercept>
-            <R2>0.75379486644073634</R2>
-            <RMSE>0.034143562864894485</RMSE>
-            <NSE>0.64305482297093941</NSE>
-            <ME>0.010374789420936878</ME>
-            <MAE>0.02347176148048909</MAE>
-            <RSR>0.59535624369781859</RSR>
+            <Slope>0.99594294071273826</Slope>
+            <Intercept>0.010715539837622773</Intercept>
+            <SEslope>0.047934375988121967</SEslope>
+            <SEintercept>0.0048633510650998128</SEintercept>
+            <R2>0.75379468486653822</R2>
+            <RMSE>0.034143957950611273</RMSE>
+            <NSE>0.64304656227725632</NSE>
+            <ME>0.010375427761916812</ME>
+            <MAE>0.023472197217930483</MAE>
+            <RSR>0.59536313274888852</RSR>
           </RegrStats>
           <RegrStats>
             <Name>sucrose_wt</Name>
             <n>152</n>
-            <Slope>1.0899021964076132</Slope>
-            <Intercept>-111.01132675322788</Intercept>
-            <SEslope>0.048715489466992862</SEslope>
-            <SEintercept>78.47834822866362</SEintercept>
-            <R2>0.76942319429084183</R2>
-            <RMSE>604.00424356261544</RMSE>
-            <NSE>0.63593171144890881</NSE>
-            <ME>2.4615105478376318</ME>
-            <MAE>394.32335464076039</MAE>
-            <RSR>0.60139263583968372</RSR>
+            <Slope>1.0899013689037786</Slope>
+            <Intercept>-111.01396650419997</Intercept>
+            <SEslope>0.048715926968029177</SEslope>
+            <SEintercept>78.4790530221298</SEintercept>
+            <R2>0.76941973832363075</R2>
+            <RMSE>604.00940902897526</RMSE>
+            <NSE>0.63592548437167</NSE>
+            <ME>2.4578263373112867</ME>
+            <MAE>394.32782832497071</MAE>
+            <RSR>0.60139777897147884</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>

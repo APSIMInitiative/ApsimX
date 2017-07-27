@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -3728,30 +3728,30 @@ Where:
           <RegrStats>
             <Name>CumulativeHarvestedWt</Name>
             <n>670</n>
-            <Slope>0.97304650388468161</Slope>
-            <Intercept>-29.970161284277992</Intercept>
-            <SEslope>0.014654730262978777</SEslope>
-            <SEintercept>9.4203749440787981</SEintercept>
-            <R2>0.86841872065192027</R2>
-            <RMSE>140.63456610586036</RMSE>
-            <NSE>0.839786890738254</NSE>
-            <ME>-44.479326965658181</ME>
-            <MAE>102.13254497171427</MAE>
-            <RSR>0.399967480200668</RSR>
+            <Slope>0.97297100094555822</Slope>
+            <Intercept>-30.027985099146633</Intercept>
+            <SEslope>0.014658532622330802</SEslope>
+            <SEintercept>9.4228191822275331</SEintercept>
+            <R2>0.86834167903379811</R2>
+            <RMSE>140.70019516286118</RMSE>
+            <NSE>0.83963732454025719</NSE>
+            <ME>-44.577794289201506</ME>
+            <MAE>102.23453557338856</MAE>
+            <RSR>0.40015413053339494</RSR>
           </RegrStats>
           <RegrStats>
             <Name>HarvestedWt</Name>
             <n>660</n>
-            <Slope>0.58690851522678822</Slope>
-            <Intercept>49.124429772946613</Intercept>
-            <SEslope>0.024029646830376356</SEslope>
-            <SEintercept>3.4318216017956131</SEintercept>
-            <R2>0.47550868457144335</R2>
-            <RMSE>59.1605699578836</RMSE>
-            <NSE>0.44940552658689337</NSE>
-            <ME>0.17747170202540188</ME>
-            <MAE>41.810532640835063</MAE>
-            <RSR>0.74145818450029988</RSR>
+            <Slope>0.586986143326879</Slope>
+            <Intercept>49.096503376073059</Intercept>
+            <SEslope>0.024030122919750981</SEslope>
+            <SEintercept>3.4318895950462736</SEintercept>
+            <R2>0.47556477246878814</R2>
+            <RMSE>59.157880243843714</RMSE>
+            <NSE>0.44945559060829265</NSE>
+            <ME>0.15874341138288095</ME>
+            <MAE>41.803387445497663</MAE>
+            <RSR>0.74142447437055869</RSR>
           </RegrStats>
           <RegrStats>
             <Name>NRate</Name>
@@ -3770,30 +3770,30 @@ Where:
           <RegrStats>
             <Name>Plantain.AboveGround.Wt</Name>
             <n>786</n>
-            <Slope>0.6077969393351178</Slope>
-            <Intercept>55.86815206077091</Intercept>
-            <SEslope>0.024189696245289573</SEslope>
-            <SEintercept>3.7156995086457014</SEintercept>
-            <R2>0.44606544583112218</R2>
-            <RMSE>46.748131726464692</RMSE>
-            <NSE>0.3873887802557463</NSE>
-            <ME>0.36388428684774721</ME>
-            <MAE>32.335690354851927</MAE>
-            <RSR>0.78219678863876252</RSR>
+            <Slope>0.60701002511985513</Slope>
+            <Intercept>55.947889244078041</Intercept>
+            <SEslope>0.024175573155878875</SEslope>
+            <SEintercept>3.7135301074324012</SEintercept>
+            <R2>0.44571385229683158</R2>
+            <RMSE>46.751038397241771</RMSE>
+            <NSE>0.38731259691225706</NSE>
+            <ME>0.33225799113189819</ME>
+            <MAE>32.331877950796006</MAE>
+            <RSR>0.78224542349246673</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Plantain.AboveGroundLive.NConc</Name>
             <n>831</n>
-            <Slope>0.7824996156224383</Slope>
-            <Intercept>0.0021694054243093855</Intercept>
-            <SEslope>0.04720134476617413</SEslope>
-            <SEintercept>0.0014493954994906123</SEintercept>
-            <R2>0.24897656912066335</R2>
-            <RMSE>0.010450753931748703</RMSE>
-            <NSE>-1.2886404286873936</NSE>
-            <ME>-0.0043380987931970014</ME>
-            <MAE>0.0087090963963272067</MAE>
-            <RSR>1.5119147954660481</RSR>
+            <Slope>0.78113367912731291</Slope>
+            <Intercept>0.0022038721524908038</Intercept>
+            <SEslope>0.047162785136594589</SEslope>
+            <SEintercept>0.0014482114621744834</SEintercept>
+            <R2>0.24862898008416678</R2>
+            <RMSE>0.010447886541048756</RMSE>
+            <NSE>-1.2873847248306771</NSE>
+            <ME>-0.0043445002111952794</ME>
+            <MAE>0.0087058322100084535</MAE>
+            <RSR>1.511499968894497</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Plantain.Population</Name>
@@ -5358,14 +5358,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
@@ -13380,14 +13372,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
@@ -21534,14 +21518,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
@@ -28281,14 +28257,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
