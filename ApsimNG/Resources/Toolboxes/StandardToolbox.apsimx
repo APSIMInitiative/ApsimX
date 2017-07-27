@@ -656,6 +656,13 @@
       <CropType>SCRUM</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
+    <Plant>
+      <Name>Chicory</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ResourceName>Chicory</ResourceName>
+      <CropType>Chicory</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
+    </Plant>
     <CultivarFolder>
       <Name>CultivarFolder</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

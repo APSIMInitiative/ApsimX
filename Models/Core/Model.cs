@@ -158,6 +158,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.NodeNumberPhase))]
         [XmlElement(typeof(Models.PMF.Phen.PhaseSetFunction))]
         [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]
+        [XmlElement(typeof(Models.PMF.Phen.VernalisationC))]
         [XmlElement(typeof(Models.PMF.Phen.VernalisationCW))]
         [XmlElement(typeof(Models.PMF.Phen.QualitativePPEffect))]
         [XmlElement(typeof(Models.PMF.Phen.ZadokPMF))]
