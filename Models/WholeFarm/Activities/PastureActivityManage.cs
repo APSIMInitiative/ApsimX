@@ -32,11 +32,11 @@ namespace Models.WholeFarm.Activities
         [Link]
 		WholeFarm WholeFarm = null;
 
-        /// <summary>
-        /// Number for the Climate Region for the pasture.
-        /// </summary>
-        [Description("Climate Region Number")]
-        public int Region { get; set; }
+        ///// <summary>
+        ///// Number for the Climate Region for the pasture.
+        ///// </summary>
+        //[Description("Climate Region Number")]
+        //public int Region { get; set; }
 
         /// <summary>
         /// Name of land type where pasture is located
@@ -93,18 +93,6 @@ namespace Models.WholeFarm.Activities
 		[Description("Area requested")]
 		public double AreaRequested { get; set; }
 
-		///// <summary>
-		///// Month for ecological indicators calculation (end of month)
-		///// </summary>
-		//[Description("Month for ecological indicators calculation (end of month)")]
-		//public int EcolCalculationMonth { get; set; }
-
-		///// <summary>
-		///// Ecological indicators calculation interval (months)
-		///// </summary>
-		//[Description("Ecological indicators calculation interval (months)")]
-		//public int EcolCalculationInterval { get; set; }
-
 		/// <summary>
 		/// Feed type
 		/// </summary>
@@ -112,9 +100,9 @@ namespace Models.WholeFarm.Activities
 		public GrazeFoodStoreType LinkedNativeFoodType { get; set; }
 
         /// <summary>
-        /// Units of area to use for this run
+        /// Conversion of simulation units of area to hectares
         /// </summary>
-        private UnitsOfAreaType unitsOfArea;
+        private double unitsOfArea2Ha;
 
 		// private properties
 		private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
@@ -134,8 +122,8 @@ namespace Models.WholeFarm.Activities
        [EventSubscribe("Commencing")]
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
-            //get the units of area for this run from the Land resource.
-            unitsOfArea = Resources.Land().UnitsOfArea; 
+			//get the units of area for this run from the Land resource.
+			unitsOfArea2Ha = Resources.Land().UnitsOfAreaToHaConversion ; 
 
             // Get Land condition relationship from children
             LandConditionIndex = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name=="LandConditionIndex").FirstOrDefault() as Relationship;
@@ -165,7 +153,7 @@ namespace Models.WholeFarm.Activities
                 ResourceRequestList.Add(new ResourceRequest()
                 {
                     AllowTransmutation = false,
-                    Required = AreaRequested * (double)unitsOfArea,
+                    Required = AreaRequested,
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse,
                     ActivityModel = this,
@@ -185,7 +173,7 @@ namespace Models.WholeFarm.Activities
             if (gotLandRequested)
             {
                 //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
-                Area = ResourceRequestList.FirstOrDefault().Available; //TODO: should this be supplied not available ?
+                Area = ResourceRequestList.FirstOrDefault().Provided;
                 LinkedNativeFoodType.Area = Area;
 
                 SetupStartingPasturePools(StartingAmount);
@@ -219,8 +207,11 @@ namespace Models.WholeFarm.Activities
                 PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
 
                 growth = pasturedata.Growth;
-           
-                if (growth > 0)
+				//TODO: check units from input files.
+				// convert from kg/ha to kg/area unit
+				growth = growth * unitsOfArea2Ha;
+
+				if (growth > 0)
 			    {
 				    GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
 				    newPasture.Age = 0;
@@ -352,13 +343,11 @@ namespace Models.WholeFarm.Activities
             {
                 LinkedNativeFoodType.Add(pool);
             }
-
         }
-
 
         private double CalculateStockingRateRightNow()
         {
-            return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * ha2sqkm);
+            return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
         }
 
 		/// <summary>
@@ -428,7 +417,7 @@ namespace Models.WholeFarm.Activities
             double stockingRate = LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate;
             pkStkRate = (int)Math.Round(stockingRate);
 
-			PastureDataList = FileGRASP.GetIntervalsPastureData(Region, soilIndex, 1,
+			PastureDataList = FileGRASP.GetIntervalsPastureData(WholeFarm.ClimateRegion, soilIndex, 1,
                pkGrassBA, pkLandCon, pkStkRate, Clock.Today, WholeFarm.EcologicalIndicatorsCalculationInterval);
         }
 

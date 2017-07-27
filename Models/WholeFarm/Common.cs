@@ -196,20 +196,23 @@ namespace Models.WholeFarm
 		perKg,
 	}
 
-	/// <summary>
-	/// Types of measures of area with value representing the number of hectares
-	/// </summary>
-	public enum UnitsOfAreaType
-	{
-		/// <summary>
-		/// Hectares
-		/// </summary>
-		Hectares = 1,
-		/// <summary>
-		/// Square kilometres
-		/// </summary>
-		SquareKilometres = 100
-	}
+	// Units of area enum was removed to allow user to use any unit of area
+	// The user must also provide a units of area to hectare conversion
+
+	///// <summary>
+	///// Types of measures of area with value representing the number of hectares
+	///// </summary>
+	//public enum UnitsOfAreaType
+	//{
+	//	/// <summary>
+	//	/// Hectares
+	//	/// </summary>
+	//	Hectares = 1,
+	//	/// <summary>
+	//	/// Square kilometres
+	//	/// </summary>
+	//	SquareKilometres = 100,
+	//}
 
 	/// <summary>
 	/// Ruminant feeding styles

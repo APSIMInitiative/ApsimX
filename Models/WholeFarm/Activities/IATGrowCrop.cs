@@ -120,8 +120,7 @@ namespace Models.WholeFarm.Activities
         /// </summary>
         private IATCropLand cropLand;
 
-
-
+		private double unitsToHaConverter;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -164,6 +163,8 @@ namespace Models.WholeFarm.Activities
             }
 
             IsTreeCrop = (TreesPerHa == 0) ? false : true;  //using this boolean just makes things more readable.
+
+			unitsToHaConverter = (cropLand.LinkedLandItem.Parent as Land).UnitsOfAreaToHaConversion;
         }
 
 
@@ -237,9 +238,9 @@ namespace Models.WholeFarm.Activities
                 {
                     double totalamount;
                     if (IsTreeCrop)
-                        totalamount = nextHarvest.AmtKg * TreesPerHa * cropLand.Area * (PercentKept / 100);
+                        totalamount = nextHarvest.AmtKg * TreesPerHa * cropLand.Area * unitsToHaConverter * (PercentKept / 100);
                     else
-                        totalamount = nextHarvest.AmtKg * cropLand.Area * (PercentKept / 100);
+                        totalamount = nextHarvest.AmtKg * cropLand.Area * unitsToHaConverter * (PercentKept / 100);
 
 
                     switch (Store)

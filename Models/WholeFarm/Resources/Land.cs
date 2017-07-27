@@ -27,9 +27,16 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Unit of area to be used in this simulation
 		/// </summary>
-		[System.ComponentModel.DefaultValueAttribute(UnitsOfAreaType.Hectares)]
+		[System.ComponentModel.DefaultValueAttribute("Hectares")]
 		[Description("Unit of area to be used in this simulation")]
-		public UnitsOfAreaType UnitsOfArea { get; set; }
+		public string UnitsOfArea { get; set; }
+
+		/// <summary>
+		/// Conversion of unit of area to hectares (10,000 square metres)
+		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(1)]
+		[Description("Unit of area conversion to ha")]
+		public double UnitsOfAreaToHaConversion { get; set; }
 
 		/// <summary>
 		/// Constructor

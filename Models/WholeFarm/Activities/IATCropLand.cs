@@ -45,7 +45,7 @@ namespace Models.WholeFarm.Activities
         public double AreaRequested { get; set; }
 
         /// <summary>
-        /// Area (in Hectares) of land actually received (maybe less than requested)
+        /// Area of land actually received (maybe less than requested)
         /// </summary>
         [XmlIgnore]
         public double Area;
@@ -63,10 +63,10 @@ namespace Models.WholeFarm.Activities
 
         private bool gotLandRequested = false; //was this crop able to get the land it requested ?
 
-        /// <summary>
-        /// Units of area to use for this run
-        /// </summary>
-        private UnitsOfAreaType unitsOfArea;
+        ///// <summary>
+        ///// Units of area to use for this run
+        ///// </summary>
+        //private UnitsOfAreaType unitsOfArea;
 
 
         
@@ -79,7 +79,7 @@ namespace Models.WholeFarm.Activities
 		{
 
             //get the units of area for this run from the Land resource.
-            unitsOfArea = Resources.Land().UnitsOfArea; 
+            //unitsOfArea = Resources.Land().UnitsOfArea; 
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.GetResourceItem(this, typeof(Land), LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;            
@@ -101,7 +101,7 @@ namespace Models.WholeFarm.Activities
                 ResourceRequestList.Add(new ResourceRequest()
                 {
                     AllowTransmutation = false,
-                    Required = AreaRequested * (double)unitsOfArea,
+                    Required = AreaRequested, // * (double)unitsOfArea,
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandItemNameToUse,
                     ActivityModel = this,
@@ -118,7 +118,7 @@ namespace Models.WholeFarm.Activities
             if (gotLandRequested)
             {
                 //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
-                Area = ResourceRequestList.FirstOrDefault().Available; //TODO: should this be supplied not available ?
+                Area = ResourceRequestList.FirstOrDefault().Provided;
             }
 
         }
