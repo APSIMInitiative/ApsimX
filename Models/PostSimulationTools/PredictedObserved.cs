@@ -6,6 +6,7 @@ using Models.Core;
 using System.IO;
 using System.Data;
 using System.Xml.Serialization;
+using Models.Storage;
 
 namespace Models.PostSimulationTools
 {
@@ -56,7 +57,7 @@ namespace Models.PostSimulationTools
         /// or
         /// Could not find observed data table:  + ObservedTableName
         /// </exception>
-        public void Run(DataStore dataStore)
+        public void Run(IStorage dataStore)
         {
             if (PredictedTableName != null && ObservedTableName != null)
             {
@@ -101,8 +102,7 @@ namespace Models.PostSimulationTools
                 DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
 
                 if (predictedObservedData != null)
-                    dataStore.WriteTable(null, this.Name, predictedObservedData);
-                dataStore.Disconnect();
+                    dataStore.WriteTable(this.Name, predictedObservedData);
             }
         }
     }

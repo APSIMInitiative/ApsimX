@@ -159,7 +159,7 @@
     <Compile Include="Core\Scope.cs" />
     <Compile Include="Core\VariableMethod.cs" />
     <Compile Include="Report\ReportTable.cs" />
-    <Compile Include="Storage\DataStore2.cs" />
+    <Compile Include="Storage\DataStore.cs" />
     <Compile Include="Graph\GraphPage.cs" />
     <Compile Include="Graph\IGraphable.cs" />
     <Compile Include="Core\ITestable.cs" />
@@ -327,6 +327,8 @@
     <Compile Include="Stock\stock_vars.cs" />
     <Compile Include="Stock\typedval.cs" />
     <Compile Include="Stock\xmlpsr.cs" />
+    <Compile Include="Storage\Row.cs" />
+    <Compile Include="Storage\Table.cs" />
     <Compile Include="Sugarcane\CropConstants.cs" />
     <Compile Include="Sugarcane\CultivarConstants.cs" />
     <Compile Include="Sugarcane\MathUtil.cs" />
@@ -463,7 +465,6 @@
     <Compile Include="Core\ISummary.cs" />
     <Compile Include="Core\Model.cs" />
     <Compile Include="Core\Zone.cs" />
-    <Compile Include="DataStore.cs" />
     <Compile Include="Core\Simulations.cs" />
     <Compile Include="Graph\Axis.cs" />
     <Compile Include="Graph\Series.cs" />

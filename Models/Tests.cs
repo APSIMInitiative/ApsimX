@@ -8,6 +8,7 @@ using Models.Core;
 using Models.PostSimulationTools;
 using APSIM.Shared.Utilities;
 using System.ComponentModel;
+using Models.Storage;
 
 namespace Models
 {
@@ -53,7 +54,7 @@ namespace Models
             PredictedObserved PO = Parent as PredictedObserved;
             if (PO == null)
                 return;
-            DataStore DS = PO.Parent as DataStore;
+            IStorage DS = PO.Parent as IStorage;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
             DataTable POtable = DS.GetData("*", PO.Name);

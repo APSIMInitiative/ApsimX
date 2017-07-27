@@ -1,12 +1,11 @@
 ﻿namespace UnitTests
 {
     using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Report;
     using Models.Storage;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.IO;
     using System.Reflection;
 
@@ -14,33 +13,22 @@
     public class TestDataStore
     {
         private string fileName;
+        private string sqliteFileName;
 
-        [SetUp]
-        public void Initialise()
+        private class Pair
         {
-            fileName = Path.Combine(Path.GetTempPath(), "TestDataStore.db");
-            File.Delete(fileName);
-            
-            string sqliteSourceFileName = FindSqlite3DLL();
-
-            string sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
-            if (!File.Exists(sqliteFileName))
-            {
-                File.Copy(sqliteSourceFileName, sqliteFileName);
-            } 
+            public int a { get; set; }
+            public int b { get; set; }
         }
 
-        [TearDown]
-        public void Cleanup()
+        private class Record
         {
-            File.Delete(fileName);
+            public DateTime c { get; set; }
+            public List<double> d { get; set; }
+            public Pair[] e { get; set; }
         }
 
-
-        /// <summary>
-        /// Find an return the database file name.
-        /// </summary>
-        /// <returns>The filename</returns>
+        /// <summary>Find and return the file name of SQLite runtime .dll</summary>
         public static string FindSqlite3DLL()
         {
             string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -62,27 +50,290 @@
             throw new Exception("Cannot find apsimx bin directory");
         }
 
-        [Test]
-        public void EnsureDatastoreWritesToDB()
+        /// <summary>Initialisation code for all unit tests in this class</summary>
+        [SetUp]
+        public void Initialise()
         {
-            using (DataStore2 storage = new DataStore2(fileName))
+            Directory.SetCurrentDirectory(Path.GetTempPath());
+
+            fileName = Path.Combine(Path.GetTempPath(), "TestDataStore.db");
+            File.Delete(fileName);
+
+            string sqliteSourceFileName = FindSqlite3DLL();
+
+            sqliteFileName = Path.Combine(Directory.GetCurrentDirectory(), "sqlite3.dll");
+            if (!File.Exists(sqliteFileName))
+            {
+                File.Copy(sqliteSourceFileName, sqliteFileName);
+            }
+        }
+
+        /// <summary>Clean up after the unit tests</summary>
+        [TearDown]
+        public void Cleanup()
+        {
+            File.Delete(fileName);
+        }
+
+        /// <summary>Write 2 columns of data for 2 simulations into one table. Ensure data was written correctly</summary>
+        [Test]
+        public void WriteRow_2Sims1TableSameCols_WriteCorrectly()
+        {
+            using (DataStore storage = new DataStore(fileName))
             {
                 storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim2" },
-                                     simulationNamesBeingRun: new string[] { "Sim2" });
+                                     simulationNamesBeingRun: new string[] { "Sim1", "Sim2" });
 
                 string[] columnNames1 = new string[] { "Col1", "Col2" };
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 1.0, 11.0 });
                 storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 2.0, 12.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 3.0, 13.0 });
                 storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 4.0, 14.0 });
-
-                string[] columnNames2 = new string[] { "Col3", "Col4" };
-                storage.WriteRow("Sim1", "Report2", columnNames2, new string[] { null, "(g/m2)" }, new object[] { 21.0, 31.0 });
-                storage.WriteRow("Sim1", "Report2", columnNames2, new string[] { null, "(g/m2)" }, new object[] { 22.0, 32.0 });
-                storage.WriteRow("Sim2", "Report2", columnNames2, new string[] { null, "(g/m2)" }, new object[] { 23.0, 33.0 });
-                storage.WriteRow("Sim2", "Report2", columnNames2, new string[] { null, "(g/m2)" }, new object[] { 24.0, 34.0 });
                 storage.EndWriting();
             }
+
+            Assert.AreEqual(TableToString(fileName, "Report1"),
+                           "SimulationID, Col1,  Col2\r\n" +
+                           "           1,1.000,11.000\r\n" +
+                           "           1,2.000,12.000\r\n" +
+                           "           2,3.000,13.000\r\n" +
+                           "           2,4.000,14.000\r\n");
         }
+
+        /// <summary>Write data for 2 simulations, each with different columns, into one table. Ensure data was written correctly</summary>
+        [Test]
+        public void WriteRow_2Sims1TableDifferentCols_WriteCorrectly()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim2" },
+                                     simulationNamesBeingRun: new string[] { "Sim1", "Sim2" });
+
+                string[] columnNames1 = new string[] { "Col1", "Col2" };
+                string[] columnNames2 = new string[] { "Col3", "Col4" };
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 1.0, 11.0 });
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "(g)" }, new object[] { 2.0, 12.0 });
+                storage.WriteRow("Sim2", "Report1", columnNames2, new string[] { null, "(g)" }, new object[] { 3.0, 13.0 });
+                storage.WriteRow("Sim2", "Report1", columnNames2, new string[] { null, "(g)" }, new object[] { 4.0, 14.0 });
+                storage.EndWriting();
+            }
+
+            Assert.AreEqual(TableToString(fileName, "Report1"),
+                           "SimulationID, Col1,  Col2, Col3,  Col4\r\n" +
+                           "           1,1.000,11.000,     ,      \r\n" +
+                           "           1,2.000,12.000,     ,      \r\n" +
+                           "           2,     ,      ,3.000,13.000\r\n" +
+                           "           2,     ,      ,4.000,14.000\r\n");
+        }
+
+        /// <summary>Write array data that changes size into a table. Ensure data was written correctly</summary>
+        [Test]
+        public void WriteRow_ArrayData_WriteCorrectly()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1" },
+                                     simulationNamesBeingRun: new string[] { "Sim1" });
+
+                string[] columnNames1 = new string[] { "Col" };
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 1.0 } });
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 2.0, 2.1} });
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { "(g)" }, new object[] { new double[] { 3.0, 3.1, 3.2} });
+                storage.EndWriting();
+            }
+
+            Assert.AreEqual(TableToString(fileName, "Report1"),
+                           "SimulationID,Col(1),Col(2),Col(3)\r\n" +
+                           "           1, 1.000,      ,      \r\n" +
+                           "           1, 2.000, 2.100,      \r\n" +
+                           "           1, 3.000, 3.100, 3.200\r\n");
+        }
+
+        /// <summary>Write array of structure data into a table. Ensure data was written correctly</summary>
+        [Test]
+        public void WriteRow_StructureData_WriteCorrectly()
+        {
+            Record record1 = new Record()
+            {
+                c = new DateTime(2017, 1, 1),
+                d = new List<double> { 100, 101 },
+                e = new Pair[] { new Pair() { a = 10, b = 11 },
+                                     new Pair() { a = 12, b = 13 } }
+            };
+            Record record2 = new Record()
+            {
+                c = new DateTime(2017, 1, 2),
+                d = new List<double> { 102, 103 },
+                e = new Pair[] { new Pair() { a = 16, b = 17 },
+                                     new Pair() { a = 18, b = 19 },
+                                     new Pair() { a = 20, b = 21 } }
+            };
+
+            using (DataStore storage = new DataStore(fileName))
+            {
+                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1" },
+                                     simulationNamesBeingRun: new string[] { "Sim1" });
+
+                string[] columnNames1 = new string[] { "Col" };
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { record1 });
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { record2 });
+                storage.EndWriting();
+            }
+
+            Assert.AreEqual(TableToString(fileName, "Report1"),
+                            "SimulationID,     Col.c,Col.d(1),Col.d(2),Col.e(1).a,Col.e(1).b,Col.e(2).a,Col.e(2).b,Col.e(3).a,Col.e(3).b\r\n" +
+                            "           1,2017-01-01, 100.000, 101.000,        10,        11,        12,        13,          ,          \r\n" +
+                            "           1,2017-01-02, 102.000, 103.000,        16,        17,        18,        19,        20,        21\r\n");
+        }
+
+        /// <summary>Ensure that begin writing method does cleanup</summary>
+        [Test]
+        public void BeginWriting_Cleanup()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                // Create a database with 3 sims.
+                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim2", "Sim3" },
+                                     simulationNamesBeingRun: new string[] { "Sim1" });
+
+                string[] columnNames1 = new string[] { "Col" };
+                storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null }, new object[] { 1 });
+                storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null }, new object[] { 2 });
+                storage.WriteRow("Sim3", "Report1", columnNames1, new string[] { null }, new object[] { 3 });
+                storage.EndWriting();
+
+                // Now do it again this time with another sim.
+                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim4" },
+                                     simulationNamesBeingRun: new string[] { "Sim4" });
+                storage.WriteRow("Sim4", "Report1", columnNames1, new string[] { null }, new object[] { 4 });
+                storage.EndWriting();
+            }
+
+            Assert.AreEqual(TableToString(fileName, "Report1"),
+                           "SimulationID,Col\r\n" +
+                           "           1,  1\r\n" +
+                           "           4,  4\r\n");
+        }
+
+        /// <summary>Ensure that GetData when passed a table name returns data for the correct table</summary>
+        [Test]
+        public void GetData_TableName_ReturnsAllData()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                Assert.AreEqual(TableToString(storage.GetData("Report2")),
+                                "SimulationName,SimulationID,      Col1,  Col2\r\n" +
+                                "          Sim1,           1,2017-01-01,21.000\r\n" +
+                                "          Sim1,           1,2017-01-02,22.000\r\n" +
+                                "          Sim2,           2,2017-01-01,31.000\r\n" +
+                                "          Sim2,           2,2017-01-02,32.000\r\n");
+            }
+        }
+
+        /// <summary>Ensure that GetData when passed a table name and simulation name returns the correct data</summary>
+        [Test]
+        public void GetData_TableNameSimName_ReturnsCorrectData()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                DataTable data = storage.GetData(tableName:"Report2",
+                                                 simulationName: "Sim1");
+                Assert.AreEqual(TableToString(data),
+                                "SimulationName,SimulationID,      Col1,  Col2\r\n" +
+                                "          Sim1,           1,2017-01-01,21.000\r\n" +
+                                "          Sim1,           1,2017-01-02,22.000\r\n");
+            }
+        }
+
+        /// <summary>Ensure that GetData when passed a table name, simulation name and field name returns the correct data</summary>
+        [Test]
+        public void GetData_TableNameSimNameFieldName_ReturnsCorrectData()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                DataTable data = storage.GetData(tableName: "Report2",
+                                                 simulationName: "Sim1",
+                                                 fieldNames: new string[] { "Col2" });
+                Assert.AreEqual(TableToString(data),
+                                "SimulationName,SimulationID,  Col2\r\n" +
+                                "          Sim1,           1,21.000\r\n" +
+                                "          Sim1,           1,22.000\r\n");
+            }
+        }
+
+        /// <summary>
+        /// Ensure that GetData when passed a table name, simulation name, field name
+        /// and filter returns the correct data
+        /// </summary>
+        [Test]
+        public void GetData_TableNameSimNameFieldNameFilter_ReturnsCorrectData()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                DataTable data = storage.GetData(tableName: "Report2",
+                                                 simulationName: "Sim1",
+                                                 fieldNames: new string[] { "Col2" },
+                                                 filter: "Col2=22");
+                Assert.AreEqual(TableToString(data),
+                                "SimulationName,SimulationID,  Col2\r\n" +
+                                "          Sim1,           1,22.000\r\n");
+            }
+        }
+
+        /// <summary>
+        /// Ensure that GetUnits works
+        /// </summary>
+        [Test]
+        public void GetUnits_TableNameColumnName_ReturnsUnits()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                string units = storage.GetUnits(tableName: "Report2",
+                                                columnHeading: "Col2");
+                Assert.AreEqual(units, "(g/m2)");
+            }
+        }
+
+        /// <summary>Convert a SQLite table to a string.</summary>
+        private static string TableToString(string fileName, string tableName)
+        {
+            SQLite database = new SQLite();
+            database.OpenDatabase(fileName, true);
+            DataTable data = database.ExecuteQuery("SELECT * FROM " + tableName);
+            database.CloseDatabase();
+            return TableToString(data);
+        }
+
+        /// <summary>Convert a DataTable to a string.</summary>
+        private static string TableToString(DataTable data)
+        {
+            StringWriter writer = new StringWriter();
+            DataTableUtilities.DataTableToText(data, 0, ",", true, writer);
+            return writer.ToString();
+        }
+
+        /// <summary>Create a table that we can test</summary>
+        private static void CreateTable(DataStore storage)
+        {
+            storage.BeginWriting(knownSimulationNames: new string[] { "Sim1", "Sim2" },
+                                 simulationNamesBeingRun: new string[] { "Sim1", "Sim2" });
+
+            string[] columnNames1 = new string[] { "Col1", "Col2" };
+            storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 1.0 });
+            storage.WriteRow("Sim1", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 2.0 });
+            storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 1), 11.0 });
+            storage.WriteRow("Sim2", "Report1", columnNames1, new string[] { null, "g" }, new object[] { new DateTime(2017, 1, 2), 12.0 });
+            storage.WriteRow("Sim1", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 1), 21.0 });
+            storage.WriteRow("Sim1", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 22.0 });
+            storage.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 1), 31.0 });
+            storage.WriteRow("Sim2", "Report2", columnNames1, new string[] { null, "g/m2" }, new object[] { new DateTime(2017, 1, 2), 32.0 });
+            storage.EndWriting();
+        }
+        
     }
 }

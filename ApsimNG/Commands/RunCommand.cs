@@ -124,11 +124,11 @@
             Stop();
             string msg = jobName + " aborted";
             if (JobErrorMessages == null)
-                explorerPresenter.MainPresenter.ShowMessage(msg, Models.DataStore.ErrorLevel.Information);
+                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Information);
             else
             {
                 msg += Environment.NewLine + JobErrorMessages;
-                explorerPresenter.MainPresenter.ShowMessage(msg, Models.DataStore.ErrorLevel.Error);
+                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.ErrorLevel.Error);
             }
         }
 
@@ -164,7 +164,7 @@
             {
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
                          numberComplete + " of " +
-                         (numSimulations) + " completed)", Models.DataStore.ErrorLevel.Information);
+                         (numSimulations) + " completed)", Simulation.ErrorLevel.Information);
 
                 explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percentComplete));
             }
@@ -173,9 +173,9 @@
                 Stop();
                 if (JobErrorMessages == null)
                     explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
-                            + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
+                            + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Simulation.ErrorLevel.Information);
                 else
-                    explorerPresenter.MainPresenter.ShowMessage(JobErrorMessages, Models.DataStore.ErrorLevel.Error);
+                    explorerPresenter.MainPresenter.ShowMessage(JobErrorMessages, Simulation.ErrorLevel.Error);
 
                 SoundPlayer player = new SoundPlayer();
                 if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)

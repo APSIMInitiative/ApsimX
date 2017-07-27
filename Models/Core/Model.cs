@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 namespace Models.Core
 {
+    using Storage;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;

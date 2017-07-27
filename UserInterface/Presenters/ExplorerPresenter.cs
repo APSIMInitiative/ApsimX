@@ -181,7 +181,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+                MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, Simulation.ErrorLevel.Error);
                 result = false;
             }
 
@@ -209,7 +209,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+                this.MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, Simulation.ErrorLevel.Error);
             }
             finally
             {
@@ -238,7 +238,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    this.MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, DataStore.ErrorLevel.Error);
+                    this.MainPresenter.ShowMessage("Cannot save the file. Error: " + err.Message, Simulation.ErrorLevel.Error);
                 }
             }
 
@@ -361,7 +361,7 @@ namespace UserInterface.Presenters
                 }
                 catch(XmlException)
                 {
-                    MainPresenter.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", DataStore.ErrorLevel.Error);
+                    MainPresenter.ShowMessage("Invalid XML. Are you sure you're trying to paste an APSIM model?", Simulation.ErrorLevel.Error);
                 }
                 object newModel = XmlUtilities.Deserialise(document.DocumentElement, ApsimXFile.GetType().Assembly);
 
@@ -420,7 +420,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception exception)
             {
-                this.MainPresenter.ShowMessage(exception.Message, DataStore.ErrorLevel.Error);
+                this.MainPresenter.ShowMessage(exception.Message, Simulation.ErrorLevel.Error);
             }
         }
 
@@ -674,7 +674,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    MainPresenter.ShowMessage("Use alpha numeric characters only!", DataStore.ErrorLevel.Error);
+                    MainPresenter.ShowMessage("Use alpha numeric characters only!", Simulation.ErrorLevel.Error);
                     e.CancelEdit = true;
                 }
             }
@@ -752,7 +752,7 @@ namespace UserInterface.Presenters
                     if (err.InnerException != null)
                         message += "\r\n" + err.InnerException.Message;
 
-                    MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
+                    MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
                 }
             }
         }
@@ -804,7 +804,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception err)
                 {
-                    MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                    MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
                 }
             }
 
@@ -859,7 +859,7 @@ namespace UserInterface.Presenters
                     err = (err as System.Reflection.TargetInvocationException).InnerException;
                 string message = err.Message;
                 message += "\r\n" + err.StackTrace;
-                MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
+                MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
             }
         }
 
