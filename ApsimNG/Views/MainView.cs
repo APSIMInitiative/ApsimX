@@ -13,6 +13,7 @@ namespace UserInterface.Views
     using Gtk;
     using Glade;
     using System.Reflection;
+    using Models.Core;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -79,7 +80,7 @@ namespace UserInterface.Views
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
         /// <param name="Message"></param>
-        void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel);
+        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel);
 
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
@@ -568,7 +569,7 @@ namespace UserInterface.Views
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
-        public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
+        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel)
         {
             Gtk.Application.Invoke(delegate
             {
@@ -579,11 +580,11 @@ namespace UserInterface.Views
                 {
                     string tagName;
                     // Output the message
-                    if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                    if (errorLevel == Simulation.ErrorLevel.Error)
                     {
                         tagName = "error";
                     }
-                    else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+                    else if (errorLevel == Simulation.ErrorLevel.Warning)
                     {
                         tagName = "warning";
                     }

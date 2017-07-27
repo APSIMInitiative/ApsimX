@@ -123,7 +123,7 @@
             if (numSimulations > 0)
             {
                 explorerPresenter.MainPresenter.ShowMessage(jobName + " running (" +
-                         (numSimulations) + ")", Models.DataStore.ErrorLevel.Information);
+                         (numSimulations) + ")", Simulation.ErrorLevel.Information);
 
                 explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percentComplete));
             }
@@ -136,9 +136,9 @@
                 string errorMessage = GetErrorsFromSimulations();
                 if (errorMessage == null)
                     explorerPresenter.MainPresenter.ShowMessage(jobName + " complete "
-                            + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Models.DataStore.ErrorLevel.Information);
+                            + " [" + stopwatch.Elapsed.TotalSeconds.ToString("#.00") + " sec]", Simulation.ErrorLevel.Information);
                 else
-                    explorerPresenter.MainPresenter.ShowMessage(errorMessage, Models.DataStore.ErrorLevel.Error);
+                    explorerPresenter.MainPresenter.ShowMessage(errorMessage, Simulation.ErrorLevel.Error);
 
                 SoundPlayer player = new SoundPlayer();
                 if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)

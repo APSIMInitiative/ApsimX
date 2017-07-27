@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Factorial;
+    using Storage;
     using System.Collections.Generic;
     using System.ComponentModel;
     /// <summary>
@@ -40,14 +41,15 @@
             // IF we are going to run all simulations, we can delete all tables in the DataStore. This
             // will clean up order of columns in the tables and removed unused ones.
             // Otherwise just remove the unwanted simulations from the DataStore.
-            DataStore store = Apsim.Child(simulations, typeof(DataStore)) as DataStore;
+            IStorage store = Apsim.Child(simulations, typeof(IStorage)) as IStorage;
             if (store != null)
             {
-                if (model is Simulations)
-                    store.DeleteAllTables(true);
-                else
-                    store.RemoveUnwantedSimulations(simulations, simulationNames);
-                store.Disconnect();
+                // TODO Dean: 
+                //if (model is Simulations)
+                //    store.DeleteAllTables(true);
+                //else
+                //    store.RemoveUnwantedSimulations(simulations, simulationNames);
+                //store.Disconnect();
             }
 
             if (runTests)

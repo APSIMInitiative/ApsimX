@@ -45,6 +45,21 @@ namespace Models.Core
         /// <summary>Gets a value indicating whether this instance is computationally time consuming.</summary>
         public bool IsComputationallyTimeConsuming { get { return true; } }
 
+        /// <summary>
+        /// An enum that is used to indicate message severity when writing messages to the .db
+        /// </summary>
+        public enum ErrorLevel
+        {
+            /// <summary>Information</summary>
+            Information,
+
+            /// <summary>Warning</summary>
+            Warning,
+
+            /// <summary>Error</summary>
+            Error
+        };
+
         /// <summary>The timer</summary>
         [NonSerialized]
         private Stopwatch timer;

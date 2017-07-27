@@ -183,11 +183,12 @@ namespace Models.Core.Runners
         /// <param name="args">The command arguments</param>
         private void OnTransferData(object sender, SocketServer.CommandArgs args)
         {
-            lock (DataStore.TablesToWrite)
-            {
-                List<ReportTable> arguments = args.obj as List<ReportTable>;
-                DataStore.TablesToWrite.AddRange(arguments);
-            }
+            //TODO Dean: 
+            //lock (DataStore.TablesToWrite)
+            //{
+            //    List<ReportTable> arguments = args.obj as List<ReportTable>;
+            //    DataStore.TablesToWrite.AddRange(arguments);
+            //}
             server.Send(args.socket, "OK");
         }
         /// <summary>Called by the client to get the next job to run.</summary>

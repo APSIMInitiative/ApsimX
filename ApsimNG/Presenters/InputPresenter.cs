@@ -70,7 +70,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                this.explorerPresenter.MainPresenter.ShowMessage(err.Message, DataStore.ErrorLevel.Error);
+                ExplorerPresenter.MainPresenter.ShowMessage(err.Message, Simulation.ErrorLevel.Error);
             }
         }
 
