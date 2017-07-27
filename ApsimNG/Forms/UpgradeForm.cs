@@ -197,8 +197,9 @@ namespace UserInterface.Forms
 
             try
             {
-                web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
-                HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false);
+                // web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
+                // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
+                HTMLview.SetContents(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
             }
             catch (Exception)
             {
@@ -245,6 +246,10 @@ namespace UserInterface.Forms
                 Process.Start(upgrades[selIndex].IssueURL);
         }
 
+        Gtk.MessageDialog waitDlg = null;
+        string tempSetupFileName = null;
+        string versionNumber = null;
+
         /// <summary>
         /// User has requested an upgrade.
         /// </summary>
@@ -265,7 +270,7 @@ namespace UserInterface.Forms
                         throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
 
                     Upgrade upgrade = upgrades[selIndex];
-                    string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
+                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
 
                     if ((Gtk.ResponseType)ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo) == Gtk.ResponseType.Yes)
@@ -274,7 +279,7 @@ namespace UserInterface.Forms
 
                         WebClient web = new WebClient();
 
-                        string tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
+                        tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
 
                         string sourceURL;
                         if (ProcessUtilities.CurrentOS.IsMac)
@@ -295,66 +300,101 @@ namespace UserInterface.Forms
 
                         try
                         {
-                            web.DownloadFile(sourceURL, tempSetupFileName);
+                            waitDlg = new Gtk.MessageDialog(window1, Gtk.DialogFlags.Modal,
+                                Gtk.MessageType.Info, Gtk.ButtonsType.Cancel, "Downloading file. Please wait...");
+                            waitDlg.Title = "APSIM Upgrade";
+                            web.DownloadFileCompleted += Web_DownloadFileCompleted;
+                            web.DownloadFileAsync(new Uri(sourceURL), tempSetupFileName);
+                            if (waitDlg.Run() == (int)ResponseType.Cancel)
+                                web.CancelAsync();
                         }
                         catch (Exception err)
                         {
                             ShowMsgDialog("Cannot download this release. Error message is: \r\n" + err.Message, "Error", MessageType.Error, ButtonsType.Ok);
                         }
-
-                        // Write to the registration database.
-                        WriteUpgradeRegistration(versionNumber);
-
-                        if (File.Exists(tempSetupFileName))
+                        finally
                         {
-                            // Copy the separate upgrader executable to the temp directory.
-                            string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
-                            string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
-
-                            // Check to see if upgrader is already running for whatever reason.
-                            // Kill them if found.
-                            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
-                                process.Kill();
-
-                            // Delete the old upgrader.
-                            if (File.Exists(upgraderFileName))
-                                File.Delete(upgraderFileName);
-                            // Copy in the new upgrader.
-                            File.Copy(sourceUpgraderFileName, upgraderFileName, true);
-
-                            // Run the upgrader.
-                            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                            string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
-                            string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
-                            string arguments = StringUtilities.DQuote(ourDirectory) + " " + 
-                                               StringUtilities.DQuote(newDirectory);
-
-                            ProcessStartInfo info = new ProcessStartInfo();
-                            if (ProcessUtilities.CurrentOS.IsMac)
+                            if (waitDlg != null)
                             {
-                                info.FileName = "mono";
-                                info.Arguments = upgraderFileName + " " + arguments;
+                                waitDlg.Destroy();
+                                waitDlg = null;
                             }
-                            else
-                            {
-                                info.FileName = upgraderFileName;
-                                info.Arguments = arguments;
-                            }
-                            info.WorkingDirectory = Path.GetTempPath();
-                            Process.Start(info);
-
-                            window1.GdkWindow.Cursor = null;
-
-                            // Shutdown the user interface
-                            window1.Destroy();
-                            tabbedExplorerView.Close();
+                            if (window1 != null && window1.GdkWindow != null)
+                                window1.GdkWindow.Cursor = null;
                         }
+
                     }
                 }
                 catch (Exception err)
                 {
                     window1.GdkWindow.Cursor = null;
                     ShowMsgDialog(err.Message, "Error", MessageType.Error, ButtonsType.Ok);
+                }
+            }
+        }
+
+        private void Web_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            if (waitDlg != null)
+            {
+                waitDlg.Destroy();
+                waitDlg = null;
+            }
+            if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
+            {
+                try
+                {
+                    // Write to the registration database.
+                    WriteUpgradeRegistration(versionNumber);
+
+                    if (File.Exists(tempSetupFileName))
+                    {
+                        // Copy the separate upgrader executable to the temp directory.
+                        string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
+                        string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
+
+                        // Check to see if upgrader is already running for whatever reason.
+                        // Kill them if found.
+                        foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
+                            process.Kill();
+
+                        // Delete the old upgrader.
+                        if (File.Exists(upgraderFileName))
+                            File.Delete(upgraderFileName);
+                        // Copy in the new upgrader.
+                        File.Copy(sourceUpgraderFileName, upgraderFileName, true);
+
+                        // Run the upgrader.
+                        string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                        string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
+                        string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
+                        string arguments = StringUtilities.DQuote(ourDirectory) + " " +
+                                           StringUtilities.DQuote(newDirectory);
+
+                        ProcessStartInfo info = new ProcessStartInfo();
+                        if (ProcessUtilities.CurrentOS.IsMac)
+                        {
+                            info.FileName = "mono";
+                            info.Arguments = upgraderFileName + " " + arguments;
+                        }
+                        else
+                        {
+                            info.FileName = upgraderFileName;
+                            info.Arguments = arguments;
+                        }
+                        info.WorkingDirectory = Path.GetTempPath();
+                        Process.Start(info);
+                        window1.GdkWindow.Cursor = null;
+
+                        // Shutdown the user interface
+                        window1.Destroy();
+                        tabbedExplorerView.Close();
+                    }
+                }
+                catch (Exception err)
+                {
+                    window1.GdkWindow.Cursor = null;
+                    ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok);
                 }
             }
         }

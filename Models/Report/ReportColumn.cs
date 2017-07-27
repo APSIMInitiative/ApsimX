@@ -89,10 +89,10 @@ namespace Models.Report
         /// </summary>
         private string aggregationFunction;
 
-        ///// <summary>
-        ///// Units as specified in the descriptor.
-        ///// </summary>
-        //private string units;
+        /// <summary>
+        /// Units as specified in the descriptor.
+        /// </summary>
+        public string Units { get; private set; }
 
         /// <summary>
         /// The date when an aggregation value was last stored
@@ -127,6 +127,14 @@ namespace Models.Report
             this.reportingFrequencies.AddRange(frequenciesFromReport);
             this.clock = Apsim.Find(parentModel, typeof(Clock)) as Clock;
 
+            try
+            {
+                IVariable var = Apsim.GetVariableObject(parentModel, variableName);
+                if (var != null)
+                    Units = var.UnitsLabel;
+            }
+            catch (Exception) { }
+
             Apsim.Subscribe(parentModel, "[Clock].StartOfDay", this.OnStartOfDay);
             Apsim.Subscribe(parentModel, "[Clock].DoReportCalculations", this.OnEndOfDay);
 
@@ -159,6 +167,17 @@ namespace Models.Report
             this.parentModel = parentModel;
             this.reportingFrequencies.AddRange(frequenciesFromReport);
             this.clock = Apsim.Find(parentModel, typeof(Clock)) as Clock;
+
+            try
+            {
+                IVariable var = Apsim.GetVariableObject(parentModel, variableName);
+                if (var != null)
+                   Units = var.UnitsLabel;
+            }
+            // Exceptions may arise when we are setting up at the start of simulation, since some of the other model
+            // components might not be fully initialized. If that's the case, we just fail silently and don't
+            // worry about determining units of measurement.
+            catch (Exception) { }
 
             foreach (string frequency in this.reportingFrequencies)
                 Apsim.Subscribe(parentModel, frequency, this.OnReportFrequency);
@@ -397,7 +416,7 @@ namespace Models.Report
             {
                 if (value != null && value is IFunction)
                 {
-                    value = (value as IFunction).Value;
+                    value = (value as IFunction).Value();
                 }
                 else if (value.GetType().IsArray || value.GetType().IsClass)
                 {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
@@ -344,7 +344,6 @@
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -395,17 +394,12 @@
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.26</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
         <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Plant>
@@ -740,25 +734,25 @@ namespace Models
           <string>[SCRUM].Stover.CoverDead</string>
           <string>[SCRUM].Stover.LAI</string>
           <string>[SCRUM].Stover.Height</string>
-          <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
           <string>[SCRUM].Product.LiveFWt</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
-          <string>[SCRUM].ExpectedYield.Value</string>
-          <string>[SCRUM].DryYield.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-          <string>[SCRUM].Ymax.Value</string>
+          <string>[SCRUM].ExpectedYield.Value()</string>
+          <string>[SCRUM].DryYield.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+          <string>[SCRUM].Ymax.Value()</string>
           <string>[SCRUM].Total.N</string>
           <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
           <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
-          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value()</string>
           <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
           <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-          <string>[SCRUM].Phenology.ThermalTime.Value</string>
+          <string>[SCRUM].Phenology.ThermalTime.Value()</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
@@ -780,7 +774,7 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
-      <Area>0</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Graph>
@@ -1190,7 +1184,7 @@ namespace Models
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -1284,7 +1278,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.DryYield.Value</YFieldName>
+        <YFieldName>SCRUM.DryYield.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1305,7 +1299,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1326,7 +1320,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1347,7 +1341,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Ymax.Value</YFieldName>
+        <YFieldName>SCRUM.Ymax.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -1669,7 +1663,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1690,7 +1684,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -1711,7 +1705,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -2482,7 +2476,6 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -2533,17 +2526,12 @@ namespace Models
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.26</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
         <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Plant>
@@ -2878,25 +2866,25 @@ namespace Models
           <string>[SCRUM].Stover.CoverDead</string>
           <string>[SCRUM].Stover.LAI</string>
           <string>[SCRUM].Stover.Height</string>
-          <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
           <string>[SCRUM].Product.LiveFWt</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
-          <string>[SCRUM].ExpectedYield.Value</string>
-          <string>[SCRUM].DryYield.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-          <string>[SCRUM].Ymax.Value</string>
+          <string>[SCRUM].ExpectedYield.Value()</string>
+          <string>[SCRUM].DryYield.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+          <string>[SCRUM].Ymax.Value()</string>
           <string>[SCRUM].Total.N</string>
           <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
           <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
-          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value()</string>
           <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
           <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-          <string>[SCRUM].Phenology.ThermalTime.Value</string>
+          <string>[SCRUM].Phenology.ThermalTime.Value()</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
@@ -2918,7 +2906,7 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
-      <Area>0</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Graph>
@@ -3422,7 +3410,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.DryYield.Value</YFieldName>
+        <YFieldName>SCRUM.DryYield.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3443,7 +3431,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3464,7 +3452,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3485,7 +3473,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Ymax.Value</YFieldName>
+        <YFieldName>SCRUM.Ymax.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -3807,7 +3795,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -3828,7 +3816,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -3849,7 +3837,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -4620,7 +4608,6 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -4671,17 +4658,12 @@ namespace Models
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.26</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
         <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Plant>
@@ -5016,25 +4998,25 @@ namespace Models
           <string>[SCRUM].Stover.CoverDead</string>
           <string>[SCRUM].Stover.LAI</string>
           <string>[SCRUM].Stover.Height</string>
-          <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
           <string>[SCRUM].Product.LiveFWt</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
-          <string>[SCRUM].ExpectedYield.Value</string>
-          <string>[SCRUM].DryYield.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-          <string>[SCRUM].Ymax.Value</string>
+          <string>[SCRUM].ExpectedYield.Value()</string>
+          <string>[SCRUM].DryYield.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+          <string>[SCRUM].Ymax.Value()</string>
           <string>[SCRUM].Total.N</string>
           <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
           <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
-          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value()</string>
           <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
           <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-          <string>[SCRUM].Phenology.ThermalTime.Value</string>
+          <string>[SCRUM].Phenology.ThermalTime.Value()</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
@@ -5056,7 +5038,7 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
-      <Area>0</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Graph>
@@ -5560,7 +5542,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.DryYield.Value</YFieldName>
+        <YFieldName>SCRUM.DryYield.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -5581,7 +5563,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -5602,7 +5584,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -5623,7 +5605,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Ymax.Value</YFieldName>
+        <YFieldName>SCRUM.Ymax.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -5945,7 +5927,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5966,7 +5948,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -5987,7 +5969,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -6758,7 +6740,6 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
-        <Area>0</Area>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>surface organic matter</Name>
@@ -6809,17 +6790,12 @@ namespace Models
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.23</soil_albedo>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
         <sun_angle>15</sun_angle>
         <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
         <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
         <refheight>2</refheight>
         <albedo>0.26</albedo>
         <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
         <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
       <Plant>
@@ -7154,25 +7130,25 @@ namespace Models
           <string>[SCRUM].Stover.CoverDead</string>
           <string>[SCRUM].Stover.LAI</string>
           <string>[SCRUM].Stover.Height</string>
-          <string>[SCRUM].Stover.PotentialBiomass.Value</string>
+          <string>[SCRUM].Stover.PotentialBiomass.Value()</string>
           <string>[SCRUM].Product.LiveFWt</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantDemand</string>
           <string>[SCRUM].Arbitrator.N.TotalPlantSupply</string>
           <string>[SCRUM].Stover.Fw</string>
           <string>[SCRUM].Stover.Fn</string>
           <string>[SCRUM].Total.Wt</string>
-          <string>[SCRUM].ExpectedYield.Value</string>
-          <string>[SCRUM].DryYield.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartReproductive.Value</string>
-          <string>[SCRUM].TotalBiomassAtStartSenescence.Value</string>
-          <string>[SCRUM].Ymax.Value</string>
+          <string>[SCRUM].ExpectedYield.Value()</string>
+          <string>[SCRUM].DryYield.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartReproductive.Value()</string>
+          <string>[SCRUM].TotalBiomassAtStartSenescence.Value()</string>
+          <string>[SCRUM].Ymax.Value()</string>
           <string>[SCRUM].Total.N</string>
           <string>[SCRUM].Arbitrator.DM.TotalFixationSupply</string>
           <string>[SCRUM].Arbitrator.DM.TotalPlantDemand</string>
-          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value</string>
+          <string>[SCRUM].Phenology.AccumulatedThermalTime.Value()</string>
           <string>[SCRUM].Arbitrator.DM.SinkLimitation</string>
           <string>[SCRUM].Arbitrator.DM.NutrientLimitation</string>
-          <string>[SCRUM].Phenology.ThermalTime.Value</string>
+          <string>[SCRUM].Phenology.ThermalTime.Value()</string>
           <string>[SCRUM].Phenology.CurrentPhaseName</string>
           <string>[SCRUM].Phenology.Stage</string>
           <string>[AutomaticIrrigation].Script.Top_Refull</string>
@@ -7194,7 +7170,7 @@ namespace Models
           <string>[Clock].DoReport</string>
         </EventNames>
       </Report>
-      <Area>0</Area>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Graph>
@@ -7698,7 +7674,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.DryYield.Value</YFieldName>
+        <YFieldName>SCRUM.DryYield.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7719,7 +7695,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartReproductive.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7740,7 +7716,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value</YFieldName>
+        <YFieldName>SCRUM.TotalBiomassAtStartSenescence.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -7761,7 +7737,7 @@ namespace Models
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>SCRUM.Ymax.Value</YFieldName>
+        <YFieldName>SCRUM.Ymax.Value()</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
@@ -8083,7 +8059,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Root.Depth</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -8104,7 +8080,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Stover.CoverTotal</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -8125,7 +8101,7 @@ namespace Models
         <Line>Solid</Line>
         <LineThickness>Normal</LineThickness>
         <TableName>Report</TableName>
-        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value</XFieldName>
+        <XFieldName>SCRUM.Phenology.AccumulatedThermalTime.Value()</XFieldName>
         <YFieldName>SCRUM.Stover.LAI</YFieldName>
         <ShowInLegend>true</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
@@ -8565,7 +8541,7 @@ namespace Models
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
+      <ColourArgb>-16777216</ColourArgb>
       <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
       <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
       <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -8691,7 +8667,7 @@ namespace Models
       <Type>Scatter</Type>
       <XAxis>Bottom</XAxis>
       <YAxis>Left</YAxis>
-      <ColourArgb>-16776961</ColourArgb>
+      <ColourArgb>-16777216</ColourArgb>
       <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
       <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
       <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>

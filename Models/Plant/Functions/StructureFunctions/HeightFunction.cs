@@ -26,25 +26,22 @@ namespace Models.PMF.Functions.StructureFunctions
         public double DeltaHeight { get; set; }
 
         /// <summary>Gets the value.</summary>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
-                double PotentialHeightIncrement = PotentialHeight.Value - PotentialHeightYesterday;
-                double StressValue = 1.0;
-                //This function is counting potential height as a stress.
-                foreach (IFunction F in ChildFunctions)
-                {
-                    StressValue = Math.Min(StressValue, F.Value);
-                }
-                DeltaHeight = PotentialHeightIncrement * StressValue;
-                PotentialHeightYesterday = PotentialHeight.Value;
-                Height += DeltaHeight;
-                return Height;
+            double PotentialHeightIncrement = PotentialHeight.Value(arrayIndex) - PotentialHeightYesterday;
+            double StressValue = 1.0;
+            //This function is counting potential height as a stress.
+            foreach (IFunction F in ChildFunctions)
+            {
+                StressValue = Math.Min(StressValue, F.Value(arrayIndex));
             }
+            DeltaHeight = PotentialHeightIncrement * StressValue;
+            PotentialHeightYesterday = PotentialHeight.Value(arrayIndex);
+            Height += DeltaHeight;
+            return Height;
         }
     }
 }

@@ -1,30 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
   <Name>Standard toolbox</Name>
-  <Area>0</Area>
   <Folder>
     <Name>Structural</Name>
-    <Folder />
-    <Zone />
-    <Replacements />
+    <Folder>
+      <Name>Folder</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
+    </Folder>
+    <Zone>
+      <Name>Zone</Name>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </SoluteManager>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Area>1</Area>
+      <Slope>0</Slope>
+    </Zone>
+    <Replacements>
+      <Name>Replacements</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Replacements>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <Folder>
     <Name>Standard models</Name>
-    <Area>0</Area>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Goondiwindi.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>1940-01-01T00:00:00</StartDate>
       <EndDate>1989-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <Report>
       <Name>Report</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ExperimentFactorNames />
+      <ExperimentFactorValues />
       <VariableNames>
         <string>[Clock].Today</string>
         <string>[Weather].MaxT</string>
@@ -38,76 +60,96 @@
     </Report>
     <Fertiliser>
       <Name>Fertiliser</Name>
-      <Definitions>
-        <FertiliserType>
-          <Name>Urea</Name>
-          <FractionNO3>0</FractionNO3>
-          <FractionNH4>0</FractionNH4>
-          <FractionUrea>0.46</FractionUrea>
-        </FertiliserType>
-        <FertiliserType>
-          <Name>DAP</Name>
-          <FractionNO3>0</FractionNO3>
-          <FractionNH4>0.18</FractionNH4>
-          <FractionUrea>0</FractionUrea>
-        </FertiliserType>
-        <FertiliserType>
-          <Name>MAP</Name>
-          <FractionNO3>0</FractionNO3>
-          <FractionNH4>0.11</FractionNH4>
-          <FractionUrea>0</FractionUrea>
-        </FertiliserType>
-        <FertiliserType>
-          <Name>UreaN</Name>
-          <FractionNO3>0</FractionNO3>
-          <FractionNH4>0</FractionNH4>
-          <FractionUrea>1</FractionUrea>
-        </FertiliserType>
-        <FertiliserType>
-          <Name>NO3N</Name>
-          <FractionNO3>1</FractionNO3>
-          <FractionNH4>0</FractionNH4>
-          <FractionUrea>0</FractionUrea>
-        </FertiliserType>
-        <FertiliserType>
-		  <Name>NH4N</Name>
-          <FractionNO3>0</FractionNO3>
-          <FractionNH4>1</FractionNH4>
-          <FractionUrea>0</FractionUrea>
-        </FertiliserType>
-		<FertiliserType>
-          <Name>NH4NO3N</Name>
-          <FractionNO3>0.5</FractionNO3>
-          <FractionNH4>0.5</FractionNH4>
-          <FractionUrea>0</FractionUrea>
-        </FertiliserType>
-        <FertiliserType>
-          <Name>NH4SO4N</Name>
-          <FractionNO3>0</FractionNO3>
-          <FractionNH4>1</FractionNH4>
-          <FractionUrea>0</FractionUrea>
-        </FertiliserType>
-      </Definitions>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Fertiliser>
     <Irrigation>
       <Name>Irrigation</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Irrigation>
     <Operations>
       <Name>Operations</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Operations>
     <Soil>
       <Name>Soil</Name>
-      <RecordNumber>0</RecordNumber>
-      <SoilType>Black Vertosol</SoilType>
-      <LocalName>Waco</LocalName>
-      <Site>Jimbour</Site>
-      <NearestTown>Jimbour, Q 4352</NearestTown>
-      <Region>South East Queensland</Region>
-      <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
-      <Latitude>0</Latitude>
-      <Longitude>0</Longitude>
       <Water>
         <Name>Water</Name>
+        <SoilCrop>
+          <Name>WheatSoil</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <LL>
+            <double>0.29</double>
+            <double>0.29</double>
+            <double>0.32</double>
+            <double>0.38</double>
+            <double>0.39</double>
+            <double>0.39</double>
+            <double>0.41</double>
+            <double>0.48</double>
+            <double>0.47</double>
+            <double>0.46</double>
+            <double>0.44</double>
+          </LL>
+          <KL>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.08</double>
+            <double>0.06</double>
+            <double>0.04</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </KL>
+          <XF>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </XF>
+        </SoilCrop>
+        <SoilCropOilPalm>
+          <Name>OilPalm</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <KL>
+            <double>0.06</double>
+            <double>0.04</double>
+            <double>0.03</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </KL>
+          <XF>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>1</double>
+            <double>0</double>
+            <double>0</double>
+            <double>0</double>
+          </XF>
+        </SoilCropOilPalm>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -186,147 +228,26 @@
           <double>0.51</double>
           <double>0.49</double>
         </SAT>
-        <SoilCrop>
-          <Name>WheatSoil</Name>
-          <LL>
-            <double>0.29</double>
-            <double>0.29</double>
-            <double>0.32</double>
-            <double>0.38</double>
-            <double>0.39</double>
-            <double>0.39</double>
-            <double>0.41</double>
-            <double>0.48</double>
-            <double>0.47</double>
-            <double>0.46</double>
-            <double>0.44</double>
-          </LL>
-          <KL>
-            <double>0.1</double>
-            <double>0.1</double>
-            <double>0.08</double>
-            <double>0.06</double>
-            <double>0.04</double>
-            <double>0.02</double>
-            <double>0.01</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </KL>
-          <XF>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </XF>
-        </SoilCrop>
-        <SoilCropOilPalm>
-          <Name>OilPalm</Name>
-          <KL>
-            <double>0.06</double>
-            <double>0.04</double>
-            <double>0.03</double>
-            <double>0.02</double>
-            <double>0.02</double>
-            <double>0.02</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0.01</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </KL>
-          <XF>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>1</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </XF>
-        </SoilCropOilPalm>
       </Water>
       <SoilWater>
         <Name>SoilWater</Name>
-        <min_crit_temp>5</min_crit_temp>
-        <max_crit_temp>35</max_crit_temp>
-        <max_albedo>0.23</max_albedo>
-        <A_to_evap_fact>0.44</A_to_evap_fact>
-        <canopy_eos_coef>1.7</canopy_eos_coef>
-        <sw_top_crit>0.9</sw_top_crit>
-        <sumes1_max>100</sumes1_max>
-        <sumes2_max>25</sumes2_max>
-        <solute_flow_eff>
-          <double>1</double>
-        </solute_flow_eff>
-        <solute_flux_eff>
-          <double>1</double>
-        </solute_flux_eff>
-        <gravity_gradient>2E-05</gravity_gradient>
-        <specific_bd>2.65</specific_bd>
-        <hydrol_effective_depth>450</hydrol_effective_depth>
-        <mobile_solutes>
-          <string>NO3</string>
-          <string>urea</string>
-          <string>cl</string>
-          <string>br</string>
-          <string>org_n</string>
-          <string>org_c_pool1</string>
-          <string>org_c_pool2</string>
-          <string>org_c_pool3</string>
-        </mobile_solutes>
-        <immobile_solutes>
-          <string>NH4</string>
-        </immobile_solutes>
-        <canopy_fact>
-          <double>1</double>
-          <double>1</double>
-          <double>0</double>
-          <double>0</double>
-        </canopy_fact>
-        <canopy_fact_height>
-          <double>0</double>
-          <double>600</double>
-          <double>1800</double>
-          <double>30000</double>
-        </canopy_fact_height>
-        <canopy_fact_default>0.5</canopy_fact_default>
-        <act_evap_method>ritchie</act_evap_method>
-        <irrigation_will_runoff>0</irrigation_will_runoff>
-        <irrigation_layer>0</irrigation_layer>
-        <obsrunoff_name />
-        <SummerCona>3.5</SummerCona>
-        <SummerU>6</SummerU>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <SummerDate>1-Nov</SummerDate>
-        <WinterCona>3.5</WinterCona>
-        <WinterU>6</WinterU>
+        <SummerU>6</SummerU>
+        <SummerCona>3.5</SummerCona>
         <WinterDate>1-Apr</WinterDate>
+        <WinterU>6</WinterU>
+        <WinterCona>3.5</WinterCona>
         <DiffusConst>40</DiffusConst>
         <DiffusSlope>16</DiffusSlope>
         <Salb>0.13</Salb>
-        <slope>NaN</slope>
-        <discharge_width>NaN</discharge_width>
-        <catchment_area>NaN</catchment_area>
-        <eo_source />
-        <max_pond>0</max_pond>
         <CN2Bare>73</CN2Bare>
         <CNRed>20</CNRed>
         <CNCov>0.8</CNCov>
-        <water_table>NaN</water_table>
+        <slope>NaN</slope>
+        <discharge_width>NaN</discharge_width>
+        <catchment_area>NaN</catchment_area>
+        <max_pond>0</max_pond>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -353,12 +274,55 @@
           <double>0.3</double>
           <double>0.3</double>
         </SWCON>
+        <residueinterception>0</residueinterception>
       </SoilWater>
       <SoilNitrogen>
         <Name>SoilNitrogen</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <fom_type>
+          <string>default</string>
+          <string>manure</string>
+          <string>mucuna</string>
+          <string>lablab</string>
+          <string>shemp</string>
+          <string>stable</string>
+        </fom_type>
+        <fract_carb>
+          <double>0.2</double>
+          <double>0.3</double>
+          <double>0.54</double>
+          <double>0.57</double>
+          <double>0.45</double>
+          <double>0</double>
+        </fract_carb>
+        <fract_cell>
+          <double>0.7</double>
+          <double>0.3</double>
+          <double>0.37</double>
+          <double>0.37</double>
+          <double>0.47</double>
+          <double>0.1</double>
+        </fract_cell>
+        <fract_lign>
+          <double>0.1</double>
+          <double>0.4</double>
+          <double>0.09</double>
+          <double>0.06</double>
+          <double>0.08</double>
+          <double>0.9</double>
+        </fract_lign>
+        <wfpsN2N2O_x>
+          <double>22</double>
+          <double>88</double>
+        </wfpsN2N2O_x>
+        <wfpsN2N2O_y>
+          <double>0.1</double>
+          <double>1</double>
+        </wfpsN2N2O_y>
       </SoilNitrogen>
       <SoilOrganicMatter>
         <Name>SoilOrganicMatter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RootCN>40</RootCN>
         <RootWt>200</RootWt>
         <SoilCN>12.5</SoilCN>
@@ -377,6 +341,19 @@
           <double>300</double>
           <double>300</double>
         </Thickness>
+        <Depth>
+          <string>0-15</string>
+          <string>15-30</string>
+          <string>30-60</string>
+          <string>60-90</string>
+          <string>90-120</string>
+          <string>120-150</string>
+          <string>150-180</string>
+          <string>180-210</string>
+          <string>210-240</string>
+          <string>240-270</string>
+          <string>270-300</string>
+        </Depth>
         <OC>
           <double>1.04</double>
           <double>0.89</double>
@@ -420,6 +397,7 @@
       </SoilOrganicMatter>
       <Analysis>
         <Name>Analysis</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -464,13 +442,14 @@
       </Analysis>
       <InitialWater>
         <Name>Initial water</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <PercentMethod>FilledFromTop</PercentMethod>
         <FractionFull>1</FractionFull>
         <DepthWetSoil>NaN</DepthWetSoil>
-        <PercentMethod>FilledFromTop</PercentMethod>
       </InitialWater>
       <Sample>
         <Name>Sample</Name>
-        <Date />
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Thickness>
           <double>150</double>
           <double>150</double>
@@ -516,13 +495,31 @@
         <OCUnits>Total</OCUnits>
         <PHUnits>Water</PHUnits>
       </Sample>
+      <CERESSoilTemperature>
+        <Name>CERESSoilTemperature</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </CERESSoilTemperature>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <RecordNumber>0</RecordNumber>
+      <SoilType>Black Vertosol</SoilType>
+      <LocalName>Waco</LocalName>
+      <Site>Jimbour</Site>
+      <NearestTown>Jimbour, Q 4352</NearestTown>
+      <Region>South East Queensland</Region>
+      <NaturalVegetation>Grassland, mainly Qld bluegrass</NaturalVegetation>
+      <Latitude>0</Latitude>
+      <Longitude>0</Longitude>
     </Soil>
     <SurfaceOrganicMatter>
       <Name>SurfaceOrganicMatter</Name>
-
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ResidueTypes>
+        <Name>ResidueTypesList</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResidueType>
           <Name>wheat</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <fom_type>inert</fom_type>
           <fraction_C>0.08</fraction_C>
           <po4ppm>10</po4ppm>
           <nh4ppm>10</nh4ppm>
@@ -546,58 +543,129 @@
             <double>0.4</double>
           </fr_p>
         </ResidueType>
+        <LoadFromResource>ResidueTypes</LoadFromResource>
       </ResidueTypes>
       <TillageTypes>
+        <Name>TillageTypesList</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <TillageType />
       </TillageTypes>
+      <Pools>
+        <Pool>
+          <PoolName>wheat</PoolName>
+          <ResidueType>wheat</ResidueType>
+          <Mass>1000</Mass>
+          <CNRatio>80</CNRatio>
+          <CPRatio>NaN</CPRatio>
+          <StandingFraction>0</StandingFraction>
+        </Pool>
+      </Pools>
       <PoolName>wheat</PoolName>
       <type>wheat</type>
       <mass>1000</mass>
       <standing_fraction>0</standing_fraction>
+      <cpr />
       <cnr>80</cnr>
+      <CriticalResidueWeight>2000</CriticalResidueWeight>
+      <OptimumDecompTemp>20</OptimumDecompTemp>
+      <MaxCumulativeEOS>20</MaxCumulativeEOS>
+      <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+      <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+      <TotalLeachRain>25</TotalLeachRain>
+      <MinRainToLeach>10</MinRainToLeach>
+      <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+      <DefaultCPRatio>0</DefaultCPRatio>
+      <DefaultStandingFraction>0</DefaultStandingFraction>
+      <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+      <FractionFaecesAdded>0.5</FractionFaecesAdded>
     </SurfaceOrganicMatter>
     <MicroClimate>
       <Name>MicroClimate</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <a_interception>0</a_interception>
+      <b_interception>1</b_interception>
+      <c_interception>0</c_interception>
+      <d_interception>0</d_interception>
+      <soil_albedo>0.23</soil_albedo>
+      <sun_angle>15</sun_angle>
+      <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+      <night_interception_fraction>0.5</night_interception_fraction>
+      <refheight>2</refheight>
+      <albedo>0.15</albedo>
+      <emissivity>0.96</emissivity>
+      <RadIntTotal>0</RadIntTotal>
     </MicroClimate>
     <Memo>
       <Name>Memo</Name>
-      <MemoText>
-        <![CDATA[]]>
-      </MemoText>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <MemoText><![CDATA[]]></MemoText>
     </Memo>
     <Map>
-	  <Name>Map</Name>
-	</Map>
+      <Name>Map</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Center>
+        <Latitude>0</Latitude>
+        <Longitude>0</Longitude>
+      </Center>
+      <Zoom>1.4</Zoom>
+    </Map>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <Folder>
     <Name>Crops</Name>
     <Plant15>
       <Name>Wheat</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ResourceName>Wheat</ResourceName>
       <AutoHarvest>true</AutoHarvest>
       <CropType>Wheat</CropType>
     </Plant15>
     <OilPalm>
       <Name>OilPalm</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ResourceName>OilPalm</ResourceName>
+      <interception>0</interception>
+      <UnderstoryCoverMax>0</UnderstoryCoverMax>
+      <UnderstoryLegumeFraction>0</UnderstoryLegumeFraction>
+      <InterceptionFraction>0</InterceptionFraction>
+      <MaximumRootDepth>0</MaximumRootDepth>
+      <RootDepth>0</RootDepth>
+      <DltDM>0</DltDM>
+      <ReproductiveGrowthFraction>0</ReproductiveGrowthFraction>
+      <UnderstoryCoverGreen>0</UnderstoryCoverGreen>
     </OilPalm>
     <Plant>
       <Name>Maize</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ResourceName>Maize</ResourceName>
       <CropType>Maize</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Plant>
       <Name>Slurp</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ResourceName>Slurp</ResourceName>
       <CropType>Slurp</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Plant>
       <Name>SCRUM</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ResourceName>SCRUM</ResourceName>
       <CropType>SCRUM</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
-    <CultivarFolder >
-	  <Name>CultivarFolder</Name>
+    <Plant>
+      <Name>Chicory</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ResourceName>Chicory</ResourceName>
+      <CropType>Chicory</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
+    </Plant>
+    <CultivarFolder>
+      <Name>CultivarFolder</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </CultivarFolder>
     <Folder>
       <Name>Wheat cultivars</Name>
@@ -605,220 +673,587 @@
         <Name>Yield Prophet cultivars</Name>
         <Cultivar>
           <Name>Early</Name>
-          <Alias><Name>agtscythe</Name></Alias>
-          <Alias><Name>arrino</Name></Alias>
-          <Alias><Name>bonnie_rock</Name></Alias>
-          <Alias><Name>bowerbird</Name></Alias>
-          <Alias><Name>crusader</Name></Alias>
-          <Alias><Name>dart</Name></Alias>
-          <Alias><Name>drysdale</Name></Alias>
-          <Alias><Name>emurock</Name></Alias>
-          <Alias><Name>hunter</Name></Alias>
-          <Alias><Name>hybrid_mercury</Name></Alias>
-          <Alias><Name>hyperno</Name></Alias>
-          <Alias><Name>imposeclplus</Name></Alias>
-          <Alias><Name>kalka</Name></Alias>
-          <Alias><Name>kirchauff</Name></Alias>
-          <Alias><Name>kukri</Name></Alias>
-          <Alias><Name>livingston</Name></Alias>
-          <Alias><Name>mace</Name></Alias>
-          <Alias><Name>ouyen</Name></Alias>
-          <Alias><Name>perengori</Name></Alias>
-          <Alias><Name>ruby</Name></Alias>
-          <Alias><Name>tamaroi</Name></Alias>
-          <Alias><Name>wyalkatchem</Name></Alias>
-          <Alias><Name>young</Name></Alias>
+          <Alias>
+            <Name>agtscythe</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>arrino</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>bonnie_rock</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>bowerbird</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>crusader</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>dart</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>drysdale</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>emurock</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>hunter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>hybrid_mercury</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>hyperno</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>imposeclplus</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>kalka</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>kirchauff</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>kukri</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>livingston</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>mace</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>ouyen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>perengori</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>ruby</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>tamaroi</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>wyalkatchem</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>young</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 2.3</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
         </Cultivar>
         <Cultivar>
           <Name>EarlyMid</Name>
-          <Alias><Name>annuello</Name></Alias>
-          <Alias><Name>barunga</Name></Alias>
-          <Alias><Name>carnamah</Name></Alias>
-          <Alias><Name>catalina</Name></Alias>
-          <Alias><Name>clf_stiletto</Name></Alias>
-          <Alias><Name>cobra</Name></Alias>
-          <Alias><Name>corack</Name></Alias>
-          <Alias><Name>correll</Name></Alias>
-          <Alias><Name>diamondbird</Name></Alias>
-          <Alias><Name>estoc</Name></Alias>
-          <Alias><Name>frame</Name></Alias>
-          <Alias><Name>gladius</Name></Alias>
-          <Alias><Name>goroke</Name></Alias>
-          <Alias><Name>grenadeclplus</Name></Alias>
-          <Alias><Name>guardian</Name></Alias>
-          <Alias><Name>halbred</Name></Alias>
-          <Alias><Name>hartog</Name></Alias>
-          <Alias><Name>impala</Name></Alias>
-          <Alias><Name>justica</Name></Alias>
-          <Alias><Name>kord</Name></Alias>
-          <Alias><Name>merlin</Name></Alias>
-          <Alias><Name>mitre</Name></Alias>
-          <Alias><Name>pugsley</Name></Alias>
-          <Alias><Name>shield</Name></Alias>
-          <Alias><Name>spitfire</Name></Alias>
-          <Alias><Name>stiletto</Name></Alias>
-          <Alias><Name>sunguard</Name></Alias>
-          <Alias><Name>sunstate</Name></Alias>
-          <Alias><Name>ventura</Name></Alias>
-          <Alias><Name>yallaroi</Name></Alias>
-          <Alias><Name>yawa</Name></Alias>
-          <Alias><Name>yitpi</Name></Alias>
+          <Alias>
+            <Name>annuello</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>barunga</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>carnamah</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>catalina</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>clf_stiletto</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>cobra</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>corack</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>correll</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>diamondbird</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>estoc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>frame</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>gladius</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>goroke</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>grenadeclplus</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>guardian</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>halbred</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>hartog</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>impala</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>justica</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>kord</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>merlin</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>mitre</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>pugsley</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>shield</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>spitfire</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>stiletto</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>sunguard</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>sunstate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>ventura</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>yallaroi</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>yawa</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>yitpi</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
         </Cultivar>
         <Cultivar>
           <Name>VeryEarly</Name>
-          <Alias><Name>h45</Name></Alias>
-          <Alias><Name>h46</Name></Alias>
-          <Alias><Name>saintly</Name></Alias>
-          <Alias><Name>silverstar</Name></Alias>
-          <Alias><Name>tamarinrock</Name></Alias>
-          <Alias><Name>waagan</Name></Alias>
-          <Alias><Name>westonia</Name></Alias>
-          <Alias><Name>wollaroi</Name></Alias>
-          <Alias><Name>zippy</Name></Alias>
+          <Alias>
+            <Name>h45</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>h46</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>saintly</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>silverstar</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>tamarinrock</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>waagan</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>westonia</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>wollaroi</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>zippy</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 1.5</Command>
         </Cultivar>
         <Cultivar>
           <Name>Mid</Name>
-          <Alias><Name>arrivato</Name></Alias>
-          <Alias><Name>babbler</Name></Alias>
-          <Alias><Name>barham</Name></Alias>
-          <Alias><Name>baxter</Name></Alias>
-          <Alias><Name>buckley</Name></Alias>
-          <Alias><Name>camm</Name></Alias>
-          <Alias><Name>carinya</Name></Alias>
-          <Alias><Name>clf</Name>-jnz</Alias>
-          <Alias><Name>derrimut</Name></Alias>
-          <Alias><Name>dollarbird</Name></Alias>
-          <Alias><Name>elmoreclplus</Name></Alias>
-          <Alias><Name>justicaclplus</Name></Alias>
-          <Alias><Name>saphire</Name></Alias>
-          <Alias><Name>wallup</Name></Alias>
+          <Alias>
+            <Name>arrivato</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>babbler</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>barham</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>baxter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>buckley</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>camm</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>carinya</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>clf-jnz</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>derrimut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>dollarbird</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>elmoreclplus</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>justicaclplus</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>saphire</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>wallup</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
         </Cultivar>
         <Cultivar>
           <Name>MidPlus</Name>
-          <Alias><Name>bellaroi</Name></Alias>
-          <Alias><Name>lang</Name></Alias>
-          <Alias><Name>caparoi</Name></Alias>
-          <Alias><Name>suntop</Name></Alias>
+          <Alias>
+            <Name>bellaroi</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>lang</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>caparoi</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>suntop</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
         </Cultivar>
         <Cultivar>
           <Name>MidLate</Name>
-          <Alias><Name>braewood</Name></Alias>
-          <Alias><Name>calingiri</Name></Alias>
-          <Alias><Name>chara</Name></Alias>
-          <Alias><Name>endure</Name></Alias>
-          <Alias><Name>envoy</Name></Alias>
-          <Alias><Name>gauntlet</Name></Alias>
-          <Alias><Name>gazelle</Name></Alias>
-          <Alias><Name>giles</Name></Alias>
-          <Alias><Name>magenta</Name></Alias>
-          <Alias><Name>phantom</Name></Alias>
-          <Alias><Name>sentinel</Name></Alias>
-          <Alias><Name>sunlin</Name></Alias>
-          <Alias><Name>sunvale</Name></Alias>
-          <Alias><Name>wylie</Name></Alias>
+          <Alias>
+            <Name>braewood</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>calingiri</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>chara</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>endure</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>envoy</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>gauntlet</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>gazelle</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>giles</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>magenta</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>phantom</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>sentinel</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>sunlin</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>sunvale</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>wylie</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 2.8</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
           <Command />
         </Cultivar>
         <Cultivar>
           <Name>Late</Name>
-          <Alias><Name>beaufont</Name></Alias>
-          <Alias><Name>bolac</Name></Alias>
-          <Alias><Name>forrest</Name></Alias>
-          <Alias><Name>kelallac</Name></Alias>
-          <Alias><Name>preston</Name></Alias>
-          <Alias><Name>strzelecki</Name></Alias>
+          <Alias>
+            <Name>beaufont</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>bolac</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>forrest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>kelallac</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>preston</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>strzelecki</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
         </Cultivar>
         <Cultivar>
           <Name>WinterWheat</Name>
-          <Alias><Name>lorikeet</Name></Alias>
-          <Alias><Name>wylah</Name></Alias>
-          <Alias><Name>rosella</Name></Alias>
-          <Alias><Name>whistler</Name></Alias>
-          <Alias><Name>wedgetail</Name></Alias>
+          <Alias>
+            <Name>lorikeet</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>wylah</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>rosella</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>whistler</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>wedgetail</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.9</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 380</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 380</Command>
           <Command />
         </Cultivar>
         <Cultivar>
           <Name>Axe</Name>
-          <Alias><Name>axe</Name></Alias>
+          <Alias>
+            <Name>axe</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
           <Command />
         </Cultivar>
         <Cultivar>
           <Name>Scout</Name>
-          <Alias><Name>scout</Name></Alias>
-          <Alias><Name>l</Name></Alias>
+          <Alias>
+            <Name>scout</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>l</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 1.8</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
-          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 550</Command>
+          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.FixedValue = 550</Command>
         </Cultivar>
         <Cultivar>
           <Name>Lincoln</Name>
-          <Alias><Name>lincoln</Name></Alias>
+          <Alias>
+            <Name>lincoln</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 1.8</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
         </Cultivar>
         <Cultivar>
           <Name>GregoryLancer</Name>
-          <Alias><Name>gregory</Name></Alias>
-          <Alias><Name>lancer</Name></Alias>
+          <Alias>
+            <Name>gregory</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <Alias>
+            <Name>lancer</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 2.7</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 3.2</Command>
           <Command />
         </Cultivar>
         <Cultivar>
           <Name>Eaglehawk</Name>
-          <Alias><Name>eaglehawk</Name></Alias>
+          <Alias>
+            <Name>eaglehawk</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </Alias>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 2.5</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 2.5</Command>
-          <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.Value = 500</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 655</Command>
-          <Command>[Phenology].FloweringToStartGrainFill.Target.Value = 250</Command>
-          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.Value = 500</Command>
+          <Command>[Phenology].EndOfJuvenileToFloralInitiation.Target.FixedValue = 500</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 655</Command>
+          <Command>[Phenology].FloweringToStartGrainFill.Target.FixedValue = 250</Command>
+          <Command>[Phenology].StartGrainFillToEndGrainFill.Target.FixedValue = 500</Command>
         </Cultivar>
         <Cultivar>
           <Name>Marombi</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].Vernalisation.VernSens = 3.9</Command>
           <Command>[Phenology].Vernalisation.PhotopSens = 4.0</Command>
-          <Command>[Phenology].FloralInitiationToFlowering.Target.Value = 455</Command>
+          <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 455</Command>
           <Command />
         </Cultivar>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
       <Name>OilPalm cultivars</Name>
       <Cultivar>
         <Name>Dami</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command>[FrondMaxArea].XYPairs.X = 0,2,4.5,8.5,14</Command>
         <Command>[FrondMaxArea].XYPairs.Y = 0.1,1,7,12,14</Command>
       </Cultivar>
       <Cultivar>
         <Name>SuperFamily</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command>[FrondMaxArea].XYPairs.X = 0,2,4.5,8.5,14</Command>
         <Command>[FrondMaxArea].XYPairs.Y = 0.1,0.9,0.63,10.8,12.6</Command>
       </Cultivar>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <Folder>
     <Name>Animals</Name>
     <Stock>
       <Name>Stock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <RandSeed>0</RandSeed>
       <GenoTypes />
       <Sheep />
@@ -836,86 +1271,152 @@
     </Stock>
     <Supplement>
       <Name>Supplement</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <SpoilageTime>0</SpoilageTime>
+      <stores>
+        <StoreType>
+          <IsRoughage>true</IsRoughage>
+          <DMContent>0.85</DMContent>
+          <DMD>0</DMD>
+          <MEContent>0</MEContent>
+          <CPConc>0</CPConc>
+          <ProtDg>0</ProtDg>
+          <PConc>0</PConc>
+          <SConc>0</SConc>
+          <EEConc>0</EEConc>
+          <ADIP2CP>0</ADIP2CP>
+          <AshAlk>0</AshAlk>
+          <MaxPassage>0</MaxPassage>
+          <Name>fodder</Name>
+          <Stored>0</Stored>
+        </StoreType>
+      </stores>
+      <PaddockList />
     </Supplement>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <Folder>
     <Name>Graphs</Name>
     <Graph>
       <Name>Graph</Name>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title></Title>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title></Title>
-      </Axis>
       <Series>
-	    <Name>Series</Name>
-        <Title>Series1</Title>
+        <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
         <ColourArgb>-16776961</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
         <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
         <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
         <ShowInLegend>true</ShowInLegend>
-        <SplitOn>Simulation</SplitOn>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Axis>
+        <Type>Bottom</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Title />
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
     </Graph>
     <Regression>
-       <Name>Regression</Name>
-	</Regression>
+      <Name>Regression</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ForEachSeries>false</ForEachSeries>
+    </Regression>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <Folder>
     <Name>Data store and analysis models</Name>
     <DataStore>
-	   <Name>DataStore</Name>
-	</DataStore>
+      <Name>DataStore</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <AutoExport>false</AutoExport>
+      <MaximumResultsPerPage>0</MaximumResultsPerPage>
+    </DataStore>
     <Input>
       <Name>Input</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ErrorMessage />
     </Input>
     <ExcelInput>
       <Name>ExcelInput</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileNameMetadata>
         <string>Excel files (*.xlsx)|*.xlsx</string>
         <string>All files (*.*)|*.*</string>
       </FileNameMetadata>
     </ExcelInput>
     <PredictedObserved>
-	  <Name>PredictedObserved</Name>
-	</PredictedObserved>
+      <Name>PredictedObserved</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PredictedObserved>
     <TimeSeriesStats>
-	  <Name>TimeSeriesStats</Name>
+      <Name>TimeSeriesStats</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
     <Probability>
       <Name>Probability</Name>
-      <TableName></TableName>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <TableName />
       <Exceedence>true</Exceedence>
     </Probability>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <Tests>
     <Name>Tests</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Tests>
   <Experiment>
     <Name>Experiment</Name>
     <Factors>
-	  <Name>Factors</Name>
+      <Name>Factors</Name>
       <Factor>
         <Name>Factor</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Specifications />
       </Factor>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Factors>
     <Simulation>
       <Name>Base</Name>
       <Clock>
         <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartDate>1940-01-01T00:00:00</StartDate>
         <EndDate>1989-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Summary>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Simulation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

@@ -43,22 +43,18 @@ namespace Models.WaterModel
         // --- Outputs -----------------------------------------------------------------------
 
         /// <summary>Returns the value to subtract from curve number due to tillage.</summary>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            if (tillageCnCumWater > 0.0)
             {
-                if (tillageCnCumWater > 0.0)
-                {
-                    // Tillage Reduction is biggest (tillageCnRed value) straight after Tillage 
-                    // and gets smaller and becomes 0 when reaches tillageCnCumWater.
-                    double tillage_fract = MathUtilities.Divide(cumWaterSinceTillage, tillageCnCumWater, 0.0);
-                    double tillage_reduction = tillageCnRed * tillage_fract;
-                    return tillage_reduction;
-                }
-                else
-                    return 0;
-
+                // Tillage Reduction is biggest (tillageCnRed value) straight after Tillage 
+                // and gets smaller and becomes 0 when reaches tillageCnCumWater.
+                double tillage_fract = MathUtilities.Divide(cumWaterSinceTillage, tillageCnCumWater, 0.0);
+                double tillage_reduction = tillageCnRed * tillage_fract;
+                return tillage_reduction;
             }
+            else
+                return 0;
         }
 
         // --- Event handlers ----------------------------------------------------------------

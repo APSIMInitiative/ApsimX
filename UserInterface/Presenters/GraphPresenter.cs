@@ -152,11 +152,11 @@ namespace UserInterface.Presenters
                     TextAnnotation textAnnotation = annotations[i] as TextAnnotation;
                     if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
                     {
-                        int numLines = StringUtilities.CountSubStrings(textAnnotation.text, "\r\n") + 1;
                         double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
 
                         double yPosition = largestAxisScale - i * interval;
-                        graphView.DrawText(textAnnotation.text, minimumX, yPosition,
+                        double xPosition = minimumX + (maximumX - minimumX) * 0.01;
+                        graphView.DrawText(textAnnotation.text, xPosition, yPosition,
                                            textAnnotation.leftAlign, textAnnotation.textRotation,
                                            Axis.AxisType.Bottom, Axis.AxisType.Left, textAnnotation.colour);
                     }
@@ -192,9 +192,19 @@ namespace UserInterface.Presenters
                 foreach (SeriesDefinition definition in seriesDefinitions)
                 {
                     if (definition.x != null && definition.xAxis == axis.Type && definition.xFieldName != null)
-                        names.Add(definition.xFieldName);
+                    {
+                        string xName = definition.xFieldName;
+                        if (definition.xFieldUnits != null)
+                            xName = xName + " " + definition.xFieldUnits;
+                        names.Add(xName);
+                    }
                     if (definition.y != null && definition.yAxis == axis.Type && definition.yFieldName != null)
-                        names.Add(definition.yFieldName);
+                    {
+                        string yName = definition.yFieldName;
+                        if (definition.yFieldUnits != null)
+                            yName = yName + " " + definition.yFieldUnits;
+                        names.Add(yName);
+                    }
                 }
 
                 // Create a default title by appending all 'names' together.
@@ -211,7 +221,7 @@ namespace UserInterface.Presenters
             Rectangle r = new Rectangle(0, 0, 800, 500);
             Bitmap img = new Bitmap(r.Width, r.Height);
 
-            graphView.Export(img, true);
+            graphView.Export(img, r, true);
 
             string fileName = Path.Combine(folder, graph.Name + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
@@ -232,7 +242,7 @@ namespace UserInterface.Presenters
             Rectangle r = new Rectangle(0, 0, 600, 450); 
             Bitmap img = new Bitmap(r.Width, r.Height);
 
-            graphView.Export(img, true);
+            graphView.Export(img, r, true);
 
             string path = Apsim.FullPath(graph).Replace(".Simulations.", "");
             string fileName = Path.Combine(folder, path + ".png");

@@ -252,31 +252,31 @@ namespace UnitTests
             soil.Water = MathUtilities.Multiply(soilProperties.Water.LL15, soilProperties.Water.Thickness);
             
             // Profile is empty - should be small amount of runoff.
-            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value, 5.60815));
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value(), 5.60815));
 
             // Full profile - should be a lot more runoff.
             soil.Water = MathUtilities.Multiply(soilProperties.Water.DUL, soilProperties.Water.Thickness);
-            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value, 58.23552));
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value(), 58.23552));
 
             // Test CN reduction due to canopy. Tests the Curve Number vs Cover graph.
             // Cover is 10%, reduction is 2.5
             surfaceOrganicMatter.Cover = 0.1;
-            Assert.IsTrue(MathUtilities.FloatsAreEqual(reductionForCover.Value, 2.49999));
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(reductionForCover.Value(), 2.49999));
 
             // Cover is 80%, reduction is 20
             surfaceOrganicMatter.Cover = 0.8;
-            Assert.IsTrue(MathUtilities.FloatsAreEqual(reductionForCover.Value, 20.0));
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(reductionForCover.Value(), 20.0));
 
             // Test Runoff vs Rainfall graph i.e. effect of different curve numbers.
             surfaceOrganicMatter.Cover = 0.0;
             runoff.CN2Bare = 60;
-            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value, 48.18584));
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value(), 48.18584));
 
             runoff.CN2Bare = 75;
-            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value, 68.16430));
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value(), 68.16430));
 
             runoff.CN2Bare = 85;
-            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value, 81.15006));
+            Assert.IsTrue(MathUtilities.FloatsAreEqual(runoff.Value(), 81.15006));
         }
 
         /// <summary>Ensure saturated flow is working.</summary>
@@ -436,16 +436,16 @@ namespace UnitTests
 
             // Profile at DUL. Essentially water table is below profile.
             soil.Water = DUL;
-            Assert.AreEqual(waterTable.Value, 1600);
+            Assert.AreEqual(waterTable.Value(), 1600);
 
             // Put a saturated layer at index 3.
             soil.Water[3] = SAT[3];
-            Assert.AreEqual(waterTable.Value, 700);
+            Assert.AreEqual(waterTable.Value(), 700);
 
             // Put a saturated layer at index 3 and a drainable layer at index 2.
             soil.Water[2] = (DUL[2] + SAT[2]) / 2;
             soil.Water[3] = SAT[3];
-            Assert.AreEqual(waterTable.Value, 250);
+            Assert.AreEqual(waterTable.Value(), 250);
 
 
         }

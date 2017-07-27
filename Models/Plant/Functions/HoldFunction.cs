@@ -7,7 +7,7 @@ using Models.PMF.Phen;
 namespace Models.PMF.Functions
 {
     /// <summary>
-    /// Returns the ValueToHold which is updated daily until the WhenToHold stage is reached, beyond which it is held constant
+    /// Returns the a value which is updated daily until a given stage is reached, beyond which it is held constant
     /// </summary>
     [Serializable]
     [Description("Returns the ValueToHold which is updated daily until the WhenToHold stage is reached, beyond which it is held constant")]
@@ -23,7 +23,7 @@ namespace Models.PMF.Functions
         public string WhenToHold { get; set; }
 
         /// <summary>The value to hold after event</summary>
-        [Link]
+        [ChildLink]
         IFunction ValueToHold = null;
 
         /// <summary>The phenology</summary>
@@ -36,7 +36,7 @@ namespace Models.PMF.Functions
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            _Value = ValueToHold.Value;
+            _Value = ValueToHold.Value();
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -50,17 +50,14 @@ namespace Models.PMF.Functions
                 //Do nothing, hold value constant
             }
             else
-                _Value = ValueToHold.Value;
+                _Value = ValueToHold.Value();
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                return _Value;
-            }
+            return _Value;
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
@@ -68,13 +65,16 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
             // Describe the function
-            tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as ValueToHold.Value until it raches " + WhenToHold + " stage when it fixes its value", indent));
+            if (ValueToHold != null)
+            {
+                tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as " + (ValueToHold as IModel).Name + " until it reaches " + WhenToHold + " stage when it fixes its value", indent));
+            }
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-            {
                 child.Document(tags, headingLevel + 1, indent + 1);
-            }
         }
 
     }

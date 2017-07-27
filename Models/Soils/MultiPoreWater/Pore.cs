@@ -89,7 +89,16 @@ namespace Models.Soils
         /// <summary>The water filled volume of the pore relative to the air space</summary>
         [XmlIgnore]
         [Units("ml/ml")]
-        public double RelativeWaterContent { get { return WaterFilledVolume / Volume; } }
+        public double RelativeWaterContent
+        {
+            get
+            {
+                if (Volume > 0)
+                    return WaterFilledVolume / Volume;
+                else
+                    return 0;
+            }
+        }
         /// <summary>The air filled volume of the pore</summary>
         [XmlIgnore]
         [Units("ml/ml")]
@@ -98,7 +107,7 @@ namespace Models.Soils
         private double _WaterDepth = 0;
         /// <summary>The depth of water in the pore</summary>
         [XmlIgnore]
-        [Units("ml/ml")]
+        [Units("mm")]
         public double WaterDepth
         {
             get
@@ -109,6 +118,8 @@ namespace Models.Soils
                 _WaterDepth = Math.Max(value,0);//discard floating point errors
                 if (_WaterDepth - VolumeDepth>FloatingPointTolerance)
                     throw new Exception("Trying to put more water into pore " + Compartment + "in layer " + Layer + " than will fit");
+                if (Double.IsNaN(_WaterDepth))
+                    throw new Exception("Something has just set Water depth to Nan for Pore " + Compartment + " in layer " + Layer + ".  Don't Worry, things like this happen sometimes.");
             }
         }
         /// <summary>The depth of Air in the pore</summary>
@@ -135,18 +146,14 @@ namespace Models.Soils
         [XmlIgnore]
         [Units("mm3/s")]
         public double PoreFlowRate { get { return CFlow * Math.Pow(Radius,XFlow); } }
-        /// <summary>The volume flow rate of water through this pore compartment</summary>
-        [XmlIgnore]
-        [Units("mm3/s/m2")]
-        public double VolumetricFlowRate { get { return PoreFlowRate * Number ; } }
         /// <summary>The hydraulic conductivity of water through this pore compartment</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Capillarity { get { return VolumetricFlowRate/1e6*3600; } }
+        public double PoiseuilleFlow { get { return (PoreFlowRate * Number)/ 1e6*3600; } }
         /// <summary>The potential diffusion out of this pore</summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Diffusivity { get { return Capillarity * RelativeWaterContent * (1- TensionFactor); } }
+        public double Diffusivity { get { return PoiseuilleFlow * RelativeWaterContent * (1- TensionFactor); } }
         /// <summary>The potential diffusion into this pore</summary>
         [XmlIgnore]
         [Units("mm")]
@@ -160,31 +167,22 @@ namespace Models.Soils
         {
             get
             {
-                return Math.Sqrt(((7.4/Radius*1000) * Capillarity * Math.Max(0,Volume - WaterFilledVolume))/0.5);
+                return Math.Sqrt(((7.4/Radius*1000) * PoiseuilleFlow * Math.Max(0,Volume - WaterFilledVolume))/0.5);
             }
         }
         /// <summary>
         /// Factor describing the effects of soil water content on hydrophobosity
-        /// equals 1
+        /// equals 1 if soil is hydrophyllic and decreases is soil becomes more hydrophobic
         /// </summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double RepelancyFactor
-        {
-            get
-            {
-                double RepFac = 1;
-                //if (RelativeWaterContent < 0.3)
-                //    RepFac = 0.3;
-                return RepFac;
-            }
-        }
+        public double RepelancyFactor { get; set; }
         /// <summary>
-        /// The rate of water movement into a pore space due to the chemical attraction from the matris
+        /// The rate of water movement into a pore space due to the chemical attraction from the matrix
         /// </summary>
         [XmlIgnore]
         [Units("mm/h")]
-        public double Sorption { get { return 0.5 * Sorptivity * Math.Pow(1, -0.5) * RepelancyFactor; } }
+        public double Sorption { get { return 0.5 * Sorptivity * Math.Pow(1, -0.5); } }
         /// <summary>The maximum possible conductivity through a pore of given size</summary>
         [XmlIgnore]
         [Units("mm/h")]
@@ -195,9 +193,9 @@ namespace Models.Soils
                 if (Double.IsNaN(Sorption))
                     throw new Exception("Sorption is NaN");
                 if (IncludeSorption)
-                    return Capillarity + Sorption;
+                    return PoiseuilleFlow + (Sorption * RepelancyFactor);
                 else
-                    return Capillarity;
+                    return PoiseuilleFlow;
             }
         }
         /// <summary>the gravitational potential for the layer this pore is in, calculated from height above zero potential base</summary>
@@ -219,16 +217,43 @@ namespace Models.Soils
                     factor = 1;
                 return factor;
             }
-        }/// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
+        }
+        /// <summary>The conductivity of water moving out of a pore, The net result of gravity Opposed by capiliary draw back</summary>
         [XmlIgnore]
         [Units("mm/h")]
         public double HydraulicConductivityOut
         {
             get
             {
-                return Capillarity * TensionFactor;
+                return Math.Max(0, PoiseuilleFlow) * TensionFactor;
             }
         }
-#endregion
+        #endregion
+
+        #region Plant water extraction
+        /// <summary>Factor to scale potential water extraction in each pore </summary>
+        public double ExtractionMultiplier { get; set; }
+
+        /// <summary>
+        /// The proportion of pores in this cohort that have absorbing roots present
+        /// </summary>
+        [XmlIgnore]
+        [Units("mm/mm3")]
+        public double RootLengthDensity { get; set; }
+
+        /// <summary>
+        /// The amount of water that may be extracted from this pore class by plant roots each hour
+        /// </summary>
+        [XmlIgnore]
+        [Units("mm/h")]
+        public double PotentialWaterExtraction
+        {
+            get {
+                double MeanDiffusionDistance = Math.Sqrt(1 / RootLengthDensity) * 0.5; //assumes root length density represents the number of roots transecting a layer
+                double UptakeProp = (PoiseuilleFlow / MeanDiffusionDistance) * ExtractionMultiplier;
+                double PotentialRootUptake = WaterDepth * UptakeProp;
+                return Math.Min(PotentialRootUptake, WaterDepth); }
+        }
+        #endregion
     }
 }

@@ -39,26 +39,23 @@ namespace Models.PMF.Functions
         /// or
         /// Phase end name not set: + Name
         /// </exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            if (ChildFunctions == null)
+                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+
+            if (Start == "")
+                throw new Exception("Phase start name not set:" + Name);
+            if (End == "")
+                throw new Exception("Phase end name not set:" + Name);
+
+            if (Phenology.Between(Start, End) && ChildFunctions.Count > 0)
             {
-                if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
-
-                if (Start == "")
-                    throw new Exception("Phase start name not set:" + Name);
-                if (End == "")
-                    throw new Exception("Phase end name not set:" + Name);
-
-                if (Phenology.Between(Start, End) && ChildFunctions.Count > 0)
-                {
-                    IFunction Lookup = ChildFunctions[0] as IFunction;
-                    return Lookup.Value;
-                }
-                else
-                    return 0.0;
+                IFunction Lookup = ChildFunctions[0] as IFunction;
+                return Lookup.Value(arrayIndex);
             }
+            else
+                return 0.0;
         }
 
         /// <summary>Gets a value indicating whether [in phase].</summary>
@@ -93,7 +90,7 @@ namespace Models.PMF.Functions
             }
             else
             {
-                tags.Add(new AutoDocumentation.Paragraph(this.Value + " between " +Start + " and " + End + " and a value of zero outside of this period", indent));
+                tags.Add(new AutoDocumentation.Paragraph(this.Value() + " between " +Start + " and " + End + " and a value of zero outside of this period", indent));
             }
         }
 

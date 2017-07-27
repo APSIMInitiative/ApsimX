@@ -71,12 +71,12 @@ namespace Models.PMF.Phen
                 if (Leaf != null)
                 {
                     LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value - RemainingLeaves - LeafNoAtStart;
+                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value() - RemainingLeaves - LeafNoAtStart;
                 }
                 else
                 {
-                    LeafNoAtStart = HaunStage.Value;
-                    TargetLeafForCompletion = FinalLeafNumber.Value;
+                    LeafNoAtStart = HaunStage.Value();
+                    TargetLeafForCompletion = FinalLeafNumber.Value();
                 }
                 
                 First = false;
@@ -93,7 +93,7 @@ namespace Models.PMF.Phen
             }
             else
             {
-                if (HaunStage.Value >= FinalLeafNumber.Value)
+                if (HaunStage.Value() >= FinalLeafNumber.Value())
                     return 0.00001;
                 else
                     return 0;
@@ -112,12 +112,12 @@ namespace Models.PMF.Phen
                 if (Leaf != null)
                 {
                     LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value - RemainingLeaves - LeafNoAtStart;
+                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value() - RemainingLeaves - LeafNoAtStart;
                 }
                 else
                 {
-                    LeafNoAtStart = HaunStage.Value;
-                    TargetLeafForCompletion = FinalLeafNumber.Value;
+                    LeafNoAtStart = HaunStage.Value();
+                    TargetLeafForCompletion = FinalLeafNumber.Value();
                 }
                 First = false;
             }
@@ -133,7 +133,7 @@ namespace Models.PMF.Phen
             }
             else
             {
-                if (HaunStage.Value >= FinalLeafNumber.Value)
+                if (HaunStage.Value() >= FinalLeafNumber.Value())
                     return 0.00001;
                 else
                     return 0;
@@ -152,7 +152,7 @@ namespace Models.PMF.Phen
                 if (Leaf != null)
                     F = (Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion - LeafNoAtStart) / TargetLeafForCompletion;
                 else
-                    F = (HaunStage.Value - LeafNoAtStart) / TargetLeafForCompletion;
+                    F = (HaunStage.Value() - LeafNoAtStart) / TargetLeafForCompletion;
                 if (F < 0) F = 0;
                 if (F > 1) F = 1;
                 return Math.Max(F, FractionCompleteYesterday); //Set to maximum of FractionCompleteYesterday so on days where final leaf number increases phenological stage is not wound back.

@@ -17,6 +17,8 @@ namespace UserInterface.Presenters
     using Models.Factorial;
     using Models.Soils;
     using APSIM.Shared.Utilities;
+    using Models.Graph;
+
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
     /// </summary>
@@ -131,7 +133,7 @@ namespace UserInterface.Presenters
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {
-            RunAPSIMInternal(multiProcessRunner:false);
+            RunAPSIMInternal(multiProcessRunner: false);
         }
 
         /// <summary>
@@ -218,7 +220,7 @@ namespace UserInterface.Presenters
         public void AcceptTests(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("You are about to change the officially accepted stats for this model. Are you sure?", "Replace official stats?", MessageBoxButtons.YesNo);
-            if(result != DialogResult.Yes)
+            if (result != DialogResult.Yes)
             {
                 return;
             }
@@ -289,7 +291,7 @@ namespace UserInterface.Presenters
             DataStore dataStore = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as DataStore;
             if (dataStore != null)
             {
-                dataStore.DeleteAllTables();
+                dataStore.DeleteAllTables(false);
             }
         }
 
@@ -309,7 +311,7 @@ namespace UserInterface.Presenters
                 List<DataTable> tables = new List<DataTable>();
                 foreach (string tableName in dataStore.TableNames)
                 {
-                    if (tableName != "Simulations" && tableName != "Messages" && tableName != "InitialConditions")
+                    if (tableName != "Simulations" && tableName != "Messages" && tableName != "InitialConditions" && tableName != DataStore.UnitsTableName)
                     {
                         DataTable table = dataStore.GetData("*", tableName, true);
                         table.TableName = tableName;
@@ -319,7 +321,7 @@ namespace UserInterface.Presenters
                 string fileName = Path.ChangeExtension(dataStore.Filename, ".xlsx");
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
                 explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, DataStore.ErrorLevel.Information);
-                Cursor.Current = Cursors.Default; 
+                Cursor.Current = Cursors.Default;
             }
         }
 
@@ -465,6 +467,64 @@ namespace UserInterface.Presenters
                 explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Models.DataStore.ErrorLevel.Error);
             }
         }
+
+        /// <summary>
+        /// Event handler for 'Include in documentation'
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Include in documentation")]
+        public void IncludeInDocumentation(object sender, EventArgs e)
+        {
+            try
+            {
+                IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+                model.IncludeInDocumentation = !model.IncludeInDocumentation; // toggle switch
+
+                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    child.IncludeInDocumentation = model.IncludeInDocumentation;
+                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowMessage(err.ToString(), Models.DataStore.ErrorLevel.Error);
+            }
+        }
+
+        /// <summary>
+        /// Event handler for checkbox for 'Include in documentation' menu item.
+        /// </summary>
+        public bool IncludeInDocumentationChecked()
+        {
+            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            return model.IncludeInDocumentation;
+        }
+
+        /// <summary>
+        /// Event handler for 'Include in documentation'
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Show page of graphs in documentation",
+                     AppliesTo = new Type[] { typeof(Folder) })]
+        public void ShowPageOfGraphs(object sender, EventArgs e)
+        {
+            Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
+            folder.ShowPageOfGraphs = !folder.ShowPageOfGraphs;
+            foreach (Folder child in Apsim.ChildrenRecursively(folder, typeof(Folder)))
+                child.ShowPageOfGraphs = folder.ShowPageOfGraphs;
+            explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+        }
+
+        /// <summary>
+        /// Event handler for checkbox for 'Include in documentation' menu item.
+        /// </summary>
+        public bool ShowPageOfGraphsChecked()
+        {
+            Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
+            return folder.ShowPageOfGraphs;
+        }
+
 
     }
 }

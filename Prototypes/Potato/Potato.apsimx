@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -7,6 +7,7 @@
       <Name>Potato</Name>
       <Memo>
         <Name>TitlePage</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText><![CDATA[
 # The APSIM Potato Model
 
@@ -50,6 +51,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>ThermalTime</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>2</double>
               <double>20</double>
@@ -61,21 +63,26 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>0</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </AirTemperatureFunction>
         <GenericPhase>
           <Name>Dormant</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[This phase is currenttly set with a very short duration and is a place holder until we have a suitalbe method for modelling tuber dormancy]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>Target</Name>
-            <Value>1</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Planting</Start>
           <End>Peeping</End>
         </GenericPhase>
@@ -83,12 +90,15 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>Sprouting</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[The sprouting phase controls when the crop emerges.  In potato this is influenced by the physiological stage of the seed tuber when it is planted.  This is difficult to model as the seed tubers physiological status begins when it is still on the mother plant and is influenced by the treatment of the mother plant, the storage conditions of the tuber, conditions when the seed is being prepared for planting and the variety of potato.  There is currently no good way of modelling this as it would require environmental information from beyond the field where the crop is to be grown which is currently beyond the scope of APSIM.  In the absence of something more elegent, we recommend that the user adjusts sowing depth to achieve a realistic emergence date and let the model deal with phenological develpment there after.]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Peeping</Start>
           <End>Emergence</End>
           <ShootLag>72</ShootLag>
@@ -98,16 +108,20 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>Vegetative</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>300</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>300</FixedValue>
           </Constant>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[During the vegetative phase the crop is only growing stem, root and leaf.  Tuber initiation usually occurs soon after emergence and the duration of this phase can be influenced by the physiological status of the seed tuber at planting.  As discussed above, we do not have a suitable method for modelling this yet so we have treated the time from emergence to tuber initiation as a thermal time constant.]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>TuberInitiation</End>
         </GenericPhase>
@@ -115,12 +129,15 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>EarlyTuber</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[During the vegetative phase the crop is only growing stem, root and leaf.  Tuber initiation usually occurs soon after emergence and the duration of this phase can be influenced by the physiological status of the seed tuber at planting.  As discussed above, we do not have a suitable method for modelling this yet so we have treated the time from emergence to tuber initiation as a thermal time constant.]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>TuberInitiation</Start>
           <End>FinalLeaf</End>
         </LeafAppearancePhase>
@@ -128,8 +145,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>LateTuber</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>FinalLeaf</Start>
           <End>FullSenescence</End>
         </LeafDeathPhase>
@@ -137,12 +156,15 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>Senesced</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>200</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>200</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>FullSenescence</Start>
           <End>Maturity</End>
         </GenericPhase>
@@ -150,21 +172,27 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>Maturity</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Maturity</Start>
           <End>Unused</End>
         </EndPhase>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
         <PrioritythenRelativeAllocation>
           <Name>NArbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PrioritythenRelativeAllocation>
         <RelativeAllocation>
           <Name>DMArbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RelativeAllocation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </OrganArbitrator>
       <Structure>
         <Name>Structure</Name>
@@ -174,13 +202,17 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>NodeInitiationRateFunction</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value</VariableName>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>PrimordiaPerMainstemNode</Name>
-              <Value>2</Value>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>2</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </DivideFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>FinalLeaf</End>
         </PhaseLookupValue>
@@ -190,6 +222,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>Phyllochron</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.15</double>
@@ -203,19 +236,23 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>60</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>FinalLeaf</End>
         </PhaseLookupValue>
         <Constant>
           <Name>MainStemFinalNodeNumber</Name>
-          <Value>34</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>34</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>HeightModel</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>200</double>
@@ -229,6 +266,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>900</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Stem].Live.Wt</XProperty>
         </LinearInterpolationFunction>
         <MultiplyFunction>
@@ -237,6 +275,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>Potential_Branching_Rate</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>7</double>
@@ -254,12 +293,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>LinearInterpolationFunction</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.4</double>
@@ -275,26 +316,38 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].CoverGreen</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <Constant>
           <Name>BranchMortality</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
         </Constant>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
+        <Constant>
+          <Name>StemSenescenceAge</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <GenericOrgan>
         <Name>Tuber</Name>
@@ -302,6 +355,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>NitrogenDemandSwitch</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.02</double>
@@ -315,11 +369,13 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Leaf].LAI</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
         </Constant>
         <PotentialSizeDemandFunction>
           <Name>DMDemandFunction</Name>
@@ -327,6 +383,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>PotentialGrowthIncrement</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>4</double>
                 <double>4.04</double>
@@ -344,23 +401,28 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
           <MultiplyFunction>
             <Name>OrganNumber</Name>
             <Constant>
               <Name>OrganNumberPerStem</Name>
-              <Value>5</Value>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>5</FixedValue>
             </Constant>
             <VariableReference>
               <Name>VariableReference</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Structure].MainStemPopn</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
           <AirTemperatureFunction>
             <Name>ThermalTime</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>2</double>
                 <double>20</double>
@@ -372,16 +434,24 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AirTemperatureFunction>
           <AccumulateFunction>
             <Name>AccumThermalTime</Name>
             <VariableReference>
               <Name>VariableReference</Name>
-              <VariableName>[Structure].ThermalTime.Value</VariableName>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Structure].ThermalTime.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartStageName>TuberInitiation</StartStageName>
             <EndStageName>Maturity</EndStageName>
+            <FractionRemovedOnCut>0</FractionRemovedOnCut>
+            <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+            <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+            <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
           </AccumulateFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartStageName>TuberInitiation</StartStageName>
           <EndStageName>Maturity</EndStageName>
         </PotentialSizeDemandFunction>
@@ -389,12 +459,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>LiveFWt</Name>
           <VariableReference>
             <Name>VariableReference</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Tuber].Live.Wt</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>DryMatterContent</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>4</double>
                 <double>4.5</double>
@@ -404,13 +476,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0.22</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </DivideFunction>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>3</double>
               <double>4</double>
@@ -424,12 +499,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>0.015</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>MinimumNConc</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>4</double>
               <double>4.1</double>
@@ -441,18 +518,22 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>0.006</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.5</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -460,6 +541,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -467,6 +549,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -474,59 +557,71 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <Root>
         <Name>Root</Name>
         <CompositeBiomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerLive</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerDead</string>
           </Propertys>
         </CompositeBiomass>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Planting</Start>
           <End>FinalLeaf</End>
         </PhaseBasedSwitch>
@@ -536,11 +631,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>PhaseLookupValue</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>10</Value>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>10</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>Peeping</Start>
             <End>FinalLeaf</End>
           </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <PhaseLookup>
           <Name>PartitionFraction</Name>
@@ -548,8 +646,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>PhaseLookupValue</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>0.3</Value>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.3</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>Emergence</Start>
             <End>TuberInitiation</End>
           </PhaseLookupValue>
@@ -557,8 +657,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>PhaseLookupValue</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>0.05</Value>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0.05</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>TuberInitiation</Start>
             <End>FinalLeaf</End>
           </PhaseLookupValue>
@@ -566,24 +668,30 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>PhaseLookupValue</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>0</Value>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>FinalLeaf</Start>
             <End>FullSenescence</End>
           </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>MaxDailyNUptake</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.02</double>
@@ -593,16 +701,19 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>6</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].Length</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>3</double>
@@ -612,12 +723,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Leaf].LAI</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>SenescenceRate</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>1</double>
@@ -627,12 +740,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>0.1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Leaf].FractionDied</XProperty>
         </LinearInterpolationFunction>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
@@ -640,6 +755,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.3</FractionLiveToResidue>
@@ -647,6 +763,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -654,16 +771,19 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -673,12 +793,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>0.02</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -688,12 +810,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>0</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>1</double>
@@ -703,18 +827,22 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].RWC</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>5</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>5</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
@@ -725,28 +853,89 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>Leaf</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LeafCohort>
           <Name>InitialLeaf1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <NReallocationFactor>0</NReallocationFactor>
+          <DMReallocationFactor>0</DMReallocationFactor>
+          <NRetranslocationFactor>0</NRetranslocationFactor>
+          <DMRetranslocationFactor>0</DMRetranslocationFactor>
+          <ShadeInducedSenRate>0</ShadeInducedSenRate>
+          <SenescedFrac>0</SenescedFrac>
+          <DeltaPotentialArea>0</DeltaPotentialArea>
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+          <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+          <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+          <MetabolicNReallocated>0</MetabolicNReallocated>
+          <MetabolicWtReallocated>0</MetabolicWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <DMRetranslocated>0</DMRetranslocated>
+          <MetabolicNAllocation>0</MetabolicNAllocation>
+          <StructuralDMAllocation>0</StructuralDMAllocation>
+          <MetabolicDMAllocation>0</MetabolicDMAllocation>
           <Rank>1</Rank>
           <Area>900</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <NReallocationFactor>0</NReallocationFactor>
+          <DMReallocationFactor>0</DMReallocationFactor>
+          <NRetranslocationFactor>0</NRetranslocationFactor>
+          <DMRetranslocationFactor>0</DMRetranslocationFactor>
+          <ShadeInducedSenRate>0</ShadeInducedSenRate>
+          <SenescedFrac>0</SenescedFrac>
+          <DeltaPotentialArea>0</DeltaPotentialArea>
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+          <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+          <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+          <MetabolicNReallocated>0</MetabolicNReallocated>
+          <MetabolicWtReallocated>0</MetabolicWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <DMRetranslocated>0</DMRetranslocated>
+          <MetabolicNAllocation>0</MetabolicNAllocation>
+          <StructuralDMAllocation>0</StructuralDMAllocation>
+          <MetabolicDMAllocation>0</MetabolicDMAllocation>
           <Rank>2</Rank>
           <Area>600</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf3</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <NReallocationFactor>0</NReallocationFactor>
+          <DMReallocationFactor>0</DMReallocationFactor>
+          <NRetranslocationFactor>0</NRetranslocationFactor>
+          <DMRetranslocationFactor>0</DMRetranslocationFactor>
+          <ShadeInducedSenRate>0</ShadeInducedSenRate>
+          <SenescedFrac>0</SenescedFrac>
+          <DeltaPotentialArea>0</DeltaPotentialArea>
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+          <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+          <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+          <MetabolicNReallocated>0</MetabolicNReallocated>
+          <MetabolicWtReallocated>0</MetabolicWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <DMRetranslocated>0</DMRetranslocated>
+          <MetabolicNAllocation>0</MetabolicNAllocation>
+          <StructuralDMAllocation>0</StructuralDMAllocation>
+          <MetabolicDMAllocation>0</MetabolicDMAllocation>
           <Rank>3</Rank>
           <Area>300</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -757,6 +946,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <Name>MaxArea</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.15</double>
@@ -774,12 +964,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>1500</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>GrowthDuration</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.3</double>
@@ -793,12 +985,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>400</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>LagDuration</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.15</double>
@@ -816,12 +1010,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>20</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>SenescenceDuration</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.15</double>
@@ -839,20 +1035,24 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>100</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>1000000</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>SpecificLeafAreaMax</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -862,40 +1062,49 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>25000</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>SpecificLeafAreaMin</Name>
-            <Value>25000</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>25000</FixedValue>
           </Constant>
           <Constant>
             <Name>StructuralFraction</Name>
-            <Value>0.5</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumNConc</Name>
-            <Value>0.07</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.07</FixedValue>
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
-            <Value>0.03</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.03</FixedValue>
           </Constant>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
-            <Value>1</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
-            <Value>0.01</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ExpansionStress</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0.5</double>
                 <double>1</double>
@@ -905,20 +1114,24 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>1</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>CriticalNConc</Name>
-            <Value>0.05</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.05</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
-            <Value>0.5</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.5</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ShadeInducedSenescenceRate</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.5</double>
@@ -932,53 +1145,70 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0.03</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0.2</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.2</FixedValue>
           </Constant>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
-            <Value>1</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
-            <Value>0</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
-            <Value>0.01</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
-            <Value>0</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
+          <Constant>
+            <Name>DroughtInducedLagAcceleration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>DroughtInducedSenAcceleration</Name>
-            <Value>1</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>CellDivisionStress</Name>
-            <Value>1</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.2</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>1.2</FixedValue>
           </Constant>
           <RUECO2Function>
             <Name>FCO2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           </RUECO2Function>
           <LinearInterpolationFunction>
             <Name>FN</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -990,12 +1220,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>1</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fn</XProperty>
           </LinearInterpolationFunction>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>2</double>
                 <double>12</double>
@@ -1009,12 +1241,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
           </WeightedTemperatureFunction>
           <LinearInterpolationFunction>
             <Name>FW</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.4</double>
@@ -1026,12 +1260,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>1</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>FVPD</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>10</double>
@@ -1043,41 +1279,51 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>1</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
           </LinearInterpolationFunction>
           <VariableReference>
             <Name>RadnInt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RUEModel>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MinimumFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MinimumFunction>
         <MultiplyFunction>
           <Name>ExtinctionCoeff</Name>
           <Constant>
             <Name>Constant</Name>
-            <Value>0.8</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.8</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>LinearInterpolationFunction</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -1087,13 +1333,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <double>1</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Potato].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <LinearInterpolationFunction>
           <Name>FrostFraction</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>-1</double>
               <double>0</double>
@@ -1103,22 +1352,26 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>0</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Weather].MinT</XProperty>
         </LinearInterpolationFunction>
         <CompositeBiomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Leaf].CohortLive</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Leaf].CohortDead</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
           <Name>Total</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Leaf].Live</string>
             <string>[Leaf].Dead</string>
@@ -1126,6 +1379,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </CompositeBiomass>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Leaf].Live</string>
           </Propertys>
@@ -1133,6 +1387,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </ArrayBiomass>
         <ArrayBiomass>
           <Name>CohortArrayDead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Leaf].Dead</string>
           </Propertys>
@@ -1142,6 +1397,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.3</FractionLiveToResidue>
@@ -1149,6 +1405,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1156,6 +1413,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1163,20 +1421,29 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.5</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
-          <Value>1</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
         </Constant>
+        <ApexStandard>
+          <Name>ApexStandard</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </ApexStandard>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
@@ -1201,32 +1468,39 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.05</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Planting</Start>
           <End>FinalLeaf</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
         </Constant>
         <InternodeDemandFunction>
           <Name>DMDemandFunction</Name>
           <Constant>
             <Name>InterNodeWt</Name>
-            <Value>0.2</Value>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.2</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </InternodeDemandFunction>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>3</double>
               <double>4</double>
@@ -1238,22 +1512,27 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>0.025</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.006</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.5</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1261,6 +1540,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1268,6 +1548,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1275,45 +1556,55 @@ The duration of a potato crop is determined by the number of leaves that the mai
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -1323,6 +1614,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>BelowGround</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Root].Live</string>
           <string>[Root].Dead</string>
@@ -1332,6 +1624,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>Total</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Leaf].Dead</string>
@@ -1345,6 +1638,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>TotalLive</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Live</string>
           <string>[Stem].Live</string>
@@ -1354,6 +1648,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </CompositeBiomass>
       <CompositeBiomass>
         <Name>TotalDead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Propertys>
           <string>[Leaf].Dead</string>
           <string>[Stem].Dead</string>
@@ -1365,19 +1660,23 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>JerseyBenny</Name>
         <Alias>
           <Name>JerseyBenny</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
-        <Command>[Structure].MainStemFinalNodeNumber.Value = 19</Command>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 19</Command>
         <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,10,11</Command>
         <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
-        <Command>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.Value = 3</Command>
+        <Command>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.FixedValue = 3</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
       </Cultivar>
       <Cultivar>
         <Name>IlamHardy</Name>
         <Alias>
           <Name>IlamHardy</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
-        <Command>[Structure].MainStemFinalNodeNumber.Value = 26</Command>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 26</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.18</Command>
         <Command />
       </Cultivar>
@@ -1385,32 +1684,39 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>MarisPiper</Name>
         <Alias>
           <Name>MarisPiper</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
         <Alias>
           <Name />
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
-        <Command>[Structure].MainStemFinalNodeNumber.Value = 50</Command>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 50</Command>
         <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,7,8,9</Command>
         <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,1,0</Command>
-        <Command>[Stem].DMDemandFunction.InternodeWt.Value = 0.4</Command>
+        <Command>[Stem].DMDemandFunction.InternodeWt.FixedValue = 0.4</Command>
         <Command>[Leaf].LagDuration.XYPairs.X = 0,0.15,0.3,0.4,0.73,1.0</Command>
         <Command>[Leaf].LagDuration.XYPairs.Y = 0,500,500,500,500,20</Command>
-        <Command>[Leaf].Photosynthesis.RUE.Value = 2</Command>
+        <Command>[Leaf].Photosynthesis.RUE.FixedValue = 2</Command>
       </Cultivar>
       <Cultivar>
         <Name>Horizon</Name>
         <Alias>
           <Name>Horizon</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
-        <Command>[Structure].MainStemFinalNodeNumber.Value = 28</Command>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 28</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.12,0.16</Command>
       </Cultivar>
       <Cultivar>
         <Name>Karaka</Name>
         <Alias>
           <Name>Karaka</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
-        <Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
         <Command />
       </Cultivar>
@@ -1418,8 +1724,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>Nooksac</Name>
         <Alias>
           <Name>Nooksac</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
-        <Command>[Structure].MainStemFinalNodeNumber.Value = 36</Command>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 36</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
         <Command />
       </Cultivar>
@@ -1427,7 +1735,9 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>RedRascal</Name>
         <Alias>
           <Name>RedRascal</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
         <Command />
       </Cultivar>
@@ -1435,8 +1745,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>Rua</Name>
         <Alias>
           <Name>Rua</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
-        <Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
         <Command />
       </Cultivar>
@@ -1444,8 +1756,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>Nadine</Name>
         <Alias>
           <Name>Nadine</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
-        <Command>[Structure].MainStemFinalNodeNumber.Value = 29</Command>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.11,0.15</Command>
         <Command />
       </Cultivar>
@@ -1453,15 +1767,19 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>RussetBurbank</Name>
         <Alias>
           <Name>RussetBurbank</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
-        <Command>[Structure].MainStemFinalNodeNumber.Value = 46</Command>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 46</Command>
         <Command />
       </Cultivar>
       <Cultivar>
         <Name>Coliban</Name>
         <Alias>
           <Name>Coliban</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.10,0.19</Command>
         <Command />
       </Cultivar>
@@ -1469,65 +1787,82 @@ The duration of a potato crop is determined by the number of leaves that the mai
         <Name>Others</Name>
         <Alias>
           <Name>Fianna</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
         <Alias>
           <Name>RussetRanger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
         <Alias>
           <Name>Moonlight</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
         <Alias>
           <Name>Agria</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
         <Alias>
           <Name>Bondi</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
         <Alias>
           <Name>Crop39</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Alias>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Command />
       </Cultivar>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Potato</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
   <Memo>
     <Name>Memo</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <MemoText><![CDATA[]]></MemoText>
   </Memo>
   <DataStore>
     <Name>DataStore</Name>
     <Input>
       <Name>Input</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage />
       <FileName>Observed\potato_observations.txt</FileName>
     </Input>
     <Input>
       <Name>InputRadInd</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage />
       <FileName>Observed\Potato_radint_observations.txt</FileName>
     </Input>
     <Input>
       <Name>InputNodeNo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage />
       <FileName>Observed\cultivar_nodenumber.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Input</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>FinalYieldData</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Input</ObservedTableName>
       <FieldNameUsedForMatch>PotatoHarvestRule.Script.FinalTag</FieldNameUsedForMatch>
     </PredictedObserved>
     <TimeSeriesStats>
       <Name>TimeSeriesStats</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <TableName>PredictedObserved</TableName>
     </TimeSeriesStats>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -1535,18 +1870,22 @@ The duration of a potato crop is determined by the number of leaves that the mai
     <Name>RussetBurbank</Name>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>2003-10-20T00:00:00</StartDate>
       <EndDate>2004-06-05T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </SoilArbitrator>
     <Zone>
       <Name>Field</Name>
@@ -1556,6 +1895,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Name>Water</Name>
           <SoilCrop>
             <Name>PotatoSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -1581,6 +1921,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <double>0</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -1632,6 +1973,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -1676,6 +2018,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -1727,6 +2070,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RootCN>30</RootCN>
           <RootWt>3000</RootWt>
           <SoilCN>11.5</SoilCN>
@@ -1776,6 +2120,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -1797,12 +2142,14 @@ The duration of a potato crop is determined by the number of leaves that the mai
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -1833,6 +2180,11 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </CERESSoilTemperature>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <SoilType>Sedementary</SoilType>
         <LocalName>Lincoln</LocalName>
@@ -1845,15 +2197,18 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypesList</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <TillageType />
         </TillageTypes>
         <Pools>
@@ -1887,6 +2242,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -1902,18 +2258,22 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Irrigation>
       <Fertiliser>
         <Name>Fertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Fertiliser>
       <Plant>
         <Name>Potato</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>Potato</ResourceName>
         <CropType>Potato</CropType>
         <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <Operations>
         <Name>Operations</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Operation>
           <Date>2003-10-20T00:00:00</Date>
           <Action>[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 0);</Action>
@@ -1961,6 +2321,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
       </Operations>
       <Manager>
         <Name>PotatoPlantAndHarvest</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script>
           <PlantingDate>2003-10-22</PlantingDate>
           <CultivarName>RussetBurbank</CultivarName>
@@ -2018,7 +2379,7 @@ namespace Models
 			if (Clock.Today.Date == HarvestDate)
 				Potato.Harvest();
 			if (SetFinalLeafNumber > 0)
-				zone.Set("Potato.Structure.MainStemFinalNodeNumber.Value", SetFinalLeafNumber);
+				zone.Set("Potato.Structure.MainStemFinalNodeNumber.FixedValue", SetFinalLeafNumber);
 			if (SetFinalLeafNumber > 46)
 				throw new Exception("The model will fail with leaf numbers > 46.  Reduce Final leaf number.");
 		}
@@ -2032,6 +2393,7 @@ namespace Models
           <Name>N balance components</Name>
           <Series>
             <Name>AccumPlantN</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2053,6 +2415,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumMineralisation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2074,6 +2437,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumDenit</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2095,6 +2459,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumFert</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2116,6 +2481,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumLeach</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2137,6 +2503,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DeltaSoilOMN</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2158,6 +2525,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DeltaSurfaceOMN</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2179,6 +2547,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DeltaSoilMineralN</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2198,6 +2567,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title>X axis title 2</Title>
@@ -2216,12 +2586,12 @@ namespace Models
           </Axis>
           <LegendPosition>BottomLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>WaterBalanceComponents</Name>
           <Series>
             <Name>AccumEO</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2243,6 +2613,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumEP</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2264,6 +2635,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumES</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2285,6 +2657,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumDrainage</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2306,6 +2679,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumRunoff</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2327,6 +2701,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumRainfall</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2348,6 +2723,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumIrrigation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2369,6 +2745,7 @@ namespace Models
           </Series>
           <Series>
             <Name>AccumLatOutFlow</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2390,6 +2767,7 @@ namespace Models
           </Series>
           <Series>
             <Name>SoilWaterDeficit</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2409,6 +2787,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Accumulated Water Changes (mm)</Title>
@@ -2426,12 +2805,12 @@ namespace Models
           </Axis>
           <LegendPosition>BottomLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Plant Biomass components</Name>
           <Series>
             <Name>Leaf</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2453,6 +2832,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Stem</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2474,6 +2854,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Tuber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2495,6 +2876,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Root</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2516,6 +2898,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Dead Leaf</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2537,6 +2920,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Dead Step</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2558,6 +2942,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Dead Tuber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2579,6 +2964,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Root Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2600,6 +2986,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Above Ground Wt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2621,6 +3008,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Below Ground Wt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2642,6 +3030,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Total Wt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2661,6 +3050,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Crop Biomass (g/m2)</Title>
@@ -2678,12 +3068,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Plant Nitrogen components</Name>
           <Series>
             <Name>Leaf</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2705,6 +3095,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Stem</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2726,6 +3117,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Tuber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2747,6 +3139,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Root</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2768,6 +3161,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Dead Leaf</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2789,6 +3183,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Dead Step</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2810,6 +3205,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Dead Tuber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2831,6 +3227,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Root Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2852,6 +3249,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Above Ground Wt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2873,6 +3271,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Below Ground Wt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2894,6 +3293,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Total Wt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2915,6 +3315,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Total Live N</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2934,6 +3335,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Crop Nitrogen (g/m2)</Title>
@@ -2951,12 +3353,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Stress factors</Name>
           <Series>
             <Name>Ft</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2970,7 +3372,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Leaf.Photosynthesis.FT.Value</YFieldName>
+            <YFieldName>Potato.Leaf.Photosynthesis.FT.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -2978,6 +3380,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Fn</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -2999,6 +3402,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Fw</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3020,6 +3424,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Fvpd</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3033,12 +3438,13 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Leaf.Photosynthesis.FVPD.Value</YFieldName>
+            <YFieldName>Potato.Leaf.Photosynthesis.FVPD.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Stress factors (0-1)</Title>
@@ -3056,12 +3462,12 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Water supply and demand</Name>
           <Series>
             <Name>Supply</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3083,6 +3489,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Uptake</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3104,6 +3511,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Demand</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3125,6 +3533,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Transpiration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3146,6 +3555,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Potential</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3167,6 +3577,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Root Depth</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
@@ -3188,6 +3599,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Canopy Height</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
@@ -3207,6 +3619,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Water (mm)</Title>
@@ -3232,12 +3645,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Canopy structure</Name>
           <Series>
             <Name>Cover Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3259,6 +3672,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Cover Green</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3280,6 +3694,7 @@ namespace Models
           </Series>
           <Series>
             <Name>CoverTotal</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3301,6 +3716,7 @@ namespace Models
           </Series>
           <Series>
             <Name>LAI</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
@@ -3322,6 +3738,7 @@ namespace Models
           </Series>
           <Series>
             <Name>LAI Dead</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
@@ -3341,6 +3758,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Cover </Title>
@@ -3366,12 +3784,12 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>LeafCohorts</Name>
           <Series>
             <Name>Senescing Cohorts</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3393,6 +3811,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Total Stem Popn</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3414,6 +3833,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Expanding Nodes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3435,6 +3855,7 @@ namespace Models
           </Series>
           <Series>
             <Name>TotalNodes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3456,6 +3877,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Dead Cohorts</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3477,6 +3899,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Appeared Cohorts</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3498,6 +3921,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Green leaves</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3519,6 +3943,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Expanded Cohorts</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3538,6 +3963,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Crop Biomass (g/m2)</Title>
@@ -3555,12 +3981,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Leaf Nitrogen %</Name>
           <Series>
             <Name>LiveNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3582,6 +4008,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DeadNCocn</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3603,6 +4030,7 @@ namespace Models
           </Series>
           <Series>
             <Name>MaximumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3616,7 +4044,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Leaf.CohortParameters.MaximumNConc.Value</YFieldName>
+            <YFieldName>Potato.Leaf.CohortParameters.MaximumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3624,6 +4052,7 @@ namespace Models
           </Series>
           <Series>
             <Name>MinimumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3637,7 +4066,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Leaf.CohortParameters.MinimumNConc.Value</YFieldName>
+            <YFieldName>Potato.Leaf.CohortParameters.MinimumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3645,6 +4074,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Stage Code</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
@@ -3664,6 +4094,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Nitrogen Content (g/g)</Title>
@@ -3688,12 +4119,12 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Stem Nitrogen %</Name>
           <Series>
             <Name>LiveNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3715,6 +4146,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DeadNCocn</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3736,6 +4168,7 @@ namespace Models
           </Series>
           <Series>
             <Name>MaximumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3749,7 +4182,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Stem.MaximumNConc.Value</YFieldName>
+            <YFieldName>Potato.Stem.MaximumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3757,6 +4190,7 @@ namespace Models
           </Series>
           <Series>
             <Name>MinimumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3770,7 +4204,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Stem.MinimumNConc.Value</YFieldName>
+            <YFieldName>Potato.Stem.MinimumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3778,6 +4212,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Stage Code</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
@@ -3797,6 +4232,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Nitrogen Content (g/g)</Title>
@@ -3821,12 +4257,12 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Tuber Nitrogen %</Name>
           <Series>
             <Name>LiveNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3848,6 +4284,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DeadNCocn</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3869,6 +4306,7 @@ namespace Models
           </Series>
           <Series>
             <Name>MinimumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3882,7 +4320,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Tuber.MinimumNConc.Value</YFieldName>
+            <YFieldName>Potato.Tuber.MinimumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3890,6 +4328,7 @@ namespace Models
           </Series>
           <Series>
             <Name>MaximumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3903,7 +4342,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Tuber.MaximumNConc.Value</YFieldName>
+            <YFieldName>Potato.Tuber.MaximumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -3911,6 +4350,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Stage Code</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Right</YAxis>
@@ -3930,6 +4370,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Nitrogen Content (g/g)</Title>
@@ -3954,12 +4395,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Root Nitrogen %</Name>
           <Series>
             <Name>LiveNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -3981,6 +4422,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DeadNCocn</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4002,6 +4444,7 @@ namespace Models
           </Series>
           <Series>
             <Name>MinimumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4015,7 +4458,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Root.MinimumNConc.Value</YFieldName>
+            <YFieldName>Potato.Root.MinimumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -4023,6 +4466,7 @@ namespace Models
           </Series>
           <Series>
             <Name>MaximumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4036,12 +4480,13 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Root.MaximumNConc.Value</YFieldName>
+            <YFieldName>Potato.Root.MaximumNConc.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>Nitrogen Content (g/g)</Title>
@@ -4059,12 +4504,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>Leafappearance</Name>
           <Series>
             <Name>Ligules</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4086,6 +4531,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Tips</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4107,6 +4553,7 @@ namespace Models
           </Series>
           <Series>
             <Name>Dead </Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4128,6 +4575,7 @@ namespace Models
           </Series>
           <Series>
             <Name>InitialisedCohorts</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4149,6 +4597,7 @@ namespace Models
           </Series>
           <Series>
             <Name>FinalNodeNumber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4170,6 +4619,7 @@ namespace Models
           </Series>
           <Series>
             <Name>MainStemNodes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4189,6 +4639,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>number</Title>
@@ -4206,12 +4657,12 @@ namespace Models
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>DM Allocation</Name>
           <Series>
             <Name>DM Supply</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4233,6 +4684,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DM Demand</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4254,6 +4706,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DM Allocated</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4275,6 +4728,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DM Sink limitation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4296,6 +4750,7 @@ namespace Models
           </Series>
           <Series>
             <Name>DM Nutrient limitation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4315,6 +4770,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>DM (g/m2/d)</Title>
@@ -4332,12 +4788,12 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
         <Graph>
           <Name>N Allocation</Name>
           <Series>
             <Name>N Supply</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4359,6 +4815,7 @@ namespace Models
           </Series>
           <Series>
             <Name>N Demand</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4380,6 +4837,7 @@ namespace Models
           </Series>
           <Series>
             <Name>N Allocated</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
@@ -4399,6 +4857,7 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Left</Type>
             <Title>DM (g/m2/d)</Title>
@@ -4416,11 +4875,13 @@ namespace Models
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
-          <IncludeInDocumentation>false</IncludeInDocumentation>
         </Graph>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -4475,8 +4936,8 @@ namespace Models
           <string>Potato.Arbitrator.N.Allocated</string>
           <string>Potato.HarvestRule.Script.FinalTag</string>
           <string>Potato.Leaf.AppearedCohortNo</string>
-          <string>Potato.Leaf.CohortParameters.MaximumNConc.Value</string>
-          <string>Potato.Leaf.CohortParameters.MinimumNConc.Value</string>
+          <string>Potato.Leaf.CohortParameters.MaximumNConc.Value()</string>
+          <string>Potato.Leaf.CohortParameters.MinimumNConc.Value()</string>
           <string>Potato.Leaf.CoverDead</string>
           <string>Potato.Leaf.CoverGreen</string>
           <string>Potato.Leaf.CoverTotal</string>
@@ -4493,8 +4954,8 @@ namespace Models
           <string>Potato.Leaf.Live.N</string>
           <string>Potato.Leaf.Live.NConc</string>
           <string>Potato.Leaf.Live.Wt</string>
-          <string>Potato.Leaf.Photosynthesis.FT.Value</string>
-          <string>Potato.Leaf.Photosynthesis.FVPD.Value</string>
+          <string>Potato.Leaf.Photosynthesis.FT.Value()</string>
+          <string>Potato.Leaf.Photosynthesis.FVPD.Value()</string>
           <string>Potato.Leaf.PlantAppearedGreenLeafNo</string>
           <string>Potato.Leaf.SenescingCohortNo</string>
           <string>Potato.Leaf.SpecificArea</string>
@@ -4510,8 +4971,8 @@ namespace Models
           <string>Potato.Root.Live.N</string>
           <string>Potato.Root.Live.NConc</string>
           <string>Potato.Root.Live.Wt</string>
-          <string>Potato.Root.MaximumNConc.Value</string>
-          <string>Potato.Root.MinimumNConc.Value</string>
+          <string>Potato.Root.MaximumNConc.Value()</string>
+          <string>Potato.Root.MinimumNConc.Value()</string>
           <string>Potato.Root.NSupplyUptake</string>
           <string>Potato.Root.NUptake</string>
           <string>Potato.Root.WaterSupply</string>
@@ -4524,8 +4985,8 @@ namespace Models
           <string>Potato.Stem.Live.NonStructuralWt</string>
           <string>Potato.Stem.Live.StructuralWt</string>
           <string>Potato.Stem.Live.Wt</string>
-          <string>Potato.Stem.MaximumNConc.Value</string>
-          <string>Potato.Stem.MinimumNConc.Value</string>
+          <string>Potato.Stem.MaximumNConc.Value()</string>
+          <string>Potato.Stem.MinimumNConc.Value()</string>
           <string>Potato.Structure.Height</string>
           <string>Potato.Structure.LeafTipsAppeared</string>
           <string>Potato.Structure.PlantTotalNodeNo</string>
@@ -4544,13 +5005,13 @@ namespace Models
           <string>Potato.Tuber.Dead.N</string>
           <string>Potato.Tuber.Dead.NConc</string>
           <string>Potato.Tuber.Dead.Wt</string>
-          <string>Potato.Tuber.LiveFWt.DryMatterContent.Value</string>
+          <string>Potato.Tuber.LiveFWt.DryMatterContent.Value()</string>
           <string>Potato.Tuber.Live.N</string>
           <string>Potato.Tuber.Live.NConc</string>
           <string>Potato.Tuber.Live.Wt</string>
           <string>Potato.Tuber.LiveFWt</string>
-          <string>Potato.Tuber.MaximumNConc.Value</string>
-          <string>Potato.Tuber.MinimumNConc.Value</string>
+          <string>Potato.Tuber.MaximumNConc.Value()</string>
+          <string>Potato.Tuber.MinimumNConc.Value()</string>
         </VariableNames>
         <EventNames>
           <string>[Clock].DoReport</string>
@@ -4558,6 +5019,7 @@ namespace Models
       </Report>
       <Manager>
         <Name>ExtraVariables</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script />
         <Code><![CDATA[using System;
 using Models.Core;
@@ -4679,7 +5141,7 @@ namespace Models
 			//!!!!!! Thermal time calculation !!!!!!
 			//!!!!!! ^^^^^^^^^^^^^^^^^^^^^^^^ !!!!!!
 			if (Potato.Phenology.Stage >= 3)
-				AccumTtemerg += Potato.Phenology.ThermalTime.Value;
+				AccumTtemerg += Potato.Phenology.ThermalTime.Value();
 		}
 		
 		[EventSubscribe("DoManagementCalculations")]
@@ -4701,9 +5163,16 @@ namespace Models
 }
 	   ]]></Code>
       </Manager>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </SoluteManager>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>259</ExplorerWidth>
 </Simulations>

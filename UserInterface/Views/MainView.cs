@@ -384,7 +384,6 @@ namespace UserInterface.Views
                 StatusWindow.Text = message;
                 this.toolTip1.SetToolTip(this.StatusWindow, message);
                 progressBar.Visible = false;
-                Application.DoEvents();
             };
 
             if (InvokeRequired)

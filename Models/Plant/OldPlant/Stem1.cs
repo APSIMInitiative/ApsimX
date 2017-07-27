@@ -183,15 +183,15 @@ namespace Models.PMF.OldPlant
         /// <param name="Delta">The delta.</param>
         public override void GiveDmGreen(double Delta)
         {
-            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value;
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value);
+            Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value();
+            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value());
             Util.Debug("Stem.Growth.StructuralWt=%f", Growth.StructuralWt);
             Util.Debug("Stem.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
         }
         /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
         {
-            double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value, 0.0, 1.0);
+            double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value(), 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
             Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
@@ -217,7 +217,7 @@ namespace Models.PMF.OldPlant
             double dm_plant = MathUtilities.Divide(Live.Wt, Population.Density, 0.0);
 
             if (HeightFunction != null)
-                Height = HeightFunction.Value;
+                Height = HeightFunction.Value();
         }
         // nitrogen
         /// <summary>Gets the n demand.</summary>
@@ -364,9 +364,9 @@ namespace Models.PMF.OldPlant
         /// <summary>Does the n conccentration limits.</summary>
         public override void DoNConccentrationLimits()
         {
-            n_conc_crit = NConcentrationCritical.Value;
-            n_conc_min = NConcentrationMinimum.Value;
-            n_conc_max = NConcentrationMaximum.Value;
+            n_conc_crit = NConcentrationCritical.Value();
+            n_conc_min = NConcentrationMinimum.Value();
+            n_conc_max = NConcentrationMaximum.Value();
             Util.Debug("Stem.n_conc_crit=%f", n_conc_crit);
             Util.Debug("Stem.n_conc_min=%f", n_conc_min);
             Util.Debug("Stem.n_conc_max=%f", n_conc_max);
@@ -453,7 +453,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Morphologies this instance.</summary>
         internal void Morphology()
         {
-            DeltaHeight = MathUtilities.Constrain(HeightFunction.Value - Height, 0.0, double.MaxValue);
+            DeltaHeight = MathUtilities.Constrain(HeightFunction.Value() - Height, 0.0, double.MaxValue);
             Util.Debug("Stem.DeltaHeight=%f", DeltaHeight);
         }
 
@@ -508,8 +508,8 @@ namespace Models.PMF.OldPlant
             // Some biomass is removed according to harvest height
             FractionHeightRemoved = MathUtilities.Divide(Harvest.Height, Height, 0.0);
 
-            double chop_fr_green = (1.0 - RetainFraction.Value);
-            double chop_fr_sen = (1.0 - RetainFraction.Value);
+            double chop_fr_green = (1.0 - RetainFraction.Value());
+            double chop_fr_sen = (1.0 - RetainFraction.Value());
 
             double dlt_dm_harvest = Live.Wt * chop_fr_green
                                  + Dead.Wt * chop_fr_sen;
@@ -520,8 +520,8 @@ namespace Models.PMF.OldPlant
             //double dlt_p_harvest = Green.P * chop_fr_green
             //                    + Senesced.P * chop_fr_sen;
 
-            Dead = Dead * RetainFraction.Value;
-            Live = Live * RetainFraction.Value;
+            Dead = Dead * RetainFraction.Value();
+            Live = Live * RetainFraction.Value();
 
             Height = MathUtilities.Constrain(Harvest.Height, 1.0, double.MaxValue);
 
@@ -568,7 +568,7 @@ namespace Models.PMF.OldPlant
         /// <summary>Gets the available to animal.</summary>
         /// <value>The available to animal.</value>
         public override AvailableToAnimalelementType[] AvailableToAnimal
-        { get { return Util.AvailableToAnimal(Plant.Name, this.Name, Height, Live, Dead); } }
+        { get { return Util.AvailableToAnimal(Plant == null ? null : Plant.Name, this.Name, Height, Live, Dead); } }
         /// <summary>Sets the removed by animal.</summary>
         /// <value>The removed by animal.</value>
         public override RemovedByAnimalType RemovedByAnimal

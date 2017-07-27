@@ -111,6 +111,8 @@ namespace UserInterface.Presenters
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
+
+
             if (this.graph == null)
             {
                 this.view.ShowGraph(false);
@@ -126,6 +128,31 @@ namespace UserInterface.Presenters
                     int padding = (this.view as ProfileView).MainWidget.Allocation.Width / 2 / 2;
                     this.view.Graph.LeftRightPadding = padding;
                     this.graphPresenter = new GraphPresenter();
+                    for (int col = 0; col < this.propertiesInGrid.Count; col++)
+                    {
+                        VariableProperty property = this.propertiesInGrid[col];
+                        string columnName = property.Description;
+
+                        // crop colours
+                        if (property.CropName != null && columnName.Contains("LL"))
+                        {
+                            Series cropLLSeries = new Series();
+                            cropLLSeries.Name = columnName;
+                            cropLLSeries.Colour = ColourUtilities.ChooseColour(this.graph.Children.Count);
+                            cropLLSeries.Line = LineType.Solid;
+                            cropLLSeries.Marker = MarkerType.None;
+                            cropLLSeries.Type = SeriesType.Scatter;
+                            cropLLSeries.ShowInLegend = true;
+                            cropLLSeries.XAxis = Axis.AxisType.Top;
+                            cropLLSeries.YAxis = Axis.AxisType.Left;
+                            cropLLSeries.YFieldName = "[Soil].DepthMidPoints";
+                            cropLLSeries.XFieldName = "[" + (property.Object as Model).Name + "]." + property.Name;
+                            cropLLSeries.Parent = this.graph;
+
+                            this.graph.Children.Add(cropLLSeries);
+                        }
+                    }
+
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
                 }
             }

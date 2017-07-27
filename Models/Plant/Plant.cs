@@ -77,6 +77,9 @@ namespace Models.PMF
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
         public Structure Structure = null;
+        /// <summary>The Canopy</summary>
+        [Link(IsOptional = true)]
+        public ICanopy Canopy = null;
         /// <summary>The leaf</summary>
         [Link(IsOptional = true)]
         public Leaf Leaf = null;
@@ -151,8 +154,8 @@ namespace Models.PMF
             {
                 double F;
 
-                if (Leaf != null && Leaf.CalculateWaterDemand() > 0)
-                    F = Root.WaterUptake / Leaf.CalculateWaterDemand();
+                if (Canopy != null && Canopy.PotentialEP > 0)
+                    F = Root.WaterUptake / Canopy.PotentialEP;
                 else
                     F = 1;
                 return F;
@@ -246,6 +249,10 @@ namespace Models.PMF
         public event EventHandler PlantEnding;
         /// <summary>Occurs when a plant is about to be pruned.</summary>
         public event EventHandler Pruning;
+        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        public event EventHandler Cutting;
+        /// <summary>Occurs when a plant is about to be pruned.</summary>
+        public event EventHandler Grazing;
         #endregion
 
         #region External Communications.  Method calls and EventHandlers
@@ -274,12 +281,12 @@ namespace Models.PMF
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (sender == this && Phenology != null && Leaf != null && AboveGround != null)
+            if (sender == this && Phenology != null && Canopy != null && AboveGround != null)
             {
                 string message = Phenology.CurrentPhase.Start + "\r\n";
-                if (Leaf != null)
+                if (Canopy != null)
                 {
-                    message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
+                    message += "  LAI = " + Canopy.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
                 Summary.WriteMessage(this, message);
@@ -295,12 +302,12 @@ namespace Models.PMF
             //Reduce plant population in case of mortality
             if (Population > 0.0 && MortalityRate != null)
             {
-                double DeltaPopulation = Population * MortalityRate.Value;
+                double DeltaPopulation = Population * MortalityRate.Value();
                 Population -= DeltaPopulation;
                 if (Structure != null)
                 {
                     Structure.DeltaPlantPopulation = DeltaPopulation;
-                    Structure.ProportionPlantMortality = MortalityRate.Value;
+                    Structure.ProportionPlantMortality = MortalityRate.Value();
                 }
             }
         }
@@ -363,10 +370,20 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
         {
-            // Invoke an event.
+            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
+
+            // Invoke specific defoliation events.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
                 Harvesting.Invoke(this, new EventArgs());
-            Summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
+            
+            if (biomassRemoveType == "Prune" && Pruning != null)
+                Pruning.Invoke(this, new EventArgs());
+
+            if (biomassRemoveType == "Cut" && Cutting != null)
+                Cutting.Invoke(this, new EventArgs());
+
+            if (biomassRemoveType == "Graze" && Grazing != null)
+                Grazing.Invoke(this, new EventArgs());
 
             // Set up the default BiomassRemovalData values
             foreach (IOrgan organ in Organs)
@@ -386,10 +403,8 @@ namespace Models.PMF
             if (removalData != null && removalData.SetThinningProportion != 0)
                 Structure.doThin(removalData.SetThinningProportion);
 
-            // Pruning event (winter pruning, summer pruning is called as cut) reset the phenology if SetPhenologyStage specified.
-            if (biomassRemoveType == "Prune" && Pruning != null)
-                Pruning.Invoke(this, new EventArgs());
-                
+
+
         }
 
         /// <summary>End the crop.</summary>

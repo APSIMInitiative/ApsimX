@@ -51,6 +51,8 @@ namespace UserInterface
             }
         }
 
+        private static Timer timer = new Timer();
+
         /// <summary>Ask user for a filename to open on Windows.</summary>
         /// <param name="prompt">String to use as dialog heading</param>
         /// <param name="fileSpec">The file specification used to filter the files.</param>
@@ -68,7 +70,7 @@ namespace UserInterface
             if (!String.IsNullOrEmpty(fileSpec))
                 dialog.Filter = fileSpec + "|All files (*.*)|*.*";
 
-            if (File.Exists(initialPath))
+            if (!String.IsNullOrWhiteSpace(initialPath)  && (File.Exists(initialPath) || action == FileChooserAction.Save))
             {
                 dialog.InitialDirectory = Path.GetDirectoryName(initialPath);
                 dialog.FileName = Path.GetFileName(initialPath);
@@ -78,10 +80,35 @@ namespace UserInterface
             else
                 dialog.InitialDirectory = Utility.Configuration.Settings.PreviousFolder;
 
+            if (!string.IsNullOrEmpty(initialPath))
+            {
+                timer.Tick += new EventHandler(WindowsWorkaround);
+                timer.Interval = 50;
+                timer.Tag = dialog;
+                timer.Start();
+            }
             if (dialog.ShowDialog() == DialogResult.OK)
                 fileName = dialog.FileName;
-
+            dialog = null;
             return fileName;
+        }
+
+        /// <summary>
+        /// Works around weird Windows bug.
+        /// See https://connect.microsoft.com/VisualStudio/feedback/details/525070/openfiledialog-show-part-of-file-name-in-win7
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private static void WindowsWorkaround(object sender, EventArgs args)
+        {
+            FileDialog dialog = timer.Tag as FileDialog;
+            if (dialog != null)
+            {
+                SendKeys.SendWait("{HOME}");
+                SendKeys.SendWait("^(a)");
+                SendKeys.Flush();
+                (sender as Timer).Stop();
+            }
         }
 
         /// <summary>Ask user for a filename to open on Windows.</summary>
@@ -237,12 +264,18 @@ namespace UserInterface
             native.str = null;
             native.hardware_keycode = (ushort)keymap[0].Keycode;
             native.group = (byte)keymap[0].Group;
-
+            
             IntPtr ptr = GLib.Marshaller.StructureToPtrAlloc(native);
             try
             {
                 Gdk.EventKey evnt = new Gdk.EventKey(ptr);
-                Gtk.Main.DoEvent(evnt);
+                Gdk.EventHelper.Put(evnt);
+                // We need to process the event, or we won't be able
+                // to safely free the unmanaged pointer
+                // Using DoEvent for this fails on the Mac
+                while (GLib.MainContext.Iteration())
+                    ;
+                // Gtk.Main.DoEvent(evnt);
             }
             finally
             {

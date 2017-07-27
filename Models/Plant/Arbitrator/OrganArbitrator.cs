@@ -65,16 +65,16 @@ namespace Models.PMF
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
-        public double FDM { get { return MathUtilities.Divide(DM.TotalPlantSupply, DM.TotalPlantDemand, 0); } }
+        public double FDM { get { return DM == null ? 0 : MathUtilities.Divide(DM.TotalPlantSupply, DM.TotalPlantDemand, 0); } }
 
         /// <summary>Gets the delta wt.</summary>
         /// <value>The delta wt.</value>
-        public double DeltaWt { get { return DM.End - DM.Start; } }
+        public double DeltaWt { get { return DM == null ? 0 : (DM.End - DM.Start); } }
 
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [XmlIgnore]
-        public double FN { get { return MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
+        public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
 
         /// <summary>Gets the water supply.</summary>
         /// <value>The water supply.</value>
@@ -368,9 +368,9 @@ namespace Models.PMF
             DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
 
             // Then check it all adds up
-            if (Math.Round(DM.Allocated, 8) > Math.Round(DM.TotalPlantSupply, 8))
+            if (MathUtilities.IsGreaterThan(DM.Allocated, DM.TotalPlantSupply) )
                 throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM supply.   Thats not really possible so something has gone a miss");
-            if (Math.Round(DM.Allocated, 8) > Math.Round(DM.TotalPlantDemand, 8))
+            if (MathUtilities.IsGreaterThan(DM.Allocated,DM.TotalPlantDemand))
                 throw new Exception("Potential DM allocation by " + this.Name + " exceeds DM Demand.   Thats not really possible so something has gone a miss");
 
             // Send potential DM allocation to organs to set this variable for calculating N demand
@@ -614,7 +614,7 @@ namespace Models.PMF
             N.End = 0;
             for (int i = 0; i < Organs.Length; i++)
                 N.End += Organs[i].N;
-            N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalFixationSupply));
+            N.BalanceError = (N.End - (N.Start + N.TotalUptakeSupply + N.TotalPlantSupply));
             if (N.BalanceError > 0.000000001)
                 throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
             N.BalanceError = (N.End - (N.Start + N.TotalPlantDemand));
@@ -623,9 +623,9 @@ namespace Models.PMF
             DM.End = 0;
             for (int i = 0; i < Organs.Length; i++)
                 DM.End += Organs[i].Wt;
-            DM.BalanceError = (DM.End - (DM.Start + DM.TotalFixationSupply));
+            DM.BalanceError = (DM.End - (DM.Start + DM.TotalPlantSupply));
             if (DM.BalanceError > 0.0001)
-                throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than Photosynthetic DM supply");
+                throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than DM supplied by photosynthesis and DM remobilisation");
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalNonStructuralDemand));
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and NonStructural DM capacity");

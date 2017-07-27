@@ -502,7 +502,7 @@ namespace Models.Soils.SoilWaterBackend
             SoluteInLayer foundSolute;
             foundSolute = solutes.Find(delegate(SoluteInLayer sol)
             {
-                return sol.name == SoluteName;
+                return sol.name.Equals(SoluteName, StringComparison.InvariantCultureIgnoreCase);
             }
                                         );
             return foundSolute;
@@ -759,31 +759,30 @@ namespace Models.Soils.SoilWaterBackend
             }
 
 
-        /// <summary>
-        /// Gets the esw.
-        /// </summary>
-        /// <value>
-        /// The esw.
-        /// </value>
-        public double esw
-            {
-            get
-                {
-                //sum esw over the profile and give single total value
-                double result = 0.0;
-                foreach (Layer lyr in this)
-                    {
-                    result =  result + lyr.esw;
-                    }
-                return result;
-                }
-            }
 
         #endregion
 
 
         #region Output as an Array
 
+        /// <summary>
+        /// Gets the esw.
+        /// </summary>
+        /// <value>
+        /// The esw.
+        /// </value>
+        public double[] esw
+        {
+            get
+            {
+                double[] result = new double[num_layers];
+                foreach (Layer lyr in this)
+                {
+                    result[lyr.number - 1] = lyr.esw;
+                }
+                return result;
+            }
+        }
 
 
         /// <summary>

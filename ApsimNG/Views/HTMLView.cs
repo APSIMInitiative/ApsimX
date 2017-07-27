@@ -25,7 +25,7 @@ namespace UserInterface.Views
         /// the contents are markdown and 'allowModification' = true then
         /// user will be able to edit markdown.
         /// </summary>
-        void SetContents(string contents, bool allowModification);
+        void SetContents(string contents, bool allowModification, bool isURI);
 
         /// <summary>
         /// Return the edited markdown.
@@ -426,7 +426,7 @@ namespace UserInterface.Views
         /// the contents are markdown and 'allowModification' = true then
         /// user will be able to edit markdown.
         /// </summary>
-        public void SetContents(string contents, bool allowModification)
+        public void SetContents(string contents, bool allowModification, bool isURI=false)
         {
             TurnEditorOn(allowModification);
             if (contents != null)
@@ -434,7 +434,7 @@ namespace UserInterface.Views
                 if (allowModification)
                     memoView1.MemoText = contents;
                 else
-                    PopulateView(contents);
+                    PopulateView(contents, isURI);
             }
         }
 
@@ -444,7 +444,7 @@ namespace UserInterface.Views
         /// <param name="contents"></param>
         /// <param name="editingEnabled"></param>
         /// <returns></returns>
-        private void PopulateView(string contents)
+        private void PopulateView(string contents, bool isURI= false)
         {
             if (browser == null)
             {
@@ -472,7 +472,10 @@ namespace UserInterface.Views
                     browser = CreateWebKitBrowser(vbox2);
                 }
             }
-            browser.LoadHTML(contents);
+            if (isURI)
+                browser.Navigate(contents);
+            else
+               browser.LoadHTML(contents);
             //browser.Navigate("http://blend-bp.nexus.csiro.au/wiki/index.php");
         }
 

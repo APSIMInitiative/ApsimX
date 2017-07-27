@@ -25,8 +25,9 @@ namespace UserInterface.Presenters
             ListView = View as IMemoView;
             ExplorerPresenter = explorerPresenter;
 
-            ListView.MemoLines = Experiment.Names();
-            ListView.LabelText = "Listed below are names of the " + ListView.MemoLines.Length.ToString() + " simulations that this experiment will create";
+            string[] allNames = Experiment.Names();
+            ListView.MemoLines = allNames;
+            ListView.LabelText = "Listed below are names of the " + allNames.Length.ToString() + " simulations that this experiment will create";
             ListView.ReadOnly = true;
             ListView.AddContextAction("Run APSIM", OnRunApsimClick);
         }

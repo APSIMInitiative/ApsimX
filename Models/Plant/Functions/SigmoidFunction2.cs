@@ -32,20 +32,15 @@ namespace Models.PMF.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Error with values to Sigmoid function</exception>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
+            try
             {
-
-                try
-                {
-                    double _return = Ymax.Value * 1 / (1 + Math.Exp(-(XValue.Value - Xo.Value) / b.Value));
-                    return _return;
-                }
-                catch (Exception)
-                {
-                    throw new Exception("Error with values to Sigmoid function");
-                }
+                return Ymax.Value(arrayIndex) * 1 / (1 + Math.Exp(-(XValue.Value(arrayIndex) - Xo.Value(arrayIndex)) / b.Value(arrayIndex)));
+            }
+            catch (Exception)
+            {
+                throw new Exception("Error with values to Sigmoid function");
             }
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

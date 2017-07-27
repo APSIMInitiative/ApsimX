@@ -70,8 +70,19 @@ namespace Models.Soils.Arbitrator
                             NewZ.Water = MathUtilities.Subtract(NewZ.Water, Z.Water);
                             NewZ.NO3N = MathUtilities.Subtract(NewZ.NO3N, Z.NO3N);
                             NewZ.NH4N = MathUtilities.Subtract(NewZ.NH4N, Z.NH4N);
+
+                            for (int i = 0; i < NewZ.Water.Length; i++)
+                            {
+                                if (NewZ.Water[i] < 0)
+                                    NewZ.Water[i] = 0;
+                                if (NewZ.NO3N[i] < 0)
+                                    NewZ.NO3N[i] = 0;
+                                if (NewZ.NH4N[i] < 0)
+                                    NewZ.NH4N[i] = 0;
+                            }
                         }
             return NewState;
         }
+
     }
 }

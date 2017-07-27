@@ -48,12 +48,12 @@ namespace Models.PMF.OldPlant
             if (RUEFactor == 0)
                 RUEFactor = 1.0;
 
-            double stress_factor = Math.Min(Math.Min(Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+            double stress_factor = Math.Min(Math.Min(Math.Min(Math.Min(TempStress.Value(), NStress.Photo),
                                                               SWStress.OxygenDeficitPhoto),
                                                      PStress.Photo),
                                             RUEFactor);
 
-            return radiationInterceptedGreen * RUE.Value * stress_factor * RUEModifier.Value;
+            return radiationInterceptedGreen * RUE.Value() * stress_factor * RUEModifier.Value();
         }
 
         /// <summary>Gets the FRGR.</summary>
@@ -62,7 +62,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return Math.Min(Math.Min(TempStress.Value, NStress.Photo),
+                return Math.Min(Math.Min(TempStress.Value(), NStress.Photo),
                                 Math.Min(SWStress.OxygenDeficitPhoto, PStress.Photo));
 
             }

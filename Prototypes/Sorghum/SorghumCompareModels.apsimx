@@ -60,19 +60,19 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
         <Name>TotalPlantDemand</Name>
         <VariableReference>
           <Name>LeafDemand</Name>
-          <VariableName>[Leaf].DMDemandFunction.Value</VariableName>
+          <VariableName>[Leaf].DMDemandFunction.Value()</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>StemDemand</Name>
-          <VariableName>[Stem].DMDemandFunction.Value</VariableName>
+          <VariableName>[Stem].DMDemandFunction.Value()</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>RachisDemand</Name>
-          <VariableName>[Rachis].DMDemandFunction.Value</VariableName>
+          <VariableName>[Rachis].DMDemandFunction.Value()</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>GrainDemand</Name>
-          <VariableName>[Grain].DMDemandFunction.Value</VariableName>
+          <VariableName>[Grain].DMDemandFunction.Value()</VariableName>
         </VariableReference>
       </AddFunction>
       <Phenology>
@@ -141,7 +141,7 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -152,11 +152,11 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>Juvenile</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>100</Value>
+            <FixedValue>100</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Emergence</Start>
           <End>EndJuvenile</End>
@@ -165,11 +165,11 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>JuvenileToFloralInit</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Target</Name>
-            <VariableName>[Phenology].TTTargetPhotoSensitive.Value</VariableName>
+            <VariableName>[Phenology].TTTargetPhotoSensitive.Value()</VariableName>
           </VariableReference>
           <Start>EndJuvenile</Start>
           <End>FloralInitiation</End>
@@ -178,21 +178,21 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>FloralInitToFlagLeaf</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <SubtractFunction>
             <Name>Target</Name>
             <VariableReference>
               <Name>TTEmergToFlag</Name>
-              <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+              <VariableName>[Phenology].TTEmergToFlagLeaf.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>TTJuvenile</Name>
-              <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
+              <VariableName>[Phenology].Juvenile.Target.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>TTJuvToFloralInit</Name>
-              <VariableName>[Phenology].JuvenileToFloralInit.Target.Value</VariableName>
+              <VariableName>[Phenology].JuvenileToFloralInit.Target.Value()</VariableName>
             </VariableReference>
           </SubtractFunction>
           <Start>FloralInitiation</Start>
@@ -202,11 +202,11 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>FlagLeafToFlowering</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>170</Value>
+            <FixedValue>170</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>FlagLeaf</Start>
           <End>Flowering</End>
@@ -215,11 +215,11 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>FloweringToGrainFilling</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>80</Value>
+            <FixedValue>80</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Flowering</Start>
           <End>StartGrainFill</End>
@@ -228,21 +228,21 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>GrainFilling</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <SubtractFunction>
             <Name>Target</Name>
             <VariableReference>
               <Name>FlowerToMaturity</Name>
-              <VariableName>[Phenology].TTFIowerToMaturity.Value</VariableName>
+              <VariableName>[Phenology].TTFIowerToMaturity.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>FlowerToGrainFill</Name>
-              <VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
+              <VariableName>[Phenology].FloweringToGrainFilling.Target.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>GrainFillToMaturity</Name>
-              <VariableName>[Phenology].TTGrainFillToMaturity.Value</VariableName>
+              <VariableName>[Phenology].TTGrainFillToMaturity.Value()</VariableName>
             </VariableReference>
           </SubtractFunction>
           <Start>StartGrainFill</Start>
@@ -252,11 +252,11 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>Maturing</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Target</Name>
-            <VariableName>[Phenology].TTGrainFillToMaturity.Value</VariableName>
+            <VariableName>[Phenology].TTGrainFillToMaturity.Value()</VariableName>
           </VariableReference>
           <Start>EndGrainFill</Start>
           <End>Maturity</End>
@@ -265,11 +265,11 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>MaturityToHarvestRipe</Name>
           <Constant>
             <Name>Target</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Maturity</Start>
           <End>HarvestRipe</End>
@@ -278,7 +278,7 @@ The model predicts development of primordia on the apex of the main stem and app
           <Name>ReadyForHarvesting</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>HarvestRipe</Start>
           <End>Unused</End>
@@ -300,7 +300,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -321,7 +321,7 @@ A function is used to provide maturity date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -332,28 +332,28 @@ A function is used to provide maturity date as days after sowing(DAS).
         </OnEventFunction>
         <Constant>
           <Name>TTFIowerToMaturity</Name>
-          <Value>761</Value>
+          <FixedValue>761</FixedValue>
         </Constant>
         <Constant>
           <Name>TTEndJuvToInit</Name>
-          <Value>160</Value>
+          <FixedValue>160</FixedValue>
         </Constant>
         <MultiplyFunction>
           <Name>TTGrainFillToMaturity</Name>
           <VariableReference>
             <Name>FlowerToMaturity</Name>
-            <VariableName>[Phenology].TTFIowerToMaturity.Value</VariableName>
+            <VariableName>[Phenology].TTFIowerToMaturity.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>Proportion</Name>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
           </Constant>
         </MultiplyFunction>
         <OnEventFunction>
           <Name>TTTargetPhotoSensitive</Name>
           <VariableReference>
             <Name>PreEventValue</Name>
-            <VariableName>[Phenology].TTEndJuvToInit.Value</VariableName>
+            <VariableName>[Phenology].TTEndJuvToInit.Value()</VariableName>
           </VariableReference>
           <AddFunction>
             <Name>PostEventValue</Name>
@@ -370,11 +370,11 @@ A function is used to provide maturity date as days after sowing(DAS).
                   <double>23</double>
                 </Y>
               </XYPairs>
-              <XProperty>[Phenology].Photoperiod.Value</XProperty>
+              <XProperty>[Phenology].Photoperiod.Value()</XProperty>
             </LinearInterpolationFunction>
             <VariableReference>
               <Name>TTEndJuvToInit</Name>
-              <VariableName>[Phenology].TTEndJuvToInit.Value</VariableName>
+              <VariableName>[Phenology].TTEndJuvToInit.Value()</VariableName>
             </VariableReference>
           </AddFunction>
           <SetEvent>EndJuvenile</SetEvent>
@@ -382,15 +382,15 @@ A function is used to provide maturity date as days after sowing(DAS).
         </OnEventFunction>
         <Constant>
           <Name>FinalLeafNo</Name>
-          <Value>17.101</Value>
+          <FixedValue>17.101</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafNoAtEmergence</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafNoRateChange</Name>
-          <Value>3.5</Value>
+          <FixedValue>3.5</FixedValue>
         </Constant>
         <AddFunction>
           <Name>TTEmergToFlagLeaf</Name>
@@ -400,31 +400,31 @@ A function is used to provide maturity date as days after sowing(DAS).
               <Name>NoLeavesRate1</Name>
               <VariableReference>
                 <Name>FinalLeafNo</Name>
-                <VariableName>[Phenology].FinalLeafNo.Value</VariableName>
+                <VariableName>[Phenology].FinalLeafNo.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>LeafNoAtEmergence</Name>
-                <VariableName>[Phenology].LeafNoAtEmergence.Value</VariableName>
+                <VariableName>[Phenology].LeafNoAtEmergence.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>LeafNoRateChange</Name>
-                <VariableName>[Phenology].LeafNoRateChange.Value</VariableName>
+                <VariableName>[Phenology].LeafNoRateChange.Value()</VariableName>
               </VariableReference>
             </SubtractFunction>
             <Constant>
               <Name>LeafAppearanceRate1</Name>
-              <Value>41</Value>
+              <FixedValue>41</FixedValue>
             </Constant>
           </MultiplyFunction>
           <MultiplyFunction>
             <Name>LeafAppearingPhase2</Name>
             <Constant>
               <Name>LeafAppearanceRate2</Name>
-              <Value>20</Value>
+              <FixedValue>20</FixedValue>
             </Constant>
             <VariableReference>
               <Name>LeafNoRateChange</Name>
-              <VariableName>[Phenology].LeafNoRateChange.Value</VariableName>
+              <VariableName>[Phenology].LeafNoRateChange.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
         </AddFunction>
@@ -432,7 +432,7 @@ A function is used to provide maturity date as days after sowing(DAS).
           <Name>TTFromEmergence</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <StartStageName>Emergence</StartStageName>
           <EndStageName>Maturity</EndStageName>
@@ -441,7 +441,7 @@ A function is used to provide maturity date as days after sowing(DAS).
           <Name>TTFMFromFlowering</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <StartStageName>Flowering</StartStageName>
           <EndStageName>Maturity</EndStageName>
@@ -450,11 +450,11 @@ A function is used to provide maturity date as days after sowing(DAS).
           <Name>TTEmergToFloralInit</Name>
           <VariableReference>
             <Name>TTTargetJuvenille</Name>
-            <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
+            <VariableName>[Phenology].Juvenile.Target.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>TTTargetJuvToFI</Name>
-            <VariableName>[Phenology].JuvenileToFloralInit.Target.Value</VariableName>
+            <VariableName>[Phenology].JuvenileToFloralInit.Target.Value()</VariableName>
           </VariableReference>
         </AddFunction>
         <DaysAfterSowing>0</DaysAfterSowing>
@@ -471,7 +471,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
         </Memo>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LessThanFunction>
           <Name>MainStemNodeAppearanceRate</Name>
@@ -483,20 +483,20 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Name>SubtractFunction</Name>
             <VariableReference>
               <Name>FinalLeafNum</Name>
-              <VariableName>[Structure].MainStemFinalNodeNumber.Value</VariableName>
+              <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>LeafNumRateChange</Name>
-              <Value>3.5</Value>
+              <FixedValue>3.5</FixedValue>
             </Constant>
           </SubtractFunction>
           <Constant>
             <Name>LeafAppRate1</Name>
-            <Value>41</Value>
+            <FixedValue>41</FixedValue>
           </Constant>
           <Constant>
             <Name>LeafAppRate2</Name>
-            <Value>20</Value>
+            <FixedValue>20</FixedValue>
           </Constant>
         </LessThanFunction>
         <HoldFunction>
@@ -505,17 +505,17 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Name>ValueToHold</Name>
             <VariableReference>
               <Name>LeafNumSeed</Name>
-              <VariableName>[Structure].LeafNumSeed.Value</VariableName>
+              <VariableName>[Structure].LeafNumSeed.Value()</VariableName>
             </VariableReference>
             <DivideFunction>
               <Name>DivideFunction</Name>
               <VariableReference>
                 <Name>TTEmergToFI</Name>
-                <VariableName>[Phenology].TTEmergToFloralInit.Value</VariableName>
+                <VariableName>[Phenology].TTEmergToFloralInit.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>LeafInitRate</Name>
-                <VariableName>[Structure].LeafInitiationRate.Value</VariableName>
+                <VariableName>[Structure].LeafInitiationRate.Value()</VariableName>
               </VariableReference>
             </DivideFunction>
           </AddFunction>
@@ -545,35 +545,35 @@ Though tillering is common in some sorghum varieties under certain agronomic con
         </HeightFunction>
         <Constant>
           <Name>BranchingRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>ShadeInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafNumSeed</Name>
-          <Value>4</Value>
+          <FixedValue>4</FixedValue>
         </Constant>
         <Constant>
           <Name>LeafInitiationRate</Name>
-          <Value>21.6</Value>
+          <FixedValue>21.6</FixedValue>
         </Constant>
         <Constant>
           <Name>PlantMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <VariableReference>
           <Name>MainStemPrimordiaInitiationRate</Name>
-          <VariableName>[Structure].LeafInitiationRate.Value</VariableName>
+          <VariableName>[Structure].LeafInitiationRate.Value()</VariableName>
         </VariableReference>
         <Constant>
           <Name>BranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
@@ -583,11 +583,11 @@ Though tillering is common in some sorghum varieties under certain agronomic con
         <Name>Grain</Name>
         <Constant>
           <Name>InitialGrainProportion</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
-          <Value>0.3</Value>
+          <FixedValue>0.3</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
@@ -597,7 +597,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
         </Biomass>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.008</Value>
+          <FixedValue>0.008</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>MaximumNConc</Name>
@@ -605,7 +605,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Name>InitialPhase</Name>
             <Constant>
               <Name>InitialNconc</Name>
-              <Value>0.05</Value>
+              <FixedValue>0.05</FixedValue>
             </Constant>
             <Start>Flowering</Start>
             <End>StartGrainFill</End>
@@ -614,7 +614,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Name>LinearPhase</Name>
             <Constant>
               <Name>FinalNconc</Name>
-              <Value>0.013</Value>
+              <FixedValue>0.013</FixedValue>
             </Constant>
             <Start>StartGrainFill</Start>
             <End>EndGrainFill</End>
@@ -622,7 +622,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
         </PhaseLookup>
         <Constant>
           <Name>WaterContent</Name>
-          <Value>0.12</Value>
+          <FixedValue>0.12</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>NFillingRate</Name>
@@ -632,33 +632,33 @@ Though tillering is common in some sorghum varieties under certain agronomic con
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <AddFunction>
                 <Name>FillingDuration</Name>
                 <VariableReference>
                   <Name>FloweringToGrainFilling</Name>
-                  <VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].FloweringToGrainFilling.Target.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>GrainFilling</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
               </AddFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
                 <Constant>
                   <Name>MaximumFinalNConc</Name>
-                  <Value>0.013</Value>
+                  <FixedValue>0.013</FixedValue>
                   <Units>g/g</Units>
                 </Constant>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -672,37 +672,37 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Name>MinimumFunction</Name>
             <VariableReference>
               <Name>FinalGrainNum</Name>
-              <VariableName>[Grain].FinalGrainNum.Value</VariableName>
+              <VariableName>[Grain].FinalGrainNum.Value()</VariableName>
             </VariableReference>
             <MultiplyFunction>
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>FinalGrainNum</Name>
-                <VariableName>[Grain].FinalGrainNum.Value</VariableName>
+                <VariableName>[Grain].FinalGrainNum.Value()</VariableName>
               </VariableReference>
               <DivideFunction>
                 <Name>DivideFunction</Name>
                 <VariableReference>
                   <Name>TTStartGrainToNow</Name>
-                  <VariableName>[Grain].TTStartGrainToNow.Value</VariableName>
+                  <VariableName>[Grain].TTStartGrainToNow.Value()</VariableName>
                 </VariableReference>
                 <Constant>
                   <Name>RampTT</Name>
-                  <Value>100</Value>
+                  <FixedValue>100</FixedValue>
                 </Constant>
               </DivideFunction>
             </MultiplyFunction>
           </MinimumFunction>
           <Constant>
             <Name>TemperatureFactor</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
         </MultiplyFunction>
         <OnEventFunction>
           <Name>FinalGrainNum</Name>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <DivideFunction>
             <Name>PostEventValue</Name>
@@ -723,17 +723,17 @@ Though tillering is common in some sorghum varieties under certain agronomic con
                 </AddFunction>
                 <VariableReference>
                   <Name>GreenWtAtFI</Name>
-                  <VariableName>[Grain].GreenWtAtFI.Value</VariableName>
+                  <VariableName>[Grain].GreenWtAtFI.Value()</VariableName>
                 </VariableReference>
               </SubtractFunction>
               <VariableReference>
                 <Name>DaysFIToStartGF</Name>
-                <VariableName>[Grain].DaysFIToStartGrainFill.Value</VariableName>
+                <VariableName>[Grain].DaysFIToStartGrainFill.Value()</VariableName>
               </VariableReference>
             </DivideFunction>
             <Constant>
               <Name>DMPerSeed</Name>
-              <Value>0.00083</Value>
+              <FixedValue>0.00083</FixedValue>
             </Constant>
           </DivideFunction>
           <SetEvent>StartGrainFill</SetEvent>
@@ -742,7 +742,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>DaysFIToStartGrainFill</Name>
           <Constant>
             <Name>One</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <StartStageName>FloralInitiation</StartStageName>
           <EndStageName>StartGrainFill</EndStageName>
@@ -751,7 +751,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>GreenWtAtFI</Name>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -763,7 +763,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <Name>TTStartGrainToNow</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <StartStageName>StartGrainFill</StartStageName>
           <EndStageName>Maturity</EndStageName>
@@ -776,11 +776,11 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           </VariableReference>
           <VariableReference>
             <Name>GrainNumber</Name>
-            <VariableName>[Grain].NumberFunction.Value</VariableName>
+            <VariableName>[Grain].NumberFunction.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
         </DivideFunction>
         <MinimumFunction>
@@ -793,50 +793,50 @@ Though tillering is common in some sorghum varieties under certain agronomic con
                 <Name>MultiplyFunction</Name>
                 <VariableReference>
                   <Name>DMCaryopsis</Name>
-                  <VariableName>[Grain].DMCaryopsis.Value</VariableName>
+                  <VariableName>[Grain].DMCaryopsis.Value()</VariableName>
                 </VariableReference>
                 <Constant>
                   <Name>Constant</Name>
-                  <Value>0.4026</Value>
+                  <FixedValue>0.4026</FixedValue>
                 </Constant>
               </MultiplyFunction>
               <Constant>
                 <Name>Constant</Name>
-                <Value>3.19E-05</Value>
+                <FixedValue>3.19E-05</FixedValue>
               </Constant>
             </AddFunction>
             <Constant>
               <Name>Constant</Name>
-              <Value>1000</Value>
+              <FixedValue>1000</FixedValue>
             </Constant>
           </MultiplyFunction>
           <Constant>
             <Name>MaxGrainFillRate</Name>
-            <Value>0.09</Value>
+            <FixedValue>0.09</FixedValue>
           </Constant>
         </MinimumFunction>
         <MultiplyFunction>
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>GrainFillRate</Name>
-            <VariableName>[Grain].PotGrainFillRate.Value</VariableName>
+            <VariableName>[Grain].PotGrainFillRate.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>GrainNumber</Name>
-            <VariableName>[Grain].NumberFunction.Value</VariableName>
+            <VariableName>[Grain].NumberFunction.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>Constant</Name>
-            <Value>0.001</Value>
+            <FixedValue>0.001</FixedValue>
           </Constant>
         </MultiplyFunction>
         <Constant>
           <Name>DMDemandFunction33</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -919,7 +919,7 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
 No effect of soil water content on root growth is currently captured in the model.<br/>
 </body></html>]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>TemperatureEffect</Name>
@@ -930,7 +930,7 @@ No effect of soil water content on root growth is currently captured in the mode
 No effect of temperature on root growth is currently captured in the model.<br/>
 </body></html>]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
@@ -941,7 +941,7 @@ No effect of temperature on root growth is currently captured in the model.<br/>
 Maximum daily N uptake is set to an arbitrarily high value.<br/>
 </body></html>]]></MemoText>
           </Memo>
-          <Value>20</Value>
+          <FixedValue>20</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -952,23 +952,23 @@ Maximum daily N uptake is set to an arbitrarily high value.<br/>
 Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Sorghum model.<br/>
 </body></html>]]></MemoText>
           </Memo>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>PartitionFraction</Name>
@@ -1011,7 +1011,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>PreFlowering</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>25</Value>
+              <FixedValue>25</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Flowering</End>
@@ -1020,7 +1020,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>PostFlowering</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Flowering</Start>
             <End>Maturity</End>
@@ -1082,21 +1082,21 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>DMDemandFunction1</Name>
           <VariableReference>
             <Name>PartitionFrac</Name>
-            <VariableName>[Root].PartitionFraction.Value</VariableName>
+            <VariableName>[Root].PartitionFraction.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>BiomassProduction</Name>
-            <VariableName>[Leaf].DMSupplyFixation.Value</VariableName>
+            <VariableName>[Leaf].DMSupplyFixation.Value()</VariableName>
           </VariableReference>
         </MultiplyFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.2</Value>
+          <FixedValue>0.2</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
@@ -1177,31 +1177,31 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </VariableReference>
           <Constant>
             <Name>FVPD</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>FN</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>FW</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.25</Value>
+            <FixedValue>1.25</FixedValue>
           </Constant>
         </RUEModel>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <MultiplyFunction>
           <Name>InitialWtFunction</Name>
           <Constant>
             <Name>InitialPlantWt</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
             <Units>g/plant</Units>
           </Constant>
           <VariableReference>
@@ -1211,7 +1211,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </MultiplyFunction>
         <Constant>
           <Name>LaiDeadFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>m^2/m^2</Units>
         </Constant>
         <MultiplyFunction>
@@ -1253,33 +1253,33 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <Constant>
           <Name>FTN</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <MultiplyFunction>
           <Name>TPLAMax</Name>
           <Constant>
             <Name>cm2Tomm2</Name>
-            <Value>100</Value>
+            <FixedValue>100</FixedValue>
           </Constant>
           <PowerFunction>
             <Name>PowerFunction</Name>
@@ -1287,16 +1287,16 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <Name>AddFunction</Name>
               <VariableReference>
                 <Name>FTN</Name>
-                <VariableName>[Leaf].FTN.Value</VariableName>
+                <VariableName>[Leaf].FTN.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>One</Name>
-                <Value>1</Value>
+                <FixedValue>1</FixedValue>
               </Constant>
             </AddFunction>
             <Constant>
               <Name>TillerCoeff</Name>
-              <Value>0.66</Value>
+              <FixedValue>0.66</FixedValue>
             </Constant>
             <Exponent>1</Exponent>
           </PowerFunction>
@@ -1304,54 +1304,54 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>PowerFunction1</Name>
             <VariableReference>
               <Name>FLN</Name>
-              <VariableName>[Phenology].FinalLeafNo.Value</VariableName>
+              <VariableName>[Phenology].FinalLeafNo.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>MainStemCoeff</Name>
-              <Value>2.9</Value>
+              <FixedValue>2.9</FixedValue>
             </Constant>
             <Exponent>1</Exponent>
           </PowerFunction>
         </MultiplyFunction>
         <Constant>
           <Name>NConc</Name>
-          <Value>1000</Value>
+          <FixedValue>1000</FixedValue>
         </Constant>
         <Constant>
           <Name>HeightFunction</Name>
-          <Value>10</Value>
+          <FixedValue>10</FixedValue>
         </Constant>
         <LessThanFunction>
           <Name>Exponent</Name>
           <VariableReference>
             <Name>TTFromEmergence</Name>
-            <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+            <VariableName>[Phenology].TTFromEmergence.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>Constant</Name>
-            <Value>80</Value>
+            <FixedValue>80</FixedValue>
           </Constant>
           <MultiplyFunction>
             <Name>MultiplyFunction</Name>
             <Constant>
               <Name>TPLAProductionCoeff</Name>
-              <Value>0.018</Value>
+              <FixedValue>0.018</FixedValue>
             </Constant>
             <SubtractFunction>
               <Name>SubtractFunction</Name>
               <Constant>
                 <Name>Constant</Name>
-                <Value>80</Value>
+                <FixedValue>80</FixedValue>
               </Constant>
               <MultiplyFunction>
                 <Name>TPLAInflection</Name>
                 <Constant>
                   <Name>TPLAInlectionRatio</Name>
-                  <Value>0.66</Value>
+                  <FixedValue>0.66</FixedValue>
                 </Constant>
                 <VariableReference>
                   <Name>TTEmergToFlagLeaf</Name>
-                  <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+                  <VariableName>[Phenology].TTEmergToFlagLeaf.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </SubtractFunction>
@@ -1360,23 +1360,23 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>MultiplyFunction1</Name>
             <Constant>
               <Name>TPLAProductionCoeff</Name>
-              <Value>0.018</Value>
+              <FixedValue>0.018</FixedValue>
             </Constant>
             <SubtractFunction>
               <Name>SubtractFunction</Name>
               <VariableReference>
                 <Name>TTFromEmergence</Name>
-                <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+                <VariableName>[Phenology].TTFromEmergence.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>TPLAInflection</Name>
                 <Constant>
                   <Name>TPLAInlectionRatio</Name>
-                  <Value>0.66</Value>
+                  <FixedValue>0.66</FixedValue>
                 </Constant>
                 <VariableReference>
                   <Name>TTEmergToFlagLeaf</Name>
-                  <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+                  <VariableName>[Phenology].TTEmergToFlagLeaf.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </SubtractFunction>
@@ -1386,22 +1386,22 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>TPLAInflection</Name>
           <Constant>
             <Name>TPLAInlectionRatio</Name>
-            <Value>0.66</Value>
+            <FixedValue>0.66</FixedValue>
           </Constant>
           <VariableReference>
             <Name>TTEmergToFlagLeaf</Name>
-            <VariableName>[Phenology].TTEmergToFlagLeaf.Value</VariableName>
+            <VariableName>[Phenology].TTEmergToFlagLeaf.Value()</VariableName>
           </VariableReference>
         </MultiplyFunction>
         <MultiplyFunction>
           <Name>LAIFunction</Name>
           <Constant>
             <Name>cm2tom2</Name>
-            <Value>1E-06</Value>
+            <FixedValue>1E-06</FixedValue>
           </Constant>
           <VariableReference>
             <Name>TPLA</Name>
-            <VariableName>[Leaf].TPLA.Value</VariableName>
+            <VariableName>[Leaf].TPLA.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>Population</Name>
@@ -1412,17 +1412,17 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>TPLA</Name>
           <VariableReference>
             <Name>TTFromEmergence</Name>
-            <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+            <VariableName>[Phenology].TTFromEmergence.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>Constant</Name>
-            <Value>80</Value>
+            <FixedValue>80</FixedValue>
           </Constant>
           <AddFunction>
             <Name>AddFunction</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>200</Value>
+              <FixedValue>200</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>MultiplyFunction</Name>
@@ -1430,41 +1430,41 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
                 <Name>DivideFunction</Name>
                 <VariableReference>
                   <Name>TTFromEmergence</Name>
-                  <VariableName>[Phenology].TTFromEmergence.Value</VariableName>
+                  <VariableName>[Phenology].TTFromEmergence.Value()</VariableName>
                 </VariableReference>
                 <Constant>
                   <Name>Constant</Name>
-                  <Value>80</Value>
+                  <FixedValue>80</FixedValue>
                 </Constant>
               </DivideFunction>
               <VariableReference>
                 <Name>TPLAToday</Name>
-                <VariableName>[Leaf].TPLAToday.Value</VariableName>
+                <VariableName>[Leaf].TPLAToday.Value()</VariableName>
               </VariableReference>
             </MultiplyFunction>
           </AddFunction>
           <VariableReference>
             <Name>TPLAToday</Name>
-            <VariableName>[Leaf].TPLAToday.Value</VariableName>
+            <VariableName>[Leaf].TPLAToday.Value()</VariableName>
           </VariableReference>
         </LessThanFunction>
         <DivideFunction>
           <Name>TPLAToday</Name>
           <VariableReference>
             <Name>TPLAMax</Name>
-            <VariableName>[Leaf].TPLAMax.Value</VariableName>
+            <VariableName>[Leaf].TPLAMax.Value()</VariableName>
           </VariableReference>
           <AddFunction>
             <Name>AddFunction</Name>
             <Constant>
               <Name>Constant</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <ExponentialFunction>
               <Name>ExpFunc</Name>
               <VariableReference>
                 <Name>Exponent</Name>
-                <VariableName>[Leaf].Exponent.Value</VariableName>
+                <VariableName>[Leaf].Exponent.Value()</VariableName>
               </VariableReference>
               <A>0</A>
               <B>1</B>
@@ -1476,19 +1476,19 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>LeafPartitioningCoefficient</Name>
           <Constant>
             <Name>One</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <AddFunction>
             <Name>AddFunction</Name>
             <Constant>
               <Name>One</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>PartitionRate</Name>
-                <VariableName>[Leaf].PartitionRate.Value</VariableName>
+                <VariableName>[Leaf].PartitionRate.Value()</VariableName>
               </VariableReference>
               <PowerFunction>
                 <Name>PowerFunction</Name>
@@ -1503,7 +1503,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </DivideFunction>
         <Constant>
           <Name>PartitionRate</Name>
-          <Value>0.006</Value>
+          <FixedValue>0.006</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>DMDemandFunction</Name>
@@ -1513,11 +1513,11 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>LeafPartitionCoeff</Name>
-                <VariableName>[Leaf].LeafPartitioningCoefficient.Value</VariableName>
+                <VariableName>[Leaf].LeafPartitioningCoefficient.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>DMFixationSupply</Name>
-                <VariableName>[Leaf].DMSupplyFixation.Value</VariableName>
+                <VariableName>[Leaf].DMSupplyFixation.Value()</VariableName>
               </VariableReference>
             </MultiplyFunction>
             <Start>Emergence</Start>
@@ -1528,57 +1528,57 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>DMRemaining</Name>
           <VariableReference>
             <Name>DMFixationSupply</Name>
-            <VariableName>[Leaf].DMSupplyFixation.Value</VariableName>
+            <VariableName>[Leaf].DMSupplyFixation.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>LeafDMDemand</Name>
-            <VariableName>[Leaf].DMDemandFunction.Value</VariableName>
+            <VariableName>[Leaf].DMDemandFunction.Value()</VariableName>
           </VariableReference>
         </SubtractFunction>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>100</Value>
+          <FixedValue>100</FixedValue>
         </Constant>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <TEWaterDemandFunction>
           <Name>TEWaterDemandFunction</Name>
           <Constant>
             <Name>SVPFrac</Name>
-            <Value>0.75</Value>
+            <FixedValue>0.75</FixedValue>
           </Constant>
           <Constant>
             <Name>TranspirationEfficiencyCoefficient</Name>
-            <Value>0.009</Value>
+            <FixedValue>0.009</FixedValue>
           </Constant>
           <VariableReference>
             <Name>Photosynthesis</Name>
-            <VariableName>[Leaf].Photosynthesis.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.Value()</VariableName>
           </VariableReference>
         </TEWaterDemandFunction>
         <MinimumFunction>
           <Name>DMSupplyFixation</Name>
           <VariableReference>
             <Name>BiomTE</Name>
-            <VariableName>[Leaf].BiomTE.Value</VariableName>
+            <VariableName>[Leaf].BiomTE.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>BiomRUE</Name>
-            <VariableName>[Leaf].Photosynthesis.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.Value()</VariableName>
           </VariableReference>
         </MinimumFunction>
         <MultiplyFunction>
@@ -1587,7 +1587,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>TE</Name>
             <VariableReference>
               <Name>TECoeff</Name>
-              <VariableName>[Leaf].TEWaterDemandFunction.TranspirationEfficiencyCoefficient.Value</VariableName>
+              <VariableName>[Leaf].TEWaterDemandFunction.TranspirationEfficiencyCoefficient.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>VPD</Name>
@@ -1595,7 +1595,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             </VariableReference>
             <Constant>
               <Name>g2mm</Name>
-              <Value>0.001</Value>
+              <FixedValue>0.001</FixedValue>
             </Constant>
           </DivideFunction>
           <VariableReference>
@@ -1623,12 +1623,12 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         <WaterAllocation>0</WaterAllocation>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant> 
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <BiomassRemoval>
@@ -1673,7 +1673,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </VariableReference>
           <Constant>
             <Name>CobsPerStem</Name>
-            <Value>1.1</Value>
+            <FixedValue>1.1</FixedValue>
           </Constant>
         </MultiplyFunction>
         <DivideFunction>
@@ -1684,7 +1684,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </VariableReference>
           <VariableReference>
             <Name>CobNumber</Name>
-            <VariableName>[Rachis].CobNumber.Value</VariableName>
+            <VariableName>[Rachis].CobNumber.Value()</VariableName>
           </VariableReference>
         </DivideFunction>
         <Biomass>
@@ -1695,28 +1695,28 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.008</Value>
+          <FixedValue>0.008</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.003</Value>
+          <FixedValue>0.003</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>ExpansionStress</Name>
@@ -1741,11 +1741,11 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <Name>MultiplyFunction</Name>
               <VariableReference>
                 <Name>DMRemainingAfterLeaf</Name>
-                <VariableName>[Leaf].DMRemaining.Value</VariableName>
+                <VariableName>[Leaf].DMRemaining.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>Stem2FlowerFrac</Name>
-                <VariableName>[Stem].StemToFlowerFrac.Value</VariableName>
+                <VariableName>[Stem].StemToFlowerFrac.Value()</VariableName>
               </VariableReference>
             </MultiplyFunction>
             <Start>FloralInitiation</Start>
@@ -1761,7 +1761,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               </VariableReference>
               <VariableReference>
                 <Name>Stem2FlowerFrac</Name>
-                <VariableName>[Stem].StemToFlowerFrac.Value</VariableName>
+                <VariableName>[Stem].StemToFlowerFrac.Value()</VariableName>
               </VariableReference>
             </MultiplyFunction>
             <Start>FlagLeaf</Start>
@@ -1770,28 +1770,28 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </PhaseLookup>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>InitialWtFunction1</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant> 
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <BiomassRemoval>
@@ -1853,7 +1853,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
+          <FixedValue>0.006</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1862,19 +1862,19 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </PhaseBasedSwitch>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>StemToFlowerFrac</Name>
-          <Value>0.3</Value>
+          <FixedValue>0.3</FixedValue>
         </Constant>
         <MaximumFunction>
           <Name>DMDemandFunction</Name>
@@ -1886,50 +1886,50 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             </VariableReference>
             <VariableReference>
               <Name>LeafDemand</Name>
-              <VariableName>[Leaf].DMDemandFunction.Value</VariableName>
+              <VariableName>[Leaf].DMDemandFunction.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RachisDemand</Name>
-              <VariableName>[Rachis].DMDemandFunction.Value</VariableName>
+              <VariableName>[Rachis].DMDemandFunction.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>GrainDemand</Name>
-              <VariableName>[Grain].DMDemandFunction.Value</VariableName>
+              <VariableName>[Grain].DMDemandFunction.Value()</VariableName>
             </VariableReference>
           </SubtractFunction>
           <Constant>
             <Name>Zero</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
         </MaximumFunction>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.8</Value>
+          <FixedValue>0.8</FixedValue>
         </Constant>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant> 
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <BiomassRemoval>
@@ -1970,27 +1970,27 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
       </Cultivar>
       <Cultivar>
         <Name>M351</Name>
-        <Command>[Phenology].TTEndJuvToInit.Value = 200</Command>
+        <Command>[Phenology].TTEndJuvToInit.FixedValue = 200</Command>
       </Cultivar>
       <Cultivar>
         <Name>CSH13r</Name>
-        <Command>[Phenology].TTEndJuvToInit.Value = 220</Command>
+        <Command>[Phenology].TTEndJuvToInit.FixedValue = 220</Command>
       </Cultivar>
       <Cultivar>
         <Name>QL41xQL36</Name>
-        <Command>[Phenology].TTEndJuvToInit.Value = 220</Command>
+        <Command>[Phenology].TTEndJuvToInit.FixedValue = 220</Command>
       </Cultivar>
       <Cultivar>
         <Name>ATx623xRTx430</Name>
-        <Command>[Phenology].TTEndJuvToInit.Value = 220</Command>
+        <Command>[Phenology].TTEndJuvToInit.FixedValue = 220</Command>
       </Cultivar>
       <Cultivar>
         <Name>QL39xQL36</Name>
-        <Command>[Phenology].TTEndJuvToInit.Value = 220</Command>
+        <Command>[Phenology].TTEndJuvToInit.FixedValue = 220</Command>
       </Cultivar>
       <Cultivar>
         <Name>A35xQL36</Name>
-        <Command>[Phenology].TTEndJuvToInit.Value = 220</Command>
+        <Command>[Phenology].TTEndJuvToInit.FixedValue = 220</Command>
       </Cultivar>
       <CropType>Sorghum</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
@@ -2551,7 +2551,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <string>[Clock].Today.Year as year</string>
               <string>[Clock].Today.DayOfYear as doy</string>
               <string>[Clock].Today.Date as date</string>
-              <string>[Phenology].ThermalTime.Value as TT</string>
+              <string>[Phenology].ThermalTime.Value() as TT</string>
               <string>[Sorghum].DaysAfterSowing</string>
               <string>[SorghumSowingRule].Script.DaysAfterSowing as das</string>
               <string>[Sorghum].Phenology.Stage as stage</string>
@@ -2572,39 +2572,39 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <string>[Sorghum].Rachis.Live.N as rachis.n</string>
               <string>[Sorghum].Grain.Live.N as grain.n</string>
               <string>[Sorghum].Grain.Live.NConc as nconc</string>
-              <string>[Sorghum].Grain.NumberFunction.Value as grainno</string>
+              <string>[Sorghum].Grain.NumberFunction.Value() as grainno</string>
               <string>[Sorghum].Grain.Size as grainsize </string>
               <string>[Sorghum].Structure.MainStemNodeNo as leafno</string>
-              <string>[Sorghum].Phenology.LeafAppearance1.RemainingLeaves.Value</string>
-              <string>[Sorghum].Phenology.LeafAppearance2.RemainingLeaves.Value</string>
+              <string>[Sorghum].Phenology.LeafAppearance1.RemainingLeaves.Value()</string>
+              <string>[Sorghum].Phenology.LeafAppearance2.RemainingLeaves.Value()</string>
               <string>[Sorghum].Phenology.LeafAppearance1._RemainingLeaves</string>
               <string>[Sorghum].Phenology.LeafAppearance2._RemainingLeaves</string>
               <string>[Soil].SoilWater.ESW as esw</string>
-              <string>[Sorghum].Phenology.Juvenile.Target.Value</string>
+              <string>[Sorghum].Phenology.Juvenile.Target.Value()</string>
               <string>sum([Soil].SoilNitrogen.NO3) as no3</string>
               <string>sum([Soil].SoilWater.SW) as sw</string>
               <string>[Sorghum].WaterSupplyDemandRatio as sdratio</string>
-              <string>[Sorghum].Leaf.Photosynthesis.FW.Value as ruestress</string>
-              <string>[Phenology].Germinating.Target.Value</string>
-              <string>[Phenology].Emerging.Target.Value</string>
-              <string>[Phenology].Juvenile.Target.Value</string>
-              <string>[Phenology].JuvenileToFloralInit.Target.Value</string>
-              <string>[Phenology].FloralInitToFlagLeaf.Target.Value</string>
-              <string>[Phenology].FlagLeafToFlowering.Target.Value</string>
-              <string>[Phenology].FloweringToGrainFilling.Target.Value</string>
-              <string>[Phenology].GrainFilling.Target.Value</string>
-              <string>[Phenology].Maturing.Target.Value</string>
-              <string>[Phenology].MaturityToHarvestRipe.Target.Value</string>
-              <string>[Phenology].TTFromEmergence.Value</string>
-              <string>[Leaf].TPLA.Value</string>
-              <string>[Leaf].TPLA2.Value</string>
-              <string>[Leaf].TPLAMax.Value</string>
-              <string>[Leaf].TPLAToday.Value</string>
-              <string>[Leaf].Exponent.Value</string>
-              <string>[Leaf].TPLAInflection.Value</string>
+              <string>[Sorghum].Leaf.Photosynthesis.FW.Value() as ruestress</string>
+              <string>[Phenology].Germinating.Target.Value()</string>
+              <string>[Phenology].Emerging.Target.Value()</string>
+              <string>[Phenology].Juvenile.Target.Value()</string>
+              <string>[Phenology].JuvenileToFloralInit.Target.Value()</string>
+              <string>[Phenology].FloralInitToFlagLeaf.Target.Value()</string>
+              <string>[Phenology].FlagLeafToFlowering.Target.Value()</string>
+              <string>[Phenology].FloweringToGrainFilling.Target.Value()</string>
+              <string>[Phenology].GrainFilling.Target.Value()</string>
+              <string>[Phenology].Maturing.Target.Value()</string>
+              <string>[Phenology].MaturityToHarvestRipe.Target.Value()</string>
+              <string>[Phenology].TTFromEmergence.Value()</string>
+              <string>[Leaf].TPLA.Value()</string>
+              <string>[Leaf].TPLA2.Value()</string>
+              <string>[Leaf].TPLAMax.Value()</string>
+              <string>[Leaf].TPLAToday.Value()</string>
+              <string>[Leaf].Exponent.Value()</string>
+              <string>[Leaf].TPLAInflection.Value()</string>
               <string>[Leaf].LAI</string>
-              <string>[Phenology].TTEmergToFlagLeaf.Value</string>
-              <string>[Structure].MainStemFinalNodeNumber.Value</string>
+              <string>[Phenology].TTEmergToFlagLeaf.Value()</string>
+              <string>[Structure].MainStemFinalNodeNumber.Value()</string>
               <string>[Structure].MainStemNodeNo</string>
               <string>[Leaf].CoverGreen</string>
               <string>[Leaf].RadIntTot</string>
@@ -2613,14 +2613,14 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <string>[Arbitrator].DM.TotalFixationSupply</string>
               <string>[Arbitrator].DM.TotalFixationSupply</string>
               <string />
-              <string>[Grain].FinalGrainNum.Value</string>
-              <string>[Leaf].LeafPartitioningCoefficient.Value</string>
-              <string>[Leaf].DMDemandFunction.Value</string>
-              <string>[Stem].DMDemandFunction.Value</string>
-              <string>[Rachis].DMDemandFunction.Value</string>
-              <string>[Grain].DMDemandFunction.Value</string>
-              <string>[Leaf].DMRemaining.Value</string>
-              <string>[Grain].PotGrainFillRate.Value</string>
+              <string>[Grain].FinalGrainNum.Value()</string>
+              <string>[Leaf].LeafPartitioningCoefficient.Value()</string>
+              <string>[Leaf].DMDemandFunction.Value()</string>
+              <string>[Stem].DMDemandFunction.Value()</string>
+              <string>[Rachis].DMDemandFunction.Value()</string>
+              <string>[Grain].DMDemandFunction.Value()</string>
+              <string>[Leaf].DMRemaining.Value()</string>
+              <string>[Grain].PotGrainFillRate.Value()</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>
@@ -3597,7 +3597,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <string>[Clock].Today.Year as year</string>
               <string>[Clock].Today.DayOfYear as doy</string>
               <string>[Clock].Today.Date as date</string>
-              <string>[Phenology].ThermalTime.Value as TT</string>
+              <string>[Phenology].ThermalTime.Value() as TT</string>
               <string>[SorghumSowingRule].Script.DaysAfterSowing as das</string>
               <string>[Sorghum].Phenology.Stage as stage</string>
               <string>[Sorghum].AboveGroundLive.Wt as biomass</string>
@@ -3611,39 +3611,39 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <string>[Sorghum].Rachis.Live.N as rachis.n</string>
               <string>[Sorghum].Grain.Live.N as grain.n</string>
               <string>[Sorghum].Grain.Live.NConc as nconc</string>
-              <string>[Sorghum].Grain.NumberFunction.Value as grainno</string>
+              <string>[Sorghum].Grain.NumberFunction.Value() as grainno</string>
               <string>[Sorghum].Grain.Size as grainsize </string>
               <string>[Sorghum].Structure.MainStemNodeNo as leafno</string>
-              <string>[Sorghum].Phenology.LeafAppearance1.RemainingLeaves.Value</string>
-              <string>[Sorghum].Phenology.LeafAppearance2.RemainingLeaves.Value</string>
+              <string>[Sorghum].Phenology.LeafAppearance1.RemainingLeaves.Value()</string>
+              <string>[Sorghum].Phenology.LeafAppearance2.RemainingLeaves.Value()</string>
               <string>[Sorghum].Phenology.LeafAppearance1._RemainingLeaves</string>
               <string>[Sorghum].Phenology.LeafAppearance2._RemainingLeaves</string>
               <string>[Soil].SoilWater.ESW as esw</string>
-              <string>[Sorghum].Phenology.Juvenile.Target.Value</string>
+              <string>[Sorghum].Phenology.Juvenile.Target.Value()</string>
               <string>sum([Soil].SoilNitrogen.NO3) as no3</string>
               <string>sum([Soil].SoilWater.SW) as sw</string>
               <string>[Sorghum].WaterSupplyDemandRatio as sdratio</string>
-              <string>[Sorghum].Leaf.Photosynthesis.FW.Value as ruestress</string>
-              <string>[Phenology].Germinating.Target.Value</string>
-              <string>[Phenology].Emerging.Target.Value</string>
-              <string>[Phenology].Juvenile.Target.Value</string>
-              <string>[Phenology].JuvenileToFloralInit.Target.Value</string>
-              <string>[Phenology].FloralInitToFlagLeaf.Target.Value</string>
-              <string>[Phenology].FlagLeafToFlowering.Target.Value</string>
-              <string>[Phenology].FloweringToGrainFilling.Target.Value</string>
-              <string>[Phenology].GrainFilling.Target.Value</string>
-              <string>[Phenology].Maturing.Target.Value</string>
-              <string>[Phenology].MaturityToHarvestRipe.Target.Value</string>
-              <string>[Phenology].TTFromEmergence.Value</string>
-              <string>[Leaf].TPLA.Value</string>
-              <string>[Leaf].TPLA2.Value</string>
-              <string>[Leaf].TPLAMax.Value</string>
-              <string>[Leaf].TPLAToday.Value</string>
-              <string>[Leaf].Exponent.Value</string>
-              <string>[Leaf].TPLAInflection.Value</string>
+              <string>[Sorghum].Leaf.Photosynthesis.FW.Value() as ruestress</string>
+              <string>[Phenology].Germinating.Target.Value()</string>
+              <string>[Phenology].Emerging.Target.Value()</string>
+              <string>[Phenology].Juvenile.Target.Value()</string>
+              <string>[Phenology].JuvenileToFloralInit.Target.Value()</string>
+              <string>[Phenology].FloralInitToFlagLeaf.Target.Value()</string>
+              <string>[Phenology].FlagLeafToFlowering.Target.Value()</string>
+              <string>[Phenology].FloweringToGrainFilling.Target.Value()</string>
+              <string>[Phenology].GrainFilling.Target.Value()</string>
+              <string>[Phenology].Maturing.Target.Value()</string>
+              <string>[Phenology].MaturityToHarvestRipe.Target.Value()</string>
+              <string>[Phenology].TTFromEmergence.Value()</string>
+              <string>[Leaf].TPLA.Value()</string>
+              <string>[Leaf].TPLA2.Value()</string>
+              <string>[Leaf].TPLAMax.Value()</string>
+              <string>[Leaf].TPLAToday.Value()</string>
+              <string>[Leaf].Exponent.Value()</string>
+              <string>[Leaf].TPLAInflection.Value()</string>
               <string>[Leaf].LAI</string>
-              <string>[Phenology].TTEmergToFlagLeaf.Value</string>
-              <string>[Structure].MainStemFinalNodeNumber.Value</string>
+              <string>[Phenology].TTEmergToFlagLeaf.Value()</string>
+              <string>[Structure].MainStemFinalNodeNumber.Value()</string>
               <string>[Structure].MainStemNodeNo</string>
               <string>[Leaf].CoverGreen</string>
               <string>[Leaf].RadIntTot</string>
@@ -3657,14 +3657,14 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <string>[Rachis].Live.wt</string>
               <string>[Grain].Live.wt</string>
               <string />
-              <string>[Grain].FinalGrainNum.Value</string>
-              <string>[Leaf].LeafPartitioningCoefficient.Value</string>
-              <string>[Leaf].DMDemandFunction.Value</string>
-              <string>[Stem].DMDemandFunction.Value</string>
-              <string>[Rachis].DMDemandFunction.Value</string>
-              <string>[Grain].DMDemandFunction.Value</string>
-              <string>[Leaf].DMRemaining.Value</string>
-              <string>[Grain].PotGrainFillRate.Value</string>
+              <string>[Grain].FinalGrainNum.Value()</string>
+              <string>[Leaf].LeafPartitioningCoefficient.Value()</string>
+              <string>[Leaf].DMDemandFunction.Value()</string>
+              <string>[Stem].DMDemandFunction.Value()</string>
+              <string>[Rachis].DMDemandFunction.Value()</string>
+              <string>[Grain].DMDemandFunction.Value()</string>
+              <string>[Leaf].DMRemaining.Value()</string>
+              <string>[Grain].PotGrainFillRate.Value()</string>
             </VariableNames>
             <EventNames>
               <string>[Clock].DoReport</string>

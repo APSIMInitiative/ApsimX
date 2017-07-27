@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -305,8 +305,8 @@ science. The Wheat model has been tested on a range of environmental conditions.
           <Manager>
             <Name>ApplyFertiliser</Name>
             <Script>
-              <Amount>160</Amount>
               <FertDayOfYear>186</FertDayOfYear>
+              <Amount>160</Amount>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -492,6 +492,7 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -524,14 +525,7 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -683,6 +677,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>APS26Soil</SoilType>
             <LocalName>APS26Site</LocalName>
@@ -874,6 +871,9 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -1267,6 +1267,7 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -1299,14 +1300,7 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -1446,6 +1440,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>APS6Soil</SoilType>
             <LocalName>APS6Site</LocalName>
@@ -1578,6 +1575,9 @@ namespace Models
             <emissivity>0.96</emissivity>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -2003,6 +2003,7 @@ namespace Models
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -2035,14 +2036,7 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -2194,6 +2188,9 @@ namespace Models
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>Clay Loam</SoilType>
             <LocalName>Gatton</LocalName>
@@ -2504,6 +2501,9 @@ private void OnDoManagement(object sender, EventArgs e)
 }
 	   ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -3039,6 +3039,7 @@ private void OnDoManagement(object sender, EventArgs e)
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -3071,14 +3072,7 @@ private void OnDoManagement(object sender, EventArgs e)
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -3254,6 +3248,9 @@ private void OnDoManagement(object sender, EventArgs e)
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>sand</SoilType>
             <LocalName>Merredin</LocalName>
@@ -3470,6 +3467,9 @@ private void OnDoManagement(object sender, EventArgs e)
             <emissivity>0.96</emissivity>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -3875,6 +3875,7 @@ private void OnDoManagement(object sender, EventArgs e)
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -3907,26 +3908,7 @@ private void OnDoManagement(object sender, EventArgs e)
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.2032986082022734</double>
-                <double>0.79228456241895961</double>
-                <double>0.29900863410282752</double>
-                <double>0.05138058238638081</double>
-                <double>0.051000528535209769</double>
-                <double>0.050675681811826238</double>
-                <double>0.050496873720279</double>
-                <double>0.050120340898946514</double>
-                <double>0.050058806023859134</double>
-                <double>0.0500199904435238</double>
-              </oc>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -4102,6 +4084,9 @@ private void OnDoManagement(object sender, EventArgs e)
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>sand</SoilType>
             <LocalName>Merredin</LocalName>
@@ -4476,6 +4461,9 @@ private void OnDoManagement(object sender, EventArgs e)
 }
 	   ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -5898,6 +5886,7 @@ public class Script : Model
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -5930,14 +5919,7 @@ public class Script : Model
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -6089,6 +6071,9 @@ public class Script : Model
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>LincolnSoil</SoilType>
             <LocalName>Lincoln</LocalName>
@@ -6200,6 +6185,9 @@ public class Script : Model
             <emissivity>0.96</emissivity>
             <RadIntTotal>0</RadIntTotal>
           </MicroClimate>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -6948,6 +6936,7 @@ public class Script : Model
             </SoilWater>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -6980,24 +6969,7 @@ public class Script : Model
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>0.36030177375113792</double>
-                <double>0.27080607825510783</double>
-                <double>0.241057083027954</double>
-                <double>0.1614100773132848</double>
-                <double>0.16039591661358196</double>
-                <double>0.29923549966041468</double>
-                <double>0.099634477132654622</double>
-                <double>0.099656769505334544</double>
-              </oc>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -7219,6 +7191,9 @@ public class Script : Model
               <OCUnits>Total</OCUnits>
               <PHUnits>Water</PHUnits>
             </Sample>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>LincolnSoil</SoilType>
             <LocalName>Lincoln</LocalName>
@@ -7361,6 +7336,9 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -8206,6 +8184,7 @@ namespace Models
             </Sample>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -8238,34 +8217,11 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>0.72352640308603</double>
-                <double>0.72301158556202039</double>
-                <double>0.45528010944098596</double>
-                <double>0.387092498436611</double>
-                <double>0.29950113221038871</double>
-                <double>0.21999754370504637</double>
-                <double>0.19001057362088997</double>
-                <double>0.18998552523739173</double>
-                <double>0.099964977125739443</double>
-                <double>0.099968106112963959</double>
-                <double>0.099990261202082154</double>
-                <double>0.10001425103904392</double>
-                <double>0.10000482680173992</double>
-                <double>0.10000034929500608</double>
-                <double>0.10000004452705698</double>
-                <double>0.10000011874242137</double>
-                <double>0.099999927332399569</double>
-              </oc>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>heavy
 </SoilType>
@@ -8602,8 +8558,8 @@ namespace Models
           <Manager>
             <Name>TopdressFertiliser</Name>
             <Script>
-              <Amount>0</Amount>
               <FertDayOfYear>239</FertDayOfYear>
+              <Amount>0</Amount>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -8639,6 +8595,9 @@ namespace Models
 }
 ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -9416,6 +9375,7 @@ namespace Models
             </Sample>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -9448,37 +9408,11 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>0.83098748905480757</double>
-                <double>0.34912902535987167</double>
-                <double>0.32945480931770033</double>
-                <double>0.22033899225619674</double>
-                <double>0.2204410407712849</double>
-                <double>0.22033460534939428</double>
-                <double>0.19066689182381227</double>
-                <double>0.1705041939872736</double>
-                <double>0.15047673339339734</double>
-                <double>0.12054425206968533</double>
-                <double>0.11047609227916679</double>
-                <double>0.10041248749368043</double>
-                <double>0.10035647768752969</double>
-                <double>0.10031196392041249</double>
-                <double>0.10024878738421951</double>
-                <double>0.10021556360251731</double>
-                <double>0.10017719304680695</double>
-                <double>0.10012934933941822</double>
-                <double>0.10009356434438876</double>
-                <double>0.10004261693966804</double>
-              </oc>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>unknown
 </SoilType>
@@ -9779,6 +9713,9 @@ private void OnDoManagement(object sender, EventArgs e)
               <Action>[Wheat].Population.KillCrop(KillFraction:0.0);</Action>
             </Operation>
           </Operations>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>
@@ -10209,6 +10146,7 @@ private void OnDoManagement(object sender, EventArgs e)
             </Sample>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -10241,37 +10179,11 @@ private void OnDoManagement(object sender, EventArgs e)
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>0.83098748905480757</double>
-                <double>0.34912902535987167</double>
-                <double>0.32945480931770033</double>
-                <double>0.22033899225619674</double>
-                <double>0.2204410407712849</double>
-                <double>0.22033460534939428</double>
-                <double>0.19066689182381227</double>
-                <double>0.1705041939872736</double>
-                <double>0.15047673339339734</double>
-                <double>0.12054425206968533</double>
-                <double>0.11047609227916679</double>
-                <double>0.10041248749368043</double>
-                <double>0.10035647768752969</double>
-                <double>0.10031196392041249</double>
-                <double>0.10024878738421951</double>
-                <double>0.10021556360251731</double>
-                <double>0.10017719304680695</double>
-                <double>0.10012934933941822</double>
-                <double>0.10009356434438876</double>
-                <double>0.10004261693966804</double>
-              </oc>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>sand</SoilType>
             <LocalName>WonganSite</LocalName>
@@ -10658,6 +10570,7 @@ private void OnDoManagement(object sender, EventArgs e)
             </Sample>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -10690,37 +10603,11 @@ private void OnDoManagement(object sender, EventArgs e)
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>0.83098748905480757</double>
-                <double>0.34912902535987167</double>
-                <double>0.32945480931770033</double>
-                <double>0.22033899225619674</double>
-                <double>0.2204410407712849</double>
-                <double>0.22033460534939428</double>
-                <double>0.19066689182381227</double>
-                <double>0.1705041939872736</double>
-                <double>0.15047673339339734</double>
-                <double>0.12054425206968533</double>
-                <double>0.11047609227916679</double>
-                <double>0.10041248749368043</double>
-                <double>0.10035647768752969</double>
-                <double>0.10031196392041249</double>
-                <double>0.10024878738421951</double>
-                <double>0.10021556360251731</double>
-                <double>0.10017719304680695</double>
-                <double>0.10012934933941822</double>
-                <double>0.10009356434438876</double>
-                <double>0.10004261693966804</double>
-              </oc>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>sand</SoilType>
             <LocalName>WonganSite</LocalName>
@@ -11341,6 +11228,7 @@ private void OnDoManagement(object sender, EventArgs e)
             </Sample>
             <SoilNitrogen>
               <Name>SoilNitrogen</Name>
+              <defaultCarbonInSoilOM>0.588</defaultCarbonInSoilOM>
               <fom_type>
                 <string>default</string>
                 <string>manure</string>
@@ -11373,37 +11261,11 @@ private void OnDoManagement(object sender, EventArgs e)
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>0.83535399008509137</double>
-                <double>0.35072954829126568</double>
-                <double>0.33072754319948056</double>
-                <double>0.22133781089563034</double>
-                <double>0.22119319780710267</double>
-                <double>0.22068541649937309</double>
-                <double>0.19107119682585652</double>
-                <double>0.17089752635119607</double>
-                <double>0.15078591418887777</double>
-                <double>0.12077803225132484</double>
-                <double>0.11061891255588494</double>
-                <double>0.10052766716623916</double>
-                <double>0.1004109273020362</double>
-                <double>0.10032282547806296</double>
-                <double>0.10027223505883373</double>
-                <double>0.10023288106617885</double>
-                <double>0.1001990217304492</double>
-                <double>0.10016997933270549</double>
-                <double>0.10014443726659265</double>
-                <double>0.10012193846548656</double>
-              </oc>
+              <isResetting>false</isResetting>
             </SoilNitrogen>
+            <CERESSoilTemperature>
+              <Name>CERESSoilTemperature</Name>
+            </CERESSoilTemperature>
             <RecordNumber>0</RecordNumber>
             <SoilType>unknown
 </SoilType>
@@ -11686,6 +11548,9 @@ private void OnDoManagement(object sender, EventArgs e)
 }
 	   ]]></Code>
           </Manager>
+          <SoluteManager>
+            <Name>SoluteManager</Name>
+          </SoluteManager>
           <Area>1</Area>
           <Slope>0</Slope>
         </Zone>

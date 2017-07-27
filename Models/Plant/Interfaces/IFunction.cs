@@ -12,6 +12,6 @@ namespace Models.PMF.Functions
     public interface IFunction
     {
         /// <summary>Gets the value of the function.</summary>
-        double Value { get; }
+        double Value(int arrayIndex = -1);
     }
 }

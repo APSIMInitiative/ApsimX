@@ -9,11 +9,10 @@ using Models.Interfaces;
 namespace Models.PMF.Functions.SupplyFunctions
 {
     /// <summary>
-    /// Biomass accumulation is the product of the amount of intercepted radiation and its 
-    /// conversion efficiency, the radiation use efficiency (RUE) [Monteith1977].  
-    /// This approach simulates net photosynthesis rather than providing separate estimates 
-    /// of growth and respiration.  RUE is calculated from a potential value which is discounted 
-    /// using stress factors that account for plant nutrition (Fn), air temperature(Ft), vapour pressure deficit (Fvpd), water supply (Fw) and atmospheric CO2 concentration (Fco2).
+    /// Biomass accumulation is the product of the amount of intercepted radiation and its conversion efficiency, the radiation use efficiency (RUE) ([Monteith1977]).  
+    /// This approach simulates net photosynthesis rather than providing separate estimates of growth and respiration.  
+    /// RUE is calculated from a potential value which is discounted using stress factors that account for plant nutrition (Fn), air temperature(Ft), vapour pressure deficit (Fvpd), water supply (Fw) and atmospheric CO2 concentration (Fco2).  
+    /// NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(ILeaf))]
@@ -89,22 +88,19 @@ namespace Models.PMF.Functions.SupplyFunctions
         {
             get
             {
-                double RueReductionFactor = Math.Min(FT.Value, Math.Min(FN.Value, FVPD.Value)) * FW.Value * FCO2.Value;
-                return RUE.Value * RueReductionFactor;
+                double RueReductionFactor = Math.Min(FT.Value(), Math.Min(FN.Value(), FVPD.Value())) * FW.Value() * FCO2.Value();
+                return RUE.Value() * RueReductionFactor;
             }
         }
         /// <summary>Daily growth increment of total plant biomass</summary>
         /// <returns>g dry matter/m2 soil/day</returns>
-        public double Value
+        public double Value(int arrayIndex = -1)
         {
-            get
-            {
-                if (Double.IsNaN(RadnInt.Value))
-                    throw new Exception("NaN Radiation interception value supplied to RUE model");
-                if (RadnInt.Value < 0)
-                    throw new Exception("Negative Radiation interception value supplied to RUE model");
-                return RadnInt.Value * RueAct;
-            }
+            if (Double.IsNaN(RadnInt.Value(arrayIndex)))
+                throw new Exception("NaN Radiation interception value supplied to RUE model");
+            if (RadnInt.Value(arrayIndex) < 0)
+                throw new Exception("Negative Radiation interception value supplied to RUE model");
+            return RadnInt.Value(arrayIndex) * RueAct;
         }
         #endregion
     }

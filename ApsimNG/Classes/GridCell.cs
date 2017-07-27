@@ -69,12 +69,14 @@ namespace UserInterface.Classes
                 {
                     return EditorTypeEnum.DateTime;
                 }
-                else if (this.gridView.Grid[this.ColumnIndex, this.RowIndex] is DataGridViewButtonCell)
+                */
+                Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
+                if (gridView.buttonList.Contains(key))
                 {
                     return EditorTypeEnum.Button;
                 }
-                */
-                else if (gridView.comboLookup.ContainsKey(new Tuple<int, int>(this.RowIndex, this.ColumnIndex)))
+                
+                else if (gridView.comboLookup.ContainsKey(key))
                     return EditorTypeEnum.DropDown;
                 else
                     return EditorTypeEnum.TextBox;
@@ -112,7 +114,11 @@ namespace UserInterface.Classes
 
                     case EditorTypeEnum.Button:
                         {
-                            /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewButtonCell();
+                            Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
+                            if (!gridView.buttonList.Contains(key))
+                            {
+                                gridView.buttonList.Add(key);
+                            }
                             break;
                         }
 

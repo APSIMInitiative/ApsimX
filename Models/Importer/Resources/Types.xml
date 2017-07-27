@@ -1575,6 +1575,11 @@
       <ShowInMainTree>Yes</ShowInMainTree>
     </MetaData>
   </Type>
+  <Type name="LinearAboveThresholdFunction">
+    <MetaData>
+      <ShowInMainTree>Yes</ShowInMainTree>
+    </MetaData>
+  </Type>
   <Type name="LessThanFunction">
     <MetaData>
       <ShowInMainTree>Yes</ShowInMainTree>

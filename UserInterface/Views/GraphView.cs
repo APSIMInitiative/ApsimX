@@ -33,6 +33,11 @@ namespace UserInterface.Views
         public double FontSize = 14;
 
         /// <summary>
+        /// Overall font size for the graph.
+        /// </summary>
+        public double MarkerSize = -1;
+
+        /// <summary>
         /// Overall font to use.
         /// </summary>
         private new const string Font = "Calibri Light";
@@ -139,7 +144,7 @@ namespace UserInterface.Views
             this.plot1.Model.DefaultFontSize = FontSize;
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0);
             this.plot1.Model.LegendBorder = OxyColors.Transparent;
-            this.plot1.Model.LegendBackground = OxyColors.White;
+            this.plot1.Model.LegendBackground = OxyColors.Transparent;
 
             if (this.LeftRightPadding != 0)
                 this.plot1.Model.Padding = new OxyThickness(10, 10, this.LeftRightPadding, 10);
@@ -156,8 +161,8 @@ namespace UserInterface.Views
                     OxyPlot.Annotations.TextAnnotation textAnnotation = annotation as OxyPlot.Annotations.TextAnnotation;
                     if (textAnnotation != null)
                         textAnnotation.FontSize = FontSize;
+                    }
                 }
-            }
 
             this.plot1.Model.InvalidatePlot(true);
         }
@@ -232,7 +237,9 @@ namespace UserInterface.Views
                     series.MarkerType = type;
                 }
 
-                if (markerSize == MarkerSizeType.Normal)
+                if (MarkerSize > -1)
+                    series.MarkerSize = MarkerSize;
+                else if (markerSize == MarkerSizeType.Normal)
                     series.MarkerSize = 7.0;
                 else
                     series.MarkerSize = 5.0;
@@ -378,6 +385,7 @@ namespace UserInterface.Views
                 yPosition = (double)y;
             annotation.TextPosition = new DataPoint(xPosition, yPosition);
             annotation.TextColor = ConverterExtensions.ToOxyColor(colour);
+            annotation.Text += "\r\n\r\n";
             this.plot1.Model.Annotations.Add(annotation);
         }
 
@@ -469,7 +477,7 @@ namespace UserInterface.Views
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
             if (oxyAxis != null)
             {
-                oxyAxis.Title = title;
+                oxyAxis.Title = title.Trim();
                 oxyAxis.MinorTickSize = 0;
                 oxyAxis.AxislineStyle = LineStyle.Solid;
                 oxyAxis.AxisTitleDistance = 10;
@@ -516,6 +524,8 @@ namespace UserInterface.Views
         public void FormatTitle(string text)
         {
             this.plot1.Model.Title = text;
+            this.plot1.Model.TitleFont = Font;
+            this.plot1.Model.TitleFontSize = FontSize;
         }
 
         /// <summary>
@@ -570,20 +580,18 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
-        public void Export(Bitmap bitmap, bool legendOutside)
+        public void Export(Bitmap bitmap, Rectangle r, bool legendOutside)
         {
-            this.plot1.Dock = DockStyle.None;
-            this.plot1.Width = bitmap.Width;
-            this.plot1.Height = bitmap.Height;
-            this.plot1.DrawToBitmap(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height));
-            this.plot1.Dock = DockStyle.Fill;
+            this.plot1.Width = r.Width;
+            this.plot1.Height = r.Height;
+            this.plot1.DrawToBitmap(bitmap, r);
         }
 
         public void ExportToClipboard()
         {
             // Set the clipboard text.
             Bitmap bitmap = new Bitmap(800, 600);
-            Export(bitmap, false);
+            Export(bitmap, new Rectangle(0, 0, bitmap.Width, bitmap.Height), false);
             Clipboard.SetImage(bitmap);
         }
 

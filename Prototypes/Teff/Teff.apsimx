@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -24,12 +24,12 @@ The APSIM Teff model includes components to simulate the following plant parts a
       </Memo>
       <OrganArbitrator>
         <Name>Arbitrator</Name>
-    <PrioritythenRelativeAllocation>
-      <Name>NArbitrator</Name>
-    </PrioritythenRelativeAllocation>
-    <RelativeAllocation>
-      <Name>DMArbitrator</Name>
-    </RelativeAllocation>
+        <PrioritythenRelativeAllocation>
+          <Name>NArbitrator</Name>
+        </PrioritythenRelativeAllocation>
+        <RelativeAllocation>
+          <Name>DMArbitrator</Name>
+        </RelativeAllocation>
       </OrganArbitrator>
       <Phenology>
         <Name>Phenology</Name>
@@ -110,7 +110,7 @@ The phenology model used in the APSIM Teff model follows the approach used in ea
           <Name>Emerging</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Germination</Start>
           <End>Emergence</End>
@@ -127,12 +127,12 @@ Data from [vanDelden2012] showed that panicle initiation occurred at leaf number
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>100</Value>
+            <FixedValue>100</FixedValue>
             <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Emergence</Start>
           <End>EndJuvenile</End>
@@ -147,7 +147,7 @@ Data from [vanDelden2012] showed that final leaf number for a selection of teff 
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <LinearInterpolationFunction>
             <Name>Target</Name>
@@ -166,7 +166,7 @@ Data from [vanDelden2012] showed that final leaf number for a selection of teff 
                 <double>150</double>
               </Y>
             </XYPairs>
-            <XProperty>[Phenology].Photoperiod.Value</XProperty>
+            <XProperty>[Phenology].Photoperiod.Value()</XProperty>
           </LinearInterpolationFunction>
           <Start>EndJuvenile</Start>
           <End>FloralInitiation</End>
@@ -175,7 +175,7 @@ Data from [vanDelden2012] showed that final leaf number for a selection of teff 
           <Name>LeafAppearance</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>FloralInitiation</Start>
           <End>FlagLeaf</End>
@@ -190,12 +190,12 @@ Data from [vanDelden2012] showed that final leaf number for a selection of teff 
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>100</Value>
+            <FixedValue>100</FixedValue>
             <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>FlagLeaf</Start>
           <End>Flowering</End>
@@ -210,12 +210,12 @@ Unknown?????????????????????????????????????<br/>
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>120</Value>
+            <FixedValue>120</FixedValue>
             <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Flowering</Start>
           <End>StartGrainFill</End>
@@ -230,12 +230,12 @@ Unknown?????????????????????????????????????<br/>
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>550</Value>
+            <FixedValue>550</FixedValue>
             <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>StartGrainFill</Start>
           <End>EndGrainFill</End>
@@ -250,12 +250,12 @@ Unknown?????????????????????????????????????<br/>
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>10</Value>
+            <FixedValue>10</FixedValue>
             <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>EndGrainFill</Start>
           <End>Maturity</End>
@@ -271,12 +271,12 @@ Unknown?????????????????????????????????????<br/>
           </Memo>
           <Constant>
             <Name>Target</Name>
-            <Value>10</Value>
+            <FixedValue>10</FixedValue>
             <Units>oC.d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>Maturity</Start>
           <End>HarvestRipe</End>
@@ -285,7 +285,7 @@ Unknown?????????????????????????????????????<br/>
           <Name>ReadyForHarvesting</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
-            <VariableName>[Phenology].ThermalTime.Value</VariableName>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <Start>HarvestRipe</Start>
           <End>Unused</End>
@@ -306,7 +306,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -326,7 +326,7 @@ A function is used to provide maturity date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -346,7 +346,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
@@ -365,7 +365,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </Memo>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <PhaseLookup>
           <Name>MainStemNodeAppearanceRate</Name>
@@ -625,7 +625,7 @@ A function is used to provide flowering date as days after sowing(DAS).
               <Name>Reproductive</Name>
               <Constant>
                 <Name>Zero</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>FlagLeaf</Start>
               <End>HarvestRipe</End>
@@ -666,11 +666,11 @@ A function is used to provide flowering date as days after sowing(DAS).
         </MultiplyFunction>
         <Constant>
           <Name>BranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <HoldFunction>
           <Name>MainStemFinalNodeNumber</Name>
@@ -678,7 +678,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>ValueToHold</Name>
             <Constant>
               <Name>PrimordiaAtEmergence</Name>
-              <Value>6</Value>
+              <FixedValue>6</FixedValue>
             </Constant>
             <DivideFunction>
               <Name>PrimordiaDuringJuvenilePhase</Name>
@@ -686,11 +686,11 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <Name>AddFunction</Name>
                 <VariableReference>
                   <Name>JuvenilePhaseDuration</Name>
-                  <VariableName>[Phenology].Juvenile.Target.Value</VariableName>
+                  <VariableName>[Phenology].Juvenile.Target.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>PhotoSensitivePhaseDuration</Name>
-                  <VariableName>[Phenology].Photosensitive.Target.Value</VariableName>
+                  <VariableName>[Phenology].Photosensitive.Target.Value()</VariableName>
                 </VariableReference>
               </AddFunction>
               <PhaseLookup>
@@ -699,7 +699,7 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <Name>PreEmerg</Name>
                   <Constant>
                     <Name>Constant</Name>
-                    <Value>15</Value>
+                    <FixedValue>15</FixedValue>
                   </Constant>
                   <Start>Germination</Start>
                   <End>Emergence</End>
@@ -714,11 +714,11 @@ A function is used to provide flowering date as days after sowing(DAS).
                         <Name>Plastochron</Name>
                         <VariableReference>
                           <Name>Phyllochron</Name>
-                          <VariableName>[Structure].MainStemNodeAppearanceRate.Value</VariableName>
+                          <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
                         </VariableReference>
                         <Constant>
                           <Name>LeafTipsPerPrimordia</Name>
-                          <Value>0.5</Value>
+                          <FixedValue>0.5</FixedValue>
                         </Constant>
                       </MultiplyFunction>
                       <StartStageName>Emergence</StartStageName>
@@ -728,7 +728,7 @@ A function is used to provide flowering date as days after sowing(DAS).
                       <Name>Days</Name>
                       <Constant>
                         <Name>Constant</Name>
-                        <Value>1</Value>
+                        <FixedValue>1</FixedValue>
                       </Constant>
                       <StartStageName>Emergence</StartStageName>
                       <EndStageName>FloralInitiation</EndStageName>
@@ -747,16 +747,17 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Emerged>false</Emerged>
         <CohortToInitialise>0</CohortToInitialise>
         <TipToAppear>0</TipToAppear>
+        <ApexNum>0</ApexNum>
       </Structure>
       <ReproductiveOrgan>
         <Name>Grain</Name>
         <Constant>
           <Name>InitialGrainProportion</Name>
-          <Value>0.05</Value>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
-          <Value>0.0003</Value>
+          <FixedValue>0.0003</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>DMDemandFunction</Name>
@@ -766,25 +767,25 @@ A function is used to provide flowering date as days after sowing(DAS).
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>FillingDuration</Name>
-                <VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
+                <VariableName>[Phenology].FloweringToGrainFilling.Target.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
                 <VariableReference>
                   <Name>InitialProportion</Name>
-                  <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
+                  <VariableName>[Grain].InitialGrainProportion.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -797,15 +798,15 @@ A function is used to provide flowering date as days after sowing(DAS).
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>FillingDuration</Name>
-                <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
               </VariableReference>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
@@ -813,16 +814,16 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <Name>ProportionLinearPhase</Name>
                   <Constant>
                     <Name>One</Name>
-                    <Value>1</Value>
+                    <FixedValue>1</FixedValue>
                   </Constant>
                   <VariableReference>
                     <Name>InitialProportion</Name>
-                    <VariableName>[Grain].InitialGrainProportion.Value</VariableName>
+                    <VariableName>[Grain].InitialGrainProportion.Value()</VariableName>
                   </VariableReference>
                 </SubtractFunction>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -838,7 +839,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </Biomass>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.008</Value>
+          <FixedValue>0.008</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <PhaseLookup>
@@ -847,7 +848,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>InitialPhase</Name>
             <Constant>
               <Name>InitialNconc</Name>
-              <Value>0.05</Value>
+              <FixedValue>0.05</FixedValue>
               <Units>g/g</Units>
             </Constant>
             <Start>Flowering</Start>
@@ -857,7 +858,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>LinearPhase</Name>
             <Constant>
               <Name>FinalNconc</Name>
-              <Value>0.013</Value>
+              <FixedValue>0.013</FixedValue>
               <Units>g/g</Units>
             </Constant>
             <Start>StartGrainFill</Start>
@@ -866,7 +867,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </PhaseLookup>
         <Constant>
           <Name>WaterContent</Name>
-          <Value>0.12</Value>
+          <FixedValue>0.12</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <PhaseLookup>
@@ -877,32 +878,32 @@ A function is used to provide flowering date as days after sowing(DAS).
               <Name>FillingRateFunction</Name>
               <VariableReference>
                 <Name>NumberFunction</Name>
-                <VariableName>[Grain].NumberFunction.Value</VariableName>
+                <VariableName>[Grain].NumberFunction.Value()</VariableName>
               </VariableReference>
               <AddFunction>
                 <Name>FillingDuration</Name>
                 <VariableReference>
                   <Name>FloweringToGrainFilling</Name>
-                  <VariableName>[Phenology].FloweringToGrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].FloweringToGrainFilling.Target.Value()</VariableName>
                 </VariableReference>
                 <VariableReference>
                   <Name>GrainFilling</Name>
-                  <VariableName>[Phenology].GrainFilling.Target.Value</VariableName>
+                  <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
                 </VariableReference>
               </AddFunction>
               <VariableReference>
                 <Name>ThermalTime</Name>
-                <VariableName>[Phenology].ThermalTime.Value</VariableName>
+                <VariableName>[Phenology].ThermalTime.Value()</VariableName>
               </VariableReference>
               <MultiplyFunction>
                 <Name>PotentialSizeIncrement</Name>
                 <Constant>
                   <Name>MaximumFinalNConc</Name>
-                  <Value>0.025</Value>
+                  <FixedValue>0.025</FixedValue>
                 </Constant>
                 <VariableReference>
                   <Name>MaximumSize</Name>
-                  <VariableName>[Grain].MaximumPotentialGrainSize.Value</VariableName>
+                  <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
                 </VariableReference>
               </MultiplyFunction>
             </FillingRateFunction>
@@ -918,7 +919,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </VariableReference>
           <Constant>
             <Name>GrainsPerGramStem</Name>
-            <Value>4000</Value>
+            <FixedValue>4000</FixedValue>
             <Units>/g</Units>
           </Constant>
         </MultiplyFunction>
@@ -1001,7 +1002,7 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
 No effect of soil water content on root growth is currently captured in the model.<br/>
 ]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>TemperatureEffect</Name>
@@ -1011,7 +1012,7 @@ No effect of soil water content on root growth is currently captured in the mode
 No effect of temperature on root growth is currently captured in the model.<br/>
 ]]></MemoText>
           </Memo>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaxDailyNUptake</Name>
@@ -1021,7 +1022,7 @@ No effect of temperature on root growth is currently captured in the model.<br/>
 Maximum daily N uptake is set to an arbitrarily high value.<br/>
 ]]></MemoText>
           </Memo>
-          <Value>20</Value>
+          <FixedValue>20</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
@@ -1031,25 +1032,25 @@ Maximum daily N uptake is set to an arbitrarily high value.<br/>
 Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-maize model.<br/>
 ]]></MemoText>
           </Memo>
-          <Value>0.005</Value>
+          <FixedValue>0.005</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
-          <Value>1000000</Value>
+          <FixedValue>1000000</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>PartitionFraction</Name>
@@ -1085,7 +1086,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>PreFlowering</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>25</Value>
+              <FixedValue>25</FixedValue>
             </Constant>
             <Start>Germination</Start>
             <End>Flowering</End>
@@ -1094,7 +1095,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>PostFlowering</Name>
             <Constant>
               <Name>Function</Name>
-              <Value>0</Value>
+              <FixedValue>0</FixedValue>
             </Constant>
             <Start>Flowering</Start>
             <End>Maturity</End>
@@ -1183,12 +1184,12 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
-          <Value>0.2</Value>
+          <FixedValue>0.2</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
-          <Value>40</Value>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
@@ -1245,24 +1246,24 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>CohortParameters</Name>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
-            <Value>0.1</Value>
+            <FixedValue>0.1</FixedValue>
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
-            <Value>0.5</Value>
+            <FixedValue>0.5</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>CellDivisionStress</Name>
@@ -1298,56 +1299,85 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <Name>GrowthDuration</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value</VariableName>
+              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>NumberOfExpandingLeaves</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
           </MultiplyFunction>
           <Constant>
             <Name>LagDuration</Name>
-            <Value>500</Value>
+            <FixedValue>500</FixedValue>
           </Constant>
           <Constant>
             <Name>SenescenceDuration</Name>
-            <Value>100</Value>
+            <FixedValue>100</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentLagDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
-            <Value>1000000</Value>
+            <FixedValue>1000000</FixedValue>
           </Constant>
           <Constant>
             <Name>RelativeBranchLeafSize</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>MaximumNConc</Name>
-            <Value>0.063</Value>
+            <FixedValue>0.063</FixedValue>
           </Constant>
           <Constant>
             <Name>CriticalNConc</Name>
-            <Value>0.05</Value>
+            <FixedValue>0.05</FixedValue>
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <AddFunction>
-            <Name>DroughtInducedSenAcceleration</Name>
+            <Name>DroughtInducedLagAcceleration</Name>
             <Constant>
               <Name>One</Name>
-              <Value>1</Value>
+              <FixedValue>1</FixedValue>
             </Constant>
             <MultiplyFunction>
               <Name>Stress</Name>
               <Constant>
                 <Name>StressResponseCoefficient</Name>
-                <Value>1</Value>
+                <FixedValue>1</FixedValue>
+              </Constant>
+              <LinearInterpolationFunction>
+                <Name>StressFactor</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <X>
+                    <double>0</double>
+                    <double>0.7</double>
+                  </X>
+                  <Y>
+                    <double>1</double>
+                    <double>0</double>
+                  </Y>
+                </XYPairs>
+                <XProperty>[Teff].WaterSupplyDemandRatio</XProperty>
+              </LinearInterpolationFunction>
+            </MultiplyFunction>
+          </AddFunction>
+          <AddFunction>
+            <Name>DroughtInducedSenAcceleration</Name>
+            <Constant>
+              <Name>One</Name>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <MultiplyFunction>
+              <Name>Stress</Name>
+              <Constant>
+                <Name>StressResponseCoefficient</Name>
+                <FixedValue>1</FixedValue>
               </Constant>
               <LinearInterpolationFunction>
                 <Name>StressFactor</Name>
@@ -1400,15 +1430,15 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </LinearInterpolationFunction>
           <Constant>
             <Name>InitialNConc</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
             <Name>StructuralFraction</Name>
-            <Value>0.5</Value>
+            <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
             <Name>NonStructuralFraction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>ShadeInducedSenescenceRate</Name>
@@ -1454,18 +1484,18 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           </LinearInterpolationFunction>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
-            <Value>0.01</Value>
+            <FixedValue>0.01</FixedValue>
           </Constant>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
-            <Value>0</Value>
+            <FixedValue>0</FixedValue>
           </Constant>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
-            <Value>1.5</Value>
+            <FixedValue>1.5</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -1674,17 +1704,17 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
-            <VariableName>[Leaf].Photosynthesis.FT.Value</VariableName>
+            <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
-              <VariableName>[Leaf].Photosynthesis.FN.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
-              <VariableName>[Leaf].Photosynthesis.FVPD.Value</VariableName>
+              <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
           </MinimumFunction>
         </MinimumFunction>
@@ -1746,7 +1776,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </LinearInterpolationFunction>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <VariableName>[Phenology].ThermalTime.Value</VariableName>
+          <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
@@ -1781,11 +1811,11 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
         </Constant>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1817,30 +1847,30 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Biomass>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.1</Value>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.01</Value>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <MultiplyFunction>
           <Name>HeadNumber</Name>
           <Constant>
             <Name>FertileTillers</Name>
-            <Value>1</Value>
+            <FixedValue>1</FixedValue>
           </Constant>
           <VariableReference>
             <Name>StemPopulation</Name>
@@ -1859,7 +1889,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <Name>PreFlagLeaf</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0</Value>
+                <FixedValue>0</FixedValue>
               </Constant>
               <Start>Emergence</Start>
               <End>FlagLeaf</End>
@@ -1868,7 +1898,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <Name>StemElongation</Name>
               <Constant>
                 <Name>PanicleFraction</Name>
-                <Value>0.6</Value>
+                <FixedValue>0.6</FixedValue>
               </Constant>
               <Start>FlagLeaf</Start>
               <End>StartGrainFill</End>
@@ -1908,27 +1938,27 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -1942,7 +1972,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </Biomass>
         <Constant>
           <Name>SenescenceRate</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <LinearInterpolationFunction>
@@ -1962,7 +1992,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
-          <Value>0.006</Value>
+          <FixedValue>0.006</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
@@ -1971,15 +2001,15 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </PhaseBasedSwitch>
         <Constant>
           <Name>NReallocationFactor</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
-          <Value>0.5</Value>
+          <FixedValue>0.5</FixedValue>
         </Constant>
         <MinimumFunction>
           <Name>DMDemandFunctionOLD</Name>
@@ -2015,7 +2045,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <Name>HightLimitedDMAccumulation</Name>
             <Constant>
               <Name>SpecificStemLengthMax</Name>
-              <Value>500</Value>
+              <FixedValue>500</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Branches</Name>
@@ -2039,7 +2069,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <Name>PreStemElongation</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.3</Value>
+                <FixedValue>0.3</FixedValue>
               </Constant>
               <Start>Emergence</Start>
               <End>FloralInitiation</End>
@@ -2048,7 +2078,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <Name>StemElongation</Name>
               <Constant>
                 <Name>StemFraction</Name>
-                <Value>0.6</Value>
+                <FixedValue>0.6</FixedValue>
               </Constant>
               <Start>FloralInitiation</Start>
               <End>FlagLeaf</End>
@@ -2088,27 +2118,27 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
-          <Value>0</Value>
+          <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
-          <Value>1</Value>
+          <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
       </GenericOrgan>
@@ -2257,12 +2287,12 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 50</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 50</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 50</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 100</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 400</Command>
       </Cultivar>
       <Cultivar>
         <Name>Gibe</Name>
@@ -2273,12 +2303,12 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 65</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 65</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9,11, 13.5</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 180</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 100</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 400</Command>
       </Cultivar>
       <Cultivar>
         <Name>Ziquala</Name>
@@ -2289,12 +2319,12 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 120</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 120</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 11, 13.5</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 150</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 50</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 200</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 50</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 200</Command>
       </Cultivar>
       <Cultivar>
         <Name>Ayana</Name>
@@ -2305,12 +2335,12 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 40</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 40</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 110</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 50</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 200</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 50</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 200</Command>
       </Cultivar>
       <Cultivar>
         <Name>04T19</Name>
@@ -2321,12 +2351,12 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 120</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 120</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 110</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 100</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 400</Command>
       </Cultivar>
       <Cultivar>
         <Name>Wajera</Name>
@@ -2334,13 +2364,13 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
           <Name>memo</Name>
           <MemoText><![CDATA[A local variety used in a study by Abebe Getu (2012) which seems to mature quickly and achieve a high harvest index (e.g. 0.4).]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 40</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 40</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 130</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 50</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 200</Command>
-        <Command>[Grain].NumberFunction.GrainsPerGramStem.Value = 5000</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 50</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 200</Command>
+        <Command>[Grain].NumberFunction.GrainsPerGramStem.FixedValue = 5000</Command>
       </Cultivar>
       <Cultivar>
         <Name>DZ974</Name>
@@ -2348,12 +2378,12 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
           <Name>memo</Name>
           <MemoText><![CDATA[A local variety used in a study by Abebe Getu (2012) which seems to mature quickly and achieve a high harvest index (e.g. 0.4).]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 40</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 40</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9, 16.5</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 70</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 50</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 200</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 50</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 200</Command>
       </Cultivar>
       <Cultivar>
         <Name>Kuncho</Name>
@@ -2364,12 +2394,12 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
 
 ]]></MemoText>
         </Memo>
-        <Command>[Phenology].Juvenile.Target.Value = 65</Command>
+        <Command>[Phenology].Juvenile.Target.FixedValue = 65</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.X = 9,11, 13.5</Command>
         <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 180</Command>
-        <Command>[Phenology].FlagLeafToFlowering.Target.Value = 10</Command>
-        <Command>[Phenology].FloweringToGrainFilling.Target.Value = 100</Command>
-        <Command>[Phenology].GrainFilling.Target.Value = 400</Command>
+        <Command>[Phenology].FlagLeafToFlowering.Target.FixedValue = 10</Command>
+        <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 100</Command>
+        <Command>[Phenology].GrainFilling.Target.FixedValue = 400</Command>
       </Cultivar>
       <CropType>Teff</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
@@ -2929,7 +2959,6 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -2946,8 +2975,8 @@ Abebe Getu (BSc), Hawassa University, Ethiopia </h2>
               <string>[Teff].Grain.Live.N as GrainN</string>
               <string>[Teff].Leaf.Live.N as LeafN</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Teff].Harvesting</string>
@@ -3715,7 +3744,6 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -3729,8 +3757,8 @@ SOIL FERTILITY CHARACTERIZATION AND RESPONSE OF WHEAT (iTriticum aestivum) i0AND
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Teff].Harvesting</string>
@@ -5254,7 +5282,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -5268,8 +5295,8 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Teff].Harvesting</string>
@@ -6962,7 +6989,6 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>Report</Name>
@@ -7005,8 +7031,8 @@ From Crop Water Productivity of Irrigated Teff in a WaterStressed RegionYenesew 
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Teff].Harvesting</string>
@@ -7554,11 +7580,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Teff].Root.Depth</string>
               <string>[Teff].Leaf.Fw</string>
               <string>[Teff].Leaf.Fn</string>
-              <string>[Teff].Leaf.Photosynthesis.Value</string>
+              <string>[Teff].Leaf.Photosynthesis.Value()</string>
               <string>[Teff].Stem.Live.Wt</string>
               <string>[Teff].Panicle.Live.Wt</string>
               <string>[Teff].Leaf.Total.Wt</string>
-              <string>[Teff].Panicle.DMDemandFunction.Value</string>
+              <string>[Teff].Panicle.DMDemandFunction.Value()</string>
               <string>[Teff].Leaf.Live.Wt</string>
               <string>[Teff].Leaf.Dead.Wt</string>
               <string>[Teff].Leaf.CoverGreen</string>
@@ -7904,7 +7930,6 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -7918,8 +7943,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDASS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDASS</string>
             </VariableNames>
             <EventNames>
               <string>[Teff].Harvesting</string>
@@ -9298,7 +9323,6 @@ Field Crops Research 116 (2010) 196204
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>Report</Name>
@@ -9327,11 +9351,11 @@ Field Crops Research 116 (2010) 196204
               <string>[Teff].Root.Depth</string>
               <string>[Teff].Leaf.Fw</string>
               <string>[Teff].Leaf.Fn</string>
-              <string>[Teff].Leaf.Photosynthesis.Value</string>
+              <string>[Teff].Leaf.Photosynthesis.Value()</string>
               <string>[Teff].Stem.Live.Wt</string>
               <string>[Teff].Panicle.Live.Wt</string>
               <string>[Teff].Leaf.Total.Wt</string>
-              <string>[Teff].Panicle.DMDemandFunction.Value</string>
+              <string>[Teff].Panicle.DMDemandFunction.Value()</string>
               <string>[Teff].Leaf.Live.Wt</string>
               <string>[Teff].Leaf.Dead.Wt</string>
               <string>[Teff].Leaf.CoverGreen</string>
@@ -9357,8 +9381,8 @@ Field Crops Research 116 (2010) 196204
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Teff].Harvesting</string>
@@ -10037,7 +10061,6 @@ namespace Models
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -10051,8 +10074,8 @@ namespace Models
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Teff].Harvesting</string>
@@ -10758,7 +10781,6 @@ namespace Models
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -10772,8 +10794,8 @@ namespace Models
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDAS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDAS</string>
             </VariableNames>
             <EventNames>
               <string>[Teff].Harvesting</string>
@@ -11193,11 +11215,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Teff].Root.Depth</string>
               <string>[Teff].Leaf.Fw</string>
               <string>[Teff].Leaf.Fn</string>
-              <string>[Teff].Leaf.Photosynthesis.Value</string>
+              <string>[Teff].Leaf.Photosynthesis.Value()</string>
               <string>[Teff].Stem.Live.Wt</string>
               <string>[Teff].Panicle.Live.Wt</string>
               <string>[Teff].Leaf.Total.Wt</string>
-              <string>[Teff].Panicle.DMDemandFunction.Value</string>
+              <string>[Teff].Panicle.DMDemandFunction.Value()</string>
               <string>[Teff].Leaf.Live.Wt</string>
               <string>[Teff].Leaf.Dead.Wt</string>
               <string>[Teff].Leaf.CoverGreen</string>
@@ -11543,7 +11565,6 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -11557,8 +11578,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDASS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDASS</string>
             </VariableNames>
             <EventNames>
               <string>[Teff].Harvesting</string>
@@ -12631,11 +12652,11 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Teff].Root.Depth</string>
               <string>[Teff].Leaf.Fw</string>
               <string>[Teff].Leaf.Fn</string>
-              <string>[Teff].Leaf.Photosynthesis.Value</string>
+              <string>[Teff].Leaf.Photosynthesis.Value()</string>
               <string>[Teff].Stem.Live.Wt</string>
               <string>[Teff].Panicle.Live.Wt</string>
               <string>[Teff].Leaf.Total.Wt</string>
-              <string>[Teff].Panicle.DMDemandFunction.Value</string>
+              <string>[Teff].Panicle.DMDemandFunction.Value()</string>
               <string>[Teff].Leaf.Live.Wt</string>
               <string>[Teff].Leaf.Dead.Wt</string>
               <string>[Teff].Leaf.CoverGreen</string>
@@ -12981,7 +13002,6 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Report>
             <Name>HarvestReport</Name>
@@ -12995,8 +13015,8 @@ Field Crops Research 116 (2010) 196204]]></MemoText>
               <string>[Teff].Grain.Size as GrainSize</string>
               <string>[Teff].Grain.Live.Wt as GrainWt</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDASS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDASS</string>
             </VariableNames>
             <EventNames>
               <string>[Teff].Harvesting</string>
@@ -14598,7 +14618,6 @@ namespace Models
             <RecordNumber>0</RecordNumber>
             <Latitude>0</Latitude>
             <Longitude>0</Longitude>
-            <Area>0</Area>
           </Soil>
           <Manager>
             <Name>TeffHarvesting</Name>
@@ -14659,9 +14678,9 @@ namespace Models
               <string>[Clock].Today</string>
               <string>[Teff].Structure.MainStemFinalNodeNo</string>
               <string>[Teff].Leaf.AppearedCohortNo</string>
-              <string>[Teff].Phenology.PanicleInitiationDAS.Value as PanicleInitiationDAS</string>
-              <string>[Teff].Phenology.FloweringDAS.Value as FloweringDAS</string>
-              <string>[Teff].Phenology.MaturityDAS.Value  as MaturityDASS</string>
+              <string>[Teff].Phenology.PanicleInitiationDAS.Value() as PanicleInitiationDAS</string>
+              <string>[Teff].Phenology.FloweringDAS.Value() as FloweringDAS</string>
+              <string>[Teff].Phenology.MaturityDAS.Value()  as MaturityDASS</string>
               <string>[ControlledEnvironment].DayLength</string>
             </VariableNames>
             <EventNames>
