@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <MemoText><![CDATA[
 # The APSIM Grapevine Model
 
@@ -35,6 +36,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
       <Name>Grapevine</Name>
       <Cultivar>
         <Name>SauvignonBlanc</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Cultivar>
       <Phenology>
         <Name>Phenology</Name>
@@ -42,6 +44,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>ThermalTime</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>30</double>
@@ -57,11 +60,13 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
               <double>0</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </AirTemperatureFunction>
         <GenericPhase>
           <Name>Dormant</Name>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>13.5</FixedValue>
             <Units>days</Units>
           </Constant>
@@ -69,6 +74,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <Name>ThermalTime</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>4</double>
@@ -82,7 +88,9 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AirTemperatureFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>StartDomancy</Start>
           <End>EndDomancy</End>
         </GenericPhase>
@@ -90,22 +98,26 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>Budding</Name>
           <Memo>
             <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[During the vegetative phase the crop is only growing stem, root and leaf.  Tuber initiation usually occurs soon after emergence and the duration of this phase can be influenced by the physiological status of the seed tuber at planting.  As discussed above, we do not have a suitable method for modelling this yet so we have treated the time from emergence to tuber initiation as a thermal time constant.]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>Target</Name>
             <Constant>
               <Name>Base</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>51</FixedValue>
             </Constant>
             <LinearInterpolationFunction>
               <Name>ChillingTadjustment</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>5</double>
                   <double>13.8</double>
@@ -121,19 +133,28 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
                   <double>0.43</double>
                 </Y>
               </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Budding].AccChill.Value()</XProperty>
             </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
           <AccumulateFunction>
             <Name>AccChill</Name>
             <VariableReference>
               <Name>ThermalTime</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].Dormant.ThermalTime.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartStageName>StartDomancy</StartStageName>
             <EndStageName>BudBurst</EndStageName>
             <ResetStageName>StartDomancy</ResetStageName>
+            <FractionRemovedOnCut>0</FractionRemovedOnCut>
+            <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+            <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+            <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
           </AccumulateFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>EndDomancy</Start>
           <End>BudBurst</End>
         </BuddingPhase>
@@ -141,12 +162,15 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>ShootGrowth</Name>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>29</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>BudBurst</Start>
           <End>StartFlowering</End>
         </GenericPhase>
@@ -154,13 +178,16 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>FlowerDevelopment</Name>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>7</FixedValue>
             <Units>dd</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>StartFlowering</Start>
           <End>FruitSet</End>
         </GenericPhase>
@@ -168,12 +195,14 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>BerryDevelopment</Name>
           <Constant>
             <Name>Target</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>20</FixedValue>
           </Constant>
           <AirTemperatureFunction>
             <Name>ThermalTime</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>25</double>
@@ -187,7 +216,9 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AirTemperatureFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>FruitSet</Start>
           <End>Veraison</End>
         </GenericPhase>
@@ -195,13 +226,16 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>LeafDeathPhase</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Veraison</Start>
           <End>LeafFall</End>
         </LeafDeathPhase>
         <GotoPhase>
           <Name>GotoPhase</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>LeafFall</Start>
           <End>Unused</End>
           <FractionComplete>0</FractionComplete>
@@ -211,18 +245,22 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Name>BudBurstDOY</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 A function is used to provide flowering date as days after sowing(DAS).
 ]]></MemoText>
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Clock].Today.DayOfYear</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>BudBurst</SetEvent>
           <ReSetEvent>StartDomancy</ReSetEvent>
         </OnEventFunction>
@@ -230,18 +268,22 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>FloweringDOY</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 A function is used to provide flowering date as days after sowing(DAS).
 ]]></MemoText>
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Clock].Today.DayOfYear</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>StartFlowering</SetEvent>
           <ReSetEvent>StartDomancy</ReSetEvent>
         </OnEventFunction>
@@ -249,21 +291,26 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>VeraisonDOY</Name>
           <Memo>
             <Name>memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
 A function is used to provide flowering date as days after sowing(DAS).
 ]]></MemoText>
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
           <VariableReference>
             <Name>PostEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Clock].Today.DayOfYear</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>Veraison</SetEvent>
           <ReSetEvent>StartDomancy</ReSetEvent>
         </OnEventFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <DaysAfterSowing>0</DaysAfterSowing>
       </Phenology>
       <Structure>
@@ -272,22 +319,52 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>MainStemPrimordiaInitiationRate</Name>
           <Constant>
             <Name>Constant</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>30</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>BudBurst</Start>
           <End>Veraison</End>
         </PhaseLookupValue>
         <PhaseLookupValue>
           <Name>MainStemNodeAppearanceRate</Name>
-          <Constant>
-            <Name>Constant</Name>
-            <FixedValue>30</FixedValue>
-          </Constant>
+          <MultiplyFunction>
+            <Name>MultiplyFunction</Name>
+            <Constant>
+              <Name>Constant</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>30</FixedValue>
+            </Constant>
+            <LinearInterpolationFunction>
+              <Name>LinearInterpolationFunction</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>1</double>
+                  <double>5</double>
+                  <double>10</double>
+                  <double>24</double>
+                </X>
+                <Y>
+                  <double>0.5</double>
+                  <double>0.5</double>
+                  <double>0.7</double>
+                  <double>1</double>
+                </Y>
+              </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <XProperty>[Leaf].AppearedCohortNo</XProperty>
+            </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>BudBurst</Start>
           <End>Veraison</End>
         </PhaseLookupValue>
         <Constant>
           <Name>MainStemFinalNodeNumber</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>24</FixedValue>
           <Units>number</Units>
         </Constant>
@@ -295,6 +372,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>HeightModel</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>200</double>
@@ -308,6 +386,7 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>1800</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Stem].Live.Wt</XProperty>
         </LinearInterpolationFunction>
         <MultiplyFunction>
@@ -316,6 +395,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>Potential_Branching_Rate</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>7</double>
@@ -333,12 +413,14 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].LeafTipsAppeared</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>LinearInterpolationFunction</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.4</double>
@@ -354,21 +436,26 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].CoverGreen</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <Constant>
           <Name>BranchMortality</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>DroughtInducedBranchMortality</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <AirTemperatureFunction>
           <Name>ThermalTime</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>30</double>
@@ -384,7 +471,14 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>0</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </AirTemperatureFunction>
+        <Constant>
+          <Name>StemSenescenceAge</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
         <Emerged>false</Emerged>
@@ -396,28 +490,89 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Name>Leaf</Name>
         <VariableReference>
           <Name>ThermalTime</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Structure].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LeafCohort>
           <Name>InitialLeaf1</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <NReallocationFactor>0</NReallocationFactor>
+          <DMReallocationFactor>0</DMReallocationFactor>
+          <NRetranslocationFactor>0</NRetranslocationFactor>
+          <DMRetranslocationFactor>0</DMRetranslocationFactor>
+          <ShadeInducedSenRate>0</ShadeInducedSenRate>
+          <SenescedFrac>0</SenescedFrac>
+          <DeltaPotentialArea>0</DeltaPotentialArea>
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+          <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+          <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+          <MetabolicNReallocated>0</MetabolicNReallocated>
+          <MetabolicWtReallocated>0</MetabolicWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <DMRetranslocated>0</DMRetranslocated>
+          <MetabolicNAllocation>0</MetabolicNAllocation>
+          <StructuralDMAllocation>0</StructuralDMAllocation>
+          <MetabolicDMAllocation>0</MetabolicDMAllocation>
           <Rank>1</Rank>
           <Area>1000</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <NReallocationFactor>0</NReallocationFactor>
+          <DMReallocationFactor>0</DMReallocationFactor>
+          <NRetranslocationFactor>0</NRetranslocationFactor>
+          <DMRetranslocationFactor>0</DMRetranslocationFactor>
+          <ShadeInducedSenRate>0</ShadeInducedSenRate>
+          <SenescedFrac>0</SenescedFrac>
+          <DeltaPotentialArea>0</DeltaPotentialArea>
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+          <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+          <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+          <MetabolicNReallocated>0</MetabolicNReallocated>
+          <MetabolicWtReallocated>0</MetabolicWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <DMRetranslocated>0</DMRetranslocated>
+          <MetabolicNAllocation>0</MetabolicNAllocation>
+          <StructuralDMAllocation>0</StructuralDMAllocation>
+          <MetabolicDMAllocation>0</MetabolicDMAllocation>
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf3</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <NReallocationFactor>0</NReallocationFactor>
+          <DMReallocationFactor>0</DMReallocationFactor>
+          <NRetranslocationFactor>0</NRetranslocationFactor>
+          <DMRetranslocationFactor>0</DMRetranslocationFactor>
+          <ShadeInducedSenRate>0</ShadeInducedSenRate>
+          <SenescedFrac>0</SenescedFrac>
+          <DeltaPotentialArea>0</DeltaPotentialArea>
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+          <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+          <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+          <MetabolicNReallocated>0</MetabolicNReallocated>
+          <MetabolicWtReallocated>0</MetabolicWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <DMRetranslocated>0</DMRetranslocated>
+          <MetabolicNAllocation>0</MetabolicNAllocation>
+          <StructuralDMAllocation>0</StructuralDMAllocation>
+          <MetabolicDMAllocation>0</MetabolicDMAllocation>
           <Rank>3</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -428,6 +583,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>MaxArea</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.15</double>
@@ -439,12 +595,14 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>10000</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>GrowthDuration</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.3</double>
@@ -458,12 +616,14 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>150</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>LagDuration</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.15</double>
@@ -481,12 +641,14 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>1000</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>SenescenceDuration</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.2</double>
@@ -498,15 +660,18 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>800</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>DetachmentLagDuration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1000000</FixedValue>
             <Units>degreeDay</Units>
           </Constant>
           <Constant>
             <Name>DetachmentDuration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1000000</FixedValue>
             <Units>degreeDay</Units>
           </Constant>
@@ -514,6 +679,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>SpecificLeafAreaMax</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -523,40 +689,48 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>25000</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Structure].RelativeNodeApperance</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>SpecificLeafAreaMin</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>20000</FixedValue>
             <Units>mm2/g</Units>
           </Constant>
           <Constant>
             <Name>StructuralFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.99</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>MaximumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.05</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>MinimumNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.01</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>InitialNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.04</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>NReallocationFactor</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>NRetranslocationFactor</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
             <Units>percentage</Units>
           </Constant>
@@ -564,6 +738,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>ExpansionStress</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -573,15 +748,18 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>1</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Grapevine].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>CriticalNConc</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.01</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
             <Units>percentage</Units>
           </Constant>
@@ -589,6 +767,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>ShadeInducedSenescenceRate</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>0.5</double>
@@ -602,62 +781,75 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
           </LinearInterpolationFunction>
           <Constant>
             <Name>NonStructuralFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.2</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>SenessingLeafRelativeSize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
           <Constant>
             <Name>DMReallocationFactor</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <Constant>
             <Name>LeafSizeShapeParameter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.01</FixedValue>
             <Units>parameter controls the logistic growth of the leaf in growth stage</Units>
           </Constant>
           <Constant>
             <Name>MaintenanceRespirationFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
             <Name>DroughtInducedLagAcceleration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>DroughtInducedSenAcceleration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>CellDivisionStress</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
             <Units>0-1</Units>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </LeafCohortParameters>
         <RUEModel>
           <Name>Photosynthesis</Name>
           <Constant>
             <Name>RUE</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.8</FixedValue>
             <Units>g/MJ</Units>
           </Constant>
           <RUECO2Function>
             <Name>FCO2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PhotosyntheticPathway>C3</PhotosyntheticPathway>
           </RUECO2Function>
           <LinearInterpolationFunction>
             <Name>FN</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -669,12 +861,14 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>1</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fn</XProperty>
           </LinearInterpolationFunction>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>5</double>
                 <double>20</double>
@@ -688,12 +882,14 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
           </WeightedTemperatureFunction>
           <LinearInterpolationFunction>
             <Name>FW</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -705,12 +901,14 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>1</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Fw</XProperty>
           </LinearInterpolationFunction>
           <LinearInterpolationFunction>
             <Name>FVPD</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>10</double>
@@ -722,52 +920,65 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>1</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
           </LinearInterpolationFunction>
           <VariableReference>
             <Name>RadnInt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].RadIntTot</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RUEModel>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <VariableReference>
             <Name>RUE_FT</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
           </VariableReference>
           <MinimumFunction>
             <Name>Others</Name>
             <VariableReference>
               <Name>RUE_FN</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>RUE_FVPD</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MinimumFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MinimumFunction>
         <MultiplyFunction>
           <Name>ExtinctionCoeff</Name>
           <Constant>
             <Name>Constant</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.5</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <CompositeBiomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Leaf].CohortLive</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Leaf].CohortDead</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
           <Name>Total</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Leaf].Live</string>
             <string>[Leaf].Dead</string>
@@ -775,6 +986,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </CompositeBiomass>
         <ArrayBiomass>
           <Name>CohortArrayLive</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Leaf].Live</string>
           </Propertys>
@@ -782,6 +994,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </ArrayBiomass>
         <ArrayBiomass>
           <Name>CohortArrayDead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Leaf].Dead</string>
           </Propertys>
@@ -791,6 +1004,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.2</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -798,6 +1012,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
@@ -805,6 +1020,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.5</FractionLiveToResidue>
@@ -812,14 +1028,17 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.99</FixedValue>
           <Units>percentage</Units>
         </Constant>
@@ -829,6 +1048,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>LinearInterpolationFunction</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>4</double>
                 <double>3</double>
@@ -838,15 +1058,23 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Weather].MinT</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Veraison</Start>
           <End>LeafFall</End>
         </PhaseLookupValue>
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
+        <ApexStandard>
+          <Name>ApexStandard</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </ApexStandard>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
@@ -871,33 +1099,39 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Name>Root</Name>
         <CompositeBiomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerLive</string>
           </Propertys>
         </CompositeBiomass>
         <CompositeBiomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerDead</string>
           </Propertys>
         </CompositeBiomass>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>BudBurst</Start>
           <End>LeafFall</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>MaximumRootDepth</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1000000</FixedValue>
           <Units>mm</Units>
         </Constant>
@@ -905,6 +1139,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>MaxDailyNUptake</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.02</double>
@@ -914,12 +1149,14 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>6</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].Length</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>3</double>
@@ -929,12 +1166,14 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Leaf].LAI</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>SenescenceRate</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>1</double>
@@ -944,12 +1183,14 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>0.1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Leaf].FractionDied</XProperty>
         </LinearInterpolationFunction>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
@@ -957,6 +1198,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.3</FractionLiveToResidue>
@@ -964,6 +1206,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -971,16 +1214,19 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.15</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <LinearInterpolationFunction>
           <Name>KNO3</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -990,12 +1236,14 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>0.02</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.003</double>
@@ -1005,12 +1253,14 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>0</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>1</double>
@@ -1020,28 +1270,34 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Root].RWC</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>InitialDM</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>5</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <Constant>
           <Name>RootFrontVelocity</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>10</FixedValue>
           <Units>mm/d</Units>
         </Constant>
         <Constant>
           <Name>PartitionFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.2</FixedValue>
           <Units>percentage</Units>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
@@ -1052,21 +1308,25 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Name>Stem</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>BudBurst</Start>
           <End>LeafFall</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>percentage</Units>
         </Constant>
@@ -1074,13 +1334,16 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>DMDemandFunction</Name>
           <Constant>
             <Name>InterNodeWt</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.2</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </InternodeDemandFunction>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>3</double>
               <double>4</double>
@@ -1092,23 +1355,28 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>0.025</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.006</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.5</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1116,6 +1384,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.8</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1123,6 +1392,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1130,62 +1400,75 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0.6</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0.2</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>1/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Cordon</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>BudBurst</Start>
           <End>LeafFall</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>percentage</Units>
         </Constant>
@@ -1193,6 +1476,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>MaximumNConc</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>3</double>
               <double>4</double>
@@ -1204,23 +1488,28 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>0.025</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.006</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1228,6 +1517,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1235,6 +1525,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1242,39 +1533,47 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>200</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.001</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -1282,33 +1581,41 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>DMDemandFunction</Name>
           <Constant>
             <Name>PartitionFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.01</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Trunk</Name>
         <Constant>
           <Name>NReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseBasedSwitch>
           <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>BudBurst</Start>
           <End>LeafFall</End>
         </PhaseBasedSwitch>
         <Constant>
           <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>3</double>
               <double>4</double>
@@ -1320,22 +1627,27 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>0.025</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Phenology].Stage</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.006</FixedValue>
         </Constant>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1343,6 +1655,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1350,6 +1663,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1357,39 +1671,47 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>InitialWtFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>2000</FixedValue>
           <Units>g/m^2</Units>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>DetachmentRateFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>SenescenceRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>/d</Units>
         </Constant>
         <Constant>
           <Name>MaintenanceRespirationFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.001</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <Constant>
           <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
@@ -1397,49 +1719,65 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>DMDemandFunction</Name>
           <Constant>
             <Name>PartitionFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.05</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <ReproductiveOrgan>
         <Name>Berry</Name>
         <Biomass>
           <Name>Live</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Biomass>
           <Name>Dead</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
         <Constant>
           <Name>MaxNConcDailyGrowth</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.01</FixedValue>
           <Units>g/g</Units>
         </Constant>
         <Constant>
           <Name>NFillingRate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.0001</FixedValue>
         </Constant>
         <AccumulateFunction>
           <Name>ThermalTimeAfterVeraison</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartStageName>Veraison</StartStageName>
           <EndStageName>LeafFall</EndStageName>
           <ResetStageName>Veraison</ResetStageName>
+          <FractionRemovedOnCut>0</FractionRemovedOnCut>
+          <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+          <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+          <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
         </AccumulateFunction>
         <LinearInterpolationFunction>
           <Name>ReadyForHarvest</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>200</double>
@@ -1451,24 +1789,33 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>1</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Berry].ThermalTimeAfterVeraison.Value()</XProperty>
         </LinearInterpolationFunction>
         <AccumulateFunction>
           <Name>ThermalTimeAfterFlowering</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartStageName>FruitSet</StartStageName>
           <EndStageName>LeafFall</EndStageName>
           <ResetStageName>FruitSet</ResetStageName>
+          <FractionRemovedOnCut>0</FractionRemovedOnCut>
+          <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+          <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+          <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
         </AccumulateFunction>
         <ExponentialFunction>
           <Name>SolubleSolidsConc</Name>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Berry].DaysAfterVeraison.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <A>24</A>
           <B>-15.6582</B>
           <C>-0.040501</C>
@@ -1477,18 +1824,21 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>NumberFunction</Name>
           <VariableReference>
             <Name>Shoots</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Structure].MainStemPopn</VariableName>
           </VariableReference>
           <OnEventFunction>
             <Name>BunchesPerShoot</Name>
             <Constant>
               <Name>PreEventValue</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0</FixedValue>
             </Constant>
             <LinearInterpolationFunction>
               <Name>PostEventValue</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>40</double>
@@ -1498,8 +1848,10 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <double>5</double>
                 </Y>
               </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Berry].MeanFloweringTempY0.Value()</XProperty>
             </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <SetEvent>BudBurst</SetEvent>
             <ReSetEvent>EndDormancy</ReSetEvent>
           </OnEventFunction>
@@ -1507,30 +1859,37 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>PotentialBerriesPerBunch</Name>
             <Constant>
               <Name>MinNum</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>66</FixedValue>
             </Constant>
             <SigmoidFunction>
               <Name>BerriesPerBunch</Name>
               <VariableReference>
                 <Name>XVariable</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Berry].MeanFloweringTemp.Value()</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Xmax>44</Xmax>
               <Xo>16.3</Xo>
               <b>0.7</b>
             </SigmoidFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <OnEventFunction>
           <Name>MeanFloweringTempY0</Name>
           <Constant>
             <Name>PreEventValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>13</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>PostEventValue</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>40</double>
@@ -1540,8 +1899,10 @@ A function is used to provide flowering date as days after sowing(DAS).
                 <double>40</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Berry].MeanFloweringTemp.Value()</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>FruitSet</SetEvent>
           <ReSetEvent>StartFlowering</ReSetEvent>
         </OnEventFunction>
@@ -1553,6 +1914,7 @@ A function is used to provide flowering date as days after sowing(DAS).
               <Name>AirTemperatureFunction</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>40</double>
@@ -1562,33 +1924,48 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <double>40</double>
                 </Y>
               </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </AirTemperatureFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartStageName>StartFlowering</StartStageName>
             <EndStageName>FruitSet</EndStageName>
             <ResetStageName>StartFlowering</ResetStageName>
+            <FractionRemovedOnCut>0</FractionRemovedOnCut>
+            <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+            <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+            <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
           </AccumulateFunction>
           <AccumulateFunction>
             <Name>Time</Name>
             <Constant>
               <Name>Days</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1</FixedValue>
               <Units>days/day</Units>
             </Constant>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <StartStageName>StartFlowering</StartStageName>
             <EndStageName>FruitSet</EndStageName>
             <ResetStageName>StartFlowering</ResetStageName>
+            <FractionRemovedOnCut>0</FractionRemovedOnCut>
+            <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+            <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+            <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
           </AccumulateFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </DivideFunction>
         <BerryFillingRateFunction>
           <Name>DMDemandFunction</Name>
           <VariableReference>
             <Name>TT</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Structure].ThermalTime.Value()</VariableName>
           </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FirstPhase>BerryDevelopment</FirstPhase>
           <SecondPhase>LeafDeathPhase</SecondPhase>
           <Wo1>0.0001</Wo1>
-          <Wf1>0.199</Wf1>
+          <Wf1>0.15</Wf1>
           <Mu1>0.007</Mu1>
           <Wo2>0.0001</Wo2>
           <Wf2>0.3</Wf2>
@@ -1598,6 +1975,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
             <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>1</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1605,6 +1983,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Cut</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>1</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1612,6 +1991,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Prune</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>1</FractionLiveToResidue>
@@ -1619,6 +1999,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Graze</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1626,14 +2007,17 @@ A function is used to provide flowering date as days after sowing(DAS).
           </OrganBiomassRemovalType>
           <OrganBiomassRemovalType>
             <Name>Thin</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FractionLiveToRemove>0</FractionLiveToRemove>
             <FractionDeadToRemove>0</FractionDeadToRemove>
             <FractionLiveToResidue>0</FractionLiveToResidue>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>2</FixedValue>
           <Units>g</Units>
         </Constant>
@@ -1641,6 +2025,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>WaterContent</Name>
           <Constant>
             <Name>Constant</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.903</FixedValue>
           </Constant>
           <PhaseLookupValue>
@@ -1649,6 +2034,7 @@ A function is used to provide flowering date as days after sowing(DAS).
               <Name>LinearInterpolationFunction</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
                   <double>100</double>
@@ -1666,12 +2052,16 @@ A function is used to provide flowering date as days after sowing(DAS).
                   <double>0.15</double>
                 </Y>
               </XYPairs>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <XProperty>[Berry].ThermalTimeAfterVeraison.Value()</XProperty>
             </LinearInterpolationFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>Veraison</Start>
             <End>LeafFall</End>
           </PhaseLookupValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </SubtractFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <RipeStage>Ripe</RipeStage>
@@ -1680,16 +2070,21 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Name>Arbitrator</Name>
         <RelativeAllocation>
           <Name>NArbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RelativeAllocation>
         <RelativeAllocation>
           <Name>DMArbitrator</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RelativeAllocation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </OrganArbitrator>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Grapevine</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>Report</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
@@ -1722,11 +2117,13 @@ A function is used to provide flowering date as days after sowing(DAS).
         <string>[Clock].DoReport</string>
       </EventNames>
     </Report>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>PhenoObs</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Observations\PhenoDataObservation.xlsx</FileName>
       <SheetNames>
         <string>Data</string>
@@ -1736,6 +2133,7 @@ A function is used to provide flowering date as days after sowing(DAS).
       <Name>PhenoPredObs</Name>
       <Tests>
         <Name>Tests</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <AcceptedStats>
           <RegrStats>
             <Name>Grapevine.Phenology.BudBurstDOY.Value()</Name>
@@ -1783,11 +2181,13 @@ A function is used to provide flowering date as days after sowing(DAS).
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
         <POName>PhenoPredObs</POName>
       </Tests>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Data</ObservedTableName>
       <FieldNameUsedForMatch>Grapevine.Phenology.CurrentStageName</FieldNameUsedForMatch>
       <FieldName2UsedForMatch>Clock.Today.Year</FieldName2UsedForMatch>
     </PredictedObserved>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -1801,6 +2201,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>Water</Name>
           <SoilCrop>
             <Name>GrapevineSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LL>
               <double>0.13</double>
               <double>0.13</double>
@@ -1826,6 +2227,7 @@ A function is used to provide flowering date as days after sowing(DAS).
               <double>0</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -1877,6 +2279,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>4.4</SummerCona>
@@ -1921,6 +2324,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -1953,49 +2357,10 @@ A function is used to provide flowering date as days after sowing(DAS).
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <urea_min>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </urea_min>
-          <nh4_min>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </nh4_min>
-          <no3_min>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-            <double>0</double>
-          </no3_min>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
-          <oc>
-            <double>3.5087566566696209</double>
-            <double>2.5000446389987916</double>
-            <double>1.2003447486804877</double>
-            <double>1.0302553388102849</double>
-            <double>0.4701677719053009</double>
-            <double>0.47008570515145176</double>
-          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RootCN>30</RootCN>
           <RootWt>3000</RootWt>
           <SoilCN>11.5</SoilCN>
@@ -2045,6 +2410,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -2066,12 +2432,14 @@ A function is used to provide flowering date as days after sowing(DAS).
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -2102,6 +2470,11 @@ A function is used to provide flowering date as days after sowing(DAS).
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </CERESSoilTemperature>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <SoilType>Sedementary</SoilType>
         <LocalName>Lincoln</LocalName>
@@ -2114,15 +2487,18 @@ A function is used to provide flowering date as days after sowing(DAS).
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <PondActive>no</PondActive>
         <ReportAdditions>no</ReportAdditions>
         <ReportRemovals>no</ReportRemovals>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypesList</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <TillageType />
         </TillageTypes>
         <Pools>
@@ -2156,6 +2532,7 @@ A function is used to provide flowering date as days after sowing(DAS).
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -2171,18 +2548,22 @@ A function is used to provide flowering date as days after sowing(DAS).
       </MicroClimate>
       <Irrigation>
         <Name>Irrigation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Irrigation>
       <Fertiliser>
         <Name>Fertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Fertiliser>
       <Plant>
         <Name>Grapevine</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>Grapevine</ResourceName>
         <CropType>Grapevine</CropType>
         <SowingDate>2005-05-01T00:00:00</SowingDate>
       </Plant>
       <Operations>
         <Name>Operations</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Operation>
           <Date>2005-05-01</Date>
           <Action>[Grapevine].Sow(population: 0.1667, cultivar: "SauvignonBlanc", depth: 50, rowSpacing: 3100, budNumber:24);</Action>
@@ -2190,6 +2571,7 @@ A function is used to provide flowering date as days after sowing(DAS).
       </Operations>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -2201,6 +2583,7 @@ A function is used to provide flowering date as days after sowing(DAS).
       </Report>
       <Manager>
         <Name>Pruning</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script>
           <PruneDateString>15-May</PruneDateString>
         </Script>
@@ -2249,29 +2632,39 @@ namespace Models
 			
 				]]></Code>
       </Manager>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </SoluteManager>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>2005-04-30T00:00:00</StartDate>
       <EndDate>2007-09-05T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </SoilArbitrator>
     <Graph>
       <Name>Phenology</Name>
       <Series>
         <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2291,6 +2684,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -2307,7 +2701,6 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>LeafNum</Name>
@@ -2315,8 +2708,10 @@ namespace Models
         <Name>Initiated</Name>
         <EventNamesOnGraph>
           <Name>EventNamesOnGraph</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ColumnName>[Grapevine].Phenology.CurrentStageName</ColumnName>
         </EventNamesOnGraph>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2338,6 +2733,7 @@ namespace Models
       </Series>
       <Series>
         <Name>AppTips</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2359,6 +2755,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Dead</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2378,6 +2775,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -2394,12 +2792,12 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>LeafSize</Name>
       <Series>
         <Name>1</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2421,6 +2819,7 @@ namespace Models
       </Series>
       <Series>
         <Name>2</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2442,6 +2841,7 @@ namespace Models
       </Series>
       <Series>
         <Name>3</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2463,6 +2863,7 @@ namespace Models
       </Series>
       <Series>
         <Name>4</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2484,6 +2885,7 @@ namespace Models
       </Series>
       <Series>
         <Name>5</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2505,6 +2907,7 @@ namespace Models
       </Series>
       <Series>
         <Name>6</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2526,6 +2929,7 @@ namespace Models
       </Series>
       <Series>
         <Name>7</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2547,6 +2951,7 @@ namespace Models
       </Series>
       <Series>
         <Name>8</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2568,6 +2973,7 @@ namespace Models
       </Series>
       <Series>
         <Name>9</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2589,6 +2995,7 @@ namespace Models
       </Series>
       <Series>
         <Name>10</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2610,6 +3017,7 @@ namespace Models
       </Series>
       <Series>
         <Name>11</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2631,6 +3039,7 @@ namespace Models
       </Series>
       <Series>
         <Name>12</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2652,6 +3061,7 @@ namespace Models
       </Series>
       <Series>
         <Name>13</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2673,6 +3083,7 @@ namespace Models
       </Series>
       <Series>
         <Name>14</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2694,6 +3105,7 @@ namespace Models
       </Series>
       <Series>
         <Name>15</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2715,6 +3127,7 @@ namespace Models
       </Series>
       <Series>
         <Name>16</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2736,6 +3149,7 @@ namespace Models
       </Series>
       <Series>
         <Name>17</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2757,6 +3171,7 @@ namespace Models
       </Series>
       <Series>
         <Name>18</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -2776,6 +3191,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -2794,7 +3210,6 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Folder>
       <Name>Berry</Name>
@@ -2802,6 +3217,7 @@ namespace Models
         <Name>MeanFloweringTemp</Name>
         <Series>
           <Name>MeanFloweringTemp</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2823,6 +3239,7 @@ namespace Models
         </Series>
         <Series>
           <Name>MeanFloweringTempY0</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2842,6 +3259,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2858,12 +3276,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>ShootandBunchNum</Name>
         <Series>
           <Name>ShootNum</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2885,6 +3303,7 @@ namespace Models
         </Series>
         <Series>
           <Name>BunchPerShoot</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2904,6 +3323,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2920,12 +3340,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>BerryNum</Name>
         <Series>
           <Name>BerryPerBunch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -2947,6 +3367,7 @@ namespace Models
         </Series>
         <Series>
           <Name>TotalNumberPerM2</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Right</YAxis>
@@ -2966,6 +3387,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -2989,12 +3411,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>BerryWT</Name>
         <Series>
           <Name>dryMass</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3014,6 +3436,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3030,8 +3453,9 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Graph>
       <Name>NWaterStress</Name>
@@ -3039,8 +3463,10 @@ namespace Models
         <Name>NStress</Name>
         <EventNamesOnGraph>
           <Name>EventNamesOnGraph</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
         </EventNamesOnGraph>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3064,8 +3490,10 @@ namespace Models
         <Name>WaterStress</Name>
         <EventNamesOnGraph>
           <Name>EventNamesOnGraph</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ColumnName>Grapevine.Phenology.CurrentStageName</ColumnName>
         </EventNamesOnGraph>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -3085,6 +3513,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -3101,8 +3530,8 @@ namespace Models
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Experiment>
     <Name>PhenoTest</Name>
@@ -3110,28 +3539,34 @@ namespace Models
       <Name>Factors</Name>
       <Factor>
         <Name>Climate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications>
           <string>[Weather].FileName = Site1001.met, Site1002.met, Site1003.met, Site1004.met</string>
         </Specifications>
       </Factor>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Factors>
     <Simulation>
       <Name>PhenologyBase</Name>
       <Weather>
         <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FileName>Site1003.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <Clock>
         <Name>Clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartDate>2005-05-13T00:00:00</StartDate>
         <EndDate>2012-09-29T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>Summary</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Summary>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </SoilArbitrator>
       <Zone>
         <Name>Vineyard</Name>
@@ -3141,6 +3576,7 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>GrapevineSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.13</double>
                 <double>0.13</double>
@@ -3166,6 +3602,7 @@ namespace Models
                 <double>0</double>
               </XF>
             </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -3217,6 +3654,7 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <SummerDate>1-Nov</SummerDate>
             <SummerU>9</SummerU>
             <SummerCona>4.4</SummerCona>
@@ -3261,6 +3699,7 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -3293,49 +3732,10 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <urea_min>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </urea_min>
-            <nh4_min>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </nh4_min>
-            <no3_min>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-              <double>0</double>
-            </no3_min>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
-            <oc>
-              <double>3.5087566566696209</double>
-              <double>2.5000446389987916</double>
-              <double>1.2003447486804877</double>
-              <double>1.0302553388102849</double>
-              <double>0.4701677719053009</double>
-              <double>0.47008570515145176</double>
-            </oc>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>30</RootCN>
             <RootWt>3000</RootWt>
             <SoilCN>11.5</SoilCN>
@@ -3385,6 +3785,7 @@ namespace Models
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -3406,12 +3807,14 @@ namespace Models
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Sample</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -3442,6 +3845,11 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>0</RecordNumber>
           <SoilType>Sedementary</SoilType>
           <LocalName>Lincoln</LocalName>
@@ -3454,15 +3862,18 @@ namespace Models
         </Soil>
         <SurfaceOrganicMatter>
           <Name>SurfaceOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PondActive>no</PondActive>
           <ReportAdditions>no</ReportAdditions>
           <ReportRemovals>no</ReportRemovals>
           <ResidueTypes>
             <Name>ResidueTypes</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
           <TillageTypes>
             <Name>TillageTypesList</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <TillageType />
           </TillageTypes>
           <Pools>
@@ -3496,6 +3907,7 @@ namespace Models
         </SurfaceOrganicMatter>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
@@ -3511,18 +3923,22 @@ namespace Models
         </MicroClimate>
         <Irrigation>
           <Name>Irrigation</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Irrigation>
         <Fertiliser>
           <Name>Fertiliser</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Fertiliser>
         <Plant>
           <Name>Grapevine</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Grapevine</ResourceName>
           <CropType>Grapevine</CropType>
           <SowingDate>2005-05-01T00:00:00</SowingDate>
         </Plant>
         <Operations>
           <Name>Operations</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>2005-05-13</Date>
             <Action>[Grapevine].Sow(population: 0.1667, cultivar: "SauvignonBlanc", depth: 50, rowSpacing: 3100, budNumber:24);</Action>
@@ -3530,6 +3946,7 @@ namespace Models
         </Operations>
         <Report>
           <Name>Report</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -3541,6 +3958,7 @@ namespace Models
         </Report>
         <Manager>
           <Name>Pruning</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <PruneDateString>15-May</PruneDateString>
           </Script>
@@ -3589,9 +4007,15 @@ namespace Models
 			
 				]]></Code>
         </Manager>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SoluteManager>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Area>1</Area>
         <Slope>0</Slope>
       </Zone>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Simulation>
     <Folder>
       <Name>PhenoValidation</Name>
@@ -3601,8 +4025,10 @@ namespace Models
           <Name>Series</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3622,6 +4048,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3638,7 +4065,6 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>FloweringPred</Name>
@@ -3646,8 +4072,10 @@ namespace Models
           <Name>Series</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3667,6 +4095,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3683,7 +4112,6 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>VeraisonPred</Name>
@@ -3691,8 +4119,10 @@ namespace Models
           <Name>Series</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3712,6 +4142,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3728,9 +4159,12 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>416</ExplorerWidth>
 </Simulations>
