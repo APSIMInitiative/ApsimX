@@ -65,6 +65,7 @@ namespace UserInterface.Presenters
             this.managerView.Editor.AddContextSeparator();
             this.managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
             this.managerView.Editor.AddContextActionWithAccel("Reformat", OnDoReformat, "Ctrl+R");
+            this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
         }
 
         /// <summary>
@@ -75,6 +76,7 @@ namespace UserInterface.Presenters
             this.BuildScript();  // compiles and saves the script
             propertyPresenter.Detach();
 
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.CommandHistory_ModelChanged;
             this.managerView.Editor.ContextItemsNeeded -= this.OnNeedVariableNames;
             this.managerView.Editor.LeaveEditor -= this.OnEditorLeave;
         }
@@ -152,17 +154,19 @@ namespace UserInterface.Presenters
         /// </summary>
         private void BuildScript()
         {
-            this.explorerPresenter.CommandHistory.ModelChanged -= new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.CommandHistory_ModelChanged;
 
             try
             {
                 string code = this.managerView.Editor.Text;
                 // set the code property manually first so that compile error can be trapped via
                 // an exception.
+                bool codeChanged = this.manager.Code != code;
                 this.manager.Code = code;
 
                 // If it gets this far then compiles ok.
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", code));
+                if (codeChanged)
+                    this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.manager, "Code", code));
 
                 this.explorerPresenter.MainPresenter.ShowMessage("Manager script compiled successfully", DataStore.ErrorLevel.Information);
             }
@@ -174,7 +178,7 @@ namespace UserInterface.Presenters
                 else
                     this.explorerPresenter.MainPresenter.ShowMessage(string.Format("[{0}]: {1}", err.model.Name, err.Message), DataStore.ErrorLevel.Error);
             }
-            this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
         }
 
         /// <summary>
@@ -184,7 +188,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The arguments</param>
         public void OnEditorLeave(object sender, EventArgs e)
         {
-            // this.explorerPresenter.CommandHistory.ModelChanged += new CommandHistory.ModelChangedDelegate(this.CommandHistory_ModelChanged);
+            // this.explorerPresenter.CommandHistory.ModelChanged += this.CommandHistory_ModelChanged;
             BuildScript();
             if (this.manager.Script != null)
             {
@@ -201,6 +205,10 @@ namespace UserInterface.Presenters
         {
             if (changedModel == this.manager)
                 this.managerView.Editor.Text = this.manager.Code;
+            else if (changedModel == this.manager.Script)
+            {
+                this.propertyPresenter.UpdateModel(manager.Script);
+            }
         }
 
         /// <summary>Get a screen shot of the manager grid.</summary>

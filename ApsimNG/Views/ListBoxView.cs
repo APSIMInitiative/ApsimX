@@ -10,6 +10,7 @@ namespace UserInterface.Views
     using System.Collections.Generic;
     using System.Linq;
     using System.IO;
+    using System.Reflection;
     using System.Runtime.InteropServices;
     using Gtk;
     using Interfaces;
@@ -37,6 +38,12 @@ namespace UserInterface.Views
         /// This will turn on display of images and drag-drop logic
         /// </summary>
         bool IsModelList { get; set; }
+
+        /// <summary>
+        /// Populates a context menu
+        /// </summary>
+        /// <param name="menuDescriptions"></param>
+        void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions);
 
         /// <summary>
         /// Invoked when a drag operation has commenced. Need to create a DragObject.
@@ -75,6 +82,8 @@ namespace UserInterface.Views
         private const string modelMime = "application/x-model-component";
         private GCHandle dragSourceHandle;
         private bool _isModels = false;
+        private Menu Popup = new Menu();
+        private AccelGroup accel = new AccelGroup();
 
         /// <summary>Constructor</summary>
         public ListBoxView(ViewBase owner) : base(owner)
@@ -101,6 +110,7 @@ namespace UserInterface.Views
             //listview.CursorChanged -= OnSelectionChanged;
             listview.SelectionChanged -= OnSelectionChanged;
             listview.ButtonPressEvent -= OnDoubleClick;
+            ClearPopup();
         }
 
         /// <summary>Get or sets the list of valid values.</summary>
@@ -258,7 +268,18 @@ namespace UserInterface.Views
         private void OnDoubleClick(object sender, ButtonPressEventArgs e)
         {
             if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1 && DoubleClicked != null)
-                DoubleClicked.Invoke(this, e);
+                DoubleClicked.Invoke(sender, e);
+            if (e.Event.Button == 3)
+            {
+                TreePath path = listview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y);
+                if (path != null)
+                {
+                    listview.SelectPath(path);
+                    if (Popup.Children.Count() > 0)
+                        Popup.Popup();
+                }
+                e.RetVal = true;
+            }
         }
 
         /// <summary>Node has begun to be dragged.</summary>
@@ -306,6 +327,87 @@ namespace UserInterface.Views
             Gdk.Atom modelClipboard = Gdk.Atom.Intern("_APSIM_MODEL", false);
             Clipboard cb = Clipboard.Get(modelClipboard);
             cb.Text = text;
+        }
+
+        /// <summary>Populate the context menu from the descriptions passed in.</summary>
+        /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
+        public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
+        {
+            ClearPopup();
+            foreach (MenuDescriptionArgs Description in menuDescriptions)
+            {
+                MenuItem item;
+                if (Description.ShowCheckbox)
+                {
+                    CheckMenuItem checkItem = new CheckMenuItem(Description.Name);
+                    checkItem.Active = Description.Checked;
+                    item = checkItem;
+                }
+                else if (!String.IsNullOrEmpty(Description.ResourceNameForImage) && hasResource(Description.ResourceNameForImage))
+                {
+                    ImageMenuItem imageItem = new ImageMenuItem(Description.Name);
+                    imageItem.Image = new Image(null, Description.ResourceNameForImage);
+                    item = imageItem;
+                }
+                else
+                {
+                    item = new MenuItem(Description.Name);
+                }
+                if (!String.IsNullOrEmpty(Description.ShortcutKey))
+                {
+                    string keyName = String.Empty;
+                    Gdk.ModifierType modifier = Gdk.ModifierType.None;
+                    string[] keyNames = Description.ShortcutKey.Split(new Char[] { '+' });
+                    foreach (string name in keyNames)
+                    {
+                        if (name == "Ctrl")
+                            modifier |= Gdk.ModifierType.ControlMask;
+                        else if (name == "Shift")
+                            modifier |= Gdk.ModifierType.ShiftMask;
+                        else if (name == "Alt")
+                            modifier |= Gdk.ModifierType.Mod1Mask;
+                        else if (name == "Del")
+                            keyName = "Delete";
+                        else
+                            keyName = name;
+                    }
+                    try
+                    {
+                        Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
+                        item.AddAccelerator("activate", accel, (uint)accelKey, modifier, AccelFlags.Visible);
+                    }
+                    catch
+                    {
+                    }
+                }
+                item.Activated += Description.OnClick;
+                Popup.Append(item);
+
+            }
+            if (Popup.AttachWidget == null)
+                Popup.AttachToWidget(listview, null);
+            Popup.ShowAll();
+        }
+
+        private void ClearPopup()
+        {
+            foreach (Widget w in Popup)
+            {
+                if (w is MenuItem)
+                {
+                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (pi != null)
+                    {
+                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                        if (w is ImageMenuItem && handlers != null && handlers.ContainsKey("activate"))
+                        {
+                            EventHandler handler = (EventHandler)handlers["activate"];
+                            (w as ImageMenuItem).Activated -= handler;
+                        }
+                    }
+                    Popup.Remove(w);
+                }
+            }
         }
     }
 }

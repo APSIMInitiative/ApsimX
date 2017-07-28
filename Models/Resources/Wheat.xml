@@ -1949,6 +1949,19 @@ This phase has a target of 1 and a Tt of 1 so it always lasts for a day.  Phase 
         <Command>[Phenology].Vernalisation.PhotopSens = 3.0</Command>
       </Cultivar>
       <Cultivar>
+        <Name>Espada</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 1.5</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 3.5</Command>
+      </Cultivar>
+	  <Cultivar>
+        <Name>Wyalkatchem</Name>
+        <Command>[Phenology].Vernalisation.VernSens = 2.0</Command>
+        <Command>[Phenology].Vernalisation.PhotopSens = 2.7</Command>
+        <Command>[Phenology].FloralInitiationToFlowering.Target.FixedValue = 436.0</Command>
+		<Command>[Phenology].FloweringToStartGrainFill.Target.FixedValue = 111.0</Command>
+		<Command>[Phenology].StartGrainFillToEndGrainFill.Target.FixedValue = 650</Command>
+      </Cultivar>
+      <Cultivar>
         <Name>Gamenya</Name>
         <Command>[Phenology].Vernalisation.VernSens = 1.6</Command>
         <Command>[Phenology].Vernalisation.PhotopSens = 2.0</Command>
