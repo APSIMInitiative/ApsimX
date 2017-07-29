@@ -108,8 +108,6 @@ namespace Models.Soils
             // Get the layering info and set the layer count
             dlayer = Soil.Thickness;
             nLayers = dlayer.Length;
-            for (int k = 0; k < Patch.Count; k++)
-                Patch[k].nLayers = nLayers;
 
             // get the initial values 
             oc = Soil.OC;
@@ -919,8 +917,6 @@ namespace Models.Soils
 
             // and the layer count
             nLayers = dlayer.Length;
-            for (int k = 0; k < Patch.Count; k++)
-                Patch[k].nLayers = nLayers;
         }
 
         /// <summary>Gets the changes in mineral N made by other modules</summary>
