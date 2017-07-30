@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="3">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
   <Name>Simulations</Name>
   <Memo>
     <Name>Introduction</Name>
@@ -853,7 +853,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
               <double>1</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDensity</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>SoilWaterEffect</Name>
@@ -967,7 +967,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
               <double>0.02</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>KNH4</Name>
@@ -982,7 +982,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
               <double>0</double>
             </Y>
           </XYPairs>
-          <XProperty>[Root].RootLengthDenisty</XProperty>
+          <XProperty>[Root].LengthDensity</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
@@ -2103,6 +2103,7 @@ Needs test and imperovement to isolate soil temperature effects of different the
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Plant>
         <Name>FodderBeet</Name>
@@ -2643,6 +2644,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Folder>
       <Name>Phenology</Name>
@@ -4151,6 +4153,7 @@ namespace Models
         <NaturalVegetation />
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
+        <CERESSoilTemperature />
       </Soil>
       <Plant>
         <Name>FodderBeet</Name>
@@ -4692,6 +4695,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Folder>
       <Name>BiomassGraphs</Name>
@@ -6660,6 +6664,7 @@ namespace Models
         <Longitude>0</Longitude>
         <DataSource>Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results</DataSource>
         <Comments>Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.</Comments>
+        <CERESSoilTemperature />
       </Soil>
       <Plant>
         <Name>FodderBeet</Name>
@@ -7164,6 +7169,7 @@ namespace Models
       </Report>
       <Area>1</Area>
       <Slope>0</Slope>
+      <SoluteManager />
     </Zone>
     <Folder>
       <Name>BiomassGraphs</Name>
@@ -8712,6 +8718,7 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
           <NaturalVegetation />
           <Latitude>0</Latitude>
           <Longitude>0</Longitude>
+          <CERESSoilTemperature />
         </Soil>
         <Plant>
           <Name>FodderBeet</Name>
@@ -9242,6 +9249,7 @@ namespace Models
         </Report>
         <Area>1</Area>
         <Slope>0</Slope>
+        <SoluteManager />
       </Zone>
       <SoilArbitrator>
         <Name>Soil Arbitrator</Name>
