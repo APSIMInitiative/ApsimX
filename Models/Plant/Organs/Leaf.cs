@@ -98,6 +98,7 @@ namespace Models.PMF.Organs
         public double Depth { get { return Structure.Height; } }
 
         /// <summary>Gets  FRGR.</summary>
+        [Description("Relative growth rate for calculating stomata conductance which fed the Penman-Monteith function")]
         [Units("0-1")]
         public double FRGR { get; set; }
 

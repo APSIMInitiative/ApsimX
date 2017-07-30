@@ -241,12 +241,13 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    if (this.ApsimXFile.FileName != null)
-                        Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName);
+                    //if (this.ApsimXFile.FileName != null)
+                    //    Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName);
 
-                    Utility.Configuration.Settings.AddMruFile(newFileName);
-                    MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     this.ApsimXFile.Write(newFileName);
+                    MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
+                    Utility.Configuration.Settings.AddMruFile(newFileName);
+                    MainPresenter.UpdateMRUDisplay();
                     return true;
                 }
                 catch (Exception err)

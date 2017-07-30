@@ -5,226 +5,58 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Linq;
 using Models.Core;
-using Models.SurfaceOM;
 using APSIM.Shared.Utilities;
+using Models.SurfaceOM;
 using Models.Interfaces;
 
 namespace Models.Soils
 {
 
     /// <summary>
-    /// 
+    /// Computes the soil C and N processes
     /// </summary>
+    /// <remarks>
+    /// Implements internal 'patches', which are replicates of state variables and processes used for simulating soil variability
+    ///
+    /// Based on a more-or-less direct port of the Fortran SoilN model  -  Ported by Eric Zurcher Sept/Oct 2010
+    /// Code tidied up by RCichota initially in Aug/Sep-2012 (updates in Feb-Apr/2014, Apr/2015, and Mar-Apr/2016)
+    /// Full patch capability ported into ApsimX by Russel McAuliffe in June/2017, tidied up by RCichota (July/2017)
+    /// </remarks>
     [Serializable]
-    public class FOMType
-    {
-        /// <summary>The amount</summary>
-        public double amount;
-        /// <summary>The c</summary>
-        public double C;
-        /// <summary>The n</summary>
-        public double N;
-        /// <summary>The p</summary>
-        public double P;
-        /// <summary>The ash alk</summary>
-        public double AshAlk;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class FOMPoolType
-    {
-        /// <summary>The layer</summary>
-        public FOMPoolLayerType[] Layer;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class FOMPoolLayerType
-    {
-        /// <summary>The thickness</summary>
-        public double thickness;
-        /// <summary>The no3</summary>
-        public double no3;
-        /// <summary>The NH4</summary>
-        public double nh4;
-        /// <summary>The po4</summary>
-        public double po4;
-        /// <summary>The pool</summary>
-        public FOMType[] Pool;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class FOMLayerType
-    {
-        /// <summary>The type</summary>
-        public string Type = "";
-        /// <summary>The layer</summary>
-        public FOMLayerLayerType[] Layer;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class SurfaceOrganicMatterDecompPoolType
-    {
-        /// <summary>The name</summary>
-        public string Name = "";
-        /// <summary>The organic matter type</summary>
-        public string OrganicMatterType = "";
-        /// <summary>The fom</summary>
-        public FOMType FOM;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    [Serializable]
-    public class SurfaceOrganicMatterDecompType
-    {
-
-        /// <summary>The pool</summary>
-        public SurfaceOrganicMatterDecompPoolType[] Pool;
-    }
-
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public struct FOMdecompData
-    {
-        // lists with values from FOM decompostion
-        /// <summary>The dlt_c_hum</summary>
-        public double[] dlt_c_hum;
-        /// <summary>The dlt_c_biom</summary>
-        public double[] dlt_c_biom;
-        /// <summary>The dlt_c_atm</summary>
-        public double[] dlt_c_atm;
-        /// <summary>The dlt_fom_n</summary>
-        public double[] dlt_fom_n;
-        /// <summary>The dlt_n_min</summary>
-        public double dlt_n_min;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ExternalMassFlowType
-    {
-        /// <summary>The pool class</summary>
-        public string PoolClass = "";
-        /// <summary>The flow type</summary>
-        public string FlowType = "";
-        /// <summary>The c</summary>
-        public double C;
-        /// <summary>The n</summary>
-        public double N;
-        /// <summary>The p</summary>
-        public double P;
-        /// <summary>The dm</summary>
-        public double DM;
-        /// <summary>The sw</summary>
-        public double SW;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class MergeSoilCNPatchType
-    {
-        /// <summary>The sender</summary>
-        public string Sender = "";
-        /// <summary>The affected patches_nm</summary>
-        public string[] AffectedPatches_nm;
-        /// <summary>The affected patches_id</summary>
-        public int[] AffectedPatches_id;
-        /// <summary>The merge all</summary>
-        public bool MergeAll;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class FOMLayerLayerType
-    {
-        /// <summary>The fom</summary>
-        public FOMType FOM;
-        /// <summary>The CNR</summary>
-        public double CNR;
-        /// <summary>The labile p</summary>
-        public double LabileP;
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class AddUrineType
-    {
-        /// <summary>The urinations</summary>
-        public double Urinations;
-        /// <summary>The volume per urination</summary>
-        public double VolumePerUrination;
-        /// <summary>The area per urination</summary>
-        public double AreaPerUrination;
-        /// <summary>The eccentricity</summary>
-        public double Eccentricity;
-        /// <summary>The urea</summary>
-        public double Urea;
-        /// <summary>The pox</summary>
-        public double POX;
-        /// <summary>The s o4</summary>
-        public double SO4;
-        /// <summary>The ash alk</summary>
-        public double AshAlk;
-    }
-
-
-    /// <summary>
-    /// Initially ported from Fortran SoilN model by Eric Zurcher Sept/Oct-2010.
-    /// Code tidied up by RCichota on Aug/Sep-2012: mostly modifying how some variables are handled (substitute 'get's by [input]), added regions
-    /// to ease access, updated error messages, moved all soilTemp code to a separate class (the idea is to eliminate it in the future), also added
-    /// some of the constants to xml.
-    /// Changes on Sep/Oct-2012 by RCichota, add patch capability: move all code for soil C and N to a separate class (SoilCNPatch), allow several
-    /// instances to be initialised, modified inputs to handle the partitioning of incoming N, also modified outputs to sum up the pools from the
-    /// several instances (patches)
-    /// </summary>
-    [Serializable]
-    [ValidParent(ParentType=typeof(Soil))]
+    [ValidParent(ParentType = typeof(Soil))]
     public partial class SoilNitrogen : Model, ISolute, INutrient
     {
-        /// <summary>The surface organic matter</summary>
-        [Link]
-        private SurfaceOrganicMatter SurfaceOrganicMatter = null;
 
-        /// <summary>Initializes a new instance of the <see cref="SoilNitrogen"/> class.</summary>
+        /// <summary>Initialises a new instance of the <see cref="SoilNitrogen"/> class.</summary>
         public SoilNitrogen()
         {
             Patch = new List<soilCNPatch>();
+
             soilCNPatch newPatch = new soilCNPatch(this);
             Patch.Add(newPatch);
             Patch[0].RelativeArea = 1.0;
             Patch[0].PatchName = "base";
-            wfpsN2N2O_x = new double[] { 22, 88 };
-            wfpsN2N2O_y = new double[] { 0.1, 1 };
         }
 
-        #region Events which we publish
+        #region >>  Events which we publish
 
         /// <summary>
         /// Event to communicate other modules of C and/or N changes to/from outside the simulation
         /// </summary>
         /// <param name="Data">The data.</param>
         public delegate void ExternalMassFlowDelegate(ExternalMassFlowType Data);
+
         /// <summary>Occurs when [external mass flow].</summary>
         public event ExternalMassFlowDelegate ExternalMassFlow;
 
-        /// <summary>Event to comunicate other modules (SurfaceOM) that residues have been decomposed</summary>
-        /// <param name="Data">The data.</param>
+        /// <summary>
+        /// Event to comunicate other modules (SurfaceOM) that residues have been decomposed
+        /// </summary>
         public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
 
-        #endregion
+        #endregion events published
 
-        #region Setup events handlers and methods
-
+        #region >>  Setup events handlers and methods
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -232,367 +64,563 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Reset();
+            // initialise basic patch values
+            Patch[0].PatchName = "base";
+            Patch[0].RelativeArea = 1.0;
+            Patch[0].CreationDate = Clock.Today;
+
+            // check few initialisation parameters
+            CheckParameters();
+
+            // set the size of some arrays
+            ResizeLayeredVariables(nLayers);
+
+            // check the initial values of some basic variables
+            CheckInitialVariables();
+
+            // set the variables up with their the initial values
+            SetInitialValues();
         }
 
         /// <summary>Reset the state values to those set during the initialisation</summary>
         public void Reset()
         {
+            // Save the present C and N status
+            StoreStatus();
 
-            Patch = new List<soilCNPatch>();
-            soilCNPatch newPatch = new soilCNPatch(this);
-            Patch.Add(newPatch);
-            Patch[0].RelativeArea = 1.0;
-            Patch[0].PatchName = "base";
+            // reset the size of arrays
+            ResizeLayeredVariables(nLayers);
 
-            // Variable handling when using APSIMX
-            initDone = false;
+            // reset C and N variables, i.e. redo initialisation and setup
+            SetInitialValues();
+
+            // get the changes of state and publish (let other component to know)
+            SendDeltaState();
+
+            mySummary.WriteWarning(this, "Re - setting SoilNitrogen state variables");
+        }
+
+        /// <summary>
+        /// Checks general initialisation parameters, and let user know of some settings
+        /// </summary>
+        private void CheckParameters()
+        {
+            // Get the layering info and set the layer count
             dlayer = Soil.Thickness;
-            bd = Soil.BD;
-            sat_dep = MathUtilities.Multiply(Soil.SAT, Soil.Thickness);
-            dul_dep = MathUtilities.Multiply(Soil.DUL, Soil.Thickness);
-            ll15_dep = MathUtilities.Multiply(Soil.LL15, Soil.Thickness);
-            sw_dep = MathUtilities.Multiply(Soil.InitialWaterVolumetric, Soil.Thickness);
+            nLayers = dlayer.Length;
+
+            // get the initial values 
             oc = Soil.OC;
+            FBiom = Soil.FBiom;
+            FInert = Soil.FInert;
+            HumusCNr = Soil.SoilOrganicMatter.SoilCN;
+            InitialFOMWt = Soil.SoilOrganicMatter.RootWt;
+            InitialFOMCNr = Soil.SoilOrganicMatter.RootCN;
+            enr_a_coeff = Soil.SoilOrganicMatter.EnrACoeff;
+            enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
             ph = Soil.PH;
-            salb = Soil.SoilWater.Salb;
             NO3ppm = Soil.InitialNO3N;
             NH4ppm = Soil.InitialNH4N;
             ureappm = new double[Soil.Thickness.Length];
-            num_residues = 0;
 
-            fbiom = Soil.FBiom;
-            finert = Soil.FInert;
-            soil_cn = SoilOrganicMatter.SoilCN;
-            root_wt = SoilOrganicMatter.RootWt;
-            root_cn = SoilOrganicMatter.RootCN;
-            enr_a_coeff = SoilOrganicMatter.EnrACoeff;
-            enr_b_coeff = SoilOrganicMatter.EnrBCoeff;
+            // This is needed to initialise values in ApsimX, (they were done in xml file before)
+            FOMDecomp_TOptimum = new double[] { 32.0, 32.0 };
+            FOMDecomp_TFactorAtZero = new double[] { 0.0, 0.0 };
+            FOMDecomp_TCurveCoeff = new double[] { 2.0, 2.0 };
+            FOMDecomp_NormWaterContents = new double[] { 0.0, 1.0, 1.5, 2.0, 3.0 };
+            FOMDecomp_MoistureFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.5 };
 
+            SOMMiner_TOptimum = new double[] { 32.0, 32.0 };
+            SOMMiner_TFactorAtZero = new double[] { 0.0, 0.0 };
+            SOMMiner_TCurveCoeff = new double[] { 2.0, 2.0 };
+            SOMMiner_NormWaterContents = new double[] { 0.0, 1.0, 1.5, 2.0, 3.0 };
+            SOMMiner_MoistureFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.5 };
+
+            UreaHydrol_TOptimum = new double[] { 32.0, 32.0 };
+            UreaHydrol_TFactorAtZero = new double[] { 0.2, 0.2 };
+            UreaHydrol_TCurveCoeff = new double[] { 1.0, 1.0 };
+            UreaHydrol_NormWaterContents = new double[] { 0.0, 1.0, 1.4, 2.4, 3.0 };
+            UreaHydrol_MoistureFactors = new double[] { 0.2, 0.2, 1.0, 1.0, 0.7 };
+
+            Nitrification_TOptimum = new double[] { 32.0, 32.0 };
+            Nitrification_FactorAtZero = new double[] { 0.0, 0.0 };
+            Nitrification_CurveCoeff = new double[] { 2.0, 2.0 };
+            Nitrification_NormWaterContents = new double[] { 0.0, 1.0, 1.25, 2.0, 3.0 };
+            Nitrification_MoistureFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0 };
+            Nitrification_pHValues = new double[] { 0.0, 4.5, 6.0, 8.0, 9.0, 14.0 };
+            Nitrification_pHFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0, 0.0 };
+
+            Nitrification2_TOptimum = new double[] { 32.0, 32.0 };
+            Nitrification2_TFactorAtZero = new double[] { 0.0, 0.0 };
+            Nitrification2_TCurveCoeff = new double[] { 2.0, 2.0 };
+            Nitrification2_NormWaterContents = new double[] { 0.0, 1.0, 1.25, 2.0, 3.0 };
+            Nitrification2_MoistureFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0 };
+            Nitritation_pHValues = new double[] { 0.0, 4.5, 6.0, 8.0, 9.0, 14.0 };
+            Nitritation_pHFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0, 0.0 };
+
+            Codenitrification_TOptmimun = new double[] { 50.05, 50.05 };
+            Codenitrification_TFactorAtZero = new double[] { 0.1, 0.1 };
+            Codenitrification_TCurveCoeff = new double[] { 1000, 1000 };
+            Codenitrification_NormWaterContents = new double[] { 0.0, 2.0, 3.0 };
+            Codenitrification_MoistureFactors = new double[] { 0.0, 0.0, 1.0 };
+            Codenitrification_pHValues = new double[] { 0.0, 4.5, 6.0, 8.0, 9.0, 14.0 };
+            Codenitrification_pHFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0, 0.0 };
+            Codenitrification_NHNOValues = new double[] { 0.0, 4.5, 6.0, 8.0, 9.0, 14.0 };
+            Codenitrification_NHNOFactors = new double[] { 0.0, 0.0, 1.0, 1.0, 0.0, 0.0 };
+
+            //// NOTE: the values for Topt and CvExp given here reproduce best the original function (it was an exponential, now a power)
+            ////  however, values like 50.06 and 1000, or even more sane 50 and 100 should be good enough
+            Denitrification_TOptimum = new double[] { 50.0561976737836, 50.0561976737836 };
+            Denitrification_TFactorAtZero = new double[] { 0.1, 0.1 };
+            Denitrification_TCurveCoeff = new double[] { 67108874, 67108874 };
+            Denitrification_NormWaterContents = new double[] { 0.0, 2.0, 3.0 };
+            Denitrification_MoistureFactors = new double[] { 0.0, 0.0, 1.0 };
+            Denit_WPFSValues = new double[] { 0.0, 28.0, 88.0, 100.0 };
+            Denit_WFPSFactors = new double[] { 0.1, 0.1, 1.0, 1.18 };
+
+            // update few parameters if soil type is Sand (for compatibility with classic apsim)
             if (Soil.SoilType != null && Soil.SoilType.Equals("Sand", StringComparison.CurrentCultureIgnoreCase))
             {
-                rd_biom = new double[] { 0.0324, 0.015 };
-                wfmin_values = new double[] { 0.05, 1.0, 1.0, 0.5 };
+                SoilNParameterSet = "sand";
+                MBiomassTurnOverRate = new double[] { 0.0324, 0.015 };
+                SOMMiner_MoistureFactors = new double[] { 0.05, 0.05, 1.0, 1.0, 0.5 };
+                FOMDecomp_MoistureFactors = new double[] { 0.05, 0.05, 1.0, 1.0, 0.5 };
             }
-            else
+
+            // check whether ph was supplied, use a default if not - would it be better to throw an exception?
+            if (ph == null)
             {
-                rd_biom = new double[] { 0.0081, 0.004 };
-                wfmin_values = new double[] { 0.0, 1.0, 1.0, 0.5 };
+                ph = new double[nLayers];
+                for (int layer = 0; layer < nLayers; ++layer)
+                    ph[layer] = DefaultInitialpH;
+                mySummary.WriteWarning(this, "Soil pH was not supplied to SoilNitrogen, the default value (" 
+                    + DefaultInitialpH.ToString("0.00") + ") will be used for all layers");
             }
-
-            initDone = true;
-
-            // set the size of arrays
-            ResizeLayerArrays(dlayer.Length);
-            foreach (soilCNPatch aPatch in Patch)
-                aPatch.ResizeLayerArrays(dlayer.Length);
-
-            // check few initialisation parameters
-            CheckParams();
-
-            // perform initial calculations and setup
-            InitCalc();
-        }
-
-        /// <summary>Check general initialisation parameters, and let user know of some settings</summary>
-        /// <exception cref="System.Exception">
-        /// Number of \fract_carb\ different to \fom_type\
-        /// or
-        /// Number of \fract_cell\ different to \fom_type\
-        /// or
-        /// Number of \fract_lign\ different to \fom_type\
-        /// </exception>
-        private void CheckParams()
-        {
-
-            SoilCNParameterSet = SoilCNParameterSet.Trim();
-            NPartitionApproach = NPartitionApproach.Trim();
-
-            // check whether ph is supplied, use a default if not - might be better to throw an exception?
-            use_external_ph = (ph != null);
-            if (!use_external_ph)
-            {
-                for (int layer = 0; layer < dlayer.Length; ++layer)
-                    ph[layer] = 6.0; // ph_ini
-            }
-
-            // convert minimum values for nh4 and no3 from ppm to kg/ha
-            double convFact = 0;
-            for (int layer = 0; layer < dlayer.Length; ++layer)
-            {
-                convFact = convFactor_kgha2ppm(layer);
-                urea_min[layer] = MathUtilities.Divide(ureappm_min, convFact, 0.0);
-                nh4_min[layer] = MathUtilities.Divide(nh4ppm_min, convFact, 0.0);
-                no3_min[layer] = MathUtilities.Divide(no3ppm_min, convFact, 0.0);
-            }
-
-            // Check if all fom values have been supplied
-            if (num_fom_types != fract_carb.Length)
-                throw new Exception("Number of \"fract_carb\" different to \"fom_type\"");
-            if (num_fom_types != fract_cell.Length)
-                throw new Exception("Number of \"fract_cell\" different to \"fom_type\"");
-            if (num_fom_types != fract_lign.Length)
-                throw new Exception("Number of \"fract_lign\" different to \"fom_type\"");
-
-            // Check if all C:N values have been supplied. If not use average C:N ratio in all pools
+            
+            // Check whether C:N values have been supplied. If not use average C:N ratio in all pools
             if (fomPoolsCNratio == null || fomPoolsCNratio.Length < 3)
             {
                 fomPoolsCNratio = new double[3];
                 for (int i = 0; i < 3; i++)
-                    fomPoolsCNratio[i] = iniFomCNratio;
+                    fomPoolsCNratio[i] = InitialFOMCNr;
             }
 
             // Check if initial fom depth has been supplied, if not assume that initial fom is distributed over the whole profile
-            if (iniFomDepth == 0.0)
-            {
-                for (int i = 0; i < dlayer.Length; ++i)
-                    iniFomDepth += dlayer[i];
-            }
+            if (InitialFOMDepth <= epsilon)
+                InitialFOMDepth = SumDoubleArray(dlayer);
+
+            // Check if initial root depth has been supplied, if not use whole profile (used to compute plant available N - patches)
+            if (rootDepth <= epsilon)
+                rootDepth = SumDoubleArray(dlayer);
+
+            // Calculate conversion factor from kg/ha to ppm (mg/kg)
+            convFactor = new double[nLayers];
+            for (int layer = 0; layer < nLayers; ++layer)
+                convFactor[layer] = MathUtilities.Divide(100.0, Soil.BD[layer] * dlayer[layer], 0.0);
+
+            // Check parameters for patches
+            if (DepthToTestByLayer <= epsilon)
+                layerDepthToTestDiffs = nLayers - 1;
+            else
+                layerDepthToTestDiffs = getCumulativeIndex(DepthToTestByLayer, dlayer);
         }
 
-        /// <summary>Do the initial setup and calculations - this is also used onReset</summary>
-        private void InitCalc()
+        /// <summary>
+        /// Checks whether initial values for OM and mineral N were given and make sure all layers have valid values
+        /// </summary>
+        /// <remarks>
+        /// Initial OC values are mandatory, but not for all layers. Zero is assumed for layers not set.
+        /// Initial values for mineral N are optional, assume zero if not given
+        /// The inital FOM values are given as a total amount which is distributed using an exponential function.
+        /// In this procedure the fraction of total FOM that goes in each layer is also computed
+        /// </remarks>
+        private void CheckInitialVariables()
         {
+            // ensure that array for initial OC have a value for each layer
+            if (reset_oc.Length < nLayers)
+                mySummary.WriteWarning(this, "Values supplied for the initial OC content do not cover all layers - zeroes will be assumed");
+            else if (reset_oc.Length > nLayers)
+                mySummary.WriteWarning(this, "More values were supplied for the initial OC content than the number of layers - excess will ignored");
 
-            int nLayers = dlayer.Length;
+            Array.Resize(ref reset_oc, nLayers);
 
-            // Factor to distribute fom over the soil profile. Uses a exponential function and goes till the especified depth
-            double[] fom_FracLayer = new double[nLayers];
-            double cum_depth = 0.0;
-            int deepest_layer = getCumulativeIndex(iniFomDepth, dlayer);
-            for (int layer = 0; layer <= deepest_layer; layer++)
+            // ensure that array for initial urea content have a value for each layer
+            if (reset_ureappm == null)
+                mySummary.WriteWarning(this, "No values were supplied for the initial content of urea - zero will be assumed");
+            else if (reset_ureappm.Length < nLayers)
+                mySummary.WriteWarning(this, "Values supplied for the initial content of urea do not cover all layers - zeroes will be assumed");
+            else if (reset_ureappm.Length > nLayers)
+                mySummary.WriteWarning(this, "More values were supplied for the initial content of urea than the number of layers - excess will ignored");
+
+            Array.Resize(ref reset_ureappm, nLayers);
+
+            // ensure that array for initial content of NH4 have a value for each layer
+            if (reset_nh4ppm == null)
+                mySummary.WriteWarning(this, "No values were supplied for the initial content of nh4 - zero will be assumed");
+            else if (reset_nh4ppm.Length < nLayers)
+                mySummary.WriteWarning(this, "Values supplied for the initial content of nh4 do not cover all layers - zeroes will be assumed");
+            else if (reset_nh4ppm.Length > nLayers)
+                mySummary.WriteWarning(this, "More values were supplied for the initial content of nh4 than the number of layers - excess will ignored");
+
+            Array.Resize(ref reset_nh4ppm, nLayers);
+
+            // ensure that array for initial content of NO3 have a value for each layer
+            if (reset_no3ppm == null)
+                mySummary.WriteWarning(this, "No values were supplied for the initial content of no3 - zero will be assumed");
+            else if (reset_no3ppm.Length < nLayers)
+                mySummary.WriteWarning(this, "Values supplied for the initial content of no3 do not cover all layers - zeroes will be assumed");
+            else if (reset_no3ppm.Length > nLayers)
+                mySummary.WriteWarning(this, "More values were supplied for the initial content of no3 than the number of layers - excess will ignored");
+
+            Array.Resize(ref reset_no3ppm, nLayers);
+
+            // compute initial FOM distribution in the soil (FOM fractions)
+            FOMiniFraction = new double[nLayers];
+            double totFOMfraction = 0.0;
+            int deepestLayer = getCumulativeIndex(InitialFOMDepth, dlayer);
+            double cumDepth = 0.0;
+            double FracLayer = 0.0;
+            for (int layer = 0; layer <= deepestLayer; layer++)
             {
-                fom_FracLayer[layer] = Math.Exp(-3.0 * Math.Min(1.0, MathUtilities.Divide(cum_depth + dlayer[layer], iniFomDepth, 0.0))) *
-                    Math.Min(1.0, MathUtilities.Divide(iniFomDepth - cum_depth, dlayer[layer], 0.0));
-                cum_depth += dlayer[layer];
+                FracLayer = Math.Min(1.0, MathUtilities.Divide(InitialFOMDepth - cumDepth, dlayer[layer], 0.0));
+                cumDepth += dlayer[layer];
+                FOMiniFraction[layer] = FracLayer * Math.Exp(-InitialFOMDistCoefficient * Math.Min(1.0, MathUtilities.Divide(cumDepth, InitialFOMDepth, 0.0)));
             }
-            double fom_FracLayer_tot = SumDoubleArray(fom_FracLayer);
 
-            // ensure initial OC has a value for each layer
-            Array.Resize(ref OC_reset, nLayers);
+            // get the actuall FOM distribution through layers (adds up to one)
+            totFOMfraction = SumDoubleArray(FOMiniFraction);
+            for (int layer = 0; layer <= deepestLayer; layer++)
+                FOMiniFraction[layer] /= totFOMfraction;
 
-            // Distribute an convert C an N values over the profile
-            double convFact = 0.0;
-            double newValue = 0.0;
+            // initialise some residue decomposition variables (others are set on DailyInitialisation)
+            residueName = new string[1] { "none" };
+        }
+
+        /// <summary>
+        /// Performs the initial setup and calculations
+        /// </summary>
+        /// <remarks>
+        /// This procedure is also used onReset
+        /// </remarks>
+        private void SetInitialValues()
+        {
+            // convert and set C an N values over the profile
             for (int layer = 0; layer < nLayers; layer++)
             {
-                convFact = convFactor_kgha2ppm(layer);
-                // check and distribute the mineral nitrogen
-                if (ureappm_reset != null)
-                {
-                    newValue = MathUtilities.Divide(ureappm_reset[layer], convFact, 0.0);       //Convert from ppm to kg/ha
-                    for (int k = 0; k < Patch.Count; k++)
-                        Patch[k].urea[layer] = newValue;
-                }
-                newValue = MathUtilities.Divide(nh4ppm_reset[layer], convFact, 0.0);       //Convert from ppm to kg/ha
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].nh4[layer] = newValue;
-                newValue = MathUtilities.Divide(no3ppm_reset[layer], convFact, 0.0);       //Convert from ppm to kg/ha
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].no3[layer] = newValue;
+                // get the initial amounts of mineral N (convert from ppm to kg/ha)
+                double iniUrea = MathUtilities.Divide(reset_ureappm[layer], convFactor[layer], 0.0);
+                double iniNH4 = MathUtilities.Divide(reset_nh4ppm[layer], convFactor[layer], 0.0);
+                double iniNO3 = MathUtilities.Divide(reset_no3ppm[layer], convFactor[layer], 0.0);
 
                 // calculate total soil C
-                double Soil_OC = OC_reset[layer] * 10000;					// = (oc/100)*1000000 - convert from % to ppm
-                Soil_OC = MathUtilities.Divide(Soil_OC, convFact, 0.0);		//Convert from ppm to kg/ha
+                double Soil_OC = reset_oc[layer] * 10000;                       // = (oc/100)*1000000 - convert from % to ppm
+                Soil_OC = MathUtilities.Divide(Soil_OC, convFactor[layer], 0.0);  //Convert from ppm to kg/ha
 
                 // calculate inert soil C
-                double InertC = finert[layer] * Soil_OC;
+                double InertC = FInert[layer] * Soil_OC;
+                double InertN = MathUtilities.Divide(InertC, HumusCNr, 0.0);
 
                 // calculate microbial biomass C and N
-                double BiomassC = MathUtilities.Divide((Soil_OC - InertC) * fbiom[layer], 1.0 + fbiom[layer], 0.0);
-                double BiomassN = MathUtilities.Divide(BiomassC, biom_cn, 0.0);
+                double BiomassC = MathUtilities.Divide((Soil_OC - InertC) * FBiom[layer], 1.0 + FBiom[layer], 0.0);
+                double BiomassN = MathUtilities.Divide(BiomassC, MBiomassCNr, 0.0);
 
-                // calculate C and N values for active humus
+                // calculate C and N values for humus
                 double HumusC = Soil_OC - BiomassC;
-                double HumusN = MathUtilities.Divide(HumusC, hum_cn, 0.0);
+                double HumusN = MathUtilities.Divide(HumusC, HumusCNr, 0.0);
 
-                // distribute and calculate the fom N and C
-                double fom = MathUtilities.Divide(iniFomWt * fom_FracLayer[layer], fom_FracLayer_tot, 0.0);
+                // distribute C over fom pools
+                double[] fomPool = new double[3];
+                fomPool[0] = InitialFOMWt * FOMiniFraction[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[1] = InitialFOMWt * FOMiniFraction[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[2] = InitialFOMWt * FOMiniFraction[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
 
+                // set the initial values across patches
                 for (int k = 0; k < Patch.Count; k++)
                 {
+                    Patch[k].urea[layer] = iniUrea;
+                    Patch[k].nh4[layer] = iniNH4;
+                    Patch[k].no3[layer] = iniNO3;
                     Patch[k].inert_c[layer] = InertC;
+                    Patch[k].inert_n[layer] = InertN;
                     Patch[k].biom_c[layer] = BiomassC;
                     Patch[k].biom_n[layer] = BiomassN;
                     Patch[k].hum_c[layer] = HumusC;
                     Patch[k].hum_n[layer] = HumusN;
-                    Patch[k].fom_c_pool1[layer] = fom * fract_carb[0] * c_in_fom;
-                    Patch[k].fom_c_pool2[layer] = fom * fract_cell[0] * c_in_fom;
-                    Patch[k].fom_c_pool3[layer] = fom * fract_lign[0] * c_in_fom;
-                    Patch[k].fom_n_pool1[layer] = MathUtilities.Divide(Patch[k].fom_c_pool1[layer], fomPoolsCNratio[0], 0.0);
-                    Patch[k].fom_n_pool2[layer] = MathUtilities.Divide(Patch[k].fom_c_pool2[layer], fomPoolsCNratio[1], 0.0);
-                    Patch[k].fom_n_pool3[layer] = MathUtilities.Divide(Patch[k].fom_c_pool3[layer], fomPoolsCNratio[2], 0.0);
+                    Patch[k].fom_c[0][layer] = fomPool[0];
+                    Patch[k].fom_c[1][layer] = fomPool[1];
+                    Patch[k].fom_c[2][layer] = fomPool[2];
+                    Patch[k].fom_n[0][layer] = MathUtilities.Divide(fomPool[0], fomPoolsCNratio[0], 0.0);
+                    Patch[k].fom_n[1][layer] = MathUtilities.Divide(fomPool[1], fomPoolsCNratio[1], 0.0);
+                    Patch[k].fom_n[2][layer] = MathUtilities.Divide(fomPool[2], fomPoolsCNratio[2], 0.0);
                 }
 
-                // store today's values
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].InitCalc();
+                // set maximum uptake rates for N forms (only really used for AgPasture when patches exist)
+                maximumNH4UptakeRate[layer] = reset_MaximumNH4Uptake / convFactor[layer];
+                maximumNO3UptakeRate[layer] = reset_MaximumNO3Uptake / convFactor[layer];
             }
 
-            // Calculations for NEW sysbal component
-            dailyInitialC = SumDoubleArray(TotalC);
-            dailyInitialN = SumDoubleArray(TotalN);
-
-            // Initialise the inhibitor factors
-            if (InhibitionFactor_Nitrification == null)
-                InhibitionFactor_Nitrification = new double[dlayer.Length];
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].CalcTotalMineralNInRootZone();
 
             initDone = true;
+
+            StoreStatus();
         }
 
-        /// <summary>Set the size of all public arrays (with nLayers)</summary>
-        /// <param name="nLayers">The n layers.</param>
-        private void ResizeLayerArrays(int nLayers)
+        /// <summary>
+        /// Sets the size of arrays (with nLayers)
+        /// </summary>
+        /// <remarks>
+        /// This is used during initialisation and whenever the soil profile changes (thus not often at all)
+        /// </remarks>
+        /// <param name="nLayers">The number of layers</param>
+        private void ResizeLayeredVariables(int nLayers)
         {
-            // Note: this doesn't clear the existing values
+            Array.Resize(ref inhibitionFactor_Nitrification, nLayers);
+            Array.Resize(ref maximumNH4UptakeRate, nLayers);
+            Array.Resize(ref maximumNO3UptakeRate, nLayers);
 
-            Array.Resize(ref urea_min, nLayers);
-            Array.Resize(ref nh4_min, nLayers);
-            Array.Resize(ref no3_min, nLayers);
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].ResizeLayeredVariables(nLayers);
         }
 
-        /// <summary>Stores the total amounts of C an N</summary>
-        private void SaveState()
+        /// <summary>
+        /// Clear (zero out) the values of variables storing deltas
+        /// </summary>
+        /// <remarks>
+        /// This is used to zero out the variables that need resetting every day, those that are not necessarily computed everyday
+        /// </remarks>
+        private void ClearDeltaVariables()
         {
-            // +  Note: needed for both NEW and OLD sysbal component
+            //Reset potential decomposition variables
+            nResidues = 0;
+            Array.Resize(ref pot_c_decomp, 0);
+            Array.Resize(ref pot_n_decomp, 0);
+            Array.Resize(ref pot_p_decomp, 0);
+            // this is also cleared onPotentialResidueDecompositionCalculated, but it is here to ensure it will be reset every timestep
 
-            dailyInitialN = SumDoubleArray(TotalN);
-            dailyInitialC = SumDoubleArray(TotalC);
+            //Reset variables in each patch
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].ClearDeltaVariables();
         }
 
-        /// <summary>Calculates variations in C an N, and publishes MassFlows to APSIM</summary>
-        private void DeltaState()
+        /// <summary>
+        /// Store today's initial N amounts
+        /// </summary>
+        private void StoreStatus()
         {
+            TodaysInitialN = SumDoubleArray(TotalN);
+            TodaysInitialC = SumDoubleArray(TotalC);
 
-            double dltN = SumDoubleArray(TotalN) - dailyInitialN;
-            double dltC = SumDoubleArray(TotalC) - dailyInitialC;
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].StoreStatus();
+        }
+
+        /// <summary>
+        /// Calculates variations in C an N, and publishes MassFlows to APSIM
+        /// </summary>
+        private void SendDeltaState()
+        {
+            double dltN = SumDoubleArray(TotalN) - TodaysInitialN;
+            double dltC = SumDoubleArray(TotalC) - TodaysInitialC;
 
             SendExternalMassFlowN(dltN);
             SendExternalMassFlowC(dltC);
         }
 
-        #endregion
+        #endregion setup events
 
-        #region Process events handlers and methods
+        #region >>  Process events handlers and methods
 
-        #region Daily processes
+        #region »   Recurrent processes (each timestep)
 
         /// <summary>
-        /// Get the information on potential residue decomposition - perform daily calculations as part of this.
+        /// Sets the procedures for the beginning of each time-step
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoSoilOrganicMatter")]
-        private void OnDoSoilOrganicMatter(object sender, EventArgs e)
-        {
-            // Get potential residue decomposition from surfaceom.
-            SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp = SurfaceOrganicMatter.PotentialDecomposition();
-
-            foreach (soilCNPatch aPatch in Patch)
-                aPatch.OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
-
-            num_residues = SurfaceOrganicMatterDecomp.Pool.Length;
-
-            sw_dep = Soil.Water;
-
-            // calculate C and N processes
-            //    - Assesses potential decomposition of surface residues;
-            //		. adjust decomposition if needed;
-            //		. accounts for mineralisation/immobilisation of N;
-            //	  - Compute the transformations on soil organic matter (including N mineralisation/immobilition);
-            //    - Calculates hydrolysis of urea, nitrification, and denitrification;
-            for (int k = 0; k < Patch.Count; k++)
-                Patch[k].Process();
-
-        }
-
-        /// <summary>Performs every-day calculations - before begining of day tasks</summary>
-        /// <param name="sender">The sender.</param>
+        /// <param name="sender">The sender model.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            // + Purpose: reset potential decomposition variables in each patch and get C and N status
+            if (initDone)
+            {
+                // store some initial values, so they may be for mass balance
+                StoreStatus();
 
-            foreach (soilCNPatch aPatch in Patch)
-                aPatch.OnTick();
-
-            // Calculations for NEW sysbal component
-            SaveState();
+                // clear variables holding deltas
+                ClearDeltaVariables();
+            }
         }
 
-        /// <summary>Performs every-day calculations - end of day processes</summary>
-        /// <param name="sender">The sender.</param>
+        /// <summary>
+        /// Sets the procedures for the main phase of each time-step
+        /// </summary>
+        /// <param name="sender">The sender model.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoSoilOrganicMatter")]
+        private void OnDoSoilOrganicMatter(object sender, EventArgs e)
+        {
+            // Get potential residue decomposition from SurfaceOrganicMatter
+            SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp = SurfaceOrganicMatter.PotentialDecomposition();
+            nResidues = SurfaceOrganicMatterDecomp.Pool.Length;
+            OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecomp);
+
+            // calculate C and N processes
+            EvaluateProcesses();
+        }
+
+        /// <summary>Stes the procedures for the end of each time-step</summary>
+        /// <param name="sender">The sender model.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoUpdate")]
         private void OnDoUpdate(object sender, EventArgs e)
         {
-            // + Purpose: Check patch status and clean up, if possible
-
-            if (Patch.Count > 1000) // must set this to one later
+            // Check whether patch auto amalgamation is allowed
+            if ((Patch.Count > 1) && (patchAutoAmalgamationAllowed))
             {
-                // we have more than one patch, check whether they are similar enough to be merged
-                PatchIDs Patches = new PatchIDs();
-                Patches = ComparePatches();
-
-                if (Patches.disappearing.Count > 0)
-                {  // there are patches that will be merged
-                    for (int k = 0; k < Patches.disappearing.Count; k++)
-                    {
-                        MergePatches(Patches.recipient[k], Patches.disappearing[k]);
-                        Summary.WriteMessage(this, "   merging Patch(" + Patches.disappearing[k].ToString() + ") into Patch(" +
-                            Patches.recipient[k].ToString() + "). New patch area = " + Patch[Patches.recipient[k]].RelativeArea.ToString("#0.00#"));
-                    }
+                if ((patchAmalgamationApproach.ToLower() == "CompareAll".ToLower()) ||
+                    (patchAmalgamationApproach.ToLower() == "CompareBase".ToLower()) ||
+                    (patchAmalgamationApproach.ToLower() == "CompareAge".ToLower()) ||
+                    (patchAmalgamationApproach.ToLower() == "CompareMerge".ToLower()))
+                {
+                    CheckPatchAutoAmalgamation();
                 }
             }
         }
 
-         
-        /// <summary>Send back to SurfaceOM the information about residue decomposition</summary>
+        /// <summary>Check whether patch amalgamation by age is allowed (done on a monthly basis)</summary>
+        /// <param name="sender">The sender model.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfMonth")]
+        private void OnEndOfMonth(object sender, EventArgs e)
+        {
+            // Check whether patch amalgamation by age is allowed (done on a monthly basis)
+            if (AllowPatchAmalgamationByAge.ToLower() == "yes")
+                CheckPatchAgeAmalgamation();
+        }
+
+        /// <summary>
+        /// Performs the soil C and N balance processes, at APSIM timestep.
+        /// </summary>
+        /// <remarks>
+        /// The processes considered, in order, are:
+        ///  - Decomposition of surface residues
+        ///  - Urea hydrolysis
+        ///  - Denitrification + N2O production
+        ///  - SOM mineralisation (humus then m. biomass) + decomposition of FOM
+        ///  - Nitrification + N2O production
+        /// Note: potential surface organic matter decomposition is given by SurfaceOM module, only N balance is considered here
+        ///  If there is a pond then surfaceOM is inactive, the decomposition of OM is done wholly by the pond module
+        ///  Also, different parameters are used for some processes when pond is active
+        /// </remarks>
+        private void EvaluateProcesses()
+        {
+            for (int k = 0; k < Patch.Count; k++)
+            {
+                // 1. Check surface residues decomposition
+                Patch[k].DecomposeResidues();
+
+                // 2. Check urea hydrolysis
+                Patch[k].ConvertUrea();
+
+                // 3. Check denitrification
+                Patch[k].ConvertNitrate();
+
+                // 4. Check transformations of soil organic matter pools
+                Patch[k].ConvertSoilOM();
+
+                // 5. Check nitrification
+                Patch[k].ConvertAmmonium();
+
+                // 6. check whether values are ok
+                Patch[k].CheckVariables();
+            }
+        }
+
+        #endregion recurrent processes
+
+        #region »   Sporadic processes (not necessarily every timestep)
+
+        /// <summary>
+        /// Passes the information about the potential decomposition of surface residues
+        /// </summary>
+        /// <remarks>
+        /// This information is passed by a residue/SurfaceOM module
+        /// </remarks>
+        /// <param name="SurfaceOrganicMatterDecomp">Data about the potential decomposition of each residue type on soil surface</param>
+        [EventSubscribe("PotentialResidueDecompositionCalculated")]
+        private void OnPotentialResidueDecompositionCalculated(SurfaceOrganicMatterDecompType SurfaceOrganicMatterDecomp)
+        {
+            // zero variables by assigning new array
+            residueName = new string[nResidues];
+            residueType = new string[nResidues];
+            pot_c_decomp = new double[nResidues];
+            pot_n_decomp = new double[nResidues];
+            pot_p_decomp = new double[nResidues];
+
+            // store potential decomposition into appropriate variables
+            for (int residue = 0; residue < nResidues; residue++)
+            {
+                residueName[residue] = SurfaceOrganicMatterDecomp.Pool[residue].Name;
+                residueType[residue] = SurfaceOrganicMatterDecomp.Pool[residue].OrganicMatterType;
+                pot_c_decomp[residue] = SurfaceOrganicMatterDecomp.Pool[residue].FOM.C;
+                pot_n_decomp[residue] = SurfaceOrganicMatterDecomp.Pool[residue].FOM.N;
+                // this P decomposition is needed to formulate data required by SOILP - struth, this is very ugly
+                pot_p_decomp[residue] = SurfaceOrganicMatterDecomp.Pool[residue].FOM.P;
+            }
+        }
+
+        /// <summary>
+        /// Sends back to SurfaceOM the information about residue decomposition
+        /// </summary>
+        /// <remarks>
+        /// Potential decomposition was gathered early on from the surfaceOM module. SoilNitrogen evaluated whether the 
+        /// conditions (C-N balance) allowed the decomposition to happen, and made the changes in the soil accordingly.
+        /// Now the actual decomposition rate for each of the residues is sent back to SurfaceOM.
+        /// </remarks>
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
         {
             // Note:
-            //      Potential decomposition was given to this module by a residue/surfaceOM module. 
-            //		Now we explicitly tell the module the actual decomposition
-            //      rate for each of its residues.  If there wasn't enough mineral N to decompose, the rate will be reduced from the potential value.
-
-            // will have to pack the SOMdecomp data from each patch and then invoke the event
-            //int num_residues = Patch[0].SOMDecomp.Pool.Length;
-            int nLayers = dlayer.Length;
+            //   - If there wasn't enough mineral N to decompose, the rate will be reduced to zero !!  - MUST CHECK THE VALIDITY OF THIS
 
             SurfaceOrganicMatterDecompType ActualSOMDecomp = new SurfaceOrganicMatterDecompType();
-            Array.Resize(ref ActualSOMDecomp.Pool, num_residues);
+            Array.Resize(ref ActualSOMDecomp.Pool, nResidues);
 
-            for (int residue = 0; residue < num_residues; residue++)
+            for (int residue = 0; residue < nResidues; residue++)
             {
-                double c_summed = 0.0F;
-                double n_summed = 0.0F;
+                // get the total amount decomposed over all existing patches
+                double c_summed = 0.0;
+                double n_summed = 0.0;
+
                 for (int k = 0; k < Patch.Count; k++)
                 {
-                    c_summed += Patch[k].SOMDecomp.Pool[residue].FOM.C * Patch[k].RelativeArea;
-                    n_summed += Patch[k].SOMDecomp.Pool[residue].FOM.N * Patch[k].RelativeArea;
+                    c_summed += Patch[k].SurfOMActualDecomposition.Pool[residue].FOM.C * Patch[k].RelativeArea;
+                    n_summed += Patch[k].SurfOMActualDecomposition.Pool[residue].FOM.N * Patch[k].RelativeArea;
                 }
 
+                // pack up the structure to return decompositions to SurfaceOrganicMatter
                 ActualSOMDecomp.Pool[residue] = new SurfaceOrganicMatterDecompPoolType();
                 ActualSOMDecomp.Pool[residue].FOM = new FOMType();
-                ActualSOMDecomp.Pool[residue].Name = Patch[0].SOMDecomp.Pool[residue].Name;
-                ActualSOMDecomp.Pool[residue].OrganicMatterType = Patch[0].SOMDecomp.Pool[residue].OrganicMatterType;
+                ActualSOMDecomp.Pool[residue].Name = Patch[0].SurfOMActualDecomposition.Pool[residue].Name;
+                ActualSOMDecomp.Pool[residue].OrganicMatterType = Patch[0].SurfOMActualDecomposition.Pool[residue].OrganicMatterType;
                 ActualSOMDecomp.Pool[residue].FOM.amount = 0.0F;
                 ActualSOMDecomp.Pool[residue].FOM.C = c_summed;
                 ActualSOMDecomp.Pool[residue].FOM.N = n_summed;
                 ActualSOMDecomp.Pool[residue].FOM.P = 0.0F;
                 ActualSOMDecomp.Pool[residue].FOM.AshAlk = 0.0F;
+                // Note: The values for 'amount', 'P', and 'AshAlk' will not be collected by SurfaceOrganicMatter, so send zero as default.
             }
 
             return ActualSOMDecomp;
         }
 
-        #endregion
-
-        #region Frequent and sporadic processes
-
-        /// <summary>Partition the given FOM C and N into fractions in each layer (one FOM)</summary>
-        /// <param name="inFOMdata">The in fo mdata.</param>
+        /// <summary>
+        /// Passes the instructions to incorporate FOM to the soil - simple FOM
+        /// </summary>
+        /// <remarks>
+        /// The use of this events is to be avoided, one should use the method IncorporateFOM
+        /// </remarks>
+        /// <param name="inFOMdata">Data about the FOM to be added to the soil</param>
         [EventSubscribe("IncorpFOM")]
         private void OnIncorpFOM(FOMLayerType inFOMdata)
         {
@@ -600,194 +628,750 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Partition the given FOM C and N into fractions in each layer (one FOM)
+        /// Passes the instructions to incorporate FOM to the soil - FOM pools
         /// </summary>
-        /// <param name="inFOMdata"></param>
-        public void DoIncorpFOM(FOMLayerType inFOMdata)
-        {
-            // Note: In this event all FOM is given as one, so it will be assumed that the CN ratios of all fractions are equal
-
-            foreach (soilCNPatch aPatch in Patch)
-                aPatch.OnIncorpFOM(inFOMdata);
-
-            fom_type = Patch[0].fom_type;
-        }
-
-        /// <summary>Partition the given FOM C and N into fractions in each layer (FOM pools)</summary>
-        /// <param name="inFOMPoolData">The in fom pool data.</param>
+        /// <remarks>
+        /// In this event, the FOM amount is given already partitioned by pool
+        /// </remarks>
+        /// <param name="inFOMPoolData">Data about the FOM to be added to the soil</param>
         [EventSubscribe("IncorpFOMPool")]
         private void OnIncorpFOMPool(FOMPoolType inFOMPoolData)
         {
-            // Note: In this event each of the three pools is given
-
-            foreach (soilCNPatch aPatch in Patch)
-                aPatch.OnIncorpFOMPool(inFOMPoolData);
+            DoIncorpFOM(inFOMPoolData);
         }
 
-        /// <summary>Get the information about urine being added</summary>
+        /// <summary>
+        /// Gets the data and forward instructions to incorporate FOM to the soil - simple FOM
+        /// </summary>
+        /// <remarks>
+        /// The data given here contains FOM as a single amount, not split into pools.
+        /// This will be partitioned here based on the given fom_type (or default if not given).
+        /// The values for C as well as N (or CN ratio) must be supplied or the action is not performed.
+        /// Both C an N are partitioned equally, thus the CN ratios of all pools are assumed equal.
+        /// If both N and CN ratio are given, the valu of CN ratio is used.
+        /// </remarks>
+        /// <param name="inFOMdata">Data about the FOM to be added to the soil</param>
+        public void DoIncorpFOM(FOMLayerType inFOMdata)
+        {
+            // get the total amount to be added
+            double totalCAmount = 0.0;
+            double totalNAmount = 0.0;
+            double amountCnotAdded = 0.0;
+            double amountNnotAdded = 0.0;
+
+            for (int layer = 0; layer < inFOMdata.Layer.Length; layer++)
+            {
+                if (layer < nLayers)
+                {
+                    if (inFOMdata.Layer[layer].FOM.amount >= epsilon)
+                    {
+                        inFOMdata.Layer[layer].FOM.C = inFOMdata.Layer[layer].FOM.amount * DefaultCarbonInFOM;
+                        if (inFOMdata.Layer[layer].CNR > epsilon)
+                        {   // we have C:N info - note that this has precedence over N amount
+                            totalCAmount += inFOMdata.Layer[layer].FOM.C;
+                            inFOMdata.Layer[layer].FOM.N = inFOMdata.Layer[layer].FOM.C / inFOMdata.Layer[layer].CNR;
+                            totalNAmount += inFOMdata.Layer[layer].FOM.N;
+                        }
+                        else if (inFOMdata.Layer[layer].FOM.N > epsilon)
+                        {   // we have N info
+                            totalCAmount += inFOMdata.Layer[layer].FOM.C;
+                            totalNAmount += inFOMdata.Layer[layer].FOM.N;
+                        }
+                        else
+                        {   // no info for N, C will not be added
+                            amountCnotAdded += inFOMdata.Layer[layer].FOM.C;
+                        }
+                    }
+                    else if (inFOMdata.Layer[layer].FOM.N >= epsilon)
+                    {   // no info for C, N will not be added
+                        amountNnotAdded += inFOMdata.Layer[layer].FOM.N;
+                    }
+                }
+                else
+                    mySummary.WriteWarning(this, "Information passed contained more layers than the soil, these will be ignored");
+            }
+
+            // If any FOM was passed, make the partition into FOM pools
+            if ((totalCAmount >= epsilon) && (totalNAmount >= epsilon))
+            {
+                // check whether a valid FOM type was given
+                fom_type = 0;   // use the default if no fom_type was given
+                for (int i = 0; i < fom_types.Length; i++)
+                {
+                    if (inFOMdata.Type == fom_types[i])
+                    {
+                        fom_type = i;
+                        break;
+                    }
+                }
+
+                // initialise data pack to hole values of fom
+                FOMPoolType myFOMPoolData = new FOMPoolType();
+                myFOMPoolData.Layer = new FOMPoolLayerType[inFOMdata.Layer.Length];
+
+                // partition the C and N amounts into FOM pools
+                for (int layer = 0; layer < inFOMdata.Layer.Length; layer++)
+                {
+                    if (layer < nLayers)
+                    {
+                        myFOMPoolData.Layer[layer] = new FOMPoolLayerType();
+                        myFOMPoolData.Layer[layer].Pool = new FOMType[3];
+                        myFOMPoolData.Layer[layer].Pool[0] = new FOMType();
+                        myFOMPoolData.Layer[layer].Pool[1] = new FOMType();
+                        myFOMPoolData.Layer[layer].Pool[2] = new FOMType();
+
+                        if (inFOMdata.Layer[layer].FOM.C > epsilon)
+                        {
+                            myFOMPoolData.Layer[layer].nh4 = 0.0F;
+                            myFOMPoolData.Layer[layer].no3 = 0.0F;
+                            myFOMPoolData.Layer[layer].Pool[0].C = inFOMdata.Layer[layer].FOM.amount * DefaultCarbonInFOM * fract_carb[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[1].C = inFOMdata.Layer[layer].FOM.amount * DefaultCarbonInFOM * fract_cell[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[2].C = inFOMdata.Layer[layer].FOM.amount * DefaultCarbonInFOM * fract_lign[fom_type];
+
+                            myFOMPoolData.Layer[layer].Pool[0].N = inFOMdata.Layer[layer].FOM.N * fract_carb[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[1].N = inFOMdata.Layer[layer].FOM.N * fract_cell[fom_type];
+                            myFOMPoolData.Layer[layer].Pool[2].N = inFOMdata.Layer[layer].FOM.N * fract_lign[fom_type];
+                        }
+                    }
+                }
+
+                // actually add the FOM to soil
+                IncorporateFOM(myFOMPoolData);
+            }
+            else
+            {
+                // let the user know of any issues
+                string aMessage;
+
+                if (amountCnotAdded >= epsilon)
+                    aMessage = "only C amount was given (" + amountCnotAdded.ToString("#0.00") + "kg/ha)";
+                else if (amountNnotAdded >= epsilon)
+                    aMessage = "only N amount was given (" + amountNnotAdded.ToString("#0.00") + "kg/ha)";
+                else
+                    aMessage = "no amount was given";
+
+                mySummary.WriteWarning(this, "FOM addition was not carried out because " + aMessage);
+            }
+        }
+
+        /// <summary>
+        /// Gets the data and forward instructions to incorporate FOM to the soil - FOM pools
+        /// </summary>
+        /// <remarks>
+        /// In this event, the FOM amount is given already partitioned into pools
+        /// The values for C as well as N must be supplied or the action is not performed.
+        /// </remarks>
+        /// <param name="inFOMData">Data about the FOM to be added to the soil</param>
+        public void DoIncorpFOM(FOMPoolType inFOMData)
+        {
+            // get the total amount to be added
+            double totalCAmount = 0.0;
+            double totalNAmount = 0.0;
+            double amountCnotAdded = 0.0;
+            double amountNnotAdded = 0.0;
+
+            for (int layer = 0; layer < inFOMData.Layer.Length; layer++)
+            {
+                if (layer < nLayers)
+                {
+                    for (int pool = 0; pool < 3; pool++)
+                    {
+                        if (inFOMData.Layer[layer].Pool[pool].C >= epsilon)
+                        {   // we have both C and N, can add
+                            totalCAmount += inFOMData.Layer[layer].Pool[pool].C;
+                            totalNAmount += inFOMData.Layer[layer].Pool[pool].N;
+                        }
+                        else
+                        {   // some data is mising, cannot add
+                            amountCnotAdded += inFOMData.Layer[layer].Pool[pool].C;
+                            amountNnotAdded += inFOMData.Layer[layer].Pool[pool].N;
+                        }
+                    }
+                }
+                else
+                    mySummary.WriteMessage(this, " Information passed contained more layers than the soil, these will be ignored");
+            }
+
+            // actually add the FOM to soil, if valid
+            if ((totalCAmount >= epsilon) && (totalNAmount >= epsilon))
+                IncorporateFOM(inFOMData);
+            else
+            {
+                // let the user know of any issues
+                string aMessage;
+
+                if (amountCnotAdded >= epsilon)
+                    aMessage = "only C amount was given (" + amountCnotAdded.ToString("#0.00") + "kg/ha)";
+                else if (amountNnotAdded >= epsilon)
+                    aMessage = "only N amount was given (" + amountNnotAdded.ToString("#0.00") + "kg/ha)";
+                else
+                    aMessage = "no amount was given";
+
+                mySummary.WriteWarning(this, "FOM addition was not carried out because " + aMessage);
+            }
+        }
+
+        /// <summary>
+        /// Gets the data about incoming FOM, add to the patch's FOM pools
+        /// </summary>
+        /// <remarks>
+        /// The FOM amount is given already partitioned by pool
+        /// </remarks>
+        /// <param name="FOMPoolData"></param>
+        public void IncorporateFOM(FOMPoolType FOMPoolData)
+        {
+            for (int k = 0; k < Patch.Count; k++)
+            {
+                for (int layer = 0; layer < FOMPoolData.Layer.Length; layer++)
+                {
+                    // update FOM amounts and check values
+                    for (int pool = 0; pool < 3; pool++)
+                    {
+                        Patch[k].fom_c[pool][layer] += FOMPoolData.Layer[layer].Pool[pool].C;
+                        Patch[k].fom_n[pool][layer] += FOMPoolData.Layer[layer].Pool[pool].N;
+                        CheckNegativeValues(ref Patch[k].fom_c[pool][layer], layer, "fom_c[" + (pool + 1).ToString() + "]", "Patch[" + Patch[k].PatchName + "].IncorporateFOM");
+                        CheckNegativeValues(ref Patch[k].fom_n[pool][layer], layer, "fom_n[" + (pool + 1).ToString() + "]", "Patch[" + Patch[k].PatchName + "].IncorporateFOM");
+                    }
+
+                    // update mineral N forms and check values
+                    Patch[k].nh4[layer] += FOMPoolData.Layer[layer].nh4;
+                    Patch[k].no3[layer] += FOMPoolData.Layer[layer].no3;
+                    CheckNegativeValues(ref Patch[k].nh4[layer], layer, "nh4", "Patch[" + Patch[k].PatchName + "].IncorporateFOM");
+                    CheckNegativeValues(ref Patch[k].no3[layer], layer, "no3", "Patch[" + Patch[k].PatchName + "].IncorporateFOM");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Passes the information about setting/changes in the soil profile
+        /// </summary>
+        /// <remarks>
+        /// We get the basic soil physics data in here;
+        /// The event is also used to account for getting changes due to soil erosion
+        /// It is assumed that if there are any changes in the soil profile the module doing it will let us know.
+        ///  this will be done by setting both 'soil_loss' and 'n_reduction' (ProfileReductionAllowed) to a non-default value
+        /// </remarks>
+        /// <param name="NewProfile">Data about the new soil profile</param>
+        [EventSubscribe("NewProfile")]
+        private void OnNew_profile(NewProfileType NewProfile)
+        {
+            // get the basic soil data info
+            int nLayers = NewProfile.dlayer.Length;
+
+            // check the layer structure
+            if (dlayer == null)
+            {
+                // we are at initialisation, set the layer structure
+                Array.Resize(ref dlayer, nLayers);
+                Array.Resize(ref reset_dlayer, nLayers);
+                for (int layer = 0; layer < nLayers; layer++)
+                {
+                    dlayer[layer] = (double)NewProfile.dlayer[layer];
+                    reset_dlayer[layer] = dlayer[layer];
+                }
+            }
+            else if (soil_loss > epsilon && profileReductionAllowed)
+            {
+                // check for variations in the soil profile. and update the C and N amounts appropriately
+                // Are these changes mainly (only) due to by erosion? what else??
+                double[] new_dlayer = new double[NewProfile.dlayer.Length];
+
+                for (int layer = 0; layer < new_dlayer.Length; layer++)
+                    new_dlayer[layer] = (double)NewProfile.dlayer[layer];
+
+                // RCichota: this routine will need carefull review, what happens if soil profile is changed and then we have a reset?
+                //  I have set up a 'reset_dlayer' which holds the original dlayer and may be used check the changes in the soil
+                //   profile. But what about the other variables??
+
+                // There have been some soil loss, launch the UpdateProfile
+                UpdateProfile(new_dlayer);
+
+                // don't we need to update the other variables (at least their size)???
+            }
+        }
+
+        /// <summary>
+        /// Check whether profile has changed and move values between layers
+        /// </summary>
+        /// <param name="new_dlayer">New values for dlayer</param>
+        private void UpdateProfile(double[] new_dlayer)
+        {
+            // move the values of variables
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].UpdateProfile(new_dlayer);
+
+            // now update the layer structure
+            for (int layer = 0; layer < new_dlayer.Length; layer++)
+                dlayer[layer] = new_dlayer[layer];
+
+            // and the layer count
+            nLayers = dlayer.Length;
+        }
+
+        /// <summary>Gets the changes in mineral N made by other modules</summary>
+        /// <param name="NitrogenChanges">The nitrogen changes.</param>
+        public void SetNitrogenChanged(NitrogenChangedType NitrogenChanges)
+        {
+            OnNitrogenChanged(NitrogenChanges);
+        }
+
+        /// <summary>
+        /// Passes the information about changes in mineral N made by other modules
+        /// </summary>
+        /// <remarks>
+        /// These values will be passed to each existing patch. Generally the values are passed as they come,
+        ///  however, if the deltas come from a soil (i.e. leaching) or plant (i.e. uptake) then the values should
+        ///  be handled (partioned).  This will be done based on soil N concentration
+        /// </remarks>
+        /// <param name="NitrogenChanges">The variation (delta) for each mineral N form</param>
+        ///
+        [EventSubscribe("NitrogenChanged")]
+        private void OnNitrogenChanged(NitrogenChangedType NitrogenChanges)
+        {
+            // get the type of module sending this change
+            senderModule = NitrogenChanges.SenderType.ToLower();
+
+            // get the total amount of N in root zone (for partition of plant uptake)
+            for (int k = 0; k < Patch.Count; k++)
+                Patch[k].CalcTotalMineralNInRootZone();
+
+            // check whether there are significant values, if so pass them to appropriate dlt
+            if (hasSignificantValues(NitrogenChanges.DeltaUrea, epsilon))
+            {
+                if ((Patch.Count > 1) && ((senderModule == "WaterModule".ToLower()) || (senderModule == "Plant".ToLower())))
+                {
+                    // the values come from a module that requires partition
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaUrea, "Urea", patchNPartitionApproach.ToLower());
+
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_urea = newDelta[k];
+                }
+                else
+                {
+                    // the values come from a module that do not require partition or there is only one patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_urea = NitrogenChanges.DeltaUrea;
+                }
+            }
+            // else{}  No values, no action needed
+
+            if (hasSignificantValues(NitrogenChanges.DeltaNH4, epsilon))
+            {
+                if ((Patch.Count > 1) && ((senderModule == "WaterModule".ToLower()) || (senderModule == "Plant".ToLower())))
+                {
+                    // the values come from a module that requires partition
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNH4, "NH4", patchNPartitionApproach.ToLower());
+
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_nh4 = newDelta[k];
+                }
+                else
+                {
+                    // the values come from a module that do not require partition or there is only one patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_nh4 = NitrogenChanges.DeltaNH4;
+                }
+            }
+            // else{}  No values, no action needed
+
+            if (hasSignificantValues(NitrogenChanges.DeltaNO3, epsilon))
+            {
+                if ((Patch.Count > 1) && ((senderModule == "WaterModule".ToLower()) || (senderModule == "Plant".ToLower())))
+                {
+                    // the values come from a module that requires partition
+                    double[][] newDelta = partitionDelta(NitrogenChanges.DeltaNO3, "NO3", patchNPartitionApproach.ToLower());
+
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_no3 = newDelta[k];
+                }
+                else
+                {
+                    // the values come from a module that do not require partition or there is only one patch
+                    for (int k = 0; k < Patch.Count; k++)
+                        Patch[k].dlt_no3 = NitrogenChanges.DeltaNO3;
+                }
+            }
+            // else{}  No values, no action needed
+        }
+
+        /// <summary>
+        /// Get the information about urine being added
+        /// </summary>
         /// <param name="UrineAdded">Urine deposition data (includes urea N amount, volume, area affected, etc)</param>
         public void AddUrine(AddUrineType UrineAdded)
         {
-
             // Starting with the minimalist version. To be updated by Val's group to include a urine patch algorithm
-
-            // test for adding urine patches  -RCichota
-            // if VolumePerUrination = 0.0 then no patch will be added, otherwise a patch will be added (based on 'base' patch)
-            // assuming new PatchArea is passed as a fraction and this will be subtracted from original
-            // urea will be added to the top layer for now
-
-            double[] newUrea = new double[dlayer.Length];
-            newUrea[0] = UrineAdded.Urea;
-
-            if (UrineAdded.VolumePerUrination > 0.0)
-            {
-                SplitPatch(0);
-                double oldArea = Patch[0].RelativeArea;
-                double newArea = oldArea * (1 - UrineAdded.AreaPerUrination);
-                Patch[0].RelativeArea = newArea;
-                int k = Patch.Count - 1;
-                Patch[k].RelativeArea = oldArea * UrineAdded.AreaPerUrination;
-                Patch[k].PatchName = "Patch" + k.ToString();
-                if (UrineAdded.Urea > EPSILON)
-                    Patch[k].dlt_urea = newUrea;
-            }
-            else
-                for (int k = 0; k < Patch.Count; k++)
-                    Patch[k].dlt_urea = newUrea;
+            // urea[0] += UrineAdded.Urea;
         }
 
-        /// <summary>Gets and handles the information about new patch and add it to patch list</summary>
+        /// <summary>
+        /// Passes and handles the information about new patch and add it to patch list
+        /// </summary>
         /// <param name="PatchtoAdd">Patch data</param>
-        [EventSubscribe("AddSoilCNPatc")]
+        [EventSubscribe("AddSoilCNPatch")]  // RJM TODO check name
         private void OnAddSoilCNPatch(AddSoilCNPatchType PatchtoAdd)
         {
             // data passed with this event:
             //.Sender: the name of the module that raised this event
+            //.SuppressMessages: flags wheter massages are suppressed or not (default is not)
             //.DepositionType: the type of deposition:
             //  - ToAllPaddock: No patch is created, add stuff as given to all patches. It is the default;
             //  - ToSpecificPatch: No patch is created, add stuff to given patches;
-            //		(recipient patch is given using its index or name; if not supplied, defaults to homogeneous)
+            //      (recipient patch is given using its index or name; if not supplied, defaults to homogeneous)
             //  - ToNewPatch: create new patch based on an existing patch, add stuff to created patch;
-            //		- recipient or base patch is given using index or name; if not supplied, new patch will be based on the base/Patch[0];
+            //      - recipient or base patch is given using index or name; if not supplied, new patch will be based on the base/Patch[0];
             //      - patches are only created is area is larger than a minimum (minPatchArea);
             //      - new areas are proportional to existing patches;
             //  - NewOverlappingPatches: create new patch(es), these overlap with all existing patches, add stuff to created patches;
-            //		(new patches are created only if their area is larger than a minimum (minPatchArea))
-            //.AffectedPatches_id (AffectedPatchesByIndex): the index of the existing patches to which urine will be added
-            //.AffectedPatches_nm (AffectedPatchesByName): the name of the existing patches to which urine will be added
-            //.AreaFraction: the relative area of the patch (0-1)
-            //.PatchName: the name(s) of the patch)es) being created
+            //      (new patches are created only if their area is larger than a minimum (minPatchArea))
+            //.AffectedPatches_id (AffectedPatchesByIndex): the index of the existing patches affected by new patch
+            //.AffectedPatches_nm (AffectedPatchesByName): the name of the existing patches affected by new patch
+            //.AreaFraction: the relative area (fraction) of new patches (0-1)
+            //.PatchName: the name(s) of the patch(es) being created
             //.Water: amount of water to add per layer (mm), not handled here
             //.Urea: amount of urea to add per layer (kgN/ha)
-            //.Urea: amount of urea to add (per layer) - Do we need other N forms?
             //.NH4: amount of ammonium to add per layer (kgN/ha)
             //.NO3: amount of nitrate to add per layer (kgN/ha)
-            //.POX: amount of POx to add per layer (kgP/ha)
-            //.SO4: amount of SO4 to add per layer (kgS/ha)
-            //.Ashalk: ash amount to add per layer (mol/ha)
+            //.POX: amount of POx to add per layer (kgP/ha), not handled here
+            //.SO4: amount of SO4 to add per layer (kgS/ha), not handled here
+            //.Ashalk: ash amount to add per layer (mol/ha), not handled here
             //.FOM_C: amount of carbon in fom (all pools) to add per layer (kgC/ha)  - if present, the entry for pools will be ignored
             //.FOM_C_pool1: amount of carbon in fom_pool1 to add per layer (kgC/ha)
             //.FOM_C_pool2: amount of carbon in fom_pool2 to add per layer (kgC/ha)
             //.FOM_C_pool3: amount of carbon in fom_pool3 to add per layer (kgC/ha)
             //.FOM_N.: amount of nitrogen in fom to add per layer (kgN/ha)
 
-            List<int> PatchesToAddStuff = new List<int>();
+            // - here we'll just convert to AddSoilCNPatchwithFOM and raise that event  - This will be deleted in the future
 
-            if ((PatchtoAdd.DepositionType.ToLower() == "ToNewPatch".ToLower()) ||
-                (PatchtoAdd.DepositionType.ToLower() == "NewOverlappingPatches".ToLower()))
-            { // New patch(es) will be added
-                AddNewCNPatch(PatchtoAdd);
+            AddSoilCNPatchwithFOMType PatchData = new AddSoilCNPatchwithFOMType();
+            PatchData.Sender = PatchtoAdd.Sender;
+            PatchData.SuppressMessages = PatchtoAdd.SuppressMessages;
+            PatchData.DepositionType = PatchtoAdd.DepositionType;
+            PatchData.AreaNewPatch = PatchtoAdd.AreaFraction;
+            PatchData.AffectedPatches_id = PatchtoAdd.AffectedPatches_id;
+            PatchData.AffectedPatches_nm = PatchtoAdd.AffectedPatches_nm;
+            PatchData.Urea = PatchtoAdd.Urea;
+            PatchData.NH4 = PatchtoAdd.NH4;
+            PatchData.NO3 = PatchtoAdd.NO3;
+            // need to also initialise FOM, even if it is empty
+            PatchData.FOM = new AddSoilCNPatchwithFOMFOMType();
+            PatchData.FOM.Type = "none";
+            PatchData.FOM.Pool = new SoilOrganicMaterialType[3];
+
+            for (int pool = 0; pool < 3; pool++)
+                PatchData.FOM.Pool[pool] = new SoilOrganicMaterialType();
+
+            OnAddSoilCNPatchwithFOM(PatchData);
+        }
+
+        /// <summary>
+        /// Passes and handles the information about new patch and add it to patch list
+        /// </summary>
+        /// <param name="PatchtoAdd">Patch data</param>
+        [EventSubscribe("AddSoilCNPatchwithFOM")]  // RJM TODO check name
+        private void OnAddSoilCNPatchwithFOM(AddSoilCNPatchwithFOMType PatchtoAdd)
+        {
+            // data passed with this event:
+            //.Sender: the name of the module that raised this event
+            //.SuppressMessages: flags wheter massages are suppressed or not (default is not)
+            //.DepositionType: the type of deposition:
+            //  - ToAllPaddock: No patch is created, add stuff as given to all patches. It is the default;
+            //  - ToSpecificPatch: No patch is created, add stuff to given patches;
+            //      (recipient patch is given using its index or name; if not supplied, defaults to homogeneous)
+            //  - ToNewPatch: create new patch based on an existing patch, add stuff to created patch;
+            //      - recipient or base patch is given using index or name; if not supplied, new patch will be based on base/Patch[0];
+            //      - patches are only created is area is larger than a minimum (minPatchArea);
+            //      - new areas are proportional to existing patches;
+            //  - NewOverlappingPatches: create new patch(es), these overlap with all existing patches, add stuff to created patches;
+            //      (new patches are created only if their area is larger than a minimum (minPatchArea))
+            //.AffectedPatches_id (AffectedPatchesByIndex): the index of the existing patches affected by new patch
+            //.AffectedPatches_nm (AffectedPatchesByName): the name of the existing patches affected by new patch
+            //.AreaNewPatch: the relative area (fraction) of new patches (0-1)
+            //.PatchName: the name(s) of the patch(es) being created
+            //.Water: amount of water to add per layer (mm), not handled here
+            //.Urea: amount of urea to add per layer (kgN/ha)
+            //.NH4: amount of ammonium to add per layer (kgN/ha)
+            //.NO3: amount of nitrate to add per layer (kgN/ha)
+            //.POX: amount of POx to add per layer (kgP/ha), not handled here
+            //.SO4: amount of SO4 to add per layer (kgS/ha), not handled here
+            //.AshAlk: ash amount to add per layer (mol/ha), not handled here
+            //.FOM: fresh organic matter to add, per fom pool
+            //   .name: name of given pool being altered
+            //   .type: type of the given pool being altered (not used here)
+            //   .Pool[]: info about FOM pools being added
+            //      .type: type of the given pool being altered (not used here)
+            //      .type: type of the given pool being altered (not used here)
+            //      .C: amount of carbon in given pool to add per layer (kgC/ha)
+            //      .N: amount of nitrogen in given pool to add per layer (kgN/ha)
+            //      .P: amount of phosphorus (kgC/ha), not handled here
+            //      .S: amount of sulphur (kgC/ha), not handled here
+            //      .AshAlk: amount of alkaline ash (kg/ha), not handled here
+
+            // check that required data is supplied
+            bool isDataOK = true;
+
+            if (PatchtoAdd.DepositionType.ToLower() == "ToNewPatch".ToLower())
+            {
+                if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
+                {
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
+                    isDataOK = false;
+                }
+                else if (PatchtoAdd.AreaNewPatch <= 0.0)
+                {
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
+                    isDataOK = false;
+                }
             }
             else if (PatchtoAdd.DepositionType.ToLower() == "ToSpecificPatch".ToLower())
-            {  // add stuff to selected patches, no new patch will be created
-
-                // 1. get the list of patch id's to which stuff will be added
-                int[] PatchIDs = CheckPatchIDs(PatchtoAdd.AffectedPatches_id, PatchtoAdd.AffectedPatches_nm);
-                // 2. create the list of patches receiving stuff
-                for (int i = 0; i < PatchIDs.Length; i++)
-                    PatchesToAddStuff.Add(PatchIDs[i]);
-                // 3. add the stuff to patches listed
-                AddStuffToPatches(PatchesToAddStuff, PatchtoAdd);
+            {
+                if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
+                {
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
+                    isDataOK = false;
+                }
+            }
+            else if (PatchtoAdd.DepositionType.ToLower() == "NewOverlappingPatches".ToLower())
+            {
+                if (PatchtoAdd.AreaNewPatch <= 0.0)
+                {
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
+                    isDataOK = false;
+                }
+            }
+            else if ((PatchtoAdd.DepositionType.ToLower() == "ToAllPaddock".ToLower()) || (PatchtoAdd.DepositionType == ""))
+            {
+                // assume stuff is added homogeneously and with no patch creation, thus no factors are actually required
             }
             else
-            {  // add urine to all existing patches, no new patch will be created
+            {
+                mySummary.WriteMessage(this, " Command to add patch did not supply a valid DepositionType. Command will be ignored.");
+                isDataOK = false;
+            }
 
-                // 1. create the list of patches receiving stuff (all)
-                for (int k = 0; k < Patch.Count; k++)
-                    PatchesToAddStuff.Add(k);
-                // 2. add the stuff to patches listed
-                AddStuffToPatches(PatchesToAddStuff, PatchtoAdd);
+            if (isDataOK)
+            {
+                List<int> PatchesToAddStuff;
+
+                if ((PatchtoAdd.DepositionType.ToLower() == "ToNewPatch".ToLower()) ||
+                    (PatchtoAdd.DepositionType.ToLower() == "NewOverlappingPatches".ToLower()))
+                { // New patch(es) will be added
+                    AddNewCNPatch(PatchtoAdd);
+                }
+                else if (PatchtoAdd.DepositionType.ToLower() == "ToSpecificPatch".ToLower())
+                {  // add stuff to selected patches, no new patch will be created
+
+                    // 1. get the list of patch id's to which stuff will be added
+                    PatchesToAddStuff = CheckPatchIDs(PatchtoAdd.AffectedPatches_id, PatchtoAdd.AffectedPatches_nm);
+                    // 2. add the stuff to patches listed
+                    AddStuffToPatches(PatchesToAddStuff, PatchtoAdd);
+                }
+                else
+                {  // add stuff to all existing patches, no new patch will be created
+                   // 1. create the list of patches receiving stuff (all)
+                    PatchesToAddStuff = new List<int>();
+                    for (int k = 0; k < Patch.Count; k++)
+                        PatchesToAddStuff.Add(k);
+                    // 2. add the stuff to patches listed
+                    AddStuffToPatches(PatchesToAddStuff, PatchtoAdd);
+                }
             }
         }
 
-
-        /// <summary>Gets the list of patches that will be merge into one, as defined by user</summary>
+        /// <summary>
+        /// Passes the list of patches that will be merged into one, as defined by user
+        /// </summary>
         /// <param name="MergeCNPatch">The list of CNPatches to merge</param>
-        [EventSubscribe("MergeSoilCNPatc")]
+        [EventSubscribe("MergeSoilCNPatch")]  // RJM TODO check name
         private void OnMergeSoilCNPatch(MergeSoilCNPatchType MergeCNPatch)
         {
-            if ((MergeCNPatch.AffectedPatches_id.Length > 1) | (MergeCNPatch.AffectedPatches_nm.Length > 1))
+            List<int> PatchesToMerge = new List<int>();
+
+            if (MergeCNPatch.MergeAll)
+            {
+                // all patches will be merged
+                for (int k = 0; k < Patch.Count; k++)
+                    PatchesToMerge.Add(k);
+            }
+            else if ((MergeCNPatch.AffectedPatches_id.Length > 1) | (MergeCNPatch.AffectedPatches_nm.Length > 1))
             {
                 // get the list of patch id's to which stuff will be added
-                List<int> PatchesToMerge = new List<int>();
-                int[] PatchIDs = CheckPatchIDs(MergeCNPatch.AffectedPatches_id, MergeCNPatch.AffectedPatches_nm);
-                for (int i = 0; i < PatchIDs.Length; i++)
-                    PatchesToMerge.Add(PatchIDs[i]);
-
-                // send the list to merger
-                AmalgamatePatches(PatchesToMerge);
+                PatchesToMerge = CheckPatchIDs(MergeCNPatch.AffectedPatches_id, MergeCNPatch.AffectedPatches_nm);
             }
+
+            // send the list to merger - all values are copied to first patch in the list, remaining will be deleted
+            if (PatchesToMerge.Count > 0)
+                AmalgamatePatches(PatchesToMerge, MergeCNPatch.SuppressMessages);
         }
-
-        /// <summary>Comunicate other components that N amount in the soil has changed</summary>
-        /// <param name="dltN">N changes</param>
-        private void SendExternalMassFlowN(double dltN)
-        {
-
-            ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
-            if (Math.Abs(dltN) <= EPSILON)
-                dltN = 0.0;
-            massBalanceChange.FlowType = dltN >= 0 ? "gain" : "loss";
-            massBalanceChange.PoolClass = "soil";
-            massBalanceChange.N = (float)Math.Abs(dltN);
-            if (ExternalMassFlow != null)
-                ExternalMassFlow.Invoke(massBalanceChange);
-        }
-
-        /// <summary>Comunicate other components that C amount in the soil has changed</summary>
+        /// <summary>
+        /// Comunicate other components that C amount in the soil has changed
+        /// </summary>
         /// <param name="dltC">C changes</param>
         private void SendExternalMassFlowC(double dltC)
         {
             if (ExternalMassFlow != null)
             {
                 ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
-                if (Math.Abs(dltC) <= EPSILON)
+
+                if (Math.Abs(dltC) <= epsilon)
                     dltC = 0.0;
                 massBalanceChange.FlowType = dltC >= 0 ? "gain" : "loss";
                 massBalanceChange.PoolClass = "soil";
-                massBalanceChange.N = (float)Math.Abs(dltC);
+                massBalanceChange.N = Math.Abs(dltC);
                 ExternalMassFlow.Invoke(massBalanceChange);
             }
         }
 
-        #endregion
-
-        #endregion
-
-        #region Auxiliary functions
-
-        /// <summary>Conversion factor: kg/ha to ppm (mg/kg)</summary>
-        /// <param name="Layer">layer to calculate</param>
-        /// <returns>conversion factor</returns>
-        /// <exception cref="System.Exception"> Error on computing convertion factor, kg/ha to ppm. Value for dlayer or bulk density not valid</exception>
-        private double convFactor_kgha2ppm(int Layer)
+        /// <summary>
+        /// Comunicate other components that N amount in the soil has changed
+        /// </summary>
+        /// <param name="dltN">N changes</param>
+        private void SendExternalMassFlowN(double dltN)
         {
-            if (bd == null || dlayer == null || bd.Length == 0 || dlayer.Length == 0)
+            ExternalMassFlowType massBalanceChange = new ExternalMassFlowType();
+
+            if (Math.Abs(dltN) < epsilon)
+                dltN = 0.0;
+            massBalanceChange.FlowType = dltN >= epsilon ? "gain" : "loss";
+            massBalanceChange.PoolClass = "soil";
+            massBalanceChange.N = Math.Abs(dltN);
+            if (ExternalMassFlow != null)
             {
-                return 0.0;
-                throw new Exception(" Error on computing convertion factor, kg/ha to ppm. Value for dlayer or bulk density not valid");
+                ExternalMassFlow.Invoke(massBalanceChange);
             }
-            return MathUtilities.Divide(100.0, bd[Layer] * dlayer[Layer], 0.0);
+        }
+
+        #endregion sporadic processes
+
+        #endregion processes events
+
+        #region >>  Auxiliary functions
+
+        /// <summary>
+        /// Checks whether the variable is significantly negative, considering thresholds
+        /// </summary>
+        /// <remarks>
+        /// Three levels are considered when analying a negative value, these are defined by the warning and the fatal threshold value:
+        ///  (1) If the variable is negative, but the value is really small (in absolute terms) than the deviation is considered irrelevant;
+        ///  (2) If the value of the variable is negative and greater than the warning threshold, then a warning message is given;
+        ///  (3) If the variable value is negative and greater than the fatal threshold, then a fatal error is raised and the calculation stops.
+        /// In any case the value any negative value is reset to zero;
+        /// </remarks>
+        /// <param name="TheValue">Reference to the variable being tested</param>
+        /// <param name="layer">The layer to which the variable belongs to</param>
+        /// <param name="VariableName">The name of the variable</param>
+        /// <param name="MethodName">The name of the method calling the test</param>
+        private void CheckNegativeValues(ref double TheValue, int layer, string VariableName, string MethodName)
+        {
+            // Note: the layer number and the variable name are passed only so that they can be added to the error message
+
+            if (TheValue < FatalNegativeThreshold)
+            {
+                // Deviation is too large, stop the calculations
+                string myMessage = " - " + MethodName + ", attempt to change " + VariableName + "["
+                                 + (layer + 1).ToString() + "] to a value(" + TheValue.ToString()
+                                 + ") below the fatal threshold (" + FatalNegativeThreshold.ToString() + ")\n";
+                TheValue = 0.0;
+                throw new Exception(myMessage);
+            }
+            else if (TheValue < WarningNegativeThreshold)
+            {
+                // Deviation is small, but warrants a notice to user
+                string myMessage = " - " + MethodName + ", attempt to change " + VariableName + "["
+                                 + (layer + 1).ToString() + "] to a value(" + TheValue.ToString()
+                                 + ") below the warning threshold (" + WarningNegativeThreshold.ToString()
+                                 + ". Value will be reset to zero.";
+                TheValue = 0.0;
+                mySummary.WriteWarning(this, myMessage);
+            }
+            else if (TheValue < 0.0)
+            {
+                // Realy small value, likely a minor numeric issue, don't bother to report
+                TheValue = 0.0;
+            }
+            //else { } // Value is positive
+        }
+
+        /// <summary>
+        /// Computes the fraction of each layer that is between the surface and a given depth
+        /// </summary>
+        /// <param name="maxDepth">The depth down to which the fractions are computed</param>
+        /// <returns>An array with the fraction (0-1) of each layer that is between the surface and maxDepth</returns>
+        private double[] FractionLayer(double maxDepth)
+        {
+            double cumDepth = 0.0;
+            double[] result = new double[nLayers];
+            int maxLayer = getCumulativeIndex(maxDepth, dlayer);
+
+            for (int layer = 0; layer <= maxLayer; layer++)
+            {
+                result[layer] = Math.Min(1.0, MathUtilities.Divide(maxDepth - cumDepth, dlayer[layer], 0.0));
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Find the index at which the cumulative amount is equal or greater than a given value
+        /// </summary>
+        /// <param name="sumTarget">The target value being sought</param>
+        /// <param name="anArray">The array to analyse</param>
+        /// <returns>The index of the array item at which the sum is equal or greater than the target</returns>
+        private int getCumulativeIndex(double sumTarget, double[] anArray)
+        {
+            double cum = 0.0f;
+
+            for (int i = 0; i < anArray.Length; i++)
+            {
+                cum += anArray[i];
+                if (cum >= sumTarget)
+                    return i;
+            }
+
+            return anArray.Length - 1;
+        }
+
+        /// <summary>
+        /// Check whether there is at least one considerable/significant value in the array
+        /// </summary>
+        /// <param name="anArray">The array to analyse</param>
+        /// <param name="MinValue">The minimum considerable value</param>
+        /// <returns>True if there is any value greater than the minimum, false otherwise</returns>
+        private bool hasSignificantValues(double[] anArray, double MinValue)
+        {
+            bool result = false;
+
+            if (anArray != null)
+            {
+                for (int i = 0; i < anArray.Length; i++)
+                {
+                    if (Math.Abs(anArray[i]) >= MinValue)
+                    {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the sum of all values of an array of doubles
+        /// </summary>
+        /// <param name="anArray">The array of values</param>
+        /// <returns>The sum</returns>
+        private double SumDoubleArray(double[] anArray)
+        {
+            double result = 0.0;
+
+            if (anArray != null)
+            {
+                for (int i = 0; i < anArray.Length; i++)
+                    result += anArray[i];
+            }
+
+            return result;
         }
 
         /// <summary>Check whether there is any considerable values in the array</summary>
@@ -797,6 +1381,7 @@ namespace Models.Soils
         private bool hasValues(double[] anArray, double Lowerue)
         {
             bool result = false;
+
             if (anArray != null)
             {
                 foreach (double Value in anArray)
@@ -808,40 +1393,10 @@ namespace Models.Soils
                     }
                 }
             }
+
             return result;
         }
 
-        /// <summary>Calculate the sum of all values of an array of doubles</summary>
-        /// <param name="anArray">The array of values</param>
-        /// <returns>The sum</returns>
-        private double SumDoubleArray(double[] anArray)
-        {
-            double result = 0.0;
-            if (anArray != null)
-            {
-                foreach (double Value in anArray)
-                    result += Value;
-            }
-            return result;
-        }
-
-        /// <summary>Find the index at which the cumulative amount is equal or greater than 'sum'</summary>
-        /// <param name="sumTarget">The target value</param>
-        /// <param name="anArray">The array to analyse</param>
-        /// <returns>The index of the array item at which the sum is equal or greater than the target</returns>
-        private int getCumulativeIndex(double sumTarget, double[] anArray)
-        {
-            double cum = 0.0f;
-            for (int i = 0; i < anArray.Length; i++)
-            {
-                cum += anArray[i];
-                if (cum >= sumTarget)
-                    return i;
-            }
-            return anArray.Length - 1;
-        }
-
-        #endregion
+        #endregion Aux functions
     }
-
 }
