@@ -156,11 +156,11 @@ namespace Models.Soils
             {
                 set
                 {
-                    for (int layer = 0; layer < Math.Min(value.Length, nLayers); ++layer)
+                    for (int layer = 0; layer < Math.Min(value.Length, g.nLayers); ++layer)
                     {
                         // update variable and check its value
                         urea[layer] += value[layer];
-                        g.CheckNegativeValues(ref urea[layer], layer, "urea", "Patch[" + this.PatchName + "].deltaUrea");
+                        g.CheckNegativeValues(ref urea[layer], layer, "urea", "Patch[" + PatchName + "].deltaUrea");
 
                         // record these values to use as outputs
                         if (g.senderModule == "WaterModule".ToLower())
@@ -188,11 +188,11 @@ namespace Models.Soils
             {
                 set
                 {
-                    for (int layer = 0; layer < Math.Min(value.Length, nLayers); ++layer)
+                    for (int layer = 0; layer < Math.Min(value.Length, g.nLayers); ++layer)
                     {
                         // update variable and check its value
                         nh4[layer] += value[layer];
-                        g.CheckNegativeValues(ref nh4[layer], layer, "nh4", "Patch[" + this.PatchName + "].deltaNH4");
+                        g.CheckNegativeValues(ref nh4[layer], layer, "nh4", "Patch[" + PatchName + "].deltaNH4");
 
                         // record these values to use as outputs
                         if (g.senderModule == "WaterModule".ToLower())
@@ -220,11 +220,11 @@ namespace Models.Soils
             {
                 set
                 {
-                    for (int layer = 0; layer < Math.Min(value.Length, nLayers); ++layer)
+                    for (int layer = 0; layer < Math.Min(value.Length, g.nLayers); ++layer)
                     {
                         // update variable and check its value
                         no3[layer] += value[layer];
-                        g.CheckNegativeValues(ref no3[layer], layer, "no3", "Patch[" + this.PatchName + "].deltaNO3");
+                        g.CheckNegativeValues(ref no3[layer], layer, "no3", "Patch[" + PatchName + "].deltaNO3");
 
                         // record these values to use as outputs
                         if (g.senderModule == "WaterModule".ToLower())
@@ -253,10 +253,10 @@ namespace Models.Soils
                     int nPools = value.Length;
                     for (int pool = 0; pool < nPools; pool++)
                     {
-                        for (int layer = 0; layer < Math.Min(value[pool].Length, nLayers); ++layer)
+                        for (int layer = 0; layer < Math.Min(value[pool].Length, g.nLayers); ++layer)
                         {
                             fom_c[pool][layer] += value[pool][layer];
-                            g.CheckNegativeValues(ref fom_c[pool][layer], layer, "FOM_C[" + (pool + 1).ToString() + "]", "Patch[" + this.PatchName + "].dltFOM");
+                            g.CheckNegativeValues(ref fom_c[pool][layer], layer, "FOM_C[" + (pool + 1).ToString() + "]", "Patch[" + PatchName + "].dltFOM");
                         }
                     }
                 }
@@ -272,10 +272,10 @@ namespace Models.Soils
                     int nPools = value.Length;
                     for (int pool = 0; pool < nPools; pool++)
                     {
-                        for (int layer = 0; layer < Math.Min(value[pool].Length, nLayers); ++layer)
+                        for (int layer = 0; layer < Math.Min(value[pool].Length, g.nLayers); ++layer)
                         {
                             fom_n[pool][layer] += value[pool][layer];
-                            g.CheckNegativeValues(ref fom_n[pool][layer], layer, "FOM_N[" + (pool + 1).ToString() + "]", "Patch[" + this.PatchName + "].dltFOM");
+                            g.CheckNegativeValues(ref fom_n[pool][layer], layer, "FOM_N[" + (pool + 1).ToString() + "]", "Patch[" + PatchName + "].dltFOM");
                         }
                     }
                 }
@@ -301,8 +301,8 @@ namespace Models.Soils
                     double[] result = null;
                     if (g.dlayer != null)
                     {
-                        result = new double[nLayers];
-                        for (int layer = 0; layer < nLayers; ++layer)
+                        result = new double[g.nLayers];
+                        for (int layer = 0; layer < g.nLayers; ++layer)
                             result[layer] = fom_n[0][layer] +
                                             fom_n[1][layer] +
                                             fom_n[2][layer] +
@@ -324,10 +324,10 @@ namespace Models.Soils
                 get
                 {
                     double depthFromSurface = 0.0;
-                    double[] result = new double[nLayers];
+                    double[] result = new double[g.nLayers];
                     double fractionAvailable = Math.Min(1.0,
                            MathUtilities.Divide(g.maxTotalNAvailableToPlants, totalMineralNInRootZone, 0.0));
-                    for (int layer = 0; layer < nLayers; layer++)
+                    for (int layer = 0; layer < g.nLayers; layer++)
                     {
                         result[layer] = nh4[layer] * fractionAvailable;
                         depthFromSurface += g.dlayer[layer];
@@ -346,10 +346,10 @@ namespace Models.Soils
                 get
                 {
                     double depthFromSurface = 0.0;
-                    double[] result = new double[nLayers];
+                    double[] result = new double[g.nLayers];
                     double fractionAvailable = Math.Min(1.0,
                         MathUtilities.Divide(g.maxTotalNAvailableToPlants, totalMineralNInRootZone, 0.0));
-                    for (int layer = 0; layer < nLayers; layer++)
+                    for (int layer = 0; layer < g.nLayers; layer++)
                     {
                         result[layer] = no3[layer] * fractionAvailable;
                         depthFromSurface += g.dlayer[layer];
@@ -511,8 +511,8 @@ namespace Models.Soils
                     double[] result = null;
                     if (g.dlayer != null)
                     {
-                        result = new double[nLayers];
-                        for (int layer = 0; layer < nLayers; layer++)
+                        result = new double[g.nLayers];
+                        for (int layer = 0; layer < g.nLayers; layer++)
                             result[layer] += fom_c[0][layer] +
                                              fom_c[1][layer] +
                                              fom_c[2][layer] +
@@ -585,8 +585,8 @@ namespace Models.Soils
             {
                 get
                 {
-                    double[] result = new double[nLayers];
-                    for (int layer = 0; layer < nLayers; layer++)
+                    double[] result = new double[g.nLayers];
+                    for (int layer = 0; layer < g.nLayers; layer++)
                         result[layer] = dlt_c_fom_to_atm[0][layer] +
                                         dlt_c_fom_to_atm[1][layer] +
                                         dlt_c_fom_to_atm[2][layer] +
@@ -610,9 +610,6 @@ namespace Models.Soils
             #endregion
 
             #region Internal variables
-
-            /// <summary>Number layers in the soil</summary>
-            public int nLayers;
 
             #region Residue decomposition information
 
@@ -668,7 +665,7 @@ namespace Models.Soils
             {
                 totalMineralNInRootZone = 0.0;
                 double depthFromSurface = 0.0;
-                for (int layer = 0; layer < nLayers; layer++)
+                for (int layer = 0; layer < g.nLayers; layer++)
                 {
                     totalMineralNInRootZone += nh4[layer] + no3[layer];
                     depthFromSurface += g.dlayer[layer];
@@ -768,18 +765,18 @@ namespace Models.Soils
                 dlt_c_loss_in_sed = 0.0;
 
                 // variables to report changes by other modules after partitioning amongst patches
-                Array.Clear(urea_flow, 0, nLayers);
-                Array.Clear(nh4_flow, 0, nLayers);
-                Array.Clear(no3_flow, 0, nLayers);
-                Array.Clear(urea_uptake, 0, nLayers);
-                Array.Clear(nh4_uptake, 0, nLayers);
-                Array.Clear(no3_uptake, 0, nLayers);
-                Array.Clear(urea_fertiliser, 0, nLayers);
-                Array.Clear(nh4_fertiliser, 0, nLayers);
-                Array.Clear(no3_fertiliser, 0, nLayers);
-                Array.Clear(urea_ChangedOther, 0, nLayers);
-                Array.Clear(nh4_ChangedOther, 0, nLayers);
-                Array.Clear(no3_ChangedOther, 0, nLayers);
+                Array.Clear(urea_flow, 0, g.nLayers);
+                Array.Clear(nh4_flow, 0, g.nLayers);
+                Array.Clear(no3_flow, 0, g.nLayers);
+                Array.Clear(urea_uptake, 0, g.nLayers);
+                Array.Clear(nh4_uptake, 0, g.nLayers);
+                Array.Clear(no3_uptake, 0, g.nLayers);
+                Array.Clear(urea_fertiliser, 0, g.nLayers);
+                Array.Clear(nh4_fertiliser, 0, g.nLayers);
+                Array.Clear(no3_fertiliser, 0, g.nLayers);
+                Array.Clear(urea_ChangedOther, 0, g.nLayers);
+                Array.Clear(nh4_ChangedOther, 0, g.nLayers);
+                Array.Clear(no3_ChangedOther, 0, g.nLayers);
             }
 
             /// <summary>
@@ -790,7 +787,7 @@ namespace Models.Soils
                 TodaysInitialN = g.SumDoubleArray(nit_tot);
                 TodaysInitialC = g.SumDoubleArray(carbon_tot);
 
-                for (int layer = 0; layer < nLayers; layer++)
+                for (int layer = 0; layer < g.nLayers; layer++)
                 {
                     // store these values so they may be used to compute daily deltas
                     TodaysInitialNH4[layer] = nh4[layer];
@@ -806,7 +803,7 @@ namespace Models.Soils
             /// </remarks>
             private void PackActualResidueDecomposition()
             {
-                soilp_dlt_org_p = new double[nLayers];
+                soilp_dlt_org_p = new double[g.nLayers];
                 double soilp_cpr = MathUtilities.Divide(g.SumDoubleArray(g.pot_p_decomp), g.SumDoubleArray(g.pot_c_decomp), 0.0);
                 SurfOMActualDecomposition = new SurfaceOrganicMatterDecompType();
                 Array.Resize(ref SurfOMActualDecomposition.Pool, g.nResidues);
@@ -837,7 +834,7 @@ namespace Models.Soils
                 double act_c_decomp = 0.0;
                 double tot_pot_c_decomp = g.SumDoubleArray(g.pot_c_decomp);
                 double tot_pot_p_decomp = g.SumDoubleArray(g.pot_p_decomp);
-                for (int layer = 0; layer < nLayers; layer++)
+                for (int layer = 0; layer < g.nLayers; layer++)
                 {
                     act_c_decomp = dlt_c_res_to_biom[layer] + dlt_c_res_to_hum[layer] + dlt_c_res_to_atm[layer];
                     soilp_dlt_org_p[layer] = tot_pot_p_decomp * MathUtilities.Divide(act_c_decomp, tot_pot_c_decomp, 0.0);
@@ -893,8 +890,8 @@ namespace Models.Soils
             {
                 double layer_loss = 0.0;
                 double layer_gain = 0.0;
-                int lowest_layer = nLayers;
-                int lowestLayer = nLayers - 1;
+                int lowest_layer = g.nLayers;
+                int lowestLayer = g.nLayers - 1;
                 int new_lowest_layer = new_dlayer.Length;
 
                 double TodaysInitialAmount = g.SumDoubleArray(SoilProperty);
@@ -926,7 +923,7 @@ namespace Models.Soils
                     // soil profile has been increased (assume material has been added to the surface
                     AmountGainedBottom = 0.0;
                     // check for changes in layer structure
-                    if (nLayers < new_dlayer.Length)
+                    if (g.nLayers < new_dlayer.Length)
                     {
                         throw new Exception("Number of soil layers was increased, this option has not been coded in SoilNitrogen");
                     }
@@ -937,7 +934,7 @@ namespace Models.Soils
                     AmountGainedBottom = 0.0;
 
                     // check for changes in layer structure
-                    if (new_dlayer.Length < nLayers)
+                    if (new_dlayer.Length < g.nLayers)
                     {
                         // we have less layers than before.  The layer structure is kept, from top down, thus in fact the bottom layer merges with the second bottom etc.
 
@@ -990,23 +987,23 @@ namespace Models.Soils
             /// </summary>
             public void CheckVariables()
             {
-                for (int layer = 0; layer < nLayers; layer++)
+                for (int layer = 0; layer < g.nLayers; layer++)
                 {
                     // 1. Organic forms
                     for (int pool = 0; pool < 3; pool++)
                     {
-                        g.CheckNegativeValues(ref fom_c[pool][layer], layer, "fom_c[" + (pool + 1).ToString() + "]", "Patch[" + this.PatchName + "].EvaluateProcesses");
-                        g.CheckNegativeValues(ref fom_n[pool][layer], layer, "fom_n[" + (pool + 1).ToString() + "]", "Patch[" + this.PatchName + "].EvaluateProcesses");
+                        g.CheckNegativeValues(ref fom_c[pool][layer], layer, "fom_c[" + (pool + 1).ToString() + "]", "Patch[" + PatchName + "].EvaluateProcesses");
+                        g.CheckNegativeValues(ref fom_n[pool][layer], layer, "fom_n[" + (pool + 1).ToString() + "]", "Patch[" + PatchName + "].EvaluateProcesses");
                     }
-                    g.CheckNegativeValues(ref biom_c[layer], layer, "biom_c", "Patch[" + this.PatchName + "].EvaluateProcesses");
-                    g.CheckNegativeValues(ref hum_c[layer], layer, "hum_c", "Patch[" + this.PatchName + "].EvaluateProcesses");
-                    g.CheckNegativeValues(ref biom_n[layer], layer, "biom_n", "Patch[" + this.PatchName + "].EvaluateProcesses");
-                    g.CheckNegativeValues(ref hum_n[layer], layer, "hum_n", "Patch[" + this.PatchName + "].EvaluateProcesses");
+                    g.CheckNegativeValues(ref biom_c[layer], layer, "biom_c", "Patch[" + PatchName + "].EvaluateProcesses");
+                    g.CheckNegativeValues(ref hum_c[layer], layer, "hum_c", "Patch[" + PatchName + "].EvaluateProcesses");
+                    g.CheckNegativeValues(ref biom_n[layer], layer, "biom_n", "Patch[" + PatchName + "].EvaluateProcesses");
+                    g.CheckNegativeValues(ref hum_n[layer], layer, "hum_n", "Patch[" + PatchName + "].EvaluateProcesses");
 
                     // 2. Mineral forms
-                    g.CheckNegativeValues(ref urea[layer], layer, "urea", "Patch[" + this.PatchName + "].EvaluateProcesses");
-                    g.CheckNegativeValues(ref nh4[layer], layer, "nh4", "Patch[" + this.PatchName + "].EvaluateProcesses");
-                    g.CheckNegativeValues(ref no3[layer], layer, "no3", "Patch[" + this.PatchName + "].EvaluateProcesses");
+                    g.CheckNegativeValues(ref urea[layer], layer, "urea", "Patch[" + PatchName + "].EvaluateProcesses");
+                    g.CheckNegativeValues(ref nh4[layer], layer, "nh4", "Patch[" + PatchName + "].EvaluateProcesses");
+                    g.CheckNegativeValues(ref no3[layer], layer, "no3", "Patch[" + PatchName + "].EvaluateProcesses");
                 }
             }
 
