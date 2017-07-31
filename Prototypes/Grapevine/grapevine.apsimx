@@ -1136,23 +1136,6 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Units>mm</Units>
         </Constant>
         <LinearInterpolationFunction>
-          <Name>MaxDailyNUptake</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <X>
-              <double>0</double>
-              <double>0.02</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>6</double>
-            </Y>
-          </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Root].Length</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
           <Name>KLModifier</Name>
           <XYPairs>
             <Name>XYPairs</Name>
@@ -1223,40 +1206,6 @@ A function is used to provide flowering date as days after sowing(DAS).
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
         <LinearInterpolationFunction>
-          <Name>KNO3</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <X>
-              <double>0</double>
-              <double>0.003</double>
-            </X>
-            <Y>
-              <double>0.02</double>
-              <double>0.02</double>
-            </Y>
-          </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Root].LengthDensity</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
-          <Name>KNH4</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <X>
-              <double>0</double>
-              <double>0.003</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>0</double>
-            </Y>
-          </XYPairs>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Root].LengthDensity</XProperty>
-        </LinearInterpolationFunction>
-        <LinearInterpolationFunction>
           <Name>NUptakeSWFactor</Name>
           <XYPairs>
             <Name>XYPairs</Name>
@@ -1296,6 +1245,21 @@ A function is used to provide flowering date as days after sowing(DAS).
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.2</FixedValue>
           <Units>percentage</Units>
+        </Constant>
+        <Constant>
+          <Name>KNO3</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.02</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>KNH4</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.003</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>MaxDailyNUptake</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>6</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
@@ -1863,7 +1827,7 @@ A function is used to provide flowering date as days after sowing(DAS).
               <FixedValue>66</FixedValue>
             </Constant>
             <SigmoidFunction>
-              <Name>SigmoidFunction</Name>
+              <Name>BerriesPerBunch</Name>
               <VariableReference>
                 <Name>XValue</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
