@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using System.Xml.Serialization;
 
 namespace Models.PMF.Functions
 {
@@ -10,49 +11,36 @@ namespace Models.PMF.Functions
     /// Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)
     /// </summary>
     [Serializable]
-    [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Xmax * 1/1+exp(-(x-Xo)/b)")]
+    [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Ymax * 1/1+exp(-(x-Xo)/b)")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SigmoidFunction : Model, IFunction
     {
-        /// <summary>constructor</summary>
-        public SigmoidFunction()
-        {
-            Xmax = 1.0;
-            Xo = 1.0;
-            b = 1.0;
-        }
-
-        /// <summary>The xmax</summary>
-        [Description("Xmax")]
-        public double Xmax { get; set; }
-        /// <summary>The xo</summary>
-        [Description("Xo")]
-        public double Xo { get; set; }
+        /// <summary>The ymax</summary>
+        [Link]
+        IFunction Ymax = null;
+        /// <summary>The x value</summary>
+        [Link]
+        IFunction XValue = null;
+        /// <summary>The Xo</summary>
+        [Link]
+        IFunction Xo = null;
         /// <summary>The b</summary>
-        [Description("b")]
-        public double b { get; set; }
-        /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
-
+        [Link]
+        IFunction b = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
-        /// <exception cref="System.Exception">Sigmoid function must have only one argument</exception>
+        /// <exception cref="System.Exception">Error with values to Sigmoid function</exception>
         public double Value(int arrayIndex = -1)
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
-
-            if (ChildFunctions.Count == 1)
+            try
             {
-                IFunction F = ChildFunctions[0] as IFunction;
-
-                return Xmax * 1 / (1 + Math.Exp(-(F.Value(arrayIndex) - Xo) / b));
+                return Ymax.Value(arrayIndex) * 1 / (1 + Math.Exp(-(XValue.Value(arrayIndex) - Xo.Value(arrayIndex)) / b.Value(arrayIndex)));
             }
-            else
+            catch (Exception)
             {
-                throw new Exception("Sigmoid function must have only one argument");
+                throw new Exception("Error with values to Sigmoid function");
             }
         }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -62,35 +50,17 @@ namespace Models.PMF.Functions
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             // add a heading.
+            Name = this.Name;
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write description of this class.
-            //AutoDocumentation.GetClassDescription(this, tags, indent);
+            tags.Add(new AutoDocumentation.Paragraph(" a sigmoid function of the form " +
+                                                      "y = Xmax * 1 / 1 + e<sup>-(XValue - Xo) / b</sup>", indent));
 
-            //
-
-            string XName = "";
-            if (ChildFunctions.Count == 1)
-            {
-                IFunction F = ChildFunctions[0] as IFunction;
-                XName = ChildFunctions[0].Name;               
-            }
-            tags.Add(new AutoDocumentation.Paragraph("Where " + this.Name + "is calculated using a sigmoid function of the form" +
-                                                      "y = Xmax * 1 / 1 + exp<sup>-("+XName+" - Xo) / b</sup>", indent));
-
-            // write a list of constant functions.
-            foreach (IModel child in Apsim.Children(this, typeof(Constant)))
-                child.Document(tags, -1, indent);
 
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
-                if (child is Constant || child is Biomass || child is CompositeBiomass || child is ArrayBiomass)
-                {
-                    // don't document.
-                }
-                else
-                    child.Document(tags, headingLevel + 1, indent);
+                    child.Document(tags, 0, indent+1);
             }
         }
     }

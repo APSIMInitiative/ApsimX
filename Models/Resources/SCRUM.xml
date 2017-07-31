@@ -441,7 +441,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
           <Name>Photosynthesis</Name>
           <DeltaFunction>
             <Name>UnStressedBiomass</Name>
-            <SigmoidFunction2>
+            <SigmoidFunction>
               <Name>Integral</Name>
               <VariableReference>
                 <Name>Ymax</Name>
@@ -459,7 +459,7 @@ Stover represents any part of the crop that is not removed at harvest (i.e not p
                 <Name>b</Name>
                 <VariableName>[Stover].bBiomass.Value()</VariableName>
               </VariableReference>
-            </SigmoidFunction2>
+            </SigmoidFunction>
             <StartStageName>Emergence</StartStageName>
           </DeltaFunction>
           <LinearInterpolationFunction>
@@ -604,7 +604,7 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
           <Name>CoverFunction</Name>
           <PhaseLookupValue>
             <Name>Expanding</Name>
-            <SigmoidFunction2>
+            <SigmoidFunction>
               <Name>SigCoverFunction</Name>
               <Constant>
                 <Name>Ymax</Name>
@@ -622,7 +622,7 @@ DM demand is based on a simple partitioning coefficients.  At harvest the biomas
                 <Name>b</Name>
                 <FixedValue>120</FixedValue>
               </Constant>
-            </SigmoidFunction2>
+            </SigmoidFunction>
             <Start>Emergence</Start>
             <End>StartSenescence</End>
           </PhaseLookupValue>
@@ -767,7 +767,7 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
             <VariableName>[Product].HarvestIndex.Value()</VariableName>
           </VariableReference>
         </DivideFunction>
-        <SigmoidFunction2>
+        <SigmoidFunction>
           <Name>TotalBiomassAtStartReproductive</Name>
           <VariableReference>
             <Name>XValue</Name>
@@ -785,8 +785,8 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
             <Name>b</Name>
             <VariableName>[Stover].bBiomass.Value()</VariableName>
           </VariableReference>
-        </SigmoidFunction2>
-        <SigmoidFunction2>
+        </SigmoidFunction>
+        <SigmoidFunction>
           <Name>TotalBiomassAtStartSenescence</Name>
           <AddFunction>
             <Name>XValue</Name>
@@ -811,8 +811,8 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
             <Name>b</Name>
             <VariableName>[Stover].bBiomass.Value()</VariableName>
           </VariableReference>
-        </SigmoidFunction2>
-        <SigmoidFunction2>
+        </SigmoidFunction>
+        <SigmoidFunction>
           <Name>TotalBiomassAtMaturity</Name>
           <AddFunction>
             <Name>XValue</Name>
@@ -841,7 +841,7 @@ This variable is the total biomass (g/m2dry weight) that the crop will produce a
             <Name>b</Name>
             <VariableName>[Stover].bBiomass.Value()</VariableName>
           </VariableReference>
-        </SigmoidFunction2>
+        </SigmoidFunction>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
