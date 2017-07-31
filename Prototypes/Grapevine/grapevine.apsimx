@@ -1827,7 +1827,7 @@ A function is used to provide flowering date as days after sowing(DAS).
               <FixedValue>66</FixedValue>
             </Constant>
             <SigmoidFunction>
-              <Name>SigmoidFunction</Name>
+              <Name>BerriesPerBunch</Name>
               <VariableReference>
                 <Name>XValue</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
