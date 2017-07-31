@@ -5,7 +5,7 @@
     <Name>TitlePage</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <MemoText><![CDATA[
-# APSIM Barley Model
+# APSIM Barley Model 
 
 _Khaembah E.N., Zyskowski, R.F. and Brown, H.E._
 
@@ -9136,7 +9136,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>C:\ApsimX\Prototypes\Barley\Weather\lincoln.met</FileName>
+          <FileName>\Weather\lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -27816,7 +27816,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>C:\ApsimX\Prototypes\Barley\Weather\lincoln.met</FileName>
+          <FileName>\Weather\lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
