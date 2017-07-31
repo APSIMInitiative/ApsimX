@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1305,6 +1305,11 @@ TSLN = FLN*0.995 - 1.95 ]]></MemoText>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.5</FixedValue>
         </Constant>
+        <Constant>
+          <Name>StemSenescenceAge</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Initialised>false</Initialised>
         <Germinated>false</Germinated>
@@ -1928,8 +1933,27 @@ N conc values are from Zhao et al 2009
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <NReallocationFactor>0</NReallocationFactor>
+          <DMReallocationFactor>0</DMReallocationFactor>
+          <NRetranslocationFactor>0</NRetranslocationFactor>
+          <DMRetranslocationFactor>0</DMRetranslocationFactor>
+          <ShadeInducedSenRate>0</ShadeInducedSenRate>
+          <SenescedFrac>0</SenescedFrac>
+          <DeltaPotentialArea>0</DeltaPotentialArea>
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+          <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+          <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+          <MetabolicNReallocated>0</MetabolicNReallocated>
+          <MetabolicWtReallocated>0</MetabolicWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <DMRetranslocated>0</DMRetranslocated>
+          <MetabolicNAllocation>0</MetabolicNAllocation>
+          <StructuralDMAllocation>0</StructuralDMAllocation>
+          <MetabolicDMAllocation>0</MetabolicDMAllocation>
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1937,8 +1961,27 @@ N conc values are from Zhao et al 2009
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
+          <NReallocationFactor>0</NReallocationFactor>
+          <DMReallocationFactor>0</DMReallocationFactor>
+          <NRetranslocationFactor>0</NRetranslocationFactor>
+          <DMRetranslocationFactor>0</DMRetranslocationFactor>
+          <ShadeInducedSenRate>0</ShadeInducedSenRate>
+          <SenescedFrac>0</SenescedFrac>
+          <DeltaPotentialArea>0</DeltaPotentialArea>
           <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
           <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+          <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+          <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+          <MetabolicNReallocated>0</MetabolicNReallocated>
+          <MetabolicWtReallocated>0</MetabolicWtReallocated>
+          <NonStructuralNReallocated>0</NonStructuralNReallocated>
+          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <DMRetranslocated>0</DMRetranslocated>
+          <MetabolicNAllocation>0</MetabolicNAllocation>
+          <StructuralDMAllocation>0</StructuralDMAllocation>
+          <MetabolicDMAllocation>0</MetabolicDMAllocation>
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -2911,6 +2954,10 @@ N conc values are from Zhao et al 2009
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <ApexStandard>
+          <Name>ApexStandard</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </ApexStandard>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -4670,22 +4717,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -4894,9 +4925,9 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
+                <InitialRootDepth>40</InitialRootDepth>
                 <Cultivar>Dash</Cultivar>
                 <SowingDate>2009-10-01</SowingDate>
-                <InitialRootDepth>40</InitialRootDepth>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6820,22 +6851,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -7044,9 +7059,9 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
+                <InitialRootDepth>40</InitialRootDepth>
                 <Cultivar>Omaka</Cultivar>
                 <SowingDate>2009-10-01</SowingDate>
-                <InitialRootDepth>40</InitialRootDepth>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -9402,22 +9417,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -11857,22 +11856,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -12227,9 +12210,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13220,22 +13203,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -13464,9 +13431,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
+              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -14557,22 +14524,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -14927,9 +14878,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -15901,22 +15852,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -16304,9 +16239,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>20</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -17531,22 +17466,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -17775,9 +17694,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Doyen</Cultivar>
+              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -18861,22 +18780,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -19231,9 +19134,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Omaka</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -20205,22 +20108,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -20608,9 +20495,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Optic</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -21528,22 +21415,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -21931,9 +21802,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2005-05-27</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Pyramid</Cultivar>
+              <SowingDate>2005-05-27</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -22872,22 +22743,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -23242,9 +23097,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Sherwood</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -24216,22 +24071,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -24586,9 +24425,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Tavern</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -25553,22 +25392,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -25923,9 +25746,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Vortex</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -28274,22 +28097,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -33384,14 +33191,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -37506,22 +37305,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
-              <oc>
-                <double>1.8356606676098439</double>
-                <double>1.4633385968844384</double>
-                <double>1.1988393325681357</double>
-                <double>1.0301002994895852</double>
-                <double>0.4703383219429832</double>
-                <double>0.47013790451920212</double>
-              </oc>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -37723,8 +37506,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <CropToSow>Dash</CropToSow>
                 <InitialRootDepth>40</InitialRootDepth>
+                <CropToSow>Dash</CropToSow>
                 <SowingDate>2014-10-14</SowingDate>
               </Script>
               <Code><![CDATA[using System;
@@ -40319,22 +40102,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
-                <oc>
-                  <double>1.8356606676098439</double>
-                  <double>1.4633385968844384</double>
-                  <double>1.1988393325681357</double>
-                  <double>1.0301002994895852</double>
-                  <double>0.4703383219429832</double>
-                  <double>0.47013790451920212</double>
-                </oc>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
@@ -42883,22 +42650,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
-                <oc>
-                  <double>1.8356606676098439</double>
-                  <double>1.4633385968844384</double>
-                  <double>1.1988393325681357</double>
-                  <double>1.0301002994895852</double>
-                  <double>0.4703383219429832</double>
-                  <double>0.47013790451920212</double>
-                </oc>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
@@ -43107,9 +42858,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -45097,22 +44848,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
-                <oc>
-                  <double>1.8356606676098439</double>
-                  <double>1.4633385968844384</double>
-                  <double>1.1988393325681357</double>
-                  <double>1.0301002994895852</double>
-                  <double>0.4703383219429832</double>
-                  <double>0.47013790451920212</double>
-                </oc>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
@@ -45321,9 +45056,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Omaka</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -47822,22 +47557,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
-                <oc>
-                  <double>1.8356606676098439</double>
-                  <double>1.4633385968844384</double>
-                  <double>1.1988393325681357</double>
-                  <double>1.0301002994895852</double>
-                  <double>0.4703383219429832</double>
-                  <double>0.47013790451920212</double>
-                </oc>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
@@ -48046,9 +47765,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -50895,22 +50614,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
-                <oc>
-                  <double>1.8356606676098439</double>
-                  <double>1.4633385968844384</double>
-                  <double>1.1988393325681357</double>
-                  <double>1.0301002994895852</double>
-                  <double>0.4703383219429832</double>
-                  <double>0.47013790451920212</double>
-                </oc>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
@@ -51119,9 +50822,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Sherwood</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -53891,22 +53594,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
-                <oc>
-                  <double>1.8356606676098439</double>
-                  <double>1.4633385968844384</double>
-                  <double>1.1988393325681357</double>
-                  <double>1.0301002994895852</double>
-                  <double>0.4703383219429832</double>
-                  <double>0.47013790451920212</double>
-                </oc>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
@@ -54115,9 +53802,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -56456,22 +56143,6 @@ namespace Models
                   <double>0.08</double>
                   <double>0.9</double>
                 </fract_lign>
-                <wfpsN2N2O_x>
-                  <double>22</double>
-                  <double>88</double>
-                </wfpsN2N2O_x>
-                <wfpsN2N2O_y>
-                  <double>0.1</double>
-                  <double>1</double>
-                </wfpsN2N2O_y>
-                <oc>
-                  <double>1.8356606676098439</double>
-                  <double>1.4633385968844384</double>
-                  <double>1.1988393325681357</double>
-                  <double>1.0301002994895852</double>
-                  <double>0.4703383219429832</double>
-                  <double>0.47013790451920212</double>
-                </oc>
               </SoilNitrogen>
               <SoilOrganicMatter>
                 <Name>SoilOrganicMatter</Name>
@@ -56680,9 +56351,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
-                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -58987,14 +58658,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -60378,14 +60041,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -61708,14 +61363,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -63038,14 +62685,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -64368,14 +64007,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -65654,14 +65285,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -66991,14 +66614,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -68321,14 +67936,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -69644,14 +69251,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -70941,14 +70540,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -72235,14 +71826,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -73572,14 +73155,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -74902,14 +74477,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -76232,14 +75799,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -77562,14 +77121,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -78892,14 +78443,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -80222,14 +79765,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -81596,14 +81131,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
