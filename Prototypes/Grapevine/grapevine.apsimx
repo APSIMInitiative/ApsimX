@@ -1863,16 +1863,28 @@ A function is used to provide flowering date as days after sowing(DAS).
               <FixedValue>66</FixedValue>
             </Constant>
             <SigmoidFunction>
-              <Name>BerriesPerBunch</Name>
+              <Name>SigmoidFunction</Name>
               <VariableReference>
-                <Name>XVariable</Name>
+                <Name>XValue</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Berry].MeanFloweringTemp.Value()</VariableName>
               </VariableReference>
+              <Constant>
+                <Name>Ymax</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>44</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>Xo</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>16.3</FixedValue>
+              </Constant>
+              <Constant>
+                <Name>b</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.7</FixedValue>
+              </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Xmax>44</Xmax>
-              <Xo>16.3</Xo>
-              <b>0.7</b>
             </SigmoidFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>

@@ -370,7 +370,6 @@
     <Compile Include="Plant\Functions\PhotoperiodFunction.cs" />
     <Compile Include="Plant\Functions\PowerFunction.cs" />
     <Compile Include="Plant\Functions\SigmoidFunction.cs" />
-    <Compile Include="Plant\Functions\SigmoidFunction2.cs" />
     <Compile Include="Plant\Functions\SoilTemperatureDepthFunction.cs" />
     <Compile Include="Plant\Functions\SoilTemperatureFunction.cs" />
     <Compile Include="Plant\Functions\SoilTemperatureWeightedFunction.cs" />
