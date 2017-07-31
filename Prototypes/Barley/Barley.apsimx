@@ -9133,18 +9133,18 @@ namespace Models
       </Factors>
       <Simulation>
         <Name>out_Rainfed</Name>
-        <Weather>
-          <Name>Weather</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>\Weather\lincoln.met</FileName>
-          <ExcelWorkSheetName />
-        </Weather>
         <Clock>
           <Name>Clock</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <StartDate>1995-10-19T00:00:00</StartDate>
           <EndDate>1996-03-31T00:00:00</EndDate>
         </Clock>
+        <Weather>
+          <Name>Weather</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FileName>Weather\lincoln.met</FileName>
+          <ExcelWorkSheetName />
+        </Weather>
         <Summary>
           <Name>summaryfile</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -12210,9 +12210,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13431,9 +13431,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
-              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -14878,9 +14878,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -16239,9 +16239,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>20</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -17694,9 +17694,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Doyen</Cultivar>
-              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -19134,9 +19134,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Omaka</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -20495,9 +20495,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Optic</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -21802,9 +21802,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2005-05-27</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Pyramid</Cultivar>
-              <SowingDate>2005-05-27</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -23097,9 +23097,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Sherwood</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -24425,9 +24425,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Tavern</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -25746,9 +25746,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Vortex</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -27816,7 +27816,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>\Weather\lincoln.met</FileName>
+          <FileName>C:\ApsimX\Prototypes\Barley\Weather\lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -37506,8 +37506,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <InitialRootDepth>40</InitialRootDepth>
                 <CropToSow>Dash</CropToSow>
+                <InitialRootDepth>40</InitialRootDepth>
                 <SowingDate>2014-10-14</SowingDate>
               </Script>
               <Code><![CDATA[using System;
