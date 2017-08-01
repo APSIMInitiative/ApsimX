@@ -701,7 +701,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>StructuralFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.99</FixedValue>
+            <FixedValue>0.8</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <Constant>
@@ -754,7 +754,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>CriticalNConc</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.01</FixedValue>
+            <FixedValue>0.03</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
@@ -1039,7 +1039,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>StructuralFraction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.99</FixedValue>
+          <FixedValue>0.8</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <PhaseLookupValue>
@@ -1225,7 +1225,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>InitialDM</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>5</FixedValue>
+          <FixedValue>5000</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
@@ -1239,12 +1239,6 @@ A function is used to provide flowering date as days after sowing(DAS).
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>10</FixedValue>
           <Units>mm/d</Units>
-        </Constant>
-        <Constant>
-          <Name>PartitionFraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.2</FixedValue>
-          <Units>percentage</Units>
         </Constant>
         <Constant>
           <Name>KNO3</Name>
@@ -1261,6 +1255,55 @@ A function is used to provide flowering date as days after sowing(DAS).
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>6</FixedValue>
         </Constant>
+        <MultiplyFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>Sroot</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>4779</FixedValue>
+            <Units>gc</Units>
+          </Constant>
+          <Constant>
+            <Name>Kprgr</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.003</FixedValue>
+            <Units>gc gc-1d-1</Units>
+          </Constant>
+          <ExponentialFunction>
+            <Name>TemResponseFun</Name>
+            <SubtractFunction>
+              <Name>SubtractFunction</Name>
+              <AirTemperatureFunction>
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>0</double>
+                    <double>40</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>40</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </AirTemperatureFunction>
+              <Constant>
+                <Name>referenceT</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>20</FixedValue>
+                <Units>oC</Units>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SubtractFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <A>0</A>
+            <B>1</B>
+            <C>0.069314</C>
+          </ExponentialFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MultiplyFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -2080,6 +2123,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <string>[Grapevine].Leaf.CohortSize</string>
         <string>[Grapevine].Leaf.Fn</string>
         <string>[Grapevine].Leaf.Fw</string>
+        <string>[Grapevine].Root.Live.Wt</string>
         <string>[Grapevine].Berry.Number</string>
         <string>[Grapevine].Berry.Live.Wt</string>
         <string>[Berry].MeanFloweringTempY0.Value()</string>
@@ -3507,6 +3551,48 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
     </Graph>
+    <Graph>
+      <Name>RootBiomass</Name>
+      <Series>
+        <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Root.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+    </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Experiment>
@@ -4142,5 +4228,5 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>416</ExplorerWidth>
+  <ExplorerWidth>411</ExplorerWidth>
 </Simulations>
