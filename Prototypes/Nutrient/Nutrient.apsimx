@@ -923,12 +923,6 @@ Reference for Carbon availability factor: Reddy KR, Khaleel R, Overcash MR (). "
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
-        <Constant>
-          <Name>StructuralFraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
-          <Units>0-1</Units>
-        </Constant>
         <MinimumFunction>
           <Name>FRGRFunction</Name>
           <AirTemperatureFunction>
