@@ -1077,6 +1077,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Leaves />
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
         <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
         <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
@@ -1337,15 +1338,6 @@ A function is used to provide flowering date as days after sowing(DAS).
           <FixedValue>0</FixedValue>
           <Units>percentage</Units>
         </Constant>
-        <InternodeDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <Constant>
-            <Name>InterNodeWt</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.2</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </InternodeDemandFunction>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
           <XYPairs>
@@ -1451,6 +1443,13 @@ A function is used to provide flowering date as days after sowing(DAS).
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <InternodeCohortDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Lmax>20</Lmax>
+          <te>400</te>
+          <tm>200</tm>
+        </InternodeCohortDemandFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -2126,6 +2125,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <string>[Grapevine].Root.Live.Wt</string>
         <string>[Grapevine].Berry.Number</string>
         <string>[Grapevine].Berry.Live.Wt</string>
+        <string>[Grapevine].Stem.Wt</string>
         <string>[Berry].MeanFloweringTempY0.Value()</string>
         <string>[Berry].MeanFloweringTemp.Value()</string>
         <string>[Berry].NumberFunction.Value()</string>
@@ -3570,6 +3570,48 @@ namespace Models
         <TableName>Report</TableName>
         <XFieldName>Clock.Today</XFieldName>
         <YFieldName>Grapevine.Root.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>StemBiomass</Name>
+      <Series>
+        <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Stem.Wt</YFieldName>
         <ShowInLegend>false</ShowInLegend>
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>

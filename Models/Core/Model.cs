@@ -208,6 +208,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.AllometricDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.TEWaterDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.InternodeDemandFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.InternodeCohortDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PartitionFractionDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PopulationBasedDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PotentialSizeDemandFunction))]
