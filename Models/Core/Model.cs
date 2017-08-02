@@ -192,7 +192,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.PhotoperiodFunction))]
         [XmlElement(typeof(Models.PMF.Functions.PowerFunction))]
         [XmlElement(typeof(Models.PMF.Functions.SigmoidFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.SigmoidFunction2))]
         [XmlElement(typeof(Models.PMF.Functions.SoilWaterScale))]
         [XmlElement(typeof(Models.PMF.Functions.SoilTemperatureDepthFunction))]
         [XmlElement(typeof(Models.PMF.Functions.SoilTemperatureFunction))]

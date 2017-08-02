@@ -19,8 +19,8 @@ namespace Models.Soils
     /// Implements internal 'patches', which are replicates of state variables and processes used for simulating soil variability
     ///
     /// Based on a more-or-less direct port of the Fortran SoilN model  -  Ported by Eric Zurcher Sept/Oct 2010
-    /// Code tidied up by RCichota initially on Aug/Sep-2012 (updates in Feb-Mar/2014 and 2016)
-    /// Ported into ApsimX by Russel McAuliffe in 2017, tidied up by RCichota (July/2017)
+    /// Code tidied up by RCichota initially in Aug/Sep-2012 (updates in Feb-Apr/2014, Apr/2015, and Mar-Apr/2016)
+    /// Full patch capability ported into ApsimX by Russel McAuliffe in June/2017, tidied up by RCichota (July/2017)
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
@@ -108,8 +108,6 @@ namespace Models.Soils
             // Get the layering info and set the layer count
             dlayer = Soil.Thickness;
             nLayers = dlayer.Length;
-            for (int k = 0; k < Patch.Count; k++)
-                Patch[k].nLayers = nLayers;
 
             // get the initial values 
             oc = Soil.OC;
@@ -859,17 +857,6 @@ namespace Models.Soils
         {
             // get the basic soil data info
             int nLayers = NewProfile.dlayer.Length;
-            //Array.Resize(ref SoilDensity, nLayers);
-            //Array.Resize(ref ll15_dep, nLayers);
-            //Array.Resize(ref dul_dep, nLayers);
-            //Array.Resize(ref sat_dep, nLayers);
-            //for (int layer = 0; layer < nLayers; layer++)
-            //{
-            //    SoilDensity[layer] = (double)NewProfile.bd[layer];
-            //    ll15_dep[layer] = (double)NewProfile.ll15_dep[layer];
-            //    dul_dep[layer] = (double)NewProfile.dul_dep[layer];
-            //    sat_dep[layer] = (double)NewProfile.sat_dep[layer];
-            //}
 
             // check the layer structure
             if (dlayer == null)
@@ -919,8 +906,6 @@ namespace Models.Soils
 
             // and the layer count
             nLayers = dlayer.Length;
-            for (int k = 0; k < Patch.Count; k++)
-                Patch[k].nLayers = nLayers;
         }
 
         /// <summary>Gets the changes in mineral N made by other modules</summary>
