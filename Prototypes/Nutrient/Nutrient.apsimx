@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -1856,30 +1856,30 @@ But their data suggests a value of 0.3]]></MemoText>
           <RegrStats>
             <Name>TOC0_10cm</Name>
             <n>148</n>
-            <Slope>0.79699887632169375</Slope>
-            <Intercept>3524.8005260712453</Intercept>
-            <SEslope>0.037607023482057127</SEslope>
-            <SEintercept>582.936853149736</SEintercept>
-            <R2>0.75467776410617859</R2>
-            <RMSE>1907.2056512831532</RMSE>
-            <NSE>0.73630449925923847</NSE>
-            <ME>469.79207124498788</ME>
-            <MAE>1393.8990002143414</MAE>
-            <RSR>0.51177512091191479</RSR>
+            <Slope>0.79708100833303919</Slope>
+            <Intercept>3512.8634438103545</Intercept>
+            <SEslope>0.03773326577599289</SEslope>
+            <SEintercept>584.89370266207311</SEintercept>
+            <R2>0.7534730318701095</R2>
+            <RMSE>1909.4994815474963</RMSE>
+            <NSE>0.73566981524876562</NSE>
+            <ME>459.09101164508036</ME>
+            <MAE>1397.0344628087892</MAE>
+            <RSR>0.51239064198070761</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TOC0_30cm</Name>
             <n>199</n>
-            <Slope>0.73391556660952384</Slope>
-            <Intercept>10462.704892699243</Intercept>
-            <SEslope>0.026060619063497877</SEslope>
-            <SEintercept>981.14789303159932</SEintercept>
-            <R2>0.80102828794128067</R2>
-            <RMSE>3508.7798613633422</RMSE>
-            <NSE>0.78807853045136234</NSE>
-            <ME>652.41951872844061</ME>
-            <MAE>2386.849212478432</MAE>
-            <RSR>0.4591911775511977</RSR>
+            <Slope>0.73332516158823124</Slope>
+            <Intercept>10472.776314524428</Intercept>
+            <SEslope>0.02612476636750213</SEslope>
+            <SEintercept>983.56295431675449</SEintercept>
+            <R2>0.79998604604268841</R2>
+            <RMSE>3514.6829420176182</RMSE>
+            <NSE>0.78736486821387219</NSE>
+            <ME>640.72325699806288</ME>
+            <MAE>2396.6816543021114</MAE>
+            <RSR>0.45996370893359212</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TOC10_30cm</Name>

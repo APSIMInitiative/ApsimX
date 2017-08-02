@@ -218,9 +218,6 @@ namespace Models.PMF.Organs
         /// <summary>The height function</summary>
         [Link]
         IFunction HeightFunction = null;
-        /// <summary>The structural fraction</summary>
-        [Link]
-        IFunction StructuralFraction = null;
         /// <summary>Leaf Residence Time</summary>
         [Link]
         IFunction LeafResidenceTime = null;
@@ -283,7 +280,15 @@ namespace Models.PMF.Organs
         public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
         /// <summary>Gets the function.</summary>
-        public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value(), 1); } }
+        public double Fn
+        {
+            get
+            {
+                double value = MathUtilities.Divide(Live.NConc-MinimumNConc.Value(), MaximumNConc.Value()-MinimumNConc.Value(), 1);
+                value = MathUtilities.Bound(value, 0, 1);
+                return value;
+            }
+        }
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -351,7 +356,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double StructuralDemand = MaximumNConc.Value() * PotentialDMAllocation * StructuralFraction.Value();
+                double StructuralDemand = MinimumNConc.Value() * PotentialDMAllocation;
                 double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
 
                 return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
