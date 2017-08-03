@@ -1797,7 +1797,7 @@ namespace Models.AgPasture
         private SpeciesBasicStateSettings InitialState;
 
         /// <summary>Flag whether this species is alive (actively growing).</summary>
-        private bool isAlive = true;
+        private bool isAlive = false;
 
         /// <summary>Flag whether several routines are ran by species or are controlled by the Sward.</summary>
         internal bool isSwardControlled = false;
@@ -3805,6 +3805,8 @@ namespace Models.AgPasture
 
             // 5. Set initial phenological stage
             phenologicStage = InitialState.PhenoStage;
+            if (phenologicStage >= 0)
+                isAlive = true;
 
             // 6. Calculate the values for LAI
             EvaluateLAI();
