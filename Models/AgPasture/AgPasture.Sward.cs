@@ -90,6 +90,8 @@ namespace Models.AgPasture
         {
             foreach (PastureSpecies species in mySpecies)
                 species.EndCrop();
+
+            swardIsAlive = false;
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
@@ -159,7 +161,7 @@ namespace Models.AgPasture
         ////- General variables >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Flag whether there is at least on plant alive in the sward.</summary>
-        private bool swardIsAlive = true;
+        private bool swardIsAlive = false;
 
         /// <summary>Number of species in the sward.</summary>
         private int numSpecies = 1;
@@ -1147,11 +1149,13 @@ namespace Models.AgPasture
             myWaterUptakeSource = "species";
             myNUptakeSource = "species";
 
+            double totalInitalDM = 0.0;
             foreach (PastureSpecies species in mySpecies)
             {
                 species.isSwardControlled = isSwardControlled;
                 species.MyWaterUptakeSource = myWaterUptakeSource;
                 species.MyNitrogenUptakeSource = myNUptakeSource;
+                totalInitalDM += species.InitialShootDM;
             }
 
             // get the number of layers in the soil profile
@@ -1164,6 +1168,10 @@ namespace Models.AgPasture
             swardSoilNO3Available = new double[nLayers];
             swardSoilNH4Uptake = new double[nLayers];
             swardSoilNO3Uptake = new double[nLayers];
+
+            // check that there are plants alive
+            if (totalInitalDM > 0.0)
+                swardIsAlive = true;
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
