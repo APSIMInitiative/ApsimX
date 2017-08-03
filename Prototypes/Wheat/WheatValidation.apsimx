@@ -6533,8 +6533,8 @@ Simulation results for the combined datasets from the various countries are show
               <Name>ApplyFertiliser</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <FertDayOfYear>186</FertDayOfYear>
                 <Amount>160</Amount>
+                <FertDayOfYear>186</FertDayOfYear>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -14071,8 +14071,8 @@ namespace Models
               <Name>1</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>29-Apr</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>29-Apr</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -14130,8 +14130,8 @@ namespace Models
               <Name>2</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>20-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>20-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -14189,8 +14189,8 @@ namespace Models
               <Name>3</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>10-Jun</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>10-Jun</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -14248,8 +14248,8 @@ namespace Models
               <Name>4</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>4-Jul</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>4-Jul</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -14307,8 +14307,8 @@ namespace Models
               <Name>5</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>22-Jul</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>22-Jul</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -14366,8 +14366,8 @@ namespace Models
               <Name>6</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>15-Aug</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>15-Aug</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -14880,8 +14880,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -17830,8 +17830,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -18574,8 +18574,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -19318,8 +19318,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script>
-                  <SowDate>25-May</SowDate>
                   <CultivarName>Hartog</CultivarName>
+                  <SowDate>25-May</SowDate>
                   <SowingDepth>40</SowingDepth>
                   <RowSpacing>250</RowSpacing>
                   <Population>100</Population>
@@ -23462,7 +23462,7 @@ namespace Models
           <Name>Factors</Name>
           <Factor>
             <Name>Soil</Name>
-            <Soil>
+            <Factor>
               <Name>Ripped</Name>
               <Water>
                 <Name>Water</Name>
@@ -23580,321 +23580,171 @@ namespace Models
                   <double>0.35</double>
                 </SAT>
               </Water>
-              <SoilWater>
-                <Name>SoilWater</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <SummerDate>1-Nov</SummerDate>
-                <SummerU>6</SummerU>
-                <SummerCona>2</SummerCona>
-                <WinterDate>1-Apr</WinterDate>
-                <WinterU>2</WinterU>
-                <WinterCona>2</WinterCona>
-                <DiffusConst>88</DiffusConst>
-                <DiffusSlope>35</DiffusSlope>
-                <Salb>0.13</Salb>
-                <CN2Bare>60</CN2Bare>
-                <CNRed>20</CNRed>
-                <CNCov>0.8</CNCov>
-                <slope>NaN</slope>
-                <discharge_width>NaN</discharge_width>
-                <catchment_area>NaN</catchment_area>
-                <max_pond>0</max_pond>
-                <Thickness>
-                  <double>50</double>
-                  <double>50</double>
-                  <double>100</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>400</double>
-                  <double>400</double>
-                  <double>600</double>
-                  <double>600</double>
-                </Thickness>
-                <SWCON>
-                  <double>0.35</double>
-                  <double>0.35</double>
-                  <double>0.35</double>
-                  <double>0.35</double>
-                  <double>0.35</double>
-                  <double>0.35</double>
-                  <double>0.35</double>
-                  <double>0.35</double>
-                  <double>0.35</double>
-                  <double>0.35</double>
-                </SWCON>
-                <residueinterception>0</residueinterception>
-              </SoilWater>
-              <SoilOrganicMatter>
-                <Name>SoilOrganicMatter</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <RootCN>40</RootCN>
-                <RootWt>1500</RootWt>
-                <SoilCN>13</SoilCN>
-                <EnrACoeff>1</EnrACoeff>
-                <EnrBCoeff>1</EnrBCoeff>
-                <Thickness>
-                  <double>50</double>
-                  <double>50</double>
-                  <double>100</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>400</double>
-                  <double>400</double>
-                  <double>600</double>
-                  <double>600</double>
-                </Thickness>
-                <Depth>
-                  <string>0-5</string>
-                  <string>5-10</string>
-                  <string>10-20</string>
-                  <string>20-40</string>
-                  <string>40-60</string>
-                  <string>60-80</string>
-                  <string>80-120</string>
-                  <string>120-160</string>
-                  <string>160-220</string>
-                  <string>220-280</string>
-                </Depth>
-                <OC>
-                  <double>1.23</double>
-                  <double>0.43</double>
-                  <double>0.37</double>
-                  <double>0.26</double>
-                  <double>0.21</double>
-                  <double>0.2</double>
-                  <double>0.18</double>
-                  <double>0.18</double>
-                  <double>0.17</double>
-                  <double>0.17</double>
-                </OC>
-                <FBiom>
-                  <double>0.04</double>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                </FBiom>
-                <FInert>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.2</double>
-                  <double>0.8</double>
-                  <double>0.9</double>
-                  <double>0.9</double>
-                  <double>0.9</double>
-                  <double>0.9</double>
-                  <double>0.9</double>
-                </FInert>
-                <OCUnits>Total</OCUnits>
-              </SoilOrganicMatter>
-              <Analysis>
-                <Name>Analysis</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Thickness>
-                  <double>50</double>
-                  <double>50</double>
-                  <double>100</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>400</double>
-                  <double>400</double>
-                  <double>600</double>
-                  <double>600</double>
-                </Thickness>
-                <PH>
-                  <double>4.7</double>
-                  <double>5.1</double>
-                  <double>5.1</double>
-                  <double>6</double>
-                  <double>6</double>
-                  <double>6</double>
-                  <double>6</double>
-                  <double>6</double>
-                  <double>6</double>
-                  <double>6</double>
-                </PH>
-                <PHUnits>Water</PHUnits>
-                <BoronUnits>HotWater</BoronUnits>
-              </Analysis>
-              <Sample>
-                <Name>Sample</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Thickness>
-                  <double>50</double>
-                  <double>50</double>
-                  <double>100</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>200</double>
-                  <double>400</double>
-                  <double>400</double>
-                  <double>600</double>
-                  <double>600</double>
-                </Thickness>
-                <NO3>
-                  <double>7</double>
-                  <double>7</double>
-                  <double>5</double>
-                  <double>3</double>
-                  <double>2</double>
-                  <double>2</double>
-                  <double>2</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                </NO3>
-                <NH4>
-                  <double>2</double>
-                  <double>2</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <SW>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.13</double>
-                  <double>0.14</double>
-                  <double>0.14</double>
-                  <double>0.11</double>
-                  <double>0.1</double>
-                  <double>0.11</double>
-                  <double>0.12</double>
-                  <double>0.13</double>
-                </SW>
-                <OC>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                </OC>
-                <EC>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                </EC>
-                <CL>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                </CL>
-                <ESP>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                </ESP>
-                <PH>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                  <double>NaN</double>
-                </PH>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </CERESSoilTemperature>
               <IncludeInDocumentation>false</IncludeInDocumentation>
-              <RecordNumber>0</RecordNumber>
-              <SoilType>sand</SoilType>
-              <LocalName>WonganSite</LocalName>
-              <Site>WonganSite</Site>
-              <NearestTown>Unknown</NearestTown>
-              <Region>WA</Region>
-              <NaturalVegetation>Unknown</NaturalVegetation>
-              <Latitude>0</Latitude>
-              <Longitude>0</Longitude>
-            </Soil>
+              <Specifications>
+                <string>[Water]</string>
+              </Specifications>
+            </Factor>
+            <Factor>
+              <Name>UnRipped</Name>
+              <Water>
+                <Name>Water</Name>
+                <SoilCrop>
+                  <Name>WheatSoil</Name>
+                  <IncludeInDocumentation>false</IncludeInDocumentation>
+                  <LL>
+                    <double>0.08</double>
+                    <double>0.08</double>
+                    <double>0.09</double>
+                    <double>0.1</double>
+                    <double>0.11</double>
+                    <double>0.12</double>
+                    <double>0.12</double>
+                    <double>0.12</double>
+                    <double>0.14</double>
+                    <double>0.14</double>
+                  </LL>
+                  <KL>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                    <double>0.06</double>
+                  </KL>
+                  <XF>
+                    <double>0.2</double>
+                    <double>0.2</double>
+                    <double>0.2</double>
+                    <double>0.7</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                    <double>1</double>
+                  </XF>
+                </SoilCrop>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Thickness>
+                  <double>50</double>
+                  <double>50</double>
+                  <double>100</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>200</double>
+                  <double>400</double>
+                  <double>400</double>
+                  <double>600</double>
+                  <double>600</double>
+                </Thickness>
+                <BD>
+                  <double>1.31</double>
+                  <double>1.31</double>
+                  <double>1.45</double>
+                  <double>1.48</double>
+                  <double>1.53</double>
+                  <double>1.5</double>
+                  <double>1.5</double>
+                  <double>1.5</double>
+                  <double>1.5</double>
+                  <double>1.5</double>
+                </BD>
+                <AirDry>
+                  <double>0.04</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                  <double>0.05</double>
+                </AirDry>
+                <LL15>
+                  <double>0.07</double>
+                  <double>0.07</double>
+                  <double>0.08</double>
+                  <double>0.09</double>
+                  <double>0.09</double>
+                  <double>0.09</double>
+                  <double>0.1</double>
+                  <double>0.11</double>
+                  <double>0.13</double>
+                  <double>0.13</double>
+                </LL15>
+                <DUL>
+                  <double>0.13</double>
+                  <double>0.13</double>
+                  <double>0.14</double>
+                  <double>0.14</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.16</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                  <double>0.17</double>
+                </DUL>
+                <SAT>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                  <double>0.35</double>
+                </SAT>
+              </Water>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Specifications>
+                <string>[Water]</string>
+              </Specifications>
+            </Factor>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Specifications />
+          </Factor>
+          <Factor>
+            <Name>N</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Specifications>
+              <string>[SowingFertiliser].Script.Amount=0,10,25,50,100</string>
+            </Specifications>
+          </Factor>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </Factors>
+        <Simulation>
+          <Name>WonganBase</Name>
+          <Clock>
+            <Name>Clock</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <StartDate>1983-06-13T00:00:00</StartDate>
+            <EndDate>1983-11-30T00:00:00</EndDate>
+          </Clock>
+          <Summary>
+            <Name>summaryfile</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+          </Summary>
+          <Weather>
+            <Name>Weather</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <FileName>Wongan83.met</FileName>
+          </Weather>
+          <Zone>
+            <Name>paddock</Name>
+            <Irrigation>
+              <Name>Irrigation</Name>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+            </Irrigation>
             <Soil>
-              <Name>Unripped</Name>
+              <Name>WonganSoil</Name>
               <Water>
                 <Name>Water</Name>
                 <SoilCrop>
@@ -24320,642 +24170,6 @@ namespace Models
               <Site>WonganSite</Site>
               <NearestTown>Unknown</NearestTown>
               <Region>WA</Region>
-              <NaturalVegetation>Unknown</NaturalVegetation>
-              <Latitude>0</Latitude>
-              <Longitude>0</Longitude>
-            </Soil>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Specifications>
-              <string>[WonganSoil]</string>
-            </Specifications>
-          </Factor>
-          <Factor>
-            <Name>N</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Specifications>
-              <string>[SowingFertiliser].Script.Amount=0,10,25,50,100</string>
-            </Specifications>
-          </Factor>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-        </Factors>
-        <Simulation>
-          <Name>WonganBase</Name>
-          <Clock>
-            <Name>Clock</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <StartDate>1983-06-13T00:00:00</StartDate>
-            <EndDate>1983-11-30T00:00:00</EndDate>
-          </Clock>
-          <Summary>
-            <Name>summaryfile</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-          </Summary>
-          <Weather>
-            <Name>Weather</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <FileName>Wongan83.met</FileName>
-          </Weather>
-          <Zone>
-            <Name>paddock</Name>
-            <Irrigation>
-              <Name>Irrigation</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-            </Irrigation>
-            <Soil>
-              <Name>WonganSoil</Name>
-              <InitialWater>
-                <Name>InitialWater</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <PercentMethod>FilledFromTop</PercentMethod>
-                <FractionFull>1</FractionFull>
-                <DepthWetSoil>NaN</DepthWetSoil>
-              </InitialWater>
-              <Water>
-                <Name>Water</Name>
-                <SoilCrop>
-                  <Name>wheatSoil</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <LL>
-                    <double>0.073</double>
-                    <double>0.075</double>
-                    <double>0.074</double>
-                    <double>0.12</double>
-                    <double>0.16</double>
-                    <double>0.25</double>
-                    <double>0.25</double>
-                    <double>0.24</double>
-                    <double>0.259</double>
-                    <double>0.281</double>
-                    <double>0.295</double>
-                    <double>0.272</double>
-                    <double>0.269</double>
-                    <double>0.264</double>
-                    <double>0.256</double>
-                    <double>0.256</double>
-                    <double>0.256</double>
-                    <double>0.256</double>
-                    <double>0.256</double>
-                    <double>0.256</double>
-                  </LL>
-                  <KL>
-                    <double>0.08</double>
-                    <double>0.08</double>
-                    <double>0.08</double>
-                    <double>0.08</double>
-                    <double>0.08</double>
-                    <double>0.08</double>
-                    <double>0.08</double>
-                    <double>0.08</double>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.06</double>
-                    <double>0.06</double>
-                    <double>0.05</double>
-                    <double>0.05</double>
-                    <double>0.04</double>
-                    <double>0.04</double>
-                    <double>0.03</double>
-                    <double>0.02</double>
-                    <double>0.01</double>
-                  </KL>
-                  <XF>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>1</double>
-                    <double>0</double>
-                    <double>0</double>
-                  </XF>
-                </SoilCrop>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Thickness>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                </Thickness>
-                <BD>
-                  <double>1.45</double>
-                  <double>1.5</double>
-                  <double>1.55</double>
-                  <double>1.5</double>
-                  <double>1.52</double>
-                  <double>1.55</double>
-                  <double>1.57</double>
-                  <double>1.6</double>
-                  <double>1.62</double>
-                  <double>1.65</double>
-                  <double>1.62</double>
-                  <double>1.6</double>
-                  <double>1.58</double>
-                  <double>1.55</double>
-                  <double>1.55</double>
-                  <double>1.55</double>
-                  <double>1.55</double>
-                  <double>1.55</double>
-                  <double>1.55</double>
-                  <double>1.55</double>
-                </BD>
-                <AirDry>
-                  <double>0.04</double>
-                  <double>0.04</double>
-                  <double>0.06</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                </AirDry>
-                <LL15>
-                  <double>0.073</double>
-                  <double>0.075</double>
-                  <double>0.074</double>
-                  <double>0.12</double>
-                  <double>0.16</double>
-                  <double>0.25</double>
-                  <double>0.25</double>
-                  <double>0.24</double>
-                  <double>0.259</double>
-                  <double>0.281</double>
-                  <double>0.295</double>
-                  <double>0.272</double>
-                  <double>0.269</double>
-                  <double>0.264</double>
-                  <double>0.256</double>
-                  <double>0.256</double>
-                  <double>0.256</double>
-                  <double>0.256</double>
-                  <double>0.256</double>
-                  <double>0.256</double>
-                </LL15>
-                <DUL>
-                  <double>0.21</double>
-                  <double>0.234</double>
-                  <double>0.22</double>
-                  <double>0.29</double>
-                  <double>0.293</double>
-                  <double>0.37</double>
-                  <double>0.36</double>
-                  <double>0.35</double>
-                  <double>0.34</double>
-                  <double>0.33</double>
-                  <double>0.34</double>
-                  <double>0.35</double>
-                  <double>0.36</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.355</double>
-                  <double>0.35</double>
-                  <double>0.33</double>
-                  <double>0.33</double>
-                  <double>0.33</double>
-                </DUL>
-                <SAT>
-                  <double>0.414</double>
-                  <double>0.394</double>
-                  <double>0.375</double>
-                  <double>0.394</double>
-                  <double>0.386</double>
-                  <double>0.375</double>
-                  <double>0.367</double>
-                  <double>0.355</double>
-                  <double>0.347</double>
-                  <double>0.335</double>
-                  <double>0.347</double>
-                  <double>0.355</double>
-                  <double>0.363</double>
-                  <double>0.375</double>
-                  <double>0.375</double>
-                  <double>0.375</double>
-                  <double>0.375</double>
-                  <double>0.375</double>
-                  <double>0.375</double>
-                  <double>0.375</double>
-                </SAT>
-              </Water>
-              <SoilWater>
-                <Name>SoilWater</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <SummerDate>1-Nov</SummerDate>
-                <SummerU>2</SummerU>
-                <SummerCona>2</SummerCona>
-                <WinterDate>1-Apr</WinterDate>
-                <WinterU>2</WinterU>
-                <WinterCona>2</WinterCona>
-                <DiffusConst>88</DiffusConst>
-                <DiffusSlope>35.4</DiffusSlope>
-                <Salb>0.13</Salb>
-                <CN2Bare>72</CN2Bare>
-                <CNRed>20</CNRed>
-                <CNCov>0.8</CNCov>
-                <slope>0</slope>
-                <discharge_width>0</discharge_width>
-                <catchment_area>0</catchment_area>
-                <max_pond>0</max_pond>
-                <Thickness>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                </Thickness>
-                <SWCON>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                  <double>0.4</double>
-                </SWCON>
-                <KLAT>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </KLAT>
-                <residueinterception>0</residueinterception>
-              </SoilWater>
-              <SoilOrganicMatter>
-                <Name>SoilOrganicMatter</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <RootCN>40</RootCN>
-                <RootWt>2000</RootWt>
-                <SoilCN>14.5</SoilCN>
-                <EnrACoeff>1</EnrACoeff>
-                <EnrBCoeff>1</EnrBCoeff>
-                <Thickness>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                </Thickness>
-                <Depth>
-                  <string>0-10</string>
-                  <string>10-20</string>
-                  <string>20-30</string>
-                  <string>30-40</string>
-                  <string>40-50</string>
-                  <string>50-60</string>
-                  <string>60-70</string>
-                  <string>70-80</string>
-                  <string>80-90</string>
-                  <string>90-100</string>
-                  <string>100-110</string>
-                  <string>110-120</string>
-                  <string>120-130</string>
-                  <string>130-140</string>
-                  <string>140-150</string>
-                  <string>150-160</string>
-                  <string>160-170</string>
-                  <string>170-180</string>
-                  <string>180-190</string>
-                  <string>190-200</string>
-                </Depth>
-                <OC>
-                  <double>0.83</double>
-                  <double>0.35</double>
-                  <double>0.33</double>
-                  <double>0.22</double>
-                  <double>0.22</double>
-                  <double>0.22</double>
-                  <double>0.19</double>
-                  <double>0.17</double>
-                  <double>0.15</double>
-                  <double>0.12</double>
-                  <double>0.11</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                </OC>
-                <FBiom>
-                  <double>0.04</double>
-                  <double>0.03</double>
-                  <double>0.03</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.02</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                  <double>0.01</double>
-                </FBiom>
-                <FInert>
-                  <double>0.36</double>
-                  <double>0.35</double>
-                  <double>0.45</double>
-                  <double>0.45</double>
-                  <double>0.59</double>
-                  <double>0.6</double>
-                  <double>0.84</double>
-                  <double>0.8</double>
-                  <double>0.8</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                  <double>0.99</double>
-                </FInert>
-                <OCUnits>Total</OCUnits>
-              </SoilOrganicMatter>
-              <Analysis>
-                <Name>Analysis</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Thickness>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                </Thickness>
-                <PH>
-                  <double>5.8</double>
-                  <double>5.9</double>
-                  <double>6.6</double>
-                  <double>6.8</double>
-                  <double>7</double>
-                  <double>7.1</double>
-                  <double>7.2</double>
-                  <double>7.3</double>
-                  <double>7.4</double>
-                  <double>7.4</double>
-                  <double>7.6</double>
-                  <double>7.8</double>
-                  <double>8</double>
-                  <double>8.2</double>
-                  <double>8.3</double>
-                  <double>8.4</double>
-                  <double>8.4</double>
-                  <double>8.5</double>
-                  <double>8.5</double>
-                  <double>8.5</double>
-                </PH>
-                <PHUnits>Water</PHUnits>
-                <BoronUnits>HotWater</BoronUnits>
-              </Analysis>
-              <Sample>
-                <Name>Sample</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <Thickness>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                  <double>100</double>
-                </Thickness>
-                <NO3>
-                  <double>10</double>
-                  <double>15</double>
-                  <double>10</double>
-                  <double>8</double>
-                  <double>5</double>
-                  <double>2</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NO3>
-                <NH4>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>1</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                  <double>0</double>
-                </NH4>
-                <NO3Units>ppm</NO3Units>
-                <NH4Units>ppm</NH4Units>
-                <SWUnits>Volumetric</SWUnits>
-                <OCUnits>Total</OCUnits>
-                <PHUnits>Water</PHUnits>
-              </Sample>
-              <SoilNitrogen>
-                <Name>SoilNitrogen</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-                <fom_type>
-                  <string>default</string>
-                  <string>manure</string>
-                  <string>mucuna</string>
-                  <string>lablab</string>
-                  <string>shemp</string>
-                  <string>stable</string>
-                </fom_type>
-                <fract_carb>
-                  <double>0.2</double>
-                  <double>0.3</double>
-                  <double>0.54</double>
-                  <double>0.57</double>
-                  <double>0.45</double>
-                  <double>0</double>
-                </fract_carb>
-                <fract_cell>
-                  <double>0.7</double>
-                  <double>0.3</double>
-                  <double>0.37</double>
-                  <double>0.37</double>
-                  <double>0.47</double>
-                  <double>0.1</double>
-                </fract_cell>
-                <fract_lign>
-                  <double>0.1</double>
-                  <double>0.4</double>
-                  <double>0.09</double>
-                  <double>0.06</double>
-                  <double>0.08</double>
-                  <double>0.9</double>
-                </fract_lign>
-              </SoilNitrogen>
-              <CERESSoilTemperature>
-                <Name>CERESSoilTemperature</Name>
-                <IncludeInDocumentation>false</IncludeInDocumentation>
-              </CERESSoilTemperature>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <RecordNumber>0</RecordNumber>
-              <SoilType>unknown
-</SoilType>
-              <LocalName>Ginninderra</LocalName>
-              <Site>Ginninderra</Site>
-              <NearestTown>Ginninderra</NearestTown>
-              <Region>ACT</Region>
               <NaturalVegetation>Unknown</NaturalVegetation>
               <Latitude>0</Latitude>
               <Longitude>0</Longitude>
@@ -32395,15 +31609,15 @@ Emergence was recorded as the 28th of May for the first planting.  The model was
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script>
-                  <FertDate1>05-Aug</FertDate1>
-                  <FertDate2>01-Oct</FertDate2>
-                  <FertDate3>20-Oct</FertDate3>
-                  <FertDate4>25-Nov</FertDate4>
+                  <SDSwitch>0</SDSwitch>
                   <Amount1>0</Amount1>
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
+                  <FertDate1>05-Aug</FertDate1>
+                  <FertDate2>01-Oct</FertDate2>
+                  <FertDate3>20-Oct</FertDate3>
+                  <FertDate4>25-Nov</FertDate4>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -35900,15 +35114,15 @@ namespace Models
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script>
-                  <FertDate1>05-Aug</FertDate1>
-                  <FertDate2>01-Oct</FertDate2>
-                  <FertDate3>20-Oct</FertDate3>
-                  <FertDate4>25-Nov</FertDate4>
+                  <SDSwitch>0</SDSwitch>
                   <Amount1>0</Amount1>
                   <Amount2>0</Amount2>
                   <Amount3>0</Amount3>
                   <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
+                  <FertDate1>05-Aug</FertDate1>
+                  <FertDate2>01-Oct</FertDate2>
+                  <FertDate3>20-Oct</FertDate3>
+                  <FertDate4>25-Nov</FertDate4>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -43864,10 +43078,10 @@ Considerable canopy decay was observed during the winter for the early sown trea
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script>
                   <SowDate>24-Jul</SowDate>
+                  <Population>150</Population>
                   <CultivarName>Wakanui</CultivarName>
                   <SowingDepth>50</SowingDepth>
                   <RowSpacing>150</RowSpacing>
-                  <Population>150</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -47377,7 +46591,17 @@ namespace Models
               <Name>Harvesting</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script />
-              <Code><![CDATA[ ]]></Code>
+              <Code><![CDATA[using System;
+using Models.Core;
+using APSIM.Shared.Utilities;
+using System.Collections.Generic;
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+	}
+}]]></Code>
             </Manager>
             <Manager>
               <Name>StateFactors</Name>
@@ -47420,15 +46644,15 @@ namespace Models
 				{
 					throw new Exception("Soil layer exception");
 				}
-				ThisSoil.DUL[0] = 0.34;
-				ThisSoil.DUL[1] = 0.3;
-				ThisSoil.DUL[2] = 0.28;
-				ThisSoil.DUL[3] = 0.3;
-				ThisSoil.DUL[4] = 0.3;
-				ThisSoil.DUL[5] = 0.30;
-				ThisSoil.DUL[6] = 0.3;
+				ThisSoil.DUL[0] = 0.31;
+				ThisSoil.DUL[1] = 0.34;
+				ThisSoil.DUL[2] = 0.32;
+				ThisSoil.DUL[3] = 0.23;
+				ThisSoil.DUL[4] = 0.29;
+				ThisSoil.DUL[5] = 0.29;
+				ThisSoil.DUL[6] = 0.29;
 				
-				double[] nSW = { 0.18, 0.25, 0.26, 0.26, 0.23, 0.28, 0.29 };
+				double[] nSW = { 0.18, 0.18, 0.26, 0.23, 0.29, 0.29, 0.27 };
 				ThisSoil.SoilWater.Reset();
 				ThisSoil.SoilWater.SetWater_frac(nSW); 
 			}   
@@ -47439,14 +46663,14 @@ namespace Models
 					throw new Exception("Soil layer exception");
 				}
 				ThisSoil.DUL[0] = 0.30;
-				ThisSoil.DUL[1] = 0.26;
+				ThisSoil.DUL[1] = 0.31;
 				ThisSoil.DUL[2] = 0.29;
 				ThisSoil.DUL[3] = 0.30;
 				ThisSoil.DUL[4] = 0.31;
 				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.34;
+				ThisSoil.DUL[6] = 0.30;
 				
-				double[] nSW = { 0.22, 0.25, 0.26, 0.3, 0.25, 0.29, 0.33 };
+				double[] nSW = { 0.18, 0.18, 0.30, 0.25, 0.29, 0.34, 0.30 };
 				ThisSoil.SoilWater.Reset();
 				ThisSoil.SoilWater.SetWater_frac(nSW); 
 			}   
@@ -47475,14 +46699,14 @@ namespace Models
 					throw new Exception("Soil layer exception");
 				}
 				ThisSoil.DUL[0] = 0.31;
-				ThisSoil.DUL[1] = 0.28;
-				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
-				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.30;
+				ThisSoil.DUL[1] = 0.34;
+				ThisSoil.DUL[2] = 0.32;
+				ThisSoil.DUL[3] = 0.23;
+				ThisSoil.DUL[4] = 0.30;
+				ThisSoil.DUL[5] = 0.33;
+				ThisSoil.DUL[6] = 0.25;
 				
-				double[] nSW = { 0.18, 0.18, 0.26, 0.26, 0.23, 0.28, 0.33 };
+				double[] nSW = { 0.18, 0.18, 0.26, 0.20, 0.30, 0.33, 0.25 };
 				ThisSoil.SoilWater.Reset();
 				ThisSoil.SoilWater.SetWater_frac(nSW); 
 			}   
@@ -47492,16 +46716,15 @@ namespace Models
 				{
 					throw new Exception("Soil layer exception");
 				}
-				ThisSoil.LL15[6] = 0.16;
 				ThisSoil.DUL[0] = 0.31;
 				ThisSoil.DUL[1] = 0.28;
 				ThisSoil.DUL[2] = 0.30;
-				ThisSoil.DUL[3] = 0.28;
-				ThisSoil.DUL[4] = 0.29;
-				ThisSoil.DUL[5] = 0.34;
-				ThisSoil.DUL[6] = 0.32;
+				ThisSoil.DUL[3] = 0.29;
+				ThisSoil.DUL[4] = 0.31;
+				ThisSoil.DUL[5] = 0.33;
+				ThisSoil.DUL[6] = 0.30;
 
-				double[] nSW = { 0.18, 0.18, 0.26, 0.26, 0.23, 0.28, 0.33 };
+				double[] nSW = { 0.18, 0.18, 0.28, 0.27, 0.28, 0.33, 0.30 };
 				
 				ThisSoil.SoilWater.Reset();
 				
@@ -48108,78 +47331,227 @@ namespace Models
             <LegendPosition>TopLeft</LegendPosition>
             <DisabledSeries />
           </Graph>
-          <Graph>
+          <Folder>
             <Name>WaterProfile</Name>
-            <Series>
-              <Name>Obs</Name>
+            <Graph>
+              <Name>250</Name>
+              <Series>
+                <Name>Obs</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>ProfileWater</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <Series>
+                <Name>Predicted</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>DailyReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>ProfileWater</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
               <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Observed</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>ProfileWater</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter />
-            </Series>
-            <Series>
-              <Name>Predicted</Name>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries>
+                <string>0Full</string>
+                <string>50Full</string>
+                <string>0Nil</string>
+                <string>50Nil</string>
+              </DisabledSeries>
+            </Graph>
+            <Graph>
+              <Name>50</Name>
+              <Series>
+                <Name>Obs</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>ProfileWater</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <Series>
+                <Name>Predicted</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>DailyReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>ProfileWater</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
               <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>ProfileWater</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-              <Filter />
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries>
-              <string>0Full</string>
-              <string>50Full</string>
-              <string>0Nil</string>
-              <string>50Nil</string>
-            </DisabledSeries>
-          </Graph>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries>
+                <string>0Full</string>
+                <string>250Full</string>
+                <string>0Nil</string>
+                <string>250Nil</string>
+              </DisabledSeries>
+            </Graph>
+            <Graph>
+              <Name>0</Name>
+              <Series>
+                <Name>Obs</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>None</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>Observed</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>ProfileWater</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <Series>
+                <Name>Predicted</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Type>Scatter</Type>
+                <XAxis>Bottom</XAxis>
+                <YAxis>Left</YAxis>
+                <ColourArgb>-16777216</ColourArgb>
+                <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+                <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+                <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+                <Marker>None</Marker>
+                <MarkerSize>Normal</MarkerSize>
+                <Line>Solid</Line>
+                <LineThickness>Normal</LineThickness>
+                <TableName>DailyReport</TableName>
+                <XFieldName>Clock.Today</XFieldName>
+                <YFieldName>ProfileWater</YFieldName>
+                <ShowInLegend>true</ShowInLegend>
+                <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                <Cumulative>false</Cumulative>
+                <CumulativeX>false</CumulativeX>
+                <Filter />
+              </Series>
+              <IncludeInDocumentation>false</IncludeInDocumentation>
+              <Axis>
+                <Type>Left</Type>
+                <Title />
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <Axis>
+                <Type>Bottom</Type>
+                <Inverted>false</Inverted>
+                <Minimum>NaN</Minimum>
+                <Maximum>NaN</Maximum>
+                <Interval>NaN</Interval>
+              </Axis>
+              <LegendPosition>TopLeft</LegendPosition>
+              <DisabledSeries>
+                <string>50Full</string>
+                <string>250Full</string>
+                <string>50Nil</string>
+                <string>250Nil</string>
+              </DisabledSeries>
+            </Graph>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ShowPageOfGraphs>true</ShowPageOfGraphs>
+          </Folder>
           <Folder>
             <Name>OrganNConc</Name>
             <Graph>
@@ -50232,9 +49604,9 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
                 <string>0Full</string>
-                <string>50Full</string>
+                <string>250Full</string>
                 <string>0Nil</string>
-                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -50301,9 +49673,9 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
                 <string>0Full</string>
-                <string>50Full</string>
+                <string>250Full</string>
                 <string>0Nil</string>
-                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -50370,9 +49742,9 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
                 <string>0Full</string>
-                <string>50Full</string>
+                <string>250Full</string>
                 <string>0Nil</string>
-                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -50439,9 +49811,9 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
                 <string>0Full</string>
-                <string>50Full</string>
+                <string>250Full</string>
                 <string>0Nil</string>
-                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -50508,9 +49880,9 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
                 <string>0Full</string>
-                <string>50Full</string>
+                <string>250Full</string>
                 <string>0Nil</string>
-                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -50577,9 +49949,9 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
                 <string>0Full</string>
-                <string>50Full</string>
+                <string>250Full</string>
                 <string>0Nil</string>
-                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -50646,9 +50018,9 @@ namespace Models
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
                 <string>0Full</string>
-                <string>50Full</string>
+                <string>250Full</string>
                 <string>0Nil</string>
-                <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -50719,10 +50091,10 @@ namespace Models
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
-                <string>0Full</string>
                 <string>50Full</string>
-                <string>0Nil</string>
+                <string>250Full</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -50788,10 +50160,10 @@ namespace Models
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
-                <string>0Full</string>
                 <string>50Full</string>
-                <string>0Nil</string>
+                <string>250Full</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -50857,10 +50229,10 @@ namespace Models
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
-                <string>0Full</string>
                 <string>50Full</string>
-                <string>0Nil</string>
+                <string>250Full</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -50926,10 +50298,10 @@ namespace Models
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
-                <string>0Full</string>
                 <string>50Full</string>
-                <string>0Nil</string>
+                <string>250Full</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -50995,10 +50367,10 @@ namespace Models
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
-                <string>0Full</string>
                 <string>50Full</string>
-                <string>0Nil</string>
+                <string>250Full</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -51064,10 +50436,10 @@ namespace Models
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
-                <string>0Full</string>
                 <string>50Full</string>
-                <string>0Nil</string>
+                <string>250Full</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <Graph>
@@ -51133,10 +50505,10 @@ namespace Models
               </Axis>
               <LegendPosition>TopLeft</LegendPosition>
               <DisabledSeries>
-                <string>0Full</string>
                 <string>50Full</string>
-                <string>0Nil</string>
+                <string>250Full</string>
                 <string>50Nil</string>
+                <string>250Nil</string>
               </DisabledSeries>
             </Graph>
             <IncludeInDocumentation>false</IncludeInDocumentation>
@@ -67393,8 +66765,8 @@ namespace Models
               <Name>MouseActivity</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <NibblingDate>2002-10-31</NibblingDate>
                 <ProportionNibbled>0.5</ProportionNibbled>
+                <NibblingDate>2002-10-31</NibblingDate>
               </Script>
               <Code><![CDATA[
 using System;
@@ -68524,8 +67896,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -69308,8 +68680,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -70052,8 +69424,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -70796,8 +70168,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <SowDate>25-May</SowDate>
                 <CultivarName>Hartog</CultivarName>
+                <SowDate>25-May</SowDate>
                 <SowingDepth>40</SowingDepth>
                 <RowSpacing>250</RowSpacing>
                 <Population>100</Population>
@@ -88325,5 +87697,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>328</ExplorerWidth>
+  <ExplorerWidth>272</ExplorerWidth>
 </Simulations>
