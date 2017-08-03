@@ -3939,30 +3939,30 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
           <RegrStats>
             <Name>Barley.Ear.Wt</Name>
             <n>183</n>
-            <Slope>0.75470376456914523</Slope>
-            <Intercept>22.330896093980527</Intercept>
-            <SEslope>0.045140464144219024</SEslope>
-            <SEintercept>22.640889102161708</SEintercept>
-            <R2>0.606970490160686</R2>
-            <RMSE>223.96375887806164</RMSE>
-            <NSE>0.52220029784601363</NSE>
-            <ME>-71.584887335507574</ME>
-            <MAE>151.73767491381145</MAE>
-            <RSR>0.68933937564875225</RSR>
+            <Slope>0.75474755321582976</Slope>
+            <Intercept>22.321538163976868</Intercept>
+            <SEslope>0.045143461913987028</SEslope>
+            <SEintercept>22.642392679365837</SEintercept>
+            <R2>0.60696648796433583</R2>
+            <RMSE>223.96783826845325</RMSE>
+            <NSE>0.52218289191145462</NSE>
+            <ME>-71.5774800467077</ME>
+            <MAE>151.735446454454</MAE>
+            <RSR>0.68935193162852182</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Grain.Wt</Name>
             <n>179</n>
-            <Slope>0.687100721421386</Slope>
-            <Intercept>26.277102022874374</Intercept>
-            <SEslope>0.048304094002010141</SEslope>
-            <SEintercept>24.245953450827763</SEintercept>
-            <R2>0.53339506243185075</R2>
-            <RMSE>250.7186927299388</RMSE>
-            <NSE>0.40707596228715059</NSE>
-            <ME>-93.2533406419636</ME>
-            <MAE>165.16302072701566</MAE>
-            <RSR>0.7678617147124589</RSR>
+            <Slope>0.68725813294043392</Slope>
+            <Intercept>26.237588778246504</Intercept>
+            <SEslope>0.048309676235383715</SEslope>
+            <SEintercept>24.248755419756559</SEintercept>
+            <R2>0.53345156447336439</R2>
+            <RMSE>250.71038494805873</RMSE>
+            <NSE>0.40711525574318619</NSE>
+            <ME>-93.23272121822049</ME>
+            <MAE>165.15804150156154</MAE>
+            <RSR>0.76783627094689666</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.CoverGreen</Name>
@@ -3981,11 +3981,11 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
           <RegrStats>
             <Name>Barley.Leaf.LAI</Name>
             <n>454</n>
-            <Slope>1.1422677278717541</Slope>
-            <Intercept>0.63448505703588243</Intercept>
-            <SEslope>0.060080723535550495</SEslope>
-            <SEintercept>0.19638885206213538</SEintercept>
-            <R2>0.44435182215100211</R2>
+            <Slope>1.1422677278717548</Slope>
+            <Intercept>0.63448505703588065</Intercept>
+            <SEslope>0.060080723535550482</SEslope>
+            <SEintercept>0.19638885206213536</SEintercept>
+            <R2>0.44435182215100233</R2>
             <RMSE>2.5715482222361308</RMSE>
             <NSE>-0.95960492223858029</NSE>
             <ME>1.0191380737532068</ME>
@@ -3995,14 +3995,14 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
           <RegrStats>
             <Name>Barley.Leaf.Live.Wt</Name>
             <n>312</n>
-            <Slope>0.74898997880298623</Slope>
-            <Intercept>4.5167964968872667</Intercept>
-            <SEslope>0.06057978019363304</SEslope>
-            <SEintercept>7.240395615312992</SEintercept>
-            <R2>0.3302524598185852</R2>
+            <Slope>0.74898997880298679</Slope>
+            <Intercept>4.5167964968871956</Intercept>
+            <SEslope>0.060579780193633019</SEslope>
+            <SEintercept>7.24039561531299</SEintercept>
+            <R2>0.33025245981858564</R2>
             <RMSE>61.121999229582563</RMSE>
             <NSE>-0.38912276851053296</NSE>
-            <ME>-22.512265965868426</ME>
+            <ME>-22.512265965868423</ME>
             <MAE>47.9121425875804</MAE>
             <RSR>1.17672020971206</RSR>
           </RegrStats>
@@ -4056,11 +4056,11 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
             <SEslope>0.033062499655724067</SEslope>
             <SEintercept>13.298097938224439</SEintercept>
             <R2>0.46936705114510413</R2>
-            <RMSE>194.61676568843316</RMSE>
-            <NSE>0.24948754082355373</NSE>
+            <RMSE>194.61676568843319</RMSE>
+            <NSE>0.24948754082355362</NSE>
             <ME>-102.17792043643377</ME>
-            <MAE>144.30787670168328</MAE>
-            <RSR>0.86493177217930883</RSR>
+            <MAE>144.30787670168331</MAE>
+            <RSR>0.86493177217930894</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Structure.LeafTipsAppeared</Name>
@@ -4072,8 +4072,8 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
             <R2>0.71442442280008045</R2>
             <RMSE>1.2762863927190773</RMSE>
             <NSE>0.680304435244971</NSE>
-            <ME>-0.29147550965221386</ME>
-            <MAE>0.892038348927959</MAE>
+            <ME>-0.29147550965221408</ME>
+            <MAE>0.89203834892795875</MAE>
             <RSR>0.56339331288787831</RSR>
           </RegrStats>
           <RegrStats>
@@ -4086,37 +4086,37 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
             <R2>0.11049736546395372</R2>
             <RMSE>224.89220137905031</RMSE>
             <NSE>-0.42103147916093087</NSE>
-            <ME>3.5026555319024535</ME>
+            <ME>3.5026555319024459</ME>
             <MAE>120.8760945966269</MAE>
             <RSR>1.1895526746415015</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TotalAboveGroundWt</Name>
             <n>565</n>
-            <Slope>0.97570184565073592</Slope>
-            <Intercept>59.284349247485125</Intercept>
-            <SEslope>0.029442131374937244</SEslope>
-            <SEintercept>26.747415878285754</SEintercept>
-            <R2>0.66109575802378218</R2>
-            <RMSE>372.89221874733153</RMSE>
-            <NSE>0.50529340935958</NSE>
-            <ME>41.358758467787631</ME>
-            <MAE>256.06171443470828</MAE>
-            <RSR>0.70273110344877343</RSR>
+            <Slope>0.9757783224127029</Slope>
+            <Intercept>59.229078503180176</Intercept>
+            <SEslope>0.029438142303301058</SEslope>
+            <SEintercept>26.743791909740047</SEintercept>
+            <R2>0.6611915884382954</R2>
+            <RMSE>372.84110675638857</RMSE>
+            <NSE>0.505429018013144</NSE>
+            <ME>41.359907281917359</ME>
+            <MAE>256.046595951545</MAE>
+            <RSR>0.70263478074749675</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Transpiration</Name>
             <n>2040</n>
             <Slope>0.70314129269209891</Slope>
             <Intercept>-0.044789522521009095</Intercept>
-            <SEslope>0.00965548533128328</SEslope>
-            <SEintercept>0.022640663538889529</SEintercept>
-            <R2>0.7223882408287603</R2>
-            <RMSE>1.05996155985158</RMSE>
-            <NSE>0.64190017153469792</NSE>
-            <ME>-0.500917147060604</ME>
-            <MAE>0.63835243505713313</MAE>
-            <RSR>0.59826774050896425</RSR>
+            <SEslope>0.0096554853312832874</SEslope>
+            <SEintercept>0.022640663538889546</SEintercept>
+            <R2>0.72238824082876008</R2>
+            <RMSE>1.0599615598515797</RMSE>
+            <NSE>0.64190017153469814</NSE>
+            <ME>-0.50091714706060375</ME>
+            <MAE>0.638352435057133</MAE>
+            <RSR>0.59826774050896414</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4179,70 +4179,70 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
           <RegrStats>
             <Name>Barley.Ear.Wt</Name>
             <n>40</n>
-            <Slope>0.61846949977554744</Slope>
-            <Intercept>129.04367582465443</Intercept>
-            <SEslope>0.035104491559847822</SEslope>
-            <SEintercept>16.81437493611897</SEintercept>
-            <R2>0.89092761320897162</R2>
-            <RMSE>103.7057917778366</RMSE>
-            <NSE>0.78685269876905828</NSE>
-            <ME>-32.359953595165543</ME>
-            <MAE>80.6716726018316</MAE>
-            <RSR>0.45587127426519009</RSR>
+            <Slope>0.61829710364668011</Slope>
+            <Intercept>129.09840988515782</Intercept>
+            <SEslope>0.03512793633797931</SEslope>
+            <SEintercept>16.825604533024677</SEintercept>
+            <R2>0.8907435393376173</R2>
+            <RMSE>103.75868900146814</RMSE>
+            <NSE>0.78663520318349567</NSE>
+            <ME>-32.378150429782536</ME>
+            <MAE>80.710141501000834</MAE>
+            <RSR>0.45610380057185634</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Grain.Wt</Name>
             <n>34</n>
-            <Slope>0.607961252425325</Slope>
-            <Intercept>132.69365389739764</Intercept>
-            <SEslope>0.032973207902138507</SEslope>
-            <SEintercept>13.179198391016586</SEintercept>
-            <R2>0.91396952999506276</R2>
-            <RMSE>95.2304614891243</RMSE>
-            <NSE>0.81145453745505458</NSE>
-            <ME>1.6937700576691621</ME>
-            <MAE>77.146854135505691</MAE>
-            <RSR>0.42778500179904827</RSR>
+            <Slope>0.60776616464509892</Slope>
+            <Intercept>132.73743450627921</Intercept>
+            <SEslope>0.0330045212488641</SEslope>
+            <SEintercept>13.191714152601206</SEintercept>
+            <R2>0.91376957805524472</R2>
+            <RMSE>95.285402152187658</RMSE>
+            <NSE>0.81123692219440158</NSE>
+            <ME>1.6723620169433371</ME>
+            <MAE>77.1921116639401</MAE>
+            <RSR>0.42803180089337045</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.LAI</Name>
             <n>103</n>
-            <Slope>0.985049005234689</Slope>
-            <Intercept>0.3695303186672998</Intercept>
-            <SEslope>0.10102390077109397</SEslope>
-            <SEintercept>0.29998431101182044</SEintercept>
-            <R2>0.48489160222398009</R2>
-            <RMSE>1.2847907279936317</RMSE>
-            <NSE>-0.10339884932064813</NSE>
-            <ME>0.32907533120756555</ME>
-            <MAE>0.95317877982748411</MAE>
-            <RSR>1.0453163344811318</RSR>
+            <Slope>0.9850490052346883</Slope>
+            <Intercept>0.36953031866730024</Intercept>
+            <SEslope>0.10102390077109401</SEslope>
+            <SEintercept>0.2999843110118206</SEintercept>
+            <R2>0.48489160222397942</R2>
+            <RMSE>1.2847907279936315</RMSE>
+            <NSE>-0.10339884932064791</NSE>
+            <ME>0.329075331207565</ME>
+            <MAE>0.95317877982748456</MAE>
+            <RSR>1.0453163344811316</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.Live.Wt</Name>
             <n>105</n>
-            <Slope>1.0485597934522055</Slope>
-            <Intercept>-6.5179830453442236</Intercept>
-            <SEslope>0.089214826600196959</SEslope>
-            <SEintercept>10.421779295528909</SEintercept>
-            <R2>0.57285822536947384</R2>
-            <RMSE>38.248717738725219</RMSE>
-            <NSE>0.17698758691429128</NSE>
-            <ME>-1.2277367410344331</ME>
-            <MAE>29.113199729352477</MAE>
-            <RSR>0.90286997935901592</RSR>
+            <Slope>1.0485597934522066</Slope>
+            <Intercept>-6.5179830453443515</Intercept>
+            <SEslope>0.089214826600196917</SEslope>
+            <SEintercept>10.421779295528902</SEintercept>
+            <R2>0.57285822536947462</R2>
+            <RMSE>38.248717738725233</RMSE>
+            <NSE>0.17698758691429051</NSE>
+            <ME>-1.227736741034424</ME>
+            <MAE>29.113199729352488</MAE>
+            <RSR>0.90286997935901625</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Stem.Wt</Name>
             <n>105</n>
             <Slope>0.53444024675805868</Slope>
             <Intercept>80.545398861058572</Intercept>
-            <SEslope>0.028335642200568865</SEslope>
-            <SEintercept>11.145334455634172</SEintercept>
-            <R2>0.77547174083858716</R2>
+            <SEslope>0.02833564220056892</SEslope>
+            <SEintercept>11.145334455634194</SEintercept>
+            <R2>0.7754717408385865</R2>
             <RMSE>143.99890101477487</RMSE>
             <NSE>0.6177612809202192</NSE>
-            <ME>-67.017665879848451</ME>
+            <ME>-67.017665879848437</ME>
             <MAE>109.61201464384349</MAE>
             <RSR>0.61530346198167951</RSR>
           </RegrStats>
@@ -4263,16 +4263,16 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
           <RegrStats>
             <Name>TotalAboveGroundWt</Name>
             <n>109</n>
-            <Slope>0.89229160748345093</Slope>
-            <Intercept>94.998279611450414</Intercept>
-            <SEslope>0.022677035488341751</SEslope>
-            <SEintercept>16.257429868194794</SEintercept>
-            <R2>0.93535719238897541</R2>
-            <RMSE>115.79694084268614</RMSE>
-            <NSE>0.92740887187123322</NSE>
-            <ME>33.195466072947816</ME>
-            <MAE>86.8335762664908</MAE>
-            <RSR>0.26818865463738251</RSR>
+            <Slope>0.8922569557039256</Slope>
+            <Intercept>95.011484980749515</Intercept>
+            <SEslope>0.0226793028966168</SEslope>
+            <SEintercept>16.259055399496411</SEintercept>
+            <R2>0.93534040342628844</R2>
+            <RMSE>115.80975747860812</RMSE>
+            <NSE>0.927392801920828</NSE>
+            <ME>33.188788335473788</ME>
+            <MAE>86.831530502791082</MAE>
+            <RSR>0.26821833829154368</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4925,9 +4925,9 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <InitialRootDepth>40</InitialRootDepth>
                 <Cultivar>Dash</Cultivar>
                 <SowingDate>2009-10-01</SowingDate>
+                <InitialRootDepth>40</InitialRootDepth>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -7059,9 +7059,9 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <InitialRootDepth>40</InitialRootDepth>
                 <Cultivar>Omaka</Cultivar>
                 <SowingDate>2009-10-01</SowingDate>
+                <InitialRootDepth>40</InitialRootDepth>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -42858,9 +42858,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -45056,9 +45056,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Omaka</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -47765,9 +47765,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -50822,9 +50822,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Sherwood</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -53802,9 +53802,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -56351,9 +56351,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
+                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -82287,5 +82287,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>470</ExplorerWidth>
+  <ExplorerWidth>301</ExplorerWidth>
 </Simulations>
