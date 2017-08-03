@@ -54,14 +54,13 @@ namespace Models.PMF.Organs
     public class Root : BaseOrgan, IWaterNitrogenUptake
     {
         #region Links
+        /// <summary>The arbitrator</summary>
+        [Link]
+        OrganArbitrator Arbitrator = null;
 
         #endregion
 
         #region Parameters
-        /// <summary>The DM demand function</summary>
-        [Link]
-        [Units("g/m2/d")]
-        IFunction DMDemandFunction = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [Link]
@@ -113,7 +112,7 @@ namespace Models.PMF.Organs
         [Link]
         [Units("/d")]
         IFunction SenescenceRate = null;
-        
+
         /// <summary>The root front velocity</summary>
         [Link]
         [Units("mm/d")]
@@ -123,7 +122,12 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction StructuralFraction = null;
-        
+
+        /// <summary>The biomass partition fraction</summary>
+        [Link]
+        [Units("0-1")]
+        IFunction PartitionFraction = null;
+
         /// <summary>The maximum N concentration</summary>
         [Link]
         [Units("g/g")]
@@ -143,12 +147,12 @@ namespace Models.PMF.Organs
         [Link]
         [Units("kg N/ha")]
         IFunction MaxDailyNUptake = null;
-        
+
         /// <summary>The kl modifier</summary>
         [Link]
         [Units("0-1")]
         IFunction KLModifier = null;
-        
+
         /// <summary>The Maximum Root Depth</summary>
         [Link]
         [Units("0-1")]
@@ -340,8 +344,8 @@ namespace Models.PMF.Organs
             ZoneState zone = Zones.Find(z => z.Name == zoneName);
             if (zone == null)
                 throw new Exception("Cannot find a zone called " + zoneName);
-				
-			zone.Uptake = MathUtilities.Multiply_Value(Amount, -1.0);
+
+            zone.Uptake = MathUtilities.Multiply_Value(Amount, -1.0);
             zone.soil.SoilWater.dlt_sw_dep = zone.Uptake;
         }
 
@@ -386,11 +390,11 @@ namespace Models.PMF.Organs
             get
             {
                 double MeanWTF = 0;
-                
+
                 if (Live.Wt > 0)
-                   foreach (ZoneState Z in Zones)
-                       for (int i = 0; i < Z.LayerLive.Length; i++)
-                           MeanWTF += Z.LayerLive[i].Wt/ Live.Wt * MathUtilities.Bound(2 * Z.soil.PAW[i] / Z.soil.PAWC[i], 0, 1);
+                    foreach (ZoneState Z in Zones)
+                        for (int i = 0; i < Z.LayerLive.Length; i++)
+                            MeanWTF += Z.LayerLive[i].Wt / Live.Wt * MathUtilities.Bound(2 * Z.soil.PAW[i] / Z.soil.PAWC[i], 0, 1);
 
                 return MeanWTF;
             }
@@ -474,7 +478,7 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
-                foreach(ZoneState Z in Zones)
+                foreach (ZoneState Z in Zones)
                     Z.GrowRootDepth();
                 // Do Root Senescence
                 DoRemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = SenescenceRate.Value() });
@@ -521,7 +525,7 @@ namespace Models.PMF.Organs
         {
             if (DMConversionEfficiency > 0.0)
             {
-                double demandedDM = DMDemandFunction.Value();
+                double demandedDM = Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value();
                 if (StructuralFraction != null)
                     demandedDM *= StructuralFraction.Value() / DMConversionEfficiency;
                 else
@@ -529,8 +533,8 @@ namespace Models.PMF.Organs
 
                 return demandedDM;
             }
-             // Conversion efficiency is zero!!!!
-                return 0.0;
+            // Conversion efficiency is zero!!!!
+            return 0.0;
         }
 
         /// <summary>Computes the amount of non structural DM demanded.</summary>
@@ -552,8 +556,8 @@ namespace Models.PMF.Organs
                 double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency;
                 return demandedDM;
             }
-             // Either there is no NonStructural fraction or conversion efficiency is zero!!!!
-                return 0.0;
+            // Either there is no NonStructural fraction or conversion efficiency is zero!!!!
+            return 0.0;
         }
 
         /// <summary>Gets the DM supply for this computation round.</summary>
@@ -602,7 +606,7 @@ namespace Models.PMF.Organs
                     for (int i = 0; i < Z.LayerLive.Length; i++)
                         rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
 
-                double availableDM = rootLiveNonStructuralWt*SenescenceRate.Value() * DMReallocationFactor.Value();
+                double availableDM = rootLiveNonStructuralWt * SenescenceRate.Value() * DMReallocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
                 return availableDM;
@@ -618,19 +622,19 @@ namespace Models.PMF.Organs
             {
                 if (PlantZone.Uptake == null)
                     throw new Exception("No water and N uptakes supplied to root. Is Soil Arbitrator included in the simulation?");
-           
+
                 if (PlantZone.Depth <= 0)
                     return; //cannot allocate growth where no length
 
                 if (DMDemand.Structural == 0 && value.Structural > 0.000000000001)
                     throw new Exception("Invalid allocation of potential DM in" + Name);
-                
+
 
                 double TotalRAw = 0;
                 foreach (ZoneState Z in Zones)
                     TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
-                if (TotalRAw==0 && value.Structural>0)
+                if (TotalRAw == 0 && value.Structural > 0)
                     throw new Exception("Error trying to partition potential root biomass");
 
                 if (TotalRAw > 0)
@@ -658,7 +662,7 @@ namespace Models.PMF.Organs
                 Allocated.NonStructuralWt = value.NonStructural;
                 Allocated.MetabolicWt = value.Metabolic;
 
-                if (TotalRAw==0 && Allocated.Wt>0)
+                if (TotalRAw == 0 && Allocated.Wt > 0)
                     throw new Exception("Error trying to partition root biomass");
 
                 foreach (ZoneState Z in Zones)
