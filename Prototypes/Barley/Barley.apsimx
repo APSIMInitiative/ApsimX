@@ -3939,72 +3939,72 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
           <RegrStats>
             <Name>Barley.Ear.Wt</Name>
             <n>183</n>
-            <Slope>0.75469060159547086</Slope>
-            <Intercept>22.340452536693817</Intercept>
-            <SEslope>0.045143139654026776</SEslope>
-            <SEintercept>22.642231044961754</SEintercept>
-            <R2>0.60693388990350061</R2>
-            <RMSE>223.97407550242855</RMSE>
-            <NSE>0.52215627828137379</NSE>
-            <ME>-71.58037055833509</ME>
-            <MAE>151.73540667491091</MAE>
-            <RSR>0.68937112924779664</RSR>
+            <Slope>0.75470376456914523</Slope>
+            <Intercept>22.330896093980527</Intercept>
+            <SEslope>0.045140464144219024</SEslope>
+            <SEintercept>22.640889102161708</SEintercept>
+            <R2>0.606970490160686</R2>
+            <RMSE>223.96375887806164</RMSE>
+            <NSE>0.52220029784601363</NSE>
+            <ME>-71.584887335507574</ME>
+            <MAE>151.73767491381145</MAE>
+            <RSR>0.68933937564875225</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Grain.Wt</Name>
             <n>179</n>
-            <Slope>0.68717732462472592</Slope>
-            <Intercept>26.26531460843006</Intercept>
-            <SEslope>0.048308041506528406</SEslope>
-            <SEintercept>24.24793487730463</SEintercept>
-            <R2>0.53340987740242518</R2>
-            <RMSE>250.71633123016673</RMSE>
-            <NSE>0.40708713164489185</NSE>
-            <ME>-93.2358649182943</ME>
-            <MAE>165.16862833242345</MAE>
-            <RSR>0.76785448228297981</RSR>
+            <Slope>0.687100721421386</Slope>
+            <Intercept>26.277102022874374</Intercept>
+            <SEslope>0.048304094002010141</SEslope>
+            <SEintercept>24.245953450827763</SEintercept>
+            <R2>0.53339506243185075</R2>
+            <RMSE>250.7186927299388</RMSE>
+            <NSE>0.40707596228715059</NSE>
+            <ME>-93.2533406419636</ME>
+            <MAE>165.16302072701566</MAE>
+            <RSR>0.7678617147124589</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.CoverGreen</Name>
             <n>186</n>
-            <Slope>0.00064034816864054554</Slope>
-            <Intercept>0.57497032868637055</Intercept>
-            <SEslope>7.1285631884830748E-05</SEslope>
-            <SEintercept>0.025712765756689689</SEintercept>
-            <R2>0.3048513863542468</R2>
-            <RMSE>360.07309719404316</RMSE>
-            <NSE>-0.90270201132663952</NSE>
-            <ME>-248.19042575857552</ME>
-            <MAE>248.21540142439233</MAE>
-            <RSR>1.3756716289218811</RSR>
+            <Slope>0.00064034816864100535</Slope>
+            <Intercept>0.57497032868720988</Intercept>
+            <SEslope>7.128563188476E-05</SEslope>
+            <SEintercept>0.025712765756664171</SEintercept>
+            <R2>0.30485138635497178</R2>
+            <RMSE>360.07309719404253</RMSE>
+            <NSE>-0.90270201132663286</NSE>
+            <ME>-248.19042575857441</ME>
+            <MAE>248.21540142439238</MAE>
+            <RSR>1.3756716289218787</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.LAI</Name>
             <n>454</n>
-            <Slope>1.1422404583156898</Slope>
-            <Intercept>0.63433514779907574</Intercept>
-            <SEslope>0.06008480422567631</SEslope>
-            <SEintercept>0.19640219081710153</SEintercept>
-            <R2>0.444306495480262</R2>
-            <RMSE>2.571599937951166</RMSE>
-            <NSE>-0.95968374120677891</NSE>
-            <ME>1.0189144350967945</ME>
-            <MAE>1.8495242946702126</MAE>
-            <RSR>1.3983444701486503</RSR>
+            <Slope>1.1422677278717541</Slope>
+            <Intercept>0.63448505703588243</Intercept>
+            <SEslope>0.060080723535550495</SEslope>
+            <SEintercept>0.19638885206213538</SEintercept>
+            <R2>0.44435182215100211</R2>
+            <RMSE>2.5715482222361308</RMSE>
+            <NSE>-0.95960492223858029</NSE>
+            <ME>1.0191380737532068</ME>
+            <MAE>1.8494678562616826</MAE>
+            <RSR>1.3983163489844397</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.Live.Wt</Name>
             <n>312</n>
-            <Slope>0.74898997878997409</Slope>
-            <Intercept>4.5167964975099153</Intercept>
-            <SEslope>0.060579780194366717</SEslope>
-            <SEintercept>7.240395615400681</SEintercept>
-            <R2>0.3302524598055423</R2>
-            <RMSE>61.121999230619316</RMSE>
-            <NSE>-0.38912276855765771</NSE>
-            <ME>-22.51226596664684</ME>
-            <MAE>47.912142588444368</MAE>
-            <RSR>1.1767202097320195</RSR>
+            <Slope>0.74898997880298623</Slope>
+            <Intercept>4.5167964968872667</Intercept>
+            <SEslope>0.06057978019363304</SEslope>
+            <SEintercept>7.240395615312992</SEintercept>
+            <R2>0.3302524598185852</R2>
+            <RMSE>61.121999229582563</RMSE>
+            <NSE>-0.38912276851053296</NSE>
+            <ME>-22.512265965868426</ME>
+            <MAE>47.9121425875804</MAE>
+            <RSR>1.17672020971206</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Phenology.FlagLeafDAS.Value()</Name>
@@ -4051,16 +4051,16 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
           <RegrStats>
             <Name>Barley.Stem.Wt</Name>
             <n>312</n>
-            <Slope>0.54748941221054126</Slope>
-            <Intercept>48.791969387184082</Intercept>
-            <SEslope>0.033062499656513741</SEslope>
-            <SEintercept>13.298097938542055</SEintercept>
-            <R2>0.46936705113073518</R2>
-            <RMSE>194.61676569215075</RMSE>
-            <NSE>0.24948754079488078</NSE>
-            <ME>-102.17792043891016</ME>
-            <MAE>144.30787670468573</MAE>
-            <RSR>0.86493177219583084</RSR>
+            <Slope>0.54748941221325786</Slope>
+            <Intercept>48.791969388754239</Intercept>
+            <SEslope>0.033062499655724067</SEslope>
+            <SEintercept>13.298097938224439</SEintercept>
+            <R2>0.46936705114510413</R2>
+            <RMSE>194.61676568843316</RMSE>
+            <NSE>0.24948754082355373</NSE>
+            <ME>-102.17792043643377</ME>
+            <MAE>144.30787670168328</MAE>
+            <RSR>0.86493177217930883</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Structure.LeafTipsAppeared</Name>
@@ -4078,45 +4078,45 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
           </RegrStats>
           <RegrStats>
             <Name>ProfileWater</Name>
-            <n>54</n>
-            <Slope>1.0025863852940964</Slope>
-            <Intercept>-29.498159173056536</Intercept>
-            <SEslope>0.092240813300968713</SEslope>
-            <SEintercept>35.304171272375129</SEintercept>
-            <R2>0.69436953442302285</R2>
-            <RMSE>47.172281703301024</RMSE>
-            <NSE>0.3026827809557211</NSE>
-            <ME>-28.5190897182282</ME>
-            <MAE>41.507535089616368</MAE>
-            <RSR>0.827287094792446</RSR>
+            <n>237</n>
+            <Slope>-0.13177200489352531</Slope>
+            <Intercept>447.84367556509852</Intercept>
+            <SEslope>0.02438860052585241</SEslope>
+            <SEintercept>10.623223330451761</SEintercept>
+            <R2>0.11049736546395372</R2>
+            <RMSE>224.89220137905031</RMSE>
+            <NSE>-0.42103147916093087</NSE>
+            <ME>3.5026555319024535</ME>
+            <MAE>120.8760945966269</MAE>
+            <RSR>1.1895526746415015</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TotalAboveGroundWt</Name>
             <n>565</n>
-            <Slope>0.97576072755937437</Slope>
-            <Intercept>59.250664666944431</Intercept>
-            <SEslope>0.029440843418670926</SEslope>
-            <SEintercept>26.746245803285081</SEintercept>
-            <R2>0.66114240003391544</R2>
-            <RMSE>372.87613151916634</RMSE>
-            <NSE>0.50533609346896824</NSE>
-            <ME>41.368513112440716</ME>
-            <MAE>256.05904361506214</MAE>
-            <RSR>0.70270078638922762</RSR>
+            <Slope>0.97570184565073592</Slope>
+            <Intercept>59.284349247485125</Intercept>
+            <SEslope>0.029442131374937244</SEslope>
+            <SEintercept>26.747415878285754</SEintercept>
+            <R2>0.66109575802378218</R2>
+            <RMSE>372.89221874733153</RMSE>
+            <NSE>0.50529340935958</NSE>
+            <ME>41.358758467787631</ME>
+            <MAE>256.06171443470828</MAE>
+            <RSR>0.70273110344877343</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Transpiration</Name>
             <n>2040</n>
-            <Slope>0.7031412927319981</Slope>
-            <Intercept>-0.044789522543948079</Intercept>
-            <SEslope>0.0096554853316748474</SEslope>
-            <SEintercept>0.022640663539807697</SEintercept>
-            <R2>0.722388240835254</R2>
-            <RMSE>1.0599615598212009</RMSE>
-            <NSE>0.64190017155522461</NSE>
-            <ME>-0.500917147022237</ME>
-            <MAE>0.638352435046357</MAE>
-            <RSR>0.59826774049181763</RSR>
+            <Slope>0.70314129269209891</Slope>
+            <Intercept>-0.044789522521009095</Intercept>
+            <SEslope>0.00965548533128328</SEslope>
+            <SEintercept>0.022640663538889529</SEintercept>
+            <R2>0.7223882408287603</R2>
+            <RMSE>1.05996155985158</RMSE>
+            <NSE>0.64190017153469792</NSE>
+            <ME>-0.500917147060604</ME>
+            <MAE>0.63835243505713313</MAE>
+            <RSR>0.59826774050896425</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4179,100 +4179,100 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
           <RegrStats>
             <Name>Barley.Ear.Wt</Name>
             <n>40</n>
-            <Slope>0.6186089875514984</Slope>
-            <Intercept>129.02729372893714</Intercept>
-            <SEslope>0.035119922135120676</SEslope>
-            <SEintercept>16.821765884302209</SEintercept>
-            <R2>0.89088602421056784</R2>
-            <RMSE>103.67662379907604</RMSE>
-            <NSE>0.78697258024434669</NSE>
-            <ME>-32.317326428753283</ME>
-            <MAE>80.649317497909323</MAE>
-            <RSR>0.45574305728311643</RSR>
+            <Slope>0.61846949977554744</Slope>
+            <Intercept>129.04367582465443</Intercept>
+            <SEslope>0.035104491559847822</SEslope>
+            <SEintercept>16.81437493611897</SEintercept>
+            <R2>0.89092761320897162</R2>
+            <RMSE>103.7057917778366</RMSE>
+            <NSE>0.78685269876905828</NSE>
+            <ME>-32.359953595165543</ME>
+            <MAE>80.6716726018316</MAE>
+            <RSR>0.45587127426519009</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Grain.Wt</Name>
             <n>34</n>
-            <Slope>0.60812264310063258</Slope>
-            <Intercept>132.6898747534552</Intercept>
-            <SEslope>0.032989803377689329</SEslope>
-            <SEintercept>13.1858315055539</SEintercept>
-            <R2>0.91393213469980983</R2>
-            <RMSE>95.208260023549144</RMSE>
-            <NSE>0.81154243995143349</NSE>
-            <ME>1.7439196640069616</ME>
-            <MAE>77.1205540140106</MAE>
-            <RSR>0.42768527053824684</RSR>
+            <Slope>0.607961252425325</Slope>
+            <Intercept>132.69365389739764</Intercept>
+            <SEslope>0.032973207902138507</SEslope>
+            <SEintercept>13.179198391016586</SEintercept>
+            <R2>0.91396952999506276</R2>
+            <RMSE>95.2304614891243</RMSE>
+            <NSE>0.81145453745505458</NSE>
+            <ME>1.6937700576691621</ME>
+            <MAE>77.146854135505691</MAE>
+            <RSR>0.42778500179904827</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.LAI</Name>
             <n>103</n>
-            <Slope>0.98504900527835593</Slope>
-            <Intercept>0.36953031867408148</Intercept>
-            <SEslope>0.10102390077201186</SEslope>
-            <SEintercept>0.29998431101454609</SEintercept>
-            <R2>0.4848916022415859</R2>
-            <RMSE>1.284790728035776</RMSE>
-            <NSE>-0.1033988493930369</NSE>
-            <ME>0.32907533133250311</ME>
-            <MAE>0.953178779849878</MAE>
-            <RSR>1.0453163345154206</RSR>
+            <Slope>0.985049005234689</Slope>
+            <Intercept>0.3695303186672998</Intercept>
+            <SEslope>0.10102390077109397</SEslope>
+            <SEintercept>0.29998431101182044</SEintercept>
+            <R2>0.48489160222398009</R2>
+            <RMSE>1.2847907279936317</RMSE>
+            <NSE>-0.10339884932064813</NSE>
+            <ME>0.32907533120756555</ME>
+            <MAE>0.95317877982748411</MAE>
+            <RSR>1.0453163344811318</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.Live.Wt</Name>
             <n>105</n>
-            <Slope>1.0485597934872277</Slope>
-            <Intercept>-6.5179830456562513</Intercept>
-            <SEslope>0.08921482659792361</SEslope>
-            <SEintercept>10.421779295263344</SEintercept>
-            <R2>0.57285822539828968</R2>
-            <RMSE>38.248717737720874</RMSE>
-            <NSE>0.17698758695751293</NSE>
-            <ME>-1.2277367375310155</ME>
-            <MAE>29.113199728908778</MAE>
-            <RSR>0.9028699793353081</RSR>
+            <Slope>1.0485597934522055</Slope>
+            <Intercept>-6.5179830453442236</Intercept>
+            <SEslope>0.089214826600196959</SEslope>
+            <SEintercept>10.421779295528909</SEintercept>
+            <R2>0.57285822536947384</R2>
+            <RMSE>38.248717738725219</RMSE>
+            <NSE>0.17698758691429128</NSE>
+            <ME>-1.2277367410344331</ME>
+            <MAE>29.113199729352477</MAE>
+            <RSR>0.90286997935901592</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Stem.Wt</Name>
             <n>105</n>
-            <Slope>0.53444024677938706</Slope>
-            <Intercept>80.545398856683732</Intercept>
-            <SEslope>0.028335642198391329</SEslope>
-            <SEintercept>11.145334454777675</SEintercept>
-            <R2>0.7754717408792452</R2>
-            <RMSE>143.99890100752992</RMSE>
-            <NSE>0.61776128095868188</NSE>
-            <ME>-67.017665877462832</ME>
-            <MAE>109.61201464028275</MAE>
-            <RSR>0.61530346195072194</RSR>
+            <Slope>0.53444024675805868</Slope>
+            <Intercept>80.545398861058572</Intercept>
+            <SEslope>0.028335642200568865</SEslope>
+            <SEintercept>11.145334455634172</SEintercept>
+            <R2>0.77547174083858716</R2>
+            <RMSE>143.99890101477487</RMSE>
+            <NSE>0.6177612809202192</NSE>
+            <ME>-67.017665879848451</ME>
+            <MAE>109.61201464384349</MAE>
+            <RSR>0.61530346198167951</RSR>
           </RegrStats>
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>22</n>
-            <Slope>0.73018730471684168</Slope>
-            <Intercept>90.440639183084556</Intercept>
-            <SEslope>0.057456101000295919</SEslope>
-            <SEintercept>22.632661723403483</SEintercept>
-            <R2>0.88981251917699355</R2>
-            <RMSE>28.665555180472897</RMSE>
-            <NSE>0.81510922951079523</NSE>
-            <ME>-14.308744225302183</ME>
-            <MAE>21.580620207046277</MAE>
-            <RSR>0.42010313562014423</RSR>
+            <Slope>0.73018730470596394</Slope>
+            <Intercept>90.440639186296664</Intercept>
+            <SEslope>0.05745610100115902</SEslope>
+            <SEintercept>22.632661723743468</SEintercept>
+            <R2>0.88981251917112669</R2>
+            <RMSE>28.665555181585766</RMSE>
+            <NSE>0.81510922949643938</NSE>
+            <ME>-14.308744226313182</ME>
+            <MAE>21.58062020796827</MAE>
+            <RSR>0.42010313563645368</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TotalAboveGroundWt</Name>
             <n>109</n>
-            <Slope>0.89234323574778718</Slope>
-            <Intercept>94.984298441793953</Intercept>
-            <SEslope>0.022674516431130921</SEslope>
-            <SEintercept>16.255623926851179</SEintercept>
-            <R2>0.935377620070713</R2>
-            <RMSE>115.7828071448707</RMSE>
-            <NSE>0.92742659113822035</NSE>
-            <ME>33.211109075739991</ME>
-            <MAE>86.825372548573156</MAE>
-            <RSR>0.26815592063444088</RSR>
+            <Slope>0.89229160748345093</Slope>
+            <Intercept>94.998279611450414</Intercept>
+            <SEslope>0.022677035488341751</SEslope>
+            <SEintercept>16.257429868194794</SEintercept>
+            <R2>0.93535719238897541</R2>
+            <RMSE>115.79694084268614</RMSE>
+            <NSE>0.92740887187123322</NSE>
+            <ME>33.195466072947816</ME>
+            <MAE>86.8335762664908</MAE>
+            <RSR>0.26818865463738251</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4460,7 +4460,7 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -4925,9 +4925,9 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
+                <InitialRootDepth>40</InitialRootDepth>
                 <Cultivar>Dash</Cultivar>
                 <SowingDate>2009-10-01</SowingDate>
-                <InitialRootDepth>40</InitialRootDepth>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -6594,7 +6594,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -7059,9 +7059,9 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
+                <InitialRootDepth>40</InitialRootDepth>
                 <Cultivar>Omaka</Cultivar>
                 <SowingDate>2009-10-01</SowingDate>
-                <InitialRootDepth>40</InitialRootDepth>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -9142,7 +9142,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Summary>
@@ -11575,7 +11575,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -12966,7 +12966,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -14287,7 +14287,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -15615,7 +15615,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -17229,7 +17229,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -18543,7 +18543,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -19871,7 +19871,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -21178,7 +21178,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -22506,7 +22506,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -23834,7 +23834,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -25155,7 +25155,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -27816,7 +27816,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>C:\ApsimX\Prototypes\Barley\Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -32970,7 +32970,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -37024,7 +37024,7 @@ The treatments were monitored for:
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>Weather\lincoln.met</FileName>
+          <FileName>lincoln.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <Clock>
@@ -39845,7 +39845,7 @@ This is the mineral nitrogen (N) validation trial conducted at the Lincoln Unive
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Weather\Lincoln15-17.met</FileName>
+            <FileName>Lincoln15-17.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
@@ -42393,7 +42393,7 @@ namespace Models
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Weather\lincoln.met</FileName>
+            <FileName>lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
@@ -42858,9 +42858,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -44591,7 +44591,7 @@ namespace Models
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Weather\lincoln.met</FileName>
+            <FileName>lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
@@ -45056,9 +45056,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Omaka</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -47300,7 +47300,7 @@ namespace Models
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Weather\lincoln.met</FileName>
+            <FileName>lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
@@ -47765,9 +47765,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -50357,7 +50357,7 @@ namespace Models
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Weather\lincoln.met</FileName>
+            <FileName>lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
@@ -50822,9 +50822,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Sherwood</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -53337,7 +53337,7 @@ This was a cultivar evaluation trial conducted in Lincoln. Eight cultivars were 
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Weather\lincoln.met</FileName>
+            <FileName>lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
@@ -53802,9 +53802,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -55886,7 +55886,7 @@ This was a nitrogen*irrigation trial conducted at Lincoln
           <Weather>
             <Name>Weather</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FileName>Weather\lincoln.met</FileName>
+            <FileName>lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
           <Clock>
@@ -56351,9 +56351,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
-                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -58403,7 +58403,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\HB90Sow1.met</FileName>
+        <FileName>HB90Sow1.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <Summary>
@@ -59790,7 +59790,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\HB90Sow2.met</FileName>
+        <FileName>HB90Sow2.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -61112,7 +61112,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\HB90Sow3.met</FileName>
+        <FileName>HB90Sow3.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -62434,7 +62434,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\HRS87-2MP.met</FileName>
+        <FileName>HRS87-2MP.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -63756,7 +63756,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\HRS87-3MP.met</FileName>
+        <FileName>HRS87-3MP.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -65078,7 +65078,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\HRSRO - DD.met</FileName>
+        <FileName>HRSRO - DD.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -66400,7 +66400,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\HRSRO - DI.met</FileName>
+        <FileName>HRSRO - DI.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -67722,7 +67722,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\HRSRO - II.met</FileName>
+        <FileName>HRSRO - II.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -69044,7 +69044,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\KthpeRain05.met</FileName>
+        <FileName>KthpeRain05.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -70366,7 +70366,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\Well360.met</FileName>
+        <FileName>Well360.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -71619,7 +71619,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\R88-1HP.met</FileName>
+        <FileName>R88-1HP.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -72941,7 +72941,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\R88-1MP.met</FileName>
+        <FileName>R88-1MP.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -74263,7 +74263,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\R88-2HP.met</FileName>
+        <FileName>R88-2HP.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -75585,7 +75585,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\R88-2MP.met</FileName>
+        <FileName>R88-2MP.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -76907,7 +76907,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\R88-3HP.met</FileName>
+        <FileName>R88-3HP.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -78229,7 +78229,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\R88-3MP.met</FileName>
+        <FileName>R88-3MP.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -79551,7 +79551,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\R88-4HP.met</FileName>
+        <FileName>R88-4HP.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -80873,7 +80873,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\R88-4MP.met</FileName>
+        <FileName>R88-4MP.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
