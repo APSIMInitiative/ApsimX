@@ -63,7 +63,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </AirTemperatureFunction>
         <GenericPhase>
-          <Name>Dormant</Name>
+          <Name>EndoDormancy</Name>
           <Constant>
             <Name>Target</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -91,8 +91,8 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </AirTemperatureFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>StartDomancy</Start>
-          <End>EndDomancy</End>
+          <Start>StartDormancy</Start>
+          <End>EndDormancy</End>
         </GenericPhase>
         <BuddingPhase>
           <Name>Budding</Name>
@@ -143,23 +143,23 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
             <VariableReference>
               <Name>ThermalTime</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Phenology].Dormant.ThermalTime.Value()</VariableName>
+              <VariableName>[Phenology].EndoDormancy.ThermalTime.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartStageName>StartDomancy</StartStageName>
+            <StartStageName>StartDormancy</StartStageName>
             <EndStageName>BudBurst</EndStageName>
-            <ResetStageName>StartDomancy</ResetStageName>
+            <ResetStageName>Veraison</ResetStageName>
             <FractionRemovedOnCut>0</FractionRemovedOnCut>
             <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
             <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
             <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
           </AccumulateFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Start>EndDomancy</Start>
+          <Start>EndDormancy</Start>
           <End>BudBurst</End>
         </BuddingPhase>
         <GenericPhase>
-          <Name>ShootGrowth</Name>
+          <Name>Flowering</Name>
           <Constant>
             <Name>Target</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -175,12 +175,12 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <End>StartFlowering</End>
         </GenericPhase>
         <GenericPhase>
-          <Name>FlowerDevelopment</Name>
+          <Name>FruitSet</Name>
           <Constant>
             <Name>Target</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>7</FixedValue>
-            <Units>dd</Units>
+            <Units>d</Units>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -239,7 +239,7 @@ The duration of a Grapevine crop is determined by the number of leaves that the 
           <Start>LeafFall</Start>
           <End>Unused</End>
           <FractionComplete>0</FractionComplete>
-          <PhaseNameToGoto>Dormant</PhaseNameToGoto>
+          <PhaseNameToGoto>EndoDormancy</PhaseNameToGoto>
         </GotoPhase>
         <OnEventFunction>
           <Name>BudBurstDOY</Name>
@@ -262,7 +262,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>BudBurst</SetEvent>
-          <ReSetEvent>StartDomancy</ReSetEvent>
+          <ReSetEvent>StartDormancy</ReSetEvent>
         </OnEventFunction>
         <OnEventFunction>
           <Name>FloweringDOY</Name>
@@ -285,7 +285,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>StartFlowering</SetEvent>
-          <ReSetEvent>StartDomancy</ReSetEvent>
+          <ReSetEvent>StartDormancy</ReSetEvent>
         </OnEventFunction>
         <OnEventFunction>
           <Name>VeraisonDOY</Name>
@@ -308,7 +308,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <SetEvent>Veraison</SetEvent>
-          <ReSetEvent>StartDomancy</ReSetEvent>
+          <ReSetEvent>StartDormancy</ReSetEvent>
         </OnEventFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <DaysAfterSowing>0</DaysAfterSowing>
@@ -701,7 +701,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>StructuralFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.99</FixedValue>
+            <FixedValue>0.8</FixedValue>
             <Units>percentage</Units>
           </Constant>
           <Constant>
@@ -754,7 +754,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Constant>
             <Name>CriticalNConc</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.01</FixedValue>
+            <FixedValue>0.03</FixedValue>
             <Units>g/g</Units>
           </Constant>
           <Constant>
@@ -1039,7 +1039,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>StructuralFraction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.99</FixedValue>
+          <FixedValue>0.8</FixedValue>
           <Units>percentage</Units>
         </Constant>
         <PhaseLookupValue>
@@ -1077,6 +1077,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Leaves />
         <CurrentExpandingLeaf>34</CurrentExpandingLeaf>
         <StartFractionExpanded>0.83819041077407885</StartFractionExpanded>
         <FractionNextleafExpanded>0.92664093062319453</FractionNextleafExpanded>
@@ -1225,7 +1226,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <Constant>
           <Name>InitialDM</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>5</FixedValue>
+          <FixedValue>5000</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
@@ -1241,12 +1242,6 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Units>mm/d</Units>
         </Constant>
         <Constant>
-          <Name>PartitionFraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.2</FixedValue>
-          <Units>percentage</Units>
-        </Constant>
-        <Constant>
           <Name>KNO3</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.02</FixedValue>
@@ -1260,6 +1255,60 @@ A function is used to provide flowering date as days after sowing(DAS).
           <Name>MaxDailyNUptake</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>6</FixedValue>
+        </Constant>
+        <MultiplyFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>Sroot</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>4779</FixedValue>
+            <Units>gc</Units>
+          </Constant>
+          <Constant>
+            <Name>Kprgr</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.003</FixedValue>
+            <Units>gc gc-1d-1</Units>
+          </Constant>
+          <ExponentialFunction>
+            <Name>TemResponseFun</Name>
+            <SubtractFunction>
+              <Name>SubtractFunction</Name>
+              <AirTemperatureFunction>
+                <Name>AirTemperatureFunction</Name>
+                <XYPairs>
+                  <Name>XYPairs</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <X>
+                    <double>0</double>
+                    <double>40</double>
+                  </X>
+                  <Y>
+                    <double>0</double>
+                    <double>40</double>
+                  </Y>
+                </XYPairs>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </AirTemperatureFunction>
+              <Constant>
+                <Name>referenceT</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>20</FixedValue>
+                <Units>oC</Units>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SubtractFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <A>0</A>
+            <B>1</B>
+            <C>0.069314</C>
+          </ExponentialFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MultiplyFunction>
+        <Constant>
+          <Name>PartitionFraction</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.2</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
@@ -1294,15 +1343,6 @@ A function is used to provide flowering date as days after sowing(DAS).
           <FixedValue>0</FixedValue>
           <Units>percentage</Units>
         </Constant>
-        <InternodeDemandFunction>
-          <Name>DMDemandFunction</Name>
-          <Constant>
-            <Name>InterNodeWt</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.2</FixedValue>
-          </Constant>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </InternodeDemandFunction>
         <LinearInterpolationFunction>
           <Name>MaximumNConc</Name>
           <XYPairs>
@@ -1408,6 +1448,15 @@ A function is used to provide flowering date as days after sowing(DAS).
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <Constant>
+            <Name>PartitionFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.2</FixedValue>
+          </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -2072,6 +2121,7 @@ A function is used to provide flowering date as days after sowing(DAS).
         <string>[Grapevine].Phenology.FloweringDOY.Value()</string>
         <string>[Grapevine].Phenology.VeraisonDOY.Value()</string>
         <string>[Grapevine].Phenology.CurrentStageName</string>
+        <string>[Grapevine].Phenology.Budding.AccChill.Value()</string>
         <string>[Grapevine].Structure.LeafTipsAppeared</string>
         <string>[Grapevine].Structure.PlantTotalNodeNo</string>
         <string>[Grapevine].Leaf.InitialisedCohortNo</string>
@@ -2080,8 +2130,10 @@ A function is used to provide flowering date as days after sowing(DAS).
         <string>[Grapevine].Leaf.CohortSize</string>
         <string>[Grapevine].Leaf.Fn</string>
         <string>[Grapevine].Leaf.Fw</string>
+        <string>[Grapevine].Root.Live.Wt</string>
         <string>[Grapevine].Berry.Number</string>
         <string>[Grapevine].Berry.Live.Wt</string>
+        <string>[Grapevine].Stem.Wt</string>
         <string>[Berry].MeanFloweringTempY0.Value()</string>
         <string>[Berry].MeanFloweringTemp.Value()</string>
         <string>[Berry].NumberFunction.Value()</string>
@@ -2114,44 +2166,44 @@ A function is used to provide flowering date as days after sowing(DAS).
           <RegrStats>
             <Name>Grapevine.Phenology.BudBurstDOY.Value()</Name>
             <n>40</n>
-            <Slope>0.29392748997457585</Slope>
-            <Intercept>175.48089041657934</Intercept>
-            <SEslope>0.19706687795559294</SEslope>
-            <SEintercept>54.8840807636668</SEintercept>
-            <R2>0.055304610561405454</R2>
-            <RMSE>22.507221063472052</RMSE>
-            <NSE>-15.583190113757265</NSE>
-            <ME>-21.125</ME>
-            <MAE>21.675</MAE>
-            <RSR>4.0210210594963725</RSR>
+            <Slope>0.23966773058361196</Slope>
+            <Intercept>191.93952041899325</Intercept>
+            <SEslope>0.20327373436843391</SEslope>
+            <SEintercept>56.612720361476896</SEintercept>
+            <R2>0.035291420548546948</R2>
+            <RMSE>21.369955545110525</RMSE>
+            <NSE>-13.949668548981096</NSE>
+            <ME>-19.775000000000002</ME>
+            <MAE>20.325000000000003</MAE>
+            <RSR>3.8178432177417356</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Grapevine.Phenology.FloweringDOY.Value()</Name>
             <n>42</n>
-            <Slope>0.42259919973356375</Slope>
-            <Intercept>179.33736245404097</Intercept>
-            <SEslope>0.1485496835960167</SEslope>
-            <SEintercept>51.375737567079533</SEintercept>
-            <R2>0.16827952580715355</R2>
-            <RMSE>21.131109992705294</RMSE>
-            <NSE>-15.415221740580197</NSE>
-            <ME>-20.333333333333332</ME>
-            <MAE>20.333333333333332</MAE>
-            <RSR>4.003046730642704</RSR>
+            <Slope>0.44135545181724967</Slope>
+            <Intercept>173.77984328110159</Intercept>
+            <SEslope>0.15226897319377969</SEslope>
+            <SEintercept>52.662049605483389</SEintercept>
+            <R2>0.17357844637001652</R2>
+            <RMSE>20.254922975955864</RMSE>
+            <NSE>-14.082152384128047</NSE>
+            <ME>-19.404761904761905</ME>
+            <MAE>19.404761904761905</MAE>
+            <RSR>3.8370631370671089</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Grapevine.Phenology.VeraisonDOY.Value()</Name>
             <n>36</n>
-            <Slope>1.6198912726919681</Slope>
-            <Intercept>-66.500776623628511</Intercept>
-            <SEslope>3.7808341758419006</SEslope>
-            <SEintercept>282.896634489324</SEintercept>
-            <R2>0.0053700593131866814</R2>
-            <RMSE>125.99371677455454</RMSE>
-            <NSE>-498.30210659159309</NSE>
-            <ME>-20.25</ME>
-            <MAE>100.52777777777777</MAE>
-            <RSR>22.032535115839838</RSR>
+            <Slope>1.6774099601980181</Slope>
+            <Intercept>-69.875643141441032</Intercept>
+            <SEslope>3.7741397909631069</SEslope>
+            <SEintercept>282.39573472379408</SEintercept>
+            <R2>0.0057762725545749127</R2>
+            <RMSE>125.64168628816367</RMSE>
+            <NSE>-495.51587224541311</NSE>
+            <ME>-19.333333333333332</ME>
+            <MAE>99.722222222222214</MAE>
+            <RSR>21.970975505949678</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -2659,6 +2711,7 @@ namespace Models
         <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
+        <Filter />
       </Series>
       <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
@@ -3507,6 +3560,132 @@ namespace Models
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
     </Graph>
+    <Graph>
+      <Name>RootBiomass</Name>
+      <Series>
+        <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Root.Live.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>StemBiomass</Name>
+      <Series>
+        <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Stem.Wt</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+    </Graph>
+    <Graph>
+      <Name>AccChill</Name>
+      <Series>
+        <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Type>Scatter</Type>
+        <XAxis>Bottom</XAxis>
+        <YAxis>Left</YAxis>
+        <ColourArgb>-16777216</ColourArgb>
+        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+        <Marker>None</Marker>
+        <MarkerSize>Normal</MarkerSize>
+        <Line>Solid</Line>
+        <LineThickness>Normal</LineThickness>
+        <TableName>Report</TableName>
+        <XFieldName>Clock.Today</XFieldName>
+        <YFieldName>Grapevine.Phenology.Budding.AccChill.Value()</YFieldName>
+        <ShowInLegend>false</ShowInLegend>
+        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+        <Cumulative>false</Cumulative>
+        <CumulativeX>false</CumulativeX>
+      </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Axis>
+        <Type>Bottom</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <Axis>
+        <Type>Left</Type>
+        <Inverted>false</Inverted>
+        <Minimum>NaN</Minimum>
+        <Maximum>NaN</Maximum>
+        <Interval>NaN</Interval>
+      </Axis>
+      <LegendPosition>TopLeft</LegendPosition>
+      <DisabledSeries />
+    </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Experiment>
@@ -3517,7 +3696,7 @@ namespace Models
         <Name>Climate</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications>
-          <string>[Weather].FileName = Site1001.met, Site1002.met, Site1003.met, Site1004.met</string>
+          <string>[Weather].FileName = Site1001.met,Site1002.met,Site1003.met,Site1004.met</string>
         </Specifications>
       </Factor>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4002,24 +4181,24 @@ namespace Models
           <Regression>
             <Name>Regression</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ForEachSeries>false</ForEachSeries>
+            <ForEachSeries>true</ForEachSeries>
           </Regression>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-1663232</ColourArgb>
+          <ColourArgb>-990142</ColourArgb>
           <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
-          <Line>None</Line>
+          <Line>Dash</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>PredictedObserved</TableName>
+          <TableName>PhenoPredObs</TableName>
           <XFieldName>Observed.Grapevine.Phenology.BudBurstDOY.Value()</XFieldName>
           <YFieldName>Predicted.Grapevine.Phenology.BudBurstDOY.Value()</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
@@ -4063,7 +4242,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>PredictedObserved</TableName>
+          <TableName>PhenoPredObs</TableName>
           <XFieldName>Observed.Grapevine.Phenology.FloweringDOY.Value()</XFieldName>
           <YFieldName>Predicted.Grapevine.Phenology.FloweringDOY.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -4110,7 +4289,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>PredictedObserved</TableName>
+          <TableName>PhenoPredObs</TableName>
           <XFieldName>Observed.Grapevine.Phenology.VeraisonDOY.Value()</XFieldName>
           <YFieldName>Predicted.Grapevine.Phenology.VeraisonDOY.Value()</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -4142,5 +4321,5 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>416</ExplorerWidth>
+  <ExplorerWidth>411</ExplorerWidth>
 </Simulations>
