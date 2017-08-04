@@ -1797,7 +1797,7 @@ namespace Models.AgPasture
         private SpeciesBasicStateSettings InitialState;
 
         /// <summary>Flag whether this species is alive (actively growing).</summary>
-        private bool isAlive = true;
+        private bool isAlive = false;
 
         /// <summary>Flag whether several routines are ran by species or are controlled by the Sward.</summary>
         internal bool isSwardControlled = false;
@@ -3805,6 +3805,8 @@ namespace Models.AgPasture
 
             // 5. Set initial phenological stage
             phenologicStage = InitialState.PhenoStage;
+            if (phenologicStage >= 0)
+                isAlive = true;
 
             // 6. Calculate the values for LAI
             EvaluateLAI();
@@ -4834,22 +4836,25 @@ namespace Models.AgPasture
         /// <param name="amountN">The N amount to send (kg/ha)</param>
         private void DoAddDetachedShootToSurfaceOM(double amountDM, double amountN)
         {
-            if (BiomassRemoved != null)
+            if (amountDM + amountN > 0.0)
             {
-                BiomassRemovedType biomassData = new BiomassRemovedType();
-                string[] type = {mySpeciesFamily.ToString()};
-                float[] dltdm = {(float) amountDM};
-                float[] dltn = {(float) amountN};
-                float[] dltp = {0f}; // P not considered here
-                float[] fraction = {1f}; // fraction is always 1.0 here
+                if (BiomassRemoved != null)
+                {
+                    BiomassRemovedType biomassData = new BiomassRemovedType();
+                    string[] type = { mySpeciesFamily.ToString() };
+                    float[] dltdm = { (float)amountDM };
+                    float[] dltn = { (float)amountN };
+                    float[] dltp = { 0f }; // P not considered here
+                    float[] fraction = { 1f }; // fraction is always 1.0 here
 
-                biomassData.crop_type = "grass"; //TODO: this could be the Name, what is the diff between name and type??
-                biomassData.dm_type = type;
-                biomassData.dlt_crop_dm = dltdm;
-                biomassData.dlt_dm_n = dltn;
-                biomassData.dlt_dm_p = dltp;
-                biomassData.fraction_to_residue = fraction;
-                BiomassRemoved.Invoke(biomassData);
+                    biomassData.crop_type = "grass"; //TODO: this could be the Name, what is the diff between name and type??
+                    biomassData.dm_type = type;
+                    biomassData.dlt_crop_dm = dltdm;
+                    biomassData.dlt_dm_n = dltn;
+                    biomassData.dlt_dm_p = dltp;
+                    biomassData.fraction_to_residue = fraction;
+                    BiomassRemoved.Invoke(biomassData);
+                }
             }
         }
 
@@ -4858,34 +4863,37 @@ namespace Models.AgPasture
         /// <param name="amountN">The N amount to send (kg/ha)</param>
         private void DoAddDetachedRootToSoilFOM(double amountDM, double amountN)
         {
-            FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
-
             // ****  RCichota, Jun/2014
             // root senesced are returned to soil (as FOM) considering return is proportional to root mass
 
-            for (int layer = 0; layer < nLayers; layer++)
+            if (amountDM + amountN > 0.0)
             {
-                FOMType fomData = new FOMType();
-                fomData.amount = amountDM * plantZoneRoots.Tissue[0].FractionWt[layer];
-                fomData.N = amountN * plantZoneRoots.Tissue[0].FractionWt[layer];
-                fomData.C = amountDM * CarbonFractionInDM * plantZoneRoots.Tissue[0].FractionWt[layer];
-                fomData.P = 0.0; // P not considered here
-                fomData.AshAlk = 0.0; // Ash not considered here
+                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
 
-                FOMLayerLayerType layerData = new FOMLayerLayerType();
-                layerData.FOM = fomData;
-                layerData.CNR = 0.0; // not used here
-                layerData.LabileP = 0; // not used here
+                for (int layer = 0; layer < nLayers; layer++)
+                {
+                    FOMType fomData = new FOMType();
+                    fomData.amount = amountDM * plantZoneRoots.Tissue[0].FractionWt[layer];
+                    fomData.N = amountN * plantZoneRoots.Tissue[0].FractionWt[layer];
+                    fomData.C = amountDM * CarbonFractionInDM * plantZoneRoots.Tissue[0].FractionWt[layer];
+                    fomData.P = 0.0; // P not considered here
+                    fomData.AshAlk = 0.0; // Ash not considered here
 
-                FOMdataLayer[layer] = layerData;
-            }
+                    FOMLayerLayerType layerData = new FOMLayerLayerType();
+                    layerData.FOM = fomData;
+                    layerData.CNR = 0.0; // not used here
+                    layerData.LabileP = 0; // not used here
 
-            if (IncorpFOM != null)
-            {
-                FOMLayerType FOMData = new FOMLayerType();
-                FOMData.Type = mySpeciesFamily.ToString();
-                FOMData.Layer = FOMdataLayer;
-                IncorpFOM.Invoke(FOMData);
+                    FOMdataLayer[layer] = layerData;
+                }
+
+                if (IncorpFOM != null)
+                {
+                    FOMLayerType FOMData = new FOMLayerType();
+                    FOMData.Type = mySpeciesFamily.ToString();
+                    FOMData.Layer = FOMdataLayer;
+                    IncorpFOM.Invoke(FOMData);
+                }
             }
         }
 
