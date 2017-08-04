@@ -248,7 +248,7 @@ namespace UserInterface.Commands
             AddStatistics(tags);
 
             // Move cultivars to end.
-            MoveCultivarsToEnd(tags);
+            //MoveCultivarsToEnd(tags);
 
             // Strip all blank sections i.e. two headings with nothing between them.
             StripEmptySections(tags);
