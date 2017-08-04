@@ -10843,7 +10843,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Lucerne.Leaf.NodeNumber.Value()</YFieldName>
+          <YFieldName>NodeNumber</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10889,7 +10889,17 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>SD1</string>
+          <string>SD2</string>
+          <string>SD3</string>
+          <string>SD4</string>
+          <string>SD6</string>
+          <string>SD7</string>
+          <string>SD8</string>
+          <string>SD9</string>
+          <string>SD10</string>
+        </DisabledSeries>
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
@@ -14618,7 +14628,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Lucerne.Leaf.NodeNumber.Value()</YFieldName>
+          <YFieldName>NodeNumber</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
