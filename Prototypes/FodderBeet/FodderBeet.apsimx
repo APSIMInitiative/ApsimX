@@ -1979,7 +1979,8 @@ date of Experiment 4 is assumed here.]]></MemoText>
     <Weather>
       <Name>Weather</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>Weather\lincoln from 2011-15.met</FileName>
+      <FileName>lincoln from 2011-15.met</FileName>
+      <ExcelWorkSheetName />
     </Weather>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
@@ -4114,7 +4115,8 @@ namespace Models
     <Weather>
       <Name>Weather</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>%root%\Prototypes\FodderBeet\Weather\lincoln from 2011-15.met</FileName>
+      <FileName>lincoln from 2011-15.met</FileName>
+      <ExcelWorkSheetName />
     </Weather>
     <SoilArbitrator>
       <Name>Soil Arbitrator</Name>
@@ -6372,7 +6374,7 @@ namespace Models
     <Weather>
       <Name>Weather</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>%root%\Prototypes\FodderBeet\Weather\lincoln from 2011-15.met</FileName>
+      <FileName>lincoln from 2011-15.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
     <SoilArbitrator>
@@ -8627,7 +8629,8 @@ Moved sowing dates of Rivage a day after just to visuslise differences in graphs
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>Weather\lincoln from 2011-15.met</FileName>
+        <FileName>lincoln from 2011-15.met</FileName>
+        <ExcelWorkSheetName />
       </Weather>
       <Zone>
         <Name>paddock</Name>
