@@ -10,6 +10,7 @@ namespace Models.PostSimulationTools
     using System.Data;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using Storage;
 
     /// <summary>
     /// A post processing model that produces time series stats.
@@ -31,7 +32,7 @@ namespace Models.PostSimulationTools
         /// The main run method called to fill tables in the specified DataStore.
         /// </summary>
         /// <param name="dataStore">The DataStore to work with</param>
-        public void Run(DataStore dataStore)
+        public void Run(IStorage dataStore)
         {
             dataStore.DeleteTable(this.Name);
 
@@ -85,7 +86,7 @@ namespace Models.PostSimulationTools
                 }
 
                 // Write the stats data to the DataStore
-                dataStore.WriteTable(null, this.Name, statsData);
+                dataStore.WriteTable(this.Name, statsData);
             }
         }
 

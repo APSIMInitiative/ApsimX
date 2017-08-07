@@ -7,6 +7,7 @@ namespace UserInterface.Presenters
 {
     using APSIM.Shared.Utilities;
     using Models;
+    using Models.Core;
     using Models.Graph;
     using System;
     using System.Collections.Generic;
@@ -204,7 +205,7 @@ namespace UserInterface.Presenters
                     string message = err.Message;
                     message += "\r\n" + err.StackTrace;
                     this.weatherDataView.Summarylabel = err.Message;
-                    this.explorerPresenter.MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
                 }
             }
             this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);

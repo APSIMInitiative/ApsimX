@@ -22,7 +22,8 @@ namespace UserInterface.Presenters
         private ISummaryView view;
 
         /// <summary>Our data store</summary>
-        private DataStore dataStore;
+        [Link]
+        private IStorage dataStore = null;
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model to work with</param>
@@ -51,9 +52,6 @@ namespace UserInterface.Presenters
                     this.view.SimulationName = simulation.Name;
                 }
 
-                // create a data store - we'll need it later
-                dataStore = new DataStore(simulation, false);
-
                 // populate the view
                 this.SetHtmlInView();
 
@@ -65,8 +63,6 @@ namespace UserInterface.Presenters
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            if (dataStore != null)
-                dataStore.Disconnect();
             this.view.SimulationNameChanged -= OnSimulationNameChanged;
         }
 

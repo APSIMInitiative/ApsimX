@@ -7,6 +7,7 @@ using System.IO;
 using System.Data;
 using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
+using Models.Storage;
 
 namespace Models.PostSimulationTools
 {
@@ -56,7 +57,7 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        public void Run(DataStore dataStore)
+        public void Run(IStorage dataStore)
         {
             string fullFileName = FullFileName;
             if (fullFileName != null)
@@ -65,7 +66,7 @@ namespace Models.PostSimulationTools
 
                 dataStore.DeleteTable(Name);
                 DataTable data = GetTable();
-                dataStore.WriteTable(null, this.Name, data);
+                dataStore.WriteTable(this.Name, data);
             }
         }
 

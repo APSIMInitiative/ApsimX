@@ -15,6 +15,7 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Graph;
     using Views;
+    using Models.Core;
 
     /// <summary>A presenter for displaying weather data</summary>
     class MetDataPresenter : IPresenter
@@ -196,7 +197,7 @@ namespace UserInterface.Presenters
                         this.WriteTable(data);
                         this.WriteSummary(data);
                         this.DisplayDetailedGraphs(data);
-                        this.explorerPresenter.MainPresenter.ShowMessage(" ", DataStore.ErrorLevel.Information);
+                        this.explorerPresenter.MainPresenter.ShowMessage(" ", Simulation.ErrorLevel.Information);
                     }
                     finally
                     {
@@ -210,7 +211,7 @@ namespace UserInterface.Presenters
                     string message = err.Message;
                     message += "\r\n" + err.StackTrace;
                     this.weatherDataView.Summarylabel = err.Message;
-                    this.explorerPresenter.MainPresenter.ShowMessage(message, DataStore.ErrorLevel.Error);
+                    this.explorerPresenter.MainPresenter.ShowMessage(message, Simulation.ErrorLevel.Error);
                 }
             }
             // this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);

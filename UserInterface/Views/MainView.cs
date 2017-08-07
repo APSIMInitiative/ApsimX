@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
+    using Models.Core;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -77,7 +78,7 @@ namespace UserInterface.Views
         /// Add a status message. A message of null will clear the status message.
         /// </summary>
         /// <param name="Message"></param>
-        void ShowMessage(string Message, Models.DataStore.ErrorLevel errorLevel);
+        void ShowMessage(string Message, Simulation.ErrorLevel errorLevel);
 
         /// <summary>
         /// Show progress bar with the specified percent.
@@ -205,7 +206,7 @@ namespace UserInterface.Views
             }
 
             if (page == null)
-                ShowMessage("Error finding tab to rename", Models.DataStore.ErrorLevel.Error);
+                ShowMessage("Error finding tab to rename", Simulation.ErrorLevel.Error);
             else
             {
                 page.Text = newTabName;
@@ -247,7 +248,7 @@ namespace UserInterface.Views
             }
 
             if (page == null)
-                ShowMessage("Error finding tab to close", Models.DataStore.ErrorLevel.Error);
+                ShowMessage("Error finding tab to close", Simulation.ErrorLevel.Error);
             else
             {
                 TabControl tabControl = IsControlOnLeft(page) ? tabControl1 : tabControl2;
@@ -359,18 +360,18 @@ namespace UserInterface.Views
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
-        public void ShowMessage(string message, Models.DataStore.ErrorLevel errorLevel)
+        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel)
         {
             MethodInvoker messageUpdate = delegate
             {
                 StatusWindow.Visible = message != null;
 
                 // Output the message
-                if (errorLevel == Models.DataStore.ErrorLevel.Error)
+                if (errorLevel == Simulation.ErrorLevel.Error)
                 {
                     StatusWindow.ForeColor = Color.Red;
                 }
-                else if (errorLevel == Models.DataStore.ErrorLevel.Warning)
+                else if (errorLevel == Simulation.ErrorLevel.Warning)
                 {
                     StatusWindow.ForeColor = Color.Brown;
                 }

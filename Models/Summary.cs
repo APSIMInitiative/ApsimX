@@ -16,6 +16,7 @@ namespace Models
     using MigraDoc.RtfRendering;
     using Models.Core;
     using Report;
+    using Storage;
 
     /// <summary>
     /// This model collects the simulation initial conditions and stores into the DataStore.
@@ -27,6 +28,9 @@ namespace Models
     [ValidParent(ParentType=typeof(Simulation))]
     public class Summary : Model, ISummary
     {
+        //[Link]
+        //private IStorage storage = null;
+
         /// <summary>
         /// The messages data table.
         /// </summary>
@@ -95,13 +99,13 @@ namespace Models
         /// <summary>
         /// Write the summary report to the specified writer.
         /// </summary>
-        /// <param name="dataStore">The data store to write a summary report from</param>
+        /// <param name="storage">The data store to query</param>
         /// <param name="simulationName">The simulation name to produce a summary report for</param>
         /// <param name="writer">Text writer to write to</param>
         /// <param name="apsimSummaryImageFileName">The file name for the logo. Can be null</param>
         /// <param name="outtype">Indicates the format to be produced</param>
         public static void WriteReport(
-            DataStore dataStore,
+            IStorage storage,
             string simulationName,
             TextWriter writer,
             string apsimSummaryImageFileName,
@@ -169,7 +173,7 @@ namespace Models
             }
 
             // Get the initial conditions table.            
-            DataTable initialConditionsTable = dataStore.GetData(simulationName, "InitialConditions");
+            DataTable initialConditionsTable = storage.GetData(simulationName, "InitialConditions");
             if (initialConditionsTable != null)
             {
                 // Convert the 'InitialConditions' table in the DataStore to a series of
@@ -214,7 +218,7 @@ namespace Models
 
             // Write out all messages.
             WriteHeading(writer, "Simulation log:", outtype, document);
-            DataTable messageTable = GetMessageTable(dataStore, simulationName);
+            DataTable messageTable = GetMessageTable(storage, simulationName);
             WriteMessageTable(writer, messageTable, outtype, false, "MessageTable", document);
 
             if (outtype == OutputType.html)
@@ -230,32 +234,20 @@ namespace Models
         }
 
         /// <summary>
-        /// All simulations have been completed. 
-        /// </summary>
-        /// <param name="sender">The sending Object</param>
-        /// <param name="e">Arguments associated with the event</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            DataStore dataStore = new DataStore(this);
-            dataStore.WriteTable(this.messagesTable);
-            dataStore.Disconnect();
-        }
-
-        /// <summary>
         /// Write a message to the summary
         /// </summary>
         /// <param name="model">The model writing the message</param>
         /// <param name="message">The message to write</param>
         public void WriteMessage(IModel model, string message)
         {
+            // TODO Dean: Need to migrate this to the new mechanism.
             string modelFullPath = Apsim.FullPath(model);
             string relativeModelPath = modelFullPath.Replace(Apsim.FullPath(Simulation) + ".", string.Empty).TrimStart(".".ToCharArray());
 
             componentNameColumn.Add(relativeModelPath);
             dateColumn.Add(clock.Today);
             messageColumn.Add(message);
-            messageTypeColumn.Add(Convert.ToInt32(DataStore.ErrorLevel.Information));
+            messageTypeColumn.Add(Convert.ToInt32(Simulation.ErrorLevel.Information));
         }
 
         /// <summary>
@@ -265,12 +257,13 @@ namespace Models
         /// <param name="message">The warning message to write</param>
         public void WriteWarning(IModel model, string message)
         {
+            // TODO Dean: Need to migrate this to the new mechanism.
             if (this.messagesTable != null)
             {
                 componentNameColumn.Add(Apsim.FullPath(model));
                 dateColumn.Add(clock.Today);
                 messageColumn.Add(message);
-                messageTypeColumn.Add(Convert.ToInt32(DataStore.ErrorLevel.Warning));
+                messageTypeColumn.Add(Convert.ToInt32(Simulation.ErrorLevel.Warning));
             }
         }
 
@@ -279,13 +272,13 @@ namespace Models
         /// <summary>
         /// Create a message table ready for writing.
         /// </summary>
-        /// <param name="dataStore">The data store to read the message table from</param>
+        /// <param name="storage">The data store</param>
         /// <param name="simulationName">The simulation name to get messages for</param>
         /// <returns>The filled message table</returns>
-        private static DataTable GetMessageTable(DataStore dataStore, string simulationName)
+        private static DataTable GetMessageTable(IStorage storage, string simulationName)
         {
             DataTable messageTable = new DataTable();
-            DataTable messages = dataStore.GetData(simulationName, "Messages");
+            DataTable messages = storage.GetData(simulationName: simulationName, tableName: "Messages");
             if (messages != null && messages.Rows.Count > 0)
             {
                 messageTable.Columns.Add("Date", typeof(string));
@@ -323,13 +316,13 @@ namespace Models
                     }
 
                     string message = (string)row[3];
-                    Models.DataStore.ErrorLevel errorLevel = (Models.DataStore.ErrorLevel)Enum.Parse(typeof(Models.DataStore.ErrorLevel), row[4].ToString());
+                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row[4].ToString());
 
-                    if (errorLevel == DataStore.ErrorLevel.Error)
+                    if (errorLevel == Simulation.ErrorLevel.Error)
                     {
                         previousMessage += "FATAL ERROR: " + message;
                     }
-                    else if (errorLevel == DataStore.ErrorLevel.Warning)
+                    else if (errorLevel == Simulation.ErrorLevel.Warning)
                     {
                         previousMessage += "WARNING: " + message;
                     }
@@ -461,7 +454,7 @@ namespace Models
             }
             else if (outtype == OutputType.rtf)
             {
-                Table tabl = new Table();
+                MigraDoc.DocumentObjectModel.Tables.Table tabl = new MigraDoc.DocumentObjectModel.Tables.Table();
                 tabl.Borders.Width = 0.75;
 
                 foreach (DataColumn col in table.Columns)
@@ -471,7 +464,7 @@ namespace Models
 
                 if (showHeadings)
                 {
-                    Row row = tabl.AddRow();
+                    MigraDoc.DocumentObjectModel.Tables.Row row = tabl.AddRow();
                     row.Shading.Color = Colors.PaleGoldenrod;
                     tabl.Shading.Color = new Color(245, 245, 255);
                     for (int i = 0; i < table.Columns.Count; i++)
@@ -490,7 +483,7 @@ namespace Models
                 {
                     bool titleRow = Convert.IsDBNull(row[0]);
                     string st;
-                    Row newRow = tabl.AddRow();
+                    MigraDoc.DocumentObjectModel.Tables.Row newRow = tabl.AddRow();
 
                     for (int i = 0; i < table.Columns.Count; i++)
                     {
@@ -782,6 +775,9 @@ namespace Models
         /// </summary>
         private void CreateInitialConditionsTable()
         {
+
+            // TODO Dean: Need to migrate this to the new mechanism.
+
             ReportColumnWithValues modelPath = new ReportColumnWithValues("ModelPath");
             ReportColumnWithValues name = new ReportColumnWithValues("Name");
             ReportColumnWithValues description = new ReportColumnWithValues("Description");
@@ -862,11 +858,6 @@ namespace Models
                     }
                 }
             }
-
-            // Write to data store.
-            DataStore dataStore = new DataStore(Simulation);
-            dataStore.WriteTable(table);
-            dataStore.Disconnect();
         }
     }
 }

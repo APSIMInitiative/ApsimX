@@ -15,6 +15,7 @@ namespace Models.Graph
     using System.Collections;
     using Models.Core;
     using Models.Factorial;
+    using Storage;
 
     /// <summary>The class represents a single series on a graph</summary>
     [ValidParent(ParentType = typeof(Graph))]
@@ -23,6 +24,9 @@ namespace Models.Graph
     [Serializable]
     public class Series : Model, IGraphable
     {
+        [Link]
+        private IStorage storage = null;
+
 
         /// <summary>Constructor for a series</summary>
         public Series()
@@ -163,16 +167,14 @@ namespace Models.Graph
                 simulationZones = RemoveFactorsNotBeingUsed(simulationZones);
 
                 // Get data for each simulation / zone object
-                DataStore dataStore = new DataStore(this);
-                DataTable baseData = GetBaseData(dataStore, simulationZones);
+                DataTable baseData = GetBaseData(simulationZones);
                 simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
 
                 // Setup all colour, marker, line types etc in all simulation / zone objects.
                 PaintAllSimulationZones(simulationZones);
 
                 // Convert all simulation / zone objects to seriesdefinitions.
-                simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(simZone, dataStore)));
-                dataStore.Disconnect();
+                simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(simZone)));
             }
 
             // Get all data.
@@ -450,8 +452,7 @@ namespace Models.Graph
 
         /// <summary>Convert a simulation zone object into a series definition</summary>
         /// <param name="simulationZone">The object to convert</param>
-        /// <param name="dataStore">Datastore from which we are drawing data</param>
-        private SeriesDefinition ConvertToSeriesDefinition(SimulationZone simulationZone, DataStore dataStore)
+        private SeriesDefinition ConvertToSeriesDefinition(SimulationZone simulationZone)
         {
             SeriesDefinition seriesDefinition = new Models.Graph.SeriesDefinition();
             seriesDefinition.type = Type;
@@ -464,10 +465,10 @@ namespace Models.Graph
             seriesDefinition.yFieldName = YFieldName;
             seriesDefinition.xAxis = XAxis;
             seriesDefinition.yAxis = YAxis;
-            if (dataStore != null && simulationZone.simulationNames.Count > 0)
+            if (simulationZone.simulationNames.Count > 0)
             {
-                seriesDefinition.xFieldUnits = dataStore.GetUnits(simulationZone.simulationNames[0], TableName, XFieldName);
-                seriesDefinition.yFieldUnits = dataStore.GetUnits(simulationZone.simulationNames[0], TableName, YFieldName);
+                seriesDefinition.xFieldUnits = storage.GetUnits(TableName, XFieldName);
+                seriesDefinition.yFieldUnits = storage.GetUnits(TableName, YFieldName);
             }
             seriesDefinition.showInLegend = ShowInLegend;
             seriesDefinition.title = simulationZone.GetSeriesTitle();
@@ -607,9 +608,8 @@ namespace Models.Graph
         /// <summary>
         /// Create a data view from the specified table and filter.
         /// </summary>
-        /// <param name="dataStore">The datastore to read from.</param>
         /// <param name="simulationZones">The list of simulation / zone pairs.</param>
-        private DataTable GetBaseData(DataStore dataStore, List<SimulationZone> simulationZones)
+        private DataTable GetBaseData(List<SimulationZone> simulationZones)
         {
             // Get a list of all simulation names in all simulationZones.
             List<string> simulationNames = new List<string>();
@@ -626,8 +626,9 @@ namespace Models.Graph
             if (Filter != string.Empty)
                 filter = AddToFilter(filter, Filter);
 
+            // TODO Dean: This storage link may be null when new series created - need to check.
             List<string> fieldNames = new List<string>();
-            if (dataStore.ColumnNames(TableName).Contains("Zone"))
+            if (storage.ColumnNames(TableName).Contains("Zone"))
                 fieldNames.Add("Zone");
             if (XFieldName != null && !XFieldName.Equals("SimulationName"))
                 fieldNames.Add(XFieldName);
@@ -641,7 +642,7 @@ namespace Models.Graph
             foreach (EventNamesOnGraph annotation in Apsim.Children(this, typeof(EventNamesOnGraph)))
                 fieldNames.Add(annotation.ColumnName);
 
-            return dataStore.GetFilteredData(TableName, fieldNames.ToArray(), filter);
+            return storage.GetData(tableName: TableName, fieldNames: fieldNames, filter: filter);
         }
 
         /// <summary>This class encapsulates a simulation / zone pair to put onto graph</summary>

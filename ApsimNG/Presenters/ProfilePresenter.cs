@@ -480,7 +480,7 @@ namespace UserInterface.Presenters
             {
                 if (e is System.Reflection.TargetInvocationException)
                     e = (e as System.Reflection.TargetInvocationException).InnerException;
-                this.explorerPresenter.MainPresenter.ShowMessage(e.Message, Models.DataStore.ErrorLevel.Error);
+                this.explorerPresenter.MainPresenter.ShowMessage(e.Message, Simulation.ErrorLevel.Error);
             }
         }
 
@@ -536,7 +536,7 @@ namespace UserInterface.Presenters
                     {
                         if (e is System.Reflection.TargetInvocationException)
                             e = (e as System.Reflection.TargetInvocationException).InnerException;
-                        this.explorerPresenter.MainPresenter.ShowMessage(e.Message, Models.DataStore.ErrorLevel.Error);
+                        this.explorerPresenter.MainPresenter.ShowMessage(e.Message, Simulation.ErrorLevel.Error);
                     }
                 }
             }

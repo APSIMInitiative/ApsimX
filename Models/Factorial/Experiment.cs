@@ -19,6 +19,9 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Simulations))]
     public class Experiment : Model, JobManager.IRunnable
     {
+        [Link]
+        IStorage storage = null;
+
         /// <summary>Called to start the job.</summary>
         /// <param name="jobManager">The job manager running this job.</param>
         /// <param name="workerThread">The thread this job is running on.</param>
@@ -114,9 +117,7 @@ namespace Models.Factorial
             IModel parentFolder = Apsim.Parent(this, typeof(Folder));
             if (parentFolder != null)
                 parentFolderName = parentFolder.Name;
-            DataStore store = new DataStore(this);
-            store.StoreFactors(Name, simulation.Name, parentFolderName, names, values);
-            store.Disconnect();
+            storage.StoreFactors(Name, simulation.Name, parentFolderName, names, values);
         }
 
         /// <summary>

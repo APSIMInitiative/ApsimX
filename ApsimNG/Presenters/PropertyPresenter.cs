@@ -33,6 +33,9 @@ namespace UserInterface.Presenters
     /// </summary>
     public class PropertyPresenter : IPresenter
     {
+        [Link]
+        IStorage storage = null;
+
         /// <summary>
         /// The underlying grid control to work with.
         /// </summary>
@@ -236,10 +239,8 @@ namespace UserInterface.Presenters
                         
                 if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
                 {
-                    DataStore dataStore = new DataStore(this.model);
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    cell.DropDownStrings = dataStore.TableNames;
-                    dataStore.Disconnect();
+                    cell.DropDownStrings = storage.TableNames.ToArray();
                 }
                 else if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.CultivarName)
                 {
@@ -342,15 +343,13 @@ namespace UserInterface.Presenters
             {
                 if (this.properties[i].DisplayType == DisplayAttribute.DisplayTypeEnum.TableName)
                 {
-                    DataStore dataStore = new DataStore(this.model);
                     IGridCell cell = this.grid.GetCell(1, i);
                     if (cell.Value != null && cell.Value.ToString() != string.Empty)
                     {
-                        DataTable data = dataStore.RunQuery("SELECT * FROM " + cell.Value.ToString() + " LIMIT 1");
+                        DataTable data = storage.RunQuery("SELECT * FROM " + cell.Value.ToString() + " LIMIT 1");
                         if (data != null)
                             fieldNames = DataTableUtilities.GetColumnNames(data);
                     }
-                    dataStore.Disconnect();
                 }
             }
             return fieldNames;
