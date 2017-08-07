@@ -21,7 +21,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 8; } }
+        public static int LastestVersion { get { return 9; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -316,6 +316,23 @@ namespace Models.Core
             }
             while (line != null);
             return writer.ToString();
+        }
+
+        /// <summary>
+        /// Add a DMDemandFunction constant function to all Root nodes that don't have one
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        private static void UpgradeToVersion9(XmlNode node)
+        {
+            foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
+            {
+                if (XmlUtilities.ChildByTypeAndValue(root, "Name", "DMDemandFunction") == null)
+                {
+                    XmlNode constant = root.AppendChild(root.OwnerDocument.CreateElement("Constant"));
+                    XmlUtilities.SetValue(constant, "Name", "DMDemandFunction");
+                    XmlUtilities.SetValue(constant, "FixedValue", "1");
+                }
+            }
         }
     }
 }
