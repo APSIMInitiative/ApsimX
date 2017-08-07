@@ -6,6 +6,7 @@ using System.Data;
 
 namespace UnitTests
 {
+    [Serializable]
     internal class MockStorage : IStorage
     {
         internal List<string> columnNames = new List<string>();
@@ -63,7 +64,7 @@ namespace UnitTests
             throw new NotImplementedException();
         }
 
-        public void WriteTable(string tableName, DataTable table)
+        public void WriteTable(DataTable table)
         {
             throw new NotImplementedException();
         }
@@ -79,11 +80,6 @@ namespace UnitTests
         }
 
         public IEnumerable<string> ColumnNames(string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void StoreFactors(string experimentName, string simulationName, string folderName, List<string> names, List<string> values)
         {
             throw new NotImplementedException();
         }

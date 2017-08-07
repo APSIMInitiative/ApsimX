@@ -79,9 +79,9 @@ namespace Models.Storage
         }
 
         /// <summary>Begin writing to DB file</summary>
-        /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file</param>
-        /// <param name="simulationNamesBeingRun">Collection of simulation names being run</param>
-        public void BeginWriting(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesBeingRun)
+        /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file. If null no cleanup will be performed.</param>
+        /// <param name="simulationNamesBeingRun">Collection of simulation names being run. If null no cleanup will be performed.</param>
+        public void BeginWriting(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
             writeTask = Task.Run(() => WriteDBWorker(knownSimulationNames, simulationNamesBeingRun));
         }
@@ -183,30 +183,37 @@ namespace Models.Storage
             return null;
         }
 
-        /// <summary>Run all post processing tools.</summary>
-        public void RunPostProcessingTools()
+        /// <summary>
+        /// Create a table in the database based on the specified data. If a 'SimulationName'
+        /// column is found a corresponding 'SimulationID' column will be created.
+        /// </summary>
+        /// <param name="data">The data to write</param>
+        public void WriteTable(DataTable data)
         {
-            // TODO Dean: Does this work?
-            // Open the .db for writing.
-            Open(readOnly: false);
+            List<string> columnNames = new List<string>();
+            foreach (DataColumn column in data.Columns)
+                columnNames.Add(column.ColumnName);
+            string[] units = new string[columnNames.Count];
 
-            foreach (IPostSimulationTool tool in Apsim.Children(this, typeof(IPostSimulationTool)))
-                tool.Run(this);
-        }
+            BeginWriting();
+            foreach (DataRow row in data.Rows)
+            {
+                object[] values = new object[columnNames.Count];
+                string simulationName = null;
+                if (data.Columns.Contains("SimulationName"))
+                    simulationName = row["SimulationName"].ToString();
+                for (int colIndex = 0; colIndex < data.Columns.Count; colIndex++)
+                    values[colIndex] = row[colIndex];
+                WriteRow(simulationName, data.TableName, columnNames, units, values);
+            }
 
-        /// <summary>Create a table in the database based on the specified one.</summary>
-        /// <param name="tableName">Name of the table.</param>
-        /// <param name="table">The table.</param>
-        public void WriteTable(string tableName, DataTable table)
-        {
-            // TODO Dean: 
+            EndWriting();
         }
 
         /// <summary>Delete the specified table.</summary>
         /// <param name="tableName">Name of the table.</param>
         public void DeleteTable(string tableName)
         {
-            // TODO Dean: Need to check this works.
             Open(readOnly: false);
             Table tableToDelete = tables.Find(t => t.Name == tableName);
             if (tableToDelete != null)
@@ -222,7 +229,6 @@ namespace Models.Storage
         /// <returns></returns>
         public DataTable RunQuery(string sql)
         {
-            // TODO Dean: Need to check this works.
             Open(readOnly: true);
 
             try
@@ -235,38 +241,18 @@ namespace Models.Storage
             }
         }
 
-        /// <summary>Store the list of factor names and values for the specified simulation.</summary>
-        public void StoreFactors(string experimentName, string simulationName, string folderName, List<string> names, List<string> values)
-        {
-            // TODO Dean: 
-            //ReportTable table = new ReportTable();
-            //table.FileName = Filename;
-            //table.TableName = "Factors";
-            //table.SimulationName = simulationName;
-            //table.Columns.Add(new ReportColumnConstantValue("ExperimentName", experimentName));
-            //table.Columns.Add(new ReportColumnConstantValue("SimulationName", simulationName));
-            //table.Columns.Add(new ReportColumnConstantValue("FolderName", folderName));
-            //table.Columns.Add(new ReportColumnWithValues("FactorName", names.ToArray()));
-            //table.Columns.Add(new ReportColumnWithValues("FactorValue", values.ToArray()));
-            //WriteTable(table);
-        }
-
-
         /// <summary>Return a list of simulations names or empty string[]. Never returns null.</summary>
         public string[] SimulationNames
         {
             get
             {
-                // TODO Dean: Need to check this works.
                 return simulationIDs.Select(p => p.Key).ToArray();
             }
         }
 
-
         /// <summary>Return a list of simulations names or empty string[]. Never returns null.</summary>
         public IEnumerable<string> ColumnNames(string tableName)
         {
-            // TODO Dean: Need to check this works.
             Table table = tables.Find(t => t.Name == tableName);
             if (table != null)
                 return table.Columns.Select(c => c.Name);
@@ -292,7 +278,8 @@ namespace Models.Storage
             {
                 Open(readOnly: false);
 
-                CleanupDB(knownSimulationNames, simulationNamesBeingRun);
+                if (knownSimulationNames != null && simulationNamesBeingRun != null)
+                    CleanupDB(knownSimulationNames, simulationNamesBeingRun);
 
                 while (true)
                 {
@@ -310,12 +297,15 @@ namespace Models.Storage
                         }
                     }
 
-                    int numRowsWritten = tableWithRows.WriteRows(connection, simulationIDs);
-                    if (numRowsWritten > 0)
+                    if (tableWithRows != null)
                     {
-                        lock (tables)
+                        int numRowsWritten = tableWithRows.WriteRows(connection, simulationIDs);
+                        if (numRowsWritten > 0)
                         {
-                            tableWithRows.RowsToWrite.RemoveRange(0, numRowsWritten);
+                            lock (tables)
+                            {
+                                tableWithRows.RowsToWrite.RemoveRange(0, numRowsWritten);
+                            }
                         }
                     }
                 }

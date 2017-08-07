@@ -146,6 +146,8 @@
     <Compile Include="Core\Alias.cs" />
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\FileFormat.cs" />
+    <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
+    <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobManagerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
     <Compile Include="Core\ModelNode.cs" />
@@ -153,7 +155,7 @@
     <Compile Include="Core\Property.cs" />
     <Compile Include="Core\Runner.cs" />
     <Compile Include="Core\Runners\RunDirectoryOfApsimFiles.cs" />
-    <Compile Include="Core\Runners\RunClonedSimulation.cs" />
+    <Compile Include="Core\Runners\RunSimulation.cs" />
     <Compile Include="Core\Runners\RunAllCompletedEvent.cs" />
     <Compile Include="Core\Runners\RunExternal.cs" />
     <Compile Include="Core\Runners\RunOrganiser.cs" />

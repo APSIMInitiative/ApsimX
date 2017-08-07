@@ -8,6 +8,7 @@
     using System.Data;
     using System.IO;
     using System.Reflection;
+    using System.Linq;
 
     [TestFixture]
     public class TestDataStore
@@ -297,6 +298,152 @@
                                                 columnHeading: "Col2");
                 Assert.AreEqual(units, "(g/m2)");
             }
+        }
+
+        /// <summary>Call WriteTable with no simulation name. Test that it writes correctly.</summary>
+        [Test]
+        public void WriteTable_Data_CorrectWriting()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                DataTable data = new DataTable("Test");
+                data.Columns.Add("Col1", typeof(int));
+                data.Columns.Add("Col2", typeof(int));
+                DataRow row = data.NewRow();
+                row["Col1"] = 10;
+                row["Col2"] = 20;
+                data.Rows.Add(row);
+                row = data.NewRow();
+                row["Col1"] = 11;
+                row["Col2"] = 21;
+                data.Rows.Add(row);
+                storage.WriteTable(data);
+                Assert.AreEqual(TableToString(fileName, "Test"),
+                                           "Col1,Col2\r\n" +
+                                           "  10,  20\r\n" +
+                                           "  11,  21\r\n");
+            }
+        }
+
+        /// <summary>Call WriteTable with unknown simulation name. Test that it writes correctly.</summary>
+        [Test]
+        public void WriteTable_DataWithUnknownSimulationName_CorrectWriting()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                DataTable data = new DataTable("Test");
+                data.Columns.Add("SimulationName", typeof(string));
+                data.Columns.Add("Col1", typeof(int));
+                data.Columns.Add("Col2", typeof(int));
+                DataRow row = data.NewRow();
+                row["SimulationName"] = "??";
+                row["Col1"] = 10;
+                row["Col2"] = 20;
+                data.Rows.Add(row);
+                row = data.NewRow();
+                row["SimulationName"] = null;
+                row["Col1"] = 11;
+                row["Col2"] = 21;
+                data.Rows.Add(row);
+                storage.WriteTable(data);
+                Assert.AreEqual(TableToString(fileName, "Test"),
+                                           "SimulationID,SimulationName,Col1,Col2\r\n" +
+                                           "            ,            ??,  10,  20\r\n" +
+                                           "            ,              ,  11,  21\r\n");
+            }
+        }
+
+        /// <summary>Call WriteTable with known simulation name. Test that it writes correctly.</summary>
+        [Test]
+        public void WriteTable_DataWithKnownSimulationName_CorrectWriting()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                // Tell storage about our sim.
+                storage.BeginWriting(knownSimulationNames: new string[] { "Sim1" },
+                                     simulationNamesBeingRun: new string[] { "Sim1" });
+                storage.EndWriting();
+
+                DataTable data = new DataTable("Test");
+                data.Columns.Add("SimulationName", typeof(string));
+                data.Columns.Add("Col1", typeof(int));
+                data.Columns.Add("Col2", typeof(int));
+                DataRow row = data.NewRow();
+                row["SimulationName"] = "Sim1";
+                row["Col1"] = 10;
+                row["Col2"] = 20;
+                data.Rows.Add(row);
+                row = data.NewRow();
+                row["SimulationName"] = null;
+                row["Col1"] = 11;
+                row["Col2"] = 21;
+                data.Rows.Add(row);
+                storage.WriteTable(data);
+                Assert.AreEqual(TableToString(fileName, "Test"),
+                                           "SimulationID,SimulationName,Col1,Col2\r\n" +
+                                           "           1,          Sim1,  10,  20\r\n" +
+                                           "            ,              ,  11,  21\r\n");
+            }
+        }
+        
+        /// <summary>Call DeleteTable with a valid table name. Ensure table is deleted</summary>
+        [Test]
+        public void DeleteTable_TableName_TableDeleted()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                storage.DeleteTable("Report1");
+                Assert.IsFalse(storage.TableNames.Contains("Report1"));
+            }
+
+            SQLite database = new SQLite();
+            database.OpenDatabase(fileName, true);
+            DataTable tableData = database.ExecuteQuery("SELECT * FROM sqlite_master");
+            database.CloseDatabase();
+            string[] tableNames = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
+            Assert.AreEqual(Array.IndexOf(tableNames, "Report1"), -1);
+        }
+
+        /// <summary>Call DeleteTable with a valid table name. Ensure table is deleted</summary>
+        [Test]
+        public void SimulationNames()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                Assert.AreEqual(storage.SimulationNames, new string[] { "Sim1", "Sim2" });
+            }
+        }
+
+        /// <summary>Call DeleteTable with a valid table name. Ensure table is deleted</summary>
+        [Test]
+        public void ColumnNames()
+        {
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                Assert.AreEqual(storage.SimulationNames, new string[] { "Col1", "Col2" });
+            }
+        }
+
+        /// <summary>Call RunQuery with valid sql and ensure correct data is returned.</summary>
+        [Test]
+        public void RunQuery_sql_DataReturned()
+        {
+            DataTable data = null;
+            using (DataStore storage = new DataStore(fileName))
+            {
+                CreateTable(storage);
+                data = storage.RunQuery("SELECT Col1 FROM Report1");
+            }
+
+            Assert.AreEqual(TableToString(data),
+                                           "      Col1\r\n" +
+                                           "2017-01-01\r\n" +
+                                           "2017-01-02\r\n" +
+                                           "2017-01-01\r\n" +
+                                           "2017-01-02\r\n");
         }
 
         /// <summary>Convert a SQLite table to a string.</summary>

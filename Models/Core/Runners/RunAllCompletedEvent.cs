@@ -26,9 +26,8 @@
             // Call the all completed event in all models
             object[] args = new object[] { this, new EventArgs() };
 
-            Events events = new Events();
-            events.AddModelEvents(simulations);
-            events.CallEventHandler(simulations, "AllCompleted", args);
+            Events events = new Events(simulations);
+            events.Publish("AllCompleted", args);
         }
     }
 }

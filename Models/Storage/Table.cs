@@ -150,14 +150,21 @@ namespace Models.Storage
             StringBuilder sql = new StringBuilder();
             sql.Append("CREATE TABLE ");
             sql.Append(Name);
-            sql.Append(" (SimulationID INTEGER");
-            Columns.Add(new Column("SimulationID", null));
+            sql.Append(" (");
+            if (columnNames.Contains("SimulationName"))
+            {
+                sql.Append("SimulationID INTEGER");
+                Columns.Add(new Column("SimulationID", null));
+            }
+
             for (int i = 0; i < columnNames.Count(); i++)
             {
                 string columnName = columnNames.ElementAt(i);
                 string columnUnit = columnUnits.ElementAt(i);
                 string type = GetSQLiteDataType(columnTypes.ElementAt(i));
-                sql.Append(",[");
+                if (columnNames.Contains("SimulationName") || i > 0)
+                    sql.Append(',');
+                sql.Append("[");
                 sql.Append(columnName);
                 sql.Append("] ");
                 sql.Append(type);

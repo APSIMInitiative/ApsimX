@@ -21,6 +21,11 @@ namespace Models.Core
         /// <param name="handler">The event handler</param>
         void Unsubscribe(string eventName, EventHandler handler);
 
+        /// <summary>Connect all events in the specified simulation.</summary>
+        void ConnectEvents();
+
+        /// <summary>Connect all events in the specified simulation.</summary>
+        void DisconnectEvents();
 
     }
 }

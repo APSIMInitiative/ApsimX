@@ -10,6 +10,7 @@ namespace Models.Report
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.IO;
     using System.Linq;
 
     /// <summary>
@@ -108,6 +109,27 @@ namespace Models.Report
             for (int i = 0; i < columns.Count; i++)
                 valuesToWrite[i] = columns[i].GetValue();
             storage.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
+        }
+
+        /// <summary>Create a text report from tables in this data store.</summary>
+        /// <param name="storage">The data store.</param>
+        /// <param name="fileName">Name of the file.</param>
+        public static void WriteAllTables(IStorage storage, string fileName)
+        {
+            // Write out each table for this simulation.
+            foreach (string tableName in storage.TableNames)
+            {
+                if (tableName != "Messages" && tableName != "InitialConditions" && tableName != "Simulations")
+                {
+                    DataTable data = storage.GetData(tableName);
+                    if (data != null && data.Rows.Count > 0)
+                    {
+                        StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
+                        DataTableUtilities.DataTableToText(data, 0, ",", true, report);
+                        report.Close();
+                    }
+                }
+            }
         }
 
         /// <summary>

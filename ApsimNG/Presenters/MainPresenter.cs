@@ -373,7 +373,7 @@ namespace UserInterface.Presenters
                     }
                     catch (Exception)
                     {
-                        view.ShowMessage("Error renaming file!", DataStore.ErrorLevel.Error);
+                        view.ShowMessage("Error renaming file!", Simulation.ErrorLevel.Error);
                     }
                 }
             }
@@ -402,7 +402,7 @@ namespace UserInterface.Presenters
                     }
                     catch (Exception)
                     {
-                        view.ShowMessage("Error creating copy of file!", DataStore.ErrorLevel.Error);
+                        view.ShowMessage("Error creating copy of file!", Simulation.ErrorLevel.Error);
                     }
                 }
             }
@@ -428,7 +428,7 @@ namespace UserInterface.Presenters
                     }
                     catch (Exception)
                     {
-                        view.ShowMessage("Error deleting file!", DataStore.ErrorLevel.Error);
+                        view.ShowMessage("Error deleting file!", Simulation.ErrorLevel.Error);
                     }
                 }
             }

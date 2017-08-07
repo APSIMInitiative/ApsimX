@@ -18,6 +18,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Models.Graph;
     using Models.Storage;
+    using Models.Report;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -269,8 +270,8 @@ namespace UserInterface.Presenters
             try
             {
                 // Run all child model post processors.
-                // TODO Dean:
-                //storage.RunPostProcessingTools();
+                foreach (IPostSimulationTool tool in Apsim.Children(storage as Model, typeof(IPostSimulationTool)))
+                    tool.Run(storage);
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.ErrorLevel.Information);
             }
             catch (Exception err)
@@ -336,8 +337,7 @@ namespace UserInterface.Presenters
             explorerPresenter.MainPresenter.ShowWaitCursor(true);
             try
             {
-                // TODO Dean: 
-                //dataStore.WriteOutputToTextFiles();
+                Report.WriteAllTables(storage, explorerPresenter.ApsimXFile.FileName);
                 string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
                 explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, Simulation.ErrorLevel.Information);
             }
@@ -363,10 +363,9 @@ namespace UserInterface.Presenters
             explorerPresenter.MainPresenter.ShowWaitCursor(true);
             try
             {
-                // TODO Dean: 
-                //dataStore.WriteSummaryToTextFiles();
-                string folder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-                explorerPresenter.MainPresenter.ShowMessage("Text files have been written to " + folder, Simulation.ErrorLevel.Information);
+                string summaryFleName = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".sum");
+                Summary.WriteSummaryToTextFiles(storage, summaryFleName);
+                explorerPresenter.MainPresenter.ShowMessage("Summary file written: " + summaryFleName, Simulation.ErrorLevel.Information);
             }
             catch (Exception err)
             {

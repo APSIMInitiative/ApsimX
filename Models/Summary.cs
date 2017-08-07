@@ -28,24 +28,35 @@ namespace Models
     [ValidParent(ParentType=typeof(Simulation))]
     public class Summary : Model, ISummary
     {
-        //[Link]
-        //private IStorage storage = null;
+        /// <summary>A link to a storage service</summary>
+        [Link]
+        private IStorage storage = null;
 
-        /// <summary>
-        /// The messages data table.
-        /// </summary>
-        private ReportTable messagesTable = new Report.ReportTable();
-
-        private ReportColumnWithValues componentNameColumn;
-        private ReportColumnWithValues dateColumn;
-        private ReportColumnWithValues messageColumn;
-        private ReportColumnWithValues messageTypeColumn;
-
-        /// <summary>
-        /// A link to the clock in the simulation.
-        /// </summary>
+        /// <summary>A link to the clock in the simulation</summary>
         [Link]
         private Clock clock = null;
+
+        /// <summary>A link to the parent simulation</summary>
+        [Link]
+        private Simulation simulation = null;
+
+        /// <summary>The column names for the summary table this model will write</summary>
+        private static string[] summaryTableColumnNames = new string[] { "ComponentName",
+                                                                         "Date", "Message", "MessageType" };
+
+        private static string[] initialConditionsColumnNames = new string[] {"ModelPath",
+                                                                             "Name",
+                                                                             "Description",
+                                                                             "DataType",
+                                                                             "Units",
+                                                                             "DisplayFormat",
+                                                                             "Total",
+                                                                             "Value" };
+        /// <summary>Full model path.</summary>
+        private string modelPath;
+
+        /// <summary>Relative model path.</summary>
+        private string relativeModelPath;
 
         /// <summary>
         /// Enumeration used to indicate the format of the output string
@@ -68,32 +79,94 @@ namespace Models
             rtf
         }
 
-        /// <summary>
-        /// Gets a link to the simulation.
-        /// </summary>
-        public Simulation Simulation
+        /// <summary>Event handler to create initialise</summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("DoInitialSummary")]
+        private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            get
-            {
-                return Apsim.Parent(this, typeof(Simulation)) as Simulation;
-            }
+            modelPath = Apsim.FullPath(this);
+            relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+            CreateInitialConditionsTable();
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Summary()
+        /// <summary>Write a message to the summary</summary>
+        /// <param name="model">The model writing the message</param>
+        /// <param name="message">The message to write</param>
+        public void WriteMessage(IModel model, string message)
         {
-            // Create our Messages table.
-            componentNameColumn = new ReportColumnWithValues("ComponentName");
-            dateColumn = new ReportColumnWithValues("Date");
-            messageColumn = new ReportColumnWithValues("Message");
-            messageTypeColumn = new ReportColumnWithValues("MessageType");
+            object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Information) };
+            storage.WriteRow(simulation.Name, "Messages", summaryTableColumnNames, null, values);
+        }
 
-            messagesTable.Columns.Add(componentNameColumn);
-            messagesTable.Columns.Add(dateColumn);
-            messagesTable.Columns.Add(messageColumn);
-            messagesTable.Columns.Add(messageTypeColumn);
+        /// <summary>Write a warning message to the summary</summary>
+        /// <param name="model">The model writing the message</param>
+        /// <param name="message">The warning message to write</param>
+        public void WriteWarning(IModel model, string message)
+        {
+            object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Warning) };
+            storage.WriteRow(simulation.Name, "Messages", summaryTableColumnNames, null, values);
+        }
+        
+        /// <summary>
+        /// Create an initial conditions table in the DataStore.
+        /// </summary>
+        private void CreateInitialConditionsTable()
+        {
+            object[] values = new object[] { modelPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, 0, simulation.Name };
+            storage.WriteRow(simulation.Name, "InitialConditions", initialConditionsColumnNames, null, values);
+
+            values = new object[] { modelPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
+            storage.WriteRow(simulation.Name, "InitialConditions", initialConditionsColumnNames, null, values);
+
+            values = new object[] { modelPath, "Run on", "Run on", "String", string.Empty, string.Empty, 0, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") };
+            storage.WriteRow(simulation.Name, "InitialConditions", initialConditionsColumnNames, null, values);
+
+            // Get all model properties and store in 'initialConditionsTable'
+            foreach (Model model in Apsim.FindAll(simulation))
+            {
+                List<VariableProperty> properties = new List<VariableProperty>();
+                FindAllProperties(model, properties);
+                foreach (VariableProperty property in properties)
+                {
+                    string propertyValue = property.ValueWithArrayHandling.ToString();
+                    if (propertyValue != string.Empty)
+                    {
+                        if (propertyValue != null && property.DataType == typeof(DateTime))
+                            propertyValue = ((DateTime)property.Value).ToString("yyyy-MM-dd HH:mm:ss");
+
+                        int total;
+                        if (double.IsNaN(property.Total))
+                            total = 0;
+                        else
+                            total = 1;
+
+                        values = new object[] { relativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, property.Value };
+                        storage.WriteRow(simulation.Name, "InitialConditions", initialConditionsColumnNames, null, values);
+                    }
+                }
+            }
+        }
+        #region Static summary report generation
+
+
+        /// <summary>
+        /// Write a single sumary file for all simulations.
+        /// </summary>
+        /// <param name="storage">The storage where the summary data is stored</param>
+        /// <param name="fileName">The file name to write</param>
+        public static void WriteSummaryToTextFiles(IStorage storage, string fileName)
+        {
+            using (StreamWriter report = new StreamWriter(fileName))
+            {
+                foreach (string simulationName in storage.SimulationNames)
+                {
+                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html);
+                    report.WriteLine();
+                    report.WriteLine();
+                    report.WriteLine("############################################################################");
+                }
+            }
         }
 
         /// <summary>
@@ -232,42 +305,6 @@ namespace Models
                 writer.Write(rtf);
             }
         }
-
-        /// <summary>
-        /// Write a message to the summary
-        /// </summary>
-        /// <param name="model">The model writing the message</param>
-        /// <param name="message">The message to write</param>
-        public void WriteMessage(IModel model, string message)
-        {
-            // TODO Dean: Need to migrate this to the new mechanism.
-            string modelFullPath = Apsim.FullPath(model);
-            string relativeModelPath = modelFullPath.Replace(Apsim.FullPath(Simulation) + ".", string.Empty).TrimStart(".".ToCharArray());
-
-            componentNameColumn.Add(relativeModelPath);
-            dateColumn.Add(clock.Today);
-            messageColumn.Add(message);
-            messageTypeColumn.Add(Convert.ToInt32(Simulation.ErrorLevel.Information));
-        }
-
-        /// <summary>
-        /// Write a warning message to the summary
-        /// </summary>
-        /// <param name="model">The model writing the message</param>
-        /// <param name="message">The warning message to write</param>
-        public void WriteWarning(IModel model, string message)
-        {
-            // TODO Dean: Need to migrate this to the new mechanism.
-            if (this.messagesTable != null)
-            {
-                componentNameColumn.Add(Apsim.FullPath(model));
-                dateColumn.Add(clock.Today);
-                messageColumn.Add(message);
-                messageTypeColumn.Add(Convert.ToInt32(Simulation.ErrorLevel.Warning));
-            }
-        }
-
-        #region Private static summary report generation
 
         /// <summary>
         /// Create a message table ready for writing.
@@ -754,110 +791,5 @@ namespace Models
 
         #endregion
 
-        /// <summary>
-        /// Simulation is commencing.
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("DoInitialSummary")]
-        private void OnDoInitialSummary(object sender, EventArgs e)
-        {
-            messagesTable.FileName = Path.ChangeExtension(Simulation.FileName, ".db");
-            messagesTable.SimulationName = Simulation.Name;
-            messagesTable.TableName = "Messages";
-
-            // Create an initial conditions table in the DataStore.
-            CreateInitialConditionsTable();
-        }
-
-        /// <summary>
-        /// Create an initial conditions table in the DataStore.
-        /// </summary>
-        private void CreateInitialConditionsTable()
-        {
-
-            // TODO Dean: Need to migrate this to the new mechanism.
-
-            ReportColumnWithValues modelPath = new ReportColumnWithValues("ModelPath");
-            ReportColumnWithValues name = new ReportColumnWithValues("Name");
-            ReportColumnWithValues description = new ReportColumnWithValues("Description");
-            ReportColumnWithValues dataType = new ReportColumnWithValues("DataType");
-            ReportColumnWithValues units = new ReportColumnWithValues("Units");
-            ReportColumnWithValues displayFormat = new ReportColumnWithValues("DisplayFormat");
-            ReportColumnWithValues showTotal = new ReportColumnWithValues("Total");
-            ReportColumnWithValues value = new ReportColumnWithValues("Value");
-            ReportTable table = new Report.ReportTable();
-            table.FileName = Path.ChangeExtension(Simulation.FileName, ".db");
-            table.SimulationName = Simulation.Name;
-            table.TableName = "InitialConditions";
-            table.Columns.Add(modelPath);
-            table.Columns.Add(name);
-            table.Columns.Add(description);
-            table.Columns.Add(dataType);
-            table.Columns.Add(units);
-            table.Columns.Add(displayFormat);
-            table.Columns.Add(showTotal);
-            table.Columns.Add(value);
-
-            modelPath.Add(Apsim.FullPath(Simulation)); 
-            name.Add("Simulation name");
-            description.Add("Simulation name");
-            dataType.Add("String");
-            units.Add(string.Empty);
-            displayFormat.Add(string.Empty);
-            showTotal.Add(0);
-            value.Add(Simulation.Name);
-
-            modelPath.Add(Apsim.FullPath(Simulation));
-            name.Add("APSIM version");
-            description.Add("APSIM version");
-            dataType.Add("String");
-            units.Add(string.Empty);
-            displayFormat.Add(string.Empty);
-            showTotal.Add(0);
-            value.Add(Simulation.ApsimVersion);
-
-            modelPath.Add(Apsim.FullPath(Simulation));
-            name.Add("Run on");
-            description.Add("Run on");
-            dataType.Add("String");
-            units.Add(string.Empty);
-            displayFormat.Add(string.Empty);
-            showTotal.Add(0);
-            value.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-
-            // Get all model properties and store in 'initialConditionsTable'
-            foreach (Model model in Apsim.FindAll(Simulation))
-            {
-                string relativeModelPath = Apsim.FullPath(model).Replace(Apsim.FullPath(Simulation) + ".", string.Empty);
-                List<VariableProperty> properties = new List<VariableProperty>();
-
-                FindAllProperties(model, properties);
-
-                foreach (VariableProperty property in properties)
-                {
-                    string propertyValue = property.ValueWithArrayHandling.ToString();
-                    if (propertyValue != string.Empty)
-                    {
-                        if (propertyValue != null && property.DataType == typeof(DateTime))
-                        {
-                            propertyValue = ((DateTime)property.Value).ToString("yyyy-MM-dd HH:mm:ss");
-                        }
-
-                        modelPath.Add(relativeModelPath);
-                        name.Add(property.Name);
-                        description.Add(property.Description);
-                        dataType.Add(property.DataType.Name);
-                        units.Add(property.Units);
-                        displayFormat.Add(property.Format);
-                        if (double.IsNaN(property.Total))
-                            showTotal.Add(0);
-                        else
-                            showTotal.Add(1);
-                        value.Add(propertyValue);
-                    }
-                }
-            }
-        }
     }
 }

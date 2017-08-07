@@ -12,6 +12,7 @@ namespace UserInterface.Presenters
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using Utility;
     using Views;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
@@ -46,9 +47,9 @@ namespace UserInterface.Presenters
             this.view.Grid.ReadOnly = true;
             this.view.Grid.NumericFormat = "N3";
             this.view.TableList.Values = this.GetTableNames();
-            // TODO Dean: Put MaximumResultsPerPage into configuration rather than .apsimx.
-            //if (dataStore != null && dataStore.MaximumResultsPerPage > 0)
-            //    this.view.MaximumNumberRecords.Value = dataStore.MaximumResultsPerPage.ToString();
+            
+            if (dataStore != null && Configuration.Settings.MaximumRowsOnReportGrid > 0)
+                this.view.MaximumNumberRecords.Value = Configuration.Settings.MaximumRowsOnReportGrid.ToString();
 
             this.view.Grid.ResizeControls();
             this.view.TableList.Changed += this.OnTableSelected;
@@ -154,9 +155,8 @@ namespace UserInterface.Presenters
             DataTable data;
             if (dataStore != null)
             {
-                // TODO Dean: Put MaximumResultsPerPage into configuration rather than .apsimx.
                 int start = 0;
-                int count = 0; // dataStore.MaximumResultsPerPage;
+                int count = Configuration.Settings.MaximumRowsOnReportGrid;
                 if (ExperimentFilter != null)
                 {
                     string filter = "NAME IN " + "(" + StringUtilities.Build(ExperimentFilter.Names(), delimiter: ",", prefix: "'", suffix: "'") + ")";
@@ -170,7 +170,7 @@ namespace UserInterface.Presenters
                                              tableName: view.TableList.SelectedValue,
                                              from: start, count: count);
                 else
-                    data = null; // dataStore.GetData("*", view.TableList.SelectedValue, true, 0, dataStore.MaximumResultsPerPage);
+                    data = dataStore.GetData(tableName:view.TableList.SelectedValue, count: Configuration.Settings.MaximumRowsOnReportGrid);
             }
             else
                 data = new DataTable();
@@ -198,12 +198,10 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnMaximumNumberRecordsChanged(object sender, EventArgs e)
         {
-            // TODO Dean: Put MaximumResultsPerPage into configuration rather than .apsimx.
-
-            //if (view.MaximumNumberRecords.Value == string.Empty)
-            //    dataStore.MaximumResultsPerPage = 0;
-            //else
-            //    dataStore.MaximumResultsPerPage = Convert.ToInt32(view.MaximumNumberRecords.Value);
+            if (view.MaximumNumberRecords.Value == string.Empty)
+                Configuration.Settings.MaximumRowsOnReportGrid = 0;
+            else
+                Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value);
             PopulateGrid();
         }
     }

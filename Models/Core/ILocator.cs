@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using System;
 
 namespace Models.Core
 {
@@ -13,6 +14,11 @@ namespace Models.Core
         /// <param name="namePath">The name of the object to return</param>
         /// <returns>The found object or null if not found</returns>
         object Get(string namePath);
+
+        /// <summary>Gets a model in scope of the specified type</summary>
+        /// <param name="typeToMatch">The type of the model to return</param>
+        /// <returns>The found model or null if not found</returns>
+        IModel Get(Type typeToMatch);
 
         /// <summary>
         /// Get the underlying variable object for the given path.

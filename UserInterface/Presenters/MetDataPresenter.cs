@@ -192,7 +192,7 @@ namespace UserInterface.Presenters
                         this.WriteTable(data);
                         this.WriteSummary(data);
                         this.DisplayDetailedGraphs(data);
-                        this.explorerPresenter.MainPresenter.ShowMessage(" ", DataStore.ErrorLevel.Information);
+                        this.explorerPresenter.MainPresenter.ShowMessage(" ", Simulation.ErrorLevel.Information);
                     }
                     finally
                     {

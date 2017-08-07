@@ -68,7 +68,6 @@ namespace UnitTests
             }
 
             this.simulation = this.simulations.Children[0] as Simulation;
-            this.simulation.StartRun();
         }
 
         /// <summary>

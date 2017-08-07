@@ -86,7 +86,8 @@ namespace Models.PostSimulationTools
                 }
 
                 // Write the stats data to the DataStore
-                dataStore.WriteTable(this.Name, statsData);
+                statsData.TableName = this.Name;
+                dataStore.WriteTable(statsData);
             }
         }
 

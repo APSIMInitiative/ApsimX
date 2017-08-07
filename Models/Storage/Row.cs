@@ -50,7 +50,9 @@ namespace Models.Storage
         public void GetValues(List<string> returnColumnNames, ref object[] returnValues, Dictionary<string, int> simulationIDs)
         {
             Flatten();
-            returnValues[0] = simulationIDs[simulationName];
+            int id;
+            if (simulationName != null && simulationIDs.TryGetValue(simulationName, out id))
+                returnValues[0] = simulationIDs[simulationName];
 
             for (int i = 0; i < Values.Count(); i++)
             {

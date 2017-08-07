@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Factorial;
     using Storage;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     /// <summary>
@@ -38,12 +39,13 @@
             parentJob.Jobs.Add(simulationJobs);
             parentJob.Jobs.Add(new RunAllCompletedEvent(simulations));
 
-            // IF we are going to run all simulations, we can delete all tables in the DataStore. This
-            // will clean up order of columns in the tables and removed unused ones.
-            // Otherwise just remove the unwanted simulations from the DataStore.
-            IStorage store = Apsim.Child(simulations, typeof(IStorage)) as IStorage;
-            if (store != null)
-            {
+            ILocator locator = simulations.GetLocatorService(simulations);
+            IStorage store = locator.Get(typeof(IStorage)) as IStorage;
+
+            if (store == null)
+                throw new Exception("Cannot find a DataStore.");
+            store.BeginWriting(simulations.FindAllSimulationNames(), simulationNames);
+            asdf{
                 // TODO Dean: 
                 //if (model is Simulations)
                 //    store.DeleteAllTables(true);
@@ -77,10 +79,7 @@
             else if (model is Simulation)
             {
                 simulationNames.Add(model.Name);
-                if (model.Parent == null)
-                    parentJob.Jobs.Add(model as Simulation);
-                else
-                    parentJob.Jobs.Add(new RunClonedSimulation(model as Simulation));
+                parentJob.Jobs.Add(new RunSimulation(model as Simulation, simulations, doClone: model.Parent != null));
             }
             else
             {

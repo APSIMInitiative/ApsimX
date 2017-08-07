@@ -8,6 +8,7 @@ namespace APSIMJobRunner
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.Interfaces;
     using Models.Core.Runners;
     using Models.Report;
     using System;
@@ -28,6 +29,8 @@ namespace APSIMJobRunner
             { 
                 AppDomain.CurrentDomain.AssemblyResolve += Manager.ResolveManagerAssembliesEventHandler;
 
+                
+
                 // Send a command to socket server to get the job to run.
                 object response = GetNextJob();
                 while (response != null)
@@ -40,7 +43,8 @@ namespace APSIMJobRunner
                     try
                     {
                         simulation = job.job as Simulation;
-                        simulation.Run(null, null);
+                        ISimulationEngine simulationEngine = Simulations.Create(new Model[] { simulation });
+                        simulationEngine.Run(simulation, doClone:false);
 
                         // TODO Dean: Need to migrate this to the new mechanism.
                         //SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };

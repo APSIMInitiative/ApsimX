@@ -102,7 +102,10 @@ namespace Models.PostSimulationTools
                 DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
 
                 if (predictedObservedData != null)
-                    dataStore.WriteTable(this.Name, predictedObservedData);
+                {
+                    predictedObservedData.TableName = this.Name;
+                    dataStore.WriteTable(predictedObservedData);
+                }
             }
         }
     }

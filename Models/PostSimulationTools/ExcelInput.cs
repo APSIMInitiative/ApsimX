@@ -111,9 +111,7 @@ namespace Models.PostSimulationTools
                 {
                     bool keep = StringUtilities.IndexOfCaseInsensitive(this.SheetNames, table.TableName) != -1;
                     if (keep)
-                    {
-                        dataStore.WriteTable(table.TableName, table);
-                    }
+                        dataStore.WriteTable(table);
                 }
 
                 // Close the reader and free resources.

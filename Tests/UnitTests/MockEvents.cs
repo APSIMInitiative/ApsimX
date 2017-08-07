@@ -10,6 +10,16 @@ namespace UnitTests
         {
         }
 
+        public void ConnectEvents()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DisconnectEvents()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Subscribe(string eventName, EventHandler handler)
         {
         }

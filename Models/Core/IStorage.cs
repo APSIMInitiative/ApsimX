@@ -41,10 +41,12 @@ namespace Models.Core
         /// <returns>The units (with surrounding parentheses), or null if not available</returns>
         string GetUnits(string tableName, string columnHeading);
 
-        /// <summary>Create a table in the database based on the specified one.</summary>
-        /// <param name="tableName">Name of the table.</param>
-        /// <param name="table">The table.</param>
-        void WriteTable(string tableName, DataTable table);
+        /// <summary>
+        /// Create a table in the database based on the specified data. If a 'SimulationName'
+        /// column is found a corresponding 'SimulationID' column will be created.
+        /// </summary>
+        /// <param name="data">The data to write</param>
+        void WriteTable(DataTable data);
 
         /// <summary>Delete the specified table.</summary>
         /// <param name="tableName">Name of the table.</param>
@@ -64,11 +66,16 @@ namespace Models.Core
         /// <summary>Return a list of simulations names or empty string[]. Never returns null.</summary>
         IEnumerable<string> ColumnNames(string tableName);
 
-        /// <summary>Store the list of factor names and values for the specified simulation.</summary>
-        void StoreFactors(string experimentName, string simulationName, string folderName, List<string> names, List<string> values);
-
         /// <summary>Delete all tables</summary>
         /// <param name="cleanSlate">If true, all tables are deleted; otherwise Simulations and Messages tables are retained</param>
         void DeleteAllTables(bool cleanSlate = false);
+
+        /// <summary>Begin writing to DB file</summary>
+        /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file. If null no cleanup will be performed.</param>
+        /// <param name="simulationNamesBeingRun">Collection of simulation names being run. If null no cleanup will be performed.</param>
+        void BeginWriting(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null);
+
+        /// <summary>Finish writing to DB file</summary>
+        void EndWriting();
     }
 }

@@ -17,7 +17,18 @@ namespace Models.Core
     /// </summary>
     public class Links
     {
-        private List<ModelWrapper> allModels;
+        /// <summary>A collection of services that can be linked to</summary>
+        private List<object> services;
+
+        /// <summary>Constructor</summary>
+        /// <param name="linkableServices">A collection of services that can be linked to</param>
+        public Links(IEnumerable<object> linkableServices = null)
+        {
+            if (linkableServices != null)
+                services = linkableServices.ToList();
+            else
+                services = new List<object>();
+        }
 
         /// <summary>
         /// 
@@ -27,7 +38,7 @@ namespace Models.Core
         {
             List<IModel> allModels = Apsim.ChildrenRecursively(rootNode);
             foreach (IModel modelNode in allModels)
-                ResolveInternal(modelNode);
+                ResolveInternal(modelNode, null);
         }
 
         /// <summary>
@@ -36,9 +47,9 @@ namespace Models.Core
         /// <param name="rootNode"></param>
         public void Resolve(ModelWrapper rootNode)
         {
-            allModels = rootNode.ChildrenRecursively;
+            List<ModelWrapper> allModels = rootNode.ChildrenRecursively;
             foreach (ModelWrapper modelNode in allModels)
-                ResolveInternal(modelNode);
+                ResolveInternal(modelNode, allModels);
         }
 
         /// <summary>
@@ -59,15 +70,14 @@ namespace Models.Core
                         field.SetValue(model, null);
                 }
             }
-            if (allModels != null)
-                allModels.Clear();
         }
 
         /// <summary>
         /// Internal [link] resolution algorithm.
         /// </summary>
         /// <param name="obj"></param>
-        private void ResolveInternal(object obj)
+        /// <param name="allModels">A collection of all model wrappers</param>
+        private void ResolveInternal(object obj, List<ModelWrapper> allModels)
         {
             // Go looking for [Link]s
             foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
@@ -85,17 +95,34 @@ namespace Models.Core
                     else if (field.FieldType.Name.StartsWith("List") && field.FieldType.GenericTypeArguments.Length == 1)
                         fieldType = field.FieldType.GenericTypeArguments[0];
 
-                    // Get a list of models that could possibly match.
+                    // Try and get a match from our services first.
                     List<object> matches;
-                    if (link is ParentLinkAttribute)
+                    matches = services.FindAll(s => fieldType.IsAssignableFrom(s.GetType()));
+
+                    // If no match on services then try other options.
+                    if (matches.Count == 0 && obj is IModel)
                     {
-                        matches = new List<object>();
-                        matches.Add(GetParent(obj, fieldType));
+                        Simulation parentSimulation = Apsim.Parent(obj as IModel, typeof(Simulation)) as Simulation;
+                        if (fieldType.IsAssignableFrom(typeof(ILocator)) && parentSimulation != null)
+                            matches.Add(new Locator(obj as IModel));
+                        else if (fieldType.IsAssignableFrom(typeof(IEvent)) && parentSimulation != null)
+                            matches.Add(new Events(obj as IModel));
                     }
-                    else if (link.IsScoped(field))
-                        matches = GetModelsInScope(obj);
-                    else
-                        matches = GetChildren(obj);
+
+                    // If no match on services then try other options.
+                    if (matches.Count == 0)
+                    {
+                        // Get a list of models that could possibly match.
+                        if (link is ParentLinkAttribute)
+                        {
+                            matches = new List<object>();
+                            matches.Add(GetParent(obj, fieldType));
+                        }
+                        else if (link.IsScoped(field))
+                            matches = GetModelsInScope(obj, allModels);
+                        else
+                            matches = GetChildren(obj);
+                    }
 
                     // Filter possible matches to those of the correct type.
                     matches.RemoveAll(match => !fieldType.IsAssignableFrom(GetModel(match).GetType()));
@@ -160,8 +187,10 @@ namespace Models.Core
         {
             if (obj is IModel)
                 return obj;
-            else
+            else if (obj is ModelWrapper)
                 return (obj as ModelWrapper).Model;
+            else
+                return obj;
         }
 
         /// <summary>
@@ -210,8 +239,9 @@ namespace Models.Core
         /// Determine the type of an object and return all models that are in scope.
         /// </summary>
         /// <param name="obj">obj can be either a ModelWrapper or an IModel.</param>
+        /// <param name="allModels">A collection of all models</param>
         /// <returns>The models that are in scope of obj.</returns>
-        private List<object> GetModelsInScope(object obj)
+        private List<object> GetModelsInScope(object obj, List<ModelWrapper> allModels)
         {
             if (obj is IModel)
                 return Apsim.FindAll(obj as IModel).Cast<object>().ToList();
