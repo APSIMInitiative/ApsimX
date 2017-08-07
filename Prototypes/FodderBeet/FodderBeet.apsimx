@@ -1722,17 +1722,17 @@ date of Experiment 4 is assumed here.]]></MemoText>
         <AcceptedStats>
           <RegrStats>
             <Name>FodderBeet.AboveGround.N</Name>
-            <n>25</n>
-            <Slope>0.77779004983695488</Slope>
-            <Intercept>10.16806991917171</Intercept>
-            <SEslope>0.067014696946425326</SEslope>
-            <SEintercept>1.9776774784904969</SEintercept>
-            <R2>0.85415834780593181</R2>
-            <RMSE>5.0954640206893291</RMSE>
-            <NSE>0.6355308479748818</NSE>
-            <ME>3.8843281107634962</ME>
-            <MAE>4.0327975831856966</MAE>
-            <RSR>0.5915153302697348</RSR>
+            <n>31</n>
+            <Slope>0.78631703974572442</Slope>
+            <Intercept>9.017105456576644</Intercept>
+            <SEslope>0.062409166652983232</SEslope>
+            <SEintercept>1.8309571215190412</SEintercept>
+            <R2>0.84553473190924344</R2>
+            <RMSE>4.8898627713225595</RMSE>
+            <NSE>0.7362384287975251</NSE>
+            <ME>3.0874033506059737</ME>
+            <MAE>3.9931535165560121</MAE>
+            <RSR>0.50522582418335449</RSR>
           </RegrStats>
           <RegrStats>
             <Name>FodderBeet.AboveGround.Wt</Name>
