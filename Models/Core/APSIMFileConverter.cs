@@ -319,6 +319,19 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Find a PMF node, as a direct child under the specified node, that has the specified name element.
+        /// </summary>
+        /// <param name="node">The XML Nnde to search</param>
+        /// <param name="name">The name of the element to search for</param>
+        /// <returns>The node or null if not found</returns>
+        private static XmlNode FindPMFNode(XmlNode node, string name)
+        {
+            foreach (XmlNode child in node.ChildNodes)
+                if (XmlUtilities.Value(child, "Name") == name)
+                    return child;
+            return null;
+        }
+        /// <summary>
         /// Add a DMDemandFunction constant function to all Root nodes that don't have one
         /// </summary>
         /// <param name="node">The node to modifiy</param>
@@ -326,11 +339,13 @@ namespace Models.Core
         {
             foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
             {
-                if (XmlUtilities.ChildByTypeAndValue(root, "Name", "DMDemandFunction") == null)
+                XmlNode partitionFraction = FindPMFNode(root, "PartitionFraction");
+                if (partitionFraction != null)
                 {
-                    XmlNode constant = root.AppendChild(root.OwnerDocument.CreateElement("Constant"));
-                    XmlUtilities.SetValue(constant, "Name", "DMDemandFunction");
-                    XmlUtilities.SetValue(constant, "FixedValue", "1");
+                    root.RemoveChild(partitionFraction);
+                    XmlNode demandFunction = root.AppendChild(root.OwnerDocument.CreateElement("PartitionFractionDemandFunction"));
+                    XmlUtilities.SetValue(demandFunction, "Name", "DMDemandFunction");
+                    demandFunction.AppendChild(partitionFraction);
                 }
             }
         }
