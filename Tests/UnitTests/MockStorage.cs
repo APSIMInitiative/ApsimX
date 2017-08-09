@@ -88,5 +88,15 @@ namespace UnitTests
         {
             throw new NotImplementedException();
         }
+
+        public void BeginWriting(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EndWriting()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

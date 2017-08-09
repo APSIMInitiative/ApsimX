@@ -80,14 +80,12 @@ namespace Models.Report
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            List<string> eventNames = new List<string>();
-            for (int i = 0; i < this.EventNames.Length; i++)
+            // Subscribe to events.
+            foreach (string eventName in EventNames)
             {
-                if (this.EventNames[i] != string.Empty)
-                    eventNames.Add(this.EventNames[i].Trim());
+                if (eventName != string.Empty)
+                    events.Subscribe(eventName.Trim(), DoOutput);
             }
-
-            this.EventNames = eventNames.ToArray();
 
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>();
@@ -103,7 +101,7 @@ namespace Models.Report
         }
 
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
-        public void DoOutput()
+        public void DoOutput(object sender, EventArgs args)
         {
             object[] valuesToWrite = new object[columns.Count];
             for (int i = 0; i < columns.Count; i++)

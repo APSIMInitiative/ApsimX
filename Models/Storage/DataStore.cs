@@ -429,6 +429,13 @@ namespace Models.Storage
         /// <param name="simulationNamesToBeRun">The simulation names about to be run.</param>
         private void CleanupDB(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesToBeRun)
         {
+            // TODO Dean: Delete .db when all sims are being run. 
+            //if (model is Simulations)
+            //    store.DeleteAllTables(true);
+            //else
+            //    store.RemoveUnwantedSimulations(simulations, simulationNames);
+            //store.Disconnect();
+
             // Make sure each known simulation name has an ID in the simulations table in the .db
             ExecuteInsertQuery("Simulations", "Name", knownSimulationNames);
 

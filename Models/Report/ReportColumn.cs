@@ -235,6 +235,15 @@ namespace Models.Report
             if (columnName == null)
                 columnName = variableName.Replace("[", string.Empty).Replace("]", string.Empty);
 
+            // Make sure variable name has square brackets around first word.
+            int indexPeriod = variableName.IndexOf('.');
+            if (indexPeriod != -1)
+            {
+                string firstWord = variableName.Substring(0, indexPeriod);
+                if (!firstWord.StartsWith("["))
+                    variableName = "[" + firstWord + "]" + variableName.Substring(indexPeriod);
+            }
+
             if (aggregationFunction != null)
                 return new ReportColumn(aggregationFunction, variableName, columnName, from, to, clock, storage, locator, events);
             else

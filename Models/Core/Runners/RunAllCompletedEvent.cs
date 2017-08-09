@@ -23,6 +23,10 @@
         /// <param name="workerThread">The thread this job is running on.</param>
         public void Run(JobManager jobManager, BackgroundWorker workerThread)
         {
+            ILocator locator = simulations.GetLocatorService(simulations);
+            IStorage store = locator.Get(typeof(IStorage)) as IStorage;
+            store.EndWriting();
+
             // Call the all completed event in all models
             object[] args = new object[] { this, new EventArgs() };
 

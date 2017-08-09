@@ -99,6 +99,7 @@ namespace Models.Core
         /// <returns>The found object or null if not found</returns>
         private IVariable GetInternal(string namePath, bool ignoreCase = true)
         {
+            IModel relativeTo = relativeToModel;
             string cacheKey = namePath;
             StringComparison compareType = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
@@ -118,7 +119,7 @@ namespace Models.Core
                      namePath.Replace("()", "").IndexOfAny("(+*/".ToCharArray()) != -1)
             {
                 // expression - need a better way of detecting an expression
-                returnVariable = new VariableExpression(namePath, relativeToModel as Model);
+                returnVariable = new VariableExpression(namePath, relativeTo as Model);
             }
             else
             {
@@ -133,29 +134,29 @@ namespace Models.Core
                     }
                     string modelName = namePath.Substring(1, posCloseBracket - 1);
                     namePath = namePath.Remove(0, posCloseBracket + 1);
-                    Model foundModel = Apsim.Find(relativeToModel, modelName) as Model;
+                    Model foundModel = Apsim.Find(relativeTo, modelName) as Model;
                     if (foundModel == null)
                     {
                         // Didn't find a model with a name matching the square bracketed string so
                         // now try and look for a model with a type matching the square bracketed string.
                         Type[] modelTypes = GetTypeWithoutNameSpace(modelName);
                         if (modelTypes.Length == 1)
-                            foundModel = Apsim.Find(relativeToModel, modelTypes[0]) as Model;
+                            foundModel = Apsim.Find(relativeTo, modelTypes[0]) as Model;
                     }
                     if (foundModel == null)
                         return null;
                     else
-                        relativeToModel = foundModel;
+                        relativeTo = foundModel;
                 }
                 else if (namePath.StartsWith("."))
                 {
                     // Absolute path
-                    IModel root = relativeToModel;
+                    IModel root = relativeTo;
                     while (root.Parent != null)
                     {
                         root = root.Parent as Model;
                     }
-                    relativeToModel = root;
+                    relativeTo = root;
 
                     int posPeriod = namePath.IndexOf('.', 1);
                     if (posPeriod == -1)
@@ -176,14 +177,14 @@ namespace Models.Core
                 int i;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
-                    IModel localModel = relativeToModel.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType));
+                    IModel localModel = relativeTo.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType));
                     if (localModel == null)
                     {
                         break;
                     }
                     else
                     {
-                        relativeToModel = localModel as Model;
+                        relativeTo = localModel as Model;
                     }
                 }
 
@@ -193,9 +194,9 @@ namespace Models.Core
                 // section of the path as each section will have to be evaulated everytime a
                 // a get is done for this path. 
                 // The variable 'i' will point to the name path that cannot be found as a model.
-                object relativeToObject = relativeToModel;
+                object relativeToObject = relativeTo;
                 List<IVariable> properties = new List<IVariable>();
-                properties.Add(new VariableObject(relativeToModel));
+                properties.Add(new VariableObject(relativeTo));
                 for (int j = i; j < namePathBits.Length; j++)
                 {
                     // look for an array specifier e.g. sw[2]
@@ -214,8 +215,8 @@ namespace Models.Core
                         propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j], BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
                     if (relativeToObject is IFunction && namePathBits[j] == "Value()")
                     {
-                        MethodInfo method = relativeToModel.GetType().GetMethod("Value");
-                        properties.Add(new VariableMethod(relativeToModel, method));
+                        MethodInfo method = relativeTo.GetType().GetMethod("Value");
+                        properties.Add(new VariableMethod(relativeTo, method));
                     }
                     else if (propertyInfo == null && relativeToObject is Model)
                     {

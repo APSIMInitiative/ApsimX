@@ -13,6 +13,11 @@ namespace UnitTests
         {
         }
 
+        public IModel Get(Type typeToMatch)
+        {
+            throw new NotImplementedException();
+        }
+
         public object Get(string namePath)
         {
             if (Values.ContainsKey(namePath))

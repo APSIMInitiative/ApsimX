@@ -99,6 +99,7 @@ namespace Models.Storage
         /// <returns>The number of rows written to the .db</returns>
         public int WriteRows(SQLite sqliteConnection, Dictionary<string, int> simulationIDs)
         {
+            sqliteConnection.ExecuteNonQuery("BEGIN");
             int numRows = RowsToWrite.Count;
             for (int rowIndex = 0; rowIndex < numRows; rowIndex++)
             {
@@ -106,15 +107,16 @@ namespace Models.Storage
 
                 // If this is the first time we've written to the table, then create table.
                 if (!Exists)
-                    CreateTable(sqliteConnection, RowsToWrite[0].ColumnNames, RowsToWrite[0].ColumnUnits, RowsToWrite[0].Values.Select(v => v.GetType()));
+                    CreateTable(sqliteConnection);
 
-                EnsureColumnsExistInDB(connection, RowsToWrite[rowIndex].ColumnNames, RowsToWrite[rowIndex].ColumnUnits, RowsToWrite[rowIndex].Values.Select(v => v.GetType()));
+                EnsureColumnsExistInDB(connection, RowsToWrite[rowIndex]);
 
                 Array.Resize(ref values, preparedInsertQueryColumnNames.Count);
                 Array.Clear(values, 0, values.Length);
                 RowsToWrite[rowIndex].GetValues(preparedInsertQueryColumnNames, ref values, simulationIDs);
                 connection.BindParametersAndRunQuery(preparedInsertQuery, values);
             }
+            sqliteConnection.ExecuteNonQuery("END");
 
             return numRows;
         }
@@ -140,10 +142,7 @@ namespace Models.Storage
 
         /// <summary>Ensure columns exist in .db file</summary>
         /// <param name="sqliteConnection">The SQLite connection to write to</param>
-        /// <param name="columnNames">The column names for the table</param>
-        /// <param name="columnUnits">The column units for the table</param>
-        /// <param name="columnTypes">A column types for the table</param>
-        private void CreateTable(SQLite sqliteConnection, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<Type> columnTypes)
+        private void CreateTable(SQLite sqliteConnection)
         {
             connection = sqliteConnection;
             Columns.Clear();
@@ -151,24 +150,35 @@ namespace Models.Storage
             sql.Append("CREATE TABLE ");
             sql.Append(Name);
             sql.Append(" (");
-            if (columnNames.Contains("SimulationName"))
+
+            bool needToAppendComma = false;
+
+            bool hasSimulationName = RowsToWrite.Count > 0 && RowsToWrite[0].SimulationName != null;
+            if (hasSimulationName)
             {
                 sql.Append("SimulationID INTEGER");
                 Columns.Add(new Column("SimulationID", null));
+                needToAppendComma = true;
             }
 
-            for (int i = 0; i < columnNames.Count(); i++)
+            Row row = RowsToWrite[0];
+            for (int i = 0; i < row.ColumnNames.Count(); i++)
             {
-                string columnName = columnNames.ElementAt(i);
-                string columnUnit = columnUnits.ElementAt(i);
-                string type = GetSQLiteDataType(columnTypes.ElementAt(i));
-                if (columnNames.Contains("SimulationName") || i > 0)
-                    sql.Append(',');
-                sql.Append("[");
-                sql.Append(columnName);
-                sql.Append("] ");
-                sql.Append(type);
-                Columns.Add(new Column(columnName, columnUnit));
+                string columnName = row.ColumnNames.ElementAt(i);
+                string columnUnit = row.ColumnUnits.ElementAt(i);
+                object value = row.Values.ElementAt(i);
+                if (value != null)
+                {
+                    string type = GetSQLiteDataType(value.GetType());
+
+                    if (needToAppendComma)
+                        sql.Append(',');
+                    sql.Append("[");
+                    sql.Append(columnName);
+                    sql.Append("] ");
+                    sql.Append(type);
+                    Columns.Add(new Column(columnName, columnUnit));
+                }
             }
             sql.Append(')');
             connection.ExecuteNonQuery(sql.ToString());
@@ -176,23 +186,24 @@ namespace Models.Storage
 
         /// <summary>Ensure columns exist in .db file</summary>
         /// <param name="connection">The SQLite connection to write to</param>
-        /// <param name="columnNames">Column names</param>
-        /// <param name="columnUnits">Column units</param>
-        /// <param name="columnTypes">Column types</param>
-        private void EnsureColumnsExistInDB(SQLite connection, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<Type> columnTypes)
+        /// <param name="row">The row</param>
+        private void EnsureColumnsExistInDB(SQLite connection, Row row)
         {
             bool columnsWereAdded = false;
-            for (int i = 0; i < columnNames.Count(); i++)
+            for (int i = 0; i < row.ColumnNames.Count(); i++)
             {
-                string columnName = columnNames.ElementAt(i);
-                string columnUnit = columnUnits.ElementAt(i);
-                Type columnType = columnTypes.ElementAt(i);
+                string columnName = row.ColumnNames.ElementAt(i);
                 if (Columns.Find(c => c.Name == columnName) == null)
                 {
-                    string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + columnName + "] " + GetSQLiteDataType(columnType);
-                    connection.ExecuteNonQuery(sql);
-                    Columns.Add(new Column(columnName, columnUnit));
-                    columnsWereAdded = true;
+                    string columnUnit = row.ColumnUnits.ElementAt(i);
+                    object value = row.Values.ElementAt(i);
+                    if (value != null)
+                    {
+                        string sql = "ALTER TABLE " + Name + " ADD COLUMN [" + columnName + "] " + GetSQLiteDataType(value.GetType());
+                        connection.ExecuteNonQuery(sql);
+                        Columns.Add(new Column(columnName, columnUnit));
+                        columnsWereAdded = true;
+                    }
                 }
             }
 

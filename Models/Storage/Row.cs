@@ -14,7 +14,7 @@ namespace Models.Storage
     class Row
     {
         /// <summary>Simulation name for this row</summary>
-        private string simulationName;
+        public string SimulationName { get; private set; }
 
         /// <summary>A collection of column names for this row</summary>
         public IEnumerable<string> ColumnNames { get; private set; }
@@ -37,7 +37,7 @@ namespace Models.Storage
                    IEnumerable<string> columnUnits,
                    IEnumerable<object> valuesToWrite)
         {
-            this.simulationName = simulationName;
+            this.SimulationName = simulationName;
             this.ColumnNames = columnNames;
             this.ColumnUnits = columnUnits;
             this.Values = valuesToWrite;
@@ -51,8 +51,8 @@ namespace Models.Storage
         {
             Flatten();
             int id;
-            if (simulationName != null && simulationIDs.TryGetValue(simulationName, out id))
-                returnValues[0] = simulationIDs[simulationName];
+            if (SimulationName != null && simulationIDs.TryGetValue(SimulationName, out id))
+                returnValues[0] = simulationIDs[SimulationName];
 
             for (int i = 0; i < Values.Count(); i++)
             {
@@ -73,10 +73,15 @@ namespace Models.Storage
             List<object> newValues = new List<object>();
 
             for (int i = 0; i < Values.Count(); i++)
+            {
+                string units = null;
+                if (ColumnUnits != null)
+                    units = ColumnUnits.ElementAt(i);
                 FlattenValue(ColumnNames.ElementAt(i),
-                             ColumnUnits.ElementAt(i),
+                             units,
                              Values.ElementAt(i),
                              newColumnNames, newColumnUnits, newValues);
+            }
 
             ColumnNames = newColumnNames;
             ColumnUnits = newColumnUnits;

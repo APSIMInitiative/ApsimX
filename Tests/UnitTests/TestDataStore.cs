@@ -423,7 +423,7 @@
             using (DataStore storage = new DataStore(fileName))
             {
                 CreateTable(storage);
-                Assert.AreEqual(storage.SimulationNames, new string[] { "Col1", "Col2" });
+                Assert.AreEqual(storage.ColumnNames("Report1").ToArray(), new string[] { "SimulationID", "Col1", "Col2" });
             }
         }
 

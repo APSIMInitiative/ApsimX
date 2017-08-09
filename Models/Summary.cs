@@ -141,14 +141,17 @@ namespace Models
                         else
                             total = 1;
 
-                        values = new object[] { relativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, property.Value };
+                        if (property.Units == null)
+                            property.Units = string.Empty;
+                       
+                        values = new object[] { relativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, propertyValue };
                         storage.WriteRow(simulation.Name, "InitialConditions", initialConditionsColumnNames, null, values);
                     }
                 }
             }
         }
+        
         #region Static summary report generation
-
 
         /// <summary>
         /// Write a single sumary file for all simulations.

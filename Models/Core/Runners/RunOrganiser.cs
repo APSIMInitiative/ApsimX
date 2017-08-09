@@ -45,15 +45,7 @@
             if (store == null)
                 throw new Exception("Cannot find a DataStore.");
             store.BeginWriting(simulations.FindAllSimulationNames(), simulationNames);
-            asdf{
-                // TODO Dean: 
-                //if (model is Simulations)
-                //    store.DeleteAllTables(true);
-                //else
-                //    store.RemoveUnwantedSimulations(simulations, simulationNames);
-                //store.Disconnect();
-            }
-
+            
             if (runTests)
             {
                 foreach (Tests tests in Apsim.ChildrenRecursively(model, typeof(Tests)))
