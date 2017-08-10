@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Simulation</Name>
     <FileCrop>
       <Name>FileCrop</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Crop_new_format(Burkina 20130222).prn</FileName>
     </FileCrop>
     <FileCrop>
       <Name>FileCropResidue</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>CropResidue_new_format(Burkina 20130222).prn</FileName>
     </FileCrop>
     <Clock>
       <Name>clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>1995-01-01T00:00:00</StartDate>
       <EndDate>2009-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <WholeFarm>
       <Name>IAT</Name>
@@ -27,20 +31,24 @@
           <Name>Land</Name>
           <LandType>
             <Name>NthQld_NtvPast_SandyCntry</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LandArea>30000</LandArea>
             <UnusablePortion>30</UnusablePortion>
             <SoilType>1</SoilType>
           </LandType>
           <LandType>
             <Name>NthQld_CrackingClayPlains</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LandArea>250</LandArea>
             <SoilType>3</SoilType>
           </LandType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Land>
         <Labour>
           <Name>Labour</Name>
           <LabourType>
             <Name>Joe B</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <InitialAge>42</InitialAge>
             <Gender>Male</Gender>
             <MaxLabourSupply>
@@ -61,6 +69,7 @@
           </LabourType>
           <LabourType>
             <Name>Jill</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <InitialAge>31</InitialAge>
             <Gender>Female</Gender>
             <MaxLabourSupply>
@@ -79,23 +88,27 @@
             </MaxLabourSupply>
             <Individuals>1</Individuals>
           </LabourType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <AllowAging>true</AllowAging>
         </Labour>
         <Finance>
           <Name>Finances</Name>
           <FinanceType>
             <Name>General account</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OpeningBalance>10000000</OpeningBalance>
             <WithdrawalLimit>-5000</WithdrawalLimit>
             <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
             <InterestRateCharged>7.5</InterestRateCharged>
             <InterestRatePaid>2</InterestRatePaid>
           </FinanceType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Finance>
         <HumanFoodStore>
           <Name>HumanFoodStore</Name>
           <HumanFoodStoreType>
             <Name>MaizeNewName</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
@@ -104,17 +117,20 @@
           </HumanFoodStoreType>
           <HumanFoodStoreType>
             <Name>TreeFruit</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
             <StartingAge>0</StartingAge>
             <StartingAmount>100</StartingAmount>
           </HumanFoodStoreType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </HumanFoodStore>
         <AnimalFoodStore>
           <Name>AnimalFoodStore</Name>
           <AnimalFoodStoreType>
             <Name>Lucerne</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
@@ -122,6 +138,7 @@
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Maize</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <DryMatter>50</DryMatter>
             <DMD>50</DMD>
             <Nitrogen>20</Nitrogen>
@@ -129,6 +146,7 @@
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>BoughtSupplement_SorghumStraw</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <DryMatter>80</DryMatter>
             <DMD>47</DMD>
             <Nitrogen>0.7</Nitrogen>
@@ -136,6 +154,7 @@
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>Brachiaria</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
@@ -143,11 +162,13 @@
           </AnimalFoodStoreType>
           <AnimalFoodStoreType>
             <Name>MaizeNewName</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <DryMatter>61</DryMatter>
             <DMD>61</DMD>
             <Nitrogen>7</Nitrogen>
             <StartingAmount>100</StartingAmount>
           </AnimalFoodStoreType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </AnimalFoodStore>
         <RuminantHerd>
           <Name>Ruminants</Name>
@@ -157,6 +178,7 @@
               <Name>Initial cohorts</Name>
               <RuminantTypeCohort>
                 <Name>CalfF</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>5</StartingAge>
                 <StartingNumber>200</StartingNumber>
@@ -166,6 +188,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>CalfM</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
                 <StartingAge>5</StartingAge>
                 <StartingNumber>200</StartingNumber>
@@ -175,6 +198,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>WeanerF</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>5</StartingAge>
                 <StartingNumber>500</StartingNumber>
@@ -184,6 +208,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>WeanerM</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
                 <StartingAge>5</StartingAge>
                 <StartingNumber>500</StartingNumber>
@@ -193,6 +218,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female1_2</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>18</StartingAge>
                 <StartingNumber>200</StartingNumber>
@@ -202,6 +228,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female2_3</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>30</StartingAge>
                 <StartingNumber>200</StartingNumber>
@@ -211,6 +238,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female3_4</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>42</StartingAge>
                 <StartingNumber>200</StartingNumber>
@@ -220,6 +248,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female4_5</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>54</StartingAge>
                 <StartingNumber>180</StartingNumber>
@@ -229,6 +258,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female5_6</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>66</StartingAge>
                 <StartingNumber>180</StartingNumber>
@@ -238,6 +268,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female6_7</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>78</StartingAge>
                 <StartingNumber>150</StartingNumber>
@@ -247,6 +278,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female7_8</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>90</StartingAge>
                 <StartingNumber>150</StartingNumber>
@@ -256,6 +288,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female8_9</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>102</StartingAge>
                 <StartingNumber>150</StartingNumber>
@@ -265,6 +298,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Female9_10</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <StartingAge>114</StartingAge>
                 <StartingNumber>150</StartingNumber>
@@ -274,6 +308,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Male1_2</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
                 <StartingAge>18</StartingAge>
                 <StartingNumber>200</StartingNumber>
@@ -283,6 +318,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Male2_3</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
                 <StartingAge>30</StartingAge>
                 <StartingNumber>200</StartingNumber>
@@ -292,6 +328,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Male3_4</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
                 <StartingAge>42</StartingAge>
                 <StartingNumber>0</StartingNumber>
@@ -301,6 +338,7 @@
               </RuminantTypeCohort>
               <RuminantTypeCohort>
                 <Name>Breeding_sires</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
                 <StartingAge>36</StartingAge>
                 <StartingNumber>60</StartingNumber>
@@ -308,11 +346,13 @@
                 <StartingWeightSD>0</StartingWeightSD>
                 <Suckling>false</Suckling>
               </RuminantTypeCohort>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </RuminantInitialCohorts>
             <AnimalPricing>
               <Name>Prices</Name>
               <AnimalPriceEntry>
                 <Name>Female calves</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <Age>0</Age>
                 <PurchaseValue>2</PurchaseValue>
@@ -320,6 +360,7 @@
               </AnimalPriceEntry>
               <AnimalPriceEntry>
                 <Name>Female weaners</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <Age>9</Age>
                 <PurchaseValue>1.8</PurchaseValue>
@@ -327,6 +368,7 @@
               </AnimalPriceEntry>
               <AnimalPriceEntry>
                 <Name>Female 1-3y</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <Age>12</Age>
                 <PurchaseValue>1.6</PurchaseValue>
@@ -334,6 +376,7 @@
               </AnimalPriceEntry>
               <AnimalPriceEntry>
                 <Name>Female 3+y</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
                 <Age>36</Age>
                 <PurchaseValue>1.2</PurchaseValue>
@@ -341,6 +384,7 @@
               </AnimalPriceEntry>
               <AnimalPriceEntry>
                 <Name>Male calves</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
                 <Age>0</Age>
                 <PurchaseValue>2</PurchaseValue>
@@ -348,6 +392,7 @@
               </AnimalPriceEntry>
               <AnimalPriceEntry>
                 <Name>Male weaners</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
                 <Age>9</Age>
                 <PurchaseValue>1.8</PurchaseValue>
@@ -355,6 +400,7 @@
               </AnimalPriceEntry>
               <AnimalPriceEntry>
                 <Name>Male 1-3y</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
                 <Age>12</Age>
                 <PurchaseValue>1.6</PurchaseValue>
@@ -362,13 +408,16 @@
               </AnimalPriceEntry>
               <AnimalPriceEntry>
                 <Name>Male 3+y</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Male</Gender>
                 <Age>36</Age>
                 <PurchaseValue>1.5</PurchaseValue>
                 <SellValue>1.5</SellValue>
               </AnimalPriceEntry>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PricingStyle>perKg</PricingStyle>
             </AnimalPricing>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Breed>Bos indicus</Breed>
             <EMaintCoefficient>0.35</EMaintCoefficient>
             <EMaintIntercept>0.503</EMaintIntercept>
@@ -429,6 +478,7 @@
             <GestationLength>9</GestationLength>
             <MinimumAge1stMating>24</MinimumAge1stMating>
             <MinimumSize1stMating>0.5</MinimumSize1stMating>
+            <MinimumDaysBirthToConception>0</MinimumDaysBirthToConception>
             <TwinRate>0</TwinRate>
             <CriticalCowWeight>0.5</CriticalCowWeight>
             <ConceptionRateCoefficent>
@@ -455,7 +505,9 @@
             <MethaneProductionIntercept>35.16</MethaneProductionIntercept>
             <MethaneProductionCoefficient>-34.8</MethaneProductionCoefficient>
           </RuminantType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </RuminantHerd>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </ResourcesHolder>
       <ActivitiesHolder>
         <Name>Activities</Name>
@@ -467,6 +519,7 @@
               <Name>Sowing</Name>
               <IATGrowCropCost>
                 <Name>BagsAndLabels</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
                 <PaymentStyle>Fixed</PaymentStyle>
@@ -476,6 +529,7 @@
               </IATGrowCropCost>
               <IATGrowCropCost>
                 <Name>Seeds</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
                 <PaymentStyle>perHa</PaymentStyle>
@@ -489,14 +543,17 @@
                   <Name>Labour details</Name>
                   <LabourFilter>
                     <Name>Filter[Name=Joe B]</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Parameter>Name</Parameter>
                     <Operator>Equal</Operator>
                     <Value>Joe B</Value>
                   </LabourFilter>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LabourPerUnit>2</LabourPerUnit>
                   <UnitSize>1</UnitSize>
                   <UnitType>Fixed</UnitType>
                 </LabourFilterGroupSpecified>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
               </IATGrowCropLabour>
@@ -506,19 +563,24 @@
                   <Name>Labour details</Name>
                   <LabourFilter>
                     <Name>Filter[Name=Joe B]</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Parameter>Name</Parameter>
                     <Operator>Equal</Operator>
                     <Value>Joe B</Value>
                   </LabourFilter>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LabourPerUnit>0.01</LabourPerUnit>
                   <UnitSize>1</UnitSize>
                   <UnitType>perHa</UnitType>
                 </LabourFilterGroupSpecified>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
               </IATGrowCropLabour>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             </ActivityFolder>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
             <CropName>Maize_local</CropName>
@@ -529,6 +591,7 @@
           </IATGrowCrop>
           <IATGrowCrop>
             <Name>MaizeResidue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <ModelNameFileCrop>FileCropResidue</ModelNameFileCrop>
             <CropName>Maize_local_Stover</CropName>
@@ -543,6 +606,7 @@
               <Name>Growing</Name>
               <IATGrowCropCost>
                 <Name>CostFruitPacking</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
                 <PaymentStyle>Fixed</PaymentStyle>
@@ -552,6 +616,7 @@
               </IATGrowCropCost>
               <IATGrowCropCost>
                 <Name>CostPruning</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
                 <PaymentStyle>perTree</PaymentStyle>
@@ -565,14 +630,17 @@
                   <Name>Labour details</Name>
                   <LabourFilter>
                     <Name>Filter[Name=Jill]</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Parameter>Name</Parameter>
                     <Operator>Equal</Operator>
                     <Value>Jill</Value>
                   </LabourFilter>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LabourPerUnit>2</LabourPerUnit>
                   <UnitSize>1</UnitSize>
                   <UnitType>Fixed</UnitType>
                 </LabourFilterGroupSpecified>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
               </IATGrowCropLabour>
@@ -582,19 +650,24 @@
                   <Name>Labour details</Name>
                   <LabourFilter>
                     <Name>Filter[Name=Jill]</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Parameter>Name</Parameter>
                     <Operator>Equal</Operator>
                     <Value>Jill</Value>
                   </LabourFilter>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LabourPerUnit>0.01</LabourPerUnit>
                   <UnitSize>1</UnitSize>
                   <UnitType>perTree</UnitType>
                 </LabourFilterGroupSpecified>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
               </IATGrowCropLabour>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             </ActivityFolder>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             <ModelNameFileCrop>FileCrop</ModelNameFileCrop>
             <CropName>Arachide</CropName>
@@ -603,6 +676,7 @@
             <PercentKept>100</PercentKept>
             <TreesPerHa>10</TreesPerHa>
           </IATGrowCrop>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
           <LandItemNameToUse>NthQld_CrackingClayPlains</LandItemNameToUse>
           <AreaRequested>50</AreaRequested>
@@ -611,80 +685,92 @@
           <Name>Pay Overheads</Name>
           <FinanceActivityCalculateInterest>
             <Name>Bank interest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
           </FinanceActivityCalculateInterest>
           <FinanceActivityPayExpense>
             <Name>General farm maintenance</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
-            <MonthDue>1</MonthDue>
             <Amount>40000</Amount>
             <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Fuel costs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
-            <MonthDue>1</MonthDue>
             <Amount>30000</Amount>
             <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Pest control</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>12</PaymentInterval>
             <MonthDue>12</MonthDue>
             <Amount>5000</Amount>
             <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Contractors</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>12</PaymentInterval>
             <MonthDue>10</MonthDue>
             <Amount>30000</Amount>
             <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Administration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>1</PaymentInterval>
-            <MonthDue>1</MonthDue>
             <Amount>1666.67</Amount>
             <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Rates and Fees</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>12</PaymentInterval>
             <MonthDue>7</MonthDue>
             <Amount>15000</Amount>
             <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Insurance</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
-            <PaymentInterval>12</PaymentInterval>
             <MonthDue>12</MonthDue>
             <Amount>20000</Amount>
             <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Electricity</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>3</PaymentInterval>
-            <MonthDue>1</MonthDue>
             <Amount>2000</Amount>
             <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Living costs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>6</PaymentInterval>
             <MonthDue>6</MonthDue>
             <Amount>1000</Amount>
             <AccountName>General account</AccountName>
+            <IsOverhead>false</IsOverhead>
           </FinanceActivityPayExpense>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
         </ActivityFolder>
         <ActivityFolder>
@@ -695,10 +781,12 @@
               <Name>BosIndicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=BosIndicus]</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Parameter>HerdName</Parameter>
                 <Operator>Equal</Operator>
                 <Value>BosIndicus</Value>
               </RuminantFilter>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthlyValues>
                 <double>1</double>
                 <double>1</double>
@@ -714,6 +802,7 @@
                 <double>1</double>
               </MonthlyValues>
             </RuminantFeedGroup>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             <FeedTypeName>Lucerne</FeedTypeName>
             <ProportionTramplingWastage>0</ProportionTramplingWastage>
@@ -721,20 +810,24 @@
           </RuminantActivityFeed>
           <RuminantActivityGrow>
             <Name>Grow all ruminants</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           </RuminantActivityGrow>
           <RuminantActivityBreed>
             <Name>Breed Bos indicus</Name>
             <ControlledMatingSettings>
               <Name>Controlled mating</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthDue>8</MonthDue>
             </ControlledMatingSettings>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>BosIndicus</HerdName>
             <MaximumConceptionRateUncontrolled>0.8</MaximumConceptionRateUncontrolled>
           </RuminantActivityBreed>
           <RuminantActivityManage>
             <Name>Manage Bos indicus herd</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <HerdName>BosIndicus</HerdName>
             <MaximumBreedersKept>1800</MaximumBreedersKept>
@@ -756,17 +849,21 @@
             <Name>Buy and sell Bos indicus</Name>
             <RuminantSaleFee>
               <Name>MLA Fee</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Amount>2</Amount>
             </RuminantSaleFee>
             <RuminantSaleFee>
               <Name>Yard Fees</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Amount>2</Amount>
             </RuminantSaleFee>
             <RuminantSaleFee>
               <Name>Sales commission</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <PaymentStyle>ProportionOfTotalSales</PaymentStyle>
               <Amount>0.02</Amount>
             </RuminantSaleFee>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <BreedName>Bos indicus</BreedName>
             <BreedingSirePrice>1</BreedingSirePrice>
@@ -778,11 +875,14 @@
               <Name>BosIndicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=Breeding]</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Parameter>HerdName</Parameter>
                 <Operator>Equal</Operator>
                 <Value>Breeding</Value>
               </RuminantFilter>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </RuminantFilterGroup>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             <PaymentInterval>6</PaymentInterval>
             <MonthDue>2</MonthDue>
@@ -791,6 +891,7 @@
           </RuminantActivityHerdCost>
           <RuminantActivityHerdCost>
             <Name>Vaccines and drenches</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <PaymentInterval>5</PaymentInterval>
             <MonthDue>7</MonthDue>
@@ -804,27 +905,34 @@
               <Name>BosIndicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=Breeding]</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Parameter>HerdName</Parameter>
                 <Operator>Equal</Operator>
                 <Value>Breeding</Value>
               </RuminantFilter>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </RuminantFilterGroup>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>SkipActivity</OnPartialResourcesAvailableAction>
             <MonthDue>5</MonthDue>
             <Amount>5</Amount>
             <PaymentStyle>perAE</PaymentStyle>
             <AccountName>General account</AccountName>
           </RuminantActivityHerdCost>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
         <SummariseRuminantHerd>
           <Name>SummariseHerd</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </SummariseRuminantHerd>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </ActivitiesHolder>
       <Folder>
         <Name>Reports</Name>
         <Report>
           <Name>HerdSummary</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -847,6 +955,7 @@
         </Report>
         <Report>
           <Name>FinancesLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -863,6 +972,7 @@
         </Report>
         <Report>
           <Name>LabourLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -878,6 +988,7 @@
         </Report>
         <Report>
           <Name>LandLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -894,6 +1005,7 @@
         </Report>
         <Report>
           <Name>HumanFoodLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -910,6 +1022,7 @@
         </Report>
         <Report>
           <Name>AnimalFoodLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -926,6 +1039,7 @@
         </Report>
         <Report>
           <Name>ResourceShortfallLedger</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -942,6 +1056,7 @@
         </Report>
         <Report>
           <Name>Brachiaria</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -954,6 +1069,7 @@
         </Report>
         <Report>
           <Name>Maize_local</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -965,7 +1081,10 @@
             <string>[Clock].EndOfMonth</string>
           </EventNames>
         </Report>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
       <RandomSeed>0</RandomSeed>
@@ -976,6 +1095,7 @@
       <Name>Maize_local</Name>
       <Series>
         <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -997,6 +1117,7 @@
       </Series>
       <Series>
         <Name>Series2</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1016,6 +1137,7 @@
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -1032,12 +1154,12 @@
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Brachiara</Name>
       <Series>
         <Name>Series</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1057,6 +1179,7 @@
         <Cumulative>true</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -1073,13 +1196,15 @@
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>281</ExplorerWidth>
 </Simulations>
