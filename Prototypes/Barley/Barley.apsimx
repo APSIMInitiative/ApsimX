@@ -67,8 +67,8 @@ Mirschel W, Wenkel K, Schultz A, Pommerening J, Verch G 2005. Dynamic phenologic
           <Name>Memo</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[Phenology takes into account the daily mean soil (pre-germination) and air (post-germination) temperature, the length of photoperiod as well as the water, nitrogen and vernalisation statuses (e.g. Mirschel et al. (2005).
-The barley cultivar "Valetta" used in this model is not sensitive to vernalisation and therefore nil sensitivity is used.
-The data  shows a slowdown in phenological developement in winter conditions, which could be due to temperature and photoperiod. 
+The barley cultivar used in this model are not sensitive to vernalisation and therefore nil sensitivity is used.
+
 
 
 
@@ -82,7 +82,8 @@ The data  shows a slowdown in phenological developement in winter conditions, wh
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[Photothermal time is based on Sonego 1997
+            <MemoText><![CDATA[
+Photothermal time is based on oat data (Sonego 1997)
 
 TTbase = T-0
 
@@ -91,7 +92,7 @@ FP = Max (0, (P-7)/9)
 TT = TTBase*FP
 
 
-Note.  Effectively mid-winter thermal time approaches 0, whereas mid-summer approaches TTbase - indication of thus mabely accumlating a low temperature eefect.
+Note.  Effectively mid-winter thermal time approaches 0, whereas mid-summer approaches TTbase - indication of the effect of accumulating a low temperature.
 
 ]]></MemoText>
           </Memo>
@@ -242,9 +243,7 @@ Note.  Effectively mid-winter thermal time approaches 0, whereas mid-summer appr
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[Barley cultivar "Valetta" used in this model is a spring variety and therefore does not require a period of cold temperature (vernalisation) to initiate reproduction.
-
-]]></MemoText>
+            <MemoText><![CDATA[A value of zero is used to indicate vernalisation insensitivity]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
@@ -255,7 +254,7 @@ Note.  Effectively mid-winter thermal time approaches 0, whereas mid-summer appr
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[ - Number of leaves the plant will produce when grown in long photoperiod.
+            <MemoText><![CDATA[ - This represents the number of leaves the plant will produce when grown in long photoperiod.
  - Previous data have indicated an average of 9 leaves on the main culm of barley (Juskiw et al. 2001).
 ]]></MemoText>
           </Memo>
@@ -268,7 +267,7 @@ Note.  Effectively mid-winter thermal time approaches 0, whereas mid-summer appr
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The amount of vernalising temperature required before vernalisation response will be evident.  Value of relative to the amount of vernalisation temperature required from the end of the lag until vernalisation saturation.  A value of 0 means there is no lag, a value of 1 means the lag is the same (in vernal time) as the vernalisation requirement and a value of 2 means the lag is twice as long as the vernalisation response phase
+            <MemoText><![CDATA[This is the cummulative low temperature required to induce flowering (from end of the lag (Vernlag) until vernalisation saturation).  A value of 0 means there is no lag, a value of 1 means the lag is the same (in vernal time) as the vernalisation requirement and a value of 2 means the lag is twice as long as the vernalisation response phase.
 
 
 Not used in barley]]></MemoText>
@@ -282,9 +281,8 @@ Not used in barley]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The reduction in leaf number going from 8h to 16 h photoperiod
-
-Not used in current barley model]]></MemoText>
+            <MemoText><![CDATA[This represents the reduction in leaf number from 8h to 16 h photoperiod.
+Photoperiod-insensitivity is assumed in the barley model.]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>6</FixedValue>
@@ -330,7 +328,7 @@ Not used in current barley model.]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[This assumes 150°Cd from sowing to emergence(Alzueta et al. 2012).]]></MemoText>
+            <MemoText><![CDATA[Initially 150°Cd from sowing to emergence was used (Alzueta et al. 2012). This has been tweaked to 80°Cd. ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Germination</Start>
@@ -459,9 +457,9 @@ Duration is (TS-6)*Phyllocgron]]></MemoText>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The Time for the FlagLeaf to appear post TS
+            <MemoText><![CDATA[Accumulated TT from flag leaf appearance to post-terminal spikelet (TS)
 
-1.5 * Phyylchron
+1.5 * Phyllochron
 ]]></MemoText>
           </Memo>
           <VariableReference>
@@ -499,7 +497,7 @@ Duration is (TS-6)*Phyllocgron]]></MemoText>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[The Time from flagLeaf  appearanace  to flowering
 
-Was constant at 100, however have cahnge it 1 Phyllchron. 
+Using 1 Phyllchron. 
 
 
 ]]></MemoText>
@@ -635,7 +633,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
-A function is used to provide flowering date as days after sowing(DAS).
+A function is used to provide flowering date as days after sowing (DAS).
 ]]></MemoText>
           </Memo>
           <Constant>
@@ -658,7 +656,7 @@ A function is used to provide flowering date as days after sowing(DAS).
             <Name>memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <MemoText><![CDATA[
-A function is used to provide maturity date as days after sowing(DAS).]]></MemoText>
+A function is used to provide maturity date as days after sowing (DAS).]]></MemoText>
           </Memo>
           <Constant>
             <Name>PreEventValue</Name>
@@ -1368,7 +1366,7 @@ N conc values are from Zhao et al 2009
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.065</FixedValue>
+          <FixedValue>0.06</FixedValue>
           <Units>g</Units>
         </Constant>
         <PhaseBasedSwitch>
@@ -1406,8 +1404,8 @@ N conc values are from Zhao et al 2009
             <Y>
               <double>0</double>
               <double>0.0015</double>
-              <double>0.0015</double>
-              <double>0.0015</double>
+              <double>0.0018</double>
+              <double>0.002</double>
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1528,7 +1526,7 @@ N conc values are from Zhao et al 2009
           <AccumulateFunction>
             <Name>DaysOfGrainDevelopment</Name>
             <Constant>
-              <Name>LenthOfADay</Name>
+              <Name>LengthOfDay</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>1</FixedValue>
               <Units>days/day</Units>
@@ -2142,30 +2140,35 @@ N conc values are from Zhao et al 2009
                   <double>3</double>
                   <double>3.45</double>
                   <double>4</double>
+                  <double>5</double>
                   <double>6</double>
+                  <double>7</double>
                 </X>
                 <Y>
                   <double>0.1</double>
+                  <double>0.6</double>
+                  <double>0.8</double>
+                  <double>0.7</double>
+                  <double>0.7</double>
                   <double>0.5</double>
-                  <double>1</double>
-                  <double>0.2</double>
                 </Y>
               </XYPairs>
               <Memo>
                 <Name>Memo</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <MemoText><![CDATA[Growth Stages and Phenology
-1 Sowing 
-2 Germination
-3 Emergence
-4 VS
-5 TS
-6 FLag leaf
-7 Flowering
-8 SGF
-9 EGF
-10 HR
-11 
+1.	Sowing 
+2.	Germination
+3.	Emergence
+4.	Vegetative (VS)
+5.	Terminal Spikelet
+6.	Flag leaf
+7.	Flowering
+8.	Start grain fill (SGF)
+9.	End grain fill (EGF)
+10.	Maturity
+11.	Harvest ripe (HR)
+
 ]]></MemoText>
               </Memo>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2825,7 +2828,7 @@ N conc values are from Zhao et al 2009
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
-                <double>0.3</double>
+                <double>0.15</double>
                 <double>1</double>
               </X>
               <Y>
@@ -3661,6 +3664,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
           <Command>[Structure].BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2800</Command>
         </Cultivar>
         <Cultivar>
           <Name>Triumph</Name>
@@ -3706,7 +3710,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <Cultivar>
           <Name>Omaka</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command />
+          <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000</Command>
         </Cultivar>
         <Cultivar>
           <Name>Optic</Name>
@@ -3926,8 +3930,8 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</
     <Input>
       <Name>BaselineData</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage>Invalid number of values on line: Barley_HRSRO-II_1	AUS	Field	1991-11-17				431.1305	1049.5	*	*	*	*	*	*
-in file: C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt</ErrorMessage>
+      <ErrorMessage>Invalid number of values on line: Dash09_10_N0_Dry	NZ	Field	2009-11-04	*	*	*	*	*	*	0.28	*	*	*	*	*	*
+in file: C:\ApsimX\Prototypes\Barley\Observations\BarleyBaseline.txt</ErrorMessage>
       <FileName>Observations\BarleyBaseline.txt</FileName>
     </Input>
     <PredictedObserved>
@@ -5068,39 +5072,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
-          <Manager>
-            <Name>Harvesting</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Script />
-            <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Barley;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Barley.Phenology.CurrentPhaseName == "ReadyForHarvesting")
-			{
-				Barley.Harvest();
-				Barley.EndCrop();
-			}
-		}
-	}
-}
-	   ]]></Code>
-          </Manager>
           <Report>
             <Name>DailyReport</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -5246,7 +5217,7 @@ namespace Models
             <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -5268,7 +5239,7 @@ namespace Models
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
@@ -5277,6 +5248,74 @@ namespace Models
             <TableName>BaselineData</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>TotalAboveGroundWt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>GrainWt</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>BaselineData</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Grain.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -5335,7 +5374,7 @@ namespace Models
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledCircle</Marker>
             <MarkerSize>Normal</MarkerSize>
@@ -5404,7 +5443,7 @@ namespace Models
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
+            <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
@@ -5503,74 +5542,6 @@ namespace Models
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
         </Graph>
-        <Graph>
-          <Name>GrainWt</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Grain.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter />
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledDiamond</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>BaselineData</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Grain.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter />
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -5587,7 +5558,7 @@ namespace Models
             <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -5609,7 +5580,7 @@ namespace Models
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledDiamond</Marker>
             <MarkerSize>Normal</MarkerSize>
@@ -5668,6 +5639,74 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
             <Filter>[_] = 'Irrig'</Filter>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>LightIntercep</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Leaf.CoverGreen</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>BaselineData</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Leaf.CoverGreen</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
           </Series>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
@@ -6425,6 +6464,55 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Interception</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObservedBaseline</TableName>
+            <XFieldName>Observed.Barley.Leaf.CoverGreen</XFieldName>
+            <YFieldName>Predicted.Barley.Leaf.CoverGreen</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>0.1</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>1</Maximum>
+            <Interval>0.1</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
           <DisabledSeries />
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7438,6 +7526,74 @@ namespace Models
           <DisabledSeries />
         </Graph>
         <Graph>
+          <Name>GrainWt</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>BaselineData</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
           <Name>StemWt</Name>
           <Series>
             <Name>Predicted</Name>
@@ -7637,74 +7793,6 @@ namespace Models
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
         </Graph>
-        <Graph>
-          <Name>GrainWt</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Grain.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter />
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledDiamond</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>BaselineData</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Grain.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter />
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -7721,10 +7809,10 @@ namespace Models
             <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>None</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
@@ -7743,7 +7831,7 @@ namespace Models
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>FilledDiamond</Marker>
             <MarkerSize>Normal</MarkerSize>
@@ -7802,6 +7890,74 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
             <Filter>[_] = 'Irrig'</Filter>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Interception</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Leaf.CoverGreen</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>BaselineData</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Leaf.CoverGreen</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
           </Series>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
@@ -8396,55 +8552,6 @@ namespace Models
           <DisabledSeries />
         </Graph>
         <Graph>
-          <Name>LeafWt</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <Regression>
-              <Name>Regression</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ForEachSeries>false</ForEachSeries>
-            </Regression>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>PredictedObservedBaseline</TableName>
-            <XFieldName>Observed.Barley.Leaf.Live.Wt</XFieldName>
-            <YFieldName>Predicted.Barley.Leaf.Live.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>BottomRight</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
           <Name>LAI</Name>
           <Series>
             <Name>Predicted</Name>
@@ -8491,6 +8598,55 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>LeafWt</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObservedBaseline</TableName>
+            <XFieldName>Observed.Barley.Leaf.Live.Wt</XFieldName>
+            <YFieldName>Predicted.Barley.Leaf.Live.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
         </Graph>
         <Graph>
@@ -8589,6 +8745,55 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Interception</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>PredictedObservedBaseline</TableName>
+            <XFieldName>Observed.Barley.Leaf.CoverGreen</XFieldName>
+            <YFieldName>Predicted.Barley.Leaf.CoverGreen</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>0.1</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>1</Maximum>
+            <Interval>0.1</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
           <DisabledSeries />
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -9995,6 +10200,74 @@ namespace Models
           <DisabledSeries />
         </Graph>
         <Graph>
+          <Name>GrainWt</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>BaselineData</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Barley.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+            <Filter />
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title />
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
           <Name>StemWt</Name>
           <Series>
             <Name>Predicted</Name>
@@ -10190,74 +10463,6 @@ namespace Models
             <Minimum>NaN</Minimum>
             <Maximum>1000</Maximum>
             <Interval>200</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>GrainWt</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Grain.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter />
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledDiamond</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>BaselineData</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Barley.Grain.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-            <Filter />
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
           <DisabledSeries />
@@ -11523,6 +11728,55 @@ namespace Models
         <LegendPosition>BottomRight</LegendPosition>
         <DisabledSeries />
       </Graph>
+      <Graph>
+        <Name>Interception</Name>
+        <Series>
+          <Name>Predicted</Name>
+          <Regression>
+            <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ForEachSeries>false</ForEachSeries>
+          </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Type>Scatter</Type>
+          <XAxis>Bottom</XAxis>
+          <YAxis>Left</YAxis>
+          <ColourArgb>-16777216</ColourArgb>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+          <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+          <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+          <Marker>FilledCircle</Marker>
+          <MarkerSize>Normal</MarkerSize>
+          <Line>None</Line>
+          <LineThickness>Normal</LineThickness>
+          <TableName>PredictedObservedBaseline</TableName>
+          <XFieldName>Observed.Barley.Leaf.CoverGreen</XFieldName>
+          <YFieldName>Predicted.Barley.Leaf.CoverGreen</YFieldName>
+          <ShowInLegend>true</ShowInLegend>
+          <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+          <Cumulative>false</Cumulative>
+          <CumulativeX>false</CumulativeX>
+        </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <Axis>
+          <Type>Bottom</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>NaN</Maximum>
+          <Interval>0.1</Interval>
+        </Axis>
+        <Axis>
+          <Type>Left</Type>
+          <Title />
+          <Inverted>false</Inverted>
+          <Minimum>NaN</Minimum>
+          <Maximum>1</Maximum>
+          <Interval>0.1</Interval>
+        </Axis>
+        <LegendPosition>TopRight</LegendPosition>
+        <DisabledSeries />
+      </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
@@ -12210,9 +12464,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13431,9 +13685,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
-              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -14878,9 +15132,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -16239,9 +16493,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>20</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -17694,9 +17948,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Doyen</Cultivar>
-              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -19134,9 +19388,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Omaka</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -20495,9 +20749,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Optic</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -21802,9 +22056,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2005-05-27</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Pyramid</Cultivar>
-              <SowingDate>2005-05-27</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -23097,9 +23351,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Sherwood</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -24425,9 +24679,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Tavern</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -25746,9 +26000,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Vortex</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -37506,8 +37760,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <InitialRootDepth>40</InitialRootDepth>
                 <CropToSow>Dash</CropToSow>
+                <InitialRootDepth>40</InitialRootDepth>
                 <SowingDate>2014-10-14</SowingDate>
               </Script>
               <Code><![CDATA[using System;
