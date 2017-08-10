@@ -521,7 +521,7 @@ namespace UserInterface.Presenters
                 ContextMenuAttribute contextMenuAttr = ReflectionUtilities.GetAttribute(method, typeof(ContextMenuAttribute), false) as ContextMenuAttribute;
                 if (contextMenuAttr != null)
                 {
-                    bool ok = true;
+                    bool ok = selectedModel != null;
                     if (contextMenuAttr.AppliesTo != null && selectedModel != null)
                     {
                         ok = false;
