@@ -648,20 +648,15 @@ namespace UserInterface.Presenters
                     Add(fromModelXml, toParentPath);
                 else if (e.Moved)
                 {
-                    Add(fromModelXml, toParentPath);
                     if (fromParentPath != toParentPath)
                     {
                         Model fromModel = Apsim.Get(this.ApsimXFile, dragObject.NodePath) as Model;
                         if (fromModel != null)
                         {
-                            cmd = new MoveModelCommand(fromModel, toParent);
+                            cmd = new MoveModelCommand(fromModel, toParent, GetNodeDescription(fromModel), view);
+                            CommandHistory.Add(cmd);
                         }
                     }
-                }
-
-                if (cmd != null)
-                {
-                    CommandHistory.Add(cmd);
                 }
             }
         }

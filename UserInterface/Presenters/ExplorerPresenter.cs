@@ -639,14 +639,10 @@ namespace UserInterface.Presenters
                         Model fromModel = Apsim.Get(this.ApsimXFile, dragObject.NodePath) as Model;
                         if (fromModel != null)
                         {
-                            cmd = new MoveModelCommand(fromModel, toParent);
+                            cmd = new MoveModelCommand(fromModel, toParent, GetNodeDescription(fromModel), view);
+                            CommandHistory.Add(cmd);
                         }
                     }
-                }
-
-                if (cmd != null)
-                {
-                    CommandHistory.Add(cmd);
                 }
             }
         }
