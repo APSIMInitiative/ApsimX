@@ -101,6 +101,9 @@ namespace UserInterface.Views
             /// into the HTML Script added when loading Google Maps
             /// I am taking the belts-and-braces approach of doing both, primarily because the 
             /// meta tag, while probably the technically better" solution, sometimes doesn't work.
+            /// 10/8/17 - I've added yet another "fix" for this problem: the installer now writes a 
+            /// registry key requesting that IE 11 be used for ApsimNG.exe (and for ApsimNG.vshost.exe,
+            /// so it also works when run from Visual Studio).
 
             wb.DocumentText = @"<!DOCTYPE html>
                    <html>
