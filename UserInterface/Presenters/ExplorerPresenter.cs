@@ -97,6 +97,7 @@ namespace UserInterface.Presenters
             this.view = view as IExplorerView;
             this.mainMenu = new MainMenu(this);
             this.contextMenu = new ContextMenu(this);
+            ApsimXFile.Links.Resolve(contextMenu);
 
             this.view.ShortcutKeys = new string[] { "F5" };
             this.view.SelectedNodeChanged += this.OnNodeSelected;
@@ -718,6 +719,7 @@ namespace UserInterface.Presenters
             if (e.Keys == System.Windows.Forms.Keys.F5)
             {
                 ContextMenu contextMenu = new ContextMenu(this);
+                ApsimXFile.Links.Resolve(contextMenu);
                 contextMenu.RunAPSIM(sender, null);
             }
         }
@@ -845,6 +847,8 @@ namespace UserInterface.Presenters
                 this.currentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter;
                 if (newView != null && this.currentRightHandPresenter != null)
                 {
+                    // Resolve links in presenter.
+                    ApsimXFile.Links.Resolve(currentRightHandPresenter);
                     this.view.AddRightHandView(newView);
                     this.currentRightHandPresenter.Attach(model, newView, this);
                 }

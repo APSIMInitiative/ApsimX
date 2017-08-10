@@ -177,6 +177,7 @@ namespace Models.Storage
                     sql.Append(columnName);
                     sql.Append("] ");
                     sql.Append(type);
+                    needToAppendComma = true;
                     Columns.Add(new Column(columnName, columnUnit));
                 }
             }

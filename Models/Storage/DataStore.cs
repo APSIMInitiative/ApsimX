@@ -19,9 +19,6 @@ namespace Models.Storage
     /// </summary>
     public class DataStore : Model, IStorage, IDisposable
     {
-        /// <summary>Name of the database table holding information on units of measurement</summary>
-        private static string UnitsTableName = "_Units";
-
         /// <summary>A SQLite connection shared between all instances of this DataStore.</summary>
         [NonSerialized]
         private SQLite connection = null;
@@ -38,8 +35,27 @@ namespace Models.Storage
         /// <summary>A task, run asynchronously, that writes to the .db</summary>
         private Task writeTask;
 
+        /// <summary>Return a list of simulations names or empty string[]. Never returns null.</summary>
+        public string[] SimulationNames
+        {
+            get
+            {
+                if (FileName == null)
+                    Open(readOnly: true);
+                return simulationIDs.Select(p => p.Key).ToArray();
+            }
+        }
+
         /// <summary>Returns a list of table names</summary>
-        public IEnumerable<string> TableNames { get { return tables.FindAll(t => t.Exists).Select(t => t.Name); } }
+        public IEnumerable<string> TableNames
+        {
+            get
+            {
+                if (FileName == null)
+                    Open(readOnly: true);
+                return tables.FindAll(t => t.Exists && !t.Name.StartsWith("_")).Select(t => t.Name);
+            }
+        }
 
         /// <summary>Returns the file name of the .db file</summary>
         [XmlIgnore]
@@ -83,6 +99,7 @@ namespace Models.Storage
         /// <param name="simulationNamesBeingRun">Collection of simulation names being run. If null no cleanup will be performed.</param>
         public void BeginWriting(IEnumerable<string> knownSimulationNames = null, IEnumerable<string> simulationNamesBeingRun = null)
         {
+            stoppingWriteToDB = false;
             writeTask = Task.Run(() => WriteDBWorker(knownSimulationNames, simulationNamesBeingRun));
         }
 
@@ -134,7 +151,7 @@ namespace Models.Storage
 
 
             // Write FROM clause
-            sql.Append(" FROM Simulations S, ");
+            sql.Append(" FROM _Simulations S, ");
             sql.Append(tableName);
             sql.Append(" T ");
 
@@ -242,15 +259,6 @@ namespace Models.Storage
         }
 
         /// <summary>Return a list of simulations names or empty string[]. Never returns null.</summary>
-        public string[] SimulationNames
-        {
-            get
-            {
-                return simulationIDs.Select(p => p.Key).ToArray();
-            }
-        }
-
-        /// <summary>Return a list of simulations names or empty string[]. Never returns null.</summary>
         public IEnumerable<string> ColumnNames(string tableName)
         {
             Table table = tables.Find(t => t.Name == tableName);
@@ -264,7 +272,7 @@ namespace Models.Storage
         public void DeleteAllTables(bool cleanSlate = false)
         {
             foreach (string tableName in this.TableNames)
-                if (cleanSlate || (tableName != "Simulations" && tableName != "Messages"))
+                if (cleanSlate || !tableName.StartsWith("_"))
                     DeleteTable(tableName);
         }
 
@@ -288,13 +296,14 @@ namespace Models.Storage
                     {
                         // Find first table that has rows.
                         tableWithRows = tables.Find(table => table.HasRowsToWrite);
-                        if (tableWithRows == null)
-                        {
-                            if (stoppingWriteToDB)
-                                break;
-                            else
-                                Thread.Sleep(100);
-                        }
+                    }
+
+                    if (tableWithRows == null)
+                    {
+                        if (stoppingWriteToDB)
+                            break;
+                        else
+                            Thread.Sleep(100);
                     }
 
                     if (tableWithRows != null)
@@ -318,9 +327,7 @@ namespace Models.Storage
                         if (column.Units != null)
                         {
                             StringBuilder sql = new StringBuilder();
-                            sql.Append("INSERT INTO [");
-                            sql.Append(UnitsTableName);
-                            sql.Append("] (TableName, ColumnHeading, Units) VALUES ('");
+                            sql.Append("INSERT INTO [_Units] (TableName, ColumnHeading, Units) VALUES ('");
                             sql.Append(table.Name);
                             sql.Append("','");
                             sql.Append(column.Name);
@@ -365,9 +372,9 @@ namespace Models.Storage
             if (!File.Exists(FileName))
             {
                 connection.OpenDatabase(FileName, readOnly: false);
-                connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
-                connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
-                connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS " + UnitsTableName + " (TableName TEXT, ColumnHeading TEXT, Units TEXT)");
+                connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS _Simulations (ID INTEGER PRIMARY KEY ASC, Name TEXT COLLATE NOCASE)");
+                connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS _Messages (SimulationID INTEGER, ComponentName TEXT, Date TEXT, Message TEXT, MessageType INTEGER)");
+                connection.ExecuteNonQuery("CREATE TABLE IF NOT EXISTS _Units (TableName TEXT, ColumnHeading TEXT, Units TEXT)");
                 connection.CloseDatabase();
             }
 
@@ -415,7 +422,7 @@ namespace Models.Storage
 
             // Get a list of simulation names
             simulationIDs.Clear();
-            DataTable simulationTable = connection.ExecuteQuery("SELECT ID, Name FROM Simulations ORDER BY Name");
+            DataTable simulationTable = connection.ExecuteQuery("SELECT ID, Name FROM _Simulations ORDER BY Name");
             foreach (DataRow row in simulationTable.Rows)
             {
                 string name = row["Name"].ToString();
@@ -429,35 +436,31 @@ namespace Models.Storage
         /// <param name="simulationNamesToBeRun">The simulation names about to be run.</param>
         private void CleanupDB(IEnumerable<string> knownSimulationNames, IEnumerable<string> simulationNamesToBeRun)
         {
-            // TODO Dean: Delete .db when all sims are being run. 
-            //if (model is Simulations)
-            //    store.DeleteAllTables(true);
-            //else
-            //    store.RemoveUnwantedSimulations(simulations, simulationNames);
-            //store.Disconnect();
+            // Delete all tables in .db when all sims are being run. 
+            if (knownSimulationNames.SequenceEqual(simulationNamesToBeRun))
+                DeleteAllTables(true);
+            else
+            {
+                // Get a list of simulation names that are in the .db but we know nothing about them
+                // i.e. they are old and no longer needed.
+                // Then delete the unknown simulation names from the simulations table.
+                string[] simulationNamesInDB = simulationIDs.Keys.ToArray();
+                List<string> unknownSimulationNames = new List<string>();
+                foreach (string simulationNameInDB in simulationNamesInDB)
+                    if (!knownSimulationNames.Contains(simulationNameInDB))
+                        unknownSimulationNames.Add(simulationNameInDB);
+                ExecuteDeleteQuery("DELETE FROM _Simulations WHERE [Name] IN (", unknownSimulationNames, ")");
+
+                // Delete all data that we are about to run, plus all data from simulations we
+                // know nothing about, from all tables except Simulations and Units 
+                unknownSimulationNames.AddRange(simulationNamesToBeRun);
+                foreach (Table table in tables)
+                    if (table.Columns.Find(c => c.Name == "SimulationID") != null)
+                        ExecuteDeleteQueryUsingIDs("DELETE FROM " + table.Name + " WHERE [SimulationID] IN (", unknownSimulationNames, ")");
+            }
 
             // Make sure each known simulation name has an ID in the simulations table in the .db
-            ExecuteInsertQuery("Simulations", "Name", knownSimulationNames);
-
-            // Get a list of simulation names that are in the .db but we know nothing about them
-            // i.e. they are old and no longer needed.
-            // Then delete the unknown simulation names from the simulations table.
-            string[] simulationNamesInDB = simulationIDs.Keys.ToArray();
-            List<string> unknownSimulationNames = new List<string>();
-            foreach (string simulationNameInDB in simulationNamesInDB)
-                if (!knownSimulationNames.Contains(simulationNameInDB))
-                    unknownSimulationNames.Add(simulationNameInDB);
-            ExecuteDeleteQuery("DELETE FROM Simulations WHERE [Name] IN (", unknownSimulationNames, ")");
-
-            // Refresh our simulation table in memory now that we have removed unwanted ones.
-            //Refresh();
-
-            // Delete all data that we are about to run, plus all data from simulations we
-            // know nothing about, from all tables except Simulations and Units 
-            unknownSimulationNames.AddRange(simulationNamesToBeRun);
-            foreach (string tableName in TableNames)
-                if (tableName != "Simulations" && tableName != UnitsTableName)
-                    ExecuteDeleteQueryUsingIDs("DELETE FROM " + tableName + " WHERE [SimulationID] IN (", unknownSimulationNames, ")");
+            ExecuteInsertQuery("_Simulations", "Name", knownSimulationNames);
 
             // Refresh our simulation table in memory now that we have removed unwanted ones.
             Refresh();

@@ -156,7 +156,7 @@
         /// <param name="e"></param>
         private void OnTimerTick(object sender, ElapsedEventArgs e)
         {
-            int numSimulations = jobManager.CountJobTypeInQueue<Simulation>();
+            int numSimulations = jobManager.CountJobTypeInQueue("RunSimulation");
             double percentComplete = jobManager.PercentComplete;
             int numberComplete = jobManager.GetNumberOfJobsCompleted<Simulation>();
 

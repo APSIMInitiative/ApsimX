@@ -16,14 +16,15 @@ namespace Models.Core
     using System.IO;
     using System.Text.RegularExpressions;
     using PMF;
-
+    using System.Data;
+	
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 13; } }
+        public static int LastestVersion { get { return 14; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -35,7 +36,7 @@ namespace Models.Core
             doc.Load(fileName);
 
             // Apply converter.
-            bool changed = ConvertToLatestVersion(doc.DocumentElement);
+            bool changed = ConvertToLatestVersion(doc.DocumentElement, fileName);
 
             if (changed)
             {
@@ -52,8 +53,9 @@ namespace Models.Core
 
         /// <summary>Converts XML to the latest version.</summary>
         /// <param name="rootNode">The root node.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
         /// <returns>Returns true if something was changed.</returns>
-        public static bool ConvertToLatestVersion(XmlNode rootNode)
+        public static bool ConvertToLatestVersion(XmlNode rootNode, string fileName)
         {
             string fileVersionString = XmlUtilities.Attribute(rootNode, "Version");
             int fileVersion = 0;
@@ -73,7 +75,7 @@ namespace Models.Core
                     throw new Exception("Cannot find converter to go to version " + toVersion);
 
                 // Found converter method so call it.
-                method.Invoke(null, new object[] { rootNode });
+                method.Invoke(null, new object[] { rootNode, fileName });
 
                 fileVersion++;
             }
@@ -104,7 +106,8 @@ namespace Models.Core
         ///      </Series>
         /// </remarks>
         /// <param name="node">The node to upgrade.</param>
-        private static void UpgradeToVersion1(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion1(XmlNode node, string fileName)
         {
             foreach (XmlNode seriesNode in XmlUtilities.FindAllRecursivelyByType(node, "Series"))
             {
@@ -147,7 +150,8 @@ namespace Models.Core
         ///      </Cultivar>
         /// </remarks>
         /// <param name="node">The node to upgrade.</param>
-        private static void UpgradeToVersion2(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion2(XmlNode node, string fileName)
         {
             foreach (XmlNode cultivarNode in XmlUtilities.FindAllRecursivelyByType(node, "Cultivar"))
             {
@@ -167,7 +171,8 @@ namespace Models.Core
 
         /// <summary>Upgrades to version 3. Make sure all area elements are greater than zero.</summary>
         /// <param name="node">The node to upgrade.</param>
-        private static void UpgradeToVersion3(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion3(XmlNode node, string fileName)
         {
             foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "Zone"))
             {
@@ -188,7 +193,8 @@ namespace Models.Core
 
         /// <summary>Upgrades to version 4. Make sure all zones have a SoluteManager model.</summary>
         /// <param name="node">The node to upgrade.</param>
-        private static void UpgradeToVersion4(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion4(XmlNode node, string fileName)
         {
             foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "Zone"))
                 XmlUtilities.EnsureNodeExists(zoneNode, "SoluteManager");
@@ -200,7 +206,8 @@ namespace Models.Core
 
         /// <summary>Upgrades to version 5. Make sure all zones have a CERESSoilTemperature model.</summary>
         /// <param name="node">The node to upgrade.</param>
-        private static void UpgradeToVersion5(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion5(XmlNode node, string fileName)
         {
             foreach (XmlNode soilNode in XmlUtilities.FindAllRecursivelyByType(node, "Soil"))
                 XmlUtilities.EnsureNodeExists(soilNode, "CERESSoilTemperature");
@@ -211,7 +218,8 @@ namespace Models.Core
         /// XProperty values.
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
-        private static void UpgradeToVersion6(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion6(XmlNode node, string fileName)
         {
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
             {
@@ -227,7 +235,8 @@ namespace Models.Core
         /// XProperty values.
         /// </summary>
         /// <param name="node">The node to upgrade.</param>
-        private static void UpgradeToVersion7(XmlNode node)
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion7(XmlNode node, string fileName)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
                 APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
@@ -366,5 +375,35 @@ namespace Models.Core
                 }
             }
         }
+		
+		        /// <summary>
+        /// Rename the "Simulations", "Messages", "InitialConditions" .db tables to be
+        /// prefixed with an underscore.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
+        /// <param name="fileName">The name of the .apsimx file</param>
+        private static void UpgradeToVersion14(XmlNode node, string fileName)
+        {
+            string dbFileName = Path.ChangeExtension(fileName, ".db");
+            if (File.Exists(dbFileName))
+            {
+                SQLite connection = new SQLite();
+                connection.OpenDatabase(dbFileName, false);
+                try
+                {
+                    DataTable tableData = connection.ExecuteQuery("SELECT * FROM sqlite_master");
+                    foreach (string tableName in DataTableUtilities.GetColumnAsStrings(tableData, "Name"))
+                    {
+                        if (tableName == "Simulations" || tableName == "Messages" || tableName == "InitialConditions")
+                            connection.ExecuteNonQuery("ALTER TABLE " + tableName + " RENAME TO " + "_" + tableName);
+                    }
+                }
+                finally
+                {
+                    connection.CloseDatabase();
+                }
+            }
+        }
+
     }
 }

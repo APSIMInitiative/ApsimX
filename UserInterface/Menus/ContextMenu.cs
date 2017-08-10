@@ -306,12 +306,9 @@ namespace UserInterface.Presenters
             List<DataTable> tables = new List<DataTable>();
             foreach (string tableName in storage.TableNames)
             {
-                if (tableName != "Simulations" && tableName != "Messages" && tableName != "InitialConditions")
-                {
-                    DataTable table = storage.GetData(tableName);
-                    table.TableName = tableName;
-                    tables.Add(table);
-                }
+                DataTable table = storage.GetData(tableName);
+                table.TableName = tableName;
+                tables.Add(table);
             }
             string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
             Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);

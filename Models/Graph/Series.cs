@@ -24,10 +24,6 @@ namespace Models.Graph
     [Serializable]
     public class Series : Model, IGraphable
     {
-        [Link]
-        private IStorage storage = null;
-
-
         /// <summary>Constructor for a series</summary>
         public Series()
         {
@@ -123,7 +119,8 @@ namespace Models.Graph
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
-        public void GetSeriesToPutOnGraph(List<SeriesDefinition> definitions)
+        /// <param name="storage">Storage service</param>
+        public void GetSeriesToPutOnGraph(IStorage storage, List<SeriesDefinition> definitions)
         {
             List<SeriesDefinition> ourDefinitions = new List<SeriesDefinition>();
 
@@ -167,14 +164,14 @@ namespace Models.Graph
                 simulationZones = RemoveFactorsNotBeingUsed(simulationZones);
 
                 // Get data for each simulation / zone object
-                DataTable baseData = GetBaseData(simulationZones);
+                DataTable baseData = GetBaseData(storage, simulationZones);
                 simulationZones.ForEach(simulationZone => simulationZone.CreateDataView(baseData, this));
 
                 // Setup all colour, marker, line types etc in all simulation / zone objects.
                 PaintAllSimulationZones(simulationZones);
 
                 // Convert all simulation / zone objects to seriesdefinitions.
-                simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(simZone)));
+                simulationZones.ForEach(simZone => ourDefinitions.Add(ConvertToSeriesDefinition(storage, simZone)));
             }
 
             // Get all data.
@@ -182,7 +179,7 @@ namespace Models.Graph
 
             // We might have child models that want to add to our series definitions e.g. regression.
             foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
-                series.GetSeriesToPutOnGraph(ourDefinitions);
+                series.GetSeriesToPutOnGraph(storage, ourDefinitions);
 
             // Remove series that have no data.
             ourDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.x) || !MathUtilities.ValuesInArray(d.y));
@@ -451,8 +448,9 @@ namespace Models.Graph
         }
 
         /// <summary>Convert a simulation zone object into a series definition</summary>
+        /// <param name="storage">Storage service</param>
         /// <param name="simulationZone">The object to convert</param>
-        private SeriesDefinition ConvertToSeriesDefinition(SimulationZone simulationZone)
+        private SeriesDefinition ConvertToSeriesDefinition(IStorage storage, SimulationZone simulationZone)
         {
             SeriesDefinition seriesDefinition = new Models.Graph.SeriesDefinition();
             seriesDefinition.type = Type;
@@ -609,7 +607,8 @@ namespace Models.Graph
         /// Create a data view from the specified table and filter.
         /// </summary>
         /// <param name="simulationZones">The list of simulation / zone pairs.</param>
-        private DataTable GetBaseData(List<SimulationZone> simulationZones)
+        /// <param name="storage">Storage service</param>
+        private DataTable GetBaseData(IStorage storage, List<SimulationZone> simulationZones)
         {
             // Get a list of all simulation names in all simulationZones.
             List<string> simulationNames = new List<string>();
@@ -626,7 +625,6 @@ namespace Models.Graph
             if (Filter != string.Empty)
                 filter = AddToFilter(filter, Filter);
 
-            // TODO Dean: This storage link may be null when new series created - need to check.
             List<string> fieldNames = new List<string>();
             if (storage.ColumnNames(TableName).Contains("Zone"))
                 fieldNames.Add("Zone");

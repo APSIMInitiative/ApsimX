@@ -37,7 +37,8 @@ namespace Models.Graph
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
-        public void GetSeriesToPutOnGraph(List<SeriesDefinition> definitions)
+        /// <param name="storage">Storage service</param>
+        public void GetSeriesToPutOnGraph(IStorage storage, List<SeriesDefinition> definitions)
         {
             if (definitions.Count > 0)
             {

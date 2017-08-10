@@ -153,7 +153,7 @@ namespace Models.Core
         public static Simulations Read(XmlNode node)
         {
             // Run the converter.
-            APSIMFileConverter.ConvertToLatestVersion(node);
+            APSIMFileConverter.ConvertToLatestVersion(node, null);
 
             // Deserialise
             Simulations simulations = XmlUtilities.Deserialise(node, Assembly.GetExecutingAssembly()) as Simulations;

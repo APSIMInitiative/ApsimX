@@ -54,6 +54,7 @@ namespace UserInterface.Presenters
             if (parentGraph != null)
             {
                 graphPresenter = new GraphPresenter();
+                explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                 graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
             }
 
@@ -333,10 +334,8 @@ namespace UserInterface.Presenters
             // Populate the editor with a list of data sources.
             List<string> dataSources = new List<string>();
             foreach (string tableName in storage.TableNames)
-            {
-                if (tableName != "Messages" && tableName != "InitialConditions")
-                    dataSources.Add(tableName);
-            }
+                dataSources.Add(tableName);
+            
             dataSources.Sort();
             this.seriesView.DataSource.Values = dataSources.ToArray();
 

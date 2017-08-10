@@ -53,6 +53,29 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Resolve links in an unknown object e.g. user interface presenter
+        /// </summary>
+        /// <param name="obj"></param>
+        public void Resolve(object obj)
+        {
+            // Go looking for [Link]s
+            foreach (FieldInfo field in ReflectionUtilities.GetAllFields(
+                                                            GetModel(obj).GetType(),
+                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public))
+            {
+                LinkAttribute link = GetLinkAttribute(field);
+
+                if (link != null)
+                {
+                    // For now only try matching on a service
+                    object match = services.Find(s => field.FieldType.IsAssignableFrom(s.GetType()));
+                    if (match != null)
+                        field.SetValue(GetModel(obj), GetModel(match));
+                }
+            }
+        }
+
+        /// <summary>
         /// Set to null all link fields in the specified model.
         /// </summary>
         /// <param name="model">The model to look through for links</param>

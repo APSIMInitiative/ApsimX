@@ -13,6 +13,7 @@ namespace UserInterface.Presenters
     using System.Collections.Generic;
     using System.Data;
     using Views;
+    using System.Linq;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
@@ -45,7 +46,7 @@ namespace UserInterface.Presenters
             this.view.TableList.IsEditable = false;
             this.view.Grid.ReadOnly = true;
             this.view.Grid.NumericFormat = "N3";
-            this.view.TableList.Values = this.GetTableNames();
+            this.view.TableList.Values = dataStore.TableNames.ToArray();
             if (dataStore != null && Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
                 this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
 
@@ -63,24 +64,6 @@ namespace UserInterface.Presenters
             view.TableList.Changed -= OnTableSelected;
             view.ColumnFilter.Changed -= OnColumnFilterChanged;
             view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
-        }
-
-        /// <summary>Get a list of table names to send to the view.</summary>
-        private string[] GetTableNames()
-        {
-            List<string> tableNames = new List<string>();
-            if (this.dataStore != null)
-            {
-                foreach (string tableName in this.dataStore.TableNames)
-                {
-                    if (tableName != "Messages" && tableName != "InitialConditions")
-                    {
-                        tableNames.Add(tableName);
-                    }
-                }
-            }
-
-            return tableNames.ToArray();
         }
 
         /// <summary>Populate the grid control with data.</summary>

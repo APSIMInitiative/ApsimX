@@ -117,15 +117,12 @@ namespace Models.Report
             // Write out each table for this simulation.
             foreach (string tableName in storage.TableNames)
             {
-                if (tableName != "Messages" && tableName != "InitialConditions" && tableName != "Simulations")
+                DataTable data = storage.GetData(tableName);
+                if (data != null && data.Rows.Count > 0)
                 {
-                    DataTable data = storage.GetData(tableName);
-                    if (data != null && data.Rows.Count > 0)
-                    {
-                        StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
-                        DataTableUtilities.DataTableToText(data, 0, ",", true, report);
-                        report.Close();
-                    }
+                    StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
+                    DataTableUtilities.DataTableToText(data, 0, ",", true, report);
+                    report.Close();
                 }
             }
         }

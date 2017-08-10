@@ -213,7 +213,7 @@
             Assert.AreEqual(TableToString(fileName, "Report1"),
                            "SimulationID,Col\r\n" +
                            "           1,  1\r\n" +
-                           "           4,  4\r\n");
+                           "           2,  4\r\n");
         }
 
         /// <summary>Ensure that GetData when passed a table name returns data for the correct table</summary>

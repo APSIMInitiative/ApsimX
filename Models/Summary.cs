@@ -96,7 +96,7 @@ namespace Models
         public void WriteMessage(IModel model, string message)
         {
             object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Information) };
-            storage.WriteRow(simulation.Name, "Messages", summaryTableColumnNames, null, values);
+            storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
         }
 
         /// <summary>Write a warning message to the summary</summary>
@@ -105,7 +105,7 @@ namespace Models
         public void WriteWarning(IModel model, string message)
         {
             object[] values = new object[] { relativeModelPath, clock.Today, message, Convert.ToInt32(Simulation.ErrorLevel.Warning) };
-            storage.WriteRow(simulation.Name, "Messages", summaryTableColumnNames, null, values);
+            storage.WriteRow(simulation.Name, "_Messages", summaryTableColumnNames, null, values);
         }
         
         /// <summary>
@@ -113,18 +113,21 @@ namespace Models
         /// </summary>
         private void CreateInitialConditionsTable()
         {
-            object[] values = new object[] { modelPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, 0, simulation.Name };
-            storage.WriteRow(simulation.Name, "InitialConditions", initialConditionsColumnNames, null, values);
+            string simulationPath = Apsim.FullPath(simulation);
+            object[] values = new object[] { simulationPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, 0, simulation.Name };
+            storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
 
-            values = new object[] { modelPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
-            storage.WriteRow(simulation.Name, "InitialConditions", initialConditionsColumnNames, null, values);
+            values = new object[] { simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
+            storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
 
-            values = new object[] { modelPath, "Run on", "Run on", "String", string.Empty, string.Empty, 0, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") };
-            storage.WriteRow(simulation.Name, "InitialConditions", initialConditionsColumnNames, null, values);
+            values = new object[] { simulationPath, "Run on", "Run on", "String", string.Empty, string.Empty, 0, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") };
+            storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
 
             // Get all model properties and store in 'initialConditionsTable'
             foreach (Model model in Apsim.FindAll(simulation))
             {
+                string thisRelativeModelPath = Apsim.FullPath(model).Replace(simulationPath + ".", string.Empty);
+
                 List<VariableProperty> properties = new List<VariableProperty>();
                 FindAllProperties(model, properties);
                 foreach (VariableProperty property in properties)
@@ -144,8 +147,8 @@ namespace Models
                         if (property.Units == null)
                             property.Units = string.Empty;
                        
-                        values = new object[] { relativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, propertyValue };
-                        storage.WriteRow(simulation.Name, "InitialConditions", initialConditionsColumnNames, null, values);
+                        values = new object[] { thisRelativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, propertyValue };
+                        storage.WriteRow(simulation.Name, "_InitialConditions", initialConditionsColumnNames, null, values);
                     }
                 }
             }
@@ -249,10 +252,10 @@ namespace Models
             }
 
             // Get the initial conditions table.            
-            DataTable initialConditionsTable = storage.GetData(simulationName, "InitialConditions");
+            DataTable initialConditionsTable = storage.GetData(simulationName: simulationName, tableName:"_InitialConditions");
             if (initialConditionsTable != null)
             {
-                // Convert the 'InitialConditions' table in the DataStore to a series of
+                // Convert the '_InitialConditions' table in the DataStore to a series of
                 // DataTables for each model.
                 List<DataTable> tables = new List<DataTable>();
                 ConvertInitialConditionsToTables(initialConditionsTable, tables);
@@ -318,7 +321,7 @@ namespace Models
         private static DataTable GetMessageTable(IStorage storage, string simulationName)
         {
             DataTable messageTable = new DataTable();
-            DataTable messages = storage.GetData(simulationName: simulationName, tableName: "Messages");
+            DataTable messages = storage.GetData(simulationName: simulationName, tableName: "_Messages");
             if (messages != null && messages.Rows.Count > 0)
             {
                 messageTable.Columns.Add("Date", typeof(string));
@@ -328,16 +331,16 @@ namespace Models
                 foreach (DataRow row in messages.Rows)
                 {
                     // Work out the column 1 text.
-                    string modelName = (string)row[1];
+                    string modelName = (string)row[2];
 
                     string col1Text;
-                    if (row[2].GetType() == typeof(DateTime))
+                    if (row[3].GetType() == typeof(DateTime))
                     {
-                        DateTime date = (DateTime)row[2];
+                        DateTime date = (DateTime)row[3];
                         col1Text = date.ToString("yyyy-MM-dd") + " " + modelName;
                     }
                     else
-                        col1Text = row[2].ToString();
+                        col1Text = row[3].ToString();
 
                     // If the date and model name have changed then write a row.
                     if (col1Text != previousCol1Text)
@@ -355,8 +358,8 @@ namespace Models
                         col1Text = null;
                     }
 
-                    string message = (string)row[3];
-                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row[4].ToString());
+                    string message = (string)row[4];
+                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row[5].ToString());
 
                     if (errorLevel == Simulation.ErrorLevel.Error)
                     {

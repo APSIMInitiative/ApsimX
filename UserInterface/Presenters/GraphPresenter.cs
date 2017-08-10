@@ -19,6 +19,9 @@ namespace UserInterface.Presenters
     /// </summary>
     class GraphPresenter : IPresenter, IExportable
     {
+        [Link]
+        IStorage storage = null;
+
         /// <summary>The graph view</summary>
         private IGraphView graphView;
 
@@ -73,7 +76,7 @@ namespace UserInterface.Presenters
             if (graph != null && graph.Series != null)
             {
                 // Get a list of series definitions.
-                seriesDefinitions = graph.GetDefinitionsToGraph();
+                seriesDefinitions = graph.GetDefinitionsToGraph(storage);
                 foreach (SeriesDefinition definition in seriesDefinitions)
                     DrawOnView(definition);
 
