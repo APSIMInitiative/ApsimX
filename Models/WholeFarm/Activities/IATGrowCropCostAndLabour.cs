@@ -1,5 +1,8 @@
 ﻿using Models.Core;
+using Models.WholeFarm.Groupings;
 using Models.WholeFarm.Resources;
+using APSIM.Shared.Utilities;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,18 +10,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
+
+
 namespace Models.WholeFarm.Activities
 {
-	/// <summary>manage enterprise activity</summary>
-	/// <summary>This activity undertakes the overheads of running the enterprise.</summary>
-	/// <version>1.0</version>
-	/// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+	/// <summary>Activity to remove the costs and labour used for graowing a crop as a single resource request.
+    /// So either both cost and labour is taken or neither is.</summary>
 	[Serializable]
 	[ViewName("UserInterface.Views.GridView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
-	[ValidParent(ParentType = typeof(IATGrowCrop))]
+    [ValidParent(ParentType = typeof(IATGrowCrop))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    public class IATGrowCropCost : WFActivityBase
+    public class IATGrowCropCostAndLabour : WFActivityBase
 	{
         /// <summary>
         /// Get the Clock.
@@ -35,17 +38,21 @@ namespace Models.WholeFarm.Activities
         [Link]
         private ResourcesHolder Resources = null;
 
+
+
+
         /// <summary>
         /// Months before harvest to sow crop
         /// </summary>
         [Description("Months before harvest to apply cost")]
         public int MthsBeforeHarvest { get; set; }
 
+
         /// <summary>
         /// Crop payment style
         /// </summary>
         [Description("Payment style")]
-        public CropPaymentStyleType  PaymentStyle { get; set; }
+        public CropPaymentStyleType PaymentStyle { get; set; }
 
 
         /// <summary>
@@ -67,6 +74,9 @@ namespace Models.WholeFarm.Activities
         public string AccountName { get; set; }
 
 
+
+
+
         /// <summary>
         /// Date to apply the cost on.
         /// Has to be stored as a global variable because of a race condition that occurs if user sets  MthsBeforeHarvest=0
@@ -79,11 +89,6 @@ namespace Models.WholeFarm.Activities
         private DateTime costDate;
 
         /// <summary>
-        /// Store finance type to use
-        /// </summary>
-        private FinanceType bankAccount;
-
-        /// <summary>
         /// Parent somewhere above this model.
         /// </summary>
         private IATGrowCrop parentGrowCrop;
@@ -93,6 +98,16 @@ namespace Models.WholeFarm.Activities
         /// </summary>
         private IATCropLand grandParentCropLand;
 
+
+        /// <summary>
+        /// Store finance type to use
+        /// </summary>
+        private FinanceType bankAccount;
+
+        /// <summary>
+        /// Labour settings
+        /// </summary>
+        private List<LabourFilterGroupSpecified> labour { get; set; }
 
 
 
@@ -112,14 +127,20 @@ namespace Models.WholeFarm.Activities
 
             grandParentCropLand = (IATCropLand)parentGrowCrop.Parent;
 
+            // get finance resource
             Finance finance = Resources.FinanceResource();
             if (finance != null)
             {
                 bankAccount = Resources.GetResourceItem(this, typeof(Finance), AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
             }
 
+            // get labour specifications
+            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
+			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+
             costDate = CostDateFromHarvestDate();
         }
+
 
 
         /// <summary>
@@ -148,8 +169,6 @@ namespace Models.WholeFarm.Activities
         }
 
 
-
-
         /// <summary>
         /// Get the cost date from the harvest date.
         /// This will happen every month in case the harvest has occured and there is a new harvest date.
@@ -171,21 +190,23 @@ namespace Models.WholeFarm.Activities
         }
 
 
-
         /// <summary>
         /// Method to determine resources required for this activity in the current month
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
-		{
-            ResourceRequestList = null;
+        {
+			ResourceRequestList = null;
 
             if ((costDate.Year == Clock.Today.Year) && (costDate.Month == Clock.Today.Month))
             {
-
                 string cropName = parentGrowCrop.CropName;
-                double totalcost;
                 string reason;
+
+
+                //COSTS
+
+                double totalcost;
 
                 switch (PaymentStyle)
                 {
@@ -229,44 +250,93 @@ namespace Models.WholeFarm.Activities
                     );
                 }
 
+
+                //LABOUR
+
+                double daysNeeded = 0;
+
+                // for each labour item specified
+                foreach (var item in labour)
+                    {
+
+                        switch (item.UnitType)
+                        {
+                            case LabourUnitType.Fixed:
+                                daysNeeded = item.LabourPerUnit;
+                                reason = "Crop labour (fixed) - " + cropName;
+                                break; 
+                            case LabourUnitType.perHa:
+                                daysNeeded = item.LabourPerUnit  * MathUtilities.Divide(grandParentCropLand.Area, item.UnitSize, 0);
+                                reason = "Crop labour (perHa) - " + cropName;
+                                break;
+                            case LabourUnitType.perTree:
+                                if (parentGrowCrop.IsTreeCrop)
+                                {
+                                    daysNeeded = item.LabourPerUnit * MathUtilities.Divide((parentGrowCrop.TreesPerHa * grandParentCropLand.Area), item.UnitSize, 0);
+                                    reason = "Crop labour (perTree) - " + cropName;
+                                }
+                                else
+                                {
+                                    throw new Exception(String.Format("{0} is not a Tree Crop, so LabourUnitType {1} is not supported for {2}", parentGrowCrop.Name, item.UnitType, this.Name));
+                                }
+                                break;
+                            default:
+                                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
+                        }
+                        if (daysNeeded > 0)
+                        {
+                            if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
+                            ResourceRequestList.Add(new ResourceRequest()
+                            {
+                                AllowTransmutation = false,
+                                Required = daysNeeded,
+                                ResourceType = typeof(Labour),
+                                ResourceTypeName = "",
+                                ActivityModel = this,
+                                Reason = reason,
+                                FilterDetails = new List<object>() { item }
+                            }
+                            );
+                        }
+                    }
             }
 
             costDate = CostDateFromHarvestDate();
 
             return ResourceRequestList;
-        }
+		}
 
-		/// <summary>
-		/// Method used to perform activity if it can occur as soon as resources are available.
-		/// </summary>
-		public override void DoActivity()
-		{
+        /// <summary>
+        /// Method used to perform activity if it can occur as soon as resources are available.
+        /// </summary>
+        public override void DoActivity()
+        {
             return;
         }
 
-		/// <summary>
-		/// Method to determine resources required for initialisation of this activity
-		/// </summary>
-		/// <returns></returns>
-		public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-		{
-			return null;
-		}
+        /// <summary>
+        /// Method to determine resources required for initialisation of this activity
+        /// </summary>
+        /// <returns></returns>
+        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        {
+            return null;
+        }
 
-		/// <summary>
-		/// Method used to perform initialisation of this activity.
-		/// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
-		/// It is the responsibility of this activity to determine resources provided.
-		/// </summary>
-		public override void DoInitialisation()
-		{
-			return;
-		}
+        /// <summary>
+        /// Method used to perform initialisation of this activity.
+        /// This will honour ReportErrorAndStop action but will otherwise be preformed regardless of resources available
+        /// It is the responsibility of this activity to determine resources provided.
+        /// </summary>
+        public override void DoInitialisation()
+        {
+            return;
+        }
 
-		/// <summary>
-		/// Resource shortfall event handler
-		/// </summary>
-		public override event EventHandler ResourceShortfallOccurred;
+        /// <summary>
+        /// Resource shortfall event handler
+        /// </summary>
+        public override event EventHandler ResourceShortfallOccurred;
 
 		/// <summary>
 		/// Shortfall occurred 
@@ -277,8 +347,6 @@ namespace Models.WholeFarm.Activities
 			if (ResourceShortfallOccurred != null)
 				ResourceShortfallOccurred(this, e);
 		}
-
-
 
 	}
 }

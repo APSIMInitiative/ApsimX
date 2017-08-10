@@ -558,7 +558,7 @@
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
               </IATGrowCropLabour>
               <IATGrowCropLabour>
-                <Name>HandSowing</Name>
+                <Name>HandSowingLabour</Name>
                 <LabourFilterGroupSpecified>
                   <Name>Labour details</Name>
                   <LabourFilter>
@@ -577,6 +577,30 @@
                 <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
                 <MthsBeforeHarvest>1</MthsBeforeHarvest>
               </IATGrowCropLabour>
+              <IATGrowCropCostAndLabour>
+                <Name>HandSowingCostAndLabour</Name>
+                <LabourFilterGroupSpecified>
+                  <Name>Labour details</Name>
+                  <LabourFilter>
+                    <Name>Filter[Name=Joe B]</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <Parameter>Name</Parameter>
+                    <Operator>Equal</Operator>
+                    <Value>Joe B</Value>
+                  </LabourFilter>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <LabourPerUnit>0.01</LabourPerUnit>
+                  <UnitSize>1</UnitSize>
+                  <UnitType>perHa</UnitType>
+                </LabourFilterGroupSpecified>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+                <MthsBeforeHarvest>1</MthsBeforeHarvest>
+                <PaymentStyle>perHa</PaymentStyle>
+                <UnitsPerHaOrTree>1</UnitsPerHaOrTree>
+                <CostPerUnit>10</CostPerUnit>
+                <AccountName>General account</AccountName>
+              </IATGrowCropCostAndLabour>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
             </ActivityFolder>

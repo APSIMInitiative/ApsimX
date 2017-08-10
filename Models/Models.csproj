@@ -492,6 +492,7 @@
     <Compile Include="WholeFarm\Activities\FinanceActivityPayExpense.cs" />
     <Compile Include="WholeFarm\Activities\GrazeBreedPoolLimit.cs" />
     <Compile Include="WholeFarm\Activities\IATGrowCrop.cs" />
+    <Compile Include="WholeFarm\Activities\IATGrowCropCostAndLabour.cs" />
     <Compile Include="WholeFarm\Activities\LabourActivityOffFarm.cs" />
     <Compile Include="WholeFarm\Activities\OtherAnimalsActivityGrow.cs" />
     <Compile Include="WholeFarm\Activities\PastureActivityBurn.cs" />
