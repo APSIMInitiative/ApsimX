@@ -32,7 +32,7 @@ namespace Models.PostSimulationTools
         /// The main run method called to fill tables in the specified DataStore.
         /// </summary>
         /// <param name="dataStore">The DataStore to work with</param>
-        public void Run(IStorage dataStore)
+        public void Run(IStorageReader dataStore)
         {
             dataStore.DeleteTable(this.Name);
 

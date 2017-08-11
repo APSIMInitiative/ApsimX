@@ -17,7 +17,7 @@ namespace Models.Storage
     /// <summary>
     /// A storage service for reading and writing to/from a SQLITE database.
     /// </summary>
-    public class DataStore : Model, IStorage, IDisposable
+    public class DataStore : Model, IStorageReader, IStorageWriter, IDisposable
     {
         /// <summary>A SQLite connection shared between all instances of this DataStore.</summary>
         [NonSerialized]
@@ -268,12 +268,14 @@ namespace Models.Storage
         }
 
         /// <summary>Delete all tables</summary>
-        /// <param name="cleanSlate">If true, all tables are deleted; otherwise Simulations and Messages tables are retained</param>
-        public void DeleteAllTables(bool cleanSlate = false)
+        public void DeleteAllTables()
         {
-            foreach (string tableName in this.TableNames)
-                if (cleanSlate || !tableName.StartsWith("_"))
-                    DeleteTable(tableName);
+            bool openForReadOnly = true;
+            if (connection != null)
+                openForReadOnly = connection.IsReadOnly;
+            Close();
+            File.Delete(FileName);
+            Open(openForReadOnly);
         }
 
 
@@ -438,7 +440,7 @@ namespace Models.Storage
         {
             // Delete all tables in .db when all sims are being run. 
             if (knownSimulationNames.SequenceEqual(simulationNamesToBeRun))
-                DeleteAllTables(true);
+                DeleteAllTables();
             else
             {
                 // Get a list of simulation names that are in the .db but we know nothing about them

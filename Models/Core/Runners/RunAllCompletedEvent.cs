@@ -24,7 +24,7 @@
         public void Run(JobManager jobManager, BackgroundWorker workerThread)
         {
             ILocator locator = simulations.GetLocatorService(simulations);
-            IStorage store = locator.Get(typeof(IStorage)) as IStorage;
+            IStorageReader store = locator.Get(typeof(IStorageReader)) as IStorageReader;
             store.EndWriting();
 
             // Call the all completed event in all models

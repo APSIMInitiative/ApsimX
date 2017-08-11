@@ -21,10 +21,6 @@ namespace Models.Core.Interfaces
         /// <param name="model">The mode to make substitutions in</param>
         void MakeSubstitutions(IModel model);
 
-        /// <summary>Call OnLoaded event in all models under specified model</summary>
-        /// <param name="model">Top level model</param>
-        void CallOnLoaded(IModel model);
-
         /// <summary>Run a simulation</summary>
         /// <param name="simulation">The simulation to run</param>
         /// <param name="doClone">Clone the simulation before running?</param>

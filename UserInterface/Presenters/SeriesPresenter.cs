@@ -26,7 +26,7 @@ namespace UserInterface.Presenters
     class SeriesPresenter : IPresenter
     {
         [Link]
-        IStorage storage = null;
+        IStorageReader storage = null;
 
         /// <summary>The graph model to work with.</summary>
         private Series series;

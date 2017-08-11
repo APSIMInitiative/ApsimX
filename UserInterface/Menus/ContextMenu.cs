@@ -27,7 +27,10 @@ namespace UserInterface.Presenters
     public class ContextMenu
     {
         [Link]
-        IStorage storage = null;
+        IStorageReader storage = null;
+
+        [Link]
+        IStorageWriter storageWriter = null;
 
         /// <summary>
         /// Reference to the ExplorerPresenter.
@@ -176,7 +179,7 @@ namespace UserInterface.Presenters
                     List<JobManager.IRunnable> jobs = new List<JobManager.IRunnable>();
                     jobs.Add(Runner.ForSimulations(this.explorerPresenter.ApsimXFile, model, false));
 
-                    this.command = new Commands.RunCommand(jobs, model.Name, this.explorerPresenter, multiProcessRunner);
+                    this.command = new Commands.RunCommand(jobs, model.Name, this.explorerPresenter, multiProcessRunner, storageWriter);
                     this.command.Do(null);
                 }
             }
@@ -290,7 +293,7 @@ namespace UserInterface.Presenters
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
-            storage.DeleteAllTables(false);
+            storage.DeleteAllTables();
         }
 
         /// <summary>

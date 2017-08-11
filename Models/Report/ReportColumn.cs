@@ -36,7 +36,7 @@ namespace Models.Report
         public List<object> Values { get; set; }
 
         /// <summary>An instance of a storage service.</summary>
-        private IStorage storage;
+        private IStorageWriter storage;
 
         /// <summary>An instance of a locator service.</summary>
         private ILocator locator;
@@ -114,7 +114,7 @@ namespace Models.Report
         /// <param name="events">An instance of an events service</param>
         /// <returns>The newly created ReportColumn</returns>
         private ReportColumn(string aggregationFunction, string variableName, string columnName, string from, string to, 
-                             IClock clock, IStorage storage, ILocator locator, IEvent events)
+                             IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
             Values = new List<object>();
 
@@ -158,7 +158,7 @@ namespace Models.Report
         /// <param name="locator">An instance of a locator service</param>
         /// <param name="events">An instance of an events service</param>
         private ReportColumn(string variableName, string columnName, 
-                             IClock clock, IStorage storage, ILocator locator, IEvent events)
+                             IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
             Values = new List<object>();
             this.variableName = variableName;
@@ -222,7 +222,7 @@ namespace Models.Report
         /// <param name="events">An instance of an event service</param>
         /// <returns>The newly created ReportColumn</returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
-        public static ReportColumn Create(string descriptor, IClock clock, IStorage storage, ILocator locator, IEvent events)
+        public static ReportColumn Create(string descriptor, IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
             string columnName = RemoveWordAfter(ref descriptor, "as");
             string to = RemoveWordAfter(ref descriptor, "to");

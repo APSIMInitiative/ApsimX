@@ -82,7 +82,7 @@ namespace Models.PostSimulationTools
         /// Main run method for performing our calculations and storing data.
         /// </summary>
         /// <param name="dataStore">The data store to store the data</param>
-        public void Run(IStorage dataStore)
+        public void Run(IStorageReader dataStore)
         {
             string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))

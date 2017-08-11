@@ -3,21 +3,16 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
-namespace APSIMJobRunner
+namespace APSIMRunner
 {
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
     using Models.Core.Interfaces;
     using Models.Core.Runners;
-    using Models.Report;
+    using Models.Storage;
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
     using System.Net.Sockets;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
     using System.Threading;
 
     class Program
@@ -39,12 +34,17 @@ namespace APSIMJobRunner
 
                     // Run the simulation.
                     string errorMessage = null;
-                    Simulation simulation = null;
+                    RunSimulation simulationRunner = null;
                     try
                     {
-                        simulation = job.job as Simulation;
-                        ISimulationEngine simulationEngine = Simulations.Create(new Model[] { simulation });
-                        simulationEngine.Run(simulation, doClone:false);
+                        simulationRunner = job.job as RunSimulation;
+
+                        // Replace datastore with a socket writer
+                        simulationRunner.Services = new object[] { new StorageViaSockets() };
+
+                        // Run simulation
+                        simulationRunner.cloneSimulationBeforeRun = false;
+                        simulationRunner.Run(null, null);
 
                         // TODO Dean: Need to migrate this to the new mechanism.
                         //SocketServer.CommandObject transferDataCommand = new SocketServer.CommandObject() { name = "TransferData", data = DataStore.TablesToWrite };

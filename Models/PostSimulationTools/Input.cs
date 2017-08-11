@@ -57,7 +57,7 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        public void Run(IStorage dataStore)
+        public void Run(IStorageReader dataStore)
         {
             string fullFileName = FullFileName;
             if (fullFileName != null)

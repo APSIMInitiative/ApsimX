@@ -120,7 +120,7 @@ namespace Models.Graph
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
-        public void GetSeriesToPutOnGraph(IStorage storage, List<SeriesDefinition> definitions)
+        public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions)
         {
             List<SeriesDefinition> ourDefinitions = new List<SeriesDefinition>();
 
@@ -450,7 +450,7 @@ namespace Models.Graph
         /// <summary>Convert a simulation zone object into a series definition</summary>
         /// <param name="storage">Storage service</param>
         /// <param name="simulationZone">The object to convert</param>
-        private SeriesDefinition ConvertToSeriesDefinition(IStorage storage, SimulationZone simulationZone)
+        private SeriesDefinition ConvertToSeriesDefinition(IStorageReader storage, SimulationZone simulationZone)
         {
             SeriesDefinition seriesDefinition = new Models.Graph.SeriesDefinition();
             seriesDefinition.type = Type;
@@ -608,7 +608,7 @@ namespace Models.Graph
         /// </summary>
         /// <param name="simulationZones">The list of simulation / zone pairs.</param>
         /// <param name="storage">Storage service</param>
-        private DataTable GetBaseData(IStorage storage, List<SimulationZone> simulationZones)
+        private DataTable GetBaseData(IStorageReader storage, List<SimulationZone> simulationZones)
         {
             // Get a list of all simulation names in all simulationZones.
             List<string> simulationNames = new List<string>();

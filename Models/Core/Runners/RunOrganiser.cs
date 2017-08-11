@@ -40,7 +40,7 @@
             parentJob.Jobs.Add(new RunAllCompletedEvent(simulations));
 
             ILocator locator = simulations.GetLocatorService(simulations);
-            IStorage store = locator.Get(typeof(IStorage)) as IStorage;
+            IStorageReader store = locator.Get(typeof(IStorageReader)) as IStorageReader;
 
             if (store == null)
                 throw new Exception("Cannot find a DataStore.");

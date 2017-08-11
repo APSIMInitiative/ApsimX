@@ -57,7 +57,7 @@ namespace Models.PostSimulationTools
         /// or
         /// Could not find observed data table:  + ObservedTableName
         /// </exception>
-        public void Run(IStorage dataStore)
+        public void Run(IStorageReader dataStore)
         {
             if (PredictedTableName != null && ObservedTableName != null)
             {

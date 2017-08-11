@@ -30,7 +30,7 @@ namespace Models
     {
         /// <summary>A link to a storage service</summary>
         [Link]
-        private IStorage storage = null;
+        private IStorageWriter storage = null;
 
         /// <summary>A link to the clock in the simulation</summary>
         [Link]
@@ -161,7 +161,7 @@ namespace Models
         /// </summary>
         /// <param name="storage">The storage where the summary data is stored</param>
         /// <param name="fileName">The file name to write</param>
-        public static void WriteSummaryToTextFiles(IStorage storage, string fileName)
+        public static void WriteSummaryToTextFiles(IStorageReader storage, string fileName)
         {
             using (StreamWriter report = new StreamWriter(fileName))
             {
@@ -184,7 +184,7 @@ namespace Models
         /// <param name="apsimSummaryImageFileName">The file name for the logo. Can be null</param>
         /// <param name="outtype">Indicates the format to be produced</param>
         public static void WriteReport(
-            IStorage storage,
+            IStorageReader storage,
             string simulationName,
             TextWriter writer,
             string apsimSummaryImageFileName,
@@ -318,7 +318,7 @@ namespace Models
         /// <param name="storage">The data store</param>
         /// <param name="simulationName">The simulation name to get messages for</param>
         /// <returns>The filled message table</returns>
-        private static DataTable GetMessageTable(IStorage storage, string simulationName)
+        private static DataTable GetMessageTable(IStorageReader storage, string simulationName)
         {
             DataTable messageTable = new DataTable();
             DataTable messages = storage.GetData(simulationName: simulationName, tableName: "_Messages");

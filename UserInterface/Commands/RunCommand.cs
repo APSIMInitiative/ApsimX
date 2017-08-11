@@ -40,7 +40,8 @@
         /// <param name="name">The name of the job</param>
         /// <param name="presenter">The explorer presenter.</param>
         /// <param name="multiProcess">Use the multi-process runner?</param>
-        public RunCommand(JobManager.IRunnable job, string name, ExplorerPresenter presenter, bool multiProcess)
+        /// <param name="storage">A storage writer where all data should be stored</param>
+        public RunCommand(JobManager.IRunnable job, string name, ExplorerPresenter presenter, bool multiProcess, IStorageWriter storage)
         {
             jobs = new List<JobManager.IRunnable>();
             this.jobs.Add(job);
@@ -48,7 +49,7 @@
             this.explorerPresenter = presenter;
 
             if (multiProcess)
-                jobManager = new JobManagerMultiProcess();
+                jobManager = new JobManagerMultiProcess(storage);
             else
                 jobManager = new JobManager();
         }
@@ -58,14 +59,15 @@
         /// <param name="name">The name of the job</param>
         /// <param name="presenter">The explorer presenter.</param>
         /// <param name="multiProcess">Use the multi-process runner?</param>
-        public RunCommand(List<JobManager.IRunnable> jobs, string name, ExplorerPresenter presenter, bool multiProcess)
+        /// <param name="storage">A storage writer where all data should be stored</param>
+        public RunCommand(List<JobManager.IRunnable> jobs, string name, ExplorerPresenter presenter, bool multiProcess, IStorageWriter storage)
         {
             this.jobs = jobs;
             this.jobName = name;
             this.explorerPresenter = presenter;
 
             if (multiProcess)
-                jobManager = new JobManagerMultiProcess();
+                jobManager = new JobManagerMultiProcess(storage);
             else
                 jobManager = new JobManager();
         }

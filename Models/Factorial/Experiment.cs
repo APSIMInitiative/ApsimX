@@ -22,7 +22,7 @@ namespace Models.Factorial
     public class Experiment : Model, JobManager.IRunnable
     {
         [Link]
-        IStorage storage = null;
+        IStorageReader storage = null;
 
         /// <summary>Called to start the job.</summary>
         /// <param name="jobManager">The job manager running this job.</param>

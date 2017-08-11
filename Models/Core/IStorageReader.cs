@@ -6,18 +6,10 @@ namespace Models.Core
     /// <summary>
     /// Interface for reading and writing data to/from permanent storage.
     /// </summary>
-    public interface IStorage
+    public interface IStorageReader
     {
         /// <summary>Returns the file name of the .db file</summary>
         string FileName { get; }
-
-        /// <summary>Write to permanent storage.</summary>
-        /// <param name="simulationName">Name of simulation</param>
-        /// <param name="tableName">Name of table</param>
-        /// <param name="columnNames">Column names</param>
-        /// <param name="columnUnits">Column units</param>
-        /// <param name="valuesToWrite">Values of row to write</param>
-        void WriteRow(string simulationName, string tableName, IEnumerable<string> columnNames, IEnumerable<string> columnUnits, IEnumerable<object> valuesToWrite);
 
         /// <summary>
         /// Return all data from the specified simulation and table name. If simulationName = "*"
@@ -67,8 +59,7 @@ namespace Models.Core
         IEnumerable<string> ColumnNames(string tableName);
 
         /// <summary>Delete all tables</summary>
-        /// <param name="cleanSlate">If true, all tables are deleted; otherwise Simulations and Messages tables are retained</param>
-        void DeleteAllTables(bool cleanSlate = false);
+        void DeleteAllTables();
 
         /// <summary>Begin writing to DB file</summary>
         /// <param name="knownSimulationNames">A list of simulation names in the .apsimx file. If null no cleanup will be performed.</param>

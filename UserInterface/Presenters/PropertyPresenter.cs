@@ -33,7 +33,7 @@ namespace UserInterface.Presenters
     public class PropertyPresenter : IPresenter
     {
         [Link]
-        IStorage storage = null;
+        IStorageReader storage = null;
 
         /// <summary>
         /// The underlying grid control to work with.

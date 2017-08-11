@@ -147,6 +147,7 @@
     <Compile Include="Core\Events.cs" />
     <Compile Include="Core\FileFormat.cs" />
     <Compile Include="Core\Interfaces\ISimulationEngine.cs" />
+    <Compile Include="Core\IStorageWriter.cs" />
     <Compile Include="Core\Locator.cs" />
     <Compile Include="Core\Runners\JobManagerMultiProcess.cs" />
     <Compile Include="Core\Links.cs" />
@@ -278,7 +279,7 @@
     <Compile Include="Core\IEvent.cs" />
     <Compile Include="Core\ILocator.cs" />
     <Compile Include="Report\IReportColumn.cs" />
-    <Compile Include="Core\IStorage.cs" />
+    <Compile Include="Core\IStorageReader.cs" />
     <Compile Include="Report\ReportColumnWithValues.cs" />
     <Compile Include="Report\ReportColumnConstantValue.cs" />
     <Compile Include="Report\ReportColumn.cs" />

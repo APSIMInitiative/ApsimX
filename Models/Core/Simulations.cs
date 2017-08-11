@@ -172,7 +172,7 @@ namespace Models.Core
                 simulations.Parent = null;
                 Apsim.ParentAllChildren(simulations);
 
-                simulations.CallOnLoaded(simulations);
+                events.Publish("Loaded", null);
             }
             else
                 throw new Exception("Simulations.Read() failed. Invalid simulation file.\n");
@@ -208,19 +208,12 @@ namespace Models.Core
                             match.Parent.Children.Insert(index, newModel as Model);
                             newModel.Parent = match.Parent;
                             match.Parent.Children.Remove(match as Model);
-                            CallOnLoaded(newModel);
+                            Events events = new Events(newModel);
+                            events.Publish("Loaded", null);
                         }
                     }
                 }
             }
-        }
-
-        /// <summary>Call Loaded event in specified model and all children</summary>
-        /// <param name="model">The model.</param>
-        public void CallOnLoaded(IModel model)
-        {
-            Events events = new Events(model);
-            events.Publish("Loaded", null);
         }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
@@ -313,7 +306,7 @@ namespace Models.Core
         private void CreateLinks()
         {
             List<object> services = new List<object>();
-            IStorage storage = Apsim.Find(this, typeof(IStorage)) as IStorage;
+            IStorageReader storage = Apsim.Find(this, typeof(IStorageReader)) as IStorageReader;
             if (storage != null)
                 services.Add(storage);
             links = new Links(services);

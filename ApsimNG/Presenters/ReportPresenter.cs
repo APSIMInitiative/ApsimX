@@ -22,7 +22,7 @@ namespace UserInterface.Presenters
         private Report report;
         private IReportView view;
         private ExplorerPresenter explorerPresenter;
-        private IStorage dataStore;
+        private IStorageReader dataStore;
         private DataStorePresenter dataStorePresenter;
 
         /// <summary>Attach the model (report) and the view (IReportView)</summary>
@@ -42,7 +42,7 @@ namespace UserInterface.Presenters
 
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
             if (simulations != null)
-                dataStore = Apsim.Child(simulations, typeof(IStorage)) as IStorage;
+                dataStore = Apsim.Child(simulations, typeof(IStorageReader)) as IStorageReader;
             /// TBI this.view.VariableList.SetSyntaxHighlighter("Report");
 
             dataStorePresenter = new DataStorePresenter();

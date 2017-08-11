@@ -20,7 +20,7 @@ namespace UserInterface.Presenters
     class GraphPresenter : IPresenter, IExportable
     {
         [Link]
-        IStorage storage = null;
+        IStorageReader storage = null;
         
         /// <summary>The graph view</summary>
         private IGraphView graphView;

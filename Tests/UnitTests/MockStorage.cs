@@ -7,7 +7,7 @@ using System.Data;
 namespace UnitTests
 {
     [Serializable]
-    internal class MockStorage : IStorage
+    internal class MockStorage : IStorageReader
     {
         internal List<string> columnNames = new List<string>();
         internal List<Row> rows = new List<Row>();

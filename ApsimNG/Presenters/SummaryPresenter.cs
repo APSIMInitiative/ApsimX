@@ -23,7 +23,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Our data store</summary>
         [Link]
-        private IStorage dataStore = null;
+        private IStorageReader dataStore = null;
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model to work with</param>

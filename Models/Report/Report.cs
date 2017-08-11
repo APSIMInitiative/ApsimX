@@ -44,7 +44,7 @@ namespace Models.Report
 
         /// <summary>Link to a storage service.</summary>
         [Link]
-        private IStorage storage = null;
+        private IStorageWriter storage = null;
 
         /// <summary>Link to a locator service.</summary>
         [Link]
@@ -112,7 +112,7 @@ namespace Models.Report
         /// <summary>Create a text report from tables in this data store.</summary>
         /// <param name="storage">The data store.</param>
         /// <param name="fileName">Name of the file.</param>
-        public static void WriteAllTables(IStorage storage, string fileName)
+        public static void WriteAllTables(IStorageReader storage, string fileName)
         {
             // Write out each table for this simulation.
             foreach (string tableName in storage.TableNames)

@@ -20,7 +20,7 @@ namespace UserInterface.Presenters
     public class DataStorePresenter : IPresenter
     {
         /// <summary>The data store model to work with.</summary>
-        private IStorage dataStore;
+        private IStorageReader dataStore;
 
         /// <summary>The data store view to work with.</summary>
         private IDataStoreView view;
@@ -40,7 +40,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            dataStore = model as IStorage;
+            dataStore = model as IStorageReader;
             this.view = view as IDataStoreView;
             this.explorerPresenter = explorerPresenter;
 
