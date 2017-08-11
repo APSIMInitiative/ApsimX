@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -1256,60 +1256,15 @@ A function is used to provide flowering date as days after sowing(DAS).
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>6</FixedValue>
         </Constant>
-        <MultiplyFunction>
+        <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <Constant>
-            <Name>Sroot</Name>
+            <Name>PartitionFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>4779</FixedValue>
-            <Units>gc</Units>
+            <FixedValue>0.2</FixedValue>
           </Constant>
-          <Constant>
-            <Name>Kprgr</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.003</FixedValue>
-            <Units>gc gc-1d-1</Units>
-          </Constant>
-          <ExponentialFunction>
-            <Name>TemResponseFun</Name>
-            <SubtractFunction>
-              <Name>SubtractFunction</Name>
-              <AirTemperatureFunction>
-                <Name>AirTemperatureFunction</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <X>
-                    <double>0</double>
-                    <double>40</double>
-                  </X>
-                  <Y>
-                    <double>0</double>
-                    <double>40</double>
-                  </Y>
-                </XYPairs>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </AirTemperatureFunction>
-              <Constant>
-                <Name>referenceT</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>20</FixedValue>
-                <Units>oC</Units>
-              </Constant>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </SubtractFunction>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <A>0</A>
-            <B>1</B>
-            <C>0.069314</C>
-          </ExponentialFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </MultiplyFunction>
-        <Constant>
-          <Name>PartitionFraction</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.2</FixedValue>
-        </Constant>
+        </PartitionFractionDemandFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
