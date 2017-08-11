@@ -20,6 +20,18 @@ namespace Importer
     using Models.Interfaces;
 
     /// <summary>
+    /// Manager script parameter
+    /// </summary>
+    public class ScriptParameter
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public string TypeName { get; set; }
+        public string Description { get; set; }
+        public string ListValues { get; set; }
+    }
+
+    /// <summary>
     /// This is a worker class for the import process that converts
     /// an old APSIM 7.5 simulation file into an APSIM(X) file or Simulations object.
     /// <para/>
@@ -149,7 +161,7 @@ namespace Importer
         /// <returns>An APSIMX Simulations object</returns>
         public Simulations CreateSimulations(string filename)
         {
-            string xfile = Path.GetTempFileName(); 
+            string xfile = Path.GetTempFileName();
             Simulations newSimulations = null;
 
             try
@@ -342,7 +354,7 @@ namespace Importer
                     this.AddChildComponents(compNode, newPaddockNode);
 
                     // if it contains a soilwater then
-                    if (this.soilWaterExists && !this.surfOMExists)   
+                    if (this.soilWaterExists && !this.surfOMExists)
                     {
                         Console.WriteLine("Added SurfaceOM to " + XmlUtilities.FullPathUsingName(newPaddockNode));
                         Models.SurfaceOM.SurfaceOrganicMatter mysom = new Models.SurfaceOM.SurfaceOrganicMatter();
@@ -391,7 +403,7 @@ namespace Importer
             {
                 throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.ToString() + "\n");
             }
-            return newNode; 
+            return newNode;
         }
 
         /// <summary>
@@ -452,8 +464,8 @@ namespace Importer
                         object obj = Activator.CreateInstance(field.FieldType);
                         this.AddLinkedObjects(newNode, obj);
                     }
-                } 
-            } 
+                }
+            }
         }
 
         /// <summary>
@@ -482,7 +494,7 @@ namespace Importer
             this.microClimateExists = true; // has been added
 
             return newNode;
-        }     
+        }
 
         /// <summary>
         /// Import the soil crop object
@@ -502,7 +514,7 @@ namespace Importer
             string name = XmlUtilities.NameAttr(compNode);
             if (name == "SoilCrop")
                 name = XmlUtilities.Value(compNode, "Name");
-            
+
             newNode = ImportObject(destParent, newNode, mycrop, name);
 
             return newNode;
@@ -628,7 +640,7 @@ namespace Importer
             this.CopyNodeAndValueArray(childNode, newNode, "FBiom", "FBiom");
             childNode = XmlUtilities.Find(compNode, "FInert");
             this.CopyNodeAndValueArray(childNode, newNode, "FInert", "FInert");
-            
+
             return newNode;
         }
 
@@ -834,7 +846,7 @@ namespace Importer
             int i = 0;
             foreach (XmlNode var in nodes)
             {
-                if (var.InnerText.Contains("yyyy")) 
+                if (var.InnerText.Contains("yyyy"))
                 {
                     myreport.VariableNames[i] = "[Clock].Today";
                 }
@@ -896,8 +908,83 @@ namespace Importer
             List<string> endofdayScripts = new List<string>();
             List<string> initScripts = new List<string>();
             List<string> unknownHandlerScripts = new List<string>();
+            List<string> enumTypes = new List<string>();
 
             List<XmlNode> nodes = new List<XmlNode>();
+
+            // Convert the <ui> section
+            List<ScriptParameter> scriptParams = new List<ScriptParameter>();
+            XmlUtilities.FindAllRecursivelyByType(compNode, "ui", ref nodes);
+            foreach (XmlNode ui in nodes)
+            {
+                XmlDocument doc = new XmlDocument();
+                XmlElement[] parameters = new XmlElement[1];
+                parameters[0] = doc.CreateElement("Script");
+                foreach (XmlNode init in ui)
+                {
+                    if (String.Compare(init.Name, "category", true) != 0)
+                    {
+                        ScriptParameter param = new ScriptParameter();
+                        param.Name = init.Name;
+                        param.Value = init.InnerText;
+                        param.ListValues = XmlUtilities.Attribute(init, "listvalues");
+                        param.Description = XmlUtilities.Attribute(init, "description");
+                        param.TypeName = XmlUtilities.Attribute(init, "type");
+                        if (String.Compare(param.TypeName, "yesno") == 0)
+                        {
+                            if (param.Value.Contains("o"))
+                            {
+                                param.Value = "false";
+                            }
+                            else
+                            {
+                                param.Value = "true";
+                            }
+                        }
+                        else if (String.Compare(param.TypeName, "list") == 0)
+                        {
+                            param.ListValues = param.ListValues.Replace("double", "_double");
+                        }
+                        scriptParams.Add(param);
+
+                        XmlNode newChild = doc.CreateElement(param.Name);
+                        XmlText text = doc.CreateTextNode(param.Value);
+                        newChild.AppendChild(text);
+                        parameters[0].AppendChild(newChild);
+                    }
+                }
+                mymanager.elements = parameters;
+            }
+
+            foreach (ScriptParameter param in scriptParams)
+            {
+                string atype = "string ";   //ddmmmdate, crop, text, cultivar
+                if (String.Compare(param.TypeName, "yesno") == 0)
+                {
+                    atype = "bool ";
+                }
+                else if (String.Compare(param.TypeName, "list") == 0)
+                {
+                    //create an unumeration
+                    atype = param.Name + "Type ";
+                    enumTypes.Add("\t\tpublic enum " + atype + "\n\t\t{\n\t\t\t" + param.ListValues + "\n\t\t}\n");
+                }
+
+                code.Append("\n\t\t[Description(\"" + param.Description+"\")]\n");
+                if (String.Compare(param.TypeName, "cultivars") == 0)
+                {
+                    code.Append("\t\t[Display(DisplayType = DisplayAttribute.DisplayTypeEnum.CultivarName)]\n");
+                }
+                code.Append("\t\tpublic " + atype + param.Name + " { get; set; }\n");
+            }
+            
+            foreach (string enumType in enumTypes)
+            {
+                code.Append(enumType);
+            }
+            code.Append("\n");
+
+            // Convert the <script> section 
             XmlUtilities.FindAllRecursivelyByType(compNode, "script", ref nodes);
             foreach (XmlNode script in nodes)
             {
