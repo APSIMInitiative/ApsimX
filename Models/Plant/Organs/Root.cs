@@ -54,13 +54,14 @@ namespace Models.PMF.Organs
     public class Root : BaseOrgan, IWaterNitrogenUptake
     {
         #region Links
-        /// <summary>The arbitrator</summary>
-        [Link]
-        OrganArbitrator Arbitrator = null;
 
         #endregion
 
         #region Parameters
+        /// <summary>The DM demand function</summary>
+        [Link]
+        [Units("g/m2/d")]
+        IFunction DMDemandFunction = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [Link]
@@ -122,11 +123,6 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction StructuralFraction = null;
-
-        /// <summary>The biomass partition fraction</summary>
-        [Link]
-        [Units("0-1")]
-        IFunction PartitionFraction = null;
 
         /// <summary>The maximum N concentration</summary>
         [Link]
@@ -525,7 +521,7 @@ namespace Models.PMF.Organs
         {
             if (DMConversionEfficiency > 0.0)
             {
-                double demandedDM = Arbitrator.DM.TotalFixationSupply * PartitionFraction.Value();
+                double demandedDM = DMDemandFunction.Value();
                 if (StructuralFraction != null)
                     demandedDM *= StructuralFraction.Value() / DMConversionEfficiency;
                 else
