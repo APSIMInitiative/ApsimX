@@ -1765,7 +1765,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
+              <XProperty>[Root].WaterTensionFactor</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>NitrogenStressFactor</Name>
@@ -1797,7 +1797,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0.1</double>
-                  <double>1</double>
+                  <double>1.1</double>
                   <double>1.3</double>
                 </X>
                 <Y>
@@ -2079,10 +2079,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>0</double>
-                    <double>0.5</double>
+                    <double>1</double>
                   </X>
                   <Y>
-                    <double>0.5</double>
+                    <double>2</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -2114,10 +2114,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <X>
                     <double>0</double>
-                    <double>0.5</double>
+                    <double>1</double>
                   </X>
                   <Y>
-                    <double>0.5</double>
+                    <double>2</double>
                     <double>0</double>
                   </Y>
                 </XYPairs>
@@ -47245,7 +47245,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.AboveGround.N</YFieldName>
+              <YFieldName>Wheat.AboveGroundLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
