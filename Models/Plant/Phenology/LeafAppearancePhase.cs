@@ -9,8 +9,7 @@ using Models.PMF.Functions;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase extends from the end of the previous phase until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate and the final main stem node number.  
-    /// As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure object) are important for predicting the duration of the crop correctly.
+    /// This phase extends from the end of the previous phase until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate (Structure.MainStemNodeAppearanceRate) and the number of leaves produced on the mainstem (Structure.MainStemFinalNodeNumber). As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure model) are important for predicting the duration of the crop correctly.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -174,12 +173,12 @@ namespace Models.PMF.Phen
             // Describe the start and end stages
             tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
+            // get description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                 memo.Document(tags, -1, indent);
-
-            // get description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
         }
 
     }
