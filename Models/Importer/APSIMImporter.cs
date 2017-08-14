@@ -14,6 +14,7 @@ namespace Importer
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml;
+    using Microsoft.CSharp;
     using Models.Core;
     using APSIM.Shared.Utilities;
     using APSIM.Shared.OldAPSIM;
@@ -24,10 +25,25 @@ namespace Importer
     /// </summary>
     public class ScriptParameter
     {
+        /// <summary>
+        /// The name of the extracted parameter
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// The value as a string
+        /// </summary>
         public string Value { get; set; }
+        /// <summary>
+        /// The type name extracted from the original script
+        /// </summary>
         public string TypeName { get; set; }
+        /// <summary>
+        /// The description for the parameter
+        /// </summary>
         public string Description { get; set; }
+        /// <summary>
+        /// An enumeration
+        /// </summary>
         public string ListValues { get; set; }
     }
 
@@ -930,6 +946,7 @@ namespace Importer
                         param.ListValues = XmlUtilities.Attribute(init, "listvalues");
                         param.Description = XmlUtilities.Attribute(init, "description");
                         param.TypeName = XmlUtilities.Attribute(init, "type");
+                        // Convert any boolean values 
                         if (String.Compare(param.TypeName, "yesno") == 0)
                         {
                             if (param.Value.Contains("o"))
@@ -943,7 +960,17 @@ namespace Importer
                         }
                         else if (String.Compare(param.TypeName, "list") == 0)
                         {
-                            param.ListValues = param.ListValues.Replace("double", "_double");
+                            // some enumerated types contain invalid identifiers for C#
+                            CSharpCodeProvider cs = new CSharpCodeProvider();
+                            string[] items = param.ListValues.Split(',');
+                            foreach (string s in items)
+                            {
+                                string item = s.Trim();
+                                if (!cs.IsValidIdentifier(item))    // returns false if this should not be used
+                                {
+                                    param.ListValues = param.ListValues.Replace(item, "_" + item + " /*replaces " +item+"*/");
+                                }
+                            }
                         }
                         scriptParams.Add(param);
 
@@ -956,6 +983,7 @@ namespace Importer
                 mymanager.elements = parameters;
             }
 
+            // write the declarations of the parameters
             foreach (ScriptParameter param in scriptParams)
             {
                 string atype = "string ";   //ddmmmdate, crop, text, cultivar
@@ -965,7 +993,7 @@ namespace Importer
                 }
                 else if (String.Compare(param.TypeName, "list") == 0)
                 {
-                    //create an unumeration
+                    //create an enumeration
                     atype = param.Name + "Type ";
                     enumTypes.Add("\t\tpublic enum " + atype + "\n\t\t{\n\t\t\t" + param.ListValues + "\n\t\t}\n");
                 }
@@ -978,6 +1006,7 @@ namespace Importer
                 code.Append("\t\tpublic " + atype + param.Name + " { get; set; }\n");
             }
             
+            // write the enumerated types in a block
             foreach (string enumType in enumTypes)
             {
                 code.Append(enumType);
