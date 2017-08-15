@@ -27,6 +27,7 @@ namespace Models.WholeFarm.Activities
 		private ResourcesHolder Resources = null;
 
 		private GreenhouseGasesType methaneEmissions;
+		private ProductStoreTypeManure manureStore;
 
 		/// <summary>
 		/// Gross energy content of forage (MJ/kg DM)
@@ -51,6 +52,7 @@ namespace Models.WholeFarm.Activities
 		private void OnSimulationCommencing(object sender, EventArgs e)
 		{
 			methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+			manureStore = Resources.GetResourceItem(this, typeof(ProductStoreType), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as ProductStoreTypeManure;
 		}
 
 		/// <summary>Function to determine all individuals potnetial intake and suckling intake after milk consumption from mother</summary>
@@ -252,10 +254,6 @@ namespace Models.WholeFarm.Activities
 					// or sum and produce one event for breed at end of loop
 					totalMethane += methane;
 
-					// calculate manure
-					// ? call manure produce event
-					// or sum and produce one event for breed at end of loop
-
 					// grow wool and cashmere
 					ind.Wool += ind.BreedParams.WoolCoefficient * ind.Intake;
 					ind.Cashmere += ind.BreedParams.CashmereCoefficient * ind.Intake;
@@ -264,6 +262,26 @@ namespace Models.WholeFarm.Activities
 				if (methaneEmissions != null)
 				{
 					methaneEmissions.Add(totalMethane * 30.4 / 1000, this.Name, breed);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in ProductResources 
+		/// This is called at the end of WFAnimalWeightGain so after intake determines and before deaths and sales.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("WFCalculateManure")]
+		private void OnWFCalculateManure(object sender, EventArgs e)
+		{
+			if(manureStore!=null)
+			{
+				// sort by animal location
+				foreach (var item in Resources.RuminantHerd().Herd.GroupBy(a => a.Location))
+				{
+					double manureProduced = item.Sum(a => a.Intake * ((100 - a.DietDryMatterDigestibility) / 100));
+					manureStore.AddUncollectedManure(item.Key, manureProduced);
 				}
 			}
 		}

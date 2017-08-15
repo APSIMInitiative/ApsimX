@@ -496,6 +496,8 @@
     <Compile Include="WholeFarm\Activities\OtherAnimalsActivityGrow.cs" />
     <Compile Include="WholeFarm\Activities\PastureActivityBurn.cs" />
     <Compile Include="WholeFarm\Activities\Relationship.cs" />
+    <Compile Include="WholeFarm\Activities\RuminantActivityCollectManureAll.cs" />
+    <Compile Include="WholeFarm\Activities\RuminantActivityCollectManurePaddock.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityGrazeAll.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityGrazePasture.cs" />
     <Compile Include="WholeFarm\Activities\RuminantActivityGrazePastureBreed.cs" />
@@ -544,6 +546,7 @@
     <Compile Include="WholeFarm\Activities\PastureActivityManage.cs" />
     <Compile Include="WholeFarm\Resources\ProductStoreType.cs" />
     <Compile Include="WholeFarm\Resources\ProductStore.cs" />
+    <Compile Include="WholeFarm\Resources\ProductStoreTypeManure.cs" />
     <Compile Include="WholeFarm\Resources\ResourceBaseWithTransactions.cs" />
     <Compile Include="WholeFarm\Resources\ResourceRequests.cs" />
     <Compile Include="WholeFarm\Resources\ResourcesHolder.cs" />

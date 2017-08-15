@@ -116,6 +116,8 @@ namespace Models
 		/// <summary>Get potential intake. This includes suckling milk consumption</summary>
 		public event EventHandler WFPotentialIntake;
 		/// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
+		public event EventHandler WFCalculateManure;
+		/// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
 		public event EventHandler WFGetResourcesRequired;
 		/// <summary>WholeFarm Calculate Animals (Ruminant and Other) milk production</summary>
 		public event EventHandler WFAnimalMilkProduction;
@@ -286,6 +288,8 @@ namespace Models
 						WFAnimalBreeding.Invoke(this, args);
 					if (WFPotentialIntake != null)
 						WFPotentialIntake.Invoke(this, args);
+					if (WFCalculateManure != null)
+						WFCalculateManure.Invoke(this, args);
 					if (WFGetResourcesRequired != null)
 						WFGetResourcesRequired.Invoke(this, args);
 					if (WFAnimalMilkProduction != null)
