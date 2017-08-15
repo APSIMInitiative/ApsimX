@@ -1003,6 +1003,11 @@
       </OrganBiomassRemovalType>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
+    <Constant>
+      <Name>NitrogenDemandSwitch</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <CohortsInitialised>false</CohortsInitialised>
     <TipsAtEmergence>0</TipsAtEmergence>
