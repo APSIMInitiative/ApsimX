@@ -480,6 +480,31 @@ This is the Product yield (g/m2 fresh weight) that SCRUM will predict provided n
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
+    <Constant>
+      <Name>NRetranslocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>NitrogenDemandSwitch</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>DMReallocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>DMRetranslocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <VariableReference>
+      <Name>CriticalNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <VariableName>[Product].MinimumNConc.Value()</VariableName>
+    </VariableReference>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <SimpleLeaf>
