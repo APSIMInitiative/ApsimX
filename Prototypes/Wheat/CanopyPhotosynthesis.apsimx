@@ -2416,10 +2416,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </WangEngelTempFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
-        <ApexStandard>
-          <Name>ApexStandard</Name>
+        <ApexTiller>
+          <Name>Apex</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </ApexStandard>
+        </ApexTiller>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>

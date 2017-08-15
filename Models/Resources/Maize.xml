@@ -1146,10 +1146,10 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
   </Root>
   <Leaf>
     <Name>Leaf</Name>
-    <ApexStandard>
-      <Name>ApexStandard</Name>
+    <ApexTiller>
+      <Name>Apex</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-    </ApexStandard>
+    </ApexTiller>
     <LeafCohort>
       <Name>InitialLeaves[1]</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>

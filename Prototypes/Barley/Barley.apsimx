@@ -2954,10 +2954,10 @@ N conc values are from Zhao et al 2009
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
-        <ApexStandard>
-          <Name>ApexStandard</Name>
+        <ApexTiller>
+          <Name>Apex</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </ApexStandard>
+        </ApexTiller>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
