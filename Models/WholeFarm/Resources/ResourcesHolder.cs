@@ -334,13 +334,14 @@ namespace Models.WholeFarm.Resources
 								if (!QueryOnly)
 								{
 									//remove cost
-									request.Reason = trans.Name + " " + trans.Parent.Name;
+									//request.Reason = trans.Name + " " + trans.Parent.Name;
 									// create new request for this transmutation cost
 									ResourceRequest transRequest = new ResourceRequest();
 									transRequest.Reason = trans.Name + " " + trans.Parent.Name;
 //									transRequest.ActivityName = trans.Name + " " + trans.Parent.Name;
 									transRequest.Required = transmutationCost;
 									transRequest.ResourceType = transcost.ResourceType;
+									transRequest.ActivityModel = request.ActivityModel;
 
 									// used to pass request, but this is not the transmutation cost
 									transResource.Remove(transRequest);

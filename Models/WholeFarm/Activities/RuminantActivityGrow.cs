@@ -414,8 +414,8 @@ namespace Models.WholeFarm.Activities
 
 				//TODO: add draft individual energy requirement
 
-				// set maintenance age to maximum of 6 years
-				double maintenanceAge = Math.Min(ind.Age * 30.4, 2190);
+				// set maintenance age to maximum of 6 years (2190 days). Now uses EnergeyMaintenanceMaximumAge
+				double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
 
 				// Reference: SCA p.24
 				// Regference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
@@ -467,7 +467,7 @@ namespace Models.WholeFarm.Activities
 			//methaneProduced = methaneProduced / 55.28 * 1000; // grams per day
 
 			// grams per day, Hunter 2007 (35.16 & -34.8)
-			methaneProduced = (ind.BreedParams.MethaneProductionCoefficient * ind.Intake + ind.BreedParams.MethaneProductionIntercept) / 47.62; 
+			methaneProduced = (ind.BreedParams.MethaneProductionCoefficient * intakeDaily + ind.BreedParams.MethaneProductionIntercept) / 47.62; 
 		}
 
 		/// <summary>

@@ -23,8 +23,6 @@ namespace Models.WholeFarm.Activities
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
-//		[Link]
-//		ISummary Summary = null;
 
 		/// <summary>
 		/// Get the Clock.

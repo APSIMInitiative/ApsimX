@@ -23,16 +23,16 @@ namespace Models.WholeFarm.Resources
 		public double OpeningBalance { get; set; }
 
 		/// <summary>
-		/// The amount this account can be withdrawn to (-ve)
-		/// </summary>
-		[Description("The amount this account can be withdrawn to (<0 credit, 0 no credit)")]
-		public double WithdrawalLimit { get; set; }
-
-		/// <summary>
 		/// Enforce withdrawal limit
 		/// </summary>
 		[Description("Enforce withdrawal limit. (false, no limit to spending)")]
 		public bool EnforceWithdrawalLimit { get; set; }
+
+		/// <summary>
+		/// The amount this account can be withdrawn to (-ve)
+		/// </summary>
+		[Description("The amount this account can be withdrawn to (<0 credit, 0 no credit)")]
+		public double WithdrawalLimit { get; set; }
 
 		/// <summary>
 		/// Interest rate (%) charged on negative balance

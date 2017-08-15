@@ -279,7 +279,7 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// A funtion to add intake and track changes in %N and DietDryMatterDigestibility
 		/// </summary>
-		/// <param name="intake">Feed request contianing intake information kg, %n, DMD</param>
+		/// <param name="intake">Feed request containing intake information kg, %n, DMD</param>
 		public void AddIntake(FoodResourcePacket intake)
 		{
 			if (intake.Amount > 0)

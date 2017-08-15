@@ -65,7 +65,7 @@ namespace Models.WholeFarm.Resources
 				pool = new ManurePool() { Age = 0 };
 				store.Pools.Add(pool);
 			}
-			pool.Amount = amount;
+			pool.Amount += amount;
 		}
 
 		/// <summary>

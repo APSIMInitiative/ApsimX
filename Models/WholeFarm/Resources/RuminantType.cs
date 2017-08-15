@@ -23,6 +23,14 @@ namespace Models.WholeFarm.Resources
         public string Breed { get; set; }
 
 		/// <summary>
+		/// Constructor
+		/// </summary>
+		public RuminantType()
+		{
+			this.SetDefaults();
+		}
+
+		/// <summary>
 		/// Current value of individuals in the herd
 		/// </summary>
 		[XmlIgnore]
@@ -124,6 +132,12 @@ namespace Models.WholeFarm.Resources
 		/// </summary>
 		[Description("Energy lactation efficiency intercept")]
 		public double ELactationIntercept { get; set; }
+		/// <summary>
+		/// Maximum age for energy maintenance calculation (yrs)
+		/// </summary>
+		[System.ComponentModel.DefaultValueAttribute(6)]
+		[Description("Maximum age for energy maintenance calculation (yrs)")]
+		public double EnergyMaintenanceMaximumAge { get; set; }
 		/// <summary>
 		/// Breed factor for maintenence energy
 		/// </summary>
