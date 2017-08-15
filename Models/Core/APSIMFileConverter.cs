@@ -357,47 +357,61 @@ namespace Models.Core
         {
             foreach (XmlNode GenericOrgan in XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"))
             {
-                XmlNode NRetranslocationFactor = FindPMFNode(GenericOrgan, "NRetranslocationFactor");
-                if (NRetranslocationFactor == null)
-                {
-                    XmlNode constant = GenericOrgan.AppendChild(GenericOrgan.OwnerDocument.CreateElement("Constant"));
-                    XmlUtilities.SetValue(constant, "Name", "NRetranslocationFactor");
-                    XmlUtilities.SetValue(constant, "FixedValue", "0.0");
-                }
+                AddOrganFunctions(GenericOrgan);
+            }
+            foreach (XmlNode SimpleLeaf in XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"))
+            {
+                AddOrganFunctions(SimpleLeaf);
+            }
+            foreach (XmlNode Nodule in XmlUtilities.FindAllRecursivelyByType(node, "Nodule"))
+            {
+                AddOrganFunctions(Nodule);
+            }
 
-                XmlNode NitrogenDemandSwitch = FindPMFNode(GenericOrgan, "NitrogenDemandSwitch");
-                if (NitrogenDemandSwitch == null)
-                {
-                    XmlNode constant = GenericOrgan.AppendChild(GenericOrgan.OwnerDocument.CreateElement("Constant"));
-                    XmlUtilities.SetValue(constant, "Name", "NitrogenDemandSwitch");
-                    XmlUtilities.SetValue(constant, "FixedValue", "1.0");
-                }
+        }
+        private static void AddOrganFunctions(XmlNode OrganType)
+        {
+            XmlNode NRetranslocationFactor = FindPMFNode(OrganType, "NRetranslocationFactor");
+            if (NRetranslocationFactor == null)
+            {
+                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
+                XmlUtilities.SetValue(constant, "Name", "NRetranslocationFactor");
+                XmlUtilities.SetValue(constant, "FixedValue", "0.0");
+            }
 
-                XmlNode DMReallocationFactor = FindPMFNode(GenericOrgan, "DMReallocationFactor");
-                if (DMReallocationFactor == null)
-                {
-                    XmlNode constant = GenericOrgan.AppendChild(GenericOrgan.OwnerDocument.CreateElement("Constant"));
-                    XmlUtilities.SetValue(constant, "Name", "DMReallocationFactor");
-                    XmlUtilities.SetValue(constant, "FixedValue", "0.0");
-                }
+            XmlNode NitrogenDemandSwitch = FindPMFNode(OrganType, "NitrogenDemandSwitch");
+            if (NitrogenDemandSwitch == null)
+            {
+                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
+                XmlUtilities.SetValue(constant, "Name", "NitrogenDemandSwitch");
+                XmlUtilities.SetValue(constant, "FixedValue", "1.0");
+            }
 
-                XmlNode DMRetranslocationFactor = FindPMFNode(GenericOrgan, "DMRetranslocationFactor");
-                if (DMRetranslocationFactor == null)
-                {
-                    XmlNode constant = GenericOrgan.AppendChild(GenericOrgan.OwnerDocument.CreateElement("Constant"));
-                    XmlUtilities.SetValue(constant, "Name", "DMRetranslocationFactor");
-                    XmlUtilities.SetValue(constant, "FixedValue", "0.0");
-                }
+            XmlNode DMReallocationFactor = FindPMFNode(OrganType, "DMReallocationFactor");
+            if (DMReallocationFactor == null)
+            {
+                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
+                XmlUtilities.SetValue(constant, "Name", "DMReallocationFactor");
+                XmlUtilities.SetValue(constant, "FixedValue", "0.0");
+            }
 
-                XmlNode CriticalNConc = FindPMFNode(GenericOrgan, "CriticalNConc");
-                if (CriticalNConc == null)
-                {
-                    XmlNode critNConc = GenericOrgan.AppendChild(GenericOrgan.OwnerDocument.CreateElement("VariableReference"));
-                    XmlUtilities.SetValue(critNConc, "Name", "CriticalNConc");
-                    string refPath = "[" + GenericOrgan.FirstChild.InnerText + "].MinimumNConc.Value()";
-                    XmlUtilities.SetValue(critNConc, "VariableName", refPath);
-                }
+            XmlNode DMRetranslocationFactor = FindPMFNode(OrganType, "DMRetranslocationFactor");
+            if (DMRetranslocationFactor == null)
+            {
+                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
+                XmlUtilities.SetValue(constant, "Name", "DMRetranslocationFactor");
+                XmlUtilities.SetValue(constant, "FixedValue", "0.0");
+            }
+
+            XmlNode CriticalNConc = FindPMFNode(OrganType, "CriticalNConc");
+            if (CriticalNConc == null)
+            {
+                XmlNode critNConc = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("VariableReference"));
+                XmlUtilities.SetValue(critNConc, "Name", "CriticalNConc");
+                string refPath = "[" + OrganType.FirstChild.InnerText + "].MinimumNConc.Value()";
+                XmlUtilities.SetValue(critNConc, "VariableName", refPath);
             }
         }
+
     }
 }
