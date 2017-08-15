@@ -89,7 +89,7 @@ namespace Models.PMF.Organs
         IFunction DetachmentRateFunction = null;
 
         /// <summary>The N retranslocation factor</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction NRetranslocationFactor = null;
 
@@ -99,16 +99,16 @@ namespace Models.PMF.Organs
         IFunction NReallocationFactor = null;
 
         /// <summary>The nitrogen demand switch</summary>
-        [Link(IsOptional = true)]
+        [Link]
         IFunction NitrogenDemandSwitch = null;
 
         /// <summary>The DM retranslocation factor</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction DMRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction DMReallocationFactor = null;
 
@@ -138,7 +138,7 @@ namespace Models.PMF.Organs
         public IFunction MinimumNConc = null;
 
         /// <summary>The critical N concentration</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("g/g")]
         public IFunction CriticalNConc = null;
 
@@ -358,53 +358,39 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
-            if (DMRetranslocationFactor != null)
-            {
-                double availableDM = Math.Max(0.0, StartLive.NonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
+             double availableDM = Math.Max(0.0, StartLive.NonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
                 return availableDM;
-            }
-            else
-            { // By default retranslocation is turned off!!!!
-                return 0.0;
-            }
         }
 
         /// <summary>Computes the amount of DM available for reallocation.</summary>
         public double AvailableDMReallocation()
         {
-            if (DMReallocationFactor != null)
-            {
-                double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value() * DMReallocationFactor.Value();
-                if (availableDM < -BiomassToleranceValue)
-                    throw new Exception("Negative DM reallocation value computed for " + Name);
+            double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value() * DMReallocationFactor.Value();
+            if (availableDM < -BiomassToleranceValue)
+                throw new Exception("Negative DM reallocation value computed for " + Name);
 
-                return availableDM;
-            }
-            else
-            { // By default reallocation is turned off!!!!
-                return 0.0;
-            }
+            return availableDM;
         }
 
         /// <summary>Gets the N demand for this computation round.</summary>
         [XmlIgnore]
-        public virtual BiomassPoolType NDemand
+    public virtual BiomassPoolType NDemand
+    {
+        get
         {
-            get
+            DoNDemandCalculations();
+            return new BiomassPoolType
             {
-                DoNDemandCalculations();
-                return new BiomassPoolType
-                {
-                    Structural = StructuralNDemand,
-                    NonStructural = NonStructuralNDemand,
-                    Metabolic = MetabolicNDemand
-                };
-            }
-            set { }
+                Structural = StructuralNDemand,
+                NonStructural = NonStructuralNDemand,
+                Metabolic = MetabolicNDemand
+            };
         }
+        set { }
+    }
 
         /// <summary>Computes the N demanded for this organ.</summary>
         /// <remarks>
@@ -412,14 +398,11 @@ namespace Models.PMF.Organs
         /// </remarks>
         private void DoNDemandCalculations()
         {
-            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value();
-            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value() : CriticalNConc.Value();
-
             double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N);
-            NDeficit *= NitrogenSwitch;
+            NDeficit *= NitrogenDemandSwitch.Value();
 
             StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value());
-            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (criticalN - MinimumNConc.Value()));
+            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (CriticalNConc.Value() - MinimumNConc.Value()));
             NonStructuralNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
         }
 
@@ -444,19 +427,12 @@ namespace Models.PMF.Organs
         /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
         public double AvailableNRetranslocation()
         {
-            if (NRetranslocationFactor != null)
-            {
                 double labileN = Math.Max(0.0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value());
                 double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
 
                 return availableN;
-            }
-            else
-            {  // By default retranslocation is turned off!!!!
-                return 0.0;
-            }
         }
 
         /// <summary>Computes the N amount available for reallocation.</summary>
