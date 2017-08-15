@@ -41,12 +41,12 @@ namespace Models.PMF.Functions
                 units = " (" + units + ")";
 
             if (!(Parent is IFunction) && headingLevel > 0)
-            {
-                tags.Add(new AutoDocumentation.Heading(Name + " = " + FixedValue + units, headingLevel));
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + FixedValue + units + "</i>", indent));
+
+            if (!String.IsNullOrEmpty(description))
                 tags.Add(new AutoDocumentation.Paragraph(description, indent));
-            }
-            else
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + FixedValue + units + "</i>", indent));
 
             // write memos.
             foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
