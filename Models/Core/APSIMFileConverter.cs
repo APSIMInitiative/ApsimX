@@ -21,7 +21,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 9; } }
+        public static int LastestVersion { get { return 10; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -346,6 +346,56 @@ namespace Models.Core
                     XmlNode demandFunction = root.AppendChild(root.OwnerDocument.CreateElement("PartitionFractionDemandFunction"));
                     XmlUtilities.SetValue(demandFunction, "Name", "DMDemandFunction");
                     demandFunction.AppendChild(partitionFraction);
+                }
+            }
+        }
+        /// <summary>
+        /// Add default values for generic organ parameters that were previously optional
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        private static void UpgradeToVersion10(XmlNode node)
+        {
+            foreach (XmlNode GenericOrgan in XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"))
+            {
+                XmlNode NRetranslocationFactor = FindPMFNode(GenericOrgan, "NRetranslocationFactor");
+                if (NRetranslocationFactor == null)
+                {
+                    XmlNode constant = GenericOrgan.AppendChild(GenericOrgan.OwnerDocument.CreateElement("Constant"));
+                    XmlUtilities.SetValue(constant, "Name", "NRetranslocationFactor");
+                    XmlUtilities.SetValue(constant, "FixedValue", "0.0");
+                }
+
+                XmlNode NitrogenDemandSwitch = FindPMFNode(GenericOrgan, "NitrogenDemandSwitch");
+                if (NitrogenDemandSwitch == null)
+                {
+                    XmlNode constant = GenericOrgan.AppendChild(GenericOrgan.OwnerDocument.CreateElement("Constant"));
+                    XmlUtilities.SetValue(constant, "Name", "NitrogenDemandSwitch");
+                    XmlUtilities.SetValue(constant, "FixedValue", "1.0");
+                }
+
+                XmlNode DMReallocationFactor = FindPMFNode(GenericOrgan, "DMReallocationFactor");
+                if (DMReallocationFactor == null)
+                {
+                    XmlNode constant = GenericOrgan.AppendChild(GenericOrgan.OwnerDocument.CreateElement("Constant"));
+                    XmlUtilities.SetValue(constant, "Name", "DMReallocationFactor");
+                    XmlUtilities.SetValue(constant, "FixedValue", "0.0");
+                }
+
+                XmlNode DMRetranslocationFactor = FindPMFNode(GenericOrgan, "DMRetranslocationFactor");
+                if (DMRetranslocationFactor == null)
+                {
+                    XmlNode constant = GenericOrgan.AppendChild(GenericOrgan.OwnerDocument.CreateElement("Constant"));
+                    XmlUtilities.SetValue(constant, "Name", "DMRetranslocationFactor");
+                    XmlUtilities.SetValue(constant, "FixedValue", "0.0");
+                }
+
+                XmlNode CriticalNConc = FindPMFNode(GenericOrgan, "CriticalNConc");
+                if (CriticalNConc == null)
+                {
+                    XmlNode critNConc = GenericOrgan.AppendChild(GenericOrgan.OwnerDocument.CreateElement("VariableReference"));
+                    XmlUtilities.SetValue(critNConc, "Name", "CriticalNConc");
+                    string refPath = "[" + GenericOrgan.FirstChild.InnerText + "].MinimumNConc.Value()";
+                    XmlUtilities.SetValue(critNConc, "VariableName", refPath);
                 }
             }
         }
