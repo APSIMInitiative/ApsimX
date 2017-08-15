@@ -100,7 +100,7 @@ namespace Models.WholeFarm.Activities
 				// if no settings have been provided from parent set limiter to 1.0. i.e. no limitation
 				if (GrazingCompetitionLimiter == 0) GrazingCompetitionLimiter = 1.0;
 
-				GrazeFoodStoreModel = Resources.GrazeFoodStore().GetByName("GrazeFoodStoreTypeName") as GrazeFoodStoreType;
+				GrazeFoodStoreModel = Resources.GrazeFoodStore().GetByName(GrazeFoodStoreTypeName) as GrazeFoodStoreType;
 			}
 
 			// If RuminantGroup has not been set use name
