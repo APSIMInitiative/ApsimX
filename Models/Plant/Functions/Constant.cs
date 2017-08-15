@@ -40,7 +40,7 @@ namespace Models.PMF.Functions
             if (units != string.Empty)
                 units = " (" + units + ")";
 
-            if (!(Parent is IFunction))
+            if (!(Parent is IFunction) && headingLevel > 0)
             {
                 tags.Add(new AutoDocumentation.Heading(Name + " = " + FixedValue + units, headingLevel));
                 tags.Add(new AutoDocumentation.Paragraph(description, indent));
