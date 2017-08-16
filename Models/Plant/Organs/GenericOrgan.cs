@@ -16,28 +16,6 @@ namespace Models.PMF.Organs
 
     /// <summary>
     /// This organ is simulated using a generic organ type.
-    ///   
-    /// **Dry Matter Supplies**
-    /// 
-    /// A given fraction of Nonstructural DM is made available to the arbitrator as DMReTranslocationSupply.
-    /// 
-    /// **Nitrogen Supplies**
-    /// 
-    /// As the organ senesces a fraction of senesced N is made available to the arbitrator as NReallocationSupply.
-    /// A fraction of nonstructural N is made available to the arbitrator as NRetranslocationSupply
-    /// 
-    /// **Biomass Senescence and Detachment**
-    /// 
-    /// Senescence is calculated as a proportion of the live dry matter.
-    /// Detachment of biomass into the surface organic matter pool is calculated daily as a proportion of the dead DM.
-    /// 
-    /// **Canopy**
-    /// 
-    /// The user can model the canopy by specifying either the LAI and an extinction coefficient, or by specifying the canopy cover directly.  If the cover is specified, LAI is calculated using an inverted Beer-Lambert equation with the specified cover value.
-    /// 
-    /// The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop.
-    /// The effect of growth rate on transpiration is captured using the Fractional Growth Rate (FRGR) function which is parameterised as a function of temperature for the simple leaf. 
-    ///
     /// </summary>
 
     [Serializable]
@@ -724,6 +702,94 @@ namespace Models.PMF.Organs
                 tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandFactor", indent));
                 NDemSwitch.Document(tags, -1, indent);
             }
+
+            //Document DM supplies
+            tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
+            IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
+            if (DMReallocFac.GetType() == typeof(Constant))
+            {
+                if (DMReallocationFactor.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate DM when senescence of the organ occurs", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + DMReallocationFactor.Value()*100 + "% of DM that senesces each day",indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM tha is allocated each day is quantified by the DMReallocationFactor", indent));
+                DMReallocFac.Document(tags, -1, indent);
+            }
+            IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
+            if (DMRetransFac.GetType() == typeof(Constant))
+            {
+                if (DMRetranslocationFactor.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural DM", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + DMRetranslocationFactor.Value() * 100 + "% of non-structural DM each day", indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM tha is allocated each day is quantified by the DMReallocationFactor", indent));
+                DMRetransFac.Document(tags, -1, indent);
+            }
+
+            //Document N supplies
+            tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
+            IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
+            if (NReallocFac.GetType() == typeof(Constant))
+            {
+                if (NReallocationFactor.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + NReallocationFactor.Value() * 100 + "% of N that senesces each day", indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N tha is allocated each day is quantified by the NReallocationFactor", indent));
+                NReallocFac.Document(tags, -1, indent);
+            }
+            IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
+            if (NRetransFac.GetType() == typeof(Constant))
+            {
+                if (NRetranslocationFactor.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + NRetranslocationFactor.Value() * 100 + "% of non-structural N each day", indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor", indent));
+                NRetransFac.Document(tags, -1, indent);
+            }
+
+            //Document Biomass Senescence and Detachment
+            tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
+            IModel Sen = Apsim.Child(this, "SenescenceRate");
+            if(Sen.GetType() ==typeof(Constant))
+            {
+                if (SenescenceRate.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomss in this organ will remain live", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " senesces " + SenescenceRate.Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool", indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceFraction", indent));
+                Sen.Document(tags, -1, indent);
+            }
+
+            IModel Det = Apsim.Child(this, "DetachmentRateFunction");
+            if (Sen.GetType() == typeof(Constant))
+            {
+                if (DetachmentRateFunction.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomss in this organ will remain with the plant until a defoliation or harvest event occurs", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " detaches " + DetachmentRateFunction.Value() * 100 + "% of its live biomass each day, passing it to the surface organic matter model for decomposition", indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction", indent));
+                Det.Document(tags, -1, indent);
+            }            
         }
     }
 }
