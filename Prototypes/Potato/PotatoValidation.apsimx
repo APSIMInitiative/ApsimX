@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="9">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -353,84 +353,124 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
       </Structure>
       <GenericOrgan>
         <Name>Tuber</Name>
-        <PotentialSizeDemandFunction>
+        <PhaseLookup>
           <Name>DMDemandFunction</Name>
-          <LinearInterpolationFunction>
-            <Name>PotentialGrowthIncrement</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
+          <PhaseLookupValue>
+            <Name>TuberFilling</Name>
+            <MultiplyFunction>
+              <Name>DailyDemand</Name>
+              <MultiplyFunction>
+                <Name>OrganNumber</Name>
+                <Constant>
+                  <Name>TuberNumberPerStem</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>5</FixedValue>
+                </Constant>
+                <VariableReference>
+                  <Name>VariableReference</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <VariableName>[Structure].MainStemPopn</VariableName>
+                </VariableReference>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </MultiplyFunction>
+              <MultiplyFunction>
+                <Name>PotentialGrowthIncrement</Name>
+                <LinearInterpolationFunction>
+                  <Name>PotentialGrowthIncrementPer_oCd</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <X>
+                      <double>4</double>
+                      <double>4.04</double>
+                      <double>4.32</double>
+                      <double>4.52</double>
+                      <double>4.95</double>
+                      <double>6.54</double>
+                    </X>
+                    <Y>
+                      <double>0.017</double>
+                      <double>0.017</double>
+                      <double>0.06</double>
+                      <double>0.06</double>
+                      <double>0.018</double>
+                      <double>0</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <XProperty>[Phenology].Stage</XProperty>
+                </LinearInterpolationFunction>
+                <AirTemperatureFunction>
+                  <Name>ThermalTime</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <Graph>
+                      <Name>Graph</Name>
+                      <Series>
+                        <Name>Series</Name>
+                        <IncludeInDocumentation>true</IncludeInDocumentation>
+                        <Type>Scatter</Type>
+                        <XAxis>Bottom</XAxis>
+                        <YAxis>Left</YAxis>
+                        <ColourArgb>-65536</ColourArgb>
+                        <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+                        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+                        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+                        <Marker>None</Marker>
+                        <MarkerSize>Normal</MarkerSize>
+                        <Line>Solid</Line>
+                        <LineThickness>Normal</LineThickness>
+                        <XFieldName>.Simulations.Replacements.Potato.Tuber.DMDemandFunction.ThermalTime.XYPairs.X</XFieldName>
+                        <YFieldName>.Simulations.Replacements.Potato.Tuber.DMDemandFunction.ThermalTime.XYPairs.Y</YFieldName>
+                        <ShowInLegend>false</ShowInLegend>
+                        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+                        <Cumulative>false</Cumulative>
+                        <CumulativeX>false</CumulativeX>
+                      </Series>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <Axis>
+                        <Type>Left</Type>
+                        <Title>Y</Title>
+                        <Inverted>false</Inverted>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <Interval>NaN</Interval>
+                      </Axis>
+                      <Axis>
+                        <Type>Bottom</Type>
+                        <Title>X</Title>
+                        <Inverted>false</Inverted>
+                        <Minimum>NaN</Minimum>
+                        <Maximum>NaN</Maximum>
+                        <Interval>NaN</Interval>
+                      </Axis>
+                      <LegendPosition>BottomRight</LegendPosition>
+                      <DisabledSeries />
+                    </Graph>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <X>
+                      <double>2</double>
+                      <double>20</double>
+                      <double>35</double>
+                    </X>
+                    <Y>
+                      <double>0</double>
+                      <double>18</double>
+                      <double>0</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </AirTemperatureFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </MultiplyFunction>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>4</double>
-                <double>4.04</double>
-                <double>4.32</double>
-                <double>4.52</double>
-                <double>4.95</double>
-                <double>6.54</double>
-              </X>
-              <Y>
-                <double>0.017</double>
-                <double>0.017</double>
-                <double>0.06</double>
-                <double>0.06</double>
-                <double>0.018</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
+            </MultiplyFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <XProperty>[Phenology].Stage</XProperty>
-          </LinearInterpolationFunction>
-          <MultiplyFunction>
-            <Name>OrganNumber</Name>
-            <Constant>
-              <Name>OrganNumberPerStem</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>5</FixedValue>
-            </Constant>
-            <VariableReference>
-              <Name>VariableReference</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemPopn</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </MultiplyFunction>
-          <AirTemperatureFunction>
-            <Name>ThermalTime</Name>
-            <XYPairs>
-              <Name>XYPairs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <X>
-                <double>2</double>
-                <double>20</double>
-                <double>35</double>
-              </X>
-              <Y>
-                <double>0</double>
-                <double>18</double>
-                <double>0</double>
-              </Y>
-            </XYPairs>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </AirTemperatureFunction>
-          <AccumulateFunction>
-            <Name>AccumThermalTime</Name>
-            <VariableReference>
-              <Name>VariableReference</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].ThermalTime.Value()</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <StartStageName>TuberInitiation</StartStageName>
-            <EndStageName>Maturity</EndStageName>
-            <FractionRemovedOnCut>0</FractionRemovedOnCut>
-            <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
-            <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
-            <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
-          </AccumulateFunction>
+            <Start>TuberInitiation</Start>
+            <End>Maturity</End>
+          </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <StartStageName>TuberInitiation</StartStageName>
-          <EndStageName>Maturity</EndStageName>
-        </PotentialSizeDemandFunction>
+        </PhaseLookup>
         <Constant>
           <Name>SenescenceRate</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -582,6 +622,31 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Tuber].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <Root>
@@ -1600,6 +1665,16 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
@@ -1683,7 +1758,7 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
           <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 19</Command>
           <Command>[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,10,11</Command>
           <Command>[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
-          <Command>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.FixedValue = 3</Command>
+          <Command>[Tuber].DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3</Command>
           <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
         </Cultivar>
         <Cultivar>
@@ -3922,6 +3997,21 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Husk].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -4119,6 +4209,26 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>NitrogenDemandSwitch</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Rachis].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -4346,6 +4456,16 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
@@ -6088,12 +6208,12 @@ namespace Models
             <Name>PotatoPlantAndHarvest</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <CultivarName>RussetBurbank</CultivarName>
-              <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
-              <PlantingDepth>120</PlantingDepth>
               <PlantingDate>2003-10-20</PlantingDate>
+              <CultivarName>RussetBurbank</CultivarName>
               <RowSpace>280</RowSpace>
               <RowWidth>770</RowWidth>
+              <PlantingDepth>120</PlantingDepth>
+              <StemNumberPerSeedTuber>2.2</StemNumberPerSeedTuber>
               <SetFinalLeafNumber>0</SetFinalLeafNumber>
               <HarvestDate>2004-06-01</HarvestDate>
             </Script>
@@ -12460,12 +12580,12 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <PlantingDate>1998-10-14</PlantingDate>
+              <CultivarName>RussetBurbank</CultivarName>
+              <RowSpace>300</RowSpace>
+              <RowWidth>770</RowWidth>
               <PlantingDepth>200</PlantingDepth>
               <StemNumberPerSeedTuber>3</StemNumberPerSeedTuber>
               <SetFinalLeafNumber>34</SetFinalLeafNumber>
-              <RowSpace>300</RowSpace>
-              <CultivarName>RussetBurbank</CultivarName>
-              <RowWidth>770</RowWidth>
               <HarvestDate>1999-04-27</HarvestDate>
             </Script>
             <Code><![CDATA[
@@ -21620,13 +21740,13 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <PlantingDate>2007-11-23</PlantingDate>
-              <HarvestDate>2008-03-05</HarvestDate>
               <CultivarName>Coliban</CultivarName>
               <RowSpace>280</RowSpace>
               <RowWidth>770</RowWidth>
               <PlantingDepth>170</PlantingDepth>
               <StemNumberPerSeedTuber>2.4</StemNumberPerSeedTuber>
               <SetFinalLeafNumber>28</SetFinalLeafNumber>
+              <HarvestDate>2008-03-05</HarvestDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -24668,12 +24788,12 @@ namespace Models
           <Name>FertiliserRule</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
-            <Day1>27</Day1>
-            <Day2>52</Day2>
-            <Day3>67</Day3>
             <Fert1>37.5</Fert1>
             <Fert2>37.5</Fert2>
             <Fert3>25</Fert3>
+            <Day1>27</Day1>
+            <Day2>52</Day2>
+            <Day3>67</Day3>
           </Script>
           <Code><![CDATA[
 using System;
@@ -31091,6 +31211,31 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <FixedValue>1</FixedValue>
               <Units>0-1</Units>
             </Constant>
+            <Constant>
+              <Name>NRetranslocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>NitrogenDemandSwitch</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>DMReallocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>CriticalNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Tuber].MinimumNConc.Value()</VariableName>
+            </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </GenericOrgan>
           <Root>
@@ -31950,6 +32095,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <FixedValue>1</FixedValue>
               <Units>0-1</Units>
             </Constant>
+            <Constant>
+              <Name>DMReallocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>CriticalNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+            </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </GenericOrgan>
           <CompositeBiomass>
@@ -32516,13 +32671,13 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <PlantingDate>2006-10-10</PlantingDate>
-              <HarvestDate>2007-03-31</HarvestDate>
               <CultivarName>RussetBurbank</CultivarName>
               <RowSpace>370</RowSpace>
               <RowWidth>860</RowWidth>
               <PlantingDepth>170</PlantingDepth>
               <StemNumberPerSeedTuber>4.12</StemNumberPerSeedTuber>
               <SetFinalLeafNumber>0</SetFinalLeafNumber>
+              <HarvestDate>2007-03-31</HarvestDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -36981,6 +37136,31 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <FixedValue>1</FixedValue>
               <Units>0-1</Units>
             </Constant>
+            <Constant>
+              <Name>NRetranslocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>NitrogenDemandSwitch</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>1</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>DMReallocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <Constant>
+              <Name>DMRetranslocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>CriticalNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Tuber].MinimumNConc.Value()</VariableName>
+            </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </GenericOrgan>
           <Root>
@@ -37820,6 +38000,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <FixedValue>1</FixedValue>
               <Units>0-1</Units>
             </Constant>
+            <Constant>
+              <Name>DMReallocationFactor</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>0</FixedValue>
+            </Constant>
+            <VariableReference>
+              <Name>CriticalNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+            </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </GenericOrgan>
           <CompositeBiomass>
@@ -38482,13 +38672,13 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
               <PlantingDate>2006-10-10</PlantingDate>
-              <HarvestDate>2007-03-22</HarvestDate>
               <CultivarName>RussetBurbank</CultivarName>
               <RowSpace>370</RowSpace>
               <RowWidth>860</RowWidth>
               <PlantingDepth>120</PlantingDepth>
               <StemNumberPerSeedTuber>2</StemNumberPerSeedTuber>
               <SetFinalLeafNumber>0</SetFinalLeafNumber>
+              <HarvestDate>2007-03-22</HarvestDate>
             </Script>
             <Code><![CDATA[
 using System;
