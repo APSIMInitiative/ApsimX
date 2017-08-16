@@ -302,7 +302,7 @@ namespace Models.PMF.Organs
         #region States
 
         /// <summary>The leaves</summary>
-        private List<LeafCohort> Leaves = new List<LeafCohort>();
+        public List<LeafCohort> Leaves = new List<LeafCohort>();
 
         /// <summary>Initialise all state variables.</summary>
         public double CurrentExpandingLeaf = 0;

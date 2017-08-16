@@ -521,7 +521,7 @@ namespace UserInterface.Presenters
                 ContextMenuAttribute contextMenuAttr = ReflectionUtilities.GetAttribute(method, typeof(ContextMenuAttribute), false) as ContextMenuAttribute;
                 if (contextMenuAttr != null)
                 {
-                    bool ok = true;
+                    bool ok = selectedModel != null;
                     if (contextMenuAttr.AppliesTo != null && selectedModel != null)
                     {
                         ok = false;
@@ -639,14 +639,10 @@ namespace UserInterface.Presenters
                         Model fromModel = Apsim.Get(this.ApsimXFile, dragObject.NodePath) as Model;
                         if (fromModel != null)
                         {
-                            cmd = new MoveModelCommand(fromModel, toParent);
+                            cmd = new MoveModelCommand(fromModel, toParent, GetNodeDescription(fromModel), view);
+                            CommandHistory.Add(cmd);
                         }
                     }
-                }
-
-                if (cmd != null)
-                {
-                    CommandHistory.Add(cmd);
                 }
             }
         }

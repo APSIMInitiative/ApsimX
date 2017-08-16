@@ -117,7 +117,6 @@ namespace UserInterface.Views
             treeview1.DragDataGet += OnDragDataGet;
             treeview1.DragDataReceived += OnDragDataReceived;
             treeview1.DragEnd += OnDragEnd;
-            treeview1.DragDataDelete += OnDragDataDelete;
             treeview1.FocusInEvent += Treeview1_FocusInEvent;
             treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -143,7 +142,6 @@ namespace UserInterface.Views
             treeview1.DragDataGet -= OnDragDataGet;
             treeview1.DragDataReceived -= OnDragDataReceived;
             treeview1.DragEnd -= OnDragEnd;
-            treeview1.DragDataDelete -= OnDragDataDelete;
             treeview1.FocusInEvent -= Treeview1_FocusInEvent;
             treeview1.FocusOutEvent -= Treeview1_FocusOutEvent;
             foreach (Widget child in toolStrip.Children)
@@ -804,16 +802,6 @@ namespace UserInterface.Views
             }
             Gtk.Drag.Finish(e.Context, success, e.Context.Action == Gdk.DragAction.Move, e.Time);
             e.RetVal = success;
-        }
-
-        /// <summary>
-        /// Delete the source item at the end of a drag Move operation
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDragDataDelete(object sender, DragDataDeleteArgs e) 
-        {
-            Delete(sourcePathOfItemBeingDragged);
         }
 
         /// <summary>User is about to start renaming a node.</summary>
