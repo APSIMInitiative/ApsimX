@@ -17,19 +17,9 @@ namespace Models.PMF.Organs
     /// <summary>
     /// This organ is simulated using a generic organ type.
     ///   
-    /// **Dry Matter Demands**
-    /// 
-    /// A given fraction of daily DM demand is determined to be structural and the remainder is non-structural.
-    /// 
     /// **Dry Matter Supplies**
     /// 
     /// A given fraction of Nonstructural DM is made available to the arbitrator as DMReTranslocationSupply.
-    /// 
-    /// **Nitrogen Demands**
-    /// 
-    /// The daily nonstructural N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
-    /// The daily structural N demand is the product of Total DM demand and a Minimum N concentration. 
-    /// The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
     /// 
     /// **Nitrogen Supplies**
     /// 
@@ -670,5 +660,70 @@ namespace Models.PMF.Organs
         }
 
         #endregion
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            // Documment DM demands.
+            tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel+1));
+            tags.Add(new AutoDocumentation.Paragraph("Total Dry matter demand is calculated by the DMDemandFunction",indent));
+            IModel DMDemand = Apsim.Child(this, "DMDemandFunction");
+            DMDemand.Document(tags, -1, indent);
+            IModel StrucFrac = Apsim.Child(this, "StructuralFraction");
+            if (StrucFrac.GetType() == typeof(Constant))
+            {
+                if (StructuralFraction.Value() == 1.0)
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("All demand is structural and this organ has no Non-structural demand", indent));
+                }
+                else
+                {
+                    double StrucPercent = StructuralFraction.Value() * 100;
+                    tags.Add(new AutoDocumentation.Paragraph("Of total biomass, " + StrucPercent + "% of this is structural and the remainder is non-structural demand", indent));
+                    tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
+                }
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of total biomass that is partitioned to structural is determined by the StructuralFraction", indent));
+                StrucFrac.Document(tags, -1, indent);
+                tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
+            }
+
+            // Document Nitrogen Demand
+            tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand is the product of Total DM demand and a Minimum N concentration", indent));
+            IModel MinN = Apsim.Child(this, "MinimumNConc");
+            MinN.Document(tags, -1, indent);
+            tags.Add(new AutoDocumentation.Paragraph("The daily nonstructural N demand is the product of Total DM demand and a Maximum N concentration", indent));
+            IModel MaxN = Apsim.Child(this, "MaximumNConc");
+            MaxN.Document(tags, -1, indent);
+            IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
+            if (NDemSwitch.GetType() == typeof(Constant))
+            {
+                if(NitrogenDemandSwitch.Value()==1.0)
+                {
+                    //Dont bother docummenting as is does nothing
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + NitrogenDemandSwitch.Value() + " as specified by the NitrogenDemandFactor", indent));
+                }
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandFactor", indent));
+                NDemSwitch.Document(tags, -1, indent);
+            }
+        }
     }
 }
