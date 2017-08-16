@@ -143,7 +143,7 @@ namespace Models.WholeFarm.Resources
 			{
 				if(IsLactating)
 				{
-					return ((this.Age - this.AgeAtLastBirth <= this.BreedParams.MilkingDays)? this.Age - this.AgeAtLastBirth : 0);
+					return ((this.Age - this.AgeAtLastBirth <= this.BreedParams.MilkingDays)? (this.Age - this.AgeAtLastBirth + 1) * 30.4 : 0);
 				}
 				else
 				{
@@ -161,6 +161,16 @@ namespace Models.WholeFarm.Resources
 		/// Amount of milk produced (L/day)
 		/// </summary>
 		public double MilkProduction;
+
+		/// <summary>
+		/// Method to remove milk from female
+		/// </summary>
+		/// <param name="amount">Amount to take</param>
+		public void TakeMilk(double amount)
+		{
+			amount = Math.Min(amount, MilkAmount);
+			MilkAmount -= amount;
+		}
 
 		/// <summary>
 		/// A list of individuals currently suckling this female

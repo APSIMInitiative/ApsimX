@@ -252,7 +252,9 @@ namespace Models.WholeFarm.Resources
 		/// <summary>
 		/// Milk production currently available from mother
 		/// </summary>
-		public double MothersMilkAvailable { get
+		public double MothersMilkProductionAvailable
+		{
+			get
 			{
 				double milk = 0;
 				if (this.Mother != null)
@@ -270,7 +272,6 @@ namespace Models.WholeFarm.Resources
 							milk = this.Mother.MilkProduction;
 						}
 					}
-//					this.Mother.MilkAmount -= milk;
 				}
 				return milk;
 			}

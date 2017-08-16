@@ -125,7 +125,11 @@ namespace Models.WholeFarm.Activities
 				double potentialMilkIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.IntakeCoefficient * ind.Weight;
 
 				// get mother
-				ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkAvailable);
+				ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkProductionAvailable);
+				if(ind.Mother !=null)
+				{
+					ind.Mother.TakeMilk(ind.MilkIntake * 30.4);
+				}
 
 				// if milk supply low, calf will subsitute forage up to a specified % of bodyweight (R_C60)
 				if (ind.MilkIntake < ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion)
@@ -149,8 +153,8 @@ namespace Models.WholeFarm.Activities
 					// Increase potential intake for lactating breeder
 					if (femaleind.IsLactating)
 					{
-						double dayOfLactation = Math.Max((ind.Age - femaleind.AgeAtLastBirth) * 30.4, 0);
-						if (dayOfLactation > ind.BreedParams.MilkingDays)
+						double dayOfLactation = Math.Max((ind.Age - femaleind.AgeAtLastBirth + 1) * 30.4, 0);
+						if (dayOfLactation <= ind.BreedParams.MilkingDays)
 						{
 							// Reference: Intake multiplier for lactating cow (M.Freer)
 							// TODO: Need to look at equation to fix Math.Pow() ^ issue
@@ -423,10 +427,6 @@ namespace Models.WholeFarm.Activities
 				energyMaintenance = ind.BreedParams.Kme * Sme * (0.26 * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-0.000082 * maintenanceAge) + (0.09 * energyMetablicFromIntake);
 				ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFoetus; // milk will be zero for non lactating individuals.
 
-				//TODO: reduce remove milk e and production if this is limiting
-
-
-
 				// Reference: Feeding_value = Ajustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
 				double feedingValue = 0;
 				if (ind.EnergyBalance > 0)
@@ -531,7 +531,7 @@ namespace Models.WholeFarm.Activities
 						mortalityRate = Math.Exp(-Math.Pow(ind.BreedParams.JuvenileMortalityCoefficient * (ind.Mother.Weight / ind.Mother.NormalisedAnimalWeight), ind.BreedParams.JuvenileMortalityExponent));
 					}
 					mortalityRate = mortalityRate + ind.BreedParams.MortalityBase;
-					mortalityRate = Math.Max(mortalityRate, ind.BreedParams.JuvenileMortalityMaximum);
+					mortalityRate = Math.Min(mortalityRate, ind.BreedParams.JuvenileMortalityMaximum);
 				}
 				else
 				{
