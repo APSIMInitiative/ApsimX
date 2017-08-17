@@ -567,6 +567,46 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>Gets lag duration</summary>
+        [Units("oCd")]
+        public double[] CohortLagDuration
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.LagDuration;
+                    ;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
+        /// <summary>Gets fraction of leaf senescence.</summary>
+        [Units("")]
+        public double[] CohortSenescedFrac
+        {
+            get
+            {
+                int i = 0;
+                double[] values = new double[MaximumMainStemLeafNumber];
+
+                foreach (LeafCohort L in Leaves)
+                {
+                    values[i] = L.SenescedFrac;
+                    ;
+                    i++;
+                }
+                return values;
+            }
+        }
+
+
         /// <summary>Gets the cohort sla.</summary>
         [Units("mm2/g")]
         public double[] CohortSLA
