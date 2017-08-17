@@ -918,6 +918,7 @@ namespace Models.PMF.Organs
             }
 
             deltaActualArea = deltaActualArea * totalf / ApexGroupSize.Sum();
+
             LiveArea += deltaActualArea;
             
             //Senessing leaf area
