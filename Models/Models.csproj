@@ -192,6 +192,7 @@
     <Compile Include="Plant\Arbitrator\RelativeAllocationSinglePass.cs" />
     <Compile Include="Plant\Arbitrator\RelativeAllocation.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
+    <Compile Include="Plant\Functions\ArrayFunction.cs" />
     <Compile Include="Plant\Functions\DemandFunctions\InternodeCohortDemandFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\LeafLightUseEfficiency.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\LeafMaxGrossPhotosynthesis.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Plant\Functions\MovingSum.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\CanopyPhotosynthesis.cs" />
     <Compile Include="Plant\Interfaces\IApex.cs" />
+    <Compile Include="Plant\Interfaces\IArrayFunction.cs" />
     <Compile Include="Plant\Interfaces\IWaterNitrogenUptake.cs" />
     <Compile Include="Plant\Interfaces\IHasWaterDemand.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />

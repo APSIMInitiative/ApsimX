@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Models.Core;
 using System.Xml.Serialization;
@@ -218,6 +219,10 @@ namespace Models.PMF.Organs
         /// <summary>The age of apex in each age group</summary>
         [XmlIgnore]
         public double[] GroupAge;
+
+        /// <summary>Modify leaf size by age</summary>
+        [XmlIgnore]
+        public double[] AgeMultiplier;
 
         /// <summary>The cell division stress factor</summary>
         [XmlIgnore]
@@ -883,7 +888,7 @@ namespace Models.PMF.Organs
             if (!IsAppeared)
                 return;
 
-            //Acellerate thermal time accumulation if crop is water stressed.
+            //Accellerate thermal time accumulation if crop is water stressed.
             double thermalTime;
             if (IsFullyExpanded && IsNotSenescing)
                 thermalTime = tt * leafCohortParameters.DroughtInducedLagAcceleration.Value();
@@ -895,6 +900,18 @@ namespace Models.PMF.Organs
             DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation)*SpecificLeafAreaMax;
             //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
             double deltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
+
+            //Modify leaf area using tillering approach
+            AgeMultiplier = new double[] { 0.5, 0.75, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+            List<double> ageMultiplierList = AgeMultiplier.ToList();
+            double totalf = 0;
+            for(int i=0; i< Leaf.ApexGroupAge.Length;i++)
+            {
+                double f = ageMultiplierList.ElementAt((int)Leaf.ApexGroupAge[i] - 1);
+                totalf += f * Leaf.ApexGroupSize[i];
+            }
+
+            deltaActualArea = deltaActualArea * Structure.TotalStemPopn * totalf / Leaf.ApexGroupSize.Sum();
             LiveArea += deltaActualArea;
             // Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
 
