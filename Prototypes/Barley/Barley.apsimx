@@ -22,12 +22,12 @@ The model consists of:
   <Memo>
     <Name>References</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <MemoText><![CDATA[•	Alzueta I, Abeledo LG, Mignonea CM, Miralles DJ 2012. Differences between wheat and barley in leaf and tillering coordination under contrasting nitrogen and sulfur conditions. Europ. J. Agronomy 4: 92-102.
+    <MemoText><![CDATA[•	Alzueta I, Abeledo LG, Mignonea CM, Miralles DJ 2012. Differences between wheat and barley in leaf and tillering coordination under contrasting nitrogen and sulfur conditions. Europ. J. Agron 4: 92-102.
 
-•	Brown HE, Huth NI, Holzworth DP et al. 2014. "Plant Modelling Framework: Software for building and running crop models on the APSIM platform. Environmental Modelling & Software 62: 385-398.
+•	Brown HE, Huth NI, Holzworth DP et al. 2014. "Plant Modelling Framework: Software for building and running crop models on the APSIM platform. Environ Modelling & Software 62: 385-398.
 
-•	De Ruiter JM 1999. Yield and quality of malting barley (Hordeum vulgare L. ‘Valetta') in response to irrigation and nitrogen fertilisation. New Zealand Journal of Crop and Horticultural Science 24: 307-317
-•	Goyne PJ, Hammer GL, Meinke H, Milroy SP, Hare JM 1996. Development and use of a barley crop simulation model to evaluate production management strategies in north-eastern Australia. Australian Journal of Agricultural Research 47: 997-1015.
+•	De Ruiter JM 1999. Yield and quality of malting barley (Hordeum vulgare L. ‘Valetta') in response to irrigation and nitrogen fertilisation. NZ J. Crop and Hort.Sci 4: 307-317
+•	Goyne PJ, Hammer GL, Meinke H, Milroy SP, Hare JM 1996. Development and use of a barley crop simulation model to evaluate production management strategies in north-eastern Australia. Aust. J. Agric. Res. 47: 997-1015.
 
 •	Jamieson PD, Munro CA 1999. A simple method for the phenological evaluation of new cereal cultivars. Proceeding of the 29th Agronomy Society of New Zealand 29: 63-68.
 
@@ -41,7 +41,7 @@ The model consists of:
 
 •	Kirby EJM 1995. Factors affecting rate of leaf emergence in barley and wheat. Crop Science 35: 11-19.
 
-•	Mirschel W, Wenkel K, Schultz A, Pommerening J, Verch G 2005. Dynamic phenological model for winter rye and winter barley. European Journal of Agronomy 23: 123-135.
+•	Mirschel W, Wenkel K, Schultz A, Pommerening J, Verch G 2005. Dynamic phenological model for winter rye and winter barley.  Europ. J. Agron 23: 123-135.
 
 •	Sonego M, Jamieson PD, Moot DJ, Martin RJ 1997. Phenological development of oat crops in response to sowing dates. Proceedings Agronomy Society of NZ. Pp. 115-118.
 
@@ -5577,6 +5577,11 @@ namespace Models
           <Name>LAI</Name>
           <Series>
             <Name>Predicted</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -12467,9 +12472,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Boss</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13736,9 +13741,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Cellar</Cultivar>
+              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -15231,9 +15236,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>County</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -16640,9 +16645,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>20</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -18143,9 +18148,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Doyen</Cultivar>
+              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -19631,9 +19636,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Omaka</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -21108,9 +21113,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Optic</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -22463,9 +22468,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2005-05-27</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Pyramid</Cultivar>
+              <SowingDate>2005-05-27</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -23806,9 +23811,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Sherwood</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -25182,9 +25187,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Tavern</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -26551,9 +26556,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Vortex</Cultivar>
+              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -37442,8 +37447,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <CropToSow>Dash</CropToSow>
                 <InitialRootDepth>40</InitialRootDepth>
+                <CropToSow>Dash</CropToSow>
                 <SowingDate>2014-10-14</SowingDate>
               </Script>
               <Code><![CDATA[using System;
@@ -41838,7 +41843,7 @@ namespace Models
         <MemoText><![CDATA[This was a “cultivar x nitrogen x irrigation" trial conducted at Lincoln. Crops were sown in spring (Oct 2009). Treatments were:
 •	Four cultivars (Booma, Dash, Omaka, Sherwood);
 •	Two water treatments; Rainfed (nil irrigation) and irrigated (310 mm);
-•	Two fertiliser N treatments; 0N (no fertiliser) and 150N (150 kg N/ha).
+•	Two fertiliser N treatments; 0N (nil fertiliser) and 150N (150 kg N/ha).
 ]]></MemoText>
       </Memo>
       <Experiment>
@@ -55595,7 +55600,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>Barley1112</TableName>
+              <TableName>CombinedData</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Barley.Grain.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
@@ -55903,7 +55908,7 @@ namespace Models
               <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -56964,10 +56969,11 @@ namespace Models
     <Memo>
       <Name>Trail details</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText><![CDATA[
-•	These simulations are inherited from barley validation (C:\Apsim\Tests\Validation\Barley) & modified to suit ApsimX.
+      <MemoText><![CDATA[•	These simulations are inherited from barley validation (Path = Apsim\Tests\Validation\Barley) & modified for ApsimX.
 •	HRS = Hermitage Research Station (28" l8/S, 152"06/E, altitude 480 m), near Warwick, Queensland) - see Goyne et al. (1996).
 •	This reference indicates plant population of 90/m2 and row spacing of 0.5 m (adopted here as a place holder).
+•	Roma Research Station (R?) – see Table 1 in Goyne et al. (1996).
+•	Kingsthorpe (Kthpe?) – see Table 1 in Goyne et al. (1996).
 ]]></MemoText>
     </Memo>
     <Simulation>
@@ -58088,12 +58094,17 @@ namespace Models
           <Name>LAI</Name>
           <Series>
             <Name>Predicted</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ColumnName>Barley.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
@@ -77698,58 +77709,9 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
-    <Graph>
-      <Name>Fw</Name>
-      <Series>
-        <Name>Predicted</Name>
-        <Regression>
-          <Name>Regression</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <ForEachSeries>false</ForEachSeries>
-        </Regression>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16777216</ColourArgb>
-        <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-        <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-        <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-        <Marker>None</Marker>
-        <MarkerSize>Normal</MarkerSize>
-        <Line>Solid</Line>
-        <LineThickness>Normal</LineThickness>
-        <TableName>DailyReport</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Barley.Leaf.Fw</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-      <Axis>
-        <Type>Bottom</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title />
-        <Inverted>false</Inverted>
-        <Minimum>0.95</Minimum>
-        <Maximum>1</Maximum>
-        <Interval>0.01</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-    </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>408</ExplorerWidth>
+  <ExplorerWidth>292</ExplorerWidth>
 </Simulations>
