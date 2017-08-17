@@ -737,11 +737,11 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Gets the live stem  number.</summary>
+        /// <summary>Gets the live stem  number to represent the observed stem numbers in an experiment.</summary>
         /// <value>Stem number.</value>
         [Units("0-1")]
         [XmlIgnore]
-        [Description("Live stem number")]
+        [Description("In the field experiment, we count stem number according whether a stem number has a green leaf. A green leaf is definied as a leaf has more than half green part.")]
         public double LiveStemNumber
         {
             get
@@ -750,7 +750,8 @@ namespace Models.PMF.Organs
 
                 foreach (LeafCohort L in Leaves)
                 {
-                    if (L.LiveArea > 0)
+                    
+                    if (L.Age < L.GrowthDuration + L.LagDuration + L.SenescenceDuration / 2)
                     {
                         sn = Math.Max(sn, L.CohortPopulation);
                     }
