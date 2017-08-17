@@ -904,14 +904,14 @@ namespace Models.PMF.Organs
             //Modify leaf area using tillering approach
             AgeMultiplier = new double[] { 0.5, 0.75, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
             List<double> ageMultiplierList = AgeMultiplier.ToList();
-            double totalf = 0;
-            for(int i=0; i< Leaf.ApexGroupAge.Length;i++)
+            double totalf = 1;
+            for(   int i=1; i< Leaf.ApexGroupAge.Length;i++)
             {
                 double f = ageMultiplierList.ElementAt((int)Leaf.ApexGroupAge[i] - 1);
                 totalf += f * Leaf.ApexGroupSize[i];
             }
 
-            deltaActualArea = deltaActualArea * Structure.TotalStemPopn * totalf / Leaf.ApexGroupSize.Sum();
+            deltaActualArea = deltaActualArea * totalf / Leaf.ApexGroupSize.Sum();
             LiveArea += deltaActualArea;
             // Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
 
