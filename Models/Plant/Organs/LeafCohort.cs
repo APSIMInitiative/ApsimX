@@ -221,6 +221,10 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public double[] GroupAge;
 
+        /// <summary>Modify leaf size by age</summary>
+        [XmlIgnore]
+        public double[] AgeMultiplier;
+
         /// <summary>The cell division stress factor</summary>
         [XmlIgnore]
         public double CellDivisionStressFactor = 1;

@@ -6953,6 +6953,94 @@ namespace Models
     </Graph>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
+  <Graph>
+    <Name>LAI</Name>
+    <Series>
+      <Name>Series</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777216</ColourArgb>
+      <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>None</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>Solid</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>DailyReport</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Wheat.Leaf.LAI</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopLeft</LegendPosition>
+    <DisabledSeries />
+  </Graph>
+  <Graph>
+    <Name>LeafArea</Name>
+    <Series>
+      <Name>Series</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Type>Scatter</Type>
+      <XAxis>Bottom</XAxis>
+      <YAxis>Left</YAxis>
+      <ColourArgb>-16777216</ColourArgb>
+      <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+      <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+      <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+      <Marker>None</Marker>
+      <MarkerSize>Normal</MarkerSize>
+      <Line>Solid</Line>
+      <LineThickness>Normal</LineThickness>
+      <TableName>DailyReport</TableName>
+      <XFieldName>Clock.Today</XFieldName>
+      <YFieldName>Wheat.Leaf.SpecificArea</YFieldName>
+      <ShowInLegend>true</ShowInLegend>
+      <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+      <Cumulative>false</Cumulative>
+      <CumulativeX>false</CumulativeX>
+    </Series>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <Axis>
+      <Type>Bottom</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <Axis>
+      <Type>Left</Type>
+      <Title />
+      <Inverted>false</Inverted>
+      <Minimum>NaN</Minimum>
+      <Maximum>NaN</Maximum>
+      <Interval>NaN</Interval>
+    </Axis>
+    <LegendPosition>TopLeft</LegendPosition>
+    <DisabledSeries />
+  </Graph>
   <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>343</ExplorerWidth>
 </Simulations>
