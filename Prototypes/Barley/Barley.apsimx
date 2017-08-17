@@ -3957,17 +3957,17 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
   <DataStore>
     <Name>DataStore</Name>
     <Input>
-      <Name>CombinedData</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt' because it is being used by another process.</ErrorMessage>
-      <FileName>Observations\NZ_AUSBarleyObservedData.txt</FileName>
-    </Input>
-    <Input>
       <Name>BaselineData</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ErrorMessage>Invalid number of values on line: Dash09_10_N0_Dry	NZ	Field	2009-11-04	*	*	*	*	*	*	0.28	*	*	*	*	*	*
 in file: C:\ApsimX\Prototypes\Barley\Observations\BarleyBaseline.txt</ErrorMessage>
       <FileName>Observations\BarleyBaseline.txt</FileName>
+    </Input>
+    <Input>
+      <Name>CombinedData</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ErrorMessage>The process cannot access the file 'C:\ApsimX\Prototypes\Barley\Observations\NZ_AUSBarleyObservedData.txt' because it is being used by another process.</ErrorMessage>
+      <FileName>Observations\NZ_AUSBarleyObservedData.txt</FileName>
     </Input>
     <PredictedObserved>
       <Name>PredictedObservedBiomass</Name>
@@ -3978,184 +3978,184 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\BarleyBaseline.txt</ErrorMessa
           <RegrStats>
             <Name>Barley.Ear.Wt</Name>
             <n>183</n>
-            <Slope>0.75474755321582976</Slope>
-            <Intercept>22.321538163976868</Intercept>
-            <SEslope>0.045143461913987028</SEslope>
-            <SEintercept>22.642392679365837</SEintercept>
-            <R2>0.60696648796433583</R2>
-            <RMSE>223.96783826845325</RMSE>
-            <NSE>0.52218289191145462</NSE>
-            <ME>-71.5774800467077</ME>
-            <MAE>151.735446454454</MAE>
-            <RSR>0.68935193162852182</RSR>
+            <Slope>0.74253966209176592</Slope>
+            <Intercept>27.196305552374781</Intercept>
+            <SEslope>0.04412656566735939</SEslope>
+            <SEintercept>22.132352838509455</SEintercept>
+            <R2>0.61005217705473413</R2>
+            <RMSE>221.47740002703787</RMSE>
+            <NSE>0.53275010527186639</NSE>
+            <ME>-71.376708803927727</ME>
+            <MAE>152.70404352039375</MAE>
+            <RSR>0.68168659706265677</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Grain.Wt</Name>
             <n>179</n>
-            <Slope>0.68725813294043392</Slope>
-            <Intercept>26.237588778246504</Intercept>
-            <SEslope>0.048309676235383715</SEslope>
-            <SEintercept>24.248755419756559</SEintercept>
-            <R2>0.53345156447336439</R2>
-            <RMSE>250.71038494805873</RMSE>
-            <NSE>0.40711525574318619</NSE>
-            <ME>-93.23272121822049</ME>
-            <MAE>165.15804150156154</MAE>
-            <RSR>0.76783627094689666</RSR>
+            <Slope>0.6842802290700023</Slope>
+            <Intercept>25.179036061082911</Intercept>
+            <SEslope>0.04645583873969801</SEslope>
+            <SEintercept>23.318232685515355</SEintercept>
+            <R2>0.55072019617496815</R2>
+            <RMSE>245.29942690709075</RMSE>
+            <NSE>0.43243096281995974</NSE>
+            <ME>-95.428860987239759</ME>
+            <MAE>163.46682022413611</MAE>
+            <RSR>0.75126444108317669</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.CoverGreen</Name>
-            <n>186</n>
-            <Slope>0.00064034816864100535</Slope>
-            <Intercept>0.57497032868720988</Intercept>
-            <SEslope>7.128563188476E-05</SEslope>
-            <SEintercept>0.025712765756664171</SEintercept>
-            <R2>0.30485138635497178</R2>
-            <RMSE>360.07309719404253</RMSE>
-            <NSE>-0.90270201132663286</NSE>
-            <ME>-248.19042575857441</ME>
-            <MAE>248.21540142439238</MAE>
-            <RSR>1.3756716289218787</RSR>
+            <n>287</n>
+            <Slope>0.00046930838908061835</Slope>
+            <Intercept>0.53991271450221745</Intercept>
+            <SEslope>6.8283308118910808E-05</SEslope>
+            <SEintercept>0.019827925284713093</SEintercept>
+            <R2>0.1421800916098559</R2>
+            <RMSE>289.94117671917991</RMSE>
+            <NSE>-0.44386900270175778</NSE>
+            <ME>-160.92790347058482</ME>
+            <MAE>160.95868360472713</MAE>
+            <RSR>1.1995157774090843</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.LAI</Name>
             <n>454</n>
-            <Slope>1.1422677278717548</Slope>
-            <Intercept>0.63448505703588065</Intercept>
-            <SEslope>0.060080723535550482</SEslope>
-            <SEintercept>0.19638885206213536</SEintercept>
-            <R2>0.44435182215100233</R2>
-            <RMSE>2.5715482222361308</RMSE>
-            <NSE>-0.95960492223858029</NSE>
-            <ME>1.0191380737532068</ME>
-            <MAE>1.8494678562616826</MAE>
-            <RSR>1.3983163489844397</RSR>
+            <Slope>0.89605896721486389</Slope>
+            <Intercept>0.52117027249987213</Intercept>
+            <SEslope>0.040968144124508034</SEslope>
+            <SEintercept>0.13391461224609783</SEintercept>
+            <R2>0.51418136564885586</R2>
+            <RMSE>1.6291704707093211</RMSE>
+            <NSE>0.21347553548062981</NSE>
+            <ME>0.24014215446063802</ME>
+            <MAE>1.2520089000919603</MAE>
+            <RSR>0.88588488630190432</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.Live.Wt</Name>
             <n>312</n>
-            <Slope>0.74898997880298679</Slope>
-            <Intercept>4.5167964968871956</Intercept>
-            <SEslope>0.060579780193633019</SEslope>
-            <SEintercept>7.24039561531299</SEintercept>
-            <R2>0.33025245981858564</R2>
-            <RMSE>61.121999229582563</RMSE>
-            <NSE>-0.38912276851053296</NSE>
-            <ME>-22.512265965868423</ME>
-            <MAE>47.9121425875804</MAE>
-            <RSR>1.17672020971206</RSR>
+            <Slope>0.68973580581895133</Slope>
+            <Intercept>5.5984413434860443</Intercept>
+            <SEslope>0.056081548818856596</SEslope>
+            <SEintercept>6.7027744054226055</SEintercept>
+            <R2>0.32792858527869917</R2>
+            <RMSE>60.45242007315673</RMSE>
+            <NSE>-0.358854355078672</NSE>
+            <ME>-27.811182083038233</ME>
+            <MAE>46.907400519627252</MAE>
+            <RSR>1.163829477483084</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Phenology.FlagLeafDAS.Value()</Name>
             <n>55</n>
-            <Slope>-0.35298712081942657</Slope>
-            <Intercept>50.912030810583886</Intercept>
-            <SEslope>0.0793073729771931</SEslope>
-            <SEintercept>9.258845933449205</SEintercept>
-            <R2>0.272080800197697</R2>
-            <RMSE>113.06008056861545</RMSE>
-            <NSE>-8.0694457800805441</NSE>
-            <ME>-98.654545454545456</ME>
-            <MAE>98.654545454545456</MAE>
-            <RSR>2.9840487204295547</RSR>
+            <Slope>-0.42538941284915821</Slope>
+            <Intercept>61.697593274961491</Intercept>
+            <SEslope>0.083956089900832878</SEslope>
+            <SEintercept>9.8015666436229782</SEintercept>
+            <R2>0.32632153802441166</R2>
+            <RMSE>112.16797468731681</RMSE>
+            <NSE>-7.9268846737516618</NSE>
+            <ME>-95.872727272727275</ME>
+            <MAE>95.872727272727275</MAE>
+            <RSR>2.9605029437045745</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Phenology.FloweringDAS.Value()</Name>
             <n>55</n>
-            <Slope>-0.60661147184285258</Slope>
-            <Intercept>113.95211410632646</Intercept>
-            <SEslope>0.14683315016827242</SEslope>
-            <SEintercept>18.927356914926847</SEintercept>
-            <R2>0.24358785429562724</R2>
-            <RMSE>111.65441814325617</RMSE>
-            <NSE>-7.536785205602003</NSE>
-            <ME>-83.836363636363629</ME>
-            <MAE>83.836363636363629</MAE>
-            <RSR>2.8950942867437863</RSR>
+            <Slope>-0.52593148622181807</Slope>
+            <Intercept>105.49240169468965</Intercept>
+            <SEslope>0.16121581981466715</SEslope>
+            <SEintercept>20.78133826365378</SEintercept>
+            <R2>0.16722295939303089</R2>
+            <RMSE>110.43451370917435</RMSE>
+            <NSE>-7.351263275416045</NSE>
+            <ME>-82.36363636363636</ME>
+            <MAE>82.36363636363636</MAE>
+            <RSR>2.8634633095176785</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Phenology.Zadok.Stage</Name>
             <n>242</n>
-            <Slope>0.46698380399632694</Slope>
-            <Intercept>27.816609042014896</Intercept>
-            <SEslope>0.054110872940656043</SEslope>
-            <SEintercept>4.1422884389573325</SEintercept>
-            <R2>0.23683328362789813</R2>
-            <RMSE>28.226604662080888</RMSE>
-            <NSE>-0.14486624827652128</NSE>
-            <ME>-10.487432540990413</ME>
-            <MAE>21.136655291661654</MAE>
-            <RSR>1.0677712283119993</RSR>
+            <Slope>0.4802003395488344</Slope>
+            <Intercept>27.373950976159065</Intercept>
+            <SEslope>0.0505483345903932</SEslope>
+            <SEintercept>3.8695694710371487</SEintercept>
+            <R2>0.27327050879972614</R2>
+            <RMSE>26.728328478905905</RMSE>
+            <NSE>-0.026552277340941677</NSE>
+            <ME>-9.9803132245037656</ME>
+            <MAE>20.629535975175</MAE>
+            <RSR>1.0110936285931593</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Stem.Wt</Name>
             <n>312</n>
-            <Slope>0.54748941221325786</Slope>
-            <Intercept>48.791969388754239</Intercept>
-            <SEslope>0.033062499655724067</SEslope>
-            <SEintercept>13.298097938224439</SEintercept>
-            <R2>0.46936705114510413</R2>
-            <RMSE>194.61676568843319</RMSE>
-            <NSE>0.24948754082355362</NSE>
-            <ME>-102.17792043643377</ME>
-            <MAE>144.30787670168331</MAE>
-            <RSR>0.86493177217930894</RSR>
+            <Slope>0.56742690381148631</Slope>
+            <Intercept>46.210836982065814</Intercept>
+            <SEslope>0.0320410486724647</SEslope>
+            <SEintercept>12.887259212903587</SEintercept>
+            <R2>0.502903935696689</R2>
+            <RMSE>187.42864603476997</RMSE>
+            <NSE>0.30390367566722054</NSE>
+            <ME>-98.107361167360281</ME>
+            <MAE>138.51179369812758</MAE>
+            <RSR>0.832985741996929</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Structure.LeafTipsAppeared</Name>
             <n>140</n>
-            <Slope>0.82606541575834558</Slope>
-            <Intercept>0.807045628289397</Intercept>
-            <SEslope>0.044458753527631921</SEslope>
-            <SEintercept>0.29818346619053426</SEintercept>
-            <R2>0.71442442280008045</R2>
-            <RMSE>1.2762863927190773</RMSE>
-            <NSE>0.680304435244971</NSE>
-            <ME>-0.29147550965221408</ME>
-            <MAE>0.89203834892795875</MAE>
-            <RSR>0.56339331288787831</RSR>
+            <Slope>0.82980805171819316</Slope>
+            <Intercept>0.8411312186040778</Intercept>
+            <SEslope>0.035321184965777866</SEslope>
+            <SEintercept>0.23689808029608123</SEintercept>
+            <R2>0.79997998751027222</R2>
+            <RMSE>1.0389635329049554</RMSE>
+            <NSE>0.78814391529653183</NSE>
+            <ME>-0.23375249995116595</ME>
+            <MAE>0.81017779186416294</MAE>
+            <RSR>0.45863147183287178</RSR>
           </RegrStats>
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>237</n>
-            <Slope>-0.13177200489352531</Slope>
-            <Intercept>447.84367556509852</Intercept>
-            <SEslope>0.02438860052585241</SEslope>
-            <SEintercept>10.623223330451761</SEintercept>
-            <R2>0.11049736546395372</R2>
-            <RMSE>224.89220137905031</RMSE>
-            <NSE>-0.42103147916093087</NSE>
-            <ME>3.5026555319024459</ME>
-            <MAE>120.8760945966269</MAE>
-            <RSR>1.1895526746415015</RSR>
+            <Slope>-0.11728273582646381</Slope>
+            <Intercept>443.76201456542714</Intercept>
+            <SEslope>0.024594474335534886</SEslope>
+            <SEintercept>10.712898154385574</SEintercept>
+            <R2>0.088228933769630036</R2>
+            <RMSE>222.51935618319718</RMSE>
+            <NSE>-0.39120297245915436</NSE>
+            <ME>5.1095754203927646</ME>
+            <MAE>119.9349994292551</MAE>
+            <RSR>1.1770016642821877</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TotalAboveGroundWt</Name>
             <n>565</n>
-            <Slope>0.9757783224127029</Slope>
-            <Intercept>59.229078503180176</Intercept>
-            <SEslope>0.029438142303301058</SEslope>
-            <SEintercept>26.743791909740047</SEintercept>
-            <R2>0.6611915884382954</R2>
-            <RMSE>372.84110675638857</RMSE>
-            <NSE>0.505429018013144</NSE>
-            <ME>41.359907281917359</ME>
-            <MAE>256.046595951545</MAE>
-            <RSR>0.70263478074749675</RSR>
+            <Slope>0.9604602227926119</Slope>
+            <Intercept>59.2247995797527</Intercept>
+            <SEslope>0.027117620552061412</SEslope>
+            <SEintercept>24.635657836680021</SEintercept>
+            <R2>0.6902264243646612</R2>
+            <RMSE>343.08876982434413</RMSE>
+            <NSE>0.58121216298742773</NSE>
+            <ME>30.054935253759623</ME>
+            <MAE>241.1345314655656</MAE>
+            <RSR>0.646565247753025</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Transpiration</Name>
             <n>2040</n>
-            <Slope>0.70314129269209891</Slope>
-            <Intercept>-0.044789522521009095</Intercept>
-            <SEslope>0.0096554853312832874</SEslope>
-            <SEintercept>0.022640663538889546</SEintercept>
-            <R2>0.72238824082876008</R2>
-            <RMSE>1.0599615598515797</RMSE>
-            <NSE>0.64190017153469814</NSE>
-            <ME>-0.50091714706060375</ME>
-            <MAE>0.638352435057133</MAE>
-            <RSR>0.59826774050896414</RSR>
+            <Slope>0.69365777181309007</Slope>
+            <Intercept>-0.013885206803323946</Intercept>
+            <SEslope>0.0093378177173260267</SEslope>
+            <SEintercept>0.021895780675103733</SEintercept>
+            <R2>0.73028875046273023</R2>
+            <RMSE>1.0424926698003914</RMSE>
+            <NSE>0.6536063662362902</NSE>
+            <ME>-0.48458439601098258</ME>
+            <MAE>0.61579882312375611</MAE>
+            <RSR>0.58840787975930886</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4174,31 +4174,31 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\BarleyBaseline.txt</ErrorMessa
         <AcceptedStats>
           <RegrStats>
             <Name>Barley.Phenology.FlagLeafDAS.Value()</Name>
-            <n>1135</n>
-            <Slope>1.148891118609803</Slope>
-            <Intercept>-8.9769144809984738</Intercept>
-            <SEslope>0.0036108112200626953</SEslope>
-            <SEintercept>0.407604799027221</SEintercept>
-            <R2>0.98893252895430162</R2>
-            <RMSE>10.008498591340434</RMSE>
-            <NSE>0.93047139945954915</NSE>
-            <ME>6.8519823788546255</ME>
-            <MAE>7.8704845814977977</MAE>
-            <RSR>0.26356657956114343</RSR>
+            <n>1178</n>
+            <Slope>1.1578801100374239</Slope>
+            <Intercept>-9.363139104824171</Intercept>
+            <SEslope>0.0034034061429519891</SEslope>
+            <SEintercept>0.38826414039266727</SEintercept>
+            <R2>0.98994186679304752</R2>
+            <RMSE>10.658975190994728</RMSE>
+            <NSE>0.92111031259355358</NSE>
+            <ME>7.6222410865874366</ME>
+            <MAE>8.3794567062818341</MAE>
+            <RSR>0.28075383921164404</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Phenology.FloweringDAS.Value()</Name>
-            <n>1135</n>
-            <Slope>1.1359696142338762</Slope>
-            <Intercept>-15.559685468649676</Intercept>
-            <SEslope>0.0040082687864910821</SEslope>
-            <SEintercept>0.50014725178364006</SEintercept>
-            <R2>0.98609001330906931</R2>
-            <RMSE>7.4039517963478918</RMSE>
-            <NSE>0.96308497045311081</NSE>
-            <ME>0.5770925110132159</ME>
-            <MAE>6.0308370044052868</MAE>
-            <RSR>0.19204818481772182</RSR>
+            <n>1178</n>
+            <Slope>1.1404624081651154</Slope>
+            <Intercept>-15.602704794338777</Intercept>
+            <SEslope>0.0037050032604331855</SEslope>
+            <SEintercept>0.46733003732436013</SEintercept>
+            <R2>0.98774070452195017</R2>
+            <RMSE>7.4247784118581777</RMSE>
+            <NSE>0.96305808042500152</NSE>
+            <ME>1.263157894736842</ME>
+            <MAE>6</MAE>
+            <RSR>0.19212121098718574</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4218,100 +4218,114 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\BarleyBaseline.txt</ErrorMessa
           <RegrStats>
             <Name>Barley.Ear.Wt</Name>
             <n>40</n>
-            <Slope>0.61829710364668011</Slope>
-            <Intercept>129.09840988515782</Intercept>
-            <SEslope>0.03512793633797931</SEslope>
-            <SEintercept>16.825604533024677</SEintercept>
-            <R2>0.8907435393376173</R2>
-            <RMSE>103.75868900146814</RMSE>
-            <NSE>0.78663520318349567</NSE>
-            <ME>-32.378150429782536</ME>
-            <MAE>80.710141501000834</MAE>
-            <RSR>0.45610380057185634</RSR>
+            <Slope>0.53325302304941047</Slope>
+            <Intercept>149.29225523496928</Intercept>
+            <SEslope>0.047289559578269851</SEslope>
+            <SEintercept>22.650787690725132</SEintercept>
+            <R2>0.76991420161522817</R2>
+            <RMSE>132.66389914692002</RMSE>
+            <NSE>0.651197707952317</NSE>
+            <ME>-48.161568394426709</ME>
+            <MAE>94.47058081284807</MAE>
+            <RSR>0.583165700934555</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Grain.Wt</Name>
             <n>34</n>
-            <Slope>0.60776616464509892</Slope>
-            <Intercept>132.73743450627921</Intercept>
-            <SEslope>0.0330045212488641</SEslope>
-            <SEintercept>13.191714152601206</SEintercept>
-            <R2>0.91376957805524472</R2>
-            <RMSE>95.285402152187658</RMSE>
-            <NSE>0.81123692219440158</NSE>
-            <ME>1.6723620169433371</ME>
-            <MAE>77.1921116639401</MAE>
-            <RSR>0.42803180089337045</RSR>
+            <Slope>0.50349348762100776</Slope>
+            <Intercept>137.27694986717378</Intercept>
+            <SEslope>0.053578057325545755</SEslope>
+            <SEintercept>21.414836220798257</SEintercept>
+            <R2>0.73402220276627572</R2>
+            <RMSE>130.74924753553074</RMSE>
+            <NSE>0.64457931152894643</NSE>
+            <ME>-28.630873912228179</ME>
+            <MAE>96.52450407262576</MAE>
+            <RSR>0.58733903225491513</RSR>
+          </RegrStats>
+          <RegrStats>
+            <Name>Barley.Leaf.CoverGreen</Name>
+            <n>67</n>
+            <Slope>0.96390504870387772</Slope>
+            <Intercept>-0.07651529372711019</Intercept>
+            <SEslope>0.0981522584210241</SEslope>
+            <SEintercept>0.065800703167732524</SEintercept>
+            <R2>0.59737957110647755</R2>
+            <RMSE>0.21137830675536032</RMSE>
+            <NSE>0.19539901344313637</NSE>
+            <ME>-0.099168916246800937</ME>
+            <MAE>0.15671172079151349</MAE>
+            <RSR>0.8902763709142536</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.LAI</Name>
             <n>103</n>
-            <Slope>0.9850490052346883</Slope>
-            <Intercept>0.36953031866730024</Intercept>
-            <SEslope>0.10102390077109401</SEslope>
-            <SEintercept>0.2999843110118206</SEintercept>
-            <R2>0.48489160222397942</R2>
-            <RMSE>1.2847907279936315</RMSE>
-            <NSE>-0.10339884932064791</NSE>
-            <ME>0.329075331207565</ME>
-            <MAE>0.95317877982748456</MAE>
-            <RSR>1.0453163344811316</RSR>
+            <Slope>0.84398549153008118</Slope>
+            <Intercept>0.381684250601134</Intercept>
+            <SEslope>0.083371333822689672</SEslope>
+            <SEintercept>0.24756609024240134</SEintercept>
+            <R2>0.50363519333265683</R2>
+            <RMSE>1.0432102079602157</RMSE>
+            <NSE>0.27253618588115647</NSE>
+            <ME>-0.040465919522079487</ME>
+            <MAE>0.77830576830609111</MAE>
+            <RSR>0.84876443059423834</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Leaf.Live.Wt</Name>
             <n>105</n>
-            <Slope>1.0485597934522066</Slope>
-            <Intercept>-6.5179830453443515</Intercept>
-            <SEslope>0.089214826600196917</SEslope>
-            <SEintercept>10.421779295528902</SEintercept>
-            <R2>0.57285822536947462</R2>
-            <RMSE>38.248717738725233</RMSE>
-            <NSE>0.17698758691429051</NSE>
-            <ME>-1.227736741034424</ME>
-            <MAE>29.113199729352488</MAE>
-            <RSR>0.90286997935901625</RSR>
+            <Slope>0.88279965644026315</Slope>
+            <Intercept>-1.3726995727458444</Intercept>
+            <SEslope>0.074901853359331583</SEslope>
+            <SEintercept>8.7497853695912564</SEintercept>
+            <R2>0.57422501100418988</R2>
+            <RMSE>35.377502796580494</RMSE>
+            <NSE>0.29591195095753686</NSE>
+            <ME>-14.140848699883073</ME>
+            <MAE>26.888355411365097</MAE>
+            <RSR>0.83509427526201607</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Barley.Stem.Wt</Name>
             <n>105</n>
-            <Slope>0.53444024675805868</Slope>
-            <Intercept>80.545398861058572</Intercept>
-            <SEslope>0.02833564220056892</SEslope>
-            <SEintercept>11.145334455634194</SEintercept>
-            <R2>0.7754717408385865</R2>
-            <RMSE>143.99890101477487</RMSE>
-            <NSE>0.6177612809202192</NSE>
-            <ME>-67.017665879848437</ME>
-            <MAE>109.61201464384349</MAE>
-            <RSR>0.61530346198167951</RSR>
+            <Slope>0.55237462063868092</Slope>
+            <Intercept>65.040926297528557</Intercept>
+            <SEslope>0.02443351502908183</SEslope>
+            <SEintercept>9.6105002667069979</SEintercept>
+            <R2>0.83227154787502222</R2>
+            <RMSE>141.80748576115715</RMSE>
+            <NSE>0.629306785865247</NSE>
+            <ME>-76.837688368806511</ME>
+            <MAE>107.25615192252755</MAE>
+            <RSR>0.60593960307242223</RSR>
           </RegrStats>
           <RegrStats>
             <Name>ProfileWater</Name>
             <n>22</n>
-            <Slope>0.73018730470596394</Slope>
-            <Intercept>90.440639186296664</Intercept>
-            <SEslope>0.05745610100115902</SEslope>
-            <SEintercept>22.632661723743468</SEintercept>
-            <R2>0.88981251917112669</R2>
-            <RMSE>28.665555181585766</RMSE>
-            <NSE>0.81510922949643938</NSE>
-            <ME>-14.308744226313182</ME>
-            <MAE>21.58062020796827</MAE>
-            <RSR>0.42010313563645368</RSR>
+            <Slope>0.72570689600229632</Slope>
+            <Intercept>93.968148274224347</Intercept>
+            <SEslope>0.059202601340225113</SEslope>
+            <SEintercept>23.320629592876962</SEintercept>
+            <R2>0.88253200895266326</R2>
+            <RMSE>28.33170456687202</RMSE>
+            <NSE>0.81939077608802968</NSE>
+            <ME>-12.52066422134323</ME>
+            <MAE>21.632524659922773</MAE>
+            <RSR>0.41521044511687505</RSR>
           </RegrStats>
           <RegrStats>
             <Name>TotalAboveGroundWt</Name>
             <n>109</n>
-            <Slope>0.8922569557039256</Slope>
-            <Intercept>95.011484980749515</Intercept>
-            <SEslope>0.0226793028966168</SEslope>
-            <SEintercept>16.259055399496411</SEintercept>
-            <R2>0.93534040342628844</R2>
-            <RMSE>115.80975747860812</RMSE>
-            <NSE>0.927392801920828</NSE>
-            <ME>33.188788335473788</ME>
-            <MAE>86.831530502791082</MAE>
-            <RSR>0.26821833829154368</RSR>
+            <Slope>0.85418365586289369</Slope>
+            <Intercept>79.194752008226033</Intercept>
+            <SEslope>0.021408160413729071</SEslope>
+            <SEintercept>15.34775860416995</SEintercept>
+            <R2>0.93702187949871041</R2>
+            <RMSE>114.04391677045354</RMSE>
+            <NSE>0.92959011706113936</NSE>
+            <ME>-4.4743114418394274</ME>
+            <MAE>78.47253438165076</MAE>
+            <RSR>0.26412860638345059</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4955,9 +4969,9 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <InitialRootDepth>40</InitialRootDepth>
                 <Cultivar>Dash</Cultivar>
                 <SowingDate>2009-10-01</SowingDate>
+                <InitialRootDepth>40</InitialRootDepth>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -7181,9 +7195,9 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <InitialRootDepth>40</InitialRootDepth>
                 <Cultivar>Omaka</Cultivar>
                 <SowingDate>2009-10-01</SowingDate>
+                <InitialRootDepth>40</InitialRootDepth>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -12472,9 +12486,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Boss</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -13741,9 +13755,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Cellar</Cultivar>
-              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -15236,9 +15250,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>County</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -16645,9 +16659,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>20</InitialRootDepth>
               <Cultivar>Dash</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -18148,9 +18162,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2004-05-28</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Doyen</Cultivar>
-              <SowingDate>2004-05-28</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -19636,9 +19650,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Omaka</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -21113,9 +21127,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Optic</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -22468,9 +22482,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2005-05-27</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Pyramid</Cultivar>
-              <SowingDate>2005-05-27</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -23811,9 +23825,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Sherwood</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -25187,9 +25201,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Tavern</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -26556,9 +26570,9 @@ namespace Models
             <Name>Sowing</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
+              <SowingDate>2003-05-21</SowingDate>
               <InitialRootDepth>40</InitialRootDepth>
               <Cultivar>Vortex</Cultivar>
-              <SowingDate>2003-05-21</SowingDate>
             </Script>
             <Code><![CDATA[using System;
 using Models.Core;
@@ -30930,7 +30944,7 @@ namespace Models
     <Experiment>
       <Name>RS1988_89</Name>
       <Memo>
-        <Name>Memo</Name>
+        <Name>Trial details</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText><![CDATA[This experiment was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand. The objective was to evaluate the effect of drought on the yield of barley crops. The experiment is fully described by Jamieson et al. (1995).  Briefly, 'Triumph' barley was sown at 188kg/ha on 07 September 1988. This sowing rate resulted in a population of 291 ± 6 plants/m2.  Plants were evaluated for their response to drought of varying duration. The treatments were:
 
@@ -37447,8 +37461,8 @@ namespace Models
               <Name>Sowing</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <InitialRootDepth>40</InitialRootDepth>
                 <CropToSow>Dash</CropToSow>
+                <InitialRootDepth>40</InitialRootDepth>
                 <SowingDate>2014-10-14</SowingDate>
               </Script>
               <Code><![CDATA[using System;
@@ -39626,7 +39640,7 @@ namespace Models
       <Experiment>
         <Name>Field2015_16</Name>
         <Memo>
-          <Name>Trail details</Name>
+          <Name>Trial details</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[
 This is the mineral nitrogen (N) validation trial conducted at the Lincoln University Dairy Farm on a deep well-drained Templeton silt loam soil. The trial ran from September 2015 to February 2016. Five N fertiliser treatments were evaluated:
@@ -40867,7 +40881,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>LeafNo</Name>
+            <Name>AppearedLeaves</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -42464,9 +42478,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -43859,7 +43873,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>LeafNo</Name>
+            <Name>AppearedLeaves</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -45512,9 +45526,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -47701,9 +47715,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Omaka</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -50066,9 +50080,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Sherwood</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -52061,7 +52075,7 @@ namespace Models
           <DisabledSeries />
         </Graph>
         <Graph>
-          <Name>EarWt</Name>
+          <Name>LightIntercept</Name>
           <Series>
             <Name>Predicted</Name>
             <Regression>
@@ -52081,9 +52095,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Factors</TableName>
-            <XFieldName>Observed.Barley.Ear.Wt</XFieldName>
-            <YFieldName>Predicted.Barley.Ear.Wt</YFieldName>
+            <TableName>PredictedObservedBiomass</TableName>
+            <XFieldName>Observed.Barley.Leaf.CoverGreen</XFieldName>
+            <YFieldName>Predicted.Barley.Leaf.CoverGreen</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -52110,7 +52124,7 @@ namespace Models
           <DisabledSeries />
         </Graph>
         <Graph>
-          <Name>LightIntercept</Name>
+          <Name>EarWt</Name>
           <Series>
             <Name>Predicted</Name>
             <Regression>
@@ -52131,8 +52145,8 @@ namespace Models
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>PredictedObservedBiomass</TableName>
-            <XFieldName>Observed.Barley.Leaf.CoverGreen</XFieldName>
-            <YFieldName>Predicted.Barley.Leaf.CoverGreen</YFieldName>
+            <XFieldName>Observed.Barley.Ear.Wt</XFieldName>
+            <YFieldName>Predicted.Barley.Ear.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -52711,9 +52725,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -53374,7 +53388,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>LeafNo</Name>
+            <Name>AppearedLeaves</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -54925,9 +54939,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
+                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -55898,7 +55912,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>LeafNo</Name>
+            <Name>AppearedLeaves</Name>
             <Series>
               <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -56312,203 +56326,7 @@ namespace Models
             <DisabledSeries />
           </Graph>
           <Graph>
-            <Name>LeafWt</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <Regression>
-                <Name>Regression</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ForEachSeries>false</ForEachSeries>
-              </Regression>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>PredictedObservedBiomass</TableName>
-              <XFieldName>Observed.Barley.Leaf.Live.Wt</XFieldName>
-              <YFieldName>Predicted.Barley.Leaf.Live.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>BottomRight</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>LAI</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <Regression>
-                <Name>Regression</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ForEachSeries>false</ForEachSeries>
-              </Regression>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>PredictedObservedBiomass</TableName>
-              <XFieldName>Observed.Barley.Leaf.LAI</XFieldName>
-              <YFieldName>Predicted.Barley.Leaf.LAI</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>6</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>6</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopRight</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>StemWt</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <Regression>
-                <Name>Regression</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ForEachSeries>false</ForEachSeries>
-              </Regression>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>PredictedObservedBiomass</TableName>
-              <XFieldName>Observed.Barley.Stem.Wt</XFieldName>
-              <YFieldName>Predicted.Barley.Stem.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>BottomRight</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>EarWt</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <Regression>
-                <Name>Regression</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ForEachSeries>false</ForEachSeries>
-              </Regression>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Factors</TableName>
-              <XFieldName>Observed.Barley.Ear.Wt</XFieldName>
-              <YFieldName>Predicted.Barley.Ear.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>BottomRight</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>LeafTips</Name>
+            <Name>AppearedLeaves</Name>
             <Series>
               <Name>Predicted</Name>
               <Regression>
@@ -56531,55 +56349,6 @@ namespace Models
               <TableName>PredictedObservedBiomass</TableName>
               <XFieldName>Observed.Barley.Structure.LeafTipsAppeared</XFieldName>
               <YFieldName>Predicted.Barley.Structure.LeafTipsAppeared</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Title />
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>BottomRight</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>LightIntercept</Name>
-            <Series>
-              <Name>Predicted</Name>
-              <Regression>
-                <Name>Regression</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ForEachSeries>false</ForEachSeries>
-              </Regression>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>FilledCircle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>PredictedObservedBiomass</TableName>
-              <XFieldName>Observed.Barley.Leaf.CoverGreen</XFieldName>
-              <YFieldName>Predicted.Barley.Leaf.CoverGreen</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -56910,7 +56679,7 @@ namespace Models
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>Zadok</Name>
+        <Name>AppearedLeaves</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -56931,8 +56700,8 @@ namespace Models
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObservedBiomass</TableName>
-          <XFieldName>Observed.Barley.Phenology.Zadok.Stage</XFieldName>
-          <YFieldName>Predicted.Barley.Phenology.Zadok.Stage</YFieldName>
+          <XFieldName>Observed.Barley.Structure.LeafTipsAppeared</XFieldName>
+          <YFieldName>Predicted.Barley.Structure.LeafTipsAppeared</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -56967,7 +56736,7 @@ namespace Models
   <Folder>
     <Name>Australia</Name>
     <Memo>
-      <Name>Trail details</Name>
+      <Name>Trial details</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText><![CDATA[•	These simulations are inherited from barley validation (Path = Apsim\Tests\Validation\Barley) & modified for ApsimX.
 •	HRS = Hermitage Research Station (28" l8/S, 152"06/E, altitude 480 m), near Warwick, Queensland) - see Goyne et al. (1996).
