@@ -149,7 +149,7 @@ namespace Models.WholeFarm.Activities
 
 			// get labour specifications
 			labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-			if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+			if (labour.Count() == 0) labour = new List<LabourFilterGroupSpecified>();
 		}
 
 		/// <summary>An event handler to perform herd breeding </summary>
@@ -165,7 +165,7 @@ namespace Models.WholeFarm.Activities
 			// grouped by location
 			var breeders = from ind in herd
 						   where
-						   (ind.Gender == Sex.Male & ind.Age >= ind.BreedParams.MinimumAge1stMating) ^
+						   (ind.Gender == Sex.Male & ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
 						   (ind.Gender == Sex.Female &
 						   ind.Age >= ind.BreedParams.MinimumAge1stMating &
 						   ind.Weight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
@@ -232,12 +232,11 @@ namespace Models.WholeFarm.Activities
 						int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
 						int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
 						double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
-						double maleLimiter = Math.Max(1.0, matingsPossible / femaleCount);
+						double maleLimiter = Math.Min(1.0, matingsPossible / femaleCount);
 
 						foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
 						{
-							//TODO: ensure enough time since last calf
-							if (!female.IsPregnant & !female.IsLactating)
+							if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth)*30.4 >= female.BreedParams.MinimumDaysBirthToConception)
 							{
 								// calculate conception
 								double conceptionRate = ConceptionRate(female) * maleLimiter;
@@ -305,15 +304,16 @@ namespace Models.WholeFarm.Activities
 			}
 			else
 			{
-				double IPIcurrent = Math.Pow(female.BreedParams.InterParturitionIntervalIntercept * (female.Weight / female.StandardReferenceWeight), female.BreedParams.InterParturitionIntervalCoefficient) * 30.64;
+				double IPIcurrent = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow((female.Weight / female.StandardReferenceWeight), female.BreedParams.InterParturitionIntervalCoefficient) * 30.64;
 				// calculate inter-parturition interval
-				IPIcurrent = Math.Max(IPIcurrent, female.BreedParams.GestationLength + 61);
+				IPIcurrent = Math.Max(IPIcurrent, female.BreedParams.GestationLength * 30.4 + female.BreedParams.MinimumDaysBirthToConception); // 2nd param was 61
 				double ageNextConception = female.AgeAtLastConception + (IPIcurrent / 30.4);
 				// restrict minimum period between births
-				if (ageNextConception - female.AgeAtLastBirth >= female.BreedParams.MinimumDaysBirthToConception)
-				{
+				// now done previously to avoid unneeded computation
+//				if (ageNextConception - female.AgeAtLastBirth >= female.BreedParams.MinimumDaysBirthToConception)
+//				{
 					isConceptionReady = (female.Age >= ageNextConception);
-				}
+//				}
 			}
 
 			// if first mating and of age or suffcient time since last birth/conception

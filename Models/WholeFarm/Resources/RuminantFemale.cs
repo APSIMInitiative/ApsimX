@@ -77,7 +77,7 @@ namespace Models.WholeFarm.Resources
 		{
 			get
 			{
-				return (this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength & this.SuccessfulPregnancy);
+				return (this.Age <= this.AgeAtLastConception + this.BreedParams.GestationLength & this.SuccessfulPregnancy);
 			}
 		}
 
@@ -130,7 +130,7 @@ namespace Models.WholeFarm.Resources
 		{
 			get
 			{
-				return (this.Age - this.AgeAtLastBirth <= this.BreedParams.MilkingDays & this.AgeAtLastBirth > 0);
+				return ((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & this.AgeAtLastBirth > 0);
 			}			
 		}
 
@@ -143,7 +143,7 @@ namespace Models.WholeFarm.Resources
 			{
 				if(IsLactating)
 				{
-					return ((this.Age - this.AgeAtLastBirth <= this.BreedParams.MilkingDays)? (this.Age - this.AgeAtLastBirth + 1) * 30.4 : 0);
+					return (((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays)? (this.Age - this.AgeAtLastBirth + 1) * 30.4 : 0);
 				}
 				else
 				{

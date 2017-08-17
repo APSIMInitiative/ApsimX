@@ -176,7 +176,7 @@ namespace Models.WholeFarm.Activities
 			// NABSA MALES - weaners, 1-2, 2-3 and 3-4 yo, we check for any male weaned and not a breeding sire.
 			// check for sell age/weight of young males
 			// if SellYoungFemalesLikeMales then all apply to both sexes else only males.
-			foreach (var ind in herd.Where(a => a.Weaned & (SellFemalesLikeMales ? true : (a.Gender == Sex.Male)) & (a.Age >= MaleSellingAge ^ a.Weight >= MaleSellingWeight)))
+			foreach (var ind in herd.Where(a => a.Weaned & (SellFemalesLikeMales ? true : (a.Gender == Sex.Male)) & (a.Age >= MaleSellingAge || a.Weight >= MaleSellingWeight)))
 			{
 				bool sell = true;
 				if (ind.GetType() == typeof(RuminantMale))
@@ -191,7 +191,7 @@ namespace Models.WholeFarm.Activities
 			}
 
 			// if management month
-			if ((Clock.Today.Month == ManagementMonth) ^ MonthlyManagement)
+			if ((Clock.Today.Month == ManagementMonth) || MonthlyManagement)
 			{
 				bool sufficientFood = true;
 				if(foodStore != null)
@@ -202,7 +202,7 @@ namespace Models.WholeFarm.Activities
 				// Perform weaning
 				foreach (var ind in herd.Where(a => a.Weaned == false))
 				{
-					if (ind.Age >= WeaningAge ^ ind.Weight >= WeaningWeight)
+					if (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight)
 					{
 						ind.Wean();
 					}

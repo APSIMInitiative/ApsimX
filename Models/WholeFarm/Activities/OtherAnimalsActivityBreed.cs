@@ -145,7 +145,7 @@ namespace Models.WholeFarm.Activities
 			if (this.NextDueDate.Month == Clock.Today.Month)
 			{
 				double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Male).Sum(b => b.Number);
-				if (!UseLocalMales ^ malebreeders > 0)
+				if (!UseLocalMales || malebreeders > 0)
 				{
 					// get number of females
 					double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Female).Sum(b => b.Number);

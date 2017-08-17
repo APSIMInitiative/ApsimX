@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
   <Name>Simulations</Name>
+  <DataStore>
+    <Name>DataStore</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
+  </DataStore>
   <Simulation>
     <Name>IndividualGrowth</Name>
     <Clock>
@@ -343,12 +349,6 @@
     </WholeFarm>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
-  <DataStore>
-    <Name>DataStore</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <AutoExport>false</AutoExport>
-    <MaximumResultsPerPage>0</MaximumResultsPerPage>
-  </DataStore>
   <Simulation>
     <Name>SucklingMother</Name>
     <Clock>
@@ -702,7 +702,7 @@
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
-    <Name>IndividualGrowth11</Name>
+    <Name>BreedingUncontrolled</Name>
     <Clock>
       <Name>clock</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -777,12 +777,22 @@
             <RuminantInitialCohorts>
               <Name>Initial cohorts</Name>
               <RuminantTypeCohort>
-                <Name>WeanerF</Name>
+                <Name>Female</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>5</StartingAge>
+                <StartingAge>18</StartingAge>
                 <StartingNumber>1</StartingNumber>
-                <StartingWeight>180</StartingWeight>
+                <StartingWeight>270</StartingWeight>
+                <StartingWeightSD>0</StartingWeightSD>
+                <Suckling>true</Suckling>
+              </RuminantTypeCohort>
+              <RuminantTypeCohort>
+                <Name>Male</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Gender>Male</Gender>
+                <StartingAge>36</StartingAge>
+                <StartingNumber>1</StartingNumber>
+                <StartingWeight>520</StartingWeight>
                 <StartingWeightSD>0</StartingWeightSD>
                 <Suckling>false</Suckling>
               </RuminantTypeCohort>
@@ -902,31 +912,38 @@
               </RuminantFilter>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <MonthlyValues>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
-                <double>0.02</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
               </MonthlyValues>
             </RuminantFeedGroup>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>UseResourcesAvailable</OnPartialResourcesAvailableAction>
             <FeedTypeName>RiceStraw</FeedTypeName>
             <ProportionTramplingWastage>0</ProportionTramplingWastage>
-            <FeedStyle>ProportionOfWeight</FeedStyle>
+            <FeedStyle>ProportionOfPotentialIntake</FeedStyle>
           </RuminantActivityFeed>
           <RuminantActivityGrow>
             <Name>Grow all ruminants</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
           </RuminantActivityGrow>
+          <RuminantActivityBreed>
+            <Name>Breed Bos indicus</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
+            <HerdName>BosIndicus</HerdName>
+            <MaximumConceptionRateUncontrolled>0.8</MaximumConceptionRateUncontrolled>
+          </RuminantActivityBreed>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <OnPartialResourcesAvailableAction>ReportErrorAndStop</OnPartialResourcesAvailableAction>
         </ActivityFolder>
