@@ -457,6 +457,12 @@ namespace Models.PMF.Organs
         /// <summary>MaintenanceRespiration</summary>
         public double MaintenanceRespiration { get; set; }
 
+        /// <summary>ApexAge</summary>
+        public double ApexAge { get; set; }
+
+        /// <summary>ApexSize</summary>
+        public double ApexSize { get; set; }
+
         #endregion
 
         #region Arbitration methods
@@ -905,7 +911,7 @@ namespace Models.PMF.Organs
             AgeMultiplier = new double[] { 0.5, 0.75, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
             List<double> ageMultiplierList = AgeMultiplier.ToList();
             double totalf = 1;
-            for(   int i=1; i< Leaf.ApexGroupAge.Length;i++)
+            for(int i=1; i< Leaf.ApexGroupAge.Length;i++)
             {
                 double f = ageMultiplierList.ElementAt((int)Leaf.ApexGroupAge[i] - 1);
                 totalf += f * Leaf.ApexGroupSize[i];
