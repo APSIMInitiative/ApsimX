@@ -841,8 +841,8 @@ namespace Models.PMF.Organs
                         break;
                 }
             }
-            NewLeaf.ApexAge = apexGroupAge.Count;
-            NewLeaf.ApexSize = apexGroupSize.Count;
+            NewLeaf.ApexGroupAge = new List<double>(apexGroupAge);
+            NewLeaf.ApexGroupSize = new List<double>(apexGroupSize);
         }
 
         /// <summary>Method to make leaf cohort appear and start expansion</summary>

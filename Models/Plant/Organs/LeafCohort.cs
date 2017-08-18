@@ -457,12 +457,13 @@ namespace Models.PMF.Organs
         /// <summary>MaintenanceRespiration</summary>
         public double MaintenanceRespiration { get; set; }
 
-        /// <summary>ApexAge</summary>
-        public double ApexAge { get; set; }
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public List<double> ApexGroupSize { get; set; }
 
-        /// <summary>ApexSize</summary>
-        public double ApexSize { get; set; }
-
+        /// <summary>Total apex number in plant.</summary>
+        [Description("Total apex number in plant")]
+        public List<double> ApexGroupAge { get; set; }
         #endregion
 
         #region Arbitration methods
