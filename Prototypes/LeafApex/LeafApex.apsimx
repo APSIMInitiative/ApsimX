@@ -1645,8 +1645,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>1</Rank>
           <Area>200</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexAge>0</ApexAge>
-          <ApexSize>0</ApexSize>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
@@ -1675,8 +1675,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Rank>2</Rank>
           <Area>0</Area>
           <MaintenanceRespiration>0</MaintenanceRespiration>
-          <ApexAge>0</ApexAge>
-          <ApexSize>0</ApexSize>
+          <ApexGroupSize />
+          <ApexGroupAge />
         </LeafCohort>
         <CompositeBiomass>
           <Name>Live</Name>
