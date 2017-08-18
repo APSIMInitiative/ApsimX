@@ -810,12 +810,11 @@ namespace Models.PMF.Organs
             NewLeaf.Rank = InitParams.Rank;
             NewLeaf.Area = 0.0;
             NewLeaf.DoInitialisation();
+            DoApexCalculations(ref NewLeaf);
             Leaves.Add(NewLeaf);
-            DoApexCalculations();
-
         }
 
-        private void DoApexCalculations()
+        private void DoApexCalculations(ref LeafCohort NewLeaf)
         {
             for (int i = 0; i < apexGroupAge.Count; i++)
                 apexGroupAge[i]++;
@@ -842,6 +841,8 @@ namespace Models.PMF.Organs
                         break;
                 }
             }
+            NewLeaf.ApexAge = apexGroupAge.Count;
+            NewLeaf.ApexSize = apexGroupSize.Count;
         }
 
         /// <summary>Method to make leaf cohort appear and start expansion</summary>
