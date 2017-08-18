@@ -827,7 +827,9 @@ namespace Models.PMF.Organs
             Leaves = new List<LeafCohort>();
             foreach (LeafCohort Leaf in InitialLeaves)
             {
-                Leaves.Add(Leaf.Clone());
+                LeafCohort NewLeaf = Leaf.Clone();
+                DoApexCalculations(ref NewLeaf);
+                Leaves.Add(NewLeaf);
             }
             foreach (LeafCohort Leaf in Leaves)
             {

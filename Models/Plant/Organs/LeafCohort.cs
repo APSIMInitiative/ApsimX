@@ -912,13 +912,13 @@ namespace Models.PMF.Organs
             AgeMultiplier = new double[] { 0.5, 0.75, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
             List<double> ageMultiplierList = AgeMultiplier.ToList();
             double totalf = 1;
-            for(int i=1; i< Leaf.ApexGroupAge.Length;i++)
+            for(int i=1; i< ApexGroupAge.Count;i++)
             {
-                double f = ageMultiplierList.ElementAt((int)Leaf.ApexGroupAge[i] - 1);
+                double f = ageMultiplierList.ElementAt((int)ApexGroupAge[i] - 1);
                 totalf += f * Leaf.ApexGroupSize[i];
             }
 
-            deltaActualArea = deltaActualArea * totalf / Leaf.ApexGroupSize.Sum();
+            deltaActualArea = deltaActualArea * totalf / ApexGroupSize.Sum();
             LiveArea += deltaActualArea;
             // Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
 
