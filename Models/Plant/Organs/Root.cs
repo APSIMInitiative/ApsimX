@@ -246,7 +246,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Root depth.</summary>
         [XmlIgnore]
-        public double Depth { get { return PlantZone.Depth; } }
+        public double Depth { get { return (PlantZone != null )? PlantZone.Depth:0; } }
 
         /// <summary>Layer live</summary>
         [XmlIgnore]
