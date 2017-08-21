@@ -369,7 +369,7 @@ namespace UserInterface.Commands
                           " of the capabilities of APSIM." + Environment.NewLine + Environment.NewLine +
 
                           "![Alt Text](..\\..\\Documentation\\Images\\Jigsaw.jpg)" + Environment.NewLine + Environment.NewLine +
-                          "*Figure: This conceptual representation of an APSIM simulation shows a “top level” farm (with climate, farm management and livestock) " +
+                          "**Figure [FigureNumber]:**  This conceptual representation of an APSIM simulation shows a “top level” farm (with climate, farm management and livestock) " +
                           "and two fields. The farm and each field are built from a combination of models found in the toolbox. The APSIM infrastructure connects all selected model pieces together to form a coherent simulation.*" + Environment.NewLine + Environment.NewLine +
 
                           "The APSIM Initiative has begun developing a next generation of APSIM (APSIM Next Generation) that is written from scratch and designed " +
@@ -658,6 +658,7 @@ namespace UserInterface.Commands
         /// <param name="workingDirectory">The working directory.</param>
         private void TagsToMigraDoc(Section section, List<AutoDocumentation.ITag> tags, string workingDirectory)
         {
+            int figureNumber = 0;
             foreach (AutoDocumentation.ITag tag in tags)
             {
                 if (tag is AutoDocumentation.Heading)
@@ -685,7 +686,11 @@ namespace UserInterface.Commands
                 }
                 else if (tag is AutoDocumentation.Paragraph)
                 {
-                    AddFormattedParagraphToSection(section, tag as AutoDocumentation.Paragraph);
+                    AutoDocumentation.Paragraph paragraph = tag as AutoDocumentation.Paragraph;
+                    if (paragraph.text.Contains("![Alt Text]"))
+                        figureNumber++;
+                    paragraph.text = paragraph.text.Replace("[FigureNumber]", figureNumber.ToString());
+                    AddFormattedParagraphToSection(section, paragraph);
                 }
                 else if (tag is AutoDocumentation.GraphAndTable)
                 {
@@ -755,6 +760,7 @@ namespace UserInterface.Commands
                     string PNGFileName = Path.Combine(workingDirectory, imageTag.name);
                     imageTag.image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
                     section.AddImage(PNGFileName);
+                    figureNumber++;
                 }
             }
         }
