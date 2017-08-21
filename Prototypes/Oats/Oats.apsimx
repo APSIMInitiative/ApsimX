@@ -14845,7 +14845,7 @@ late drought increased screenings.
             <Weather>
               <Name>Weather</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FileName>C:\Users\Neil\Dropbox\APSIMOats\Hybrid Gatton07 metfile.met</FileName>
+              <FileName>Hybrid Gatton07 metfile.met</FileName>
               <ExcelWorkSheetName />
             </Weather>
             <Zone>
