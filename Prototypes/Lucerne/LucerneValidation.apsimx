@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -330,43 +330,6 @@
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>Early</Name>
-            <Constant>
-              <Name>Function</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.1</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>Emergence</Start>
-            <End>StartFlowering</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Middle</Name>
-            <Constant>
-              <Name>Function</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.08</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>StartFlowering</Start>
-            <End>StartPodfill</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Late</Name>
-            <Constant>
-              <Name>Function</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>StartPodfill</Start>
-            <End>Maturity</End>
-          </PhaseLookupValue>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -487,6 +450,47 @@
           <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>Early</Name>
+              <Constant>
+                <Name>Function</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.1</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>StartFlowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Middle</Name>
+              <Constant>
+                <Name>Function</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.08</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartFlowering</Start>
+              <End>StartPodfill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Late</Name>
+              <Constant>
+                <Name>Function</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartPodfill</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -657,6 +661,26 @@
           <FixedValue>10000</FixedValue>
           <Units>g/m^2/d</Units>
         </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Nodule].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Nodule>
       <SimpleLeaf>
@@ -1059,6 +1083,26 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <FractionRemovedOnGraze>1</FractionRemovedOnGraze>
           <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
         </AccumulateFunction>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
@@ -1254,6 +1298,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1422,6 +1476,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Shell].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1590,6 +1654,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Grain].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -2727,6 +2801,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[TapRoot].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
@@ -2923,14 +3007,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>Sheet1</string>
       </SheetNames>
     </ExcelInput>
-    <PredictedObserved>
-      <Name>ObsVsPre</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <PredictedTableName>Report</PredictedTableName>
-      <ObservedTableName>Observed</ObservedTableName>
-      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
-      <FieldName2UsedForMatch>SWC</FieldName2UsedForMatch>
-    </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
@@ -3936,14 +4012,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -8104,14 +8172,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -12045,14 +12105,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -15988,14 +16040,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -18675,5 +18719,5 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>348</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
