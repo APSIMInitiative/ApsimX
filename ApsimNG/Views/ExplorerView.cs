@@ -101,6 +101,7 @@ namespace UserInterface.Views
 
             treeview1.CursorChanged += OnAfterSelect;
             treeview1.ButtonReleaseEvent += OnButtonUp;
+            treeview1.ButtonPressEvent += OnButtonPress;
 
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry(modelMime, TargetFlags.App, 0)
@@ -136,6 +137,7 @@ namespace UserInterface.Views
             textRender.Edited -= OnAfterLabelEdit;
             treeview1.CursorChanged -= OnAfterSelect;
             treeview1.ButtonReleaseEvent -= OnButtonUp;
+            treeview1.ButtonPressEvent -= OnButtonPress;
             treeview1.DragMotion -= OnDragOver;
             treeview1.DragDrop -= OnDragDrop;
             treeview1.DragBegin -= OnDragBegin;
@@ -624,7 +626,8 @@ namespace UserInterface.Views
                 TreeViewColumn selCol;
                 treeview1.GetCursor(out selPath, out selCol);
                 selectionChangedData.NewNodePath = FullPath(selPath);
-                SelectedNodeChanged.Invoke(this, selectionChangedData);
+                if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
+                    SelectedNodeChanged.Invoke(this, selectionChangedData);
                 previouslySelectedNodePath = selectionChangedData.NewNodePath;
             }
         }
@@ -648,6 +651,27 @@ namespace UserInterface.Views
         {
             (treeview1.Toplevel as Gtk.Window).AddAccelGroup(accel);
         }
+        
+        /// <summary>
+        /// Handle button press events, by looking for double clicks as a trigger
+        /// to begin editing an item name.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [GLib.ConnectBefore]
+        private void OnButtonPress(object sender, ButtonPressEventArgs e)
+        {
+            if (e.Event.Button == 1 && e.Event.Type == Gdk.EventType.TwoButtonPress)
+            {
+                TreePath path;
+                if (treeview1.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path))
+                {
+                    BeginRenamingCurrentNode();
+                    e.RetVal = true;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Displays the popup menu when the right mouse button is released
@@ -660,11 +684,6 @@ namespace UserInterface.Views
                 Popup.Popup();
         }
 
-        // Looks like drag and drop is broken on Mono on Mac. The data being dragged needs to be
-        // serializable which is ok but it still doesn work. Gives the error:
-        //     System.Runtime.Serialization.SerializationException: Unexpected binary element: 46
-        //     at System.Runtime.Serialization.Formatters.Binary.ObjectReader.ReadObject (BinaryElement element, System.IO.BinaryReader reader, System.Int64& objectId, System.Object& value, System.Runtime.Serialization.SerializationInfo& info) [0x00000] in <filename unknown>:0 
-
         private GCHandle dragSourceHandle;
 
         /// <summary>Node has begun to be dragged.</summary>
@@ -672,6 +691,8 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragBegin(object sender, DragBeginArgs e)
         {
+            if (textRender.Editable) // If the node to be dragged is open for editing (renaming), close it now.
+                textRender.CancelEditing();
             DragStartArgs args = new DragStartArgs();
             args.NodePath = SelectedNode; // FullPath(e.Item as TreeNode);
             if (DragStarted != null)
