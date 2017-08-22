@@ -355,36 +355,37 @@ namespace UserInterface.Commands
         private void AddBackground(List<AutoDocumentation.ITag> tags)
         {
             string text = "**Background:** " +
-                          "The Agricultural Production Systems sIMulator (APSIM) is a farming systems modelling framework " +
-                          "that is being actively developed by the APSIM Initiative. " + Environment.NewLine + Environment.NewLine +
-                          " It is comprised of " + Environment.NewLine + Environment.NewLine +
-                          " 1. a set of biophysical models that capture the science and management of the system being modelled, " + Environment.NewLine +
-                          " 2. a software framework that allows these models to be coupled together to facilitate data exchange between the models, " + Environment.NewLine +
-                          " 3. a community of developers and users who work together, to share ideas, data and source code, " + Environment.NewLine +
-                          " 4. a data platform to enable this sharing and " + Environment.NewLine +
-                          " 5. a user interface to make it accessible to a broad range of users." + Environment.NewLine + Environment.NewLine +
-                          " The literature contains numerous papers outlining the many uses of APSIM applied to diverse problem domains. " +
-                          " In particular, [holzworth_apsim_2014;keating_overview_2003;mccown_apsim:_1996;mccown_apsim:_1995] " +
-                          " have described earlier versions of APSIM in detail, outlining the key APSIM crop and soil process models and presented some examples " +
-                          " of the capabilities of APSIM." + Environment.NewLine + Environment.NewLine +
+              "The Agricultural Production Systems sIMulator (APSIM) is a farming systems modelling framework " +
+              "that is being actively developed by the APSIM Initiative. " + Environment.NewLine + Environment.NewLine +
+              " It is comprised of " + Environment.NewLine + Environment.NewLine +
+              " 1. a set of biophysical models that capture the science and management of the system being modelled, " + Environment.NewLine +
+              " 2. a software framework that allows these models to be coupled together to facilitate data exchange between the models, " + Environment.NewLine +
+              " 3. a set of input models that capture soil characteristics, climate variables, genotype information, field management etc, " + Environment.NewLine +
+              " 4. a community of developers and users who work together, to share ideas, data and source code, " + Environment.NewLine +
+              " 5. a data platform to enable this sharing and " + Environment.NewLine +
+              " 6. a user interface to make it accessible to a broad range of users." + Environment.NewLine + Environment.NewLine +
+              " The literature contains numerous papers outlining the many uses of APSIM applied to diverse problem domains. " +
+              " In particular, [holzworth_apsim_2014;keating_overview_2003;mccown_apsim:_1996;mccown_apsim:_1995] " +
+              " have described earlier versions of APSIM in detail, outlining the key APSIM crop and soil process models and presented some examples " +
+              " of the capabilities of APSIM." + Environment.NewLine + Environment.NewLine +
 
-                          "![Alt Text](..\\..\\Documentation\\Images\\Jigsaw.jpg)" + Environment.NewLine + Environment.NewLine +
-                          "**Figure [FigureNumber]:**  This conceptual representation of an APSIM simulation shows a “top level” farm (with climate, farm management and livestock) " +
-                          "and two fields. The farm and each field are built from a combination of models found in the toolbox. The APSIM infrastructure connects all selected model pieces together to form a coherent simulation.*" + Environment.NewLine + Environment.NewLine +
+              "![Alt Text](..\\..\\Documentation\\Images\\Jigsaw.jpg)" + Environment.NewLine + Environment.NewLine +
+              "**Figure [FigureNumber]:**  This conceptual representation of an APSIM simulation shows a “top level” farm (with climate, farm management and livestock) " +
+              "and two fields. The farm and each field are built from a combination of models found in the toolbox. The APSIM infrastructure connects all selected model pieces together to form a coherent simulation.*" + Environment.NewLine + Environment.NewLine +
 
-                          "The APSIM Initiative has begun developing a next generation of APSIM (APSIM Next Generation) that is written from scratch and designed " +
-                          "to run natively on Windows, LINUX and MAC OSX. The new framework incorporates the best of the APSIM 7.x " +
-                          "framework with an improved supporting framework. The Plant Modelling Framework (a generic collection of plant building blocks) was ported " +
-                          "from the existing APSIM to bring a rapid development pathway for plant models. The user interface paradigm has been kept the same as the " +
-                          "existing APSIM version, but completely rewritten to support new application domains and the newer Plant Modelling Framework. " +
-                          "The ability to describe experiments has been added which can also be used for rapidly building factorials of simulations. " +
-                          "The ability to write C# scripts to control farm and paddock management has been retained. Finally, all simulation outputs are written to " +
-                          "an SQLite database to make it easier and quicker to query, filter and graph outputs." + Environment.NewLine + Environment.NewLine +
-                          "The model described in this documentation is for APSIM Next Generation." + Environment.NewLine + Environment.NewLine +
+              "The APSIM Initiative has begun developing a next generation of APSIM (APSIM Next Generation) that is written from scratch and designed " +
+              "to run natively on Windows, LINUX and MAC OSX. The new framework incorporates the best of the APSIM 7.x " +
+              "framework with an improved supporting framework. The Plant Modelling Framework (a generic collection of plant building blocks) was ported " +
+              "from the existing APSIM to bring a rapid development pathway for plant models. The user interface paradigm has been kept the same as the " +
+              "existing APSIM version, but completely rewritten to support new application domains and the newer Plant Modelling Framework. " +
+              "The ability to describe experiments has been added which can also be used for rapidly building factorials of simulations. " +
+              "The ability to write C# scripts to control farm and paddock management has been retained. Finally, all simulation outputs are written to " +
+              "an SQLite database to make it easier and quicker to query, filter and graph outputs." + Environment.NewLine + Environment.NewLine +
+              "The model described in this documentation is for APSIM Next Generation." + Environment.NewLine + Environment.NewLine +
 
-                          "APSIM is freely available for non-commercial purposes. Non-commercial use of APSIM means public-good research & development and educational activities. " +
-                          "It includes the support of policy development and/or implementation by, or on behalf of, government bodies and industry-good work where the research outcomes " +
-                          "are to be made publicly available. For more information visit <a href=\"http://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
+              "APSIM is freely available for non-commercial purposes. Non-commercial use of APSIM means public-good research & development and educational activities. " +
+              "It includes the support of policy development and/or implementation by, or on behalf of, government bodies and industry-good work where the research outcomes " +
+              "are to be made publicly available. For more information visit <a href=\"http://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
 
             tags.Add(new AutoDocumentation.Paragraph(text, 0));
         }

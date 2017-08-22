@@ -151,7 +151,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The Maximum Root Depth</summary>
         [Link]
-        [Units("0-1")]
+        [Units("mm")]
         public IFunction MaximumRootDepth = null;
 
         /// <summary>Link to biomass removal model</summary>

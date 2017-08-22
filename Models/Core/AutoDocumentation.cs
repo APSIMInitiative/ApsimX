@@ -29,7 +29,7 @@ namespace Models.Core
         /// <returns>The units (no brackets) or any empty string.</returns>
         public static string GetUnits(IModel model, string fieldName)
         {
-            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (field != null)
             {
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(field, typeof(UnitsAttribute), false) as UnitsAttribute;
@@ -46,7 +46,7 @@ namespace Models.Core
         /// <returns>The description or any empty string.</returns>
         public static string GetDescription(IModel model, string fieldName)
         {
-            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (field != null)
             {
                 DescriptionAttribute descriptionAttribute = ReflectionUtilities.GetAttribute(field, typeof(DescriptionAttribute), false) as DescriptionAttribute;

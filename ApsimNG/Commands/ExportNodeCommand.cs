@@ -357,9 +357,10 @@ namespace UserInterface.Commands
                           " It is comprised of " + Environment.NewLine + Environment.NewLine +
                           " 1. a set of biophysical models that capture the science and management of the system being modelled, " + Environment.NewLine +
                           " 2. a software framework that allows these models to be coupled together to facilitate data exchange between the models, " + Environment.NewLine +
-                          " 3. a community of developers and users who work together, to share ideas, data and source code, " + Environment.NewLine +
-                          " 4. a data platform to enable this sharing and " + Environment.NewLine +
-                          " 5. a user interface to make it accessible to a broad range of users." + Environment.NewLine + Environment.NewLine +
+                          " 3. a set of input models that capture soil characteristics, climate variables, genotype information, field management etc, " + Environment.NewLine +
+                          " 4. a community of developers and users who work together, to share ideas, data and source code, " + Environment.NewLine +
+                          " 5. a data platform to enable this sharing and " + Environment.NewLine +
+                          " 6. a user interface to make it accessible to a broad range of users." + Environment.NewLine + Environment.NewLine +
                           " The literature contains numerous papers outlining the many uses of APSIM applied to diverse problem domains. " +
                           " In particular, [holzworth_apsim_2014;keating_overview_2003;mccown_apsim:_1996;mccown_apsim:_1995] " +
                           " have described earlier versions of APSIM in detail, outlining the key APSIM crop and soil process models and presented some examples " +

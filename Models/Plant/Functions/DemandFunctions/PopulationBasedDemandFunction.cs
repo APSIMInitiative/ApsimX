@@ -27,11 +27,13 @@ namespace Models.PMF.Functions.DemandFunctions
 
         /// <summary>The expansion stress</summary>
         [Link]
+        [Units("0-1")]
         IFunction ExpansionStress = null;
 
         /// <summary>The maximum organ wt</summary>
         [Description("Size individual organs will grow to when fully supplied with DM")]
         [Link]
+        [Units("g")]
         IFunction MaximumOrganWt = null;
 
         /// <summary>The start stage</summary>
@@ -42,6 +44,7 @@ namespace Models.PMF.Functions.DemandFunctions
         /// <summary>The growth duration</summary>
         [Description("ThermalTime duration of organ growth ")]
         [Link]
+        [Units("<sup>o</sup>Cd")]
         IFunction GrowthDuration = null;
 
         /// <summary>The accumulated thermal time</summary>
