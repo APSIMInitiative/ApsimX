@@ -6,11 +6,10 @@ using Models.PMF.Functions;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
-using Models.PMF.Functions.StructureFunctions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 
-namespace Models.PMF
+namespace Models.PMF.Struct
 {
     /// <summary>
     /// The structure model calculates structural development of the plant.  This includes the number of primordia, leaf nodes and stems, as well as overall plant height.  The development of these characteristics is driven by <i>Thermal time</i>.

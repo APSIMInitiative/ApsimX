@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
+using Models.PMF.Functions;
 
-namespace Models.PMF.Functions.StructureFunctions
+namespace Models.PMF.Struct
 {
     /// <summary>
     /// Height is used by the MicroClimate model to calculate the aerodynamic resistance used for calculation of potential transpiration.

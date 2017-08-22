@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Organs
 {

@@ -1,5 +1,6 @@
 using System;
 using Models.Core;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Functions
 {
