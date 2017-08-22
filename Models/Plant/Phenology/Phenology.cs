@@ -836,9 +836,15 @@ namespace Models.PMF.Phen
             tags.Add(new AutoDocumentation.Paragraph(line, indent));
             tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
 
+
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel+1));
+            foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+                    child.Document(tags, headingLevel + 2, indent);
+
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                if (child.GetType()!=typeof(Memo))
+                if (child.GetType()!=typeof(Memo) && !typeof(Phase).IsAssignableFrom(child.GetType()))
                     child.Document(tags, headingLevel + 1, indent);
         }
     }
