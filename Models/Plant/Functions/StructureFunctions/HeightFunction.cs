@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Functions.StructureFunctions
 {
     /// <summary>
+    /// Height is used by the MicroClimate model to calculate the aerodynamic resistance used for calculation of potential transpiration.
     /// Calculates the potential height increment and then multiplies it by the smallest of any childern functions (Child functions represent stress).
     /// </summary>
     [Serializable]

@@ -896,8 +896,7 @@ namespace Models.PMF.Organs
             //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
             double deltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
             LiveArea += deltaActualArea;
-            // Integrates leaf area at each cohort? FIXME-EIT is this the one integrated at leaf.cs?
-
+            
             //Senessing leaf area
             double areaSenescing = LiveArea*SenescedFrac;
             double areaSenescingN = 0;
