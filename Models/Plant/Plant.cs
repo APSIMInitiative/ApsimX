@@ -439,6 +439,21 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
+            tags.Add(new AutoDocumentation.Paragraph("The plant model is constructed from the following list of software components.  Details of the exact implementation and parameterisation are provided in the following sections.", indent));
+            // Write Plant Model Table
+            tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
+            string line;
+            line = "|Component Name | Component Type |" + System.Environment.NewLine;
+            line += "|--------------|:----------------|" + System.Environment.NewLine;
+
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder))
+                    line += "|" + child.Name + "|" + child.GetType().ToString() + "  |" + System.Environment.NewLine;
+            }
+            tags.Add(new AutoDocumentation.Paragraph(line, indent));
+
+
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 child.Document(tags, headingLevel + 1, indent);
         }
