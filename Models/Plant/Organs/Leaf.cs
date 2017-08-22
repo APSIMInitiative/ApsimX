@@ -12,9 +12,13 @@ using Models.PMF.Library;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    ///     This provides a phytomer type which predicts the area, biomass and nutrient as the tally of separate cohorts of leaves.  
-    ///     A cohort of leaves is represented by a main-stem node position and branch leaves are kept in the same cohort as the mainstem leaf appearing at the same time ([lawless2005wheat]). 
-    ///     The Leaf class delegates the status and function of individual cohorts into LeafCohort sub-classes.
+    ///     This organ uses a phytomer-based approach to predict the area, biomass and nutrient content 
+    ///     of separate cohorts of leaves.  
+    ///     A cohort of leaves is represented by a main-stem node position and branch leaves are kept 
+    ///     in the same cohort as the mainstem leaf appearing at the same time ([lawless2005wheat]). 
+    ///     This class delegates prediction of the status and function of individual cohorts to the
+    ///     LeafCohort sub-classes.  Overall canopy state is calculated by this class by aggregation
+    ///     of state data across all leaf cohorts.
     /// </summary>
     [Serializable]
     [Description("Leaf Class")]
