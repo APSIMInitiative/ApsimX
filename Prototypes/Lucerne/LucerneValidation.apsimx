@@ -2811,11 +2811,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <string>[Grain].Dead</string>
         </Propertys>
       </CompositeBiomass>
-      <Cultivar>
-        <Name>Kaituna</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command />
-      </Cultivar>
       <Memo>
         <Name>Memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2829,6 +2824,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
       </Memo>
       <CultivarFolder>
         <Name>CultivarFolder</Name>
+        <Cultivar>
+          <Name>Kaituna</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Command />
+        </Cultivar>
+        <Cultivar>
+          <Name>Trifecta</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Command />
+        </Cultivar>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2929,14 +2934,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>Sheet1</string>
       </SheetNames>
     </ExcelInput>
-    <PredictedObserved>
-      <Name>ObsVsPre</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <PredictedTableName>Report</PredictedTableName>
-      <ObservedTableName>Observed</ObservedTableName>
-      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
-      <FieldName2UsedForMatch>SWC</FieldName2UsedForMatch>
-    </PredictedObserved>
     <ExcelInput>
       <Name>ExcelInput1</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2945,14 +2942,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>Hudson</string>
       </SheetNames>
     </ExcelInput>
-    <PredictedObserved>
-      <Name>ObsVsPre1</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <PredictedTableName>Report</PredictedTableName>
-      <ObservedTableName>Hudson</ObservedTableName>
-      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
-      <FieldName2UsedForMatch>LAI</FieldName2UsedForMatch>
-    </PredictedObserved>
     <ExcelInput>
       <Name>ExcelInput2</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2961,6 +2950,22 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>Nekia</string>
       </SheetNames>
     </ExcelInput>
+    <PredictedObserved>
+      <Name>ObsVsPre</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>Observed</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+      <FieldName2UsedForMatch>SWC</FieldName2UsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>ObsVsPre1</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>Hudson</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+      <FieldName2UsedForMatch>LAI</FieldName2UsedForMatch>
+    </PredictedObserved>
     <PredictedObserved>
       <Name>ObsVsPre2</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -25709,7 +25714,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Canopy Cover (0-1)</Title>
+          <Title />
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -25775,7 +25780,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Soil water</Title>
+          <Title>Soil water </Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -25841,7 +25846,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Height (mm)</Title>
+          <Title>SW2</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -25973,7 +25978,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Height (mm)</Title>
+          <Title>SW3</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -26039,7 +26044,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Height (mm)</Title>
+          <Title>SW4</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -26105,7 +26110,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>Height (mm)</Title>
+          <Title>SW5</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -26171,7 +26176,7 @@ namespace Models
         </Axis>
         <Axis>
           <Type>Left</Type>
-          <Title>RootWt (Kg/ha)</Title>
+          <Title>SW7</Title>
           <Inverted>false</Inverted>
           <Minimum>NaN</Minimum>
           <Maximum>NaN</Maximum>
@@ -26254,14 +26259,14 @@ namespace Models
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
-          <ColourArgb>-2793984</ColourArgb>
+          <ColourArgb>-16777216</ColourArgb>
           <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>None</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>Solid</Line>
-          <LineThickness>Normal</LineThickness>
+          <LineThickness>Thin</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>ET</YFieldName>
@@ -26594,7 +26599,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.OutputLayers.SW(12)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(13)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -26924,7 +26929,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(18)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -26946,7 +26951,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Nekia</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW2</YFieldName>
+          <YFieldName>SW18</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -26990,7 +26995,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(19)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -27012,7 +27017,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Nekia</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW2</YFieldName>
+          <YFieldName>SW19</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -27056,7 +27061,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.OutputLayers.SW(2)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(20)</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -27078,7 +27083,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Nekia</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW2</YFieldName>
+          <YFieldName>SW20</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -27122,7 +27127,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(21)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -27144,7 +27149,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Nekia</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW6</YFieldName>
+          <YFieldName>SW21</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -27188,7 +27193,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(22)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -27210,7 +27215,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Nekia</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW6</YFieldName>
+          <YFieldName>SW22</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -27254,7 +27259,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Soil.OutputLayers.SW(6)</YFieldName>
+          <YFieldName>Soil.OutputLayers.SW(23)</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -27276,7 +27281,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Nekia</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>SW6</YFieldName>
+          <YFieldName>SW23</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
