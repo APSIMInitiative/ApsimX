@@ -26,10 +26,7 @@ namespace Models.PMF.Phen
         public String EventStageName = "";
     }
     /// <summary>
-    /// This model simulates the development of the crop through successive developmental <i>phases</i>. 
-    /// Each phase is bound by distinct growth <i>stages</i>. 
-    /// Phases often require a target to be reached to signal movement to the next phase. 
-    /// Differences between cultivars are specified by changing the values of the default parameters shown below.
+    /// This model simulates the development of the crop through successive developmental <i>phases</i>. Each phase is bound by distinct growth <i>stages</i>. Phases often require a target to be reached to signal movement to the next phase. Differences between cultivars are specified by changing the values of the default parameters shown below.
     /// </summary>
     /// \warning An \ref Models.PMF.Phen.EndPhase "EndPhase" model 
     /// should be included as the last child of 
@@ -801,6 +798,54 @@ namespace Models.PMF.Phen
                 CurrentPhaseIndex = SavedCurrentPhaseIndex;
                 return TTInPhase;
             }
+        }
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(Memo)))
+                child.Document(tags, headingLevel + 1, indent);
+
+            // Write Phase Table
+            tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
+            string line;
+            line = "|Stage Number  | Stage Name      | Phase Name    |"+ System.Environment.NewLine;
+            line +="|--------------|:----------------|:--------------|" + System.Environment.NewLine;
+
+            int N = 0;
+            foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+            {
+                if (N == 0)
+                {
+                    N++;
+                    line += "|" + N.ToString() + "|" + (child as Phase).Start + "|  |" + System.Environment.NewLine;
+                }
+                line += "|  |  | "+child.Name+"|" + System.Environment.NewLine;
+                N++;
+                line += "|" + N.ToString() + "|" + (child as Phase).End + "|  |" + System.Environment.NewLine;
+            }
+            tags.Add(new AutoDocumentation.Paragraph(line, indent));
+            tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
+
+
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel+1));
+            foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+                    child.Document(tags, headingLevel + 2, indent);
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                if (child.GetType()!=typeof(Memo) && !typeof(Phase).IsAssignableFrom(child.GetType()))
+                    child.Document(tags, headingLevel + 1, indent);
         }
     }
 }

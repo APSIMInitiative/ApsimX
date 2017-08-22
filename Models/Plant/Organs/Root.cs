@@ -151,7 +151,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The Maximum Root Depth</summary>
         [Link]
-        [Units("0-1")]
+        [Units("mm")]
         public IFunction MaximumRootDepth = null;
 
         /// <summary>Link to biomass removal model</summary>
@@ -246,7 +246,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Root depth.</summary>
         [XmlIgnore]
-        public double Depth { get { return PlantZone.Depth; } }
+        public double Depth { get { return (PlantZone != null )? PlantZone.Depth:0; } }
 
         /// <summary>Layer live</summary>
         [XmlIgnore]

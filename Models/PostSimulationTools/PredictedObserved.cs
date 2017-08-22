@@ -102,6 +102,18 @@ namespace Models.PostSimulationTools
 
                 if (predictedObservedData != null)
                     dataStore.WriteTable(null, this.Name, predictedObservedData);
+                else
+                {
+                    // Determine what went wrong.
+                    DataTable predictedData = dataStore.RunQuery("SELECT * FROM " + PredictedTableName);
+                    DataTable observedData = dataStore.RunQuery("SELECT * FROM " + ObservedTableName);
+                    if (predictedData == null || predictedData.Rows.Count == 0)
+                        throw new Exception(Name + ": Cannot find any predicted data.");
+                    else if (observedData == null || observedData.Rows.Count == 0)
+                        throw new Exception(Name + ": Cannot find any observed data in node: " + ObservedTableName + ". Check for missing observed file or move " + ObservedTableName + " to top of child list under DataStore (order is important!)");
+                    else
+                        throw new Exception(Name + ": Observed data was found but didn't match the predicted values. Make sure the values in the SimulationName column match the simulation names in the user interface. Also ensure column names in the observed file match the APSIM report column names.");
+                }
                 dataStore.Disconnect();
             }
         }

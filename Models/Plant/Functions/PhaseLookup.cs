@@ -48,6 +48,8 @@ namespace Models.PMF.Functions
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
                 child.Document(tags, -1, indent+1);
+
+            tags.Add(new AutoDocumentation.Paragraph(this.Name + " has a value of zero for phasese not specified above " , indent+1));
         }
 
     }

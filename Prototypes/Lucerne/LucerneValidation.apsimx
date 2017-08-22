@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -330,43 +330,6 @@
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>Early</Name>
-            <Constant>
-              <Name>Function</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.1</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>Emergence</Start>
-            <End>StartFlowering</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Middle</Name>
-            <Constant>
-              <Name>Function</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.08</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>StartFlowering</Start>
-            <End>StartPodfill</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Late</Name>
-            <Constant>
-              <Name>Function</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>StartPodfill</Start>
-            <End>Maturity</End>
-          </PhaseLookupValue>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -487,6 +450,47 @@
           <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>Early</Name>
+              <Constant>
+                <Name>Function</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.1</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>StartFlowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Middle</Name>
+              <Constant>
+                <Name>Function</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.08</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartFlowering</Start>
+              <End>StartPodfill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Late</Name>
+              <Constant>
+                <Name>Function</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartPodfill</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -657,6 +661,26 @@
           <FixedValue>10000</FixedValue>
           <Units>g/m^2/d</Units>
         </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Nodule].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Nodule>
       <SimpleLeaf>
@@ -1022,66 +1046,27 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <AccumulateFunction>
           <Name>NodeNumber</Name>
           <DivideFunction>
-            <Name>Node</Name>
+            <Name>DeltaNode</Name>
             <VariableReference>
               <Name>ThermalTime</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].ThermalTime.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
-              <Name>LinearInterpolationFunction</Name>
+              <Name>Phyllochron</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
-                <Graph>
-                  <Name>Graph</Name>
-                  <Series>
-                    <Name>Series</Name>
-                    <IncludeInDocumentation>true</IncludeInDocumentation>
-                    <Type>Scatter</Type>
-                    <XAxis>Bottom</XAxis>
-                    <YAxis>Left</YAxis>
-                    <ColourArgb>-65536</ColourArgb>
-                    <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-                    <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-                    <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-                    <Marker>None</Marker>
-                    <MarkerSize>Normal</MarkerSize>
-                    <Line>Solid</Line>
-                    <LineThickness>Normal</LineThickness>
-                    <XFieldName>.Simulations.Replacements.Lucerne.Leaf.NodeNumber.Node.XYPairs.X</XFieldName>
-                    <YFieldName>.Simulations.Replacements.Lucerne.Leaf.NodeNumber.Node.XYPairs.Y</YFieldName>
-                    <ShowInLegend>false</ShowInLegend>
-                    <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-                    <Cumulative>false</Cumulative>
-                    <CumulativeX>false</CumulativeX>
-                  </Series>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <Axis>
-                    <Type>Left</Type>
-                    <Title>Y</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <Axis>
-                    <Type>Bottom</Type>
-                    <Title>X</Title>
-                    <Inverted>false</Inverted>
-                    <Minimum>NaN</Minimum>
-                    <Maximum>NaN</Maximum>
-                    <Interval>NaN</Interval>
-                  </Axis>
-                  <LegendPosition>BottomRight</LegendPosition>
-                  <DisabledSeries />
-                </Graph>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
+                  <double>6</double>
                   <double>10.5</double>
                   <double>12.5</double>
+                  <double>18</double>
                 </X>
                 <Y>
                   <double>51</double>
+                  <double>51</double>
+                  <double>34</double>
                   <double>34</double>
                 </Y>
               </XYPairs>
@@ -1098,6 +1083,26 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <FractionRemovedOnGraze>1</FractionRemovedOnGraze>
           <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
         </AccumulateFunction>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
@@ -1293,6 +1298,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1461,6 +1476,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Shell].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1629,6 +1654,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Grain].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -2766,6 +2801,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[TapRoot].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
@@ -2962,14 +3007,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>Sheet1</string>
       </SheetNames>
     </ExcelInput>
-    <PredictedObserved>
-      <Name>ObsVsPre</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-      <PredictedTableName>Report</PredictedTableName>
-      <ObservedTableName>Observed</ObservedTableName>
-      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
-      <FieldName2UsedForMatch>SWC</FieldName2UsedForMatch>
-    </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
@@ -3975,14 +4012,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -6895,7 +6924,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Lucerne.Leaf.NodeNumber.Value()</YFieldName>
+          <YFieldName>NodeNumber</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -7261,7 +7290,7 @@ namespace Models
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>2012-05-02</Date>
+              <Date>2012-06-21</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
           </Operations>
@@ -8143,14 +8172,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -10230,7 +10251,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Sheet1</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Shootsbiomass</YFieldName>
+          <YFieldName>Shootbiomass</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10276,7 +10297,17 @@ namespace Models
           <Interval>NaN</Interval>
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
-        <DisabledSeries />
+        <DisabledSeries>
+          <string>SD2</string>
+          <string>SD3</string>
+          <string>SD4</string>
+          <string>SD5</string>
+          <string>SD6</string>
+          <string>SD7</string>
+          <string>SD8</string>
+          <string>SD9</string>
+          <string>SD10</string>
+        </DisabledSeries>
       </Graph>
       <Graph>
         <Name>LAI</Name>
@@ -10890,7 +10921,6 @@ namespace Models
         </Axis>
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries>
-          <string>SD1</string>
           <string>SD2</string>
           <string>SD3</string>
           <string>SD4</string>
@@ -10930,8 +10960,12 @@ namespace Models
               <Action>[Irrigation].Apply(30)</Action>
             </Operation>
             <Operation>
-              <Date>1998-09-13</Date>
-              <Action>[Irrigation].Apply(60)</Action>
+              <Date>1998-09-16</Date>
+              <Action>[Irrigation].Apply(30)</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-09-18</Date>
+              <Action>[Irrigation].Apply(30)</Action>
             </Operation>
             <Operation>
               <Date>1999-09-11</Date>
@@ -11624,7 +11658,7 @@ namespace Models
           </Operation>
           <Operation>
             <Date>1997-11-19</Date>
-            <Action>[Mower].Script.Cut();</Action>
+            <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
             <Date>1997-12-23</Date>
@@ -11636,10 +11670,6 @@ namespace Models
           </Operation>
           <Operation>
             <Date>1998-03-12</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1998-05-06</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
@@ -11687,15 +11717,11 @@ namespace Models
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-01-24</Date>
+            <Date>2000-01-26</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-03-12</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2000-05-17</Date>
+            <Date>2000-03-13</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
@@ -11719,7 +11745,7 @@ namespace Models
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2001-03-12</Date>
+            <Date>2001-03-14</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
@@ -12079,14 +12105,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -14166,7 +14184,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Sheet1</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Shootsbiomass</YFieldName>
+          <YFieldName>Shootbiomass</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -14799,117 +14817,6 @@ namespace Models
           </Specifications>
         </Factor>
         <Factor>
-          <Name>LS</Name>
-          <Operations>
-            <Name>Cutting</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Operation>
-              <Date>2001-01-24</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2001-03-07</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2001-05-02</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2001-07-04</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2001-09-29</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2001-11-14</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2001-12-21</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2002-01-31</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2002-04-04</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2002-06-14</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2002-10-06</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2002-11-17</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2002-12-28</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-02-11</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-03-08</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-04-05</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-06-13</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-10-06</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-11-13</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2003-12-29</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-02-08</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-03-07</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-05-03</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-06-12</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2004-10-03</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-          </Operations>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[Cutting]</string>
-          </Specifications>
-        </Factor>
-        <Factor>
           <Name>SL</Name>
           <Operations>
             <Name>Cutting</Name>
@@ -14999,7 +14906,7 @@ namespace Models
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>2003-11-12</Date>
+              <Date>2003-11-13</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
@@ -15078,6 +14985,10 @@ namespace Models
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
+              <Date>2002-06-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
               <Date>2002-09-14</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
@@ -15126,11 +15037,11 @@ namespace Models
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>2003-11-09</Date>
+              <Date>2003-11-12</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>2003-12-09</Date>
+              <Date>2003-12-12</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
@@ -15138,7 +15049,7 @@ namespace Models
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
-              <Date>2004-02-02</Date>
+              <Date>2004-02-03</Date>
               <Action> [Mower].Script.Cut();</Action>
             </Operation>
             <Operation>
@@ -15160,6 +15071,125 @@ namespace Models
             <Operation>
               <Date>2004-10-04</Date>
               <Action> [Mower].Script.Cut();  </Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[Cutting]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>LS</Name>
+          <Operations>
+            <Name>Cutting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>2001-01-24</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-03-07</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-05-02</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-07-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-09-29</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-11-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2001-12-21</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-01-31</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-04-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-06-14</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-10-06</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-11-17</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2002-12-28</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-02-11</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-03-08</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-04-05</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-05-05</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-06-13</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-10-06</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-11-13</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2003-12-29</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2004-02-08</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2004-03-07</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2004-04-04</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2004-05-03</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2004-06-12</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2004-10-03</Date>
+              <Action> [Mower].Script.Cut();</Action>
             </Operation>
           </Operations>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -16010,14 +16040,6 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
@@ -18639,7 +18661,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Lucerne.Leaf.NodeNumber.Value()</YFieldName>
+          <YFieldName>NodeNumber</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -18697,5 +18719,5 @@ namespace Models
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>282</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

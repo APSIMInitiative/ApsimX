@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 namespace Models.PMF.Phen
 {
 
-    /// <summary>The end phase in phenology</summary>
+    /// <summary>It is the end phase in phenology and the crop will sit, unchanging, in this phase until it is harvested or removed by other method</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

@@ -382,6 +382,7 @@ namespace UserInterface.Views
             hbox1.Visible = false;
             hbox1.NoShowAll = true;
             memoView1.ReadOnly = false;
+            memoView1.WordWrap = true;
             memoView1.MemoChange += this.TextUpdate;
             vpaned1.ShowAll();
             frame1.ExposeEvent += OnWidgetExpose;
