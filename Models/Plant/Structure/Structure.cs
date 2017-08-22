@@ -6,13 +6,13 @@ using Models.PMF.Functions;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
-using Models.PMF.Functions.StructureFunctions;
 using Models.Interfaces;
+using Models.PMF.Interfaces;
 
-namespace Models.PMF
+namespace Models.PMF.Struct
 {
     /// <summary>
-    /// The structure model calculates structural development of the plant.  This includes the number of primordia, leaves, stems and nodes, as well as overall plant height.
+    /// The structure model calculates structural development of the plant.  This includes the number of primordia, leaf nodes and stems, as well as overall plant height.  The development of these characteristics is driven by <i>Thermal time</i>.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" model has to exist to access 
     /// sowing data, e.g. population, bud number.
@@ -190,7 +190,7 @@ namespace Models.PMF
         public event EventHandler InitialiseLeafCohorts;
         /// <summary>Occurs when ever an new vegetative leaf cohort is initiated on the stem apex.</summary>
         public event EventHandler<CohortInitParams> AddLeafCohort;
-        /// <summary>The Leaf Appearance DAta </summary>
+        /// <summary>The Leaf Appearance Data </summary>
         [XmlIgnore]
         public CohortInitParams InitParams { get; set; }
         /// <summary>Occurs when ever an new leaf tip appears.</summary>
@@ -232,6 +232,7 @@ namespace Models.PMF
         /// <summary>The main stem node appearance rate</summary>
         [Link]
         public IFunction MainStemNodeAppearanceRate = null;
+        
         /// <summary>The main stem final node number</summary>
         [Link]
         public IFunction MainStemFinalNodeNumber = null;
@@ -247,6 +248,9 @@ namespace Models.PMF
         [Link]
         [Units("/d")]
         IFunction BranchMortality = null;
+        /// <summary>The maximum age of stem senescence</summary>
+        [Link]
+        public IFunction StemSenescenceAge = null;
         #endregion
 
         #region States
@@ -276,7 +280,6 @@ namespace Models.PMF
         [Description("Number of mainstem nodes which have their tips appeared")]
         public double PotLeafTipsAppeared { get; set; }
 
-        //Plant leaf number state variables
         /// <summary>Gets or sets the main stem node no.</summary>
         /// <value>The main stem node no.</value>
         [XmlIgnore]
@@ -305,6 +308,11 @@ namespace Models.PMF
         [XmlIgnore]
         public double DeltaHaunStage { get; set; }
 
+        /// <value>Senscenced by age.</value>
+        [XmlIgnore]
+        public bool SenescenceByAge { get; set; }
+
+
         /// <value>The delta node number.</value>
         [XmlIgnore]
         public double DeltaTipNumber { get; set; }
@@ -323,7 +331,7 @@ namespace Models.PMF
         /// </summary>
         [XmlIgnore]
         public double DeltaPlantPopulation { get; set; }
-
+        
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
@@ -334,6 +342,7 @@ namespace Models.PMF
             ProportionPlantMortality = 0;
             DeltaTipNumber = 0;
             DeltaHaunStage = 0;
+            SenescenceByAge = false;
         }
 
         #endregion
@@ -378,7 +387,6 @@ namespace Models.PMF
                 return LeafTipsAppeared / MainStemFinalNodeNumber.Value();
             }
         }
-
         #endregion
 
         #region Top level timestep Functions
@@ -487,10 +495,18 @@ namespace Models.PMF
                             BranchNumber += BranchingRate.Value();
                             DoLeafTipAppearance();
                         }
+                        // Apex calculation
+                        ApexNum += (BranchingRate.Value() - BranchMortality.Value()) * PrimaryBudNo;
+
+                        if (Phenology.Stage > 4 & !SenescenceByAge)
+                        {
+                            ApexNum -= Leaf.ApexNumByAge(StemSenescenceAge.Value());
+                            SenescenceByAge = true;
+                        }
                     }
 
                     //Reduce population if there has been plant mortality 
-                    if(DeltaPlantPopulation>0)
+                    if (DeltaPlantPopulation>0)
                     TotalStemPopn -= DeltaPlantPopulation * TotalStemPopn / Plant.Population;
                     
                     //Reduce stem number incase of mortality
@@ -501,9 +517,6 @@ namespace Models.PMF
                         TotalStemPopn -= DeltaPopn;
                         ProportionBranchMortality = PropnMortality;
                     }
-
-                    // Apex calculation
-                    ApexNum += (BranchingRate.Value() - BranchMortality.Value()) * PrimaryBudNo;
                 }
             }
         }

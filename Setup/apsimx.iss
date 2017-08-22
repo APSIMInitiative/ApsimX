@@ -156,7 +156,10 @@ Name: {userdesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: de
 Name: {commondesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: commondesktopicon
 
 [Registry]
-
+; With this key, the embedded WebBrowser emulates IE7, which breaks Google Maps.
+; I'm setting a value of 11000 here to emulate IE11; this may need to change in the future.
+Root: HKLM; Subkey: "Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION"; ValueType: dword; ValueName: "ApsimNG.exe"; ValueData: "11000"
+Root: HKLM; Subkey: "Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION"; ValueType: dword; ValueName: "ApsimNG.vshost.exe"; ValueData: "11000"
 
 [Run]
 Filename: {app}\Bin\ApsimNG.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent

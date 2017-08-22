@@ -2,11 +2,12 @@
 using System.Collections;
 using Models.Core;
 using System.Xml.Serialization;
+using System.Collections.Generic;
 
 namespace Models.PMF
 {
     /// <summary>
-    /// A composite biomass i.e. a biomass made up of 1 or more biomass objects.
+    /// This is a composite biomass class. *i.e.* a biomass made up of 1 or more biomass objects.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -148,5 +149,31 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                child.Document(tags, headingLevel + 1, indent);
+
+            tags.Add(new AutoDocumentation.Paragraph(this.Name +" is a composite of the following biomass objects:", indent));
+
+            string st = string.Empty;
+            foreach (string PropertyName in Propertys)
+            {
+                st = st + Environment.NewLine + "* " + PropertyName;
+            }
+            tags.Add(new AutoDocumentation.Paragraph(st, indent));
+
+        }
     }
 }

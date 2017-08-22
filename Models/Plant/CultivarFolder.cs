@@ -45,8 +45,13 @@ namespace Models.PMF
                 tags.Add(new AutoDocumentation.Paragraph(text, indent));
 
             // write child folders.
+            foreach (IModel childCultivar in Apsim.Children(this, typeof(Cultivar)))
+                childCultivar.Document(tags, headingLevel + 1, indent);
+
+            // write child folders.
             foreach (IModel childFolder in Apsim.Children(this, typeof(CultivarFolder)))
                 childFolder.Document(tags, headingLevel + 1, indent);
+
         }
     }
 }

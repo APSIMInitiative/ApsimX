@@ -89,7 +89,7 @@ namespace UserInterface.Views
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
             column.PackStart(iconRender, false);
             textRender = new Gtk.CellRendererText();
-            textRender.Editable = true;
+            textRender.Editable = false;
             textRender.EditingStarted += OnBeforeLabelEdit;
             textRender.Edited += OnAfterLabelEdit;
             column.PackStart(textRender, true);
@@ -101,6 +101,7 @@ namespace UserInterface.Views
 
             treeview1.CursorChanged += OnAfterSelect;
             treeview1.ButtonReleaseEvent += OnButtonUp;
+            treeview1.ButtonPressEvent += OnButtonPress;
 
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry(modelMime, TargetFlags.App, 0)
@@ -117,7 +118,6 @@ namespace UserInterface.Views
             treeview1.DragDataGet += OnDragDataGet;
             treeview1.DragDataReceived += OnDragDataReceived;
             treeview1.DragEnd += OnDragEnd;
-            treeview1.DragDataDelete += OnDragDataDelete;
             treeview1.FocusInEvent += Treeview1_FocusInEvent;
             treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -137,13 +137,13 @@ namespace UserInterface.Views
             textRender.Edited -= OnAfterLabelEdit;
             treeview1.CursorChanged -= OnAfterSelect;
             treeview1.ButtonReleaseEvent -= OnButtonUp;
+            treeview1.ButtonPressEvent -= OnButtonPress;
             treeview1.DragMotion -= OnDragOver;
             treeview1.DragDrop -= OnDragDrop;
             treeview1.DragBegin -= OnDragBegin;
             treeview1.DragDataGet -= OnDragDataGet;
             treeview1.DragDataReceived -= OnDragDataReceived;
             treeview1.DragEnd -= OnDragEnd;
-            treeview1.DragDataDelete -= OnDragDataDelete;
             treeview1.FocusInEvent -= Treeview1_FocusInEvent;
             treeview1.FocusOutEvent -= Treeview1_FocusOutEvent;
             foreach (Widget child in toolStrip.Children)
@@ -258,6 +258,7 @@ namespace UserInterface.Views
         /// <summary>Puts the current node into edit mode so user can rename it.</summary>
         public void BeginRenamingCurrentNode()
         {
+            textRender.Editable = true;
             TreePath selPath;
             TreeViewColumn selCol;
             treeview1.GetCursor(out selPath, out selCol);
@@ -625,7 +626,8 @@ namespace UserInterface.Views
                 TreeViewColumn selCol;
                 treeview1.GetCursor(out selPath, out selCol);
                 selectionChangedData.NewNodePath = FullPath(selPath);
-                SelectedNodeChanged.Invoke(this, selectionChangedData);
+                if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
+                    SelectedNodeChanged.Invoke(this, selectionChangedData);
                 previouslySelectedNodePath = selectionChangedData.NewNodePath;
             }
         }
@@ -649,6 +651,27 @@ namespace UserInterface.Views
         {
             (treeview1.Toplevel as Gtk.Window).AddAccelGroup(accel);
         }
+        
+        /// <summary>
+        /// Handle button press events, by looking for double clicks as a trigger
+        /// to begin editing an item name.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [GLib.ConnectBefore]
+        private void OnButtonPress(object sender, ButtonPressEventArgs e)
+        {
+            if (e.Event.Button == 1 && e.Event.Type == Gdk.EventType.TwoButtonPress)
+            {
+                TreePath path;
+                if (treeview1.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path))
+                {
+                    BeginRenamingCurrentNode();
+                    e.RetVal = true;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Displays the popup menu when the right mouse button is released
@@ -661,11 +684,6 @@ namespace UserInterface.Views
                 Popup.Popup();
         }
 
-        // Looks like drag and drop is broken on Mono on Mac. The data being dragged needs to be
-        // serializable which is ok but it still doesn work. Gives the error:
-        //     System.Runtime.Serialization.SerializationException: Unexpected binary element: 46
-        //     at System.Runtime.Serialization.Formatters.Binary.ObjectReader.ReadObject (BinaryElement element, System.IO.BinaryReader reader, System.Int64& objectId, System.Object& value, System.Runtime.Serialization.SerializationInfo& info) [0x00000] in <filename unknown>:0 
-
         private GCHandle dragSourceHandle;
 
         /// <summary>Node has begun to be dragged.</summary>
@@ -673,6 +691,8 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragBegin(object sender, DragBeginArgs e)
         {
+            if (textRender.Editable) // If the node to be dragged is open for editing (renaming), close it now.
+                textRender.CancelEditing();
             DragStartArgs args = new DragStartArgs();
             args.NodePath = SelectedNode; // FullPath(e.Item as TreeNode);
             if (DragStarted != null)
@@ -805,16 +825,6 @@ namespace UserInterface.Views
             e.RetVal = success;
         }
 
-        /// <summary>
-        /// Delete the source item at the end of a drag Move operation
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDragDataDelete(object sender, DragDataDeleteArgs e) 
-        {
-            Delete(sourcePathOfItemBeingDragged);
-        }
-
         /// <summary>User is about to start renaming a node.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
@@ -825,11 +835,12 @@ namespace UserInterface.Views
             // e.CancelEdit = false;
         }
         
-        /// <summary>User has finished renamed a node.</summary>
+        /// <summary>User has finished renaming a node.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
         private void OnAfterLabelEdit(object sender, EditedArgs e)
         {
+            textRender.Editable = false;
             // TreeView.ContextMenuStrip = this.PopupMenu;
             if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
             {

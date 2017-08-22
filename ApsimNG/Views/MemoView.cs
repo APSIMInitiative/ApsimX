@@ -26,6 +26,7 @@ namespace UserInterface.Views
         string[] MemoLines { get; set; }
         bool ReadOnly { get; set; }
         string LabelText { get; set; }
+        bool WordWrap { get; set; }
 
         void Export(int width, int height, Graphics graphics);
     }
@@ -133,6 +134,11 @@ namespace UserInterface.Views
             set { label1.Text = value; }
         }
 
+        public bool WordWrap
+        {
+            get { return textView.WrapMode == WrapMode.Word; }
+            set { textView.WrapMode = value ? WrapMode.Word : WrapMode.None;  }
+        }
 
         /// <summary>
         /// The memo has been updated and now send the changed text to the model.

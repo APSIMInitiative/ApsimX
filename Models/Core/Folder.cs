@@ -45,6 +45,31 @@ namespace Models.Core
                 foreach (Memo memo in Apsim.Children(this, typeof(Memo)))
                     memo.Document(tags, headingLevel, indent);
 
+                if (Apsim.Children(this, typeof(Experiment)).Count > 0)
+                {
+                    // Write Phase Table
+                    tags.Add(new AutoDocumentation.Paragraph("**List of experiments.**", indent));
+                    string line;
+                    line = "|Experiment Name | Design (Number of Treatments) |" + System.Environment.NewLine;
+                    line += "|--------------|:----------------|" + System.Environment.NewLine;
+
+                    foreach (IModel child in Apsim.Children(this, typeof(Experiment)))
+                    {
+                        IModel Factors = Apsim.Child(child, typeof(Factors));
+                        string Design = "";
+                        foreach (IModel factor in Apsim.Children(Factors, typeof(Factor)))
+                        {
+                            if (Design != "")
+                                Design += " x ";
+                            Design += factor.Name;
+                        }
+                        Design += " (" + (child as Experiment).Names().Length+")";
+
+                        line += "|" + child.Name + "|" + Design +"  |" + System.Environment.NewLine;
+                    }
+                    tags.Add(new AutoDocumentation.Paragraph(line, indent));
+
+                }
                 int pageNumber = 1;
                 int i = 0;
                 List<IModel> children = Apsim.Children(this, typeof(Graph.Graph));

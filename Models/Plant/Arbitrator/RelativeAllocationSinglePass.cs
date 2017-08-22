@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Models.PMF
 {
     /// <summary>
-    /// Relative allocation class
+    /// Single Pass Relative allocation rules used to determine partitioning
     /// </summary>
     [Serializable]
     public class RelativeAllocationSinglePass : Model,IArbitrationMethod
@@ -66,12 +66,9 @@ namespace Models.PMF
             // write description of this class.
             AutoDocumentation.GetClassDescription(this, tags, indent);
 
-            string RelativeDocString = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their demand relative to the demand from all organs.  On the second pass any remaining biomass is allocated to non-structural demands based on the organ's relative demand.";
-            //string RelativeThenPriorityDocStirng = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first. On the second pass any remaining biomass is allocated to non-structural demands based on the relative demand from all organs.";
-            //string PriorityDocString = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first.  On the second pass any remaining biomass is allocated to non-structural demands based on the same order of priority.";
-            //string SinglePassDocString = "Arbitration is performed in a single pass for each of the biomass supply sources.  Biomass is partitioned between organs based on their relative demand in a single pass so non-structural demands compete dirrectly with structural demands.";
+            string SinglePassDocString = "Arbitration is performed in a single pass for each of the biomass supply sources.  Biomass is partitioned between organs based on their relative demand in a single pass so non-structural demands compete dirrectly with structural demands.";
 
-            tags.Add(new AutoDocumentation.Paragraph(RelativeDocString, indent));
+            tags.Add(new AutoDocumentation.Paragraph(SinglePassDocString, indent));
         }
     }
 }

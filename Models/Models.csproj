@@ -192,6 +192,7 @@
     <Compile Include="Plant\Arbitrator\RelativeAllocationSinglePass.cs" />
     <Compile Include="Plant\Arbitrator\RelativeAllocation.cs" />
     <Compile Include="Plant\CultivarFolder.cs" />
+    <Compile Include="Plant\Functions\DemandFunctions\InternodeCohortDemandFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\LeafLightUseEfficiency.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\LeafMaxGrossPhotosynthesis.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\CanopyGrossPhotosynthesisHourly.cs" />
@@ -207,12 +208,15 @@
     <Compile Include="Plant\Functions\DemandFunctions\FillingRateFunction.cs" />
     <Compile Include="Plant\Functions\MovingSum.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\CanopyPhotosynthesis.cs" />
+    <Compile Include="Plant\Interfaces\IApex.cs" />
     <Compile Include="Plant\Interfaces\IWaterNitrogenUptake.cs" />
     <Compile Include="Plant\Interfaces\IHasWaterDemand.cs" />
     <Compile Include="Plant\Interfaces\IArbitration.cs" />
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Library\BiomassRemoval.cs" />
+    <Compile Include="Plant\Structure\ApexStandard.cs" />
+    <Compile Include="Plant\Structure\ApexTiller.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
     <Compile Include="Plant\Organs\RootZoneState.cs" />
     <Compile Include="Plant\Phenology\ExpressionPhase.cs" />
@@ -290,15 +294,17 @@
     <Compile Include="Soils\MultiPoreWater\WEIRDO.cs" />
     <Compile Include="Soils\MultiPoreWater\Pore.cs" />
     <Compile Include="Soils\SoilCropOilPalm.cs" />
-    <Compile Include="Soils\PatchHandler.cs" />
     <Compile Include="Soils\Arbitrator\SoilArbitrator.cs" />
-    <Compile Include="Soils\soilCNPatch.cs" />
+    <Compile Include="Soils\SoilNitrogen.CNPatch.cs" />
+    <Compile Include="Soils\SoilNitrogen.CNPatch.Processes.cs" />
+    <Compile Include="Soils\SoilNitrogen.CNPatchHandlers.cs" />
+    <Compile Include="Soils\SoilNitrogen.cs" />
+    <Compile Include="Soils\SoilNitrogen.Variables.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterDataTypes.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterEvap.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterRunoff.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSoil.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWaterSurface.cs" />
-    <Compile Include="Soils\Variables.cs" />
     <Compile Include="SoluteManager.cs" />
     <Compile Include="Stock\animgrp.cs" />
     <Compile Include="Stock\animprm.cs" />
@@ -365,14 +371,12 @@
     <Compile Include="Plant\Functions\PhotoperiodFunction.cs" />
     <Compile Include="Plant\Functions\PowerFunction.cs" />
     <Compile Include="Plant\Functions\SigmoidFunction.cs" />
-    <Compile Include="Plant\Functions\SigmoidFunction2.cs" />
     <Compile Include="Plant\Functions\SoilTemperatureDepthFunction.cs" />
     <Compile Include="Plant\Functions\SoilTemperatureFunction.cs" />
     <Compile Include="Plant\Functions\SoilTemperatureWeightedFunction.cs" />
     <Compile Include="Plant\Functions\SplineInterpolationFunction.cs" />
     <Compile Include="Plant\Functions\StageBasedInterpolation.cs" />
-    <Compile Include="Plant\Functions\StructureFunctions\HeightFunction.cs" />
-    <Compile Include="Plant\Functions\StructureFunctions\InPhaseTemperatureFunction.cs" />
+    <Compile Include="Plant\Structure\HeightFunction.cs" />
     <Compile Include="Plant\Functions\SubtractFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUECO2Function.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUEModel.cs" />
@@ -426,7 +430,7 @@
     <Compile Include="Plant\Phenology\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\VernalisationCW.cs" />
     <Compile Include="Plant\Plant.cs" />
-    <Compile Include="Plant\Structure.cs" />
+    <Compile Include="Plant\Structure\Structure.cs" />
     <Compile Include="Plant\Utility.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
     <Compile Include="Soils\RunoffEventType.cs" />
@@ -438,7 +442,6 @@
     <Compile Include="Soils\CERESSoilTemperature.cs" />
     <Compile Include="Soils\Soil.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
-    <Compile Include="Soils\SoilNitrogen.cs" />
     <Compile Include="Soils\SoilOrganicMatter.cs" />
     <Compile Include="Soils\SoilTemperature.cs" />
     <Compile Include="Soils\SoilTemperature2.cs" />
@@ -623,6 +626,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Maize.xml" />
+    <None Include="Resources\Chicory.xml" />
     <Content Include="Resources\ResidueTypes.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -640,7 +644,7 @@
   <Target Name="BeforeBuild">
   </Target>-->
   <Target Name="AfterBuild" DependsOnTargets="AssignTargetPaths;Compile" Inputs="$(MSBuildAllProjects);@(IntermediateAssembly)" Outputs="$(OutputPath)$(_SGenDllName)">
-	<!-- Delete the file because I can't figure out how to force the SGen task. -->
+    <!-- Delete the file because I can't figure out how to force the SGen task. -->
     <Delete Files="$(TargetDir)$(TargetName).XmlSerializers.dll" ContinueOnError="true" />
     <SGen Condition="'$(OS)' == 'Windows_NT' OR '$(OS)' == 'WINDOWS'" BuildAssemblyName="$(TargetFileName)" BuildAssemblyPath="$(OutputPath)" References="@(ReferencePath)" ShouldGenerateSerializer="true" UseProxyTypes="false" KeyContainer="$(KeyContainerName)" KeyFile="$(KeyOriginatorFile)" DelaySign="$(DelaySign)" ToolPath="$(TargetFrameworkSDKToolsDirectory)" Platform="$(Platform)">
       <Output TaskParameter="SerializationAssembly" ItemName="SerializationAssembly" />

@@ -15,14 +15,13 @@ namespace Models.Core
     using System.Reflection;
     using System.IO;
     using System.Text.RegularExpressions;
-
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 7; } }
+        public static int LastestVersion { get { return 10; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -234,6 +233,27 @@ namespace Models.Core
                 SearchReplaceReportCode(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
         }
 
+        private static void UpgradeToVersion8(XmlNode node)
+        {
+            XmlNode apex = XmlUtilities.CreateNode(node.OwnerDocument, "ApexStandard", "");
+            XmlNode stemSen = XmlUtilities.CreateNode(node.OwnerDocument, "Constant", "");
+            XmlElement name = node.OwnerDocument.CreateElement("Name");
+            XmlElement element = node.OwnerDocument.CreateElement("FixedValue");
+            name.InnerText = "StemSenescenceAge";
+            element.InnerText = "0";
+            stemSen.AppendChild(name);
+            stemSen.AppendChild(element);
+
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "Leaf"))
+            {
+                n.AppendChild(apex);
+            }
+            foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "Structure"))
+            {
+                n.AppendChild(stemSen);
+            }
+        }
+
         /// <summary>
         /// Perform a search and replace in manager script. Also optionally insert a using statement.
         /// </summary>
@@ -297,5 +317,101 @@ namespace Models.Core
             while (line != null);
             return writer.ToString();
         }
+
+        /// <summary>
+        /// Find a PMF node, as a direct child under the specified node, that has the specified name element.
+        /// </summary>
+        /// <param name="node">The XML Nnde to search</param>
+        /// <param name="name">The name of the element to search for</param>
+        /// <returns>The node or null if not found</returns>
+        private static XmlNode FindPMFNode(XmlNode node, string name)
+        {
+            foreach (XmlNode child in node.ChildNodes)
+                if (XmlUtilities.Value(child, "Name") == name)
+                    return child;
+            return null;
+        }
+        /// <summary>
+        /// Add a DMDemandFunction constant function to all Root nodes that don't have one
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        private static void UpgradeToVersion9(XmlNode node)
+        {
+            foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
+            {
+                XmlNode partitionFraction = FindPMFNode(root, "PartitionFraction");
+                if (partitionFraction != null)
+                {
+                    root.RemoveChild(partitionFraction);
+                    XmlNode demandFunction = root.AppendChild(root.OwnerDocument.CreateElement("PartitionFractionDemandFunction"));
+                    XmlUtilities.SetValue(demandFunction, "Name", "DMDemandFunction");
+                    demandFunction.AppendChild(partitionFraction);
+                }
+            }
+        }
+        /// <summary>
+        /// Add default values for generic organ parameters that were previously optional
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        private static void UpgradeToVersion10(XmlNode node)
+        {
+            foreach (XmlNode GenericOrgan in XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"))
+            {
+                AddOrganFunctions(GenericOrgan);
+            }
+            foreach (XmlNode SimpleLeaf in XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"))
+            {
+                AddOrganFunctions(SimpleLeaf);
+            }
+            foreach (XmlNode Nodule in XmlUtilities.FindAllRecursivelyByType(node, "Nodule"))
+            {
+                AddOrganFunctions(Nodule);
+            }
+
+        }
+        private static void AddOrganFunctions(XmlNode OrganType)
+        {
+            XmlNode NRetranslocationFactor = FindPMFNode(OrganType, "NRetranslocationFactor");
+            if (NRetranslocationFactor == null)
+            {
+                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
+                XmlUtilities.SetValue(constant, "Name", "NRetranslocationFactor");
+                XmlUtilities.SetValue(constant, "FixedValue", "0.0");
+            }
+
+            XmlNode NitrogenDemandSwitch = FindPMFNode(OrganType, "NitrogenDemandSwitch");
+            if (NitrogenDemandSwitch == null)
+            {
+                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
+                XmlUtilities.SetValue(constant, "Name", "NitrogenDemandSwitch");
+                XmlUtilities.SetValue(constant, "FixedValue", "1.0");
+            }
+
+            XmlNode DMReallocationFactor = FindPMFNode(OrganType, "DMReallocationFactor");
+            if (DMReallocationFactor == null)
+            {
+                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
+                XmlUtilities.SetValue(constant, "Name", "DMReallocationFactor");
+                XmlUtilities.SetValue(constant, "FixedValue", "0.0");
+            }
+
+            XmlNode DMRetranslocationFactor = FindPMFNode(OrganType, "DMRetranslocationFactor");
+            if (DMRetranslocationFactor == null)
+            {
+                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
+                XmlUtilities.SetValue(constant, "Name", "DMRetranslocationFactor");
+                XmlUtilities.SetValue(constant, "FixedValue", "0.0");
+            }
+
+            XmlNode CriticalNConc = FindPMFNode(OrganType, "CriticalNConc");
+            if (CriticalNConc == null)
+            {
+                XmlNode critNConc = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("VariableReference"));
+                XmlUtilities.SetValue(critNConc, "Name", "CriticalNConc");
+                string refPath = "[" + OrganType.FirstChild.InnerText + "].MinimumNConc.Value()";
+                XmlUtilities.SetValue(critNConc, "VariableName", refPath);
+            }
+        }
+
     }
 }

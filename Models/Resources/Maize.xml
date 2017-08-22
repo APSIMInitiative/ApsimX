@@ -1,7 +1,9 @@
-<Plant>
+<?xml version="1.0" encoding="utf-8"?>
+<Plant xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>Maize</Name>
   <Memo>
     <Name>TitlePage</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <MemoText>
       <![CDATA[
 # The APSIM Maize Model
@@ -23,10 +25,13 @@ The model consists of:
     <Name>Arbitrator</Name>
     <RelativeAllocation>
       <Name>NArbitrator</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </RelativeAllocation>
     <RelativeAllocation>
       <Name>DMArbitrator</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </RelativeAllocation>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </OrganArbitrator>
   <Phenology>
     <Name>Phenology</Name>
@@ -36,6 +41,7 @@ The model consists of:
         <Name>BaseThermalTime</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>18</double>
@@ -51,10 +57,13 @@ The model consists of:
             <double>0</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </AirTemperatureFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
     <GerminatingPhase>
       <Name>Germinating</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>Sowing</Start>
       <End>Germination</End>
     </GerminatingPhase>
@@ -62,8 +71,10 @@ The model consists of:
       <Name>Emerging</Name>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>Germination</Start>
       <End>Emergence</End>
       <ShootLag>55</ShootLag>
@@ -73,13 +84,16 @@ The model consists of:
       <Name>Juvenile</Name>
       <Constant>
         <Name>Target</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>200</FixedValue>
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>Emergence</Start>
       <End>EndJuvenile</End>
     </GenericPhase>
@@ -87,12 +101,14 @@ The model consists of:
       <Name>Photosensitive</Name>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
       <LinearInterpolationFunction>
         <Name>Target</Name>
         <Memo>
           <Name>memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText>
             <![CDATA[
 The photoperiod is likely to vary with individual maize cultivars.  Therefore, the response shown here is indicative only.  See the descriptions of individual cultivars for more detail on photoperiod responses used by the maize model.
@@ -101,6 +117,7 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
         </Memo>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>12.5</double>
@@ -112,8 +129,10 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
             <double>10</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Phenology].Photoperiod.Value()</XProperty>
       </LinearInterpolationFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>EndJuvenile</Start>
       <End>FloralInitiation</End>
     </GenericPhase>
@@ -121,8 +140,10 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
       <Name>LeafAppearance</Name>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>FloralInitiation</Start>
       <End>FlagLeaf</End>
     </LeafAppearancePhase>
@@ -130,13 +151,16 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
       <Name>FlagLeafToFlowering</Name>
       <Constant>
         <Name>Target</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>50</FixedValue>
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>FlagLeaf</Start>
       <End>Flowering</End>
     </GenericPhase>
@@ -144,13 +168,16 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
       <Name>FloweringToGrainFilling</Name>
       <Constant>
         <Name>Target</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>120</FixedValue>
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>Flowering</Start>
       <End>StartGrainFill</End>
     </GenericPhase>
@@ -158,13 +185,16 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
       <Name>GrainFilling</Name>
       <Constant>
         <Name>Target</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>550</FixedValue>
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>StartGrainFill</Start>
       <End>EndGrainFill</End>
     </GenericPhase>
@@ -172,13 +202,16 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
       <Name>Maturing</Name>
       <Constant>
         <Name>Target</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>10</FixedValue>
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>EndGrainFill</Start>
       <End>Maturity</End>
     </GenericPhase>
@@ -186,13 +219,16 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
       <Name>MaturityToHarvestRipe</Name>
       <Constant>
         <Name>Target</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>10</FixedValue>
         <Units>deg day</Units>
       </Constant>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>Maturity</Start>
       <End>HarvestRipe</End>
     </GenericPhase>
@@ -200,19 +236,24 @@ The photoperiod is likely to vary with individual maize cultivars.  Therefore, t
       <Name>ReadyForHarvesting</Name>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>HarvestRipe</Start>
       <End>Unused</End>
     </EndPhase>
     <PhotoperiodFunction>
       <Name>Photoperiod</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Twilight>-6</Twilight>
+      <DayLength>0</DayLength>
     </PhotoperiodFunction>
     <OnEventFunction>
       <Name>FloweringDAS</Name>
       <Memo>
         <Name>memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText>
           <![CDATA[
 A function is used to provide flowering date as days after sowing(DAS).
@@ -221,12 +262,15 @@ A function is used to provide flowering date as days after sowing(DAS).
       </Memo>
       <Constant>
         <Name>PreEventValue</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
       </Constant>
       <VariableReference>
         <Name>PostEventValue</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].DaysAfterSowing</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <SetEvent>Flowering</SetEvent>
       <ReSetEvent>never</ReSetEvent>
     </OnEventFunction>
@@ -234,6 +278,7 @@ A function is used to provide flowering date as days after sowing(DAS).
       <Name>MaturityDAS</Name>
       <Memo>
         <Name>memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText>
           <![CDATA[
 A function is used to provide maturity date as days after sowing(DAS).]]>
@@ -241,28 +286,40 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
       </Memo>
       <Constant>
         <Name>PreEventValue</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
       </Constant>
       <VariableReference>
         <Name>PostEventValue</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].DaysAfterSowing</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <SetEvent>Maturity</SetEvent>
       <ReSetEvent>never</ReSetEvent>
     </OnEventFunction>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <DaysAfterSowing>0</DaysAfterSowing>
   </Phenology>
   <Structure>
     <Name>Structure</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 Though tillering is common in some maize varieties under certain agronomic conditions, no tillering is accounted for within this model.  Therefore all branching has been parameterised out of the current maize model.
 ]]>
       </MemoText>
     </Memo>
+    <Constant>
+      <Name>StemSenescenceAge</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
     <VariableReference>
       <Name>ThermalTime</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Phenology].ThermalTime.Value()</VariableName>
     </VariableReference>
     <PhaseLookup>
@@ -273,6 +330,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Name>Phyllochron</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>1</double>
               <double>3.4</double>
@@ -284,11 +342,14 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <double>42</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Structure].LeafTipsAppeared</XProperty>
         </LinearInterpolationFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Start>Emergence</Start>
         <End>FlagLeaf</End>
       </PhaseLookupValue>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
     <HeightFunction>
       <Name>HeightModel</Name>
@@ -296,6 +357,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <Name>PotentialHeight</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>3</double>
             <double>4</double>
@@ -309,12 +371,14 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <double>1700</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Phenology].Stage</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
         <Name>WaterStress</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>0.6</double>
@@ -324,26 +388,33 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <double>1</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
       </LinearInterpolationFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </HeightFunction>
     <Constant>
       <Name>BranchingRate</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
     <AddFunction>
       <Name>BranchMortality</Name>
       <Constant>
         <Name>ShadeInducedBranchMortality</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
       </Constant>
       <Constant>
         <Name>DroughtInducedBranchMortality</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
       </Constant>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </AddFunction>
     <Constant>
       <Name>zMainStemFinalNodeNumber</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>15</FixedValue>
     </Constant>
     <HoldFunction>
@@ -352,6 +423,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <Name>ValueToHold</Name>
         <Constant>
           <Name>PrimordiaAtEmergence</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>6</FixedValue>
         </Constant>
         <DivideFunction>
@@ -360,12 +432,15 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <Name>AddFunction</Name>
             <VariableReference>
               <Name>JuvenilePhaseDuration</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].Juvenile.Target.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>PhotoSensitivePhaseDuration</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].Photosensitive.Target.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>
           <PhaseLookup>
             <Name>MeanPlastochron</Name>
@@ -373,8 +448,10 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <Name>PreEmerg</Name>
               <Constant>
                 <Name>Constant</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>15</FixedValue>
               </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Germination</Start>
               <End>Emergence</End>
             </PhaseLookupValue>
@@ -388,51 +465,78 @@ Though tillering is common in some maize varieties under certain agronomic condi
                     <Name>Plastochron</Name>
                     <VariableReference>
                       <Name>Phyllochron</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
                       <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
                     </VariableReference>
                     <Constant>
                       <Name>LeafTipsPerPrimordia</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
                       <FixedValue>0.5</FixedValue>
                     </Constant>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
                   </MultiplyFunction>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <StartStageName>Emergence</StartStageName>
                   <EndStageName>FloralInitiation</EndStageName>
+                  <FractionRemovedOnCut>0</FractionRemovedOnCut>
+                  <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+                  <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+                  <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
                 </AccumulateFunction>
                 <AccumulateFunction>
                   <Name>Days</Name>
                   <Constant>
                     <Name>Constant</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
                     <FixedValue>1</FixedValue>
                   </Constant>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
                   <StartStageName>Emergence</StartStageName>
                   <EndStageName>FloralInitiation</EndStageName>
+                  <FractionRemovedOnCut>0</FractionRemovedOnCut>
+                  <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+                  <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+                  <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
                 </AccumulateFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
               </DivideFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Emergence</Start>
               <End>FlagLeaf</End>
             </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </DivideFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </AddFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <WhenToHold>FloralInitiation</WhenToHold>
     </HoldFunction>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Initialised>false</Initialised>
     <Germinated>false</Germinated>
     <Emerged>false</Emerged>
+    <CohortToInitialise>0</CohortToInitialise>
+    <TipToAppear>0</TipToAppear>
+    <ApexNum>0</ApexNum>
   </Structure>
   <ReproductiveOrgan>
     <Name>Grain</Name>
     <Constant>
       <Name>InitialGrainProportion</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.05</FixedValue>
     </Constant>
     <Constant>
       <Name>MaximumPotentialGrainSize</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.3</FixedValue>
       <Units>g</Units>
     </Constant>
     <Constant>
       <Name>MaximumGrainsPerCob</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>700</FixedValue>
       <Units>number</Units>
     </Constant>
@@ -444,28 +548,36 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Name>FillingRateFunction</Name>
           <VariableReference>
             <Name>NumberFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Grain].NumberFunction.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>FillingDuration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].FloweringToGrainFilling.Target.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>PotentialSizeIncrement</Name>
             <VariableReference>
               <Name>InitialProportion</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Grain].InitialGrainProportion.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>MaximumSize</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </FillingRateFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Start>Flowering</Start>
         <End>StartGrainFill</End>
       </PhaseLookupValue>
@@ -475,14 +587,17 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Name>FillingRateFunction</Name>
           <VariableReference>
             <Name>NumberFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Grain].NumberFunction.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>FillingDuration</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
@@ -491,31 +606,42 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <Name>ProportionLinearPhase</Name>
               <Constant>
                 <Name>One</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>1</FixedValue>
               </Constant>
               <VariableReference>
                 <Name>InitialProportion</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
                 <VariableName>[Grain].InitialGrainProportion.Value()</VariableName>
               </VariableReference>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
             </SubtractFunction>
             <VariableReference>
               <Name>MaximumSize</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </FillingRateFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Start>StartGrainFill</Start>
         <End>EndGrainFill</End>
       </PhaseLookupValue>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
     <Biomass>
       <Name>Live</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Biomass>
     <Biomass>
       <Name>Dead</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Biomass>
     <Constant>
       <Name>MinimumNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.008</FixedValue>
       <Units>g/g</Units>
     </Constant>
@@ -525,8 +651,10 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <Name>InitialPhase</Name>
         <Constant>
           <Name>InitialNconc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.05</FixedValue>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Start>Flowering</Start>
         <End>StartGrainFill</End>
       </PhaseLookupValue>
@@ -534,14 +662,18 @@ Though tillering is common in some maize varieties under certain agronomic condi
         <Name>LinearPhase</Name>
         <Constant>
           <Name>FinalNconc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.013</FixedValue>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Start>StartGrainFill</Start>
         <End>EndGrainFill</End>
       </PhaseLookupValue>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
     <Constant>
       <Name>WaterContent</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.12</FixedValue>
       <Units>g/g</Units>
     </Constant>
@@ -553,49 +685,62 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <Name>FillingRateFunction</Name>
           <VariableReference>
             <Name>NumberFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Grain].NumberFunction.Value()</VariableName>
           </VariableReference>
           <AddFunction>
             <Name>FillingDuration</Name>
             <VariableReference>
               <Name>FloweringToGrainFilling</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].FloweringToGrainFilling.Target.Value()</VariableName>
             </VariableReference>
             <VariableReference>
               <Name>GrainFilling</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </AddFunction>
           <VariableReference>
             <Name>ThermalTime</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <MultiplyFunction>
             <Name>PotentialSizeIncrement</Name>
             <Constant>
               <Name>MaximumFinalNConc</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <FixedValue>0.013</FixedValue>
             </Constant>
             <VariableReference>
               <Name>MaximumSize</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <VariableName>[Grain].MaximumPotentialGrainSize.Value()</VariableName>
             </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </FillingRateFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Start>Flowering</Start>
         <End>EndGrainFill</End>
       </PhaseLookupValue>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
     <MultiplyFunction>
       <Name>NumberFunction</Name>
       <VariableReference>
         <Name>PotentialGrainNumber</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[MaximumGrainsPerCob].Value()</VariableName>
       </VariableReference>
       <LinearInterpolationFunction>
         <Name>GrowthRateFactor</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0.55</double>
             <double>3.3</double>
@@ -609,55 +754,76 @@ Though tillering is common in some maize varieties under certain agronomic condi
             <double>1</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[GrowthRateGrainDevelopment].Value()</XProperty>
       </LinearInterpolationFunction>
       <VariableReference>
         <Name>Population</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Maize].Population</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
     <ExpressionFunction>
       <Name>YieldBuPerAcre</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Expression>[Grain].Live.Wt * 10 * 56 * 0.4536 * 2.471</Expression>
     </ExpressionFunction>
     <AccumulateFunction>
       <Name>GrowthGrainDevelopment</Name>
       <VariableReference>
         <Name>DailyBiomassProduction</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Arbitrator].DM.TotalFixationSupply</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartStageName>FlagLeaf</StartStageName>
       <EndStageName>StartGrainFill</EndStageName>
+      <FractionRemovedOnCut>0</FractionRemovedOnCut>
+      <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+      <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+      <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
     </AccumulateFunction>
     <AccumulateFunction>
       <Name>DaysGrainDevelopment</Name>
       <Constant>
         <Name>LenthOfADay</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>1</FixedValue>
         <Units>days/day</Units>
       </Constant>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartStageName>FlagLeaf</StartStageName>
       <EndStageName>StartGrainFill</EndStageName>
+      <FractionRemovedOnCut>0</FractionRemovedOnCut>
+      <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+      <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+      <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
     </AccumulateFunction>
     <DivideFunction>
       <Name>GrowthRateGrainDevelopment</Name>
       <VariableReference>
         <Name>AccumulatedGrowth</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[GrowthGrainDevelopment].Value()</VariableName>
       </VariableReference>
       <VariableReference>
         <Name>GrowthDuration</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[DaysGrainDevelopment].Value()</VariableName>
       </VariableReference>
       <VariableReference>
         <Name>Population</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Maize].Population</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </DivideFunction>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>1</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -665,6 +831,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>1</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -672,6 +839,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.8</FractionLiveToResidue>
@@ -679,24 +847,31 @@ Though tillering is common in some maize varieties under certain agronomic condi
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.6</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <GrowthRespiration>0</GrowthRespiration>
+    <MaintenanceRespiration>0</MaintenanceRespiration>
     <RipeStage />
   </ReproductiveOrgan>
   <Root>
     <Name>Root</Name>
     <CompositeBiomass>
       <Name>Live</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Propertys>
         <string>[Root].LayerLive</string>
       </Propertys>
     </CompositeBiomass>
     <CompositeBiomass>
       <Name>Dead</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Propertys>
         <string>[Root].LayerDead</string>
       </Propertys>
@@ -705,6 +880,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
       <Name>KLModifier</Name>
       <Memo>
         <Name>memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText>
           <![CDATA[
 The parameter KL is is described by Meinke et al (1993) to combine elements of soil conductivity (K) with root length (L) in determining root water uptake.  Peake et al (2013) demonstrated that in maize KL varied with plant population through impacts on root length density.  Here we adjust KL linearly with plant population.
@@ -713,6 +889,7 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
       </Memo>
       <XYPairs>
         <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <X>
           <double>0</double>
           <double>10</double>
@@ -722,30 +899,35 @@ The parameter KL is is described by Meinke et al (1993) to combine elements of s
           <double>1</double>
         </Y>
       </XYPairs>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Maize].Population</XProperty>
     </LinearInterpolationFunction>
     <Constant>
       <Name>SoilWaterEffect</Name>
       <Memo>
         <Name>memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText>
           <![CDATA[
 No effect of soil water content on root growth is currently captured in the model.
 ]]>
         </MemoText>
       </Memo>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
       <Name>MaxDailyNUptake</Name>
       <Memo>
         <Name>memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText>
           <![CDATA[
 Maximum daily N uptake is set to an arbitrarily high value.
 ]]>
         </MemoText>
       </Memo>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>20</FixedValue>
       <Units>g/m2/d</Units>
     </Constant>
@@ -753,58 +935,71 @@ Maximum daily N uptake is set to an arbitrarily high value.
       <Name>SenescenceRate</Name>
       <Memo>
         <Name>memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText>
           <![CDATA[
 Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Maize model.
 ]]>
         </MemoText>
       </Memo>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.005</FixedValue>
       <Units>/d</Units>
     </Constant>
     <Constant>
       <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
     </Constant>
     <Constant>
       <Name>MaximumRootDepth</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1000000</FixedValue>
     </Constant>
     <Constant>
       <Name>MaximumNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.01</FixedValue>
       <Units>g/g</Units>
     </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.01</FixedValue>
       <Units>g/g</Units>
     </Constant>
-    <LinearInterpolationFunction>
-      <Name>PartitionFraction</Name>
-      <XYPairs>
-        <Name>XYPairs</Name>
-        <X>
-          <double>0</double>
-          <double>2.99</double>
-          <double>3</double>
-          <double>6</double>
-          <double>7</double>
-        </X>
-        <Y>
-          <double>0</double>
-          <double>0</double>
-          <double>0.2</double>
-          <double>0.2</double>
-          <double>0</double>
-        </Y>
-      </XYPairs>
-      <XProperty>[Phenology].Stage</XProperty>
-    </LinearInterpolationFunction>
+    <PartitionFractionDemandFunction>
+      <Name>DMDemandFunction</Name>
+      <LinearInterpolationFunction>
+        <Name>PartitionFraction</Name>
+        <XYPairs>
+          <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <X>
+            <double>0</double>
+            <double>2.99</double>
+            <double>3</double>
+            <double>6</double>
+            <double>7</double>
+          </X>
+          <Y>
+            <double>0</double>
+            <double>0</double>
+            <double>0.2</double>
+            <double>0.2</double>
+            <double>0</double>
+          </Y>
+        </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <XProperty>[Phenology].Stage</XProperty>
+      </LinearInterpolationFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </PartitionFractionDemandFunction>
     <PhaseLookup>
       <Name>RootFrontVelocity</Name>
       <Memo>
         <Name>memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText>
           <![CDATA[
 [Hammer_etal_2009] used a constant extraction front velocity of 2.5cm per day in their analysis of historical maize yield trends in the US corn belt.
@@ -815,9 +1010,11 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <Name>PreFlowering</Name>
         <Constant>
           <Name>RootFrontVelocity</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>25</FixedValue>
           <Units>mm/d</Units>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Start>Germination</Start>
         <End>Flowering</End>
       </PhaseLookupValue>
@@ -825,15 +1022,19 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <Name>PostFlowering</Name>
         <Constant>
           <Name>RootFrontVelocity</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>mm/d</Units>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Start>Flowering</Start>
         <End>Maturity</End>
       </PhaseLookupValue>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </PhaseLookup>
     <PhaseBasedSwitch>
       <Name>NitrogenDemandSwitch</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>Germination</Start>
       <End>Maturity</End>
     </PhaseBasedSwitch>
@@ -841,6 +1042,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
@@ -848,6 +1050,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.3</FractionLiveToResidue>
@@ -855,6 +1058,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -862,19 +1066,23 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.15</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
     <Constant>
       <Name>InitialDM</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.2</FixedValue>
       <Units>g/plant</Units>
     </Constant>
     <Constant>
       <Name>SpecificRootLength</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>40</FixedValue>
       <Units>m/g</Units>
     </Constant>
@@ -882,6 +1090,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Name>KNO3</Name>
       <XYPairs>
         <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <X>
           <double>0.003</double>
           <double>0.003</double>
@@ -891,12 +1100,14 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <double>0.03</double>
         </Y>
       </XYPairs>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Root].LengthDensity</XProperty>
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>KNH4</Name>
       <XYPairs>
         <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <X>
           <double>0</double>
           <double>0.003</double>
@@ -906,12 +1117,14 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <double>0.0003</double>
         </Y>
       </XYPairs>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Root].LengthDensity</XProperty>
     </LinearInterpolationFunction>
     <LinearInterpolationFunction>
       <Name>NUptakeSWFactor</Name>
       <XYPairs>
         <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <X>
           <double>0</double>
           <double>1</double>
@@ -921,36 +1134,95 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
           <double>1</double>
         </Y>
       </XYPairs>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Root].RWC</XProperty>
     </LinearInterpolationFunction>
-    <NuptakeSupply>0</NuptakeSupply>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <GrowthRespiration>0</GrowthRespiration>
+    <MaintenanceRespiration>0</MaintenanceRespiration>
+    <ZoneNamesToGrowRootsIn />
+    <ZoneRootDepths />
+    <ZoneInitialDM />
   </Root>
   <Leaf>
     <Name>Leaf</Name>
+    <ApexStandard>
+      <Name>ApexStandard</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </ApexStandard>
     <LeafCohort>
       <Name>InitialLeaves[1]</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <NReallocationFactor>0</NReallocationFactor>
+      <DMReallocationFactor>0</DMReallocationFactor>
+      <NRetranslocationFactor>0</NRetranslocationFactor>
+      <DMRetranslocationFactor>0</DMRetranslocationFactor>
+      <ShadeInducedSenRate>0</ShadeInducedSenRate>
+      <SenescedFrac>0</SenescedFrac>
+      <DeltaPotentialArea>0</DeltaPotentialArea>
+      <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+      <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+      <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+      <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+      <MetabolicNReallocated>0</MetabolicNReallocated>
+      <MetabolicWtReallocated>0</MetabolicWtReallocated>
+      <NonStructuralNReallocated>0</NonStructuralNReallocated>
+      <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+      <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+      <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+      <DMRetranslocated>0</DMRetranslocated>
+      <MetabolicNAllocation>0</MetabolicNAllocation>
+      <StructuralDMAllocation>0</StructuralDMAllocation>
+      <MetabolicDMAllocation>0</MetabolicDMAllocation>
       <Rank>1</Rank>
       <Area>380</Area>
+      <MaintenanceRespiration>0</MaintenanceRespiration>
     </LeafCohort>
     <LeafCohort>
       <Name>InitialLeaves[2]</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <NReallocationFactor>0</NReallocationFactor>
+      <DMReallocationFactor>0</DMReallocationFactor>
+      <NRetranslocationFactor>0</NRetranslocationFactor>
+      <DMRetranslocationFactor>0</DMRetranslocationFactor>
+      <ShadeInducedSenRate>0</ShadeInducedSenRate>
+      <SenescedFrac>0</SenescedFrac>
+      <DeltaPotentialArea>0</DeltaPotentialArea>
+      <DeltaWaterConstrainedArea>0</DeltaWaterConstrainedArea>
+      <DeltaCarbonConstrainedArea>0</DeltaCarbonConstrainedArea>
+      <PotentialStructuralDMAllocation>0</PotentialStructuralDMAllocation>
+      <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
+      <MetabolicNReallocated>0</MetabolicNReallocated>
+      <MetabolicWtReallocated>0</MetabolicWtReallocated>
+      <NonStructuralNReallocated>0</NonStructuralNReallocated>
+      <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+      <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
+      <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+      <DMRetranslocated>0</DMRetranslocated>
+      <MetabolicNAllocation>0</MetabolicNAllocation>
+      <StructuralDMAllocation>0</StructuralDMAllocation>
+      <MetabolicDMAllocation>0</MetabolicDMAllocation>
       <Rank>2</Rank>
       <Area>0</Area>
+      <MaintenanceRespiration>0</MaintenanceRespiration>
     </LeafCohort>
     <CompositeBiomass>
       <Name>Live</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Propertys>
         <string>[Leaf].CohortLive</string>
       </Propertys>
     </CompositeBiomass>
     <CompositeBiomass>
       <Name>Dead</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Propertys>
         <string>[Leaf].CohortDead</string>
       </Propertys>
     </CompositeBiomass>
     <ArrayBiomass>
       <Name>CohortArrayLive</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Propertys>
         <string>[Leaf].Live</string>
       </Propertys>
@@ -958,6 +1230,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
     </ArrayBiomass>
     <ArrayBiomass>
       <Name>CohortArrayDead</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Propertys>
         <string>[Leaf].Dead</string>
       </Propertys>
@@ -967,18 +1240,22 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
       <Name>CohortParameters</Name>
       <Constant>
         <Name>DMReallocationFactor</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
-      </Constant>      
+      </Constant>
       <Constant>
         <Name>LeafSizeShapeParameter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0.01</FixedValue>
       </Constant>
       <Constant>
         <Name>MaintenanceRespirationFunction</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
-      </Constant> 
+      </Constant>
       <Constant>
         <Name>SenessingLeafRelativeSize</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>1</FixedValue>
         <Units>0-1</Units>
       </Constant>
@@ -986,6 +1263,7 @@ Jones and Kiniry (1986) used a constant root senescence fraction in the CERES-Ma
         <Name>MaxArea</Name>
         <Memo>
           <Name>Memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText>
             <![CDATA[
 Potential leaf area is calculated from leaf number using the approach of Keating and Wafula (1992).
@@ -997,17 +1275,21 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
           <Name>LargestLeafPosition</Name>
           <VariableReference>
             <Name>FinalLeafNumber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
           </VariableReference>
           <Constant>
             <Name>RelativePositionOfLargestLeaf</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.67</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <LinearInterpolationFunction>
           <Name>AreaMax</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>2</double>
@@ -1025,12 +1307,14 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <double>90000</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Structure].MainStemFinalNodeNumber.Value()</XProperty>
         </LinearInterpolationFunction>
         <LinearInterpolationFunction>
           <Name>Breadth</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>5</double>
               <double>10</double>
@@ -1046,29 +1330,36 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <double>-0.016</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Structure].MainStemFinalNodeNumber.Value()</XProperty>
         </LinearInterpolationFunction>
         <Constant>
           <Name>Skewness</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.00025</FixedValue>
         </Constant>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </BellCurveFunction>
       <Constant>
         <Name>NReallocationFactor</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>1</FixedValue>
       </Constant>
       <Constant>
         <Name>NRetranslocationFactor</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0.03</FixedValue>
       </Constant>
       <Constant>
         <Name>DMRetranslocationFactor</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0.5</FixedValue>
       </Constant>
       <LinearInterpolationFunction>
         <Name>CellDivisionStress</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0.9</double>
             <double>1</double>
@@ -1078,12 +1369,14 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>1</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
         <Name>ExpansionStress</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0.1</double>
             <double>0.7</double>
@@ -1095,12 +1388,14 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>1</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
         <Name>GrowthDuration</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>0.3</double>
@@ -1114,12 +1409,14 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>100</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Structure].RelativeNodeApperance</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
         <Name>LagDuration</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>0.3</double>
@@ -1131,12 +1428,14 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>650</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Structure].RelativeNodeApperance</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
         <Name>SenescenceDuration</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>0.3</double>
@@ -1148,20 +1447,24 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>350</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Structure].RelativeNodeApperance</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>DetachmentLagDuration</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>1000000</FixedValue>
       </Constant>
       <Constant>
         <Name>DetachmentDuration</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>1000000</FixedValue>
       </Constant>
       <LinearInterpolationFunction>
         <Name>MaximumNConc</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>1</double>
             <double>10</double>
@@ -1171,15 +1474,18 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>0.03</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Structure].LeafTipsAppeared</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>CriticalNConc</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0.015</FixedValue>
         <Units>g/g</Units>
       </Constant>
       <Constant>
         <Name>MinimumNConc</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0.008</FixedValue>
         <Units>g/g</Units>
       </Constant>
@@ -1187,18 +1493,21 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
         <Name>DroughtInducedLagAcceleration</Name>
         <Constant>
           <Name>One</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <MultiplyFunction>
           <Name>Stress</Name>
           <Constant>
             <Name>StressResponseCoefficient</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>StressFactor</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -1208,26 +1517,32 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </AddFunction>
-	  <AddFunction>
+      <AddFunction>
         <Name>DroughtInducedSenAcceleration</Name>
         <Constant>
           <Name>One</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>1</FixedValue>
         </Constant>
         <MultiplyFunction>
           <Name>Stress</Name>
           <Constant>
             <Name>StressResponseCoefficient</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>1</FixedValue>
           </Constant>
           <LinearInterpolationFunction>
             <Name>StressFactor</Name>
             <XYPairs>
               <Name>XYPairs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>0</double>
                 <double>1</double>
@@ -1237,14 +1552,18 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 <double>0</double>
               </Y>
             </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
           </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </AddFunction>
       <LinearInterpolationFunction>
         <Name>SpecificLeafAreaMax</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>1</double>
             <double>9</double>
@@ -1254,12 +1573,14 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>25000</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Structure].LeafTipsAppeared</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
         <Name>SpecificLeafAreaMin</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>1</double>
             <double>9</double>
@@ -1269,20 +1590,24 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>8000</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Structure].LeafTipsAppeared</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>StructuralFraction</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0.7</FixedValue>
       </Constant>
       <Constant>
         <Name>NonStructuralFraction</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
       </Constant>
       <LinearInterpolationFunction>
         <Name>ShadeInducedSenescenceRate</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>0.7</double>
@@ -1298,24 +1623,29 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>0</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
       </LinearInterpolationFunction>
       <Constant>
         <Name>InitialNConc</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
         <Units>g/g</Units>
       </Constant>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </LeafCohortParameters>
     <RUEModel>
       <Name>Photosynthesis</Name>
       <Constant>
         <Name>RUE</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>2</FixedValue>
       </Constant>
       <WeightedTemperatureFunction>
         <Name>FT</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>8</double>
@@ -1331,12 +1661,14 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>0</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MaximumTemperatureWeighting>0.75</MaximumTemperatureWeighting>
       </WeightedTemperatureFunction>
       <LinearInterpolationFunction>
         <Name>FVPD</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>10</double>
@@ -1348,12 +1680,14 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>1</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Leaf].Photosynthesis.VPD</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
         <Name>FN</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>1</double>
@@ -1363,12 +1697,14 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>1</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Leaf].Fn</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
         <Name>FW</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>0.3</double>
@@ -1378,21 +1714,26 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
             <double>1</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Leaf].Fw</XProperty>
       </LinearInterpolationFunction>
       <RUECO2Function>
         <Name>FCO2</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <PhotosyntheticPathway>C4</PhotosyntheticPathway>
       </RUECO2Function>
       <VariableReference>
         <Name>RadnInt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Leaf].RadIntTot</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </RUEModel>
     <MultiplyFunction>
       <Name>ExtinctionCoeff</Name>
       <Memo>
         <Name>Memo</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText>
           <![CDATA[
 Extinction coefficient is specified in terms of a potential extinction coefficient which is then discounted during periods of water stress to account for the impact of leaf curling.
@@ -1403,6 +1744,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Name>PotentialExtinctionCoeff</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0.2</double>
             <double>0.5</double>
@@ -1414,12 +1756,14 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <double>0.4</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Maize].SowingData.RowSpacing</XProperty>
       </LinearInterpolationFunction>
       <LinearInterpolationFunction>
         <Name>WaterStressImpact</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>0.7</double>
@@ -1429,13 +1773,16 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <double>1</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
       </LinearInterpolationFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
     <LinearInterpolationFunction>
       <Name>FrostFraction</Name>
       <XYPairs>
         <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <X>
           <double>-2</double>
           <double>2</double>
@@ -1445,33 +1792,41 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <double>0</double>
         </Y>
       </XYPairs>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Weather].MinT</XProperty>
     </LinearInterpolationFunction>
     <VariableReference>
       <Name>ThermalTime</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <VariableName>[Phenology].ThermalTime.Value()</VariableName>
     </VariableReference>
     <MinimumFunction>
       <Name>FRGRFunction</Name>
       <VariableReference>
         <Name>FT</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Leaf].Photosynthesis.FT.Value()</VariableName>
       </VariableReference>
       <VariableReference>
         <Name>FN</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Leaf].Photosynthesis.FN.Value()</VariableName>
       </VariableReference>
       <VariableReference>
         <Name>FVPD</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Leaf].Photosynthesis.FVPD.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </MinimumFunction>
     <Constant>
       <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.7</FixedValue>
     </Constant>
     <Constant>
       <Name>DMConversionEfficiencyFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
@@ -1479,6 +1834,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.3</FractionLiveToResidue>
@@ -1486,6 +1842,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.8</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1493,6 +1850,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1500,12 +1858,18 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.6</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <GrowthRespiration>0</GrowthRespiration>
+    <MaintenanceRespiration>0</MaintenanceRespiration>
+    <Leaves />
     <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
     <StartFractionExpanded>0</StartFractionExpanded>
     <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -1516,9 +1880,12 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
     <R50>160</R50>
     <FRGR>0</FRGR>
     <PotentialEP>0</PotentialEP>
+    <MicroClimatePresent>true</MicroClimatePresent>
     <KDead>0.03</KDead>
     <MaximumMainStemLeafNumber>30</MaximumMainStemLeafNumber>
+    <DMConversionEfficiency>0</DMConversionEfficiency>
     <TipsAtEmergence>0</TipsAtEmergence>
+    <CohortsAtInitialisation>0</CohortsAtInitialisation>
     <FractionDied>0</FractionDied>
   </Leaf>
   <GenericOrgan>
@@ -1527,26 +1894,32 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>DMDemandFunction</Name>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
       <Constant>
         <Name>StartStage</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>5.2</FixedValue>
       </Constant>
       <Constant>
         <Name>GrowthDuration</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>120</FixedValue>
       </Constant>
       <Constant>
         <Name>MaximumOrganWt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>25</FixedValue>
       </Constant>
       <VariableReference>
         <Name>OrganPopulation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Rachis].CobNumber.Value()</VariableName>
       </VariableReference>
       <Constant>
         <Name>SenescenceRate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>0</FixedValue>
         <Units>/d</Units>
       </Constant>
@@ -1554,6 +1927,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Name>ExpansionStress</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0.3</double>
             <double>0.8</double>
@@ -1563,51 +1937,63 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <double>1</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
       </LinearInterpolationFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </PopulationBasedDemandFunction>
     <Biomass>
       <Name>Live</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Biomass>
     <Biomass>
       <Name>Dead</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Biomass>
     <Constant>
       <Name>NReallocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
     <Constant>
       <Name>NRetranslocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.1</FixedValue>
     </Constant>
     <Constant>
       <Name>MaximumNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.01</FixedValue>
       <Units>g/g</Units>
     </Constant>
     <Constant>
       <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.3</FixedValue>
       <Units>g/g</Units>
     </Constant>
     <Constant>
       <Name>SenescenceRate</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
     </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.01</FixedValue>
       <Units>g/g</Units>
     </Constant>
     <Constant>
       <Name>DMRetranslocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.1</FixedValue>
     </Constant>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.5</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1615,6 +2001,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.8</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1622,6 +2009,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1629,32 +2017,54 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.6</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
     <Constant>
       <Name>InitialWtFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>g/m^2</Units>
     </Constant>
     <Constant>
       <Name>DetachmentRateFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>0-1</Units>
-    </Constant>    
+    </Constant>
     <Constant>
       <Name>DMConversionEfficiency</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
+    <Constant>
+      <Name>NitrogenDemandSwitch</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>DMReallocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <VariableReference>
+      <Name>CriticalNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <VariableName>[Husk].MinimumNConc.Value()</VariableName>
+    </VariableReference>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Rachis</Name>
@@ -1662,50 +2072,62 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>CobNumber</Name>
       <VariableReference>
         <Name>StemNumber</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Structure].TotalStemPopn</VariableName>
       </VariableReference>
       <Constant>
         <Name>CobsPerStem</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>1.1</FixedValue>
       </Constant>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </MultiplyFunction>
     <DivideFunction>
       <Name>CobSize</Name>
       <VariableReference>
         <Name>CobMass</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Rachis].Live.Wt</VariableName>
       </VariableReference>
       <VariableReference>
         <Name>CobNumber</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Rachis].CobNumber.Value()</VariableName>
       </VariableReference>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </DivideFunction>
     <PopulationBasedDemandFunction>
       <Name>DMDemandFunction</Name>
       <VariableReference>
         <Name>ThermalTime</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Phenology].ThermalTime.Value()</VariableName>
       </VariableReference>
       <Constant>
         <Name>StartStage</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>5.5</FixedValue>
       </Constant>
       <Constant>
         <Name>GrowthDuration</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>300</FixedValue>
       </Constant>
       <Constant>
         <Name>MaximumOrganWt</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FixedValue>23</FixedValue>
       </Constant>
       <VariableReference>
         <Name>OrganPopulation</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <VariableName>[Rachis].CobNumber.Value()</VariableName>
       </VariableReference>
       <LinearInterpolationFunction>
         <Name>ExpansionStress</Name>
         <XYPairs>
           <Name>XYPairs</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <X>
             <double>0</double>
             <double>0.35</double>
@@ -1715,40 +2137,50 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
             <double>1</double>
           </Y>
         </XYPairs>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
       </LinearInterpolationFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </PopulationBasedDemandFunction>
     <Biomass>
       <Name>Live</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Biomass>
     <Biomass>
       <Name>Dead</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Biomass>
     <Constant>
       <Name>NReallocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
     <Constant>
       <Name>NRetranslocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.1</FixedValue>
     </Constant>
     <Constant>
       <Name>MaximumNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.008</FixedValue>
       <Units>g/g</Units>
     </Constant>
     <Constant>
       <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>g/g</Units>
     </Constant>
     <Constant>
       <Name>SenescenceRate</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
     </Constant>
     <Constant>
       <Name>MinimumNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.003</FixedValue>
       <Units>g/g</Units>
     </Constant>
@@ -1756,6 +2188,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <Name>ExpansionStress</Name>
       <XYPairs>
         <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <X>
           <double>0.1</double>
           <double>0.7</double>
@@ -1765,12 +2198,14 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <double>1</double>
         </Y>
       </XYPairs>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Maize].WaterSupplyDemandRatio</XProperty>
     </LinearInterpolationFunction>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.5</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1778,6 +2213,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.8</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1785,6 +2221,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1792,49 +2229,80 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.6</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
     <Constant>
       <Name>InitialWtFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>g/m^2</Units>
     </Constant>
     <Constant>
       <Name>DetachmentRateFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>0-1</Units>
-    </Constant>  
+    </Constant>
     <Constant>
       <Name>DMConversionEfficiency</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
+    <Constant>
+      <Name>NitrogenDemandSwitch</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>DMReallocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>DMRetranslocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <VariableReference>
+      <Name>CriticalNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <VariableName>[Rachis].MinimumNConc.Value()</VariableName>
+    </VariableReference>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
     <Name>Stem</Name>
     <Biomass>
       <Name>Live</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Biomass>
     <Biomass>
       <Name>Dead</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Biomass>
     <Constant>
       <Name>StructuralFraction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.7</FixedValue>
     </Constant>
     <LinearInterpolationFunction>
       <Name>MaximumNConc</Name>
       <XYPairs>
         <Name>XYPairs</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <X>
           <double>0</double>
           <double>10</double>
@@ -1846,28 +2314,34 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <double>0.005</double>
         </Y>
       </XYPairs>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <XProperty>[Structure].LeafTipsAppeared</XProperty>
     </LinearInterpolationFunction>
     <Constant>
       <Name>MinimumNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.006</FixedValue>
       <Units>g/g</Units>
     </Constant>
     <PhaseBasedSwitch>
       <Name>NitrogenDemandSwitch</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Start>Emergence</Start>
       <End>StartGrainFill</End>
     </PhaseBasedSwitch>
     <Constant>
       <Name>NReallocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
     </Constant>
     <Constant>
       <Name>NRetranslocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.5</FixedValue>
     </Constant>
     <Constant>
       <Name>DMRetranslocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0.1</FixedValue>
     </Constant>
     <MinimumFunction>
@@ -1876,16 +2350,19 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Name>PotentialDMAccumulation</Name>
         <VariableReference>
           <Name>NodesAppearing</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Structure].DeltaTipNumber</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>Branches</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Structure].TotalStemPopn</VariableName>
         </VariableReference>
         <LinearInterpolationFunction>
           <Name>PotentialInternodeWt</Name>
           <XYPairs>
             <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
               <double>0.2</double>
@@ -1899,8 +2376,10 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
               <double>16</double>
             </Y>
           </XYPairs>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[Structure].RelativeNodeApperance</XProperty>
         </LinearInterpolationFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </MultiplyFunction>
       <MultiplyFunction>
         <Name>HightLimitedDMAccumulation</Name>
@@ -1908,19 +2387,25 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>SpecificStemLengthMax</Name>
           <Constant>
             <Name>SpecificStemLengthMax</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.1</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0.1</FixedValue>
         </Constant>
         <VariableReference>
           <Name>Branches</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Structure].TotalStemPopn</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>DeltaHeight</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Structure].HeightModel.DeltaHeight</VariableName>
         </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </MultiplyFunction>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </MinimumFunction>
     <PartitionFractionDemandFunction>
       <Name>DMDemandFunction</Name>
@@ -1928,14 +2413,17 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
         <Name>PartitionFraction</Name>
         <Memo>
           <Name>memo</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[]]></MemoText>
         </Memo>
         <PhaseLookupValue>
           <Name>PreStemElongation</Name>
           <Constant>
             <Name>StemFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.6</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
           <End>FloralInitiation</End>
         </PhaseLookupValue>
@@ -1943,17 +2431,22 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
           <Name>StemElongation</Name>
           <Constant>
             <Name>StemFraction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.82</FixedValue>
           </Constant>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>FloralInitiation</Start>
           <End>Flowering</End>
         </PhaseLookupValue>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </PhaseLookup>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </PartitionFractionDemandFunction>
     <BiomassRemoval>
       <Name>BiomassRemovalDefaults</Name>
       <OrganBiomassRemovalType>
         <Name>Harvest</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.5</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.1</FractionLiveToResidue>
@@ -1961,6 +2454,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Cut</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.8</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0</FractionLiveToResidue>
@@ -1968,6 +2462,7 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Prune</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.6</FractionLiveToResidue>
@@ -1975,48 +2470,68 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       </OrganBiomassRemovalType>
       <OrganBiomassRemovalType>
         <Name>Graze</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FractionLiveToRemove>0.6</FractionLiveToRemove>
         <FractionDeadToRemove>0</FractionDeadToRemove>
         <FractionLiveToResidue>0.2</FractionLiveToResidue>
         <FractionDeadToResidue>0</FractionDeadToResidue>
       </OrganBiomassRemovalType>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </BiomassRemoval>
     <Constant>
       <Name>InitialWtFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>g/m^2</Units>
     </Constant>
     <Constant>
       <Name>DetachmentRateFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
     </Constant>
     <Constant>
       <Name>SenescenceRate</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>/d</Units>
     </Constant>
     <Constant>
       <Name>MaintenanceRespirationFunction</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>0</FixedValue>
       <Units>0-1</Units>
-    </Constant> 
+    </Constant>
     <Constant>
       <Name>DMConversionEfficiency</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
-    </Constant>     
+    </Constant>
+    <Constant>
+      <Name>DMReallocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <VariableReference>
+      <Name>CriticalNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+    </VariableReference>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <CompositeBiomass>
     <Name>AboveGround</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The AboveGround composite biomass object includes all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Propertys>
       <string>[Leaf].Live</string>
       <string>[Leaf].Dead</string>
@@ -2034,12 +2549,14 @@ The AboveGround composite biomass object includes all organs occurring above the
     <Name>BelowGround</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The BelowGround composite biomass object includes all root biomass pools to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Propertys>
       <string>[Root].Live</string>
       <string>[Root].Dead</string>
@@ -2049,12 +2566,14 @@ The BelowGround composite biomass object includes all root biomass pools to allo
     <Name>Total</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The Total composite biomass object includes all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Propertys>
       <string>[Leaf].Live</string>
       <string>[Leaf].Dead</string>
@@ -2074,12 +2593,14 @@ The Total composite biomass object includes all organs (above+below ground) to a
     <Name>TotalLive</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The TotalLive composite biomass object includes the Live pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Propertys>
       <string>[Leaf].Live</string>
       <string>[Stem].Live</string>
@@ -2093,12 +2614,14 @@ The TotalLive composite biomass object includes the Live pools of all organs (ab
     <Name>TotalDead</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The TotalDead composite biomass object includes the Dead pools of all organs (above+below ground) to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Propertys>
       <string>[Leaf].Dead</string>
       <string>[Stem].Dead</string>
@@ -2112,12 +2635,14 @@ The TotalDead composite biomass object includes the Dead pools of all organs (ab
     <Name>EarLive</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The EarLive composite biomass object includes the Live pools of all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Propertys>
       <string>[Husk].Live</string>
       <string>[Grain].Live</string>
@@ -2128,12 +2653,14 @@ The EarLive composite biomass object includes the Live pools of all organs withi
     <Name>AboveGroundLive</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The AboveGroundLive composite biomass object includes the Live pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Propertys>
       <string>[Leaf].Live</string>
       <string>[Stem].Live</string>
@@ -2146,12 +2673,14 @@ The AboveGroundLive composite biomass object includes the Live pools of all orga
     <Name>AboveGroundDead</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The AboveGroundDead composite biomass object includes the Dead pools of all organs occurring above the soil surface to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Propertys>
       <string>[Leaf].Dead</string>
       <string>[Stem].Dead</string>
@@ -2162,6 +2691,7 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
   </CompositeBiomass>
   <Memo>
     <Name>Future Development Needs</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <MemoText>
       <![CDATA[##Future Development requirements
 
@@ -2181,6 +2711,7 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
   </Memo>
   <Cultivar>
     <Name>Pioneer_39G12</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
     <Command>[Grain].MaximumGrainsPerCob.FixedValue = 550</Command>
     <Command>[Grain].NumberFunction.GrowthRateFactor.XYPairs.X = 0.2,2,4,10</Command>
@@ -2188,17 +2719,20 @@ The AboveGroundDead composite biomass object includes the Dead pools of all orga
   </Cultivar>
   <Cultivar>
     <Name>Pioneer_3153</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Cultivar>
   <Cultivar>
     <Name>Katumani</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety Katumani Composite B was formed in 1966 and released in 1968 as part of the maize breeding work undertaken at the Katumani Research Station in Kenya which started in 1956.  Katumani Composite B was an advanced generation of Katumani Synthetic V X Katumani Synthetic VI.  It has slight photoperiod sensitivity and relatively small potential cob size.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 150</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 115</Command>
@@ -2213,12 +2747,14 @@ The variety Katumani Composite B was formed in 1966 and released in 1968 as part
     <Name>Makueni</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety Makueni Composite is a kenyan variety with similar phenology but slightly higher cob size than Katumani composite.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 150</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 115</Command>
@@ -2233,12 +2769,14 @@ The variety Makueni Composite is a kenyan variety with similar phenology but sli
     <Name>NSCM_41</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 230</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2253,12 +2791,14 @@ The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response
     <Name>sc401</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 230</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2273,12 +2813,14 @@ The variety NSCM_41 is a Zimbabwean early maturing hybrid.  Photoperiod response
     <Name>r201</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety r201 is a Zimbabwean early maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 230</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2293,12 +2835,14 @@ The variety r201 is a Zimbabwean early maturing hybrid.  Photoperiod response is
     <Name>sc501</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety sc501 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 250</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2313,12 +2857,14 @@ The variety sc501 is a Zimbabwean early-medium maturing hybrid.  Photoperiod res
     <Name>sr52</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 250</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2333,12 +2879,14 @@ The variety sr52 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
     <Name>Melkassa</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety Melkassa is a local early-medium maturing Ethiopian variety.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 230</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2353,12 +2901,14 @@ The variety Melkassa is a local early-medium maturing Ethiopian variety.
     <Name>r215</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety r215 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 250</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2373,12 +2923,14 @@ The variety r215 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
     <Name>mh18</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety mh18 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 260</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2393,12 +2945,14 @@ The variety mh18 is a Zimbabwean early-medium maturing hybrid.  Photoperiod resp
     <Name>CG4141</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety CG4141 is a Zimbabwean early-medium maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 233</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2413,12 +2967,14 @@ The variety CG4141 is a Zimbabwean early-medium maturing hybrid.  Photoperiod re
     <Name>sc601</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety sc601 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 280</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2433,12 +2989,14 @@ The variety sc601 is a Zimbabwean medium-late maturing hybrid.  Photoperiod resp
     <Name>sc625</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety sc625 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 280</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2453,12 +3011,14 @@ The variety sc625 is a Zimbabwean medium-late maturing hybrid.  Photoperiod resp
     <Name>sc623</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety sc623 is a Zimbabwean medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 280</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2473,12 +3033,14 @@ The variety sc623 is a Zimbabwean medium-late maturing hybrid.  Photoperiod resp
     <Name>mh12</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety mh12 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 290</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2493,12 +3055,14 @@ The variety mh12 is a Malawian medium-late maturing hybrid.  Photoperiod respons
     <Name>mh16</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety mh16 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 290</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2513,12 +3077,14 @@ The variety mh16 is a Malawian medium-late maturing hybrid.  Photoperiod respons
     <Name>mh17</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety mh17 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 290</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2533,12 +3099,14 @@ The variety mh17 is a Malawian medium-late maturing hybrid.  Photoperiod respons
     <Name>mh19</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety mh19 is a Malawian medium-late maturing hybrid.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 290</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2553,12 +3121,14 @@ The variety mh19 is a Malawian medium-late maturing hybrid.  Photoperiod respons
     <Name>malawi_local</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 The variety malawi_local is a Malawian medium-late maturing local variety.  Photoperiod response is taken from Ellis et al Crop Sci 32:1225 for SR52.
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 280</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 264.5</Command>
@@ -2571,6 +3141,7 @@ The variety malawi_local is a Malawian medium-late maturing local variety.  Phot
   </Cultivar>
   <Cultivar>
     <Name>Dekalb_XL82</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 211</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 472</Command>
@@ -2582,6 +3153,7 @@ The variety malawi_local is a Malawian medium-late maturing local variety.  Phot
   </Cultivar>
   <Cultivar>
     <Name>GH_5009</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 220</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 300</Command>
@@ -2593,6 +3165,7 @@ The variety malawi_local is a Malawian medium-late maturing local variety.  Phot
   </Cultivar>
   <Cultivar>
     <Name>Hycorn_40</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 220</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
@@ -2604,6 +3177,7 @@ The variety malawi_local is a Malawian medium-late maturing local variety.  Phot
   </Cultivar>
   <Cultivar>
     <Name>GH_5019WX</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 255</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24.0</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
@@ -2615,6 +3189,7 @@ The variety malawi_local is a Malawian medium-late maturing local variety.  Phot
   </Cultivar>
   <Cultivar>
     <Name>Laila</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 211</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 0</Command>
@@ -2630,12 +3205,14 @@ The variety malawi_local is a Malawian medium-late maturing local variety.  Phot
     <Name>Pioneer_39V43</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 VShort duration variety released in New Zealand by Pioneer
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 150</Command>
     <Command>[Phenology].GrainFilling.Target.FixedValue = 450</Command>
     <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
@@ -2649,27 +3226,32 @@ VShort duration variety released in New Zealand by Pioneer
     <Name>Pioneer_34K77</Name>
     <Memo>
       <Name>memo</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <MemoText>
         <![CDATA[
 VShort duration variety released in New Zealand by Pioneer
 ]]>
       </MemoText>
     </Memo>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 280</Command>
     <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
   </Cultivar>
   <Cultivar>
     <Name>Pioneer_38H20</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 210</Command>
     <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
   </Cultivar>
   <Cultivar>
     <Name>Pioneer_33M54</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
     <Command>[Phenology].Juvenile.Target.FixedValue = 270</Command>
   </Cultivar>
   <Cultivar>
     <Name>Hycorn_53</Name>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <Command>[Phenology].Juvenile.Target.FixedValue = 235</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.X = 0, 12.5, 24</Command>
     <Command>[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0, 124</Command>
@@ -2679,5 +3261,7 @@ VShort duration variety released in New Zealand by Pioneer
     <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 25</Command>
     <Command>[Grain].MaximumGrainsPerCob.FixedValue =  550</Command>
   </Cultivar>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <CropType>Maize</CropType>
+  <SowingDate>0001-01-01T00:00:00</SowingDate>
 </Plant>

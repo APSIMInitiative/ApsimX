@@ -127,7 +127,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.RelativeAllocationSinglePass))]
         [XmlElement(typeof(Models.PMF.PrioritythenRelativeAllocation))]
         [XmlElement(typeof(Models.PMF.PriorityAllocation))]
-        [XmlElement(typeof(Models.PMF.Structure))]
         [XmlElement(typeof(Models.PMF.Biomass))]
         [XmlElement(typeof(Models.PMF.CompositeBiomass))]
         [XmlElement(typeof(Models.PMF.ArrayBiomass))]
@@ -156,6 +155,7 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Phen.NodeNumberPhase))]
         [XmlElement(typeof(Models.PMF.Phen.PhaseSetFunction))]
         [XmlElement(typeof(Models.PMF.Phen.Vernalisation))]
+        [XmlElement(typeof(Models.PMF.Phen.VernalisationC))]
         [XmlElement(typeof(Models.PMF.Phen.VernalisationCW))]
         [XmlElement(typeof(Models.PMF.Phen.QualitativePPEffect))]
         [XmlElement(typeof(Models.PMF.Phen.ZadokPMF))]
@@ -189,7 +189,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.PhotoperiodFunction))]
         [XmlElement(typeof(Models.PMF.Functions.PowerFunction))]
         [XmlElement(typeof(Models.PMF.Functions.SigmoidFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.SigmoidFunction2))]
         [XmlElement(typeof(Models.PMF.Functions.SoilWaterScale))]
         [XmlElement(typeof(Models.PMF.Functions.SoilTemperatureDepthFunction))]
         [XmlElement(typeof(Models.PMF.Functions.SoilTemperatureFunction))]
@@ -206,14 +205,13 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.AllometricDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.TEWaterDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.InternodeDemandFunction))]
+        [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.InternodeCohortDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PartitionFractionDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PopulationBasedDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.PotentialSizeDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.RelativeGrowthRateDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.FillingRateFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.BerryFillingRateFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.HeightFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.InPhaseTemperatureFunction))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUECO2Function))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUEModel))]
         [XmlElement(typeof(Models.PMF.OldPlant.Plant15))]
@@ -238,6 +236,10 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.CultivarFolder))]
         [XmlElement(typeof(Models.PMF.OrganBiomassRemovalType))]
         [XmlElement(typeof(Models.PMF.Library.BiomassRemoval))]
+        [XmlElement(typeof(Models.PMF.Struct.Structure))]
+        [XmlElement(typeof(Models.PMF.Struct.HeightFunction))]
+        [XmlElement(typeof(Models.PMF.Struct.ApexStandard))]
+        [XmlElement(typeof(Models.PMF.Struct.ApexTiller))]
         [XmlElement(typeof(Alias))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]
@@ -344,6 +346,16 @@ namespace Models.Core
         /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
         /// </summary>
         public bool IncludeInDocumentation { get; set; }
+
+        /// <summary>
+        /// A cleanup routine, in which we clear our child list recursively
+        /// </summary>
+        public void ClearChildLists()
+        {
+            foreach (Model child in Children)
+                child.ClearChildLists();
+            Children.Clear();
+        }
 
         /// <summary>
         /// Return the current APSIM version number.

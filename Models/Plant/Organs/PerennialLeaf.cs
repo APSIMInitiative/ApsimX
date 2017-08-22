@@ -5,6 +5,7 @@ using Models.PMF.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
 using Models.PMF.Phen;
+using Models.PMF.Struct;
 using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
@@ -142,7 +143,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI + LAIDead; } }
         /// <summary>Gets the SLA</summary>
-        public double SpecificLeafArea { get { return MathUtilities.Divide(LAI, Live.Wt,0.0); } }
+        public double SpecificLeafArea { get { return MathUtilities.Divide(LAI, Live.Wt, 0.0); } }
 
         /// <summary>Gets the cover green.</summary>
         [Units("0-1")]
@@ -218,9 +219,6 @@ namespace Models.PMF.Organs
         /// <summary>The height function</summary>
         [Link]
         IFunction HeightFunction = null;
-        /// <summary>The structural fraction</summary>
-        [Link]
-        IFunction StructuralFraction = null;
         /// <summary>Leaf Residence Time</summary>
         [Link]
         IFunction LeafResidenceTime = null;
@@ -261,16 +259,16 @@ namespace Models.PMF.Organs
         public double NFixationCost { get { return 0; } set { } }
         /// <summary>Gets or sets the water supply.</summary>
         /// <param name="zone">The zone.</param>
-         public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
+        public double[] WaterSupply(ZoneWaterAndN zone) { return null; }
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
-         public void DoWaterUptake(double[] Amount, string zoneName) { }
+        public void DoWaterUptake(double[] Amount, string zoneName) { }
         /// <summary>Gets the nitrogen supply from the specified zone.</summary>
         /// <param name="zone">The zone.</param>
         /// <param name="NO3Supply">The returned NO3 supply</param>
         /// <param name="NH4Supply">The returned NH4 supply</param>
-         public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
+        public void CalcNSupply(ZoneWaterAndN zone, out double[] NO3Supply, out double[] NH4Supply)
         {
             NO3Supply = null;
             NH4Supply = null;
@@ -278,12 +276,20 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the Nitrogen uptake.</summary>
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
-         public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
+        public void DoNitrogenUptake(List<ZoneWaterAndN> zonesFromSoilArbitrator) { }
         /// <summary>Gets the fw.</summary>
         public double Fw { get { return MathUtilities.Divide(WaterAllocation, PotentialEP, 1); } }
 
         /// <summary>Gets the function.</summary>
-        public double Fn { get { return MathUtilities.Divide(Live.N, Live.Wt * MaximumNConc.Value(), 1); } }
+        public double Fn
+        {
+            get
+            {
+                double value = MathUtilities.Divide(Live.NConc-MinimumNConc.Value(), MaximumNConc.Value()-MinimumNConc.Value(), 1);
+                value = MathUtilities.Bound(value, 0, 1);
+                return value;
+            }
+        }
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -306,6 +312,9 @@ namespace Models.PMF.Organs
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadIntTot { get { return CoverGreen * MetData.Radn; } }
 
+        /// <summary>Apex number by age</summary>
+        /// <param name="age">Threshold age</param>
+        public double ApexNumByAge(double age) { return 0; }
         #endregion
 
         #region Arbitrator Methods
@@ -321,7 +330,7 @@ namespace Models.PMF.Organs
             {
                 StructuralDMDemand = DMDemandFunction.Value();
                 NonStructuralDMDemand = 0;
-                return new BiomassPoolType { Structural = StructuralDMDemand , NonStructural = NonStructuralDMDemand };
+                return new BiomassPoolType { Structural = StructuralDMDemand, NonStructural = NonStructuralDMDemand };
             }
             set { }
         }
@@ -348,7 +357,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double StructuralDemand = MaximumNConc.Value() * PotentialDMAllocation * StructuralFraction.Value();
+                double StructuralDemand = MinimumNConc.Value() * PotentialDMAllocation;
                 double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N - StructuralDemand);
 
                 return new BiomassPoolType { Structural = StructuralDemand, NonStructural = NDeficit };
@@ -508,8 +517,8 @@ namespace Models.PMF.Organs
         {
             foreach (PerrenialLeafCohort L in Leaves)
             {
-                L.Live.NonStructuralWt *= (1-fraction);
-                L.Live.MetabolicWt *= (1-fraction);
+                L.Live.NonStructuralWt *= (1 - fraction);
+                L.Live.MetabolicWt *= (1 - fraction);
             }
         }
 
@@ -583,7 +592,7 @@ namespace Models.PMF.Organs
                 double LabileN = Math.Max(0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value());
                 Biomass Senescing = new Biomass();
                 GetSenescingLeafBiomass(out Senescing);
-                
+
                 return new BiomassSupplyType()
                 {
                     Reallocation = Senescing.NonStructuralN * NReallocationFactor.Value(),
@@ -627,11 +636,11 @@ namespace Models.PMF.Organs
         {
             set
             {
-               AddNewLeafMaterial(StructuralWt: 0,
-                   NonStructuralWt: 0,
-                   StructuralN: value.Structural,
-                   NonStructuralN: value.NonStructural,
-                   SLA: SpecificLeafAreaFunction.Value());
+                AddNewLeafMaterial(StructuralWt: 0,
+                    NonStructuralWt: 0,
+                    StructuralN: value.Structural,
+                    NonStructuralN: value.NonStructural,
+                    SLA: SpecificLeafAreaFunction.Value());
 
                 double Removal = value.Retranslocation + value.Reallocation;
                 foreach (PerrenialLeafCohort L in Leaves)
@@ -640,7 +649,7 @@ namespace Models.PMF.Organs
                     L.Live.NonStructuralN -= Delta;
                     Removal -= Delta;
                 }
-                if (MathUtilities.IsGreaterThan(Removal,0))
+                if (MathUtilities.IsGreaterThan(Removal, 0))
                     throw new Exception("Insufficient Nonstructural N to account for Retranslocation and Reallocation in Perrenial Leaf");
             }
         }
@@ -702,11 +711,11 @@ namespace Models.PMF.Organs
                 Leaves.Add(new PerrenialLeafCohort());
                 if (Leaves.Count == 1)
                     AddNewLeafMaterial(StructuralWt: InitialWtFunction.Value(),
-                                       NonStructuralWt: 0, 
-                                       StructuralN: InitialWtFunction.Value() * MinimumNConc.Value(), 
+                                       NonStructuralWt: 0,
+                                       StructuralN: InitialWtFunction.Value() * MinimumNConc.Value(),
                                        NonStructuralN: InitialWtFunction.Value() * (MaximumNConc.Value() - MinimumNConc.Value()),
                                        SLA: SpecificLeafAreaFunction.Value());
-             
+
                 foreach (PerrenialLeafCohort L in Leaves)
                     L.Age++;
 
@@ -725,7 +734,7 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 SenesceLeaves();
-                double LKF = Math.Max(0.0,Math.Min(LeafKillFraction.Value(), (1-MinimumLAI.Value() / LAI)));
+                double LKF = Math.Max(0.0, Math.Min(LeafKillFraction.Value(), (1 - MinimumLAI.Value() / LAI)));
                 KillLeavesUniformly(LKF);
                 DetachLeaves(out Detached);
 
@@ -773,7 +782,7 @@ namespace Models.PMF.Organs
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, value, liveAfterRemoval, deadAfterRemoval, Removed, Detached);
 
             double remainingLiveFraction = MathUtilities.Divide(liveAfterRemoval.Wt, Live.Wt, 0);
-            double remainingDeadFraction = MathUtilities.Divide(deadAfterRemoval.Wt,  Dead.Wt, 0);
+            double remainingDeadFraction = MathUtilities.Divide(deadAfterRemoval.Wt, Dead.Wt, 0);
 
             ReduceLeavesUniformly(remainingLiveFraction);
             ReduceDeadLeavesUniformly(remainingDeadFraction);

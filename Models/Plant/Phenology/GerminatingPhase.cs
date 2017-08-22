@@ -9,7 +9,7 @@ using Models.PMF.OldPlant;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This model assumes that germination will be complete on any day after sowing if the extractable soil water is greater than zero.
+    /// This model assumes that germination will be completed on any day after sowing if the extractable soil water is greater than zero.
     /// </summary>
     /// \pre A \ref Models.Soils.Soil "Soil" function has to exist to 
     /// provide the \ref Models.Soils.SoilWater.esw "extractable soil water (ESW)" 

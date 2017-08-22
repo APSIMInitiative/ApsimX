@@ -8,7 +8,7 @@ using Models.PMF.Functions;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase simulates time to emergence as a function of sowing depth.  A <i>ThermalTime Target</i> from sowing to emergence = SowingDepth (set with sow()
+    /// It simulates time to emergence as a function of sowing depth.  A <i>ThermalTime Target</i> from sowing to emergence = SowingDepth (set with sow()
     /// method called from the manager)  x ShootRate + ShootLag.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" function has to exist to 

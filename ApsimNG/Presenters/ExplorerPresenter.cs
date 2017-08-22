@@ -129,7 +129,10 @@ namespace UserInterface.Presenters
             if (this.view is Views.ExplorerView)
                 (this.view as Views.ExplorerView).MainWidget.Destroy();
             this.contextMenu = null;
+            this.mainMenu = null;
             this.CommandHistory.Clear();
+            this.ApsimXFile.ClearSimulationReferences();
+            this.ApsimXFile = null;
         }
 
         /// <summary>Toggle advanced mode.</summary>
@@ -238,12 +241,13 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    if (this.ApsimXFile.FileName != null)
-                        Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName);
+                    //if (this.ApsimXFile.FileName != null)
+                    //    Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName);
 
-                    Utility.Configuration.Settings.AddMruFile(newFileName);
-                    MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     this.ApsimXFile.Write(newFileName);
+                    MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
+                    Utility.Configuration.Settings.AddMruFile(newFileName);
+                    MainPresenter.UpdateMRUDisplay();
                     return true;
                 }
                 catch (Exception err)
@@ -644,20 +648,15 @@ namespace UserInterface.Presenters
                     Add(fromModelXml, toParentPath);
                 else if (e.Moved)
                 {
-                    Add(fromModelXml, toParentPath);
                     if (fromParentPath != toParentPath)
                     {
                         Model fromModel = Apsim.Get(this.ApsimXFile, dragObject.NodePath) as Model;
                         if (fromModel != null)
                         {
-                            cmd = new MoveModelCommand(fromModel, toParent);
+                            cmd = new MoveModelCommand(fromModel, toParent, GetNodeDescription(fromModel), view);
+                            CommandHistory.Add(cmd);
                         }
                     }
-                }
-
-                if (cmd != null)
-                {
-                    CommandHistory.Add(cmd);
                 }
             }
         }
