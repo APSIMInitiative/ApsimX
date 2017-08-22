@@ -167,8 +167,12 @@ namespace Models.PMF
 
             tags.Add(new AutoDocumentation.Paragraph(this.Name +" is a composite of the following biomass objects:", indent));
 
+            string st = string.Empty;
             foreach (string PropertyName in Propertys)
-                tags.Add(new AutoDocumentation.Paragraph("* "+PropertyName, indent));
+            {
+                st = st + Environment.NewLine + "* " + PropertyName;
+            }
+            tags.Add(new AutoDocumentation.Paragraph(st, indent));
 
         }
     }
