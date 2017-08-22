@@ -8,6 +8,7 @@ using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.PMF.Library;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Organs
 {

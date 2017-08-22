@@ -16,6 +16,7 @@ namespace Models.PMF
     using Models.PMF.Phen;
     using Models.Soils.Arbitrator;
     using APSIM.Shared.Utilities;
+    using Struct;
 
     ///<summary>
     /// The generic plant model
