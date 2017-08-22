@@ -18733,7 +18733,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>C:\Users\yxm20\Dropbox\APSIMLucerne\Hudson\Hudson.met</FileName>
+        <FileName>Hudson.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
@@ -22492,7 +22492,7 @@ namespace Models
       <Weather>
         <Name>Weather</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <FileName>C:\Users\yxm20\Dropbox\APSIMLucerne\Nekia\Nekia.met</FileName>
+        <FileName>Nekia.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <SoilArbitrator>
