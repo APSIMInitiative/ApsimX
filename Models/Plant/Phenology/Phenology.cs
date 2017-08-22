@@ -799,5 +799,47 @@ namespace Models.PMF.Phen
                 return TTInPhase;
             }
         }
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(Memo)))
+                child.Document(tags, headingLevel + 1, indent);
+
+            // Write Phase Table
+            tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
+            string line;
+            line = "|Stage Number  | Stage Name      | Phase Name    |"+ System.Environment.NewLine;
+            line +="|--------------|:----------------|:--------------|" + System.Environment.NewLine;
+
+            int N = 0;
+            foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+            {
+                if (N == 0)
+                {
+                    N++;
+                    line += "|" + N.ToString() + "|" + (child as Phase).Start + "|  |" + System.Environment.NewLine;
+                }
+                line += "|  |  | "+child.Name+"|" + System.Environment.NewLine;
+                N++;
+                line += "|" + N.ToString() + "|" + (child as Phase).End + "|  |" + System.Environment.NewLine;
+            }
+            tags.Add(new AutoDocumentation.Paragraph(line, indent));
+            tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
+
+            // write children.
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                if (child.GetType()!=typeof(Memo))
+                    child.Document(tags, headingLevel + 1, indent);
+        }
     }
 }
