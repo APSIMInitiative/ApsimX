@@ -270,7 +270,7 @@ namespace Models.Core
         public class Table : ITag
         {
             /// <summary>The data to show in the table.</summary>
-            public List<List<string>> data;
+            public DataTable data;
 
             /// <summary>The indent level.</summary>
             public int indent;
@@ -280,7 +280,7 @@ namespace Models.Core
             /// </summary>
             /// <param name="data">The column / row data.</param>
             /// <param name="indent">The indentation.</param>
-            public Table(List<List<string>> data, int indent)
+            public Table(DataTable data, int indent)
             {
                 this.data = data;
                 this.indent = indent;

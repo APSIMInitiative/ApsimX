@@ -610,7 +610,7 @@ namespace UserInterface.Views
         {
             this.plot1.Model.Title = text;
             this.plot1.Model.TitleFont = Font;
-            this.plot1.Model.TitleFontSize = 50;
+            this.plot1.Model.TitleFontSize = 30;
             this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
         }
 

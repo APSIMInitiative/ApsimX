@@ -9,6 +9,7 @@ using System.Xml;
 using System.IO;
 using Models.PMF.OldPlant;
 using APSIM.Shared.Utilities;
+using System.Data;
 
 namespace Models.PMF.Phen
 {
@@ -817,28 +818,45 @@ namespace Models.PMF.Phen
 
             // Write Phase Table
             tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
-            string line;
-            line = "|Stage Number  | Stage Name      | Phase Name    |"+ System.Environment.NewLine;
-            line +="|--------------|:----------------|:--------------|" + System.Environment.NewLine;
+
+            DataTable tableData = new DataTable();
+            tableData.Columns.Add("Stage Number", typeof(int));
+            tableData.Columns.Add("Stage Name", typeof(string));
+            tableData.Columns.Add("Phase Name", typeof(string));
 
             int N = 0;
             foreach (IModel child in Apsim.Children(this, typeof(Phase)))
             {
+                DataRow row;
                 if (N == 0)
                 {
                     N++;
-                    line += "|" + N.ToString() + "|" + (child as Phase).Start + "|  |" + System.Environment.NewLine;
+                    row = tableData.NewRow();
+                    row[0] = N;
+                    row[1] = (child as Phase).Start;
+                    tableData.Rows.Add(row);
                 }
-                line += "|  |  | "+child.Name+"|" + System.Environment.NewLine;
+                row = tableData.NewRow();
+                row[2] = child.Name;
+                tableData.Rows.Add(row);
                 N++;
-                line += "|" + N.ToString() + "|" + (child as Phase).End + "|  |" + System.Environment.NewLine;
+                row = tableData.NewRow();
+                row[0] = N;
+                row[1] = (child as Phase).End;
+                tableData.Rows.Add(row);
             }
-            tags.Add(new AutoDocumentation.Paragraph(line, indent));
+            tags.Add(new AutoDocumentation.Table(tableData, indent));
             tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
+
+
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel+1));
+            foreach (IModel child in Apsim.Children(this, typeof(Phase)))
+                    child.Document(tags, headingLevel + 2, indent);
 
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                if (child.GetType()!=typeof(Memo))
+                if (child.GetType()!=typeof(Memo) && !typeof(Phase).IsAssignableFrom(child.GetType()))
                     child.Document(tags, headingLevel + 1, indent);
         }
     }

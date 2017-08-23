@@ -1168,6 +1168,51 @@ namespace Models
             return result;
         }
 
+        /// <summary>
+        /// Obtain the units for a column of data
+        /// </summary>
+        /// <param name="tableName">Name of the table</param>
+        /// <param name="columnHeading">Name of the data column</param>
+        /// <returns>The units (with surrounding parentheses), or null if not available</returns>
+        public string GetUnits(string tableName, string columnHeading)
+        {
+            string result = null;
+            if (TableNames.Contains(UnitsTableName))
+            {
+                string query = "SELECT Units FROM " + UnitsTableName +
+                      " WHERE TableName = '" + tableName +
+                      "' AND ColumnHeading = '" + columnHeading + "'";
+                DataTable DB = Connection.ExecuteQuery(query);
+                if (DB.Rows.Count > 0)
+                    result = (string)DB.Rows[0][0];
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Add units to table. Removes old units first.
+        /// </summary>
+        /// <param name="tableName">The table name</param>
+        /// <param name="columnNames">The column names to add</param>
+        /// <param name="columnUnits">The column units to add</param>
+        public void AddUnitsForTable(string tableName, List<string> columnNames, List<string> columnUnits)
+        {
+            Connection.ExecuteNonQuery("DELETE FROM " + UnitsTableName + " WHERE TableName = '" + tableName + "'");
+
+            string sql = "INSERT INTO " + UnitsTableName + " (SimulationID, TableName, ColumnHeading, Units) " +
+                           "VALUES (?, ?, ?, ?)";
+            IntPtr statement = Connection.Prepare(sql);
+            for (int i = 0; i < columnNames.Count; i++)
+            {
+                Connection.BindParametersAndRunQuery(statement, new object[] {
+                                                      0,
+                                                      tableName,
+                                                      columnNames[i],
+                                                      columnUnits[i]});
+            }
+            Connection.Finalize(statement);
+        }
+
         #endregion
     }
 }

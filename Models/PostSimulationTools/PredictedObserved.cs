@@ -101,7 +101,27 @@ namespace Models.PostSimulationTools
                 DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
 
                 if (predictedObservedData != null)
+                {
                     dataStore.WriteTable(null, this.Name, predictedObservedData);
+
+                    List<string> unitFieldNames = new List<string>();
+                    List<string> unitNames = new List<string>();
+
+                    // write units to table.
+                    foreach (string fieldName in commonCols)
+                    {
+                        string units = dataStore.GetUnits(PredictedTableName, fieldName);
+                        if (units != null)
+                        {
+                            unitFieldNames.Add("Predicted." + fieldName);
+                            unitNames.Add(units);
+                            unitFieldNames.Add("Observed." + fieldName);
+                            unitNames.Add(units);
+                        }
+                    }
+                    if (unitNames.Count > 0)
+                        dataStore.AddUnitsForTable(Name, unitFieldNames, unitNames);
+                }
                 else
                 {
                     // Determine what went wrong.

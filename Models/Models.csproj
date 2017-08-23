@@ -215,8 +215,8 @@
     <Compile Include="Plant\Interfaces\IFunction.cs" />
     <Compile Include="Interfaces\IUptake.cs" />
     <Compile Include="Plant\Library\BiomassRemoval.cs" />
-    <Compile Include="Plant\Organs\ApexStandard.cs" />
-    <Compile Include="Plant\Organs\ApexTiller.cs" />
+    <Compile Include="Plant\Structure\ApexStandard.cs" />
+    <Compile Include="Plant\Structure\ApexTiller.cs" />
     <Compile Include="Plant\Organs\PerennialLeaf.cs" />
     <Compile Include="Plant\Organs\RootZoneState.cs" />
     <Compile Include="Plant\Phenology\ExpressionPhase.cs" />
@@ -376,8 +376,7 @@
     <Compile Include="Plant\Functions\SoilTemperatureWeightedFunction.cs" />
     <Compile Include="Plant\Functions\SplineInterpolationFunction.cs" />
     <Compile Include="Plant\Functions\StageBasedInterpolation.cs" />
-    <Compile Include="Plant\Functions\StructureFunctions\HeightFunction.cs" />
-    <Compile Include="Plant\Functions\StructureFunctions\InPhaseTemperatureFunction.cs" />
+    <Compile Include="Plant\Structure\HeightFunction.cs" />
     <Compile Include="Plant\Functions\SubtractFunction.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUECO2Function.cs" />
     <Compile Include="Plant\Functions\SupplyFunctions\RUEModel.cs" />
@@ -431,7 +430,7 @@
     <Compile Include="Plant\Phenology\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\VernalisationCW.cs" />
     <Compile Include="Plant\Plant.cs" />
-    <Compile Include="Plant\Structure.cs" />
+    <Compile Include="Plant\Structure\Structure.cs" />
     <Compile Include="Plant\Utility.cs" />
     <Compile Include="Soils\IrrigationApplicationType.cs" />
     <Compile Include="Soils\RunoffEventType.cs" />

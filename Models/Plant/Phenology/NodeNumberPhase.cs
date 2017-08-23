@@ -5,6 +5,7 @@ using Models.Core;
 using Models.PMF.Organs;
 using Models.PMF.Functions;
 using System.Xml.Serialization;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {

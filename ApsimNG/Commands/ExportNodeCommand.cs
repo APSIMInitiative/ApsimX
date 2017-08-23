@@ -18,6 +18,8 @@ using Models.Agroforestry;
 using Models.Zones;
 using Models.PostSimulationTools;
 using PdfSharp.Fonts;
+using System.Data;
+using PdfSharp.Drawing;
 
 namespace UserInterface.Commands
 {
@@ -462,8 +464,7 @@ namespace UserInterface.Commands
             xyStyle.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
 
             Style tableStyle = document.Styles.AddStyle("Table", "Normal");
-            tableStyle.Font.Size = 8;
-            tableStyle.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
+            //tableStyle.Font.Size = 8;
         }
 
         /// <summary>Creates the graph.</summary>
@@ -610,27 +611,53 @@ namespace UserInterface.Commands
             // Create a 2 column, 1 row table. Image in first cell, X/Y data in second cell.
             Table table = section.AddTable();
             table.Style = "Table";
-            table.Rows.LeftIndent = "3cm";
+            table.Borders.Color = Colors.Blue;
+            table.Borders.Width = 0.25;           
+            table.Borders.Left.Width = 0.5;
+            table.Borders.Right.Width = 0.5;
+            table.Rows.LeftIndent = 0;
 
-            foreach (List<string> column in tableObj.data)
+            foreach (DataColumn column in tableObj.data.Columns)
             {
                 Column column1 = table.AddColumn();
-                column1.Width = "1.4cm";
                 column1.Format.Alignment = ParagraphAlignment.Right;
             }
 
-            for (int rowIndex = 0; rowIndex < tableObj.data[0].Count; rowIndex++)
+            Row row = table.AddRow();
+            row.HeadingFormat = true;
+            row.Format.Font.Bold = true;
+            row.Shading.Color = Colors.LightBlue;
+
+            XFont gdiFont = new XFont("Arial", 10);
+            XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
+
+            for (int columnIndex = 0; columnIndex < tableObj.data.Columns.Count; columnIndex++)
             {
-                Row row = table.AddRow();
-                for (int columnIndex = 0; columnIndex < tableObj.data.Count; columnIndex++)
+                string heading = tableObj.data.Columns[columnIndex].ColumnName;
+
+                // Get the width of the column
+                double maxSize = graphics.MeasureString(heading, gdiFont).Width;
+                for (int rowIndex = 0; rowIndex < tableObj.data.Rows.Count; rowIndex++)
                 {
-                    string cellText = tableObj.data[columnIndex][rowIndex];
+                    string cellText = tableObj.data.Rows[rowIndex][columnIndex].ToString();
+                    XSize size = graphics.MeasureString(cellText, gdiFont);
+                    maxSize = Math.Max(maxSize, size.Width);
+                }
+
+                table.Columns[columnIndex].Width = Unit.FromPoint(maxSize + 10);
+                row.Cells[columnIndex].AddParagraph(heading);
+            }
+            for (int rowIndex = 0; rowIndex < tableObj.data.Rows.Count; rowIndex++)
+            {
+                row = table.AddRow();
+                for (int columnIndex = 0; columnIndex < tableObj.data.Columns.Count; columnIndex++)
+                {
+                    string cellText = tableObj.data.Rows[rowIndex][columnIndex].ToString();
                     row.Cells[columnIndex].AddParagraph(cellText);
                 }
                 
             }
-
-            
+            section.AddParagraph();
         }
 
 

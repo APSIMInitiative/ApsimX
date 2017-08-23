@@ -525,7 +525,7 @@ namespace UserInterface.Views
         {
             this.plot1.Model.Title = text;
             this.plot1.Model.TitleFont = Font;
-            this.plot1.Model.TitleFontSize = FontSize;
+            this.plot1.Model.TitleFontSize = 30;
         }
 
         /// <summary>
