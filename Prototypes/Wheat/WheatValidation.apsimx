@@ -111,88 +111,12 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
-              <double>1</double>
-              <double>2</double>
-              <double>3</double>
-              <double>4</double>
-              <double>5</double>
-              <double>6</double>
-              <double>7</double>
-              <double>8</double>
-              <double>9</double>
-              <double>10</double>
-              <double>11</double>
-              <double>12</double>
-              <double>13</double>
-              <double>14</double>
-              <double>15</double>
-              <double>16</double>
-              <double>17</double>
-              <double>18</double>
-              <double>19</double>
-              <double>20</double>
-              <double>21</double>
-              <double>22</double>
-              <double>23</double>
-              <double>24</double>
-              <double>25</double>
               <double>26</double>
-              <double>27</double>
-              <double>28</double>
-              <double>29</double>
-              <double>30</double>
-              <double>31</double>
-              <double>32</double>
-              <double>33</double>
               <double>34</double>
-              <double>35</double>
-              <double>36</double>
-              <double>37</double>
-              <double>38</double>
-              <double>39</double>
-              <double>40</double>
             </X>
             <Y>
               <double>0</double>
-              <double>0.119470832257985</double>
-              <double>0.429443112504489</double>
-              <double>0.905199739644179</double>
-              <double>1.53217470641352</double>
-              <double>2.29821298396141</double>
-              <double>3.19191333504152</double>
-              <double>4.20198789739741</double>
-              <double>5.31695648453901</double>
-              <double>6.52498265956689</double>
-              <double>7.8137793749852</double>
-              <double>9.17055226081921</double>
-              <double>10.5819647627968</double>
-              <double>12.0341166381133</double>
-              <double>13.5125309465477</double>
-              <double>15.00214661138</double>
-              <double>16.4873147179519</double>
-              <double>17.9517973642161</double>
-              <double>19.3787682748621</double>
-              <double>20.7508146427336</double>
-              <double>22.0499398257607</double>
-              <double>23.2575666375538</double>
-              <double>24.354541044785</double>
-              <double>25.3211361365545</double>
-              <double>26.1370562676747</double>
-              <double>26.7814413040797</double>
-              <double>27.2328709175845</double>
-              <double>27.4693688911335</double>
-              <double>27.4684074059511</double>
-              <double>27.2069112896434</double>
-              <double>26.6612622100323</double>
-              <double>25.807302803805</double>
-              <double>24.6203407323283</double>
-              <double>23.0751526594479</double>
-              <double>21.1459881479693</double>
-              <double>18.8065734729518</double>
-              <double>16.0301153510254</double>
-              <double>12.7893045857668</double>
-              <double>9.05631962978539</double>
-              <double>4.80283006463448</double>
+              <double>26</double>
               <double>0</double>
             </Y>
           </XYPairs>
@@ -32072,15 +31996,15 @@ Emergence was recorded as the 28th of May for the first planting.  The model was
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script>
-                  <SDSwitch>0</SDSwitch>
-                  <Amount1>0</Amount1>
-                  <Amount2>0</Amount2>
-                  <Amount3>0</Amount3>
-                  <Amount4>0</Amount4>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
                   <FertDate4>25-Nov</FertDate4>
+                  <Amount1>0</Amount1>
+                  <Amount2>0</Amount2>
+                  <Amount3>0</Amount3>
+                  <Amount4>0</Amount4>
+                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -35577,15 +35501,15 @@ namespace Models
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script>
-                  <SDSwitch>0</SDSwitch>
-                  <Amount1>0</Amount1>
-                  <Amount2>0</Amount2>
-                  <Amount3>0</Amount3>
-                  <Amount4>0</Amount4>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
                   <FertDate4>25-Nov</FertDate4>
+                  <Amount1>0</Amount1>
+                  <Amount2>0</Amount2>
+                  <Amount3>0</Amount3>
+                  <Amount4>0</Amount4>
+                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -43541,10 +43465,10 @@ Considerable canopy decay was observed during the winter for the early sown trea
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Script>
                   <SowDate>24-Jul</SowDate>
-                  <Population>150</Population>
                   <CultivarName>Wakanui</CultivarName>
                   <SowingDepth>50</SowingDepth>
                   <RowSpacing>150</RowSpacing>
+                  <Population>150</Population>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -47070,9 +46994,9 @@ namespace Models
               <Name>StateFactors</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <Nit>0</Nit>
                 <Irr>
                 </Irr>
+                <Nit>0</Nit>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -67228,8 +67152,8 @@ namespace Models
               <Name>MouseActivity</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <ProportionNibbled>0.5</ProportionNibbled>
                 <NibblingDate>2002-10-31</NibblingDate>
+                <ProportionNibbled>0.5</ProportionNibbled>
               </Script>
               <Code><![CDATA[
 using System;
