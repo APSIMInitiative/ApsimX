@@ -719,12 +719,12 @@
             <End />
           </PhaseLookupValue>
           <PhaseLookupValue>
-            <Name>MainStemNodeAppearanceRate</Name>
+            <Name>Phyllochron</Name>
             <Start />
             <End />
           </PhaseLookupValue>
           <Constant>
-            <Name>MainStemFinalNodeNumber</Name>
+            <Name>FinalLeafNumber</Name>
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>

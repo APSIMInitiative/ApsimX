@@ -30,12 +30,12 @@ namespace Models.PMF.Struct
     /// \param ThermalTime <b>(IFunction)</b> The daily thermal time (<sup>o</sup>Cd).
     /// \param MainStemPrimordiaInitiationRate <b>(IFunction)</b> The initiation rate 
     /// of primordia in main stem (# <sup>o</sup>Cd<sup>-1</sup>).
-    /// \param MainStemNodeAppearanceRate <b>(IFunction)</b> The appearance rate 
+    /// \param Phyllochron <b>(IFunction)</b> The appearance rate 
     /// of node in main stem (# <sup>o</sup>Cd<sup>-1</sup>).
-    /// \param MainStemFinalNodeNumber <b>(IFunction)</b> The maximum node number
+    /// \param FinalLeafNumber <b>(IFunction)</b> The maximum node number
     /// in main stem (#). The maximum node is calculated by model 
-    /// MainStemFinalNodeNumberFunction if MainStemFinalNodeNumber is 
-    /// specified to MainStemFinalNodeNumberFunction.
+    /// FinalLeafNumberFunction if FinalLeafNumber is 
+    /// specified to FinalLeafNumberFunction.
     /// \param HeightModel <b>(IFunction)</b> Plant height (mm).
     /// \param BranchingRate <b>(IFunction)</b> The rate of new branching (#).
     /// \param ShadeInducedBranchMortality <b>(IFunction)</b> 
@@ -91,9 +91,9 @@ namespace Models.PMF.Struct
     /// equals to bud number multiplying sowing population.
     /// 
     /// The maximum node (phytomer) number in main stem is set by 
-    /// parameter MainStemFinalNodeNumber. 
-    ///     \ref Models.PMF.Functions.StructureFunctions.MainStemFinalNodeNumberFunction "MainStemFinalNodeNumberFunction" is called if 
-    ///     MainStemFinalNodeNumber specifies to MainStemFinalNodeNumberFunction.
+    /// parameter FinalLeafNumber. 
+    ///     \ref Models.PMF.Functions.StructureFunctions.FinalLeafNumberFunction "FinalLeafNumberFunction" is called if 
+    ///     FinalLeafNumber specifies to FinalLeafNumberFunction.
     /// The maximum node number in only used to limit the primordia number.
     ///     
     /// Plant height is set by parameter HeightModel, and updated by Leaf model.
@@ -115,7 +115,7 @@ namespace Models.PMF.Struct
     /// \f]
     /// where, \f$\Delta TT_{t}\f$ is the daily thermal time, which calculates 
     /// from parameter ThermalTime. \f$P_{pla}\f$ and \f$P_{phy}\f$ calculates
-    /// from parameter MainStemPrimordiaInitiationRate and MainStemNodeAppearanceRate,
+    /// from parameter MainStemPrimordiaInitiationRate and Phyllochron,
     /// respectively.
     /// 
     /// Total number of primordia (\f$N_{pri}\f$) and node (\f$N_{node}\f$) in 
@@ -231,11 +231,11 @@ namespace Models.PMF.Struct
         IFunction ThermalTime = null;
         /// <summary>The main stem node appearance rate</summary>
         [Link]
-        public IFunction MainStemNodeAppearanceRate = null;
+        public IFunction Phyllochron = null;
         
         /// <summary>The main stem final node number</summary>
         [Link]
-        public IFunction MainStemFinalNodeNumber = null;
+        public IFunction FinalLeafNumber = null;
         /// <summary>The height model</summary>
         [Link]
         [Units("mm")]
@@ -359,7 +359,7 @@ namespace Models.PMF.Struct
         /// <value>The remaining node no.</value>
         [XmlIgnore]
         [Description("Number of leaves yet to appear")]
-        public double RemainingNodeNo { get { return MainStemFinalNodeNumber.Value() - LeafTipsAppeared; } }
+        public double RemainingNodeNo { get { return FinalLeafNumber.Value() - LeafTipsAppeared; } }
 
         /// <summary>Gets the height.</summary>
         /// <value>The height.</value>
@@ -384,7 +384,7 @@ namespace Models.PMF.Struct
         {
             get
             {
-                return LeafTipsAppeared / MainStemFinalNodeNumber.Value();
+                return LeafTipsAppeared / FinalLeafNumber.Value();
             }
         }
         #endregion
@@ -419,8 +419,8 @@ namespace Models.PMF.Struct
             if (Plant.IsGerminated)
             {
                  DeltaHaunStage = 0;
-                if (MainStemNodeAppearanceRate.Value() > 0)
-                    DeltaHaunStage = ThermalTime.Value() / MainStemNodeAppearanceRate.Value();
+                if (Phyllochron.Value() > 0)
+                    DeltaHaunStage = ThermalTime.Value() / Phyllochron.Value();
                
                 if (Germinated==false) // We have no leaves set up and nodes have just started appearing - Need to initialise Leaf cohorts
                 {
@@ -439,13 +439,13 @@ namespace Models.PMF.Struct
                         DoEmergence();
                     }
 
-                    bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= MainStemFinalNodeNumber.Value());
+                    bool AllCohortsInitialised = (Leaf.InitialisedCohortNo >= FinalLeafNumber.Value());
                     bool AllLeavesAppeared = (Leaf.AppearedCohortNo == Leaf.InitialisedCohortNo);
                     bool LastLeafAppearing = ((Math.Truncate(LeafTipsAppeared) + 1)  == Leaf.InitialisedCohortNo);
                     
                     if ((AllCohortsInitialised)&&(LastLeafAppearing))
                     {
-                        NextLeafProportion = 1-(Leaf.InitialisedCohortNo - MainStemFinalNodeNumber.Value());
+                        NextLeafProportion = 1-(Leaf.InitialisedCohortNo - FinalLeafNumber.Value());
                     }
                     else
                     {
@@ -464,9 +464,9 @@ namespace Models.PMF.Struct
                     }
 
                     PotLeafTipsAppeared += DeltaTipNumber;
-                    //if (PotLeafTipsAppeared > MainStemFinalNodeNumber.Value)
-                    //    FinalLeafDeltaTipNumberonDayOfAppearance = PotLeafTipsAppeared - MainStemFinalNodeNumber.Value;
-                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, MainStemFinalNodeNumber.Value());
+                    //if (PotLeafTipsAppeared > FinalLeafNumber.Value)
+                    //    FinalLeafDeltaTipNumberonDayOfAppearance = PotLeafTipsAppeared - FinalLeafNumber.Value;
+                    LeafTipsAppeared = Math.Min(PotLeafTipsAppeared, FinalLeafNumber.Value());
 
                     bool TimeForAnotherLeaf = PotLeafTipsAppeared >= (Leaf.AppearedCohortNo + 1);
                     int LeavesToAppear = (int)(LeafTipsAppeared - (Leaf.AppearedCohortNo - (1- NextLeafProportion)));
@@ -560,9 +560,9 @@ namespace Models.PMF.Struct
             CohortParams.CohortToAppear = TipToAppear;
             CohortParams.TotalStemPopn = TotalStemPopn;
             if ((Math.Truncate(LeafTipsAppeared) + 1) == Leaf.InitialisedCohortNo)
-                CohortParams.CohortAge = (PotLeafTipsAppeared - TipToAppear) * MainStemNodeAppearanceRate.Value();
+                CohortParams.CohortAge = (PotLeafTipsAppeared - TipToAppear) * Phyllochron.Value();
             else
-                CohortParams.CohortAge = (LeafTipsAppeared - TipToAppear) * MainStemNodeAppearanceRate.Value();
+                CohortParams.CohortAge = (LeafTipsAppeared - TipToAppear) * Phyllochron.Value();
             CohortParams.FinalFraction = NextLeafProportion;
             if(LeafTipAppearance != null)
             LeafTipAppearance.Invoke(this, CohortParams);

@@ -323,7 +323,7 @@ The model consists of:
             <Name>Target</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.BasePhyllochron.Value()</VariableName>
             </VariableReference>
             <AddFunction>
               <Name>Phyllochrons</Name>
@@ -540,7 +540,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <LinearInterpolationFunction>
             <Name>LeafStageFactor</Name>
             <XYPairs>
@@ -837,13 +837,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>MeanPhyllochron</Name>
           <VariableReference>
             <Name>Phyllochron</Name>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Structure].Phyllochron.Value()</VariableName>
           </VariableReference>
           <NumberOfDays>300</NumberOfDays>
           <InitialValue>80</InitialValue>
         </MovingAverageFunction>
         <HoldFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <AddFunction>
             <Name>ValueToHold</Name>
             <VariableReference>
@@ -899,7 +899,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Name>FLNlessIntercept</Name>
             <VariableReference>
               <Name>FinalLeafNumber</Name>
-              <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+              <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>Intercept</Name>
@@ -1581,7 +1581,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <PhaseLookup>
@@ -1592,7 +1592,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>LagDuration</Name>
                 <VariableReference>
                   <Name>Phyllochron</Name>
-                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                  <VariableName>[Structure].Phyllochron.Value()</VariableName>
                 </VariableReference>
                 <LinearInterpolationFunction>
                   <Name>AgeFactor</Name>
@@ -1663,7 +1663,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               </Constant>
               <VariableReference>
                 <Name>Phyllochron</Name>
-                <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                <VariableName>[Structure].Phyllochron.Value()</VariableName>
               </VariableReference>
             </MultiplyFunction>
             <MultiplyFunction>
@@ -1697,7 +1697,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Constant>
@@ -2581,7 +2581,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 10</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 6</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Aspiring</Name>
@@ -2595,7 +2595,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 8</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.7</Command>
           </Cultivar>
           <Cultivar>
@@ -2604,7 +2604,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.7</Command>
           </Cultivar>
           <Cultivar>
@@ -2619,7 +2619,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 8</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Conquest</Name>
@@ -2657,7 +2657,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Pennant</Name>
@@ -2689,7 +2689,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 2</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rubric</Name>
@@ -2739,7 +2739,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 10</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0</Command>
             <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.7</Command>
@@ -2758,7 +2758,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].GrainDevelopment.Target.FixedValue = 300</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.08</Command>
             <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600</Command>
             <Command>[Leaf].CohortParameters.SenescenceDuration.Multiplier.FixedValue = 4.2</Command>
@@ -3990,7 +3990,7 @@ namespace Models
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value()</string>
+                <string>[Maize].Structure.Phyllochron.Value()</string>
                 <string>[Maize].Structure.Height</string>
                 <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
@@ -4909,7 +4909,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>MaizeReport</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value()</YFieldName>
+                <YFieldName>Maize.Structure.Phyllochron.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -5582,7 +5582,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>MaizeReport</TableName>
                 <XFieldName>Maize.Structure.LeafTipsAppeared</XFieldName>
-                <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value()</YFieldName>
+                <YFieldName>Maize.Structure.Phyllochron.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10006,7 +10006,7 @@ namespace Models
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value()</string>
                 <string>[Wheat].Leaf.CohortParameters.LagDuration.Value()</string>
                 <string>[Wheat].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Wheat].Structure.MainStemNodeAppearanceRate.Value()</string>
+                <string>[Wheat].Structure.Phyllochron.Value()</string>
                 <string>[Wheat].Structure.Height</string>
                 <string>[Wheat].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Wheat].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>

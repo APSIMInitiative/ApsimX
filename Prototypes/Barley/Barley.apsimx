@@ -705,7 +705,7 @@ A function used to provide maturity date as the number days after sowing (DAS).]
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <Memo>
             <Name>Rational</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1046,7 +1046,7 @@ This (above) was used for oats. We probably need to adjust for barley.]]></MemoT
           <VariableReference>
             <Name>Phyllochron</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Structure].Phyllochron.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
@@ -1059,7 +1059,7 @@ This (above) was used for oats. We probably need to adjust for barley.]]></MemoT
             <VariableReference>
               <Name>FinalLeafNumber</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+              <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>Intercept</Name>
@@ -1144,7 +1144,7 @@ This (above) was used for oats. We probably need to adjust for barley.]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <MinimumFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1280,7 +1280,7 @@ TSLN = FLN*0.995 - 1.95 ]]></MemoText>
               <VariableReference>
                 <Name>FLN</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+                <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>PS</Name>
@@ -2202,7 +2202,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -2215,7 +2215,7 @@ N conc values are from Zhao et al 2009
                 <VariableReference>
                   <Name>Phyllochron</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                  <VariableName>[Structure].Phyllochron.Value()</VariableName>
                 </VariableReference>
                 <LinearInterpolationFunction>
                   <Name>AgeFactor</Name>
@@ -2312,7 +2312,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>AgeFactor</Name>
@@ -2412,7 +2412,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>LinearInterpolationFunction</Name>
@@ -3912,8 +3912,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Barley].Structure.HaunStage.Value()</string>
         <string>[Barley].Structure.Height</string>
         <string>[Barley].Structure.LeafTipsAppeared</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+        <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+        <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
         <string>[Barley].Structure.MainStemPopn</string>
         <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
         <string>[Barley].Structure.TotalStemPopn</string>
@@ -5194,8 +5194,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -5224,7 +5224,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -7420,8 +7420,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -7450,7 +7450,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -10093,8 +10093,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -10125,7 +10125,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -12437,8 +12437,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -12468,7 +12468,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -13925,8 +13925,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -13955,7 +13955,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -15202,8 +15202,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -15232,7 +15232,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -16578,8 +16578,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -16608,7 +16608,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -18332,8 +18332,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -18362,7 +18362,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -19602,8 +19602,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -19632,7 +19632,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -21046,8 +21046,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -21076,7 +21076,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -22401,8 +22401,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -22431,7 +22431,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -23777,8 +23777,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -23807,7 +23807,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -25153,8 +25153,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -25183,7 +25183,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -26522,8 +26522,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -26552,7 +26552,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -29493,8 +29493,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -29525,7 +29525,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -34571,8 +34571,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -34600,7 +34600,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -37759,8 +37759,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -37790,7 +37790,7 @@ namespace Models
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -40427,8 +40427,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -40457,7 +40457,7 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -42736,8 +42736,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -42766,7 +42766,7 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -45784,8 +45784,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -45814,7 +45814,7 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -47973,8 +47973,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -48003,7 +48003,7 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -50338,8 +50338,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -50368,7 +50368,7 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -52934,8 +52934,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -52964,7 +52964,7 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -55156,8 +55156,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -55186,7 +55186,7 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -57593,8 +57593,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -57623,7 +57623,7 @@ namespace Models
           <ExperimentFactorValues />
           <VariableNames>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+            <string>[Barley].Structure.FinalLeafNumber</string>
             <string>[Barley].Phenology.FlagLeafDAS</string>
             <string>[Barley].Phenology.FloweringDAS</string>
             <string>[Barley].Phenology.MaturityDAS</string>
@@ -58783,8 +58783,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -59899,8 +59899,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -61023,8 +61023,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -62147,8 +62147,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -63227,8 +63227,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -64351,8 +64351,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -65475,8 +65475,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -66599,8 +66599,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -67654,8 +67654,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -69179,8 +69179,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -70303,8 +70303,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -71427,8 +71427,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -72551,8 +72551,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -73679,8 +73679,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -74564,8 +74564,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -75923,8 +75923,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>
@@ -77091,8 +77091,8 @@ namespace Models
             <string>[Barley].Structure.HaunStage.Value()</string>
             <string>[Barley].Structure.Height</string>
             <string>[Barley].Structure.LeafTipsAppeared</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-            <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+            <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
             <string>[Barley].Structure.MainStemPopn</string>
             <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
             <string>[Barley].Structure.TotalStemPopn</string>

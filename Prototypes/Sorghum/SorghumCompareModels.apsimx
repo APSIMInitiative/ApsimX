@@ -474,7 +474,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LessThanFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <VariableReference>
             <Name>CurrentLeafNum</Name>
             <VariableName>[Structure].LeafTipsAppeared</VariableName>
@@ -483,7 +483,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
             <Name>SubtractFunction</Name>
             <VariableReference>
               <Name>FinalLeafNum</Name>
-              <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+              <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>LeafNumRateChange</Name>
@@ -500,7 +500,7 @@ Though tillering is common in some sorghum varieties under certain agronomic con
           </Constant>
         </LessThanFunction>
         <HoldFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <AddFunction>
             <Name>ValueToHold</Name>
             <VariableReference>
@@ -2604,7 +2604,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <string>[Leaf].TPLAInflection.Value()</string>
               <string>[Leaf].LAI</string>
               <string>[Phenology].TTEmergToFlagLeaf.Value()</string>
-              <string>[Structure].MainStemFinalNodeNumber.Value()</string>
+              <string>[Structure].FinalLeafNumber.Value()</string>
               <string>[Structure].MainStemNodeNo</string>
               <string>[Leaf].CoverGreen</string>
               <string>[Leaf].RadIntTot</string>
@@ -3643,7 +3643,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
               <string>[Leaf].TPLAInflection.Value()</string>
               <string>[Leaf].LAI</string>
               <string>[Phenology].TTEmergToFlagLeaf.Value()</string>
-              <string>[Structure].MainStemFinalNodeNumber.Value()</string>
+              <string>[Structure].FinalLeafNumber.Value()</string>
               <string>[Structure].MainStemNodeNo</string>
               <string>[Leaf].CoverGreen</string>
               <string>[Leaf].RadIntTot</string>

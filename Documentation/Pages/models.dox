@@ -34,7 +34,7 @@ Name                                | Description
 | <h3>StructureFunctions</h3>         |          |
 \ref Models.PMF.Functions.StructureFunctions.HeightFunction "HeightFunction"                                     | A plant height function
 \ref Models.PMF.Functions.StructureFunctions.InPhaseTemperatureFunction "InPhaseTemperatureFunction"             | Returns the current InPhase temperature accumulation
-\ref Models.PMF.Functions.StructureFunctions.MainStemFinalNodeNumberFunction "MainStemFinalNodeNumberFunction"   | Main stem final node number function
+\ref Models.PMF.Functions.StructureFunctions.FinalLeafNumberFunction "FinalLeafNumberFunction"   | Main stem final node number function
 | <h3>SupplyFunctions</h3>            |          |
 \ref Models.PMF.Functions.SupplyFunctions.RUEModel "RUEModel"                | This model calculates CO2 Impact on RUE using the approach of Reyenga, Howden, Meinke, Mckeon (1999)
 \ref Models.PMF.Functions.SupplyFunctions.RUECO2Function "RUECO2Function"    | An RUE model

@@ -429,7 +429,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <PhaseLookup>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <PhaseLookupValue>
             <Name>Phyllochron</Name>
             <LinearInterpolationFunction>
@@ -760,7 +760,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <FixedValue>0</FixedValue>
         </Constant>
         <HoldFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <AddFunction>
             <Name>ValueToHold</Name>
             <Constant>
@@ -808,7 +808,7 @@ A function is used to provide flowering date as days after sowing(DAS).
                         <VariableReference>
                           <Name>Phyllochron</Name>
                           <IncludeInDocumentation>true</IncludeInDocumentation>
-                          <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                          <VariableName>[Structure].Phyllochron.Value()</VariableName>
                         </VariableReference>
                         <Constant>
                           <Name>LeafTipsPerPrimordia</Name>
@@ -1566,7 +1566,7 @@ Hammer et al (2009) used a constant extraction front velocity of 2.5cm per day i
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Phyllochron.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>NumberOfExpandingLeaves</Name>

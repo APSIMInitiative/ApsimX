@@ -304,7 +304,7 @@ The model consists of:
           </VariableReference>
           <VariableReference>
             <Name>FinalLeafNumber</Name>
-            <VariableName>[Phenology].MainStemFinalNodeNumber.Value()</VariableName>
+            <VariableName>[Phenology].FinalLeafNumber.Value()</VariableName>
           </VariableReference>
           <Start>TerminalSpikelet</Start>
           <End>FlagLeaf</End>
@@ -319,7 +319,7 @@ The model consists of:
             <Name>Target</Name>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.Value()</VariableName>
+              <VariableName>[Phenology].Phyllochron.BasePhyllochron.Value()</VariableName>
             </VariableReference>
             <AddFunction>
               <Name>Phyllochrons</Name>
@@ -525,7 +525,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <FixedValue>2.5</FixedValue>
         </Constant>
         <MultiplyFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <LinearInterpolationFunction>
             <Name>LeafStageFactor</Name>
             <XYPairs>
@@ -581,7 +581,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>MeanPhyllochron</Name>
           <VariableReference>
             <Name>Phyllochron</Name>
-            <VariableName>[Phenology].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Phenology].Phyllochron.Value()</VariableName>
           </VariableReference>
           <NumberOfDays>300</NumberOfDays>
           <InitialValue>80</InitialValue>
@@ -603,7 +603,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </VariableReference>
           <VariableReference>
             <Name>Phyllochron</Name>
-            <VariableName>[Phenology].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Phenology].Phyllochron.Value()</VariableName>
           </VariableReference>
         </DivideFunction>
         <MolecularPhenology>
@@ -678,7 +678,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </LinearInterpolationFunction>
         </MolecularPhenology>
         <HoldFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <VariableReference>
             <Name>ValueToHold</Name>
             <VariableName>[Phenology].HaunStage.Value()</VariableName>
@@ -703,7 +703,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].VrnSensitivity.FixedValue = 10</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 6</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 5</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Aspiring</Name>
@@ -717,7 +717,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].VrnSensitivity.FixedValue = 8</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>BattenSpring</Name>
@@ -725,7 +725,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Centaur</Name>
@@ -739,7 +739,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].VrnSensitivity.FixedValue = 8</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Conquest</Name>
@@ -777,7 +777,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 2</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Pennant</Name>
@@ -809,7 +809,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 2</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rubric</Name>
@@ -859,7 +859,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].VrnSensitivity.FixedValue = 10</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0</Command>
           </Cultivar>
@@ -937,7 +937,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 3</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Janz</Name>
@@ -947,7 +947,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].VernLag.FixedValue = 0</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kelallac</Name>
@@ -990,7 +990,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90</Command>
           </Cultivar>
           <Cultivar>
             <Name>Mercury</Name>
@@ -1051,7 +1051,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.FixedValue = 2.5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 5</Command>
-            <Command>[Phenology].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Young</Name>
@@ -1135,7 +1135,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <string>[Wheat].Phenology.FloweringDAS.Value()</string>
         <string>[Wheat].Phenology.MaturityDAS.Value()</string>
         <string>[Wheat].Phenology.HaunStage.Value()</string>
-        <string>[Wheat].Phenology.MainStemFinalNodeNumber.Value()</string>
+        <string>[Wheat].Phenology.FinalLeafNumber.Value()</string>
         <string>[Wheat].SowingData.Cultivar</string>
         <string>[Wheat].SowingDate.DayOfYear</string>
       </VariableNames>
@@ -1159,7 +1159,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <string>[Wheat].Phenology.Vrn1.Value()</string>
         <string>[Wheat].Phenology.Vrn4.Value()</string>
         <string>[Wheat].Phenology.HaunStage.Value()</string>
-        <string>[Wheat].Phenology.MainStemFinalNodeNumber.Value()</string>
+        <string>[Wheat].Phenology.FinalLeafNumber.Value()</string>
         <string>[Wheat].Phenology.MolecularPhenology.FIHS</string>
         <string>[Wheat].Phenology.MolecularPhenology.TSHS</string>
         <string>[Wheat].Phenology.MolecularPhenology.Vrn1Target</string>
@@ -7223,7 +7223,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Wheat.Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</YFieldName>
+            <YFieldName>Wheat.Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

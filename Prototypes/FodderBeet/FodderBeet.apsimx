@@ -352,7 +352,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Phyllochron.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>PrimordiaPerMainstemNode</Name>
@@ -371,7 +371,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <End>Maturity</End>
         </PhaseLookupValue>
         <PhaseLookupValue>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <LinearInterpolationFunction>
             <Name>Phyllochron</Name>
             <XYPairs>
@@ -402,7 +402,7 @@ date of Experiment 4 is assumed here.]]></MemoText>
           <End>Maturity</End>
         </PhaseLookupValue>
         <Constant>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>80</FixedValue>
         </Constant>

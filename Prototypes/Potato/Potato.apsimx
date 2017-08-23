@@ -206,7 +206,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <PhaseLookupValue>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <LinearInterpolationFunction>
             <Name>Phyllochron</Name>
             <XYPairs>
@@ -235,7 +235,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <End>FinalLeaf</End>
         </PhaseLookupValue>
         <Constant>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>34</FixedValue>
         </Constant>
@@ -1634,7 +1634,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
       <Cultivar>
         <Name>JerseyBenny</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 19</Command>
+        <Command>[Structure].FinalLeafNumber.FixedValue = 19</Command>
         <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,10,11</Command>
         <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
         <Command>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.FixedValue = 3</Command>
@@ -1643,27 +1643,27 @@ The duration of a potato crop is determined by the number of leaves that the mai
       <Cultivar>
         <Name>IlamHardy</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 26</Command>
+        <Command>[Structure].FinalLeafNumber.FixedValue = 26</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.18</Command>
         <Command>[Phenology].Vegetative.Target.FixedValue = 200</Command>
       </Cultivar>
       <Cultivar>
         <Name>Horizon</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 28</Command>
+        <Command>[Structure].FinalLeafNumber.FixedValue = 28</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.12,0.16</Command>
       </Cultivar>
       <Cultivar>
         <Name>Karaka</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+        <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
         <Command />
       </Cultivar>
       <Cultivar>
         <Name>Nooksac</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 36</Command>
+        <Command>[Structure].FinalLeafNumber.FixedValue = 36</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
       </Cultivar>
       <Cultivar>
@@ -1675,24 +1675,24 @@ The duration of a potato crop is determined by the number of leaves that the mai
       <Cultivar>
         <Name>Rua</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+        <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.Y = 5,40,40,60,60</Command>
+        <Command>[Structure].Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1</Command>
+        <Command>[Structure].Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60</Command>
         <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,20,21</Command>
         <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
       </Cultivar>
       <Cultivar>
         <Name>Nadine</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+        <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
         <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.11,0.15</Command>
         <Command />
       </Cultivar>
       <Cultivar>
         <Name>RussetBurbank</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 34</Command>
+        <Command>[Structure].FinalLeafNumber.FixedValue = 34</Command>
       </Cultivar>
       <Cultivar>
         <Name>Coliban</Name>
@@ -2251,7 +2251,7 @@ namespace Models
 			if (Clock.Today.Date == HarvestDate)
 				Potato.Harvest();
 			if (SetFinalLeafNumber > 0)
-				zone.Set("Potato.Structure.MainStemFinalNodeNumber.FixedValue", SetFinalLeafNumber);
+				zone.Set("Potato.Structure.FinalLeafNumber.FixedValue", SetFinalLeafNumber);
 			if (SetFinalLeafNumber > 46)
 				throw new Exception("The model will fail with leaf numbers > 46.  Reduce Final leaf number.");
 		}
@@ -2515,7 +2515,7 @@ namespace Models
           <string>Potato.Stem.MinimumNConc.Value()</string>
           <string>Potato.Structure.Height</string>
           <string>Potato.Structure.LeafTipsAppeared</string>
-          <string>Potato.Structure.MainStemFinalNodeNumber.Value()</string>
+          <string>Potato.Structure.FinalLeafNumber.Value()</string>
           <string>Potato.Structure.PlantTotalNodeNo</string>
           <string>Potato.Structure.PrimaryBudTotalNodeNo</string>
           <string>Potato.Structure.TotalStemPopn</string>
@@ -4747,7 +4747,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Potato.Structure.MainStemFinalNodeNumber.Value()</YFieldName>
+            <YFieldName>Potato.Structure.FinalLeafNumber.Value()</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
