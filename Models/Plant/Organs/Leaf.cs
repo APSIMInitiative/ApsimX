@@ -13,13 +13,11 @@ using Models.PMF.Struct;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    ///     This organ uses a phytomer-based approach to predict the area, biomass and nutrient content 
-    ///     of separate cohorts of leaves.  
-    ///     A cohort of leaves is represented by a main-stem node position and branch leaves are kept 
-    ///     in the same cohort as the mainstem leaf appearing at the same time ([lawless2005wheat]). 
-    ///     This class delegates prediction of the status and function of individual cohorts to the
-    ///     LeafCohort sub-classes.  Overall canopy state is calculated by this class by aggregation
-    ///     of state data across all leaf cohorts.
+    /// The leaves of a crop are modeled as a series of cohorts of similar leaves and the properties of each of these cohorts are summed by the Leaf class.  
+    /// A cohort is represented by main stem node positions with all of the branch leaves appearing at the same time as the current main-stem leaf being included in that cohort ([lawless2005wheat]).  
+    /// The number of leaves in each cohort is a product of the number of plants per m<sup>2</sup> and the number of branches per plant.  
+    /// The Structure class models the appearance of main-stem leaves and branches.  Once a cohort is initiated the Leaf class models the area and biomass dynamics of each of these cohorts.  
+    /// It is assumed all leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to LeafCohort classes.  
     /// </summary>
     [Serializable]
     [Description("Leaf Class")]
@@ -1496,5 +1494,92 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
         }
         #endregion
+        /// <summary>
+        /// Document a specific function
+        /// </summary>
+        /// <param name="FunctName"></param>
+        /// <param name="indent"></param>
+        /// <param name="tags"></param>
+        public void DocumentFunction(string FunctName, List<AutoDocumentation.ITag> tags, int indent)
+        {
+            IModel Funct = Apsim.Child(this, FunctName);
+            Funct.Document(tags, -1, indent);
+        }
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+           /// <param name="tags">The list of tags to add to.</param>
+           /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+           /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.GetClassDescription(this, tags, indent);
+
+            //Documment Leaf expansion 
+            tags.Add(new AutoDocumentation.Heading("Potential Leaf Area index ", headingLevel + 1));
+            string LAIText = "Leaf area index is calculated as the sum of the area of each cohort of leaves  ";
+            LAIText += "The tip appearance of a new leaf cohort occurs each time Structure.LeafTipsAppeared increases by one ";
+            LAIText += "From tip appearance the area of each cohort will increase for a certian number of degree days defined by ";
+            tags.Add(new AutoDocumentation.Paragraph(LAIText, indent));
+            (CohortParameters.GrowthDuration as Model).Document(tags, -1, indent+1);
+
+            tags.Add(new AutoDocumentation.Paragraph("If no stress occurs the leaves will reach a Maximum area at the end of the expansion phase. "+
+                "The maximum area is defined by", indent));
+            (CohortParameters.MaxArea as Model).Document(tags, -1, indent+1);
+
+            tags.Add(new AutoDocumentation.Paragraph("In the absence of stress the leaf will remain at it maximum size for a number of degree days "+
+                "set by the lag duration and then area will senesce to zero at the end of the senescence duration", indent));
+            (CohortParameters.LagDuration as Model).Document(tags, -1, indent+1);
+            (CohortParameters.SenescenceDuration as Model).Document(tags, -1, indent+1);
+
+            tags.Add(new AutoDocumentation.Paragraph("Mutual shading can cause premature senescence of cohorts if the leaf area above them becomes to great" +
+                "Each cohort models the proportion of its area that is lost to shade induced senescence as:", indent));
+            (CohortParameters.ShadeInducedSenescenceRate as Model).Document(tags, -1, indent + 1);
+
+            tags.Add(new AutoDocumentation.Heading("Stress effects on Leaf Area Index", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("Stress reduces Leaf area in a number of ways. "+
+                "Firstly, stress occuring prior to the appearance of the cohort can reduce cell division, so reducing the maximum leaf size. "+
+                "Leaf captures this by multiplying the MaxSize of each cohort by a CellDivisionStress factor which is calculated as:", indent));
+            (CohortParameters.CellDivisionStress as Model).Document(tags, -1, indent + 1);
+
+            tags.Add(new AutoDocumentation.Paragraph("Stress during the expansion phase of the cohort reduces the size increase of the cohort by "+
+                "multiplying the potential increase by a ExpansionStress factor:", indent));
+            (CohortParameters.ExpansionStress as Model).Document(tags, -1, indent + 1);
+
+            tags.Add(new AutoDocumentation.Paragraph("Stresses can also acellerate the onset and rate of senescence in a number of ways. " +
+                "Nitrogen shortage will cause N to be reallocated out of lower order leaves to support the expansion of higher order leaves and other organs. " +
+                "When this happens the lower order cohorts will have their area reduced in proportion to the amount of N that is remobilised out of them:", indent));
+            tags.Add(new AutoDocumentation.Paragraph("Water stress hastens senescence by increasing the rate of thermal time accumulation in the lag and senescence phases. " +
+               "This is done by multiplying thermal time accumulation by DroughtInducedLagAcceleration and DroughtInducedSenescenceAcceleration factors, respectively:", indent));
+            (CohortParameters.DroughtInducedLagAcceleration as Model).Document(tags, -1, indent + 1);
+            (CohortParameters.DroughtInducedSenAcceleration as Model).Document(tags, -1, indent + 1);
+            /*   // Documment DM demands.
+               tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
+               tags.Add(new AutoDocumentation.Paragraph("Total Dry matter demand is calculated by the DMDemandFunction", indent));
+   // IModel DMDemand = Apsim.Child(this, "DMDemandFunction");
+               (DMDemandFunction as Model).Document(tags, -1, indent);
+               IModel StrucFrac = Apsim.Child(this, "StructuralFraction");
+               if (StrucFrac.GetType() == typeof(Constant))
+               {
+                   if (StructuralFraction.Value() == 1.0)
+                   {
+                       tags.Add(new AutoDocumentation.Paragraph("All demand is structural and this organ has no Non-structural demand", indent));
+                   }
+                   else
+                   {
+                       double StrucPercent = StructuralFraction.Value() * 100;
+                       tags.Add(new AutoDocumentation.Paragraph("Of total biomass, " + StrucPercent + "% of this is structural and the remainder is non-structural demand", indent));
+                       tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
+                   }
+               }
+               else
+               {
+                   tags.Add(new AutoDocumentation.Paragraph("The proportion of total biomass that is partitioned to structural is determined by the StructuralFraction", indent));
+                   StrucFrac.Document(tags, -1, indent);
+                   tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
+               } */
+        }
     }
 }
