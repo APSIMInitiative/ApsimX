@@ -466,8 +466,8 @@ namespace Models.Graph
             seriesDefinition.yAxis = YAxis;
             if (dataStore != null && simulationZone.simulationNames.Count > 0)
             {
-                seriesDefinition.xFieldUnits = dataStore.GetUnits(simulationZone.simulationNames[0], TableName, XFieldName);
-                seriesDefinition.yFieldUnits = dataStore.GetUnits(simulationZone.simulationNames[0], TableName, YFieldName);
+                seriesDefinition.xFieldUnits = dataStore.GetUnits(TableName, XFieldName);
+                seriesDefinition.yFieldUnits = dataStore.GetUnits(TableName, YFieldName);
             }
             seriesDefinition.showInLegend = ShowInLegend;
             seriesDefinition.title = simulationZone.GetSeriesTitle();
