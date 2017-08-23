@@ -13,11 +13,11 @@ using Models.PMF.Struct;
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// The leaves of a crop are modeled as a series of cohorts of similar leaves and the properties of each of these cohorts are summed by the Leaf class.  
-    /// A cohort is represented by main stem node positions with all of the branch leaves appearing at the same time as the current main-stem leaf being included in that cohort ([lawless2005wheat]).  
-    /// The number of leaves in each cohort is a product of the number of plants per m<sup>2</sup> and the number of branches per plant.  
-    /// The Structure class models the appearance of main-stem leaves and branches.  Once a cohort is initiated the Leaf class models the area and biomass dynamics of each of these cohorts.  
-    /// It is assumed all leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to LeafCohort classes.  
+    /// The leaves are modeled as a set of leaf cohorts and the properties of each of these cohorts are summed to give over all values for the leaf organ.  
+    ///   A cohort represents all the leaves of a given main stem node position including all of the branch leaves appearing at the same time as the given main-stem leaf ([lawless2005wheat]).  
+    ///   The number of leaves in each cohort is the product of the number of plants per m<sup>2</sup> and the number of branches per plant.  
+    ///   The Structure class models the appearance of main-stem leaves and branches.  Once cohorts are initiated the Leaf class models the area and biomass dynamics of each.  
+    ///   It is assumed all the leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to LeafCohort classes.  
     /// </summary>
     [Serializable]
     [Description("Leaf Class")]
@@ -1520,65 +1520,69 @@ namespace Models.PMF.Organs
             //Documment Potential leaf area
             tags.Add(new AutoDocumentation.Heading("Potential Leaf Area index ", headingLevel + 1));
             string LAIText = "Leaf area index is calculated as the sum of the area of each cohort of leaves  ";
-            LAIText += "The tip appearance of a new leaf cohort occurs each time Structure.LeafTipsAppeared increases by one ";
-            LAIText += "From tip appearance the area of each cohort will increase for a certian number of degree days defined by ";
+            LAIText += "The appearance of a new cohort of leaves occurs each time Structure.LeafTipsAppeared increases by one. ";
+            LAIText += "From tip appearance the area of each cohort will increase for a certian number of degree days defined by the <i>GrowthDuration</i>:";
             tags.Add(new AutoDocumentation.Paragraph(LAIText, indent));
             (CohortParameters.GrowthDuration as Model).Document(tags, -1, indent+1);
 
-            tags.Add(new AutoDocumentation.Paragraph("If no stress occurs the leaves will reach a Maximum area at the end of the expansion phase. "+
-                "The maximum area is defined by", indent));
+            tags.Add(new AutoDocumentation.Paragraph("If no stress occurs the leaves will reach a Maximum area (<i>MaxArea</i>) at the end of the <i>GrowthDuration</i>. " +
+                "The <i>MaxArea</i> is defined by:", indent));
             (CohortParameters.MaxArea as Model).Document(tags, -1, indent+1);
 
-            tags.Add(new AutoDocumentation.Paragraph("In the absence of stress the leaf will remain at it maximum size for a number of degree days "+
-                "set by the lag duration and then area will senesce to zero at the end of the senescence duration", indent));
+            tags.Add(new AutoDocumentation.Paragraph("In the absence of stress the leaf will remain at <i>MaxArea</i> for a number of degree days " +
+                "set by the <i>LagDuration<i/> and then area will senesce to zero at the end of the <i>SenescenceDuration</i>", indent));
             (CohortParameters.LagDuration as Model).Document(tags, -1, indent+1);
             (CohortParameters.SenescenceDuration as Model).Document(tags, -1, indent+1);
 
-            tags.Add(new AutoDocumentation.Paragraph("Mutual shading can cause premature senescence of cohorts if the leaf area above them becomes to great" +
-                "Each cohort models the proportion of its area that is lost to shade induced senescence as:", indent));
+            tags.Add(new AutoDocumentation.Paragraph("Mutual shading can cause premature senescence of cohorts if the leaf area above them becomes to great. " +
+                "Each cohort models the proportion of its area that is lost to shade induced senescence each day as:", indent));
             (CohortParameters.ShadeInducedSenescenceRate as Model).Document(tags, -1, indent + 1);
 
             //Document stress effects on leaf area
             tags.Add(new AutoDocumentation.Heading("Stress effects on Leaf Area Index", headingLevel + 1));
-            tags.Add(new AutoDocumentation.Paragraph("Stress reduces Leaf area in a number of ways. "+
+            tags.Add(new AutoDocumentation.Paragraph("Stress reduces leaf area in a number of ways. "+
                 "Firstly, stress occuring prior to the appearance of the cohort can reduce cell division, so reducing the maximum leaf size. "+
-                "Leaf captures this by multiplying the MaxSize of each cohort by a CellDivisionStress factor which is calculated as:", indent));
+                "Leaf captures this by multiplying the <i>MaxSize</i> of each cohort by a <i>CellDivisionStress</i> factor which is calculated as:", indent));
             (CohortParameters.CellDivisionStress as Model).Document(tags, -1, indent + 1);
+            tags.Add(new AutoDocumentation.Paragraph("Leaf.FN quantifys the N stress status of the plant and represents the concentration of metabolic N relative the maximum potentil metabolic N content of the leaf " +
+                "calculated as (<i>Leaf.NConc - MinimumNConc</i>)/(<i>CriticalNConc - MinimumNConc</i>).", indent));
+            tags.Add(new AutoDocumentation.Paragraph("Leaf.FW quantifies water stress and is " +
+                "calculated as <i>Leaf.Transpiration</i>/<i>Leaf.WaterDemand</i>, where <i>Leaf.Transpiration</i> is the minimum of <i>Leaf.WaterDemand</i> and <i>Root.WaterUptake</i> ", indent));
 
-            tags.Add(new AutoDocumentation.Paragraph("Stress during the expansion phase of the cohort reduces the size increase of the cohort by "+
-                "multiplying the potential increase by a ExpansionStress factor:", indent));
+            tags.Add(new AutoDocumentation.Paragraph("Stress during the <i>GrowthDuration</i> of the cohort reduces the size increase of the cohort by " +
+                "multiplying the potential increase by a <i>ExpansionStress</i> factor:", indent));
             (CohortParameters.ExpansionStress as Model).Document(tags, -1, indent + 1);
 
             tags.Add(new AutoDocumentation.Paragraph("Stresses can also acellerate the onset and rate of senescence in a number of ways. " +
-                "Nitrogen shortage will cause N to be reallocated out of lower order leaves to support the expansion of higher order leaves and other organs. " +
-                "When this happens the lower order cohorts will have their area reduced in proportion to the amount of N that is remobilised out of them:", indent));
+                "Nitrogen shortage will cause N to be retranslocated out of lower order leaves to support the expansion of higher order leaves and other organs. " +
+                "When this happens the lower order cohorts will have their area reduced in proportion to the amount of N that is remobilised out of them.", indent));
             tags.Add(new AutoDocumentation.Paragraph("Water stress hastens senescence by increasing the rate of thermal time accumulation in the lag and senescence phases. " +
-               "This is done by multiplying thermal time accumulation by DroughtInducedLagAcceleration and DroughtInducedSenescenceAcceleration factors, respectively:", indent));
+               "This is done by multiplying thermal time accumulation by <i>DroughtInducedLagAcceleration</i> and <i>DroughtInducedSenescenceAcceleration</i> factors, respectively:", indent));
             (CohortParameters.DroughtInducedLagAcceleration as Model).Document(tags, -1, indent + 1);
             (CohortParameters.DroughtInducedSenAcceleration as Model).Document(tags, -1, indent + 1);
 
             //Document DM Demand
             tags.Add(new AutoDocumentation.Heading("Dry matter Demand", headingLevel + 1));
             tags.Add(new AutoDocumentation.Paragraph("Leaf calculates the DM demand from each cohort as a function of the potential size increment (DeltaPotentialArea) an specific leaf area bounds. " +
-                "Under non stressed conditions the demand for Non-storage DM is calculated as DeltaPotentialArea divided by the mean of SpecificLeafAreaMax and SpecificLeafAreaMin. " +
-                "Under stressed conditions it is calculated as DeltaWaterConstrainedArea divided by SpecificLeafAreaMin.", indent));
+                "Under non stressed conditions the demand for non-storage DM is calculated as <i>DeltaPotentialArea</i> divided by the mean of <i>SpecificLeafAreaMax</i> and <i>SpecificLeafAreaMin</i>. " +
+                "Under stressed conditions it is calculated as <i>DeltaWaterConstrainedArea</i> divided by <i>SpecificLeafAreaMin</i>.", indent));
             (CohortParameters.SpecificLeafAreaMax as Model).Document(tags, -1, indent + 1);
             (CohortParameters.SpecificLeafAreaMin as Model).Document(tags, -1, indent + 1);
-            tags.Add(new AutoDocumentation.Paragraph(" Non-storage DM Demand is then seperated into structural and metabolic DM demands using the Structural fraction:", indent));
+            tags.Add(new AutoDocumentation.Paragraph(" Non-storage DM Demand is then seperated into structural and metabolic DM demands using the <i>StructuralFraction</i>:", indent));
             (CohortParameters.StructuralFraction as Model).Document(tags, -1, indent + 1);
-            tags.Add(new AutoDocumentation.Paragraph(" The storage DM Demand is calculated from the sum of Metabolic and Structural DM (including todays demands) "+
-                "Multiplied by a StorageFraction:", indent));
+            tags.Add(new AutoDocumentation.Paragraph(" The storage DM demand is calculated from the sum of metabolic and structural DM (including todays demands) "+
+                "multiplied by a <i>NonStructuralFraction</i>:", indent));
             (CohortParameters.NonStructuralFraction as Model).Document(tags, -1, indent + 1);
 
             //Document N Demand
             tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
             tags.Add(new AutoDocumentation.Paragraph("Leaf calculates the N demand from each cohort as a function of the potential DM increment and N concentration bounds. " +
-                "Structural N demand = PotentialStructuralDMAllocation * MinimumNConc where:", indent));
+                "Structural N demand = <i>PotentialStructuralDMAllocation</i> * <i>MinimumNConc</i> where:", indent));
             (CohortParameters.MinimumNConc as Model).Document(tags, -1, indent + 1);
-            tags.Add(new AutoDocumentation.Paragraph("Metabolic N demand is calculated as PotentialMetabolicDMAllocation * (CriticalNConc - MinimumNConc) where:", indent));
+            tags.Add(new AutoDocumentation.Paragraph("Metabolic N demand is calculated as <i>PotentialMetabolicDMAllocation</i> * (<i>CriticalNConc</i> - <i>MinimumNConc</i>) where:", indent));
             (CohortParameters.CriticalNConc as Model).Document(tags, -1, indent + 1);
             tags.Add(new AutoDocumentation.Paragraph("Storage N demand is calculated as the sum of metabolic and structural wt (including todays demands) "+
-                " multiplied by LuxareNconc (MaximumNConc - CriticalNConc) less the amount of Storage N already present.  MaximumNConc is given by:", indent));
+                " multiplied by <i>LuxaryNconc</i> (<i>MaximumNConc</i> - <i>CriticalNConc</i>) less the amount of storage N already present.  <i>MaximumNConc</i> is given by:", indent));
             (CohortParameters.MaximumNConc as Model).Document(tags, -1, indent + 1);
 
             //Document DM supply
@@ -1586,9 +1590,9 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Paragraph("The most important DM supply from leaf is the photosynthetic fixiation supply.  Radiation interception is calculated from "+
                 "LAI using an extinction coefficient of:", indent));
             (ExtinctionCoeff as Model).Document(tags, -1, indent + 1);
-            (Photosynthesis as Model).Document(tags, -1, indent + 1);
-            tags.Add(new AutoDocumentation.Paragraph("In additon to Photosynthesis, the leaf can also supply DM by reallocation of senescing DM and retranslocation of storgage DM: "+
-                "Reallocation supply is a proportion of the Metabolic and Storage DM that would be senesced each day where the proportion is set by:", indent));
+            (Photosynthesis as Model).Document(tags, -1, indent);
+            tags.Add(new AutoDocumentation.Paragraph("In additon to photosynthesis, the leaf can also supply DM by reallocation of senescing DM and retranslocation of storgage DM: "+
+                "Reallocation supply is a proportion of the metabolic and non-structural DM that would be senesced each day where the proportion is set by:", indent));
             (CohortParameters.DMReallocationFactor as Model).Document(tags, -1, indent + 1);
             tags.Add(new AutoDocumentation.Paragraph("Retranslocation supply is calculated as a proportion of the amount of storage DM in each cohort where the proportion is set by :", indent));
             (CohortParameters.DMRetranslocationFactor as Model).Document(tags, -1, indent + 1);
