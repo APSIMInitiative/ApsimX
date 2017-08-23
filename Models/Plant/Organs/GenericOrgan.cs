@@ -143,7 +143,7 @@ namespace Models.PMF.Organs
         protected double StructuralDMDemand = 0.0;
 
         /// <summary>The non structural DM demand</summary>
-        protected double NonStructuralDMDemand = 0.0;
+        protected double StorageDMDemand = 0.0;
 
         /// <summary>The metabolic DM demand</summary>
         protected double MetabolicDMDemand = 0.0;
@@ -152,7 +152,7 @@ namespace Models.PMF.Organs
         protected double StructuralNDemand = 0.0;
 
         /// <summary>The non structural N demand</summary>
-        protected double NonStructuralNDemand = 0.0;
+        protected double StorageNDemand = 0.0;
 
         /// <summary>The metabolic N demand</summary>
         protected double MetabolicNDemand = 0.0;
@@ -179,7 +179,7 @@ namespace Models.PMF.Organs
             PotentialStructuralDMAllocation = 0.0;
             PotentialMetabolicDMAllocation = 0.0;
             StructuralDMDemand = 0.0;
-            NonStructuralDMDemand = 0.0;
+            StorageDMDemand = 0.0;
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
@@ -253,7 +253,7 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType
                 {
                     Structural = StructuralDMDemand,
-                    NonStructural = NonStructuralDMDemand,
+                    Storage = StorageDMDemand,
                     Metabolic = 0.0
                 };
             }
@@ -276,12 +276,12 @@ namespace Models.PMF.Organs
 
         /// <summary>Computes the amount of non structural DM demanded.</summary>
         /// <remarks>Assumes that StructuralFraction is always greater than zero</remarks>
-        public double DemandedDMNonStructural()
+        public double DemandedDMStorage()
         {
             if (DMConversionEfficiency.Value() > 0.0)
             {
                 double theoreticalMaximumDM = (StartLive.StructuralWt + StructuralDMDemand) / StructuralFraction.Value();
-                double baseAllocated = StartLive.StructuralWt + StartLive.NonStructuralWt + StructuralDMDemand;
+                double baseAllocated = StartLive.StructuralWt + StartLive.StorageWt + StructuralDMDemand;
                 double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency.Value();
                 return demandedDM;
             }
@@ -326,7 +326,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
-             double availableDM = Math.Max(0.0, StartLive.NonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
+             double availableDM = Math.Max(0.0, StartLive.StorageWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
@@ -336,7 +336,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of DM available for reallocation.</summary>
         public double AvailableDMReallocation()
         {
-            double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value() * DMReallocationFactor.Value();
+            double availableDM = StartLive.StorageWt * SenescenceRate.Value() * DMReallocationFactor.Value();
             if (availableDM < -BiomassToleranceValue)
                 throw new Exception("Negative DM reallocation value computed for " + Name);
 
@@ -353,7 +353,7 @@ namespace Models.PMF.Organs
             return new BiomassPoolType
             {
                 Structural = StructuralNDemand,
-                NonStructural = NonStructuralNDemand,
+                Storage = StorageNDemand,
                 Metabolic = MetabolicNDemand
             };
         }
@@ -371,7 +371,7 @@ namespace Models.PMF.Organs
 
             StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value());
             MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (CriticalNConc.Value() - MinimumNConc.Value()));
-            NonStructuralNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
+            StorageNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
         }
 
         /// <summary>Gets the N supply for this computation round.</summary>
@@ -395,7 +395,7 @@ namespace Models.PMF.Organs
         /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
         public double AvailableNRetranslocation()
         {
-                double labileN = Math.Max(0.0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value());
+                double labileN = Math.Max(0.0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
                 double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
@@ -406,7 +406,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the N amount available for reallocation.</summary>
         public double AvailableNReallocation()
         {
-            double availableN = StartLive.NonStructuralN * SenescenceRate.Value() * NReallocationFactor.Value();
+            double availableN = StartLive.StorageN * SenescenceRate.Value() * NReallocationFactor.Value();
             if (availableN < -BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
@@ -426,7 +426,7 @@ namespace Models.PMF.Organs
                 // get DM lost by respiration (growth respiration)
                 GrowthRespiration = 0.0;
                 GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency.Value())
-                                  + value.NonStructural * (1.0 - DMConversionEfficiency.Value())
+                                  + value.Storage * (1.0 - DMConversionEfficiency.Value())
                                   + value.Metabolic * (1.0 - DMConversionEfficiency.Value());
 
                 // allocate structural DM
@@ -434,22 +434,22 @@ namespace Models.PMF.Organs
                 Live.StructuralWt += Allocated.StructuralWt;
                 
                 // allocate non structural DM
-                if ((value.NonStructural * DMConversionEfficiency.Value() - DMDemand.NonStructural) > BiomassToleranceValue)
+                if ((value.Storage * DMConversionEfficiency.Value() - DMDemand.Storage) > BiomassToleranceValue)
                     throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
-                if (DMDemand.NonStructural > 0.0)
+                if (DMDemand.Storage > 0.0)
                 {
-                    Allocated.NonStructuralWt = value.NonStructural * DMConversionEfficiency.Value();
-                    Live.NonStructuralWt += Allocated.NonStructuralWt;
+                    Allocated.StorageWt = value.Storage * DMConversionEfficiency.Value();
+                    Live.StorageWt += Allocated.StorageWt;
                 }
 
                 // allocate metabolic DM
                 Allocated.MetabolicWt = value.Metabolic * DMConversionEfficiency.Value();
 
                 // Retranslocation
-                if (value.Retranslocation - StartLive.NonStructuralWt > BiomassToleranceValue)
+                if (value.Retranslocation - StartLive.StorageWt > BiomassToleranceValue)
                     throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
-                Live.NonStructuralWt -= value.Retranslocation;
-                Allocated.NonStructuralWt -= value.Retranslocation;
+                Live.StorageWt -= value.Retranslocation;
+                Allocated.StorageWt -= value.Retranslocation;
             }
         }
         /// <summary>Sets the n allocation.</summary>
@@ -459,24 +459,24 @@ namespace Models.PMF.Organs
             set
             {
                 Live.StructuralN += value.Structural;
-                Live.NonStructuralN += value.NonStructural;
+                Live.StorageN += value.Storage;
                 Live.MetabolicN += value.Metabolic;
 
                 Allocated.StructuralN += value.Structural;
-                Allocated.NonStructuralN += value.NonStructural;
+                Allocated.StorageN += value.Storage;
                 Allocated.MetabolicN += value.Metabolic;
 
                 // Retranslocation
-                if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.NonStructuralN - NRetranslocationSupply))
+                if (MathUtilities.IsGreaterThan(value.Retranslocation, StartLive.StorageN - NRetranslocationSupply))
                     throw new Exception("N retranslocation exceeds non structural nitrogen in organ: " + Name);
-                Live.NonStructuralN -= value.Retranslocation;
-                Allocated.NonStructuralN -= value.Retranslocation;
+                Live.StorageN -= value.Retranslocation;
+                Allocated.StorageN -= value.Retranslocation;
 
                 // Reallocation
-                if (MathUtilities.IsGreaterThan(value.Reallocation, StartLive.NonStructuralN))
+                if (MathUtilities.IsGreaterThan(value.Reallocation, StartLive.StorageN))
                     throw new Exception("N reallocation exceeds non structural nitrogen in organ: " + Name);
-                Live.NonStructuralN -= value.Reallocation;
-                Allocated.NonStructuralN -= value.Reallocation;
+                Live.StorageN -= value.Reallocation;
+                Allocated.StorageN -= value.Reallocation;
             }
         }
 
@@ -550,9 +550,9 @@ namespace Models.PMF.Organs
         {
             //Initialise biomass and nitrogen
             Live.StructuralWt = InitialWtFunction.Value();
-            Live.NonStructuralWt = 0.0;
+            Live.StorageWt = 0.0;
             Live.StructuralN = Live.StructuralWt * MinimumNConc.Value();
-            Live.NonStructuralN = (InitialWtFunction.Value() * MaximumNConc.Value()) - Live.StructuralN;
+            Live.StorageN = (InitialWtFunction.Value() * MaximumNConc.Value()) - Live.StructuralN;
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -582,7 +582,7 @@ namespace Models.PMF.Organs
         virtual public void DoDMDemandCalculations()
         {
             StructuralDMDemand = DemandedDMStructural();
-            NonStructuralDMDemand = DemandedDMNonStructural();
+            StorageDMDemand = DemandedDMStorage();
             //Note: Metabolic is assumed to be zero
         }
 
@@ -618,8 +618,8 @@ namespace Models.PMF.Organs
                 // Do maintenance respiration
                 MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
                 Live.MetabolicWt *= (1 - MaintenanceRespirationFunction.Value());
-                MaintenanceRespiration += Live.NonStructuralWt * MaintenanceRespirationFunction.Value();
-                Live.NonStructuralWt *= (1 - MaintenanceRespirationFunction.Value());
+                MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
+                Live.StorageWt *= (1 - MaintenanceRespirationFunction.Value());
             }
         }
 
@@ -682,7 +682,7 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand is the product of Total DM demand and a Minimum N concentration", indent));
             IModel MinN = Apsim.Child(this, "MinimumNConc");
             MinN.Document(tags, -1, indent);
-            tags.Add(new AutoDocumentation.Paragraph("The daily nonstructural N demand is the product of Total DM demand and a Maximum N concentration", indent));
+            tags.Add(new AutoDocumentation.Paragraph("The daily Storage N demand is the product of Total DM demand and a Maximum N concentration", indent));
             IModel MaxN = Apsim.Child(this, "MaximumNConc");
             MaxN.Document(tags, -1, indent);
             IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");

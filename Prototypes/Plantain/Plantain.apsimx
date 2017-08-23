@@ -3382,11 +3382,11 @@ namespace Models
 			Inflorescence_DMSupply = Inflorescence_DMSupplies.Fixation + Inflorescence_DMSupplies.Uptake + Inflorescence_DMSupplies.Reallocation + Inflorescence_DMSupplies.Retranslocation;
 			Root_DMSupply = Root_DMSupplies.Fixation + Root_DMSupplies.Uptake + Root_DMSupplies.Reallocation + Root_DMSupplies.Retranslocation;
 			Taproot_DMSupply = Taproot_DMSupplies.Fixation + Taproot_DMSupplies.Uptake + Taproot_DMSupplies.Reallocation + Taproot_DMSupplies.Retranslocation;
-			Leaf_DMDemand = Leaf_DMDemands.Structural + Leaf_DMDemands.NonStructural + Leaf_DMDemands.Metabolic;
-			Stem_DMDemand = Stem_DMDemands.Structural + Stem_DMDemands.NonStructural + Stem_DMDemands.Metabolic;
-			Inflorescence_DMDemand = Inflorescence_DMDemands.Structural + Inflorescence_DMDemands.NonStructural + Inflorescence_DMDemands.Metabolic;
-			Root_DMDemand = Root_DMDemands.Structural + Root_DMDemands.NonStructural + Root_DMDemands.Metabolic;
-			Taproot_DMDemand = Taproot_DMDemands.Structural + Taproot_DMDemands.NonStructural + Taproot_DMDemands.Metabolic;
+			Leaf_DMDemand = Leaf_DMDemands.Structural + Leaf_DMDemands.Storage + Leaf_DMDemands.Metabolic;
+			Stem_DMDemand = Stem_DMDemands.Structural + Stem_DMDemands.Storage + Stem_DMDemands.Metabolic;
+			Inflorescence_DMDemand = Inflorescence_DMDemands.Structural + Inflorescence_DMDemands.Storage + Inflorescence_DMDemands.Metabolic;
+			Root_DMDemand = Root_DMDemands.Structural + Root_DMDemands.Storage + Root_DMDemands.Metabolic;
+			Taproot_DMDemand = Taproot_DMDemands.Structural + Taproot_DMDemands.Storage + Taproot_DMDemands.Metabolic;
 			
 			Leaf_NSupply = Leaf_NSupplies.Fixation + Leaf_NSupplies.Uptake + Leaf_NSupplies.Reallocation + Leaf_NSupplies.Retranslocation;
 			Stem_NSupply = Stem_NSupplies.Fixation + Stem_NSupplies.Uptake + Stem_NSupplies.Reallocation + Stem_NSupplies.Retranslocation;
@@ -3394,11 +3394,11 @@ namespace Models
 			Taproot_NSupply = Taproot_NSupplies.Fixation + Taproot_NSupplies.Uptake + Taproot_NSupplies.Reallocation + Taproot_NSupplies.Retranslocation;
 			Root_NSupply = Root_NSupplies.Fixation + Root_NSupplies.Uptake + Root_NSupplies.Reallocation + Root_NSupplies.Retranslocation;
 
-			Leaf_NDemand = Leaf_NDemands.Structural + Leaf_NDemands.NonStructural + Leaf_NDemands.Metabolic;
-			Stem_NDemand = Stem_NDemands.Structural + Stem_NDemands.NonStructural + Stem_NDemands.Metabolic;
-			Inflorescence_NDemand = Inflorescence_NDemands.Structural + Inflorescence_NDemands.NonStructural + Inflorescence_NDemands.Metabolic;
-			Taproot_NDemand = Taproot_NDemands.Structural + Taproot_NDemands.NonStructural + Taproot_NDemands.Metabolic;
-			Root_NDemand = Root_NDemands.Structural + Root_NDemands.NonStructural + Root_NDemands.Metabolic;
+			Leaf_NDemand = Leaf_NDemands.Structural + Leaf_NDemands.Storage + Leaf_NDemands.Metabolic;
+			Stem_NDemand = Stem_NDemands.Structural + Stem_NDemands.Storage + Stem_NDemands.Metabolic;
+			Inflorescence_NDemand = Inflorescence_NDemands.Structural + Inflorescence_NDemands.Storage + Inflorescence_NDemands.Metabolic;
+			Taproot_NDemand = Taproot_NDemands.Structural + Taproot_NDemands.Storage + Taproot_NDemands.Metabolic;
+			Root_NDemand = Root_NDemands.Structural + Root_NDemands.Storage + Root_NDemands.Metabolic;
 
 			Leaf_NSupplyReallocation = Leaf_NSupplies.Reallocation;
 			Stem_NSupplyReallocation = Stem_NSupplies.Reallocation;
@@ -3622,40 +3622,40 @@ namespace Models
         <string>[Plantain].Root.WaterUptake</string>
         <string />
         <string>[Plantain].Leaf.Live.StructuralWt</string>
-        <string>[Plantain].Leaf.Live.NonStructuralWt</string>
+        <string>[Plantain].Leaf.Live.StorageWt</string>
         <string>[Plantain].Leaf.Live.MetabolicWt</string>
         <string>[Plantain].Leaf.Live.StructuralN</string>
-        <string>[Plantain].Leaf.Live.NonStructuralN</string>
+        <string>[Plantain].Leaf.Live.StorageN</string>
         <string>[Plantain].Leaf.Live.MetabolicN</string>
         <string />
         <string>[Plantain].Leaf.Dead.StructuralWt</string>
-        <string>[Plantain].Leaf.Dead.NonStructuralWt</string>
+        <string>[Plantain].Leaf.Dead.StorageWt</string>
         <string>[Plantain].Leaf.Dead.MetabolicWt</string>
         <string>[Plantain].Leaf.Dead.StructuralN</string>
-        <string>[Plantain].Leaf.Dead.NonStructuralN</string>
+        <string>[Plantain].Leaf.Dead.StorageN</string>
         <string>[Plantain].Leaf.Dead.MetabolicN</string>
         <string />
         <string>[Plantain].Stem.Live.StructuralWt</string>
-        <string>[Plantain].Stem.Live.NonStructuralWt</string>
+        <string>[Plantain].Stem.Live.StorageWt</string>
         <string>[Plantain].Stem.Live.MetabolicWt</string>
         <string>[Plantain].Stem.Live.StructuralN</string>
-        <string>[Plantain].Stem.Live.NonStructuralN</string>
+        <string>[Plantain].Stem.Live.StorageN</string>
         <string>[Plantain].Inflorescence.Live.StructuralWt</string>
-        <string>[Plantain].Inflorescence.Live.NonStructuralWt</string>
+        <string>[Plantain].Inflorescence.Live.StorageWt</string>
         <string>[Plantain].Inflorescence.Live.StructuralN</string>
-        <string>[Plantain].Inflorescence.Live.NonStructuralN</string>
+        <string>[Plantain].Inflorescence.Live.StorageN</string>
         <string>[Plantain].Root.Live.StructuralWt</string>
-        <string>[Plantain].Root.Live.NonStructuralWt</string>
+        <string>[Plantain].Root.Live.StorageWt</string>
         <string>[Plantain].Root.Live.StructuralN</string>
-        <string>[Plantain].Root.Live.NonStructuralN</string>
+        <string>[Plantain].Root.Live.StorageN</string>
         <string>[Plantain].Taproot.Live.StructuralWt</string>
-        <string>[Plantain].Taproot.Live.NonStructuralWt</string>
+        <string>[Plantain].Taproot.Live.StorageWt</string>
         <string>[Plantain].Taproot.Live.StructuralN</string>
-        <string>[Plantain].Taproot.Live.NonStructuralN</string>
+        <string>[Plantain].Taproot.Live.StorageN</string>
         <string>[Plantain].Leaf.Live.StructuralNConc</string>
-        <string>[Plantain].Leaf.Live.NonStructuralNConc</string>
+        <string>[Plantain].Leaf.Live.StorageNConc</string>
         <string>[Plantain].Root.Live.StructuralNConc</string>
-        <string>[Plantain].Root.Live.NonStructuralNConc</string>
+        <string>[Plantain].Root.Live.StorageNConc</string>
         <string />
         <string>[Plantain].Leaf.DMDemandFunction.PartitionFraction.Value()</string>
         <string>[Plantain].Stem.DMDemandFunction.PartitionFraction.Value()</string>
@@ -7832,7 +7832,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -7847,7 +7847,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -7898,7 +7898,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -7913,7 +7913,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -7964,7 +7964,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -7979,7 +7979,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8030,7 +8030,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -8045,7 +8045,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -8096,7 +8096,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -8111,7 +8111,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9891,7 +9891,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -9906,7 +9906,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -9979,7 +9979,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -9994,7 +9994,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10045,7 +10045,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -10060,7 +10060,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10111,7 +10111,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -10126,7 +10126,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -10177,7 +10177,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -10192,7 +10192,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -15849,7 +15849,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -15864,7 +15864,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -15915,7 +15915,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -15930,7 +15930,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -15981,7 +15981,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -15996,7 +15996,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -16047,7 +16047,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -16062,7 +16062,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -16113,7 +16113,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -16128,7 +16128,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -17908,7 +17908,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -17923,7 +17923,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -17996,7 +17996,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -18011,7 +18011,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -18062,7 +18062,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -18077,7 +18077,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -18128,7 +18128,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -18143,7 +18143,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -18194,7 +18194,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -18209,7 +18209,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -23993,7 +23993,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -24008,7 +24008,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -24059,7 +24059,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -24074,7 +24074,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -24125,7 +24125,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -24140,7 +24140,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -24191,7 +24191,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -24206,7 +24206,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -24257,7 +24257,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -24272,7 +24272,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26052,7 +26052,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -26067,7 +26067,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26140,7 +26140,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -26155,7 +26155,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26206,7 +26206,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -26221,7 +26221,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26272,7 +26272,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -26287,7 +26287,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -26338,7 +26338,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -26353,7 +26353,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30735,7 +30735,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -30750,7 +30750,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30801,7 +30801,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -30816,7 +30816,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30867,7 +30867,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -30882,7 +30882,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30933,7 +30933,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -30948,7 +30948,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -30999,7 +30999,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -31014,7 +31014,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralWt</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageWt</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -32794,7 +32794,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -32809,7 +32809,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Leaf.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Leaf.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -32882,7 +32882,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -32897,7 +32897,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Stem.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Stem.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -32948,7 +32948,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -32963,7 +32963,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Root.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Root.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -33014,7 +33014,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -33029,7 +33029,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Taproot.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Taproot.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -33080,7 +33080,7 @@ namespace Models
                 <CumulativeX>false</CumulativeX>
               </Series>
               <Series>
-                <Name>NonStructural</Name>
+                <Name>Storage</Name>
                 <IncludeInDocumentation>false</IncludeInDocumentation>
                 <Type>Scatter</Type>
                 <XAxis>Bottom</XAxis>
@@ -33095,7 +33095,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Date</XFieldName>
-                <YFieldName>Plantain.Inflorescence.Live.NonStructuralN</YFieldName>
+                <YFieldName>Plantain.Inflorescence.Live.StorageN</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>

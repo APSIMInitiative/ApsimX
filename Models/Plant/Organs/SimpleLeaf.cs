@@ -24,14 +24,14 @@ namespace Models.PMF.Organs
     /// 
     /// **Nitrogen Demands**
     /// 
-    /// The daily nonstructural N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
+    /// The daily Storage N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
     /// The daily structural N demand is the product of Total DM demand and a Minimum N concentration. 
     /// The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
     /// 
     /// **Nitrogen Supplies**
     /// 
     /// As the organ senesces a fraction of senesced N is made available to the arbitrator as NReallocationSupply.
-    /// A fraction of nonstructural N is made available to the arbitrator as NRetranslocationSupply
+    /// A fraction of Storage N is made available to the arbitrator as NRetranslocationSupply
     /// 
     /// **Biomass Senescence and Detachment**
     /// 

@@ -224,7 +224,7 @@ namespace Models.PMF.Organs
             public IFunction DroughtInducedSenAcceleration = null;
             /// <summary>The non structural fraction</summary>
             [Link]
-            public IFunction NonStructuralFraction = null;
+            public IFunction StorageFraction = null;
             /// <summary>The cell division stress</summary>
             [Link]
             public IFunction CellDivisionStress = null;
@@ -719,14 +719,14 @@ namespace Models.PMF.Organs
         private BiomassPoolType GetDMDemand()
         {
             double StructuralDemand = 0.0;
-            double NonStructuralDemand = 0.0;
+            double StorageDemand = 0.0;
             double MetabolicDemand = 0.0;
 
             DMConversionEfficiency = DMConversionEfficiencyFunction.Value();
             if (DMDemandFunction != null)
             {
                 StructuralDemand = DMDemandFunction.Value() * StructuralFraction.Value();
-                NonStructuralDemand = DMDemandFunction.Value() * (1 - StructuralFraction.Value());
+                StorageDemand = DMDemandFunction.Value() * (1 - StructuralFraction.Value());
             }
             else
             {
@@ -734,10 +734,10 @@ namespace Models.PMF.Organs
                 {
                     StructuralDemand += L.StructuralDMDemand / DMConversionEfficiency;
                     MetabolicDemand += L.MetabolicDMDemand / DMConversionEfficiency;
-                    NonStructuralDemand += L.NonStructuralDMDemand / DMConversionEfficiency;
+                    StorageDemand += L.StorageDMDemand / DMConversionEfficiency;
                 }
             }
-            return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, NonStructural = NonStructuralDemand };
+            return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, Storage = StorageDemand };
         }
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
@@ -1047,11 +1047,11 @@ namespace Models.PMF.Organs
                 // get DM lost by respiration (growth respiration)
                 GrowthRespiration = 0.0;
                 GrowthRespiration += value.Structural * (1.0 - DMConversionEfficiency)
-                                  + value.NonStructural * (1.0 - DMConversionEfficiency)
+                                  + value.Storage * (1.0 - DMConversionEfficiency)
                                   + value.Metabolic * (1.0 - DMConversionEfficiency);
 
                 double[] StructuralDMAllocationCohort = new double[Leaves.Count + 2];
-                double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
+                double StartWt = Live.StructuralWt + Live.MetabolicWt + Live.StorageWt;
                 //Structural DM allocation
                 if (DMDemand.Structural <= 0 && value.Structural > 0.000000000001)
                     throw new Exception("Invalid allocation of DM in Leaf");
@@ -1103,23 +1103,23 @@ namespace Models.PMF.Organs
                 }
 
                 // excess allocation
-                double[] NonStructuralDMAllocationCohort = new double[Leaves.Count + 2];
+                double[] StorageDMAllocationCohort = new double[Leaves.Count + 2];
                 double TotalSinkCapacity = 0;
                 foreach (LeafCohort L in Leaves)
-                    TotalSinkCapacity += L.NonStructuralDMDemand;
-                if (value.NonStructural * DMConversionEfficiency > TotalSinkCapacity)
+                    TotalSinkCapacity += L.StorageDMDemand;
+                if (value.Storage * DMConversionEfficiency > TotalSinkCapacity)
                 //Fixme, this exception needs to be turned on again
                 { }
                 //throw new Exception("Allocating more excess DM to Leaves then they are capable of storing");
                 if (TotalSinkCapacity > 0.0)
                 {
-                    double SinkFraction = (value.NonStructural * DMConversionEfficiency) / TotalSinkCapacity;
+                    double SinkFraction = (value.Storage * DMConversionEfficiency) / TotalSinkCapacity;
                     int i = 0;
                     foreach (LeafCohort L in Leaves)
                     {
                         i++;
-                        double allocation = Math.Min(L.NonStructuralDMDemand * SinkFraction, value.NonStructural * DMConversionEfficiency);
-                        NonStructuralDMAllocationCohort[i] = allocation;
+                        double allocation = Math.Min(L.StorageDMDemand * SinkFraction, value.Storage * DMConversionEfficiency);
+                        StorageDMAllocationCohort[i] = allocation;
                     }
                 }
 
@@ -1173,14 +1173,14 @@ namespace Models.PMF.Organs
                     {
                         Structural = StructuralDMAllocationCohort[a],
                         Metabolic = MetabolicDMAllocationCohort[a],
-                        NonStructural = NonStructuralDMAllocationCohort[a],
+                        Storage = StorageDMAllocationCohort[a],
                         Retranslocation = DMRetranslocationCohort[a],
                         Reallocation = DMReAllocationCohort[a],
                     };
                 }
 
-                double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.NonStructuralWt;
-                double CheckValue = StartWt + value.Structural * DMConversionEfficiency + value.Metabolic * DMConversionEfficiency + value.NonStructural * DMConversionEfficiency - value.Reallocation - value.Retranslocation - value.Respired;
+                double EndWt = Live.StructuralWt + Live.MetabolicWt + Live.StorageWt;
+                double CheckValue = StartWt + value.Structural * DMConversionEfficiency + value.Metabolic * DMConversionEfficiency + value.Storage * DMConversionEfficiency - value.Reallocation - value.Retranslocation - value.Respired;
                 double ExtentOfError = Math.Abs(EndWt - CheckValue);
                 double FloatingPointError = 0.00000001;
                 if (ExtentOfError > FloatingPointError)
@@ -1195,14 +1195,14 @@ namespace Models.PMF.Organs
             {
                 double StructuralDemand = 0.0;
                 double MetabolicDemand = 0.0;
-                double NonStructuralDemand = 0.0;
+                double StorageDemand = 0.0;
                 foreach (LeafCohort L in Leaves)
                 {
                     StructuralDemand += L.StructuralNDemand;
                     MetabolicDemand += L.MetabolicNDemand;
-                    NonStructuralDemand += L.NonStructuralNDemand;
+                    StorageDemand += L.StorageNDemand;
                 }
-                return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, NonStructural = NonStructuralDemand };
+                return new BiomassPoolType { Structural = StructuralDemand, Metabolic = MetabolicDemand, Storage = StorageDemand };
             }
         }
 
@@ -1215,24 +1215,24 @@ namespace Models.PMF.Organs
                 if (NDemand.Structural == 0 && value.Structural > 0) //FIXME this needs to be seperated into compoents
                     throw new Exception("Invalid allocation of N");
 
-                double StartN = Live.StructuralN + Live.MetabolicN + Live.NonStructuralN;
+                double StartN = Live.StructuralN + Live.MetabolicN + Live.StorageN;
 
                 double[] StructuralNAllocationCohort = new double[Leaves.Count + 2];
                 double[] MetabolicNAllocationCohort = new double[Leaves.Count + 2];
-                double[] NonStructuralNAllocationCohort = new double[Leaves.Count + 2];
+                double[] StorageNAllocationCohort = new double[Leaves.Count + 2];
                 double[] NReallocationCohort = new double[Leaves.Count + 2];
                 double[] NRetranslocationCohort = new double[Leaves.Count + 2];
 
-                if (value.Structural + value.Metabolic + value.NonStructural > 0.0)
+                if (value.Structural + value.Metabolic + value.Storage > 0.0)
                 {
                     //setup allocation variables
                     double[] CohortNAllocation = new double[Leaves.Count + 2];
                     double[] StructuralNDemand = new double[Leaves.Count + 2];
                     double[] MetabolicNDemand = new double[Leaves.Count + 2];
-                    double[] NonStructuralNDemand = new double[Leaves.Count + 2];
+                    double[] StorageNDemand = new double[Leaves.Count + 2];
                     double TotalStructuralNDemand = 0;
                     double TotalMetabolicNDemand = 0;
-                    double TotalNonStructuralNDemand = 0;
+                    double TotalStorageNDemand = 0;
 
                     int i = 0;
                     foreach (LeafCohort L in Leaves)
@@ -1243,12 +1243,12 @@ namespace Models.PMF.Organs
                         TotalStructuralNDemand += L.StructuralNDemand;
                         MetabolicNDemand[i] = L.MetabolicNDemand;
                         TotalMetabolicNDemand += L.MetabolicNDemand;
-                        NonStructuralNDemand[i] = L.NonStructuralNDemand;
-                        TotalNonStructuralNDemand += L.NonStructuralNDemand;
+                        StorageNDemand[i] = L.StorageNDemand;
+                        TotalStorageNDemand += L.StorageNDemand;
                     }
                     double NSupplyValue = value.Structural;
 
-                    // first make sure each cohort gets the structural N requirement for growth (includes MinNconc for structural growth and MinNconc for nonstructural growth)
+                    // first make sure each cohort gets the structural N requirement for growth (includes MinNconc for structural growth and MinNconc for Storage growth)
                     if (NSupplyValue > 0 && TotalStructuralNDemand > 0)
                     {
                         i = 0;
@@ -1272,14 +1272,14 @@ namespace Models.PMF.Organs
                         }
                     }
                     // then allocate excess N relative to leaves N sink capacity
-                    NSupplyValue = value.NonStructural;
-                    if (NSupplyValue > 0 && TotalNonStructuralNDemand > 0)
+                    NSupplyValue = value.Storage;
+                    if (NSupplyValue > 0 && TotalStorageNDemand > 0)
                     {
                         i = 0;
                         foreach (LeafCohort L in Leaves)
                         {
                             i++;
-                            NonStructuralNAllocationCohort[i] += Math.Min(NonStructuralNDemand[i], NSupplyValue * (NonStructuralNDemand[i] / TotalNonStructuralNDemand));
+                            StorageNAllocationCohort[i] += Math.Min(StorageNDemand[i], NSupplyValue * (StorageNDemand[i] / TotalStorageNDemand));
                         }
                     }
                 }
@@ -1333,14 +1333,14 @@ namespace Models.PMF.Organs
                     {
                         Structural = StructuralNAllocationCohort[a],
                         Metabolic = MetabolicNAllocationCohort[a],
-                        NonStructural = NonStructuralNAllocationCohort[a],
+                        Storage = StorageNAllocationCohort[a],
                         Retranslocation = NRetranslocationCohort[a],
                         Reallocation = NReallocationCohort[a],
                     };
                 }
 
-                double endN = Live.StructuralN + Live.MetabolicN + Live.NonStructuralN;
-                double checkValue = StartN + value.Structural + value.Metabolic + value.NonStructural -
+                double endN = Live.StructuralN + Live.MetabolicN + Live.StorageN;
+                double checkValue = StartN + value.Structural + value.Metabolic + value.Storage -
                                     value.Reallocation - value.Retranslocation - value.Respired;
                 double extentOfError = Math.Abs(endN - checkValue);
                 if (extentOfError > 0.00000001)

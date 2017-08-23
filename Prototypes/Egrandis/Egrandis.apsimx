@@ -1101,7 +1101,7 @@ Ayaz eta 2004 presented a RUE of 1.6 g/MJ PAR during non-limiting temperature co
         <string>Eucalyptus.Root.MaximumNConc.Value()</string>
         <string>Eucalyptus.TotalLive.Wt</string>
         <string>Eucalyptus.Stem.Live.StructuralWt</string>
-        <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
+        <string>Eucalyptus.Stem.Live.StorageWt</string>
         <string>Eucalyptus.Leaf.SpecificArea</string>
         <string>Eucalyptus.TotalDead.Wt</string>
         <string>[Soil].SoilWater.SWmm</string>
@@ -4543,7 +4543,7 @@ namespace Models
                 <string>Eucalyptus.Root.MaximumNConc.Value()</string>
                 <string>Eucalyptus.TotalLive.Wt</string>
                 <string>Eucalyptus.Stem.Live.StructuralWt</string>
-                <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
+                <string>Eucalyptus.Stem.Live.StorageWt</string>
                 <string>Eucalyptus.Leaf.SpecificArea</string>
                 <string>Eucalyptus.TotalDead.Wt</string>
                 <string>[Soil].SoilWater.SWmm</string>
@@ -5302,7 +5302,7 @@ namespace Models
               <string>Eucalyptus.Root.MaximumNConc.Value()</string>
               <string>Eucalyptus.TotalLive.Wt</string>
               <string>Eucalyptus.Stem.Live.StructuralWt</string>
-              <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
+              <string>Eucalyptus.Stem.Live.StorageWt</string>
               <string>Eucalyptus.Leaf.SpecificArea</string>
               <string>Eucalyptus.TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
@@ -6293,7 +6293,7 @@ namespace Models
               <string>Eucalyptus.Root.MaximumNConc.Value()</string>
               <string>Eucalyptus.TotalLive.Wt</string>
               <string>Eucalyptus.Stem.Live.StructuralWt</string>
-              <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
+              <string>Eucalyptus.Stem.Live.StorageWt</string>
               <string>Eucalyptus.Leaf.SpecificArea</string>
               <string>Eucalyptus.TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
@@ -8695,7 +8695,7 @@ namespace Models
             <string>Eucalyptus.Root.MaximumNConc.Value()</string>
             <string>Eucalyptus.TotalLive.Wt</string>
             <string>Eucalyptus.Stem.Live.StructuralWt</string>
-            <string>Eucalyptus.Stem.Live.NonStructuralWt</string>
+            <string>Eucalyptus.Stem.Live.StorageWt</string>
             <string>Eucalyptus.Leaf.SpecificArea</string>
             <string>Eucalyptus.TotalDead.Wt</string>
             <string>[Soil].SoilWater.SWmm</string>

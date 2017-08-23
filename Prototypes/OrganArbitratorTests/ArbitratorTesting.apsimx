@@ -1862,7 +1862,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
@@ -2435,7 +2435,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>PercentWSC</Name>
           <VariableReference>
             <Name>WSC</Name>
-            <VariableName>[Stem].Live.NonStructuralWt</VariableName>
+            <VariableName>[Stem].Live.StorageWt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>StemWt</Name>

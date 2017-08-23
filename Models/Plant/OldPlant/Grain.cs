@@ -236,17 +236,17 @@ namespace Models.PMF.OldPlant
         /// <param name="DMDemandDifferentialTotal">The dm demand differential total.</param>
         public override void DoDmRetranslocate(double DMAvail, double DMDemandDifferentialTotal)
         {
-            Retranslocation.NonStructuralWt = DMAvail * MathUtilities.Divide(DMDemandDifferential, DMDemandDifferentialTotal, 0.0);
-            Util.Debug("meal.Retranslocation=%f", Retranslocation.NonStructuralWt);
+            Retranslocation.StorageWt = DMAvail * MathUtilities.Divide(DMDemandDifferential, DMDemandDifferentialTotal, 0.0);
+            Util.Debug("meal.Retranslocation=%f", Retranslocation.StorageWt);
         }
         /// <summary>Gives the dm green.</summary>
         /// <param name="Delta">The delta.</param>
         public override void GiveDmGreen(double Delta)
         {
             Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value();
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value());
+            Growth.StorageWt += Delta * (1.0 - GrowthStructuralFractionStage.Value());
             Util.Debug("meal.Growth.StructuralWt=%f", Growth.StructuralWt);
-            Util.Debug("meal.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
+            Util.Debug("meal.Growth.StorageWt=%f", Growth.StorageWt);
         }
         /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
@@ -254,9 +254,9 @@ namespace Models.PMF.OldPlant
             double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value(), 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
-            Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
+            Senescing.StorageWt = (Live.StorageWt + Growth.StorageWt + Retranslocation.StorageWt) * fraction_senescing;
             Util.Debug("meal.Senescing.StructuralWt=%f", Senescing.StructuralWt);
-            Util.Debug("meal.Senescing.NonStructuralWt=%f", Senescing.NonStructuralWt);
+            Util.Debug("meal.Senescing.StorageWt=%f", Senescing.StorageWt);
 
         }
         /// <summary>Does the detachment.</summary>

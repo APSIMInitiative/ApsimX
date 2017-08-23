@@ -643,9 +643,9 @@
             <FixedValue>0.8</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <Constant>
-              <Name>NonStructuralFraction</Name>
+              <Name>StorageFraction</Name>
               <FixedValue>0.2</FixedValue>
             </Constant>
             <FixedValue>0.2</FixedValue>

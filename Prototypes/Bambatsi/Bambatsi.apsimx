@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -815,30 +815,33 @@ But their data suggests a value of 0.3]]></MemoText>
             <FractionDeadToResidue>0</FractionDeadToResidue>
           </OrganBiomassRemovalType>
         </BiomassRemoval>
-        <LinearInterpolationFunction>
-          <Name>PartitionFraction</Name>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <X>
-              <double>0</double>
-              <double>1</double>
-              <double>1.1</double>
-              <double>5</double>
-            </X>
-            <Y>
-              <double>0.5</double>
-              <double>0.5</double>
-              <double>0.2</double>
-              <double>0.2</double>
-            </Y>
-          </XYPairs>
-          <XProperty>[Bambatsi].Age.Value()</XProperty>
-        </LinearInterpolationFunction>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
         <ZoneNamesToGrowRootsIn />
         <ZoneRootDepths />
         <ZoneInitialDM />
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <LinearInterpolationFunction>
+            <Name>PartitionFraction</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <X>
+                <double>0</double>
+                <double>1</double>
+                <double>1.1</double>
+                <double>5</double>
+              </X>
+              <Y>
+                <double>0.5</double>
+                <double>0.5</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </Y>
+            </XYPairs>
+            <XProperty>[Bambatsi].Age.Value()</XProperty>
+          </LinearInterpolationFunction>
+        </PartitionFractionDemandFunction>
       </Root>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -963,6 +966,14 @@ But their data suggests a value of 0.3]]></MemoText>
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <FixedValue>0.0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
       </GenericOrgan>
       <Cultivar>
         <Name>Bambatsi</Name>
@@ -1788,7 +1799,7 @@ But their data suggests a value of 0.3]]></MemoText>
               <string>Bambatsi.Root.MaximumNConc.Value()</string>
               <string>Bambatsi.TotalLive.Wt</string>
               <string>Bambatsi.Stem.Live.StructuralWt</string>
-              <string>Bambatsi.Stem.Live.NonStructuralWt</string>
+              <string>Bambatsi.Stem.Live.StorageWt</string>
               <string>Bambatsi.Leaf.SpecificArea</string>
               <string>Bambatsi.TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
@@ -3321,7 +3332,7 @@ namespace Models
                 <string>Bambatsi.Root.MaximumNConc.Value()</string>
                 <string>Bambatsi.TotalLive.Wt</string>
                 <string>Bambatsi.Stem.Live.StructuralWt</string>
-                <string>Bambatsi.Stem.Live.NonStructuralWt</string>
+                <string>Bambatsi.Stem.Live.StorageWt</string>
                 <string>Bambatsi.Leaf.SpecificArea</string>
                 <string>Bambatsi.TotalDead.Wt</string>
                 <string>[Soil].SoilWater.SWmm</string>
@@ -5760,7 +5771,7 @@ namespace Models
               <string>Bambatsi.Root.MaximumNConc.Value()</string>
               <string>Bambatsi.TotalLive.Wt</string>
               <string>Bambatsi.Stem.Live.StructuralWt</string>
-              <string>Bambatsi.Stem.Live.NonStructuralWt</string>
+              <string>Bambatsi.Stem.Live.StorageWt</string>
               <string>Bambatsi.Leaf.SpecificArea</string>
               <string>Bambatsi.TotalDead.Wt</string>
               <string>[Soil].SoilWater.SWmm</string>
