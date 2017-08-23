@@ -899,10 +899,10 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
       </Root>
       <Leaf>
         <Name>Leaf</Name>
-        <ApexStandard>
-          <Name>ApexStandard</Name>
+        <ApexTiller>
+          <Name>Apex</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </ApexStandard>
+        </ApexTiller>
         <VariableReference>
           <Name>ThermalTime</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -37869,10 +37869,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
               </OrganBiomassRemovalType>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </BiomassRemoval>
-            <ApexStandard>
-              <Name>ApexStandard</Name>
+            <ApexTiller>
+              <Name>Apex</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-            </ApexStandard>
+            </ApexTiller>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <GrowthRespiration>0</GrowthRespiration>
             <MaintenanceRespiration>0</MaintenanceRespiration>
