@@ -340,7 +340,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
               <VariableReference>
                 <Name>Phyllochron</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                <VariableName>[Structure].Phyllochron.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>LeafTipsPerPrimordia</Name>
@@ -356,7 +356,7 @@ Though tillering is common in some maize varieties under certain agronomic condi
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <PhaseLookup>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <PhaseLookupValue>
             <Name>Phyllochron</Name>
             <LinearInterpolationFunction>
@@ -1256,7 +1256,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
               <VariableReference>
                 <Name>FinalLeafNumber</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+                <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>RelativePositionOfLargestLeaf</Name>
@@ -1288,7 +1288,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value()</XProperty>
+              <XProperty>[Structure].FinalLeafNumber.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>Breadth</Name>
@@ -1311,7 +1311,7 @@ Individual leaf size is described using a bell-shaped curve, the parameters of w
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Structure].MainStemFinalNodeNumber.Value()</XProperty>
+              <XProperty>[Structure].FinalLeafNumber.Value()</XProperty>
             </LinearInterpolationFunction>
             <Constant>
               <Name>Skewness</Name>
@@ -3078,8 +3078,8 @@ VShort duration variety released in New Zealand by Pioneer
         <Command>[Phenology].Juvenile.Target.FixedValue = 150</Command>
         <Command>[Phenology].GrainFilling.Target.FixedValue = 450</Command>
         <Command>[Phenology].FloweringToGrainFilling.Target.FixedValue = 170</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
-        <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
+        <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11</Command>
+        <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70</Command>
         <Command>[Rachis].DMDemandFunction.MaximumOrganWt.FixedValue = 18</Command>
         <Command>[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6</Command>
         <Command>[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 1300</Command>
@@ -3254,7 +3254,7 @@ The model consists of:
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.BasePhyllochron.Value()</VariableName>
             </VariableReference>
             <AddFunction>
               <Name>PhotoPeriodResponse</Name>
@@ -3601,7 +3601,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                         <VariableReference>
                           <Name>Phyllochron</Name>
                           <IncludeInDocumentation>true</IncludeInDocumentation>
-                          <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                          <VariableName>[Structure].Phyllochron.Value()</VariableName>
                         </VariableReference>
                         <IncludeInDocumentation>true</IncludeInDocumentation>
                       </DivideFunction>
@@ -3698,7 +3698,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <LinearInterpolationFunction>
             <Name>LeafStageFactor</Name>
             <XYPairs>
@@ -3737,7 +3737,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
         <VariableReference>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Phenology].FinalLeafNumber.Value()</VariableName>
         </VariableReference>
@@ -3969,7 +3969,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableReference>
             <Name>Phyllochron</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Structure].Phyllochron.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
@@ -4765,7 +4765,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableReference>
             <Name>GrowthDuration</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Structure].Phyllochron.Value()</VariableName>
           </VariableReference>
           <PhaseLookup>
             <Name>LagDuration</Name>
@@ -4781,7 +4781,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <VariableReference>
                   <Name>Phyllochron</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                  <VariableName>[Structure].Phyllochron.Value()</VariableName>
                 </VariableReference>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </MultiplyFunction>
@@ -4812,7 +4812,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>

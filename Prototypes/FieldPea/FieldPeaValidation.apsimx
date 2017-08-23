@@ -123,7 +123,7 @@
             </VariableReference>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <VariableReference>
@@ -227,7 +227,7 @@
           <FixedValue>0</FixedValue>
         </Constant>
         <Constant>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <FixedValue>40</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
@@ -312,7 +312,7 @@
           <FixedValue>0</FixedValue>
         </Constant>
         <PhaseLookup>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <PhaseLookupValue>
             <Name>Vegetative</Name>
             <Constant>

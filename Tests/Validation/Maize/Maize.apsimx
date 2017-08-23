@@ -27414,7 +27414,7 @@ namespace Models
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value()</string>
+                <string>[Maize].Structure.Phyllochron.Value()</string>
                 <string>[Maize].Structure.Height</string>
                 <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
@@ -28372,7 +28372,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value()</YFieldName>
+                <YFieldName>Maize.Structure.Phyllochron.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -29071,7 +29071,7 @@ namespace Models
                 <LineThickness>Normal</LineThickness>
                 <TableName>Report</TableName>
                 <XFieldName>Maize.Structure.LeafTipsAppeared</XFieldName>
-                <YFieldName>Maize.Structure.MainStemNodeAppearanceRate.Value()</YFieldName>
+                <YFieldName>Maize.Structure.Phyllochron.Value()</YFieldName>
                 <ShowInLegend>true</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -35802,7 +35802,7 @@ namespace Models
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value()</string>
+                <string>[Maize].Structure.Phyllochron.Value()</string>
                 <string>[Maize].Structure.Height</string>
                 <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
@@ -36699,7 +36699,7 @@ namespace Models
                 <string>[Maize].Leaf.CohortParameters.GrowthDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.LagDuration.Value()</string>
                 <string>[Maize].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Maize].Structure.MainStemNodeAppearanceRate.Value()</string>
+                <string>[Maize].Structure.Phyllochron.Value()</string>
                 <string>[Maize].Structure.Height</string>
                 <string>[Maize].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Maize].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>

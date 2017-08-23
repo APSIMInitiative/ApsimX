@@ -672,7 +672,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <Memo>
             <Name>Rational</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1013,7 +1013,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableReference>
             <Name>Phyllochron</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Structure].Phyllochron.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
@@ -1026,7 +1026,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableReference>
               <Name>FinalLeafNumber</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+              <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>Intercept</Name>
@@ -1111,7 +1111,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <MinimumFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1247,7 +1247,7 @@ TSLN = FLN*0.995 - 1.95 ]]></MemoText>
               <VariableReference>
                 <Name>FLN</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+                <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>PS</Name>
@@ -2138,7 +2138,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -2151,7 +2151,7 @@ N conc values are from Zhao et al 2009
                 <VariableReference>
                   <Name>Phyllochron</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                  <VariableName>[Structure].Phyllochron.Value()</VariableName>
                 </VariableReference>
                 <LinearInterpolationFunction>
                   <Name>AgeFactor</Name>
@@ -2248,7 +2248,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>AgeFactor</Name>
@@ -2348,7 +2348,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>LinearInterpolationFunction</Name>
@@ -3738,8 +3738,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].Structure.HaunStage.Value()</string>
         <string>[Oats].Structure.Height</string>
         <string>[Oats].Structure.LeafTipsAppeared</string>
-        <string>[Oats].Structure.MainStemFinalNodeNumber.Value()</string>
-        <string>[Oats].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+        <string>[Oats].Structure.FinalLeafNumber.Value()</string>
+        <string>[Oats].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
         <string>[Oats].Structure.MainStemPopn</string>
         <string>[Oats].Structure.MeanTillerGrowthRate.Value()</string>
         <string>[Oats].Structure.TotalStemPopn</string>
@@ -3767,7 +3767,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Oats].Structure.LeafTipsAppeared</string>
-        <string>[Oats].Structure.MainStemFinalNodeNumber</string>
+        <string>[Oats].Structure.FinalLeafNumber</string>
         <string>[Oats].Phenology.FlagLeafDAS</string>
         <string>[Oats].Phenology.FloweringDAS</string>
         <string>[Oats].Phenology.MaturityDAS</string>
@@ -4102,8 +4102,8 @@ Simulation results for the combined datasets from the various countries are show
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>PredictedObserved</TableName>
-          <XFieldName>Predicted.Oats.Structure.MainStemFinalNodeNumber</XFieldName>
-          <YFieldName>Observed.Oats.Structure.MainStemFinalNodeNumber</YFieldName>
+          <XFieldName>Predicted.Oats.Structure.FinalLeafNumber</XFieldName>
+          <YFieldName>Observed.Oats.Structure.FinalLeafNumber</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -5483,7 +5483,7 @@ namespace Models
                   <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
                   <string>[0ats].Arbitrator.FN</string>
                   <string>[0ats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[Oats].Structure.Phyllochron</string>
                   <string>[0ats].Leaf.CohortMaxSize</string>
                   <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
                   <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
@@ -10280,7 +10280,7 @@ namespace Models
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Oats].Structure.LeafTipsAppeared</string>
-                  <string>[Oats].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Oats].Structure.FinalLeafNumber</string>
                   <string>[Oats].Phenology.FlagLeafDAS</string>
                   <string>[Oats].Phenology.FloweringDAS</string>
                   <string>[Oats].Phenology.MaturityDAS</string>
@@ -12120,7 +12120,7 @@ namespace Models
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Oats].Structure.LeafTipsAppeared</string>
-                  <string>[Oats].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Oats].Structure.FinalLeafNumber</string>
                   <string>[Oats].Phenology.FlagLeafDAS</string>
                   <string>[Oats].Phenology.FloweringDAS</string>
                   <string>[Oats].Phenology.MaturityDAS</string>
@@ -13142,7 +13142,7 @@ namespace Models
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Oats].Structure.LeafTipsAppeared</string>
-                  <string>[Oats].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Oats].Structure.FinalLeafNumber</string>
                   <string>[Oats].Phenology.FlagLeafDAS</string>
                   <string>[Oats].Phenology.FloweringDAS</string>
                   <string>[Oats].Phenology.MaturityDAS</string>
@@ -14096,7 +14096,7 @@ namespace Models
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Oats].Structure.LeafTipsAppeared</string>
-                  <string>[Oats].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Oats].Structure.FinalLeafNumber</string>
                   <string>[Oats].Phenology.FlagLeafDAS</string>
                   <string>[Oats].Phenology.FloweringDAS</string>
                   <string>[Oats].Phenology.MaturityDAS</string>
@@ -14997,7 +14997,7 @@ namespace Models
                   <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
                   <string>[0ats].Arbitrator.FN</string>
                   <string>[0ats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[Oats].Structure.Phyllochron</string>
                   <string>[0ats].Leaf.CohortMaxSize</string>
                   <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
                   <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>

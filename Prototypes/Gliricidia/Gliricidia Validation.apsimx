@@ -4745,7 +4745,7 @@ namespace Models
               <string>[Maize].Phenology.Photoperiod.Value</string>
               <string>[Maize].Phenology.Photosensitive.Target.Value</string>
               <string>[Maize].Phenology.LeafAppearance.FractionComplete</string>
-              <string>[Maize].Structure.MainStemFinalNodeNumber.Value</string>
+              <string>[Maize].Structure.FinalLeafNumber.Value</string>
               <string>[Maize].Leaf.ExpandedCohortNo</string>
               <string>[Soil].SoilWater.LeachNO3</string>
               <string>[Soil].SoilWater.flow_no3</string>

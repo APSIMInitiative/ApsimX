@@ -327,7 +327,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <End>Veraison</End>
         </PhaseLookupValue>
         <PhaseLookupValue>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <MultiplyFunction>
             <Name>MultiplyFunction</Name>
             <Constant>
@@ -363,7 +363,7 @@ A function is used to provide flowering date as days after sowing(DAS).
           <End>Veraison</End>
         </PhaseLookupValue>
         <Constant>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>24</FixedValue>
           <Units>number</Units>

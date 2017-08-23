@@ -443,7 +443,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.BasePhyllochron.Value()</VariableName>
             </VariableReference>
             <AddFunction>
               <Name>Phyllochrons</Name>
@@ -644,7 +644,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <Memo>
             <Name>Rational</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -947,14 +947,14 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableReference>
             <Name>Phyllochron</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Structure].Phyllochron.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
           <InitialValue>80</InitialValue>
         </MovingAverageFunction>
         <HoldFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <AddFunction>
             <Name>FinalNodeNumber</Name>
             <VariableReference>
@@ -1024,7 +1024,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <MemoText><![CDATA[The Haun stage at which Terminal Spikelet occurs is determined from final leaf number using the approach described in [Brown_Anthesis_2013].]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Expression>([Structure].MainStemFinalNodeNumber.Value() - 2.85)/1.1</Expression>
+          <Expression>([Structure].FinalLeafNumber.Value() - 2.85)/1.1</Expression>
         </ExpressionFunction>
         <AddFunction>
           <Name>HaunStage</Name>
@@ -1876,7 +1876,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -1949,7 +1949,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -3010,7 +3010,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 10</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 6</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Aspiring</Name>
@@ -3026,7 +3026,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 8</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.7</Command>
           </Cultivar>
           <Cultivar>
@@ -3036,7 +3036,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.7</Command>
           </Cultivar>
           <Cultivar>
@@ -3053,7 +3053,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 8</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Conquest</Name>
@@ -3061,7 +3061,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Discovery</Name>
@@ -3075,7 +3075,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8.5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
             <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.051</Command>
             <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 25</Command>
@@ -3117,7 +3117,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Pennant</Name>
@@ -3154,7 +3154,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 2</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Rubric</Name>
@@ -3212,7 +3212,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 10</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8</Command>
             <Command>[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0</Command>
             <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.7</Command>
@@ -3237,7 +3237,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Bolac</Name>
@@ -3245,7 +3245,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Cunningham</Name>
@@ -3365,7 +3365,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Derrimut</Name>
@@ -3373,7 +3373,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>EGAGregory</Name>
@@ -3389,7 +3389,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 1</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>GattonHartog</Name>
@@ -3404,7 +3404,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 3.5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.FixedValue</Command>
           </Cultivar>
@@ -3494,7 +3494,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gladius</Name>
@@ -3502,7 +3502,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gutha</Name>
@@ -3510,7 +3510,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
             <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17</Command>
           </Cultivar>
@@ -3540,7 +3540,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>H46</Name>
@@ -3548,7 +3548,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Hartog</Name>
@@ -3660,7 +3660,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
           </Cultivar>
           <Cultivar>
@@ -3753,7 +3753,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Janz</Name>
@@ -3761,7 +3761,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 1</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kelallac</Name>
@@ -3793,7 +3793,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Kennedy</Name>
@@ -3801,7 +3801,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Lang</Name>
@@ -3809,7 +3809,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Livingston</Name>
@@ -3817,7 +3817,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Lincoln</Name>
@@ -3829,7 +3829,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Mace</Name>
@@ -3837,7 +3837,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>MacKellar</Name>
@@ -3862,7 +3862,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.5 </Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Matong</Name>
@@ -3870,7 +3870,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 1</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>McCubbin</Name>
@@ -3878,7 +3878,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>
           </Cultivar>
           <Cultivar>
             <Name>Mercury</Name>
@@ -3887,7 +3887,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3.5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Ruby</Name>
@@ -3895,7 +3895,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Spear</Name>
@@ -3903,7 +3903,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.045</Command>
           </Cultivar>
           <Cultivar>
@@ -3912,7 +3912,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Sunco</Name>
@@ -3941,7 +3941,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 3.5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Ventura</Name>
@@ -3949,7 +3949,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wedgetail</Name>
@@ -3977,7 +3977,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Westonia</Name>
@@ -3985,7 +3985,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Wilgoyne</Name>
@@ -3993,7 +3993,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.045</Command>
           </Cultivar>
@@ -4003,7 +4003,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
             <Name>Yitpi</Name>
@@ -4013,7 +4013,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].EarlyReproductiveLongDayBase.FixedValue = 2.5</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Young</Name>
@@ -4021,7 +4021,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 8</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </CultivarFolder>
@@ -4033,7 +4033,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 15</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.050</Command>
             <Command>[Grain].MaximumNConc.FixedValue = 0.026</Command>
@@ -4049,7 +4049,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 5</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </CultivarFolder>
@@ -4061,7 +4061,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>
             <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000</Command>
           </Cultivar>
           <Cultivar>
@@ -4111,7 +4111,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.8</Command>
           </Cultivar>
           <Cultivar>
@@ -4121,7 +4121,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.8</Command>
           </Cultivar>
           <Cultivar>
@@ -4131,7 +4131,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Leaf].ExtinctionCoeff.FixedValue = 0.8</Command>
           </Cultivar>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4144,7 +4144,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17</Command>
             <Command>[Phenology].GrainFilling.Target.FixedValue = 350</Command>
           </Cultivar>
@@ -4158,7 +4158,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </CultivarFolder>
@@ -4189,7 +4189,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Grain.Protein</string>
         <string>[Wheat].Grain.Size</string>
         <string>[Wheat].Structure.HaunStage.Value()TerminalSpikelet.Value()</string>
-        <string>[Wheat].Structure.MainStemFinalNodeNumber.Value()</string>
+        <string>[Wheat].Structure.FinalLeafNumber.Value()</string>
         <string>[Wheat].Structure.MainStemPopn</string>
         <string>[Wheat].SowingData.Cultivar</string>
         <string>[Wheat].SowingDate.DayOfYear</string>
@@ -4285,8 +4285,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Structure.HaunStage.Value()</string>
         <string>[Wheat].Structure.Height</string>
         <string>[Wheat].Structure.LeafTipsAppeared</string>
-        <string>[Wheat].Structure.MainStemFinalNodeNumber.Value()</string>
-        <string>[Wheat].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+        <string>[Wheat].Structure.FinalLeafNumber.Value()</string>
+        <string>[Wheat].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
         <string>[Wheat].Structure.MainStemPopn</string>
         <string>[Wheat].Structure.MeanTillerGrowthRate.Value()</string>
         <string>[Wheat].Structure.TotalStemPopn</string>
@@ -47092,7 +47092,7 @@ namespace Models
                 <string>[Wheat].Leaf.CohortParameters.GrowthDuration.Value()</string>
                 <string>[Wheat].Leaf.CohortParameters..Value()</string>
                 <string>[Wheat].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[Wheat].Structure.MainStemNodeAppearanceRate.Value()</string>
+                <string>[Wheat].Structure.Phyllochron.Value()</string>
                 <string>[Wheat].Structure.Height</string>
                 <string>[Wheat].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Wheat].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
@@ -51891,7 +51891,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</YFieldName>
+              <YFieldName>Wheat.Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>

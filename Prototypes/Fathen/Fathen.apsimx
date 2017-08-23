@@ -153,7 +153,7 @@
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <PhaseLookupValue>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <Constant>
             <Name>Constant</Name>
             <Memo>
@@ -166,7 +166,7 @@
           <End>Maturity</End>
         </PhaseLookupValue>
         <Constant>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <FixedValue>60</FixedValue>
         </Constant>
         <Constant>

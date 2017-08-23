@@ -334,7 +334,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <FixedValue>40</FixedValue>
         </Constant>
         <LinearInterpolationFunction>
@@ -884,7 +884,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <FixedValue>0</FixedValue>
         </Constant>
         <PhaseLookup>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <PhaseLookupValue>
             <Name>PreEmergence</Name>
             <Constant>
@@ -1578,7 +1578,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <MultiplyFunction>
@@ -1589,7 +1589,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <MultiplyFunction>
@@ -1600,7 +1600,7 @@ Robertson et al (2002) used a maximum leaf size of 300 mm2 for the first 9 leave
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
           </MultiplyFunction>
           <Constant>
