@@ -789,7 +789,10 @@ namespace Models.PMF.Organs
             {
                 tags.Add(new AutoDocumentation.Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction", indent));
                 Det.Document(tags, -1, indent);
-            }            
+            }
+
+            if (biomassRemovalModel != null)
+                biomassRemovalModel.Document(tags, headingLevel+1, indent);          
         }
     }
 }
