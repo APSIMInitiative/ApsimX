@@ -2927,15 +2927,15 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
   <DataStore>
     <Name> Database</Name>
     <ExcelInput>
-      <Name>ExcelInput</Name>
+      <Name>Lincoln</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
-        <string>Sheet1</string>
+        <string>Observed</string>
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
-      <Name>ExcelInput1</Name>
+      <Name>Hudson</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Hudson.xlsx</FileName>
       <SheetNames>
@@ -2943,7 +2943,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
       </SheetNames>
     </ExcelInput>
     <ExcelInput>
-      <Name>ExcelInput2</Name>
+      <Name>Nekia</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Nekia.xlsx</FileName>
       <SheetNames>
@@ -2951,7 +2951,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
       </SheetNames>
     </ExcelInput>
     <PredictedObserved>
-      <Name>ObsVsPre</Name>
+      <Name>ObsVsPreLincoln</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
@@ -2959,7 +2959,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
       <FieldName2UsedForMatch>SWC</FieldName2UsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
-      <Name>ObsVsPre1</Name>
+      <Name>ObsVsPreHudson</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Hudson</ObservedTableName>
@@ -2967,7 +2967,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
       <FieldName2UsedForMatch>LAI</FieldName2UsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
-      <Name>ObsVsPre2</Name>
+      <Name>ObsVsPreNekia</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Nekia</ObservedTableName>
@@ -6494,9 +6494,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Shootsbiomass</YFieldName>
+          <YFieldName>Shootbiomass</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6582,7 +6582,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -6648,9 +6648,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ObservedBiomass</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Lucerne.Leaf.Live.Wt</YFieldName>
+          <YFieldName>LeafWt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6714,9 +6714,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ObservedBiomass</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Lucerne.Stem.Live.Wt</YFieldName>
+          <YFieldName>StemWt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -6846,7 +6846,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SWC</YFieldName>
           <ShowInLegend>false</ShowInLegend>
@@ -6919,7 +6919,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>node_no</YFieldName>
           <ShowInLegend>false</ShowInLegend>
@@ -10232,7 +10232,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Shootbiomass</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -10330,7 +10330,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -10405,9 +10405,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ObservedBiomass</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Lucerne.Leaf.Live.Wt</YFieldName>
+          <YFieldName>StemWt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10537,7 +10537,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>InputRadInd</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Lucerne.Leaf.CoverGreen</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -10604,7 +10604,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SWC</YFieldName>
           <ShowInLegend>false</ShowInLegend>
@@ -10679,9 +10679,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Rootwt</YFieldName>
+          <YFieldName>RootWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10745,7 +10745,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>TotalLeafNo</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -10811,9 +10811,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>ShootPopulation</YFieldName>
+          <YFieldName>Shootbiomass</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -10877,7 +10877,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>node_no</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -14181,7 +14181,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Shootbiomass</YFieldName>
           <ShowInLegend>false</ShowInLegend>
@@ -14269,7 +14269,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -14394,7 +14394,7 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
@@ -14533,7 +14533,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SWC</YFieldName>
           <ShowInLegend>false</ShowInLegend>
@@ -14599,7 +14599,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Height</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -14665,7 +14665,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>node_no</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -18132,9 +18132,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Shootsbiomass</YFieldName>
+          <YFieldName>Shootbiomass</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -18222,7 +18222,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>LAI</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -18288,7 +18288,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>LeafWt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
@@ -18354,7 +18354,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>StemWt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
@@ -18486,7 +18486,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>SWC</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -18513,9 +18513,9 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries>
-          <string>LS</string>
           <string>SL</string>
           <string>SS</string>
+          <string>LS</string>
         </DisabledSeries>
       </Graph>
       <Graph>
@@ -18556,9 +18556,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Rootwt</YFieldName>
+          <YFieldName>RootWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -18622,7 +18622,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Height</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -18688,7 +18688,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Sheet1</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>node_no</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -18716,8 +18716,8 @@ namespace Models
         <LegendPosition>TopRight</LegendPosition>
         <DisabledSeries>
           <string>LL</string>
-          <string>LS</string>
           <string>SL</string>
+          <string>LS</string>
         </DisabledSeries>
       </Graph>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -22911,7 +22911,7 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.2</double>
-                <double>0.2</double>
+                <double>0.15</double>
                 <double>0.21</double>
                 <double>0.23</double>
                 <double>0.25</double>
@@ -23082,7 +23082,7 @@ namespace Models
             <DUL>
               <double>0.35</double>
               <double>0.4</double>
-              <double>0.43</double>
+              <double>0.45</double>
               <double>0.43</double>
               <double>0.4</double>
               <double>0.4</double>
