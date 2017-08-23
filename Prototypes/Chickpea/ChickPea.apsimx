@@ -85,7 +85,7 @@ The model consists of:
         <string>[Chickpea].Arbitrator.DM.TotalFixationSupply</string>
         <string>[Chickpea].Leaf.Live.MetabolicNConc</string>
         <string>[Chickpea].Leaf.Live.StructuralNConc</string>
-        <string>[Chickpea].Leaf.Live.NonStructuralNConc</string>
+        <string>[Chickpea].Leaf.Live.StorageNConc</string>
         <string>[Chickpea].Leaf.SenescingCohortNo</string>
         <string>[Chickpea].Stem.DMDemand</string>
         <string>[Chickpea].Leaf.DMSupplyPhotosynthesis</string>
@@ -876,7 +876,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Stem].Live.NonStructuralWt</XProperty>
+            <XProperty>[Stem].Live.StorageWt</XProperty>
           </LinearInterpolationFunction>
         </MultiplyFunction>
         <Constant>
@@ -1794,7 +1794,7 @@ Maximum specific leaf area has been taken from Robertson et al (2002).
             <FixedValue>0.08</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
@@ -6120,7 +6120,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Leaf.Live.NonStructuralNConc</YFieldName>
+            <YFieldName>Chickpea.Leaf.Live.StorageNConc</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -35594,7 +35594,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Chickpea.Leaf.Live.NonStructuralNConc</YFieldName>
+            <YFieldName>Chickpea.Leaf.Live.StorageNConc</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>

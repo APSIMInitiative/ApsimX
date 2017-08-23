@@ -834,10 +834,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -862,10 +862,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -890,10 +890,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1117,7 +1117,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
             <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
           </LinearInterpolationFunction>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.2</FixedValue>
           </Constant>
@@ -2508,7 +2508,7 @@ namespace Models
           <string>Potato.Stem.Dead.Wt</string>
           <string>Potato.Stem.Live.N</string>
           <string>Potato.Stem.Live.NConc</string>
-          <string>Potato.Stem.Live.NonStructuralWt</string>
+          <string>Potato.Stem.Live.StorageWt</string>
           <string>Potato.Stem.Live.StructuralWt</string>
           <string>Potato.Stem.Live.Wt</string>
           <string>Potato.Stem.MaximumNConc.Value()</string>

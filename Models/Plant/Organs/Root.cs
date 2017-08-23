@@ -27,7 +27,7 @@ namespace Models.PMF.Organs
     /// 
     /// **Nitrogen Demands**
     /// 
-    /// The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered NonStructural 
+    /// The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered Storage 
     /// and can be used for retranslocation and/or reallocation is the respective factors are set to values other then zero.  
     /// 
     /// **Nitrogen Uptake**
@@ -197,7 +197,7 @@ namespace Models.PMF.Organs
         private double StructuralDMDemand = 0.0;
 
         /// <summary>The non structural DM demand</summary>
-        private double NonStructuralDMDemand = 0.0;
+        private double StorageDMDemand = 0.0;
 
         /// <summary>The metabolic DM demand</summary>
         private double MetabolicDMDemand = 0.0;
@@ -206,7 +206,7 @@ namespace Models.PMF.Organs
         private double StructuralNDemand = 0.0;
 
         /// <summary>The non structural N demand</summary>
-        private double NonStructuralNDemand = 0.0;
+        private double StorageNDemand = 0.0;
 
         /// <summary>The metabolic N demand</summary>
         private double MetabolicNDemand = 0.0;
@@ -459,8 +459,8 @@ namespace Models.PMF.Organs
             if (Plant.SowingData.Depth < PlantZone.Depth)
             {
                 StructuralDMDemand = DemandedDMStructural();
-                NonStructuralDMDemand = DemandedDMNonStructural();
-                TotalDMDemand = StructuralDMDemand + NonStructuralDMDemand + MetabolicDMDemand;
+                StorageDMDemand = DemandedDMStorage();
+                TotalDMDemand = StructuralDMDemand + StorageDMDemand + MetabolicDMDemand;
                 ////This sum is currently not necessary as demand is not calculated on a layer basis.
                 //// However it might be some day... and can consider non structural too
             }
@@ -510,7 +510,7 @@ namespace Models.PMF.Organs
                 return new BiomassPoolType
                 {
                     Structural = StructuralDMDemand,
-                    NonStructural = NonStructuralDMDemand,
+                    Storage = StorageDMDemand,
                     Metabolic = 0.0
                 };
             }
@@ -534,25 +534,25 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Computes the amount of non structural DM demanded.</summary>
-        public double DemandedDMNonStructural()
+        public double DemandedDMStorage()
         {
             if ((DMConversionEfficiency > 0.0) && (StructuralFraction != null))
             {
                 double rootLiveStructuralWt = 0.0;
-                double rootLiveNonStructuralWt = 0.0;
+                double rootLiveStorageWt = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
                     {
                         rootLiveStructuralWt += Z.LayerLive[i].StructuralWt;
-                        rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
+                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
                     }
 
                 double theoreticalMaximumDM = (rootLiveStructuralWt + StructuralDMDemand) / StructuralFraction.Value();
-                double baseAllocated = rootLiveStructuralWt + rootLiveNonStructuralWt + StructuralDMDemand;
+                double baseAllocated = rootLiveStructuralWt + rootLiveStorageWt + StructuralDMDemand;
                 double demandedDM = Math.Max(0.0, theoreticalMaximumDM - baseAllocated) / DMConversionEfficiency;
                 return demandedDM;
             }
-            // Either there is no NonStructural fraction or conversion efficiency is zero!!!!
+            // Either there is no Storage fraction or conversion efficiency is zero!!!!
             return 0.0;
         }
 
@@ -575,12 +575,12 @@ namespace Models.PMF.Organs
         {
             if (DMRetranslocationFactor != null)
             {
-                double rootLiveNonStructuralWt = 0.0;
+                double rootLiveStorageWt = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
+                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
 
-                double availableDM = Math.Max(0.0, rootLiveNonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
+                double availableDM = Math.Max(0.0, rootLiveStorageWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
@@ -597,12 +597,12 @@ namespace Models.PMF.Organs
         {
             if (DMReallocationFactor != null)
             {
-                double rootLiveNonStructuralWt = 0.0;
+                double rootLiveStorageWt = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveNonStructuralWt += Z.LayerLive[i].NonStructuralWt;
+                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
 
-                double availableDM = rootLiveNonStructuralWt * SenescenceRate.Value() * DMReallocationFactor.Value();
+                double availableDM = rootLiveStorageWt * SenescenceRate.Value() * DMReallocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM reallocation value computed for " + Name);
                 return availableDM;
@@ -655,7 +655,7 @@ namespace Models.PMF.Organs
                     TotalRAw += MathUtilities.Sum(Z.CalculateRootActivityValues());
 
                 Allocated.StructuralWt = value.Structural;
-                Allocated.NonStructuralWt = value.NonStructural;
+                Allocated.StorageWt = value.Storage;
                 Allocated.MetabolicWt = value.Metabolic;
 
                 if (TotalRAw == 0 && Allocated.Wt > 0)
@@ -678,7 +678,7 @@ namespace Models.PMF.Organs
                 {
                     Structural = StructuralNDemand,
                     Metabolic = MetabolicNDemand,
-                    NonStructural = NonStructuralNDemand
+                    Storage = StorageNDemand
                 };
             }
         }
@@ -695,11 +695,11 @@ namespace Models.PMF.Organs
 
             StructuralNDemand = 0.0;
             MetabolicNDemand = 0.0;
-            NonStructuralNDemand = 0.0;
+            StorageNDemand = 0.0;
             foreach (ZoneState Z in Zones)
             {
                 Z.StructuralNDemand = new double[Z.soil.Thickness.Length];
-                Z.NonStructuralNDemand = new double[Z.soil.Thickness.Length];
+                Z.StorageNDemand = new double[Z.soil.Thickness.Length];
                 //Note: MetabolicN is assumed to be zero
 
                 double NDeficit = 0.0;
@@ -707,10 +707,10 @@ namespace Models.PMF.Organs
                 {
                     Z.StructuralNDemand[i] = Z.LayerLive[i].PotentialDMAllocation * MinimumNConc.Value() * NitrogenSwitch;
                     NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Z.LayerLive[i].Wt + Z.LayerLive[i].PotentialDMAllocation) - (Z.LayerLive[i].N + Z.StructuralNDemand[i]));
-                    Z.NonStructuralNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
+                    Z.StorageNDemand[i] = Math.Max(0, NDeficit - Z.StructuralNDemand[i]) * NitrogenSwitch;
 
                     StructuralNDemand += Z.StructuralNDemand[i];
-                    NonStructuralNDemand += Z.NonStructuralNDemand[i];
+                    StorageNDemand += Z.StorageNDemand[i];
                 }
             }
         }
@@ -741,7 +741,7 @@ namespace Models.PMF.Organs
                 double labileN = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        labileN += Math.Max(0.0, Z.LayerLive[i].NonStructuralN - Z.LayerLive[i].NonStructuralWt * MinimumNConc.Value());
+                        labileN += Math.Max(0.0, Z.LayerLive[i].StorageN - Z.LayerLive[i].StorageWt * MinimumNConc.Value());
 
                 double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
@@ -760,12 +760,12 @@ namespace Models.PMF.Organs
         {
             if (NReallocationFactor != null)
             {
-                double rootLiveNonStructuralN = 0.0;
+                double rootLiveStorageN = 0.0;
                 foreach (ZoneState Z in Zones)
                     for (int i = 0; i < Z.LayerLive.Length; i++)
-                        rootLiveNonStructuralN += Z.LayerLive[i].NonStructuralN;
+                        rootLiveStorageN += Z.LayerLive[i].StorageN;
 
-                double availableN = rootLiveNonStructuralN * SenescenceRate.Value() * NReallocationFactor.Value();
+                double availableN = rootLiveStorageN * SenescenceRate.Value() * NReallocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N reallocation value computed for " + Name);
 
@@ -824,11 +824,11 @@ namespace Models.PMF.Organs
                 foreach (ZoneState Z in Zones)
                 {
                     totalStructuralNDemand += MathUtilities.Sum(Z.StructuralNDemand);
-                    totalNDemand += MathUtilities.Sum(Z.StructuralNDemand) + MathUtilities.Sum(Z.NonStructuralNDemand);
+                    totalNDemand += MathUtilities.Sum(Z.StructuralNDemand) + MathUtilities.Sum(Z.StorageNDemand);
                 }
                 NTakenUp = value.Uptake;
                 Allocated.StructuralN = value.Structural;
-                Allocated.NonStructuralN = value.NonStructural;
+                Allocated.StorageN = value.Storage;
                 Allocated.MetabolicN = value.Metabolic;
 
                 double surplus = Allocated.N - totalNDemand;
@@ -846,12 +846,12 @@ namespace Models.PMF.Organs
                             Z.LayerLive[i].StructuralN += value.Structural * StructFrac;
                             NAllocated += value.Structural * StructFrac;
                         }
-                        double totalNonStructuralNDemand = MathUtilities.Sum(Z.NonStructuralNDemand);
-                        if (totalNonStructuralNDemand > 0)
+                        double totalStorageNDemand = MathUtilities.Sum(Z.StorageNDemand);
+                        if (totalStorageNDemand > 0)
                         {
-                            double NonStructFrac = Z.NonStructuralNDemand[i] / totalNonStructuralNDemand;
-                            Z.LayerLive[i].NonStructuralN += value.NonStructural * NonStructFrac;
-                            NAllocated += value.NonStructural * NonStructFrac;
+                            double NonStructFrac = Z.StorageNDemand[i] / totalStorageNDemand;
+                            Z.LayerLive[i].StorageN += value.Storage * NonStructFrac;
+                            NAllocated += value.Storage * NonStructFrac;
                         }
                     }
                 }

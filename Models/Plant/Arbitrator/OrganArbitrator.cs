@@ -365,7 +365,7 @@ namespace Models.PMF
         virtual public void SendPotentialDMAllocations(IArbitration[] Organs)
         {
             //  Allocate to meet Organs demands
-            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
+            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalStorageAllocation;
 
             // Then check it all adds up
             if (MathUtilities.IsGreaterThan(DM.Allocated, DM.TotalPlantSupply) )
@@ -379,7 +379,7 @@ namespace Models.PMF
                 {
                     Structural = DM.StructuralAllocation[i],  //Need to seperate metabolic and structural allocations
                     Metabolic = DM.MetabolicAllocation[i],  //This wont do anything currently
-                    NonStructural = DM.NonStructuralAllocation[i], //Nor will this do anything
+                    Storage = DM.StorageAllocation[i], //Nor will this do anything
                 };
         }
 
@@ -474,14 +474,14 @@ namespace Models.PMF
                 if (DM.TotalRespiration <= DM.SinkLimitation)
                 { } //Cost of N fixation can be met by DM supply that was not allocated
                 else
-                {//claw back todays NonStructuralDM allocation to cover the cost
+                {//claw back todays StorageDM allocation to cover the cost
                     double UnallocatedRespirationCost = DM.TotalRespiration - DM.SinkLimitation;
-                    if (DM.TotalNonStructuralAllocation > 0)
+                    if (DM.TotalStorageAllocation > 0)
                         for (int i = 0; i < Organs.Length; i++)
                         {
-                            double proportion = DM.NonStructuralAllocation[i] / DM.TotalNonStructuralAllocation;
-                            double Clawback = Math.Min(UnallocatedRespirationCost * proportion, DM.NonStructuralAllocation[i]);
-                            DM.NonStructuralAllocation[i] -= Clawback;
+                            double proportion = DM.StorageAllocation[i] / DM.TotalStorageAllocation;
+                            double Clawback = Math.Min(UnallocatedRespirationCost * proportion, DM.StorageAllocation[i]);
+                            DM.StorageAllocation[i] -= Clawback;
                             UnallocatedRespirationCost -= Clawback;
                         }
                     if (UnallocatedRespirationCost == 0)
@@ -530,7 +530,7 @@ namespace Models.PMF
         {
             double PreNStressDMAllocation = DM.Allocated;
             for (int i = 0; i < Organs.Length; i++)
-                N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.NonStructuralAllocation[i];
+                N.TotalAllocation[i] = N.StructuralAllocation[i] + N.MetabolicAllocation[i] + N.StorageAllocation[i];
 
             N.Allocated = MathUtilities.Sum(N.TotalAllocation);
 
@@ -538,7 +538,7 @@ namespace Models.PMF
             // Calculate posible growth based on Minimum N requirement of organs
             for (int i = 0; i < Organs.Length; i++)
             {
-                double TotalNDemand = N.StructuralDemand[i] + N.MetabolicDemand[i] + N.NonStructuralDemand[i];
+                double TotalNDemand = N.StructuralDemand[i] + N.MetabolicDemand[i] + N.StorageDemand[i];
                 if (N.TotalAllocation[i] >= TotalNDemand)
                     N.ConstrainedGrowth[i] = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth  
                 else
@@ -552,17 +552,17 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Length; i++)
                 if ((DM.MetabolicAllocation[i] + DM.StructuralAllocation[i]) != 0)
                 {
-                    double MetabolicProportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
-                    double StructuralProportion = DM.StructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
-                    double NonStructuralProportion = DM.NonStructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.NonStructuralAllocation[i]);
+                    double MetabolicProportion = DM.MetabolicAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
+                    double StructuralProportion = DM.StructuralAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
+                    double StorageProportion = DM.StorageAllocation[i] / (DM.MetabolicAllocation[i] + DM.StructuralAllocation[i] + DM.StorageAllocation[i]);
                     DM.MetabolicAllocation[i] = Math.Min(DM.MetabolicAllocation[i], N.ConstrainedGrowth[i] * MetabolicProportion);
                     DM.StructuralAllocation[i] = Math.Min(DM.StructuralAllocation[i], N.ConstrainedGrowth[i] * StructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
-                    DM.NonStructuralAllocation[i] = Math.Min(DM.NonStructuralAllocation[i], N.ConstrainedGrowth[i] * NonStructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
+                    DM.StorageAllocation[i] = Math.Min(DM.StorageAllocation[i], N.ConstrainedGrowth[i] * StorageProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
 
                     //Question.  Why do I not restrain non-structural DM allocations.  I think this may be wrong and require further thought HEB 15-1-2015
                 }
             //Recalculated DM Allocation totals
-            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalNonStructuralAllocation;
+            DM.Allocated = DM.TotalStructuralAllocation + DM.TotalMetabolicAllocation + DM.TotalStorageAllocation;
             DM.NutrientLimitation = (PreNStressDMAllocation - DM.Allocated);
         }
 
@@ -578,7 +578,7 @@ namespace Models.PMF
                     Reallocation = DM.Reallocation[i],
                     Retranslocation = DM.Retranslocation[i],
                     Structural = DM.StructuralAllocation[i],
-                    NonStructural = DM.NonStructuralAllocation[i],
+                    Storage = DM.StorageAllocation[i],
                     Metabolic = DM.MetabolicAllocation[i],
                 };
         }
@@ -590,19 +590,19 @@ namespace Models.PMF
             // Send N allocations to all Plant Organs
             for (int i = 0; i < Organs.Length; i++)
             {
-                if ((N.StructuralAllocation[i] < -0.00000001) || (N.MetabolicAllocation[i] < -0.00000001) || (N.NonStructuralAllocation[i] < -0.00000001))
+                if ((N.StructuralAllocation[i] < -0.00000001) || (N.MetabolicAllocation[i] < -0.00000001) || (N.StorageAllocation[i] < -0.00000001))
                     throw new Exception("-ve N Allocation");
                 if (N.StructuralAllocation[i] < 0.0)
                     N.StructuralAllocation[i] = 0.0;
                 if (N.MetabolicAllocation[i] < 0.0)
                     N.MetabolicAllocation[i] = 0.0;
-                if (N.NonStructuralAllocation[i] < 0.0)
-                    N.NonStructuralAllocation[i] = 0.0;
+                if (N.StorageAllocation[i] < 0.0)
+                    N.StorageAllocation[i] = 0.0;
                 Organs[i].NAllocation = new BiomassAllocationType
                 {
                     Structural = N.StructuralAllocation[i], //This needs to be seperated into components
                     Metabolic = N.MetabolicAllocation[i],
-                    NonStructural = N.NonStructuralAllocation[i],
+                    Storage = N.StorageAllocation[i],
                     Fixation = N.Fixation[i],
                     Reallocation = N.Reallocation[i],
                     Retranslocation = N.Retranslocation[i],
@@ -626,9 +626,9 @@ namespace Models.PMF
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalPlantSupply));
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than DM supplied by photosynthesis and DM remobilisation");
-            DM.BalanceError = (DM.End - (DM.Start + DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalNonStructuralDemand));
+            DM.BalanceError = (DM.End - (DM.Start + DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalStorageDemand));
             if (DM.BalanceError > 0.0001)
-                throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and NonStructural DM capacity");
+                throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and Storage DM capacity");
         }
 
         #endregion

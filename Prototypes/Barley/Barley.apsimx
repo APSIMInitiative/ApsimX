@@ -1958,10 +1958,10 @@ N conc values are from Zhao et al 2009
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1986,10 +1986,10 @@ N conc values are from Zhao et al 2009
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -2696,7 +2696,7 @@ N conc values are from Zhao et al 2009
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.5</FixedValue>
           </Constant>
@@ -3526,7 +3526,7 @@ N conc values are from Zhao et al 2009
           <VariableReference>
             <Name>WSC</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Stem].Live.NonStructuralWt</VariableName>
+            <VariableName>[Stem].Live.StorageWt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>StemWt</Name>
@@ -3899,12 +3899,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Barley].Spike.N</string>
         <string>[Barley].Spike.NConc</string>
         <string>[Barley].Spike.Wt</string>
-        <string>[Barley].Spike.Live.NonStructuralWt</string>
+        <string>[Barley].Spike.Live.StorageWt</string>
         <string>[Barley].Stem.N</string>
         <string>[Barley].Stem.NConc</string>
         <string>[Barley].Stem.Wt</string>
         <string>[Barley].Stem.PercentWSC</string>
-        <string>[Barley].Stem.Live.NonStructuralWt</string>
+        <string>[Barley].Stem.Live.StorageWt</string>
         <string>[Barley].StemPlusSpike.Wt</string>
         <string>[Barley].StemPlusSpike.N</string>
         <string>[Barley].SowingData.Cultivar</string>
@@ -5181,12 +5181,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -7407,12 +7407,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -10080,12 +10080,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -12424,12 +12424,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -13912,12 +13912,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -15189,12 +15189,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -16565,12 +16565,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -18319,12 +18319,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -19589,12 +19589,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -21033,12 +21033,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -22388,12 +22388,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -23764,12 +23764,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -25140,12 +25140,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -26509,12 +26509,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -29480,12 +29480,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -34558,12 +34558,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -37746,12 +37746,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -40414,12 +40414,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -42723,12 +42723,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -45771,12 +45771,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -47960,12 +47960,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -50325,12 +50325,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -52921,12 +52921,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -55143,12 +55143,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -57580,12 +57580,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -58770,12 +58770,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -59886,12 +59886,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -61010,12 +61010,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -62134,12 +62134,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -63214,12 +63214,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -64338,12 +64338,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -65462,12 +65462,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -66586,12 +66586,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -67641,12 +67641,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -69166,12 +69166,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -70290,12 +70290,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -71414,12 +71414,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -72538,12 +72538,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -73666,12 +73666,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -74551,12 +74551,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -75910,12 +75910,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>
@@ -77078,12 +77078,12 @@ namespace Models
             <string>[Barley].Spike.N</string>
             <string>[Barley].Spike.NConc</string>
             <string>[Barley].Spike.Wt</string>
-            <string>[Barley].Spike.Live.NonStructuralWt</string>
+            <string>[Barley].Spike.Live.StorageWt</string>
             <string>[Barley].Stem.N</string>
             <string>[Barley].Stem.NConc</string>
             <string>[Barley].Stem.Wt</string>
             <string>[Barley].Stem.PercentWSC</string>
-            <string>[Barley].Stem.Live.NonStructuralWt</string>
+            <string>[Barley].Stem.Live.StorageWt</string>
             <string>[Barley].StemPlusSpike.Wt</string>
             <string>[Barley].StemPlusSpike.N</string>
             <string>[Barley].SowingData.Cultivar</string>

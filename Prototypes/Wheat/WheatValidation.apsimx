@@ -1644,10 +1644,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1672,10 +1672,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -2166,7 +2166,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
@@ -2845,7 +2845,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableReference>
             <Name>WSC</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Stem].Live.NonStructuralWt</VariableName>
+            <VariableName>[Stem].Live.StorageWt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>StemWt</Name>
@@ -4277,12 +4277,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].Spike.N</string>
         <string>[Wheat].Spike.NConc</string>
         <string>[Wheat].Spike.Wt</string>
-        <string>[Wheat].Spike.Live.NonStructuralWt</string>
+        <string>[Wheat].Spike.Live.StorageWt</string>
         <string>[Wheat].Stem.N</string>
         <string>[Wheat].Stem.NConc</string>
         <string>[Wheat].Stem.Wt</string>
         <string>[Wheat].Stem.PercentWSC</string>
-        <string>[Wheat].Stem.Live.NonStructuralWt</string>
+        <string>[Wheat].Stem.Live.StorageWt</string>
         <string>[Wheat].StemPlusSpike.Wt</string>
         <string>[Wheat].StemPlusSpike.N</string>
         <string>[Wheat].SowingData.Cultivar</string>
@@ -9379,11 +9379,11 @@ namespace Models
                 <string>[Wheat].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
                 <string>[Wheat].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Wheat].Stem.StructuralN</string>
-                <string>[Wheat].Stem.NonStructuralN</string>
-                <string>[Wheat].Stem.NonStructuralNConc</string>
+                <string>[Wheat].Stem.StorageN</string>
+                <string>[Wheat].Stem.StorageNConc</string>
                 <string>[Wheat].Stem.StructuralNConc</string>
                 <string>[Wheat].Stem.StructuralWt</string>
-                <string>[Wheat].Stem.NonStructuralWt</string>
+                <string>[Wheat].Stem.StorageWt</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -60113,7 +60113,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Stem.Live.NonStructuralWt</YFieldName>
+              <YFieldName>Wheat.Stem.Live.StorageWt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -60135,7 +60135,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Stem.NonStructural.Wt</YFieldName>
+              <YFieldName>Wheat.Stem.Storage.Wt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -60301,7 +60301,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Spike.Live.NonStructuralWt</YFieldName>
+              <YFieldName>Wheat.Spike.Live.StorageWt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -60323,7 +60323,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Spike.NonStructural.Wt</YFieldName>
+              <YFieldName>Wheat.Spike.Storage.Wt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -62144,7 +62144,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Stem.Live.NonStructuralWt</YFieldName>
+              <YFieldName>Wheat.Stem.Live.StorageWt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -62166,7 +62166,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Stem.NonStructural.Wt</YFieldName>
+              <YFieldName>Wheat.Stem.Storage.Wt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -62260,7 +62260,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Spike.Live.NonStructuralWt</YFieldName>
+              <YFieldName>Wheat.Spike.Live.StorageWt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -62282,7 +62282,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Wheat.Spike.NonStructural.Wt</YFieldName>
+              <YFieldName>Wheat.Spike.Storage.Wt</YFieldName>
               <ShowInLegend>false</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>

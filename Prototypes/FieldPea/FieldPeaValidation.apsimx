@@ -300,7 +300,7 @@
                 <double>1</double>
               </Y>
             </XYPairs>
-            <XProperty>[Stem].Live.NonStructuralWt</XProperty>
+            <XProperty>[Stem].Live.StorageWt</XProperty>
           </LinearInterpolationFunction>
           <Memo>
             <Name>Memo1</Name>
@@ -1441,7 +1441,7 @@
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
@@ -12538,7 +12538,7 @@ namespace Models
             <string>[FieldPea].Nodule.Dead.Wt</string>
             <string>[FieldPea].Nodule.Live.N</string>
             <string>[FieldPea].Nodule.Live.NConc</string>
-            <string>[FieldPea].Nodule.Live.NonStructuralWt</string>
+            <string>[FieldPea].Nodule.Live.StorageWt</string>
             <string>[FieldPea].Nodule.Live.StructuralWt</string>
             <string>[FieldPea].Nodule.Live.Wt</string>
             <string>[FieldPea].Nodule.MaximumNConc.Value()</string>
@@ -12567,7 +12567,7 @@ namespace Models
             <string>[FieldPea].Stem.Dead.Wt</string>
             <string>[FieldPea].Stem.Live.N</string>
             <string>[FieldPea].Stem.Live.NConc</string>
-            <string>[FieldPea].Stem.Live.NonStructuralWt</string>
+            <string>[FieldPea].Stem.Live.StorageWt</string>
             <string>[FieldPea].Stem.Live.StructuralWt</string>
             <string>[FieldPea].Stem.Live.Wt</string>
             <string>[FieldPea].Stem.MaximumNConc.Value()</string>
@@ -12577,7 +12577,7 @@ namespace Models
             <string>[FieldPea].Shell.Dead.Wt</string>
             <string>[FieldPea].Shell.Live.N</string>
             <string>[FieldPea].Shell.Live.NConc</string>
-            <string>[FieldPea].Shell.Live.NonStructuralWt</string>
+            <string>[FieldPea].Shell.Live.StorageWt</string>
             <string>[FieldPea].Shell.Live.StructuralWt</string>
             <string>[FieldPea].Shell.Live.Wt</string>
             <string>[FieldPea].Shell.MaximumNConc.Value()</string>
@@ -12618,8 +12618,8 @@ namespace Models
             <string>[Soil].SoilWater.pond</string>
             <string>[Soil].SoilWater.Runoff</string>
             <string>[Soil].SoilWater.SWmm</string>
-            <string>[DiagnosticsVariables].Script.NonStructuralDM</string>
-            <string>[FieldPea].Stem.Live.NonStructuralWt</string>
+            <string>[DiagnosticsVariables].Script.StorageDM</string>
+            <string>[FieldPea].Stem.Live.StorageWt</string>
           </VariableNames>
           <EventNames>
             <string>[Clock].DoReport</string>
@@ -15475,7 +15475,7 @@ namespace Models
 		[XmlIgnore] public double MineralN { get; set; }
 		[XmlIgnore] public double DltNMinRes { get; set; }
 		[XmlIgnore] public double DltNMinTot { get; set; }
-		[XmlIgnore] public double NonStructuralDM {get; set;}
+		[XmlIgnore] public double StorageDM {get; set;}
 		
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
@@ -15547,7 +15547,7 @@ namespace Models
 			SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);
 			DUL = MathUtilities.Sum(Soil.SoilWater.DULmm);
 			
-			NonStructuralDM = (double)zone.Get("FieldPea.Leaf.Live.NonStructuralWt") + (double)zone.Get("FieldPea.Stem.Live.NonStructuralWt") + (double)zone.Get("FieldPea.Root.Live.NonStructuralWt") + (double)zone.Get("FieldPea.Nodule.Live.NonStructuralWt") + (double)zone.Get("FieldPea.Shell.Live.NonStructuralWt") + (double)zone.Get("FieldPea.Grain.Live.NonStructuralWt");
+			StorageDM = (double)zone.Get("FieldPea.Leaf.Live.StorageWt") + (double)zone.Get("FieldPea.Stem.Live.StorageWt") + (double)zone.Get("FieldPea.Root.Live.StorageWt") + (double)zone.Get("FieldPea.Nodule.Live.StorageWt") + (double)zone.Get("FieldPea.Shell.Live.StorageWt") + (double)zone.Get("FieldPea.Grain.Live.StorageWt");
 		}
 	}
 }
@@ -16295,7 +16295,7 @@ namespace Models
         <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
-        <Name>NonStructuralWt</Name>
+        <Name>StorageWt</Name>
         <Series>
           <Name>Predicted</Name>
           <Type>Scatter</Type>
@@ -16311,7 +16311,7 @@ namespace Models
           <LineThickness>Normal</LineThickness>
           <TableName>Report</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>FieldPea.Stem.Live.NonStructuralWt</YFieldName>
+          <YFieldName>FieldPea.Stem.Live.StorageWt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
