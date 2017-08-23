@@ -5521,7 +5521,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>GrainNumber</Name>
+        <Name>Grain Number</Name>
         <Series>
           <Name>Series 0</Name>
           <Regression>
@@ -5718,7 +5718,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>GrainNitrogenConcentration</Name>
+        <Name>Grain Nitrogen Concentration</Name>
         <Series>
           <Name>Series 0</Name>
           <Regression>
@@ -5767,7 +5767,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>HaunStage</Name>
+        <Name>Haun Stage</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -5817,7 +5817,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>LeafNumber</Name>
+        <Name>Leaf Number</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -5866,7 +5866,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>FlagLeafDate</Name>
+        <Name>Flag Leaf Date</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -5916,7 +5916,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>FloweringDate</Name>
+        <Name>Flowering Date</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -5966,7 +5966,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>MaxLeafSize</Name>
+        <Name>Maximum Leaf Size</Name>
         <Series>
           <Name>Series 0</Name>
           <Regression>
@@ -19677,7 +19677,7 @@ namespace Models
       <Memo>
         <Name>Memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[The wheat belt of Western Australia has a Mediteranean climate (winter dominant rainfall patterns) with mostly sandy soils.  Earlier versions of the APSIM Wheat models have been tested extensively in this region [Asseng1998163].  Some of these data are included here.  More recent studies have been included to extend the range of conditions studied and to include more modern cultivars.]]></MemoText>
+        <MemoText><![CDATA[The wheat belt of Western Australia has a Mediteranean climate (winter dominant rainfall patterns) with mostly sandy soils.  Data from [Asseng1998163].   and some more recent studies have been included to extend the range of conditions studied and to include more modern cultivars.]]></MemoText>
       </Memo>
       <Experiment>
         <Name>Mer86</Name>
@@ -51314,7 +51314,7 @@ namespace Models
         <Memo>
           <Name>Memo</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
-          <MemoText><![CDATA[A range of soon to be released cultivares have their phenology assesed each year at Plant and Food Research in Lincoln, New Zealand.  Each cultivar is planted on 4 sowing dates representing Autumn, Winter, Early Spring and Late Spring sowings. (approx April, June, Aug, Nov).  Each cultivar is observed for 3 years but a number of standards are included each year or for more than 3 years bacause of the value of the data they provided.
+          <MemoText><![CDATA[A range of soon to be released cultivars have their phenology assesed each year at Plant and Food Research in Lincoln, New Zealand.  Each cultivar is planted on 4 sowing dates representing Autumn, Winter, Early Spring and Late Spring sowings. (approx April, June, Aug, Nov).  Each cultivar is observed for 3 years but a number of standards are included each year or for more than 3 years bacause of the value of the data they provided.
 
 ]]></MemoText>
         </Memo>
@@ -87729,5 +87729,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>235</ExplorerWidth>
+  <ExplorerWidth>314</ExplorerWidth>
 </Simulations>

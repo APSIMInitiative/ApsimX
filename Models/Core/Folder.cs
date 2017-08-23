@@ -5,6 +5,7 @@ using System.Text;
 using Models.Factorial;
 using Models.PMF.Interfaces;
 using Models.Graph;
+using System.Data;
 
 namespace Models.Core
 {
@@ -49,9 +50,9 @@ namespace Models.Core
                 {
                     // Write Phase Table
                     tags.Add(new AutoDocumentation.Paragraph("**List of experiments.**", indent));
-                    string line;
-                    line = "|Experiment Name | Design (Number of Treatments) |" + System.Environment.NewLine;
-                    line += "|--------------|:----------------|" + System.Environment.NewLine;
+                    DataTable tableData = new DataTable();
+                    tableData.Columns.Add("Experiment Name", typeof(string));
+                    tableData.Columns.Add("Design (Number of Treatments)", typeof(string));
 
                     foreach (IModel child in Apsim.Children(this, typeof(Experiment)))
                     {
@@ -65,9 +66,12 @@ namespace Models.Core
                         }
                         Design += " (" + (child as Experiment).Names().Length+")";
 
-                        line += "|" + child.Name + "|" + Design +"  |" + System.Environment.NewLine;
+                        DataRow row = tableData.NewRow();
+                        row[0] = child.Name;
+                        row[1] = Design;
+                        tableData.Rows.Add(row);
                     }
-                    tags.Add(new AutoDocumentation.Paragraph(line, indent));
+                    tags.Add(new AutoDocumentation.Table(tableData, indent));
 
                 }
                 int pageNumber = 1;
