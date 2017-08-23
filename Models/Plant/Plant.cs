@@ -17,6 +17,7 @@ namespace Models.PMF
     using Models.Soils.Arbitrator;
     using APSIM.Shared.Utilities;
     using Struct;
+    using System.Data;
 
     ///<summary>
     /// The generic plant model
@@ -443,17 +444,21 @@ namespace Models.PMF
             tags.Add(new AutoDocumentation.Paragraph("The plant model is constructed from the following list of software components.  Details of the exact implementation and parameterisation are provided in the following sections.", indent));
             // Write Plant Model Table
             tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
-            string line;
-            line = "|Component Name | Component Type |" + System.Environment.NewLine;
-            line += "|--------------|:----------------|" + System.Environment.NewLine;
+            DataTable tableData = new DataTable();
+            tableData.Columns.Add("Component Name", typeof(string));
+            tableData.Columns.Add("Component Type", typeof(string));
 
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
             {
                 if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder))
-                    line += "|" + child.Name + "|" + child.GetType().ToString() + "  |" + System.Environment.NewLine;
+                {
+                    DataRow row = tableData.NewRow();
+                    row[0] = child.Name;
+                    row[1] = child.GetType().ToString();
+                    tableData.Rows.Add(row);
+                }
             }
-            tags.Add(new AutoDocumentation.Paragraph(line, indent));
-
+            tags.Add(new AutoDocumentation.Table(tableData, indent));
 
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 child.Document(tags, headingLevel + 1, indent);
