@@ -1335,11 +1335,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Name>Root</Name>
         <CompositeBiomass>
           <Name>Live</Name>
-          <Constant>
-            <Name>KLModifier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1</FixedValue>
-          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Propertys>
             <string>[Root].LayerLive</string>
@@ -1744,7 +1739,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <MinimumFunction>
             <Name>CellDivisionStress</Name>
             <LinearInterpolationFunction>
-              <Name>WaterStressFactor</Name>
+              <Name>WaterStressEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1761,7 +1756,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
-              <Name>NitrogenStressFactor</Name>
+              <Name>NitrogenStressEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1784,7 +1779,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <MinimumFunction>
             <Name>ExpansionStress</Name>
             <LinearInterpolationFunction>
-              <Name>WaterStress</Name>
+              <Name>WaterStressEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1822,7 +1817,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <XProperty>[Phenology].MeanTemp.Value()</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
-              <Name>NitrogenStressFactor</Name>
+              <Name>NitrogenStressEffect</Name>
               <XYPairs>
                 <Name>XYPairs</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>

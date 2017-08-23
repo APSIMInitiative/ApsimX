@@ -1517,7 +1517,7 @@ namespace Models.PMF.Organs
             // write description of this class.
             AutoDocumentation.GetClassDescription(this, tags, indent);
 
-            //Documment Leaf expansion 
+            //Documment Potential leaf area
             tags.Add(new AutoDocumentation.Heading("Potential Leaf Area index ", headingLevel + 1));
             string LAIText = "Leaf area index is calculated as the sum of the area of each cohort of leaves  ";
             LAIText += "The tip appearance of a new leaf cohort occurs each time Structure.LeafTipsAppeared increases by one ";
@@ -1538,6 +1538,7 @@ namespace Models.PMF.Organs
                 "Each cohort models the proportion of its area that is lost to shade induced senescence as:", indent));
             (CohortParameters.ShadeInducedSenescenceRate as Model).Document(tags, -1, indent + 1);
 
+            //Document stress effects on leaf area
             tags.Add(new AutoDocumentation.Heading("Stress effects on Leaf Area Index", headingLevel + 1));
             tags.Add(new AutoDocumentation.Paragraph("Stress reduces Leaf area in a number of ways. "+
                 "Firstly, stress occuring prior to the appearance of the cohort can reduce cell division, so reducing the maximum leaf size. "+
@@ -1555,31 +1556,52 @@ namespace Models.PMF.Organs
                "This is done by multiplying thermal time accumulation by DroughtInducedLagAcceleration and DroughtInducedSenescenceAcceleration factors, respectively:", indent));
             (CohortParameters.DroughtInducedLagAcceleration as Model).Document(tags, -1, indent + 1);
             (CohortParameters.DroughtInducedSenAcceleration as Model).Document(tags, -1, indent + 1);
-            /*   // Documment DM demands.
-               tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
-               tags.Add(new AutoDocumentation.Paragraph("Total Dry matter demand is calculated by the DMDemandFunction", indent));
-   // IModel DMDemand = Apsim.Child(this, "DMDemandFunction");
-               (DMDemandFunction as Model).Document(tags, -1, indent);
-               IModel StrucFrac = Apsim.Child(this, "StructuralFraction");
-               if (StrucFrac.GetType() == typeof(Constant))
-               {
-                   if (StructuralFraction.Value() == 1.0)
-                   {
-                       tags.Add(new AutoDocumentation.Paragraph("All demand is structural and this organ has no Non-structural demand", indent));
-                   }
-                   else
-                   {
-                       double StrucPercent = StructuralFraction.Value() * 100;
-                       tags.Add(new AutoDocumentation.Paragraph("Of total biomass, " + StrucPercent + "% of this is structural and the remainder is non-structural demand", indent));
-                       tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
-                   }
-               }
-               else
-               {
-                   tags.Add(new AutoDocumentation.Paragraph("The proportion of total biomass that is partitioned to structural is determined by the StructuralFraction", indent));
-                   StrucFrac.Document(tags, -1, indent);
-                   tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
-               } */
+
+            //Document DM Demand
+            tags.Add(new AutoDocumentation.Heading("Dry matter Demand", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("Leaf calculates the DM demand from each cohort as a function of the potential size increment (DeltaPotentialArea) an specific leaf area bounds. " +
+                "Under non stressed conditions the demand for Non-storage DM is calculated as DeltaPotentialArea divided by the mean of SpecificLeafAreaMax and SpecificLeafAreaMin. " +
+                "Under stressed conditions it is calculated as DeltaWaterConstrainedArea divided by SpecificLeafAreaMin.", indent));
+            (CohortParameters.SpecificLeafAreaMax as Model).Document(tags, -1, indent + 1);
+            (CohortParameters.SpecificLeafAreaMin as Model).Document(tags, -1, indent + 1);
+            tags.Add(new AutoDocumentation.Paragraph(" Non-storage DM Demand is then seperated into structural and metabolic DM demands using the Structural fraction:", indent));
+            (CohortParameters.StructuralFraction as Model).Document(tags, -1, indent + 1);
+            tags.Add(new AutoDocumentation.Paragraph(" The storage DM Demand is calculated from the sum of Metabolic and Structural DM (including todays demands) "+
+                "Multiplied by a StorageFraction:", indent));
+            (CohortParameters.NonStructuralFraction as Model).Document(tags, -1, indent + 1);
+
+            //Document N Demand
+            tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("Leaf calculates the N demand from each cohort as a function of the potential DM increment and N concentration bounds. " +
+                "Structural N demand = PotentialStructuralDMAllocation * MinimumNConc where:", indent));
+            (CohortParameters.MinimumNConc as Model).Document(tags, -1, indent + 1);
+            tags.Add(new AutoDocumentation.Paragraph("Metabolic N demand is calculated as PotentialMetabolicDMAllocation * (CriticalNConc - MinimumNConc) where:", indent));
+            (CohortParameters.CriticalNConc as Model).Document(tags, -1, indent + 1);
+            tags.Add(new AutoDocumentation.Paragraph("Storage N demand is calculated as the sum of metabolic and structural wt (including todays demands) "+
+                " multiplied by LuxareNconc (MaximumNConc - CriticalNConc) less the amount of Storage N already present.  MaximumNConc is given by:", indent));
+            (CohortParameters.MaximumNConc as Model).Document(tags, -1, indent + 1);
+
+            //Document DM supply
+            tags.Add(new AutoDocumentation.Heading("Drymatter supply", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("The most important DM supply from leaf is the photosynthetic fixiation supply.  Radiation interception is calculated from "+
+                "LAI using an extinction coefficient of:", indent));
+            (ExtinctionCoeff as Model).Document(tags, -1, indent + 1);
+            (Photosynthesis as Model).Document(tags, -1, indent + 1);
+            tags.Add(new AutoDocumentation.Paragraph("In additon to Photosynthesis, the leaf can also supply DM by reallocation of senescing DM and retranslocation of storgage DM: "+
+                "Reallocation supply is a proportion of the Metabolic and Storage DM that would be senesced each day where the proportion is set by:", indent));
+            (CohortParameters.DMReallocationFactor as Model).Document(tags, -1, indent + 1);
+            tags.Add(new AutoDocumentation.Paragraph("Retranslocation supply is calculated as a proportion of the amount of storage DM in each cohort where the proportion is set by :", indent));
+            (CohortParameters.DMRetranslocationFactor as Model).Document(tags, -1, indent + 1);
+
+            //Document N supply
+            tags.Add(new AutoDocumentation.Heading("Nitrogen supply", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("Nitrogen supply from the leaf comes from the reallocation of metabolic and storage N in senescing material " +
+                "and the retranslocation of metabolic and storage N.  Reallocation supply is a proportion of the Metabolic and Storage DM that would be senesced each day where the proportion is set by:", indent));
+            (CohortParameters.NReallocationFactor as Model).Document(tags, -1, indent + 1);
+            tags.Add(new AutoDocumentation.Paragraph("Retranslocation supply is calculated as a proportion of the amount of storage and metabolic N in each cohort where the proportion is set by :", indent));
+            (CohortParameters.NRetranslocationFactor as Model).Document(tags, -1, indent + 1);
+
+
         }
     }
 }
