@@ -465,7 +465,6 @@ namespace UserInterface.Commands
 
             Style tableStyle = document.Styles.AddStyle("Table", "Normal");
             //tableStyle.Font.Size = 8;
-            //tableStyle.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
         }
 
         /// <summary>Creates the graph.</summary>
@@ -658,8 +657,7 @@ namespace UserInterface.Commands
                 }
                 
             }
-
-            
+            section.AddParagraph();
         }
 
 
