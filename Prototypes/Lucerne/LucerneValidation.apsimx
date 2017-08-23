@@ -22913,25 +22913,25 @@ namespace Models
                 <double>0.2</double>
                 <double>0.15</double>
                 <double>0.21</double>
-                <double>0.23</double>
-                <double>0.25</double>
-                <double>0.27</double>
+                <double>0.24</double>
+                <double>0.26</double>
                 <double>0.28</double>
-                <double>0.3</double>
+                <double>0.29</double>
                 <double>0.31</double>
+                <double>0.32</double>
                 <double>0.33</double>
                 <double>0.32</double>
-                <double>0.31</double>
+                <double>0.3</double>
+                <double>0.29</double>
+                <double>0.28</double>
+                <double>0.27</double>
                 <double>0.29</double>
                 <double>0.27</double>
-                <double>0.27</double>
-                <double>0.27</double>
-                <double>0.27</double>
-                <double>0.27</double>
-                <double>0.27</double>
-                <double>0.27</double>
-                <double>0.27</double>
-                <double>0.27</double>
+                <double>0.32</double>
+                <double>0.33</double>
+                <double>0.32</double>
+                <double>0.33</double>
+                <double>0.25</double>
               </LL>
               <KL>
                 <double>0.06</double>
@@ -23083,25 +23083,25 @@ namespace Models
               <double>0.35</double>
               <double>0.4</double>
               <double>0.45</double>
-              <double>0.43</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
-              <double>0.4</double>
+              <double>0.45</double>
+              <double>0.45</double>
+              <double>0.45</double>
               <double>0.4</double>
               <double>0.36</double>
-              <double>0.35</double>
-              <double>0.35</double>
+              <double>0.37</double>
+              <double>0.38</double>
+              <double>0.38</double>
+              <double>0.36</double>
               <double>0.34</double>
-              <double>0.32</double>
-              <double>0.32</double>
-              <double>0.31</double>
-              <double>0.31</double>
-              <double>0.31</double>
-              <double>0.31</double>
-              <double>0.31</double>
-              <double>0.31</double>
-              <double>0.31</double>
+              <double>0.34</double>
+              <double>0.34</double>
+              <double>0.34</double>
+              <double>0.35</double>
+              <double>0.35</double>
+              <double>0.38</double>
+              <double>0.4</double>
+              <double>0.4</double>
+              <double>0.35</double>
             </DUL>
             <SAT>
               <double>0.45</double>
@@ -23122,10 +23122,10 @@ namespace Models
               <double>0.36</double>
               <double>0.36</double>
               <double>0.36</double>
-              <double>0.36</double>
-              <double>0.36</double>
-              <double>0.36</double>
-              <double>0.36</double>
+              <double>0.4</double>
+              <double>0.42</double>
+              <double>0.41</double>
+              <double>0.4</double>
             </SAT>
           </Water>
           <SoilWater>
