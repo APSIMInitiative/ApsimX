@@ -18763,6 +18763,97 @@ namespace Models
   </Experiment>
   <Experiment>
     <Name>Hudson</Name>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>Defoliation</Name>
+        <Operations>
+          <Name>Cutting</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Operation>
+            <Date>1995-12-01</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1996-01-18</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1996-02-28</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1996-08-28</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1996-11-26</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-01-14</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-03-04</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-05-06</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-08-21</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-11-17</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1997-12-16</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1998-03-03</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1998-09-10</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1998-12-17</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-02-16</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-06-02</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-09-29</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-11-11</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1999-12-23</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+        </Operations>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Specifications>
+          <string>[Cutting]</string>
+        </Specifications>
+      </Factor>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Factors>
     <Simulation>
       <Name>P1 Base Simulation</Name>
       <Clock>
@@ -22427,6 +22518,10 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Experiment>
+  <Experiment>
+    <Name>Nekia</Name>
     <Factors>
       <Name>Factors</Name>
       <Factor>
@@ -22435,79 +22530,59 @@ namespace Models
           <Name>Cutting</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
-            <Date>1995-12-01</Date>
+            <Date>1999-10-22</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1996-01-18</Date>
+            <Date>1999-12-03</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1996-02-28</Date>
+            <Date>2000-01-13</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1996-08-28</Date>
+            <Date>2000-04-19</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1996-11-26</Date>
+            <Date>2000-10-04</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1997-01-14</Date>
+            <Date>2000-11-15</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1997-03-04</Date>
+            <Date>2000-12-26</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1997-05-06</Date>
+            <Date>2001-02-09</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1997-08-21</Date>
+            <Date>2001-04-20</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1997-11-17</Date>
+            <Date>2001-06-01</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1997-12-16</Date>
+            <Date>2001-11-01</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1998-03-03</Date>
+            <Date>2001-12-14</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1998-09-10</Date>
+            <Date>2002-01-25</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1998-12-17</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-02-16</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-06-02</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-09-29</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-11-11</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1999-12-23</Date>
+            <Date>2002-03-28</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
         </Operations>
@@ -22518,10 +22593,6 @@ namespace Models
       </Factor>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Factors>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Experiment>
-  <Experiment>
-    <Name>Nekia</Name>
     <Simulation>
       <Name>Base Simulation</Name>
       <Clock>
@@ -27346,6 +27417,10 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Experiment>
+  <Experiment>
+    <Name>Gatton</Name>
     <Factors>
       <Name>Factors</Name>
       <Factor>
@@ -27354,59 +27429,51 @@ namespace Models
           <Name>Cutting</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
-            <Date>1999-10-22</Date>
+            <Date>1994-09-12</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1999-12-03</Date>
+            <Date>1994-10-17</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-01-13</Date>
+            <Date>1994-11-16</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-04-19</Date>
+            <Date>1994-12-14</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-10-04</Date>
+            <Date>1995-01-09</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-11-15</Date>
+            <Date>1995-02-21</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-12-26</Date>
+            <Date>1995-03-28</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2001-02-09</Date>
+            <Date>1995-05-23</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2001-04-20</Date>
+            <Date>1995-07-13</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2001-06-01</Date>
+            <Date>1995-09-01</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2001-11-01</Date>
+            <Date>1995-10-10</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2001-12-14</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2002-01-25</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>2002-03-28</Date>
+            <Date>1995-11-09</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
         </Operations>
@@ -27417,10 +27484,6 @@ namespace Models
       </Factor>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Factors>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Experiment>
-  <Experiment>
-    <Name>Gatton</Name>
     <Simulation>
       <Name>1994_95 Hunter River</Name>
       <Clock>
@@ -30649,6 +30712,10 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Experiment>
+  <Experiment>
+    <Name>Quairading</Name>
     <Factors>
       <Name>Factors</Name>
       <Factor>
@@ -30657,51 +30724,59 @@ namespace Models
           <Name>Cutting</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
-            <Date>1994-09-12</Date>
+            <Date>1998-11-11</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1994-10-17</Date>
+            <Date>1998-12-16</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1994-11-16</Date>
+            <Date>1999-03-17</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1994-12-14</Date>
+            <Date>1999-04-28</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1995-01-09</Date>
+            <Date>1999-07-01</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1995-02-21</Date>
+            <Date>1999-08-20</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1995-03-28</Date>
+            <Date>1999-09-28</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1995-05-23</Date>
+            <Date>1999-11-16</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1995-07-13</Date>
+            <Date>2000-01-17</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1995-09-01</Date>
+            <Date>2000-02-29</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1995-10-10</Date>
+            <Date>2000-05-08</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1995-11-09</Date>
+            <Date>2000-08-08</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-10-05</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>2000-11-22</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
         </Operations>
@@ -30712,10 +30787,6 @@ namespace Models
       </Factor>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Factors>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Experiment>
-  <Experiment>
-    <Name>Quairading</Name>
     <Simulation>
       <Name> 1998_01 Trifecta</Name>
       <Clock>
@@ -33867,6 +33938,10 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
+  </Experiment>
+  <Experiment>
+    <Name>Tamworth</Name>
     <Factors>
       <Name>Factors</Name>
       <Factor>
@@ -33875,59 +33950,103 @@ namespace Models
           <Name>Cutting</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
-            <Date>1998-11-11</Date>
+            <Date>1979-10-27</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1998-12-16</Date>
+            <Date>1979-12-03</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1999-03-17</Date>
+            <Date>1980-01-21</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1999-04-28</Date>
+            <Date>1980-02-25</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1999-07-01</Date>
+            <Date>1980-05-18</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1999-08-20</Date>
+            <Date>1980-09-08</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1999-09-28</Date>
+            <Date>1980-10-19</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>1999-11-16</Date>
+            <Date>1980-11-23</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-01-17</Date>
+            <Date>1980-12-23</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-02-29</Date>
+            <Date>1981-01-19</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-05-08</Date>
+            <Date>1981-03-03</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-08-08</Date>
+            <Date>1980-10-19</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-10-05</Date>
+            <Date>1981-04-21</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
           <Operation>
-            <Date>2000-11-22</Date>
+            <Date>1981-09-08</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-10-23</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-11-27</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1981-12-30</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1982-01-29</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1982-03-08</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1982-04-08</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1982-05-28</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1982-10-27</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1982-12-21</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-02-01</Date>
+            <Action> [Mower].Script.Cut();</Action>
+          </Operation>
+          <Operation>
+            <Date>1983-03-14</Date>
             <Action> [Mower].Script.Cut();</Action>
           </Operation>
         </Operations>
@@ -33938,10 +34057,6 @@ namespace Models
       </Factor>
       <IncludeInDocumentation>true</IncludeInDocumentation>
     </Factors>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-  </Experiment>
-  <Experiment>
-    <Name>Tamworth</Name>
     <Simulation>
       <Name> 1979_83 Hunter River</Name>
       <Clock>
@@ -37139,121 +37254,6 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
-    <Factors>
-      <Name>Factors</Name>
-      <Factor>
-        <Name>Defoliation</Name>
-        <Operations>
-          <Name>Cutting</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Operation>
-            <Date>1979-10-27</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1979-12-03</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1980-01-21</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1980-02-25</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1980-05-18</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1980-09-08</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1980-10-19</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1980-11-23</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1980-12-23</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1981-01-19</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1981-03-03</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1980-10-19</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1981-04-21</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1981-09-08</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1981-10-23</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1981-11-27</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1981-12-30</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1982-01-29</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1982-03-08</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1982-04-08</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1982-05-28</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1982-10-27</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1982-12-21</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1983-02-01</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-          <Operation>
-            <Date>1983-03-14</Date>
-            <Action> [Mower].Script.Cut();</Action>
-          </Operation>
-        </Operations>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Specifications>
-          <string>[Cutting]</string>
-        </Specifications>
-      </Factor>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Factors>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
   <Experiment>
@@ -40350,7 +40350,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Observed</TableName>
+          <TableName>LucerneAllObs</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Shootbiomass</YFieldName>
           <ShowInLegend>false</ShowInLegend>
@@ -40438,9 +40438,9 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Observed</TableName>
+          <TableName>LucerneAllObs</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>LAI</YFieldName>
+          <YFieldName>lai</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -40497,16 +40497,16 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ObservedBiomass</TableName>
+          <TableName>LucerneAllObs</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Lucerne.Leaf.Live.Wt</YFieldName>
+          <YFieldName>leafgreenwt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -40563,16 +40563,16 @@ namespace Models
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16777216</ColourArgb>
-          <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+          <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
           <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
           <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
           <Marker>FilledCircle</Marker>
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>ObservedBiomass</TableName>
+          <TableName>LucerneAllObs</TableName>
           <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Lucerne.Stem.Live.Wt</YFieldName>
+          <YFieldName>stemgreenwt</YFieldName>
           <ShowInLegend>false</ShowInLegend>
           <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -40768,7 +40768,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Observed</TableName>
+          <TableName>LucerneAllObs</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Height</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -40834,7 +40834,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>Observed</TableName>
+          <TableName>LucerneAllObs</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>node_no</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -40880,7 +40880,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1988-05-26</Date>
-              <Action>[Wheat].Sow(population:100, cultivar:"BattenWinter", depth:50, rowSpacing:150);</Action>
+              <Action>[Wheat].Sow(Popn:100, cultivar:"BattenWinter", depth:50, rowSpacing:150);</Action>
             </Operation>
             <Operation>
               <Date>1988-10-15</Date>
@@ -40965,7 +40965,7 @@ namespace Models
             <IncludeInDocumentation>false</IncludeInDocumentation>
             <Operation>
               <Date>1989-06-20</Date>
-              <Action>[Wheat].Sow(population:100, cultivar:"BattenWinter", depth:50, rowSpacing:150);</Action>
+              <Action>[Wheat].Sow(Popn:100, cultivar:"BattenWinter", depth:50, rowSpacing:150);</Action>
             </Operation>
             <Operation>
               <Date>1989-11-07</Date>
@@ -41060,6 +41060,10 @@ namespace Models
       </SoilArbitrator>
       <Zone>
         <Name>paddock</Name>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SoluteManager>
         <MicroClimate>
           <Name>MicroClimate</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -41348,7 +41352,7 @@ namespace Models
             <SowingDepth>40</SowingDepth>
             <SowingRate>300</SowingRate>
             <CultivarName>Sceptre</CultivarName>
-            <SowingDate>0001-01-01</SowingDate>
+            <SowingDate>1988-05-26</SowingDate>
           </Script>
           <Code><![CDATA[
 using System;
@@ -41448,25 +41452,26 @@ namespace Models
           <Name>Cutting</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Operations>
-        <Plant>
+        <Plant15>
           <Name>Wheat</Name>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Wheat</ResourceName>
-          <CropType>Wheat</CropType>
-          <SowingDate>0001-01-01T00:00:00</SowingDate>
-        </Plant>
+          <AutoHarvest>false</AutoHarvest>
+          <CropType>wheat</CropType>
+        </Plant15>
         <Manager>
           <Name>Sow</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
           <Script>
             <SowDate>24-Jul</SowDate>
-            <Population>100</Population>
-            <SowingDepth>10</SowingDepth>
             <CultivarName>hartog</CultivarName>
+            <SowingDepth>10</SowingDepth>
             <RowSpacing>150</RowSpacing>
+            <Population>100</Population>
           </Script>
           <Code><![CDATA[using System;
 using Models.Core;
+using Models.PMF.OldPlant;
 using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
@@ -41480,7 +41485,7 @@ namespace Models
 		[Link] Clock Clock;
 		[Link] Summary Summary;
 		[Link] Soil Soil;
-		[Link] Plant Wheat;
+		[Link] Plant15 Wheat;
 		Accumulator accumulatedRain;
 		
 		[Description("Sowing date (d-mmm)")]
@@ -41492,7 +41497,7 @@ namespace Models
 		[Description("Row spacing (mm)")]
 		public double RowSpacing { get; set; }
 		[Description("Plant population (/m2)")]
-		public double Popn { get; set; }
+		public double Population { get; set; }
 		
 
 
@@ -41501,7 +41506,7 @@ namespace Models
 		{
 			if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))
 			{
-				Wheat.Sow(Population: Popn, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
+				Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);	
 			}
 		
 		}
@@ -41543,10 +41548,6 @@ namespace Models
 }
 	   ]]></Code>
         </Manager>
-        <SoluteManager>
-          <Name>SoluteManager</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </SoluteManager>
         <Soil>
           <Name>warra88_96_T8</Name>
           <Water>
@@ -44399,6 +44400,213 @@ namespace Models
   </Experiment>
   <Experiment>
     <Name>Jimbour</Name>
+    <Factors>
+      <Name>Factors</Name>
+      <Factor>
+        <Name>SowingDate</Name>
+        <Factor>
+          <Name>Strip7</Name>
+          <Operations>
+            <Name>Cutting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>1997-06-12</Date>
+              <Action>[Fertiliser].Apply(4, Fertiliser.Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-10-27</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-12-02</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-03-11</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-03-14</Date>
+              <Action>[Fertiliser].Apply(10, Fertiliser.Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-05-22</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-10-07</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-12-24</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-01-21</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-02-20</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-04-15</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-01-06</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-02-07</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>2000-05-06</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[LucerneSowingRule].Script.SowingDate = 1997-06-12</string>
+            <string>[Cutting]</string>
+            <string>[Clock].StartDate = 1997-06-10</string>
+            <string>[InitialWater]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Strip8</Name>
+          <Operations>
+            <Name>Cutting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>1997-06-12</Date>
+              <Action>[Fertiliser].Apply(4, Fertiliser.Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-10-27</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-12-02</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-03-11</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-03-14</Date>
+              <Action>[Fertiliser].Apply(10, Fertiliser.Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-05-22</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-10-07</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-12-24</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-01-21</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-02-20</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-04-15</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-07-13</Date>
+              <Action> [Mower].Script.Cut();</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[LucerneSowingRule].Script.SowingDate = 1997-06-12</string>
+            <string>[Cutting]</string>
+            <string>[Clock].StartDate =1997-05-30</string>
+            <string>[InitialWater]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Strip3a</Name>
+          <Operations>
+            <Name>Cutting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>1999-08-06</Date>
+              <Action>[Fertiliser].Apply(4, Fertiliser.Types.UreaN, 50);</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[LucerneSowingRule].Script.SowingDate = 1999-08-06</string>
+            <string>[LucerneSowingRule].Script.SowingRate= 50</string>
+            <string>[Cutting]</string>
+            <string>[Clock].StartDate = 1999-07-21</string>
+            <string>[InitialWater]</string>
+          </Specifications>
+        </Factor>
+        <Factor>
+          <Name>Strip6</Name>
+          <Operations>
+            <Name>Cutting</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Operation>
+              <Date>1997-06-12</Date>
+              <Action>[Fertiliser].Apply(4, Fertiliser.Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>1997-11-14</Date>
+              <Action>[Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-03-04</Date>
+              <Action>[Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-03-14</Date>
+              <Action>[Fertiliser].Apply(10, Fertiliser.Types.UreaN, 50);</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-06-07</Date>
+              <Action>[Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1998-10-22</Date>
+              <Action>[Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-01-20</Date>
+              <Action>[Mower].Script.Cut();</Action>
+            </Operation>
+            <Operation>
+              <Date>1999-02-22</Date>
+              <Action>[Mower].Script.Cut();</Action>
+            </Operation>
+          </Operations>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Specifications>
+            <string>[LucerneSowingRule].Script.SowingDate = 1997-06-12</string>
+            <string>[LucerneSowingRule].Script.SowingRate= 80</string>
+            <string>[Cutting]</string>
+            <string>[Clock].StartDate =1997-05-30</string>
+            <string>[InitialWater]</string>
+          </Specifications>
+        </Factor>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Specifications />
+      </Factor>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </Factors>
     <Simulation>
       <Name>1997_2000 Trifecta Grant</Name>
       <Clock>
@@ -47726,213 +47934,6 @@ namespace Models
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
-    <Factors>
-      <Name>Factors</Name>
-      <Factor>
-        <Name>SowingDate</Name>
-        <Factor>
-          <Name>Strip7</Name>
-          <Operations>
-            <Name>Cutting</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Operation>
-              <Date>1997-06-12</Date>
-              <Action>[Fertiliser].Apply(4, Fertiliser.Types.UreaN, 50);</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-10-27</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-12-02</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-03-11</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-03-14</Date>
-              <Action>[Fertiliser].Apply(10, Fertiliser.Types.UreaN, 50);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-05-22</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-10-07</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-12-24</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-01-21</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-02-20</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-04-15</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-01-06</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-02-07</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>2000-05-06</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-          </Operations>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[LucerneSowingRule].Script.SowingDate = 1997-06-12</string>
-            <string>[Cutting]</string>
-            <string>[Clock].StartDate = 1997-06-10</string>
-            <string>[InitialWater]</string>
-          </Specifications>
-        </Factor>
-        <Factor>
-          <Name>Strip8</Name>
-          <Operations>
-            <Name>Cutting</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Operation>
-              <Date>1997-06-12</Date>
-              <Action>[Fertiliser].Apply(4, Fertiliser.Types.UreaN, 50);</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-10-27</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-12-02</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-03-11</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-03-14</Date>
-              <Action>[Fertiliser].Apply(10, Fertiliser.Types.UreaN, 50);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-05-22</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-10-07</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-12-24</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-01-21</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-02-20</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-04-15</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-07-13</Date>
-              <Action> [Mower].Script.Cut();</Action>
-            </Operation>
-          </Operations>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[LucerneSowingRule].Script.SowingDate = 1997-06-12</string>
-            <string>[Cutting]</string>
-            <string>[Clock].StartDate =1997-05-30</string>
-            <string>[InitialWater]</string>
-          </Specifications>
-        </Factor>
-        <Factor>
-          <Name>Strip3a</Name>
-          <Operations>
-            <Name>Cutting</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Operation>
-              <Date>1999-08-06</Date>
-              <Action>[Fertiliser].Apply(4, Fertiliser.Types.UreaN, 50);</Action>
-            </Operation>
-          </Operations>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[LucerneSowingRule].Script.SowingDate = 1999-08-06</string>
-            <string>[LucerneSowingRule].Script.SowingRate= 50</string>
-            <string>[Cutting]</string>
-            <string>[Clock].StartDate = 1999-07-21</string>
-            <string>[InitialWater]</string>
-          </Specifications>
-        </Factor>
-        <Factor>
-          <Name>Strip6</Name>
-          <Operations>
-            <Name>Cutting</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Operation>
-              <Date>1997-06-12</Date>
-              <Action>[Fertiliser].Apply(4, Fertiliser.Types.UreaN, 50);</Action>
-            </Operation>
-            <Operation>
-              <Date>1997-11-14</Date>
-              <Action>[Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-03-04</Date>
-              <Action>[Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-03-14</Date>
-              <Action>[Fertiliser].Apply(10, Fertiliser.Types.UreaN, 50);</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-06-07</Date>
-              <Action>[Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1998-10-22</Date>
-              <Action>[Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-01-20</Date>
-              <Action>[Mower].Script.Cut();</Action>
-            </Operation>
-            <Operation>
-              <Date>1999-02-22</Date>
-              <Action>[Mower].Script.Cut();</Action>
-            </Operation>
-          </Operations>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Specifications>
-            <string>[LucerneSowingRule].Script.SowingDate = 1997-06-12</string>
-            <string>[LucerneSowingRule].Script.SowingRate= 80</string>
-            <string>[Cutting]</string>
-            <string>[Clock].StartDate =1997-05-30</string>
-            <string>[InitialWater]</string>
-          </Specifications>
-        </Factor>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <Specifications />
-      </Factor>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
-    </Factors>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
   <IncludeInDocumentation>true</IncludeInDocumentation>
