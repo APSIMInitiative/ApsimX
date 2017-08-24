@@ -128,6 +128,7 @@ namespace UserInterface.Commands
                                                          typeof(PredictedObserved)};
             Type[] modelTypesToDocument = new Type[] { typeof(Graph),
                                                        typeof(Folder),
+                                                       typeof(Experiment),
                                                        typeof(Memo),
                                                        typeof(Map),
                                                        typeof(Tests)}; 
