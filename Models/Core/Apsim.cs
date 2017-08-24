@@ -179,22 +179,25 @@ namespace Models.Core
         /// <returns>The clone of the model</returns>
         public static IModel Clone(IModel model)
         {
-            // Get rid of our parent temporarily as we don't want to serialise that.
-            IModel parent = model.Parent;
-            model.Parent = null;
-
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new MemoryStream();
-            using (stream)
+            lock (model)
             {
-                formatter.Serialize(stream, model);
-                stream.Seek(0, SeekOrigin.Begin);
-                IModel returnObject = (IModel)formatter.Deserialize(stream);
+                // Get rid of our parent temporarily as we don't want to serialise that.
+                IModel parent = model.Parent;
+                model.Parent = null;
 
-                // Reinstate parent
-                model.Parent = parent;
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new MemoryStream();
+                using (stream)
+                {
+                    formatter.Serialize(stream, model);
+                    stream.Seek(0, SeekOrigin.Begin);
+                    IModel returnObject = (IModel)formatter.Deserialize(stream);
 
-                return returnObject;
+                    // Reinstate parent
+                    model.Parent = parent;
+
+                    return returnObject;
+                }
             }
         }
 

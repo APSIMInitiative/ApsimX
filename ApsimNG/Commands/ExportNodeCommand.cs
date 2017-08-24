@@ -128,9 +128,10 @@ namespace UserInterface.Commands
                                                          typeof(PredictedObserved)};
             Type[] modelTypesToDocument = new Type[] { typeof(Graph),
                                                        typeof(Folder),
+                                                       typeof(Experiment),
                                                        typeof(Memo),
                                                        typeof(Map),
-                                                       typeof(Tests)}; 
+                                                       typeof(Tests)};
 
             // Look for child models that are a folder or simulation etc
             // that we need to recurse down through.
@@ -284,12 +285,15 @@ namespace UserInterface.Commands
             IModel dataStore = Apsim.Child(ExplorerPresenter.ApsimXFile, "DataStore");
             if (dataStore != null)
             {
-                List<IModel> tests = Apsim.ChildrenRecursively(dataStore, typeof(Tests));
+                List<IModel> tests = Apsim.FindAll(dataStore, typeof(Tests));
                 if (tests.Count > 0)
                     tags.Add(new AutoDocumentation.Heading("Statistics", 2));
 
                 foreach (Tests test in tests)
+                {
+                    tags.Add(new AutoDocumentation.Heading(test.Parent.Name, 3));
                     test.Document(tags, 3, 0);
+                }
             }
         }
 
