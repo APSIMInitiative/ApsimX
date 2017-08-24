@@ -6,6 +6,7 @@ using Models.Core;
 using System.IO;
 using System.Data;
 using System.Xml.Serialization;
+using Models.Factorial;
 
 namespace Models.PostSimulationTools
 {
@@ -22,6 +23,7 @@ namespace Models.PostSimulationTools
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(ParentType = typeof(Folder))]
     public class PredictedObserved : Model, IPostSimulationTool
     {
         /// <summary>Gets or sets the name of the predicted table.</summary>
@@ -97,6 +99,26 @@ namespace Models.PostSimulationTools
                 query = query.Replace("@match1", FieldNameUsedForMatch);
                 query = query.Replace("@match2", FieldName2UsedForMatch);
                 query = query.Replace("@match3", FieldName3UsedForMatch);
+
+                if (Parent is Folder)
+                {
+                    // Limit it to particular simulations in scope.
+                    List<string> simulationNames = new List<string>();
+                    foreach (Experiment experiment in Apsim.FindAll(this, typeof(Experiment)))
+                        simulationNames.AddRange(experiment.Names());
+                    foreach (Simulation simulation in Apsim.FindAll(this, typeof(Simulation)))
+                        if (!(simulation.Parent is Experiment))
+                            simulationNames.Add(simulation.Name);
+
+                    query.Append(" AND I.SimulationID in (");
+                    foreach (string simulationName in simulationNames)
+                    {
+                        if (simulationName != simulationNames[0])
+                            query.Append(',');
+                        query.Append(dataStore.GetSimulationID(simulationName));
+                    }
+                    query.Append(")");
+                }
 
                 DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
 

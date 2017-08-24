@@ -53,7 +53,7 @@ namespace Models
             PredictedObserved PO = Parent as PredictedObserved;
             if (PO == null)
                 return;
-            DataStore DS = PO.Parent as DataStore;
+            DataStore DS = Apsim.Find(this, typeof(DataStore)) as DataStore;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
             DataTable POtable = DS.GetData("*", PO.Name);
