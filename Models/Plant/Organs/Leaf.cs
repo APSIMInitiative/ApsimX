@@ -1534,7 +1534,7 @@ namespace Models.PMF.Organs
             (CohortParameters.LagDuration as Model).Document(tags, -1, indent+1);
             (CohortParameters.SenescenceDuration as Model).Document(tags, -1, indent+1);
 
-            tags.Add(new AutoDocumentation.Paragraph("Mutual shading can cause premature senescence of cohorts if the leaf area above them becomes to great. " +
+            tags.Add(new AutoDocumentation.Paragraph("Mutual shading can cause premature senescence of cohorts if the leaf area above them becomes too great. " +
                 "Each cohort models the proportion of its area that is lost to shade induced senescence each day as:", indent));
             (CohortParameters.ShadeInducedSenescenceRate as Model).Document(tags, -1, indent + 1);
 
