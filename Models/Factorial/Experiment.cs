@@ -231,9 +231,9 @@ namespace Models.Factorial
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                if (child.GetType() != typeof(Factors) && child.GetType() != typeof(Simulation))
-                    child.Document(tags, headingLevel + 1, indent);
+            //foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+             //   if (child.GetType() != typeof(Factors) && child.GetType() != typeof(Simulation))
+             //       child.Document(tags, headingLevel + 1, indent);
 
         }
     }
