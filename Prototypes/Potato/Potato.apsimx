@@ -1956,7 +1956,7 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
       <FileName>Observed\cultivar_nodenumber.txt</FileName>
     </Input>
     <PredictedObserved>
-      <Name>TimeCoarseData</Name>
+      <Name>TimeSeriesData</Name>
       <Tests>
         <Name>Tests</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2008,26 +2008,26 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
             <n>146</n>
             <Slope>0.032955556750770151</Slope>
             <Intercept>29812.192745699285</Intercept>
-            <SEslope>0.059218227908422551</SEslope>
-            <SEintercept>1738.9482601015532</SEintercept>
+            <SEslope>0.059218227908423092</SEslope>
+            <SEintercept>1738.9482601015691</SEintercept>
             <R2>0.0021461049518829434</R2>
-            <RMSE>5972.3064023768347</RMSE>
-            <NSE>-0.58203810511601928</NSE>
-            <ME>1788.5478879891832</ME>
-            <MAE>4117.2957627223814</MAE>
-            <RSR>1.2534760578821271</RSR>
+            <RMSE>5972.3064023768338</RMSE>
+            <NSE>-0.58203810511601883</NSE>
+            <ME>1788.5478879891841</ME>
+            <MAE>4117.29576272238</MAE>
+            <RSR>1.2534760578821269</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Potato.Stem.Live.N</Name>
             <n>144</n>
-            <Slope>0.20222558785921316</Slope>
-            <Intercept>2.2531384315832117</Intercept>
-            <SEslope>0.070896437970147719</SEslope>
-            <SEintercept>0.21998299201469812</SEintercept>
-            <R2>0.0541923353380912</R2>
+            <Slope>0.20222558785921363</Slope>
+            <Intercept>2.2531384315832108</Intercept>
+            <SEslope>0.070896437970147747</SEslope>
+            <SEintercept>0.21998299201469818</SEintercept>
+            <R2>0.054192335338091313</R2>
             <RMSE>2.1435446167479073</RMSE>
             <NSE>-0.36956831303720028</NSE>
-            <ME>0.25504593590743824</ME>
+            <ME>0.255045935907438</ME>
             <MAE>1.6192544692031499</MAE>
             <RSR>1.1662149981776269</RSR>
           </RegrStats>
@@ -2055,7 +2055,7 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
             <R2>0.65425535052683692</R2>
             <RMSE>6.7810355996669829</RMSE>
             <NSE>0.37724322182244852</NSE>
-            <ME>1.8050258444162148</ME>
+            <ME>1.8050258444162155</ME>
             <MAE>4.9982686076583445</MAE>
             <RSR>0.78700205239253651</RSR>
           </RegrStats>
@@ -2076,11 +2076,11 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
           <RegrStats>
             <Name>Potato.Tuber.Live.N</Name>
             <n>190</n>
-            <Slope>1.0836230494039942</Slope>
-            <Intercept>-0.13762079163978136</Intercept>
-            <SEslope>0.024708200453588593</SEslope>
-            <SEintercept>0.33722190729508944</SEintercept>
-            <R2>0.91096041662804017</R2>
+            <Slope>1.0836230494039936</Slope>
+            <Intercept>-0.13762079163977248</Intercept>
+            <SEslope>0.024708200453588656</SEslope>
+            <SEintercept>0.33722190729509027</SEintercept>
+            <R2>0.91096041662803962</R2>
             <RMSE>2.9323850223387264</RMSE>
             <NSE>0.86893839184841959</NSE>
             <ME>0.78095199656017877</ME>
@@ -2097,7 +2097,7 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
             <R2>0.93140779712908472</R2>
             <RMSE>159.725241505909</RMSE>
             <NSE>0.92638985960845277</NSE>
-            <ME>-27.611194268643494</ME>
+            <ME>-27.611194268643509</ME>
             <MAE>113.19889433612599</MAE>
             <RSR>0.27085164664796635</RSR>
           </RegrStats>
@@ -2109,15 +2109,15 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
             <SEslope>0.019083366934891027</SEslope>
             <SEintercept>88.849115700058817</SEintercept>
             <R2>0.9109785906507013</R2>
-            <RMSE>861.80355883846789</RMSE>
+            <RMSE>861.80355883846778</RMSE>
             <NSE>0.90457797032528742</NSE>
-            <ME>-103.38932638016759</ME>
-            <MAE>575.71158331746983</MAE>
+            <ME>-103.38932638016742</ME>
+            <MAE>575.71158331746972</MAE>
             <RSR>0.30830764643406705</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
-        <POName>TimeCoarseData</POName>
+        <POName>TimeSeriesData</POName>
       </Tests>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
@@ -2290,6 +2290,15 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
       <MemoText><![CDATA[A test dataset has been developed to test the APSIM Potato model for a range of environmental (soil and climate) conditions, management options (sowing dates, populations, nitrogen rates) and genetic backgrounds (different regions, cultivar types).  These tests have been grouped into various geographical regions to allow users to evaluate the suitability of the model for their particular region of interest.  Graphs of model performance are provided for yield, biomass production, canopy development, phenological development, water and nitrogen uptake, and yield components.
 ]]></MemoText>
     </Memo>
+    <Map>
+      <Name>Map</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Center>
+        <Latitude>-30.562260950499429</Latitude>
+        <Longitude>154.951171875</Longitude>
+      </Center>
+      <Zoom>4</Zoom>
+    </Map>
     <Folder>
       <Name>Combined Results</Name>
       <Memo>
@@ -19694,5 +19703,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>346</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>
