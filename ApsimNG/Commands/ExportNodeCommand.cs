@@ -128,9 +128,10 @@ namespace UserInterface.Commands
                                                          typeof(PredictedObserved)};
             Type[] modelTypesToDocument = new Type[] { typeof(Graph),
                                                        typeof(Folder),
+                                                       typeof(Experiment),
                                                        typeof(Memo),
                                                        typeof(Map),
-                                                       typeof(Tests)}; 
+                                                       typeof(Tests)};
 
             // Look for child models that are a folder or simulation etc
             // that we need to recurse down through.
