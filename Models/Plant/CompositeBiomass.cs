@@ -159,7 +159,7 @@ namespace Models.PMF
             tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
 
             // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))

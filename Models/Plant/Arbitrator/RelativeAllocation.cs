@@ -72,7 +72,7 @@ namespace Models.PMF
                 memo.Document(tags, -1, indent);
 
             // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
             string RelativeDocString = "Arbitration is performed in two passes for each of the supply sources.  On the first pass, biomass or nutrient supply is allocated to structural and metabolic pools of each organ based on their demand relative to the demand from all organs.  On the second pass any remaining supply is allocated to non-structural pool based on the organ's relative demand.";
             
