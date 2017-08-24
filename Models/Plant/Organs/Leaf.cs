@@ -1375,7 +1375,7 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-        #region Event handlers and publishers
+        #region Event handlers
 
         /// <summary>Occurs when [new leaf].</summary>
         public event NullTypeDelegate NewLeaf;
@@ -1422,14 +1422,14 @@ namespace Models.PMF.Organs
         {
             if (sender == Plant)
             {
-                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
+                //Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
 
-                if (Wt > 0)
-                    SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-                Live.Clear();
-                Dead.Clear();
-                Leaves.Clear();
-                CohortsAtInitialisation = 0;
+                //if (Wt > 0)
+                 //   SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
+               // Live.Clear();
+               // Dead.Clear();
+               // Leaves.Clear();
+               // CohortsAtInitialisation = 0;
             }
         }
 
