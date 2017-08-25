@@ -76,6 +76,8 @@ namespace UserInterface.Views
 
         private const string modelMime = "application/x-model-component";
 
+        System.Timers.Timer timer = new System.Timers.Timer();
+
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
@@ -102,6 +104,7 @@ namespace UserInterface.Views
             treeview1.CursorChanged += OnAfterSelect;
             treeview1.ButtonReleaseEvent += OnButtonUp;
             treeview1.ButtonPressEvent += OnButtonPress;
+            treeview1.RowActivated += OnRowActivated;
 
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry(modelMime, TargetFlags.App, 0)
@@ -121,6 +124,7 @@ namespace UserInterface.Views
             treeview1.FocusInEvent += Treeview1_FocusInEvent;
             treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+            timer.Elapsed += Timer_Elapsed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -138,6 +142,7 @@ namespace UserInterface.Views
             treeview1.CursorChanged -= OnAfterSelect;
             treeview1.ButtonReleaseEvent -= OnButtonUp;
             treeview1.ButtonPressEvent -= OnButtonPress;
+            treeview1.RowActivated -= OnRowActivated;
             treeview1.DragMotion -= OnDragOver;
             treeview1.DragDrop -= OnDragDrop;
             treeview1.DragBegin -= OnDragBegin;
@@ -146,6 +151,7 @@ namespace UserInterface.Views
             treeview1.DragEnd -= OnDragEnd;
             treeview1.FocusInEvent -= Treeview1_FocusInEvent;
             treeview1.FocusOutEvent -= Treeview1_FocusOutEvent;
+            timer.Elapsed -= Timer_Elapsed;
             foreach (Widget child in toolStrip.Children)
             {
                 if (child is ToolButton)
@@ -651,25 +657,59 @@ namespace UserInterface.Views
         {
             (treeview1.Toplevel as Gtk.Window).AddAccelGroup(accel);
         }
-        
+
         /// <summary>
-        /// Handle button press events, by looking for double clicks as a trigger
-        /// to begin editing an item name.
+        /// Handle button press events to possibly begin editing an item name.
+        /// This is in an attempt to rather slavishly follow Windows conventions.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [GLib.ConnectBefore]
         private void OnButtonPress(object sender, ButtonPressEventArgs e)
         {
-            if (e.Event.Button == 1 && e.Event.Type == Gdk.EventType.TwoButtonPress)
+            timer.Stop();
+            if (e.Event.Button == 1 && e.Event.Type == Gdk.EventType.ButtonPress)
             {
                 TreePath path;
-                if (treeview1.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path))
+                TreeViewColumn col;
+                // Get the clicked location
+                if (treeview1.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out col))
                 {
-                    BeginRenamingCurrentNode();
-                    e.RetVal = true;
+                    // See if the click was on the current selection
+                    TreePath selPath;
+                    TreeViewColumn selCol;
+                    treeview1.GetCursor(out selPath, out selCol);
+                    if (selPath != null && path.Compare(selPath) == 0)
+                    {
+                        // Check where on the row we are located, allowing 16 pixels for the image, and 2 for its border
+                        Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
+                        if (e.Event.X > rect.X + 18)
+                        {
+                            timer.Interval = treeview1.Settings.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                            timer.AutoReset = false;
+                            timer.Start();
+                        }
+                    }
                 }
             }
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Gtk.Application.Invoke(delegate
+            {
+                BeginRenamingCurrentNode();
+            });
+        }
+
+        private void OnRowActivated(object sender, RowActivatedArgs e)
+        {
+            timer.Stop();
+            if (treeview1.GetRowExpanded(e.Path))
+                treeview1.CollapseRow(e.Path);
+            else
+                treeview1.ExpandRow(e.Path, false);
+            e.RetVal = true;
         }
 
 
