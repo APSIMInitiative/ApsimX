@@ -6943,7 +6943,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     <ExcelInput>
       <Name>Observed</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>D:\GitHubRepos\ApsimOatObsFile.xlsx</FileName>
+      <FileName>ApsimOatObsFile.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
       </SheetNames>
