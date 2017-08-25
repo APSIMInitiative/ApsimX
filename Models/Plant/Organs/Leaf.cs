@@ -1505,24 +1505,6 @@ namespace Models.PMF.Organs
                 L.DoKill(KillLeaf.KillFraction);
         }
 
-        /// <summary>Called when crop is being cut.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Cutting")]
-        private void OnCutting(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                //Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
-
-                //if (Wt > 0)
-                 //   SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-               // Live.Clear();
-               // Dead.Clear();
-               // Leaves.Clear();
-               // CohortsAtInitialisation = 0;
-            }
-        }
 
         /// <summary>Called when crop is being prunned.</summary>
         /// <param name="sender">The sender.</param>
