@@ -675,7 +675,7 @@ namespace Models.PMF.Struct
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
             // write a list of constant functions.
             foreach (IModel child in Apsim.Children(this, typeof(Constant)))

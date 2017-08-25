@@ -335,11 +335,7 @@ namespace Models.Core
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
-
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                child.Document(tags, headingLevel + 1, indent);
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent, true);
         }
 
         /// <summary>

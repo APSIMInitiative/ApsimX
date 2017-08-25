@@ -649,7 +649,7 @@ namespace Models.PMF.Organs
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
             // Documment DM demands.
             tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel+1));

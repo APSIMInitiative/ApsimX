@@ -61,8 +61,11 @@ namespace Models.Core
         /// <summary>Writes the description of a class to the tags.</summary>
         /// <param name="model">The model to get documentation for.</param>
         /// <param name="tags">The tags to add to.</param>
+        /// <param name="headingLevel">The heading level to use.</param>
         /// <param name="indent">The indentation level.</param>
-        public static void GetClassDescription(object model, List<ITag> tags, int indent)
+        /// <param name="documentAllChildren">Document all children?</param>
+        /// <param name="withHeading">Put a heading in for this model?</param>
+        public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = false, bool withHeading = false)
         {
             if (doc == null)
             {
@@ -70,6 +73,11 @@ namespace Models.Core
                 doc = new XmlDocument();
                 doc.Load(fileName);
             }
+
+            if (withHeading)
+                tags.Add(new AutoDocumentation.Heading(model.Name, headingLevel));
+
+            List<IModel> childrenDocumented = new List<Core.IModel>();
 
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, "members/T:" + model.GetType().FullName + "/summary");
             if (summaryNode != null)
@@ -81,9 +89,20 @@ namespace Models.Core
                     st = st.Remove(0, 2);
                 StringReader reader = new StringReader(st);
                 string line = reader.ReadLine();
+                int targetHeadingLevel = headingLevel;
                 while (line != null)
                 {
                     line = line.Trim();
+
+                    // Adjust heading levels.
+                    if (line.StartsWith("#"))
+                    {
+                        int currentHeadingLevel = line.Count(c => c == '#') / 2;
+                        targetHeadingLevel = headingLevel + currentHeadingLevel - 1;
+                        string hashString = new string('#', targetHeadingLevel);
+                        line = hashString + line.Replace("#", "") + hashString;
+                    }
+
                     if (line != string.Empty)
                     {
                         {
@@ -98,15 +117,26 @@ namespace Models.Core
                         }
                     }
                     string heading;
-                    int headingLevel;
-                    if (GetHeadingFromLine(line, out heading, out headingLevel))
+                    int thisHeadingLevel;
+                    if (GetHeadingFromLine(line, out heading, out thisHeadingLevel))
                     {
-                        if (paragraphSoFar != string.Empty)
+                        StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+                        tags.Add(new Heading(heading, thisHeadingLevel));
+                    }
+                    else if (line.StartsWith("[Document "))
+                    {
+                        StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+
+                        // Find child
+                        string childName = line.Replace("[Document ", "").Replace("]", "");
+                        IModel child = Apsim.Get(model, childName) as IModel;
+                        if (child == null)
+                            paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
+                        else
                         {
-                            tags.Add(new Paragraph(paragraphSoFar, indent));
-                            paragraphSoFar = string.Empty;
+                            child.Document(tags, targetHeadingLevel + 1, indent);
+                            childrenDocumented.Add(child);
                         }
-                        tags.Add(new Heading(heading, headingLevel));
                     }
                     else
                         paragraphSoFar += line + "\r\n";
@@ -114,12 +144,25 @@ namespace Models.Core
                     line = reader.ReadLine();
                 }
 
-                if (paragraphSoFar != string.Empty)
+                StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+            }
+
+            if(documentAllChildren)
+            {
+                // write children.
+                foreach (IModel child in Apsim.Children(model, typeof(IModel)))
                 {
-                    tags.Add(new Paragraph(paragraphSoFar, indent));
-                    paragraphSoFar = string.Empty;
+                    if (!childrenDocumented.Contains(child))
+                        child.Document(tags, headingLevel + 1, indent);
                 }
             }
+        }
+
+        private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
+        {
+            if (paragraphSoFar != string.Empty)
+                tags.Add(new Paragraph(paragraphSoFar, indent));
+            paragraphSoFar = string.Empty;
         }
 
         /// <summary>Look at a string and return true if it is a heading.</summary>
