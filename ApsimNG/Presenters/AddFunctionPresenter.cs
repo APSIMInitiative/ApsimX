@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="AddModelPresenter.cs" company="APSIM Initiative">
+// <copyright file="AddFunctionPresenter.cs" company="APSIM Initiative">
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
@@ -40,10 +40,10 @@ namespace UserInterface.Presenters
             this.view = view as IListButtonView;
             this.explorerPresenter = explorerPresenter;
 
-            allowableChildFunctions = Apsim.GetAllowableChildFunctions(this.model);
+            this.allowableChildFunctions = Apsim.GetAllowableChildFunctions(this.model);
 
             this.view.List.IsModelList = true;
-            this.view.List.Values = allowableChildFunctions.Select(m => m.Name).ToArray();
+            this.view.List.Values = this.allowableChildFunctions.Select(m => m.Name).ToArray();
             this.view.AddButton("Add", null, this.OnAddButtonClicked);
 
             // Trap events from the view.
@@ -64,10 +64,10 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            Type selectedModelType = allowableChildFunctions.Find(m => m.Name == view.List.SelectedValue);
+            Type selectedModelType = this.allowableChildFunctions.Find(m => m.Name == this.view.List.SelectedValue);
             if (selectedModelType != null)
             {
-                explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 try
                 {
                     // Use the pre built serialization assembly.
@@ -76,12 +76,12 @@ namespace UserInterface.Presenters
 
                     object child = Activator.CreateInstance(selectedModelType, true);
                     string childXML = XmlUtilities.Serialise(child, false, deserializerFileName);
-                    this.explorerPresenter.Add(childXML, Apsim.FullPath(model));
-                    // this.explorerPresenter.HideRightHandPanel();
+                    this.explorerPresenter.Add(childXML, Apsim.FullPath(this.model));
+                    /* this.explorerPresenter.HideRightHandPanel(); */
                 }
                 finally
                 {
-                    explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                    this.explorerPresenter.MainPresenter.ShowWaitCursor(false);
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace UserInterface.Presenters
 
             // We want to create an object of the named type
             Type modelType = null;
-            explorerPresenter.MainPresenter.ShowWaitCursor(true);
+            this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
             try
             {
                 foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -119,7 +119,7 @@ namespace UserInterface.Presenters
 
                     object child = Activator.CreateInstance(modelType, true);
                     string childXML = XmlUtilities.Serialise(child, false, deserializerFileName);
-                    (view.List as ListBoxView).SetClipboardText(childXML);
+                    (this.view.List as ListBoxView).SetClipboardText(childXML);
 
                     DragObject dragObject = new DragObject();
                     dragObject.NodePath = e.NodePath;
@@ -130,9 +130,8 @@ namespace UserInterface.Presenters
             }
             finally
             {
-                explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                this.explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
-
         }
     }
 }
