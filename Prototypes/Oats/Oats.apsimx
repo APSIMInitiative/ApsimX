@@ -6943,7 +6943,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
     <ExcelInput>
       <Name>Observed</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>ApsimOatObsFile.xlsx</FileName>
+      <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
       </SheetNames>
@@ -13001,7 +13001,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>Observations</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Oats.Leaf.LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
@@ -13070,7 +13070,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>Observations</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Oats.Leaf.LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
@@ -13139,7 +13139,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>Observations</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Oats.Leaf.LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
@@ -13208,7 +13208,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>Observations</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Oats.Leaf.LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
@@ -13277,7 +13277,7 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>Observations</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Oats.Leaf.LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
@@ -19424,7 +19424,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.Leaf.AppearedCohortNo</YFieldName>
+            <YFieldName>Oats.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -19444,7 +19444,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>ObsStructure</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Structure.LeafTipsAppeared</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -19488,9 +19488,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>ObsStructure</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Structure.MainStemLigules</YFieldName>
+            <YFieldName>Oats.Leaf.ExpandedCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -19594,7 +19594,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Stem.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -19680,7 +19680,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -19744,7 +19744,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.Dead.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -19808,7 +19808,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.StructureTotalStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -19872,7 +19872,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.SLA</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -21789,7 +21789,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -21855,7 +21855,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Grain.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -21921,7 +21921,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -22095,7 +22095,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Stem.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -22161,7 +22161,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -22227,7 +22227,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.SLA</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -22293,7 +22293,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.StructureTotalStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -23043,7 +23043,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -23107,7 +23107,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Grain.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -23171,7 +23171,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -23213,9 +23213,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>ObsStructure</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Structure.MainStemLigules</YFieldName>
+            <YFieldName>Oats.Leaf.ExpandedCohortNo</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -23300,7 +23300,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.StructureTotalStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -23366,7 +23366,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -23432,7 +23432,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Stem.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -23540,7 +23540,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Grain.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -24289,7 +24289,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -24353,7 +24353,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Grain.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -24417,7 +24417,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observations</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -24463,5 +24463,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>298</ExplorerWidth>
+  <ExplorerWidth>282</ExplorerWidth>
 </Simulations>
