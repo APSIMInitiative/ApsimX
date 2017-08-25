@@ -227,7 +227,16 @@ namespace Models.PMF
             }
         }
         /// <summary>Returns true if the crop is ready for harvesting</summary>
-        public bool IsReadyForHarvesting { get { return Phenology.CurrentPhaseName == "ReadyForHarvesting"; } }
+        public bool IsReadyForHarvesting
+        {
+            get
+            {
+                if (Phenology != null)
+                    return Phenology.CurrentPhaseName == "ReadyForHarvesting";
+                else
+                    return false;
+            }
+        }
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
