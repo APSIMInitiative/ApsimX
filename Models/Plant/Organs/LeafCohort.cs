@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Functions;
 
 namespace Models.PMF.Organs
 {
@@ -67,6 +68,10 @@ namespace Models.PMF.Organs
 
         [Link]
         private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
+
+        /// <summary>Modify leaf size by age</summary>
+        [Link]
+        private ArrayFunction AgeMultiplier = null;
 
         /// <summary>The live</summary>
         [XmlIgnore]
@@ -219,10 +224,6 @@ namespace Models.PMF.Organs
         /// <summary>The age of apex in each age group</summary>
         [XmlIgnore]
         public double[] GroupAge;
-
-        /// <summary>Modify leaf size by age</summary>
-        [XmlIgnore]
-        public double[] AgeMultiplier;
 
         /// <summary>The cell division stress factor</summary>
         [XmlIgnore]
@@ -909,12 +910,10 @@ namespace Models.PMF.Organs
             double deltaActualArea = Math.Min(DeltaWaterConstrainedArea, DeltaCarbonConstrainedArea);
 
             //Modify leaf area using tillering approach
-            AgeMultiplier = new double[] { 0.5, 0.75, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-            List<double> ageMultiplierList = AgeMultiplier.ToList();
             double totalf = 1;
             for(int i=1; i< ApexGroupAge.Count;i++)
             {
-                double f = ageMultiplierList.ElementAt((int)ApexGroupAge[i] - 1);
+                double f = AgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
                 totalf += f * Leaf.ApexGroupSize[i];
             }
 

@@ -10,7 +10,7 @@ namespace Models.PMF.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ArrayFunction : Model, IArrayFunction
+    public class ArrayFunction : Model, IFunction
     {
         /// <summary>Gets the value.</summary>
         [Description("The values of the array (space seperated)")]
@@ -23,8 +23,11 @@ namespace Models.PMF.Functions
         private List<double> str2dbl = new List<double>();
 
         /// <summary>Gets the value of the function.</summary>
-        public double[] Value(int arrayIndex = -1)
+        public double Value(int arrayIndex = -1)
         {
+            if (arrayIndex == -1)
+                throw new ApsimXException(this, "ArrayFunction must pass an index to return.");
+
             if (str2dbl.Count == 0)
             {
                 string[] split = Values.Split(' ');
@@ -38,7 +41,7 @@ namespace Models.PMF.Functions
                         throw new ApsimXException(this, "ArrayFunction: Could not convert " + s + " to a number.");
                     }
             }
-            return str2dbl.ToArray();
+            return str2dbl[arrayIndex];
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
