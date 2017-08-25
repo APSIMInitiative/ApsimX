@@ -69,6 +69,10 @@ namespace Models.PMF.Organs
         [Link]
         private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
+        /// <summary>Modify leaf size by age</summary>
+        [Link]
+        private ArrayFunction AgeMultiplier = null;
+
         /// <summary>The live</summary>
         [XmlIgnore]
         public Biomass Live = new Biomass();
@@ -220,10 +224,6 @@ namespace Models.PMF.Organs
         /// <summary>The age of apex in each age group</summary>
         [XmlIgnore]
         public double[] GroupAge;
-
-        /// <summary>Modify leaf size by age</summary>
-        [XmlIgnore]
-        public double[] AgeMultiplier;
 
         /// <summary>The cell division stress factor</summary>
         [XmlIgnore]
