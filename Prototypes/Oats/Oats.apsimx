@@ -6941,6 +6941,39 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <CropType>Wheat</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
+    <Manager>
+      <Name>Harvesting</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <Script />
+      <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Plant Oats;
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Oats.Phenology.CurrentPhaseName == "Maturing")
+			{
+				Oats.Harvest();
+				Oats.EndCrop();
+			}
+		}
+	}
+}
+	   ]]></Code>
+    </Manager>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
   <DataStore>
@@ -8263,6 +8296,10 @@ late drought increased screenings.
             <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
+          <SoilArbitrator>
+            <Name>Soil Arbitrator</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoilArbitrator>
           <Zone>
             <Name>paddock</Name>
             <Soil>
@@ -8764,115 +8801,6 @@ namespace Models
 	}
 }]]></Code>
             </Manager>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Oats;
-		[Link] Clock clock;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Oats.IsAlive == true)
-			{	
-				DateTime HD = new DateTime(1999, 03, 04);
-				if (clock.Today.Date == HD.Date)
-				{
-					Oats.Harvest();
-					Oats.EndCrop();
-				}
-			}
-		}
-	}
-}
-	   ]]></Code>
-            </Manager>
-            <Manager>
-              <Name>LeafSize</Name>
-              <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Plant Oats;
-		[Link] Zone zone;
-					
-		[XmlIgnore] public bool InitialDay { get; set; }
-		
-		[XmlIgnore] public double LeafExpandedPosition { get; set; }
-		[XmlIgnore] public double LeafAppearedPosition { get; set; }
-		[XmlIgnore] public double ExpandedLeafNoYesterday { get; set; }
-		[XmlIgnore] public double AppearedLeafNoYesterday { get; set; }
-		[XmlIgnore] public double MostRecentlyExpandedLeafSize { get; set; }
-		[XmlIgnore] public double MostRecentlyAppearedLeafMaxSize { get; set; }
-        
-		[EventSubscribe("Commencing")]
-		private void OnSimulationCommencing(object sender, EventArgs e)
-		{
-			InitialDay = true;
-			LeafExpandedPosition = 0;
-			LeafAppearedPosition = 0;
-			ExpandedLeafNoYesterday = 0;
-			AppearedLeafNoYesterday = 0;
-			MostRecentlyExpandedLeafSize = 0;
-			MostRecentlyAppearedLeafMaxSize = 0;
-		}
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			ExpandedLeafNoYesterday = (double)zone.Get("Oats.Leaf.ExpandedCohortNo");
-			AppearedLeafNoYesterday = (double)zone.Get("Oats.Leaf.AppearedCohortNo");
-		}
-		
-		[EventSubscribe("DoManagementCalculations")]
-		private void OnDoManagementCalculations(object sender, EventArgs e)
-		{
-			if ((double)zone.Get("Oats.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
-			{
-				LeafExpandedPosition = (double)zone.Get("Oats.Leaf.ExpandedCohortNo");
-				MostRecentlyExpandedLeafSize = (double)zone.Get("Oats.Leaf.CohortSize[" + (int)LeafExpandedPosition + "]");
-			}
-			
-			if ((double)zone.Get("Oats.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday)
-			{
-				LeafAppearedPosition = (double)zone.Get("Oats.Leaf.AppearedCohortNo");
-				MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Oats.Leaf.CohortParameters.MaxArea.Value()");
-			}
-			
-		}
-	}
-}
-	   ]]></Code>
-            </Manager>
             <Folder>
               <Name>Manager folder</Name>
               <Operations>
@@ -8955,6 +8883,102 @@ namespace Models
                   <Action> [Irrigation].Apply(24);</Action>
                 </Operation>
               </Operations>
+              <Manager>
+                <Name>LeafSize</Name>
+                <IncludeInDocumentation>false</IncludeInDocumentation>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Plant Oats;
+		[Link] Zone zone;
+					
+		[XmlIgnore] public bool InitialDay { get; set; }
+		
+		[XmlIgnore] public double LeafExpandedPosition { get; set; }
+		[XmlIgnore] public double LeafAppearedPosition { get; set; }
+		[XmlIgnore] public double ExpandedLeafNoYesterday { get; set; }
+		[XmlIgnore] public double AppearedLeafNoYesterday { get; set; }
+		[XmlIgnore] public double MostRecentlyExpandedLeafSize { get; set; }
+		[XmlIgnore] public double MostRecentlyAppearedLeafMaxSize { get; set; }
+        
+		[EventSubscribe("Commencing")]
+		private void OnSimulationCommencing(object sender, EventArgs e)
+		{
+			InitialDay = true;
+			LeafExpandedPosition = 0;
+			LeafAppearedPosition = 0;
+			ExpandedLeafNoYesterday = 0;
+			AppearedLeafNoYesterday = 0;
+			MostRecentlyExpandedLeafSize = 0;
+			MostRecentlyAppearedLeafMaxSize = 0;
+		}
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			ExpandedLeafNoYesterday = (double)zone.Get("Oats.Leaf.ExpandedCohortNo");
+			AppearedLeafNoYesterday = (double)zone.Get("Oats.Leaf.AppearedCohortNo");
+		}
+		
+		[EventSubscribe("DoManagementCalculations")]
+		private void OnDoManagementCalculations(object sender, EventArgs e)
+		{
+			if ((double)zone.Get("Oats.Leaf.ExpandedCohortNo") > ExpandedLeafNoYesterday)
+			{
+				LeafExpandedPosition = (double)zone.Get("Oats.Leaf.ExpandedCohortNo");
+				MostRecentlyExpandedLeafSize = (double)zone.Get("Oats.Leaf.CohortSize[" + (int)LeafExpandedPosition + "]");
+			}
+			
+			if ((double)zone.Get("Oats.Leaf.AppearedCohortNo") > AppearedLeafNoYesterday)
+			{
+				LeafAppearedPosition = (double)zone.Get("Oats.Leaf.AppearedCohortNo");
+				MostRecentlyAppearedLeafMaxSize = (double)zone.Get("Oats.Leaf.CohortParameters.MaxArea.Value()");
+			}
+			
+		}
+	}
+}
+	   ]]></Code>
+              </Manager>
+              <Manager>
+                <Name>Harvesting</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+
+	}
+}
+
+	   ]]></Code>
+              </Manager>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ShowPageOfGraphs>true</ShowPageOfGraphs>
             </Folder>
@@ -9027,10 +9051,6 @@ namespace Models
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <SoilArbitrator>
-            <Name>Soil Arbitrator</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoilArbitrator>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Simulation>
         <Graph>
@@ -10631,18 +10651,6 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <string>[Fertilise].Script.SDSwitch = 2.0</string>
               </Specifications>
             </Factor>
-            <Factor>
-              <Name>Fallow</Name>
-              <Operations>
-                <Name>Operations</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Operations>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Specifications>
-                <string>[Operations]</string>
-                <string>[Fertilise].Script.SDSwitch = 0.0</string>
-              </Specifications>
-            </Factor>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Specifications />
           </Factor>
@@ -10701,273 +10709,12 @@ Grazing winter forage crops is an important management strategy for profitable l
             <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
+          <SoilArbitrator>
+            <Name>Soil Arbitrator</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoilArbitrator>
           <Zone>
             <Name>paddock</Name>
-            <Folder>
-              <Name>Manager folder</Name>
-              <Operations>
-                <Name>Operations</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Operations>
-              <Manager>
-                <Name>Fertilise</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script>
-                  <FertDate1>05-Aug</FertDate1>
-                  <FertDate2>01-Oct</FertDate2>
-                  <FertDate3>20-Oct</FertDate3>
-                  <FertDate4>25-Nov</FertDate4>
-                  <Amount1>0</Amount1>
-                  <Amount2>0</Amount2>
-                  <Amount3>0</Amount3>
-                  <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
-                </Script>
-                <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		
-		[Description("Date to fertilise")]
-		public string FertDate1 { get; set; }
-		[Description("Date to fertilise")]
-		public string FertDate2 { get; set; }
-		[Description("Date to fertilise")]
-		public string FertDate3 { get; set; }
-		[Description("Date to fertilise")]
-		public string FertDate4 { get; set; }
-		
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount1 { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount2 { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount3 { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount4 { get; set; }
-		
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double SDSwitch { get; set; }
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (DateUtilities.WithinDates(FertDate1, Clock.Today, FertDate1))
-				Fertiliser.Apply(Amount: Amount1 * SDSwitch, Type: Fertiliser.Types.NO3N);
-			if (DateUtilities.WithinDates(FertDate2, Clock.Today, FertDate2))
-				Fertiliser.Apply(Amount: Amount2, Type: Fertiliser.Types.NO3N);
-			if (DateUtilities.WithinDates(FertDate3, Clock.Today, FertDate3))
-				Fertiliser.Apply(Amount: Amount3, Type: Fertiliser.Types.NO3N);
-			if (DateUtilities.WithinDates(FertDate4, Clock.Today, FertDate4))
-				Fertiliser.Apply(Amount: Amount4 * SDSwitch, Type: Fertiliser.Types.NO3N);
-		}
-	}
-}
-]]></Code>
-              </Manager>
-              <Operations>
-                <Name>Fertilize</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-06-01</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
-                </Operation>
-              </Operations>
-              <Operations>
-                <Name>Irr</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-10-15</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-03</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-15</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2015-11-20</Date>
-                  <Action>[Irrigation].Apply(30);</Action>
-                </Operation>
-              </Operations>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ShowPageOfGraphs>true</ShowPageOfGraphs>
-            </Folder>
-            <Irrigation>
-              <Name>Irrigation</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </Irrigation>
-            <SurfaceOrganicMatter>
-              <Name>Surface Organic Matter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ResidueTypes>
-                <Name>ResidueTypes</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LoadFromResource>ResidueTypes</LoadFromResource>
-              </ResidueTypes>
-              <Pools>
-                <Pool>
-                  <PoolName>wheat_stubble</PoolName>
-                  <ResidueType>wheat</ResidueType>
-                  <Mass>0</Mass>
-                  <CNRatio>80</CNRatio>
-                  <CPRatio>NaN</CPRatio>
-                  <StandingFraction>0</StandingFraction>
-                </Pool>
-              </Pools>
-              <PoolName>wheat_stubble</PoolName>
-              <type>wheat</type>
-              <mass>0</mass>
-              <standing_fraction>0</standing_fraction>
-              <cpr />
-              <cnr>80</cnr>
-              <CriticalResidueWeight>2000</CriticalResidueWeight>
-              <OptimumDecompTemp>20</OptimumDecompTemp>
-              <MaxCumulativeEOS>20</MaxCumulativeEOS>
-              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-              <TotalLeachRain>25</TotalLeachRain>
-              <MinRainToLeach>10</MinRainToLeach>
-              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-              <DefaultCPRatio>0</DefaultCPRatio>
-              <DefaultStandingFraction>0</DefaultStandingFraction>
-              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-              <FractionFaecesAdded>0.5</FractionFaecesAdded>
-            </SurfaceOrganicMatter>
-            <Fertiliser>
-              <Name>Fertiliser</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </Fertiliser>
-            <MicroClimate>
-              <Name>MicroClimate</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <a_interception>0</a_interception>
-              <b_interception>1</b_interception>
-              <c_interception>0</c_interception>
-              <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <refheight>2</refheight>
-              <albedo>0.29366217672824863</albedo>
-              <emissivity>0.96</emissivity>
-              <RadIntTotal>0</RadIntTotal>
-            </MicroClimate>
-            <Plant>
-              <Name>Oats</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ResourceName>Oats</ResourceName>
-              <CropType>Oats</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
-            </Plant>
-            <Report>
-              <Name>DailyReport</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string />
-              </VariableNames>
-              <EventNames>
-                <string />
-              </EventNames>
-            </Report>
-            <Report>
-              <Name>HarvestReport</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string />
-              </VariableNames>
-              <EventNames>
-                <string />
-              </EventNames>
-            </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Oats;
-		[Link] Clock clock;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Oats.IsAlive == true)
-			{	
-				DateTime HD = new DateTime(2015, 11, 30);
-				if (clock.Today.Date == HD.Date)
-				{
-					Oats.Harvest();
-					Oats.EndCrop();
-				}
-			}
-		}
-	}
-}
-	   ]]></Code>
-            </Manager>
-            <Report>
-              <Name>SupReport</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string>[Clock].Today</string>
-                <string>[Leaf].CohortSize</string>
-                <string>[0ats].Arbitrator.DMAllocated</string>
-                <string>[0ats].Arbitrator.DMDemand</string>
-                <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                <string>[0ats].Arbitrator.FN</string>
-                <string>[0ats].Arbitrator.NDemand</string>
-                <string>[0ats].Leaf.CohortMaxSize</string>
-                <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.MaxArea.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
-                <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
-              </VariableNames>
-              <EventNames>
-                <string>[Clock].DoReport</string>
-              </EventNames>
-            </Report>
             <Soil>
               <Name>Soil</Name>
               <Analysis>
@@ -11342,14 +11089,261 @@ namespace Models
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </SoluteManager>
+            <Irrigation>
+              <Name>Irrigation</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Irrigation>
+            <SurfaceOrganicMatter>
+              <Name>Surface Organic Matter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ResidueTypes>
+                <Name>ResidueTypes</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LoadFromResource>ResidueTypes</LoadFromResource>
+              </ResidueTypes>
+              <Pools>
+                <Pool>
+                  <PoolName>wheat_stubble</PoolName>
+                  <ResidueType>wheat</ResidueType>
+                  <Mass>0</Mass>
+                  <CNRatio>80</CNRatio>
+                  <CPRatio>NaN</CPRatio>
+                  <StandingFraction>0</StandingFraction>
+                </Pool>
+              </Pools>
+              <PoolName>wheat_stubble</PoolName>
+              <type>wheat</type>
+              <mass>0</mass>
+              <standing_fraction>0</standing_fraction>
+              <cpr />
+              <cnr>80</cnr>
+              <CriticalResidueWeight>2000</CriticalResidueWeight>
+              <OptimumDecompTemp>20</OptimumDecompTemp>
+              <MaxCumulativeEOS>20</MaxCumulativeEOS>
+              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+              <TotalLeachRain>25</TotalLeachRain>
+              <MinRainToLeach>10</MinRainToLeach>
+              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+              <DefaultCPRatio>0</DefaultCPRatio>
+              <DefaultStandingFraction>0</DefaultStandingFraction>
+              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+              <FractionFaecesAdded>0.5</FractionFaecesAdded>
+            </SurfaceOrganicMatter>
+            <Fertiliser>
+              <Name>Fertiliser</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Fertiliser>
+            <MicroClimate>
+              <Name>MicroClimate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <a_interception>0</a_interception>
+              <b_interception>1</b_interception>
+              <c_interception>0</c_interception>
+              <d_interception>0</d_interception>
+              <soil_albedo>0.3</soil_albedo>
+              <sun_angle>15</sun_angle>
+              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+              <night_interception_fraction>0.5</night_interception_fraction>
+              <refheight>2</refheight>
+              <albedo>0.29366217672824863</albedo>
+              <emissivity>0.96</emissivity>
+              <RadIntTotal>0</RadIntTotal>
+            </MicroClimate>
+            <Plant>
+              <Name>Oats</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ResourceName>Oats</ResourceName>
+              <CropType>Oats</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
+            </Plant>
+            <Folder>
+              <Name>Manager folder</Name>
+              <Operations>
+                <Name>Operations</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Operations>
+              <Manager>
+                <Name>Fertilise</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script>
+                  <SDSwitch>0</SDSwitch>
+                  <Amount1>0</Amount1>
+                  <Amount2>0</Amount2>
+                  <Amount3>0</Amount3>
+                  <Amount4>0</Amount4>
+                  <FertDate1>05-Aug</FertDate1>
+                  <FertDate2>01-Oct</FertDate2>
+                  <FertDate3>20-Oct</FertDate3>
+                  <FertDate4>25-Nov</FertDate4>
+                </Script>
+                <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		
+		[Description("Date to fertilise")]
+		public string FertDate1 { get; set; }
+		[Description("Date to fertilise")]
+		public string FertDate2 { get; set; }
+		[Description("Date to fertilise")]
+		public string FertDate3 { get; set; }
+		[Description("Date to fertilise")]
+		public string FertDate4 { get; set; }
+		
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount1 { get; set; }
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount2 { get; set; }
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount3 { get; set; }
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount4 { get; set; }
+		
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double SDSwitch { get; set; }
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (DateUtilities.WithinDates(FertDate1, Clock.Today, FertDate1))
+				Fertiliser.Apply(Amount: Amount1 * SDSwitch, Type: Fertiliser.Types.NO3N);
+			if (DateUtilities.WithinDates(FertDate2, Clock.Today, FertDate2))
+				Fertiliser.Apply(Amount: Amount2, Type: Fertiliser.Types.NO3N);
+			if (DateUtilities.WithinDates(FertDate3, Clock.Today, FertDate3))
+				Fertiliser.Apply(Amount: Amount3, Type: Fertiliser.Types.NO3N);
+			if (DateUtilities.WithinDates(FertDate4, Clock.Today, FertDate4))
+				Fertiliser.Apply(Amount: Amount4 * SDSwitch, Type: Fertiliser.Types.NO3N);
+		}
+	}
+}
+]]></Code>
+              </Manager>
+              <Operations>
+                <Name>Fertilize</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2015-06-01</Date>
+                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
+                </Operation>
+              </Operations>
+              <Operations>
+                <Name>Irr</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2015-10-15</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-03</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-15</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2015-11-20</Date>
+                  <Action>[Irrigation].Apply(30);</Action>
+                </Operation>
+              </Operations>
+              <Manager>
+                <Name>Harvesting</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+
+	}
+}
+	   ]]></Code>
+              </Manager>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ShowPageOfGraphs>true</ShowPageOfGraphs>
+            </Folder>
+            <Report>
+              <Name>DailyReport</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string />
+              </VariableNames>
+              <EventNames>
+                <string />
+              </EventNames>
+            </Report>
+            <Report>
+              <Name>HarvestReport</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string />
+              </VariableNames>
+              <EventNames>
+                <string />
+              </EventNames>
+            </Report>
+            <Report>
+              <Name>SupReport</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string>[Clock].Today</string>
+                <string>[Leaf].CohortSize</string>
+                <string>[0ats].Arbitrator.DMAllocated</string>
+                <string>[0ats].Arbitrator.DMDemand</string>
+                <string>[0ats].Arbitrator.DMNutrientLimitation</string>
+                <string>[0ats].Arbitrator.DMSinkLimitation</string>
+                <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[0ats].Arbitrator.FN</string>
+                <string>[0ats].Arbitrator.NDemand</string>
+                <string>[0ats].Leaf.CohortMaxSize</string>
+                <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+                <string>[0ats].Leaf.CohortParameters.MaxArea.Value()</string>
+                <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+                <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
+                <string>[0ats].Leaf.Photosynthesis.RueAct</string>
+                <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                <string>[0ats].Leaf.NextExpandingLeafProportion</string>
+                <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
+              </VariableNames>
+              <EventNames>
+                <string>[Clock].DoReport</string>
+              </EventNames>
+            </Report>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <SoilArbitrator>
-            <Name>Soil Arbitrator</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoilArbitrator>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Simulation>
         <Folder>
@@ -11719,230 +11713,12 @@ Grazing winter forage crops is an important management strategy for profitable l
             <FileName>%root%\Examples\WeatherFiles\lincoln.met</FileName>
             <ExcelWorkSheetName />
           </Weather>
+          <SoilArbitrator>
+            <Name>Soil Arbitrator</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </SoilArbitrator>
           <Zone>
             <Name>paddock</Name>
-            <Folder>
-              <Name>Manager folder</Name>
-              <Operations>
-                <Name>Operations</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Operations>
-              <Manager>
-                <Name>Fertilise</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script>
-                  <FertDate1>05-Aug</FertDate1>
-                  <FertDate2>01-Oct</FertDate2>
-                  <FertDate3>20-Oct</FertDate3>
-                  <FertDate4>25-Nov</FertDate4>
-                  <Amount1>0</Amount1>
-                  <Amount2>0</Amount2>
-                  <Amount3>0</Amount3>
-                  <Amount4>0</Amount4>
-                  <SDSwitch>0</SDSwitch>
-                </Script>
-                <Code><![CDATA[using System;
-using Models.Core;
-using Models.PMF;
-using APSIM.Shared.Utilities;
-namespace Models
-{
-	[Serializable]
-	public class Script : Model
-	{
-		[Link] Clock Clock;
-		[Link] Fertiliser Fertiliser;
-		
-		[Description("Date to fertilise")]
-		public string FertDate1 { get; set; }
-		[Description("Date to fertilise")]
-		public string FertDate2 { get; set; }
-		[Description("Date to fertilise")]
-		public string FertDate3 { get; set; }
-		[Description("Date to fertilise")]
-		public string FertDate4 { get; set; }
-		
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount1 { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount2 { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount3 { get; set; }
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double Amount4 { get; set; }
-		
-		[Description("Amount of fertiliser to be applied (kg/ha)")]
-		public double SDSwitch { get; set; }
-		
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (DateUtilities.WithinDates(FertDate1, Clock.Today, FertDate1))
-				Fertiliser.Apply(Amount: Amount1 * SDSwitch, Type: Fertiliser.Types.NO3N);
-			if (DateUtilities.WithinDates(FertDate2, Clock.Today, FertDate2))
-				Fertiliser.Apply(Amount: Amount2, Type: Fertiliser.Types.NO3N);
-			if (DateUtilities.WithinDates(FertDate3, Clock.Today, FertDate3))
-				Fertiliser.Apply(Amount: Amount3, Type: Fertiliser.Types.NO3N);
-			if (DateUtilities.WithinDates(FertDate4, Clock.Today, FertDate4))
-				Fertiliser.Apply(Amount: Amount4 * SDSwitch, Type: Fertiliser.Types.NO3N);
-		}
-	}
-}
-]]></Code>
-              </Manager>
-              <Operations>
-                <Name>Fertilize</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-06-01</Date>
-                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
-                </Operation>
-              </Operations>
-              <Operations>
-                <Name>Irr</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2016-09-26</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2016-10-05</Date>
-                  <Action>[Irrigation].Apply(25);</Action>
-                </Operation>
-              </Operations>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ShowPageOfGraphs>true</ShowPageOfGraphs>
-            </Folder>
-            <Irrigation>
-              <Name>Irrigation</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </Irrigation>
-            <SurfaceOrganicMatter>
-              <Name>Surface Organic Matter</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ResidueTypes>
-                <Name>ResidueTypes</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <LoadFromResource>ResidueTypes</LoadFromResource>
-              </ResidueTypes>
-              <Pools>
-                <Pool>
-                  <PoolName>wheat_stubble</PoolName>
-                  <ResidueType>wheat</ResidueType>
-                  <Mass>0</Mass>
-                  <CNRatio>80</CNRatio>
-                  <CPRatio>NaN</CPRatio>
-                  <StandingFraction>0</StandingFraction>
-                </Pool>
-              </Pools>
-              <PoolName>wheat_stubble</PoolName>
-              <type>wheat</type>
-              <mass>0</mass>
-              <standing_fraction>0</standing_fraction>
-              <cpr />
-              <cnr>80</cnr>
-              <CriticalResidueWeight>2000</CriticalResidueWeight>
-              <OptimumDecompTemp>20</OptimumDecompTemp>
-              <MaxCumulativeEOS>20</MaxCumulativeEOS>
-              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-              <TotalLeachRain>25</TotalLeachRain>
-              <MinRainToLeach>10</MinRainToLeach>
-              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-              <DefaultCPRatio>0</DefaultCPRatio>
-              <DefaultStandingFraction>0</DefaultStandingFraction>
-              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-              <FractionFaecesAdded>0.5</FractionFaecesAdded>
-            </SurfaceOrganicMatter>
-            <Fertiliser>
-              <Name>Fertiliser</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </Fertiliser>
-            <MicroClimate>
-              <Name>MicroClimate</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <a_interception>0</a_interception>
-              <b_interception>1</b_interception>
-              <c_interception>0</c_interception>
-              <d_interception>0</d_interception>
-              <soil_albedo>0.3</soil_albedo>
-              <sun_angle>15</sun_angle>
-              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-              <night_interception_fraction>0.5</night_interception_fraction>
-              <refheight>2</refheight>
-              <albedo>0.29366217672824863</albedo>
-              <emissivity>0.96</emissivity>
-              <RadIntTotal>0</RadIntTotal>
-            </MicroClimate>
-            <Plant>
-              <Name>Oats</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ResourceName>Oats</ResourceName>
-              <CropType>Oats</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
-            </Plant>
-            <Report>
-              <Name>DailyReport</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string />
-              </VariableNames>
-              <EventNames>
-                <string />
-              </EventNames>
-            </Report>
-            <Report>
-              <Name>HarvestReport</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ExperimentFactorNames />
-              <ExperimentFactorValues />
-              <VariableNames>
-                <string />
-              </VariableNames>
-              <EventNames>
-                <string />
-              </EventNames>
-            </Report>
-            <Manager>
-              <Name>Harvesting</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Script />
-              <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Oats;
-		[Link] Clock clock;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Oats.IsAlive == true)
-			{	
-				DateTime HD = new DateTime(2015, 11, 30);
-				if (clock.Today.Date == HD.Date)
-				{
-					Oats.Harvest();
-					Oats.EndCrop();
-				}
-			}
-		}
-	}
-}
-	   ]]></Code>
-            </Manager>
             <Soil>
               <Name>Soil</Name>
               <Analysis>
@@ -12317,14 +12093,218 @@ namespace Models
               <Name>SoluteManager</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </SoluteManager>
+            <Irrigation>
+              <Name>Irrigation</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Irrigation>
+            <SurfaceOrganicMatter>
+              <Name>Surface Organic Matter</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ResidueTypes>
+                <Name>ResidueTypes</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <LoadFromResource>ResidueTypes</LoadFromResource>
+              </ResidueTypes>
+              <Pools>
+                <Pool>
+                  <PoolName>wheat_stubble</PoolName>
+                  <ResidueType>wheat</ResidueType>
+                  <Mass>0</Mass>
+                  <CNRatio>80</CNRatio>
+                  <CPRatio>NaN</CPRatio>
+                  <StandingFraction>0</StandingFraction>
+                </Pool>
+              </Pools>
+              <PoolName>wheat_stubble</PoolName>
+              <type>wheat</type>
+              <mass>0</mass>
+              <standing_fraction>0</standing_fraction>
+              <cpr />
+              <cnr>80</cnr>
+              <CriticalResidueWeight>2000</CriticalResidueWeight>
+              <OptimumDecompTemp>20</OptimumDecompTemp>
+              <MaxCumulativeEOS>20</MaxCumulativeEOS>
+              <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+              <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+              <TotalLeachRain>25</TotalLeachRain>
+              <MinRainToLeach>10</MinRainToLeach>
+              <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+              <DefaultCPRatio>0</DefaultCPRatio>
+              <DefaultStandingFraction>0</DefaultStandingFraction>
+              <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+              <FractionFaecesAdded>0.5</FractionFaecesAdded>
+            </SurfaceOrganicMatter>
+            <Fertiliser>
+              <Name>Fertiliser</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Fertiliser>
+            <MicroClimate>
+              <Name>MicroClimate</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <a_interception>0</a_interception>
+              <b_interception>1</b_interception>
+              <c_interception>0</c_interception>
+              <d_interception>0</d_interception>
+              <soil_albedo>0.3</soil_albedo>
+              <sun_angle>15</sun_angle>
+              <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+              <night_interception_fraction>0.5</night_interception_fraction>
+              <refheight>2</refheight>
+              <albedo>0.29366217672824863</albedo>
+              <emissivity>0.96</emissivity>
+              <RadIntTotal>0</RadIntTotal>
+            </MicroClimate>
+            <Plant>
+              <Name>Oats</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ResourceName>Oats</ResourceName>
+              <CropType>Oats</CropType>
+              <SowingDate>0001-01-01T00:00:00</SowingDate>
+            </Plant>
+            <Folder>
+              <Name>Manager folder</Name>
+              <Operations>
+                <Name>Operations</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Operations>
+              <Manager>
+                <Name>Fertilise</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script>
+                  <SDSwitch>0</SDSwitch>
+                  <Amount1>0</Amount1>
+                  <Amount2>0</Amount2>
+                  <Amount3>0</Amount3>
+                  <Amount4>0</Amount4>
+                  <FertDate1>05-Aug</FertDate1>
+                  <FertDate2>01-Oct</FertDate2>
+                  <FertDate3>20-Oct</FertDate3>
+                  <FertDate4>25-Nov</FertDate4>
+                </Script>
+                <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using APSIM.Shared.Utilities;
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Clock Clock;
+		[Link] Fertiliser Fertiliser;
+		
+		[Description("Date to fertilise")]
+		public string FertDate1 { get; set; }
+		[Description("Date to fertilise")]
+		public string FertDate2 { get; set; }
+		[Description("Date to fertilise")]
+		public string FertDate3 { get; set; }
+		[Description("Date to fertilise")]
+		public string FertDate4 { get; set; }
+		
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount1 { get; set; }
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount2 { get; set; }
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount3 { get; set; }
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double Amount4 { get; set; }
+		
+		[Description("Amount of fertiliser to be applied (kg/ha)")]
+		public double SDSwitch { get; set; }
+		
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (DateUtilities.WithinDates(FertDate1, Clock.Today, FertDate1))
+				Fertiliser.Apply(Amount: Amount1 * SDSwitch, Type: Fertiliser.Types.NO3N);
+			if (DateUtilities.WithinDates(FertDate2, Clock.Today, FertDate2))
+				Fertiliser.Apply(Amount: Amount2, Type: Fertiliser.Types.NO3N);
+			if (DateUtilities.WithinDates(FertDate3, Clock.Today, FertDate3))
+				Fertiliser.Apply(Amount: Amount3, Type: Fertiliser.Types.NO3N);
+			if (DateUtilities.WithinDates(FertDate4, Clock.Today, FertDate4))
+				Fertiliser.Apply(Amount: Amount4 * SDSwitch, Type: Fertiliser.Types.NO3N);
+		}
+	}
+}
+]]></Code>
+              </Manager>
+              <Operations>
+                <Name>Fertilize</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2015-06-01</Date>
+                  <Action>[Fertiliser].Apply(0, Fertiliser.Types.UreaN, 10);</Action>
+                </Operation>
+              </Operations>
+              <Operations>
+                <Name>Irr</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Operation>
+                  <Date>2016-09-26</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+                <Operation>
+                  <Date>2016-10-05</Date>
+                  <Action>[Irrigation].Apply(25);</Action>
+                </Operation>
+              </Operations>
+              <Manager>
+                <Name>Harvesting</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <Script />
+                <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+		
+	}
+}
+	   ]]></Code>
+              </Manager>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ShowPageOfGraphs>true</ShowPageOfGraphs>
+            </Folder>
+            <Report>
+              <Name>DailyReport</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string />
+              </VariableNames>
+              <EventNames>
+                <string />
+              </EventNames>
+            </Report>
+            <Report>
+              <Name>HarvestReport</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ExperimentFactorNames />
+              <ExperimentFactorValues />
+              <VariableNames>
+                <string />
+              </VariableNames>
+              <EventNames>
+                <string />
+              </EventNames>
+            </Report>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Area>1</Area>
             <Slope>0</Slope>
           </Zone>
-          <SoilArbitrator>
-            <Name>Soil Arbitrator</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoilArbitrator>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Simulation>
         <Folder>
@@ -13268,175 +13248,12 @@ late drought increased screenings.
               <FileName>Hybrid Gatton07 metfile.met</FileName>
               <ExcelWorkSheetName />
             </Weather>
+            <SoilArbitrator>
+              <Name>Soil Arbitrator</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SoilArbitrator>
             <Zone>
               <Name>paddock</Name>
-              <Irrigation>
-                <Name>Irrigation</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Irrigation>
-              <SurfaceOrganicMatter>
-                <Name>Surface Organic Matter</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResidueTypes>
-                  <Name>ResidueTypes</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LoadFromResource>ResidueTypes</LoadFromResource>
-                </ResidueTypes>
-                <Pools>
-                  <Pool>
-                    <PoolName>wheat_stubble</PoolName>
-                    <ResidueType>wheat</ResidueType>
-                    <Mass>0</Mass>
-                    <CNRatio>80</CNRatio>
-                    <CPRatio>NaN</CPRatio>
-                    <StandingFraction>0</StandingFraction>
-                  </Pool>
-                </Pools>
-                <PoolName>wheat_stubble</PoolName>
-                <type>wheat</type>
-                <mass>0</mass>
-                <standing_fraction>0</standing_fraction>
-                <cpr />
-                <cnr>80</cnr>
-                <CriticalResidueWeight>2000</CriticalResidueWeight>
-                <OptimumDecompTemp>20</OptimumDecompTemp>
-                <MaxCumulativeEOS>20</MaxCumulativeEOS>
-                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-                <TotalLeachRain>25</TotalLeachRain>
-                <MinRainToLeach>10</MinRainToLeach>
-                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-                <DefaultCPRatio>0</DefaultCPRatio>
-                <DefaultStandingFraction>0</DefaultStandingFraction>
-                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-                <FractionFaecesAdded>0.5</FractionFaecesAdded>
-              </SurfaceOrganicMatter>
-              <Fertiliser>
-                <Name>Fertiliser</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Fertiliser>
-              <MicroClimate>
-                <Name>MicroClimate</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <a_interception>0</a_interception>
-                <b_interception>1</b_interception>
-                <c_interception>0</c_interception>
-                <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.29366217672824863</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
-              </MicroClimate>
-              <Plant>
-                <Name>Oats</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResourceName>Oats</ResourceName>
-                <CropType>Oats</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
-              </Plant>
-              <Report>
-                <Name>DailyReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string />
-                </VariableNames>
-                <EventNames>
-                  <string />
-                </EventNames>
-              </Report>
-              <Report>
-                <Name>HarvestReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string />
-                </VariableNames>
-                <EventNames>
-                  <string />
-                </EventNames>
-              </Report>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Oats;
-		[Link] Clock clock;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Oats.IsAlive == true)
-			{	
-				DateTime HD = new DateTime(1999, 03, 04);
-				if (clock.Today.Date == HD.Date)
-				{
-					Oats.Harvest();
-					Oats.EndCrop();
-				}
-			}
-		}
-	}
-}
-	   ]]></Code>
-              </Manager>
-              <Report>
-                <Name>SupReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string>[Clock].Today</string>
-                  <string>[Phenology].ThermalTime.Value()</string>
-                  <string>[Leaf].CohortSize</string>
-                  <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                  <string>[0ats].Arbitrator.DMAllocated</string>
-                  <string>[0ats].Arbitrator.DMDemand</string>
-                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                  <string>[0ats].Arbitrator.FN</string>
-                  <string>[0ats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                  <string>[0ats].Leaf.CohortMaxSize</string>
-                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
-                  <string>sum([Soil].SoilWater.SWmm[1:7]) as ProfileWater</string>
-                </VariableNames>
-                <EventNames>
-                  <string>[Clock].DoReport</string>
-                </EventNames>
-              </Report>
               <Soil>
                 <Name>Soil</Name>
                 <Water>
@@ -13758,54 +13575,207 @@ namespace Models
                 <Name>SoluteManager</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
               </SoluteManager>
-              <Operations>
-                <Name>Operations</Name>
+              <Irrigation>
+                <Name>Irrigation</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Operations>
-              <Operations>
-                <Name>IrrigandFert</Name>
+              </Irrigation>
+              <SurfaceOrganicMatter>
+                <Name>Surface Organic Matter</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2007-05-18</Date>
-                  <Action> [Irrigation].Apply(140);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2007-05-31</Date>
-                  <Action> [Irrigation].Apply(15);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2007-07-12</Date>
-                  <Action> [Irrigation].Apply(15);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2007-07-24</Date>
-                  <Action> [Irrigation].Apply(29);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2007-08-14</Date>
-                  <Action> [Irrigation].Apply(45);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2007-05-14</Date>
-                  <Action> [Fertiliser].Apply(150, Fertiliser.Types.UreaN, 40);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2007-07-23</Date>
-                  <Action> [Fertiliser].Apply(90, Fertiliser.Types.UreaN, 10);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2007-08-13</Date>
-                  <Action> [Fertiliser].Apply(110, Fertiliser.Types.UreaN, 10);</Action>
-                </Operation>
-              </Operations>
+                <ResidueTypes>
+                  <Name>ResidueTypes</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <LoadFromResource>ResidueTypes</LoadFromResource>
+                </ResidueTypes>
+                <Pools>
+                  <Pool>
+                    <PoolName>wheat_stubble</PoolName>
+                    <ResidueType>wheat</ResidueType>
+                    <Mass>0</Mass>
+                    <CNRatio>80</CNRatio>
+                    <CPRatio>NaN</CPRatio>
+                    <StandingFraction>0</StandingFraction>
+                  </Pool>
+                </Pools>
+                <PoolName>wheat_stubble</PoolName>
+                <type>wheat</type>
+                <mass>0</mass>
+                <standing_fraction>0</standing_fraction>
+                <cpr />
+                <cnr>80</cnr>
+                <CriticalResidueWeight>2000</CriticalResidueWeight>
+                <OptimumDecompTemp>20</OptimumDecompTemp>
+                <MaxCumulativeEOS>20</MaxCumulativeEOS>
+                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+                <TotalLeachRain>25</TotalLeachRain>
+                <MinRainToLeach>10</MinRainToLeach>
+                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+                <DefaultCPRatio>0</DefaultCPRatio>
+                <DefaultStandingFraction>0</DefaultStandingFraction>
+                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+                <FractionFaecesAdded>0.5</FractionFaecesAdded>
+              </SurfaceOrganicMatter>
+              <Fertiliser>
+                <Name>Fertiliser</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Fertiliser>
+              <MicroClimate>
+                <Name>MicroClimate</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <a_interception>0</a_interception>
+                <b_interception>1</b_interception>
+                <c_interception>0</c_interception>
+                <d_interception>0</d_interception>
+                <soil_albedo>0.3</soil_albedo>
+                <sun_angle>15</sun_angle>
+                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+                <night_interception_fraction>0.5</night_interception_fraction>
+                <refheight>2</refheight>
+                <albedo>0.29366217672824863</albedo>
+                <emissivity>0.96</emissivity>
+                <RadIntTotal>0</RadIntTotal>
+              </MicroClimate>
+              <Plant>
+                <Name>Oats</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResourceName>Oats</ResourceName>
+                <CropType>Oats</CropType>
+                <SowingDate>0001-01-01T00:00:00</SowingDate>
+              </Plant>
+              <Folder>
+                <Name>Management</Name>
+                <Operations>
+                  <Name>IrrigandFert</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Operation>
+                    <Date>2007-05-18</Date>
+                    <Action> [Irrigation].Apply(140);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2007-05-31</Date>
+                    <Action> [Irrigation].Apply(15);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2007-07-12</Date>
+                    <Action> [Irrigation].Apply(15);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2007-07-24</Date>
+                    <Action> [Irrigation].Apply(29);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2007-08-14</Date>
+                    <Action> [Irrigation].Apply(45);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2007-05-14</Date>
+                    <Action> [Fertiliser].Apply(150, Fertiliser.Types.UreaN, 40);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2007-07-23</Date>
+                    <Action> [Fertiliser].Apply(90, Fertiliser.Types.UreaN, 10);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2007-08-13</Date>
+                    <Action> [Fertiliser].Apply(110, Fertiliser.Types.UreaN, 10);</Action>
+                  </Operation>
+                </Operations>
+                <Operations>
+                  <Name>Operations</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </Operations>
+                <Manager>
+                  <Name>Harvesting</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
+                  <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+	}
+}
+	   ]]></Code>
+                </Manager>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ShowPageOfGraphs>true</ShowPageOfGraphs>
+              </Folder>
+              <Report>
+                <Name>DailyReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>HarvestReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>SupReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string>[Clock].Today</string>
+                  <string>[Phenology].ThermalTime.Value()</string>
+                  <string>[Leaf].CohortSize</string>
+                  <string>[Leaf].CohortParameters.MaxArea.Value()</string>
+                  <string>[0ats].Arbitrator.DMAllocated</string>
+                  <string>[0ats].Arbitrator.DMDemand</string>
+                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
+                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
+                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
+                  <string>[0ats].Arbitrator.FN</string>
+                  <string>[0ats].Arbitrator.NDemand</string>
+                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[0ats].Leaf.CohortMaxSize</string>
+                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
+                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
+                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                  <string>sum([Soil].SoilWater.SWmm[1:7]) as ProfileWater</string>
+                </VariableNames>
+                <EventNames>
+                  <string>[Clock].DoReport</string>
+                </EventNames>
+              </Report>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <SoilArbitrator>
-              <Name>Soil Arbitrator</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </SoilArbitrator>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Simulation>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -14839,226 +14809,12 @@ namespace Models
               <FileName>Roma2006.met</FileName>
               <ExcelWorkSheetName />
             </Weather>
+            <SoilArbitrator>
+              <Name>Soil Arbitrator</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SoilArbitrator>
             <Zone>
               <Name>paddock</Name>
-              <Irrigation>
-                <Name>Irrigation</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Irrigation>
-              <SurfaceOrganicMatter>
-                <Name>Surface Organic Matter</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResidueTypes>
-                  <Name>ResidueTypes</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LoadFromResource>ResidueTypes</LoadFromResource>
-                </ResidueTypes>
-                <Pools>
-                  <Pool>
-                    <PoolName>wheat_stubble</PoolName>
-                    <ResidueType>wheat</ResidueType>
-                    <Mass>0</Mass>
-                    <CNRatio>80</CNRatio>
-                    <CPRatio>NaN</CPRatio>
-                    <StandingFraction>0</StandingFraction>
-                  </Pool>
-                </Pools>
-                <PoolName>wheat_stubble</PoolName>
-                <type>wheat</type>
-                <mass>0</mass>
-                <standing_fraction>0</standing_fraction>
-                <cpr />
-                <cnr>80</cnr>
-                <CriticalResidueWeight>2000</CriticalResidueWeight>
-                <OptimumDecompTemp>20</OptimumDecompTemp>
-                <MaxCumulativeEOS>20</MaxCumulativeEOS>
-                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-                <TotalLeachRain>25</TotalLeachRain>
-                <MinRainToLeach>10</MinRainToLeach>
-                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-                <DefaultCPRatio>0</DefaultCPRatio>
-                <DefaultStandingFraction>0</DefaultStandingFraction>
-                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-                <FractionFaecesAdded>0.5</FractionFaecesAdded>
-              </SurfaceOrganicMatter>
-              <Fertiliser>
-                <Name>Fertiliser</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Fertiliser>
-              <MicroClimate>
-                <Name>MicroClimate</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <a_interception>0</a_interception>
-                <b_interception>1</b_interception>
-                <c_interception>0</c_interception>
-                <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.29366217672824863</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
-              </MicroClimate>
-              <Plant>
-                <Name>Oats</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResourceName>Oats</ResourceName>
-                <CropType>Oats</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
-              </Plant>
-              <Report>
-                <Name>DailyReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string />
-                </VariableNames>
-                <EventNames>
-                  <string />
-                </EventNames>
-              </Report>
-              <Report>
-                <Name>HarvestReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string />
-                </VariableNames>
-                <EventNames>
-                  <string />
-                </EventNames>
-              </Report>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Oats;
-		[Link] Clock clock;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Oats.IsAlive == true)
-			{	
-				DateTime HD = new DateTime(1999, 03, 04);
-				if (clock.Today.Date == HD.Date)
-				{
-					Oats.Harvest();
-					Oats.EndCrop();
-				}
-			}
-		}
-	}
-}
-	   ]]></Code>
-              </Manager>
-              <Report>
-                <Name>SupReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string>[Clock].Today</string>
-                  <string>[Phenology].ThermalTime.Value()</string>
-                  <string>[Leaf].CohortSize</string>
-                  <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                  <string>[0ats].Arbitrator.DMAllocated</string>
-                  <string>[0ats].Arbitrator.DMDemand</string>
-                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                  <string>[0ats].Arbitrator.FN</string>
-                  <string>[0ats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                  <string>[0ats].Leaf.CohortMaxSize</string>
-                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
-                  <string>sum([Soil].SoilWater.SWmm[1:7]) as ProfileWater</string>
-                </VariableNames>
-                <EventNames>
-                  <string>[Clock].DoReport</string>
-                </EventNames>
-              </Report>
-              <SoluteManager>
-                <Name>SoluteManager</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </SoluteManager>
-              <Operations>
-                <Name>Sowing</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Operations>
-              <Operations>
-                <Name>IrrigandFert</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2006-04-03</Date>
-                  <Action> [Fertiliser].Apply(35, Fertiliser.Types.NO3N, 20);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2006-05-10</Date>
-                  <Action> [Irrigation].Apply(40);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2006-08-15</Date>
-                  <Action> [Fertiliser].Apply(40, Fertiliser.Types.NO3N, 10);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2006-06-05</Date>
-                  <Action> [Irrigation].Apply(60);</Action>
-                </Operation>
-              </Operations>
-              <Manager>
-                <Name>Cutting</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[
-using System;
-using System.Collections.Generic;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.Interfaces;
-using System.Xml.Serialization;
-
-namespace Models
-{
-	[Serializable] 
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-		
-	}
-}
-				]]></Code>
-              </Manager>
               <Soil>
                 <Name>Soil</Name>
                 <Water>
@@ -15407,14 +15163,218 @@ namespace Models
                 <Latitude>0</Latitude>
                 <Longitude>0</Longitude>
               </Soil>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </SoluteManager>
+              <Irrigation>
+                <Name>Irrigation</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Irrigation>
+              <SurfaceOrganicMatter>
+                <Name>Surface Organic Matter</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResidueTypes>
+                  <Name>ResidueTypes</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <LoadFromResource>ResidueTypes</LoadFromResource>
+                </ResidueTypes>
+                <Pools>
+                  <Pool>
+                    <PoolName>wheat_stubble</PoolName>
+                    <ResidueType>wheat</ResidueType>
+                    <Mass>0</Mass>
+                    <CNRatio>80</CNRatio>
+                    <CPRatio>NaN</CPRatio>
+                    <StandingFraction>0</StandingFraction>
+                  </Pool>
+                </Pools>
+                <PoolName>wheat_stubble</PoolName>
+                <type>wheat</type>
+                <mass>0</mass>
+                <standing_fraction>0</standing_fraction>
+                <cpr />
+                <cnr>80</cnr>
+                <CriticalResidueWeight>2000</CriticalResidueWeight>
+                <OptimumDecompTemp>20</OptimumDecompTemp>
+                <MaxCumulativeEOS>20</MaxCumulativeEOS>
+                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+                <TotalLeachRain>25</TotalLeachRain>
+                <MinRainToLeach>10</MinRainToLeach>
+                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+                <DefaultCPRatio>0</DefaultCPRatio>
+                <DefaultStandingFraction>0</DefaultStandingFraction>
+                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+                <FractionFaecesAdded>0.5</FractionFaecesAdded>
+              </SurfaceOrganicMatter>
+              <Fertiliser>
+                <Name>Fertiliser</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Fertiliser>
+              <MicroClimate>
+                <Name>MicroClimate</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <a_interception>0</a_interception>
+                <b_interception>1</b_interception>
+                <c_interception>0</c_interception>
+                <d_interception>0</d_interception>
+                <soil_albedo>0.3</soil_albedo>
+                <sun_angle>15</sun_angle>
+                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+                <night_interception_fraction>0.5</night_interception_fraction>
+                <refheight>2</refheight>
+                <albedo>0.29366217672824863</albedo>
+                <emissivity>0.96</emissivity>
+                <RadIntTotal>0</RadIntTotal>
+              </MicroClimate>
+              <Plant>
+                <Name>Oats</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResourceName>Oats</ResourceName>
+                <CropType>Oats</CropType>
+                <SowingDate>0001-01-01T00:00:00</SowingDate>
+              </Plant>
+              <Folder>
+                <Name>Management</Name>
+                <Manager>
+                  <Name>Cutting</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
+                  <Code><![CDATA[
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System.Xml.Serialization;
+
+namespace Models
+{
+	[Serializable] 
+	[System.Xml.Serialization.XmlInclude(typeof(Model))]
+	public class Script : Model
+	{
+		
+	}
+}
+				]]></Code>
+                </Manager>
+                <Operations>
+                  <Name>IrrigandFert</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Operation>
+                    <Date>2006-04-03</Date>
+                    <Action> [Fertiliser].Apply(35, Fertiliser.Types.NO3N, 20);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2006-05-10</Date>
+                    <Action> [Irrigation].Apply(40);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2006-08-15</Date>
+                    <Action> [Fertiliser].Apply(40, Fertiliser.Types.NO3N, 10);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2006-06-05</Date>
+                    <Action> [Irrigation].Apply(60);</Action>
+                  </Operation>
+                </Operations>
+                <Operations>
+                  <Name>Sowing</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </Operations>
+                <Manager>
+                  <Name>Harvesting</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
+                  <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+	}
+}
+	   ]]></Code>
+                </Manager>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ShowPageOfGraphs>true</ShowPageOfGraphs>
+              </Folder>
+              <Report>
+                <Name>DailyReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>HarvestReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>SupReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string>[Clock].Today</string>
+                  <string>[Phenology].ThermalTime.Value()</string>
+                  <string>[Leaf].CohortSize</string>
+                  <string>[Leaf].CohortParameters.MaxArea.Value()</string>
+                  <string>[0ats].Arbitrator.DMAllocated</string>
+                  <string>[0ats].Arbitrator.DMDemand</string>
+                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
+                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
+                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
+                  <string>[0ats].Arbitrator.FN</string>
+                  <string>[0ats].Arbitrator.NDemand</string>
+                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[0ats].Leaf.CohortMaxSize</string>
+                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
+                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
+                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                  <string>sum([Soil].SoilWater.SWmm[1:7]) as ProfileWater</string>
+                </VariableNames>
+                <EventNames>
+                  <string>[Clock].DoReport</string>
+                </EventNames>
+              </Report>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <SoilArbitrator>
-              <Name>Soil Arbitrator</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </SoilArbitrator>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Simulation>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -15670,7 +15630,7 @@ namespace Models
 				Remove.SetFractionToResidue("Root", 0.0);
 				Oats.RemoveBiomass("Cut", Remove);
 			}
-        }
+		}
 	}
 }
 				]]></Code>
@@ -15746,7 +15706,7 @@ namespace Models
 				Remove.SetFractionToResidue("Root", 0.0);
 				Oats.RemoveBiomass("Cut", Remove);
 			}
-        }
+		}
 	}
 }
 				]]></Code>
@@ -15778,205 +15738,6 @@ namespace Models
             </Weather>
             <Zone>
               <Name>paddock</Name>
-              <Irrigation>
-                <Name>Irrigation</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Irrigation>
-              <SurfaceOrganicMatter>
-                <Name>Surface Organic Matter</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResidueTypes>
-                  <Name>ResidueTypes</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LoadFromResource>ResidueTypes</LoadFromResource>
-                </ResidueTypes>
-                <Pools>
-                  <Pool>
-                    <PoolName>wheat_stubble</PoolName>
-                    <ResidueType>wheat</ResidueType>
-                    <Mass>0</Mass>
-                    <CNRatio>80</CNRatio>
-                    <CPRatio>NaN</CPRatio>
-                    <StandingFraction>0</StandingFraction>
-                  </Pool>
-                </Pools>
-                <PoolName>wheat_stubble</PoolName>
-                <type>wheat</type>
-                <mass>0</mass>
-                <standing_fraction>0</standing_fraction>
-                <cpr />
-                <cnr>80</cnr>
-                <CriticalResidueWeight>2000</CriticalResidueWeight>
-                <OptimumDecompTemp>20</OptimumDecompTemp>
-                <MaxCumulativeEOS>20</MaxCumulativeEOS>
-                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-                <TotalLeachRain>25</TotalLeachRain>
-                <MinRainToLeach>10</MinRainToLeach>
-                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-                <DefaultCPRatio>0</DefaultCPRatio>
-                <DefaultStandingFraction>0</DefaultStandingFraction>
-                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-                <FractionFaecesAdded>0.5</FractionFaecesAdded>
-              </SurfaceOrganicMatter>
-              <Fertiliser>
-                <Name>Fertiliser</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Fertiliser>
-              <MicroClimate>
-                <Name>MicroClimate</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <a_interception>0</a_interception>
-                <b_interception>1</b_interception>
-                <c_interception>0</c_interception>
-                <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.29366217672824863</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
-              </MicroClimate>
-              <Plant>
-                <Name>Oats</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResourceName>Oats</ResourceName>
-                <CropType>Oats</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
-              </Plant>
-              <Report>
-                <Name>DailyReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string />
-                </VariableNames>
-                <EventNames>
-                  <string />
-                </EventNames>
-              </Report>
-              <Report>
-                <Name>HarvestReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string />
-                </VariableNames>
-                <EventNames>
-                  <string />
-                </EventNames>
-              </Report>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Oats;
-		[Link] Clock clock;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Oats.IsAlive == true)
-			{	
-				DateTime HD = new DateTime(1999, 03, 04);
-				if (clock.Today.Date == HD.Date)
-				{
-					Oats.Harvest();
-					Oats.EndCrop();
-				}
-			}
-		}
-	}
-}
-	   ]]></Code>
-              </Manager>
-              <Report>
-                <Name>SupReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string>[Clock].Today</string>
-                  <string>[Phenology].ThermalTime.Value()</string>
-                  <string>[Leaf].CohortSize</string>
-                  <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                  <string>[0ats].Arbitrator.DMAllocated</string>
-                  <string>[0ats].Arbitrator.DMDemand</string>
-                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                  <string>[0ats].Arbitrator.FN</string>
-                  <string>[0ats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                  <string>[0ats].Leaf.CohortMaxSize</string>
-                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
-                  <string>sum([Soil].SoilWater.SWmm[1:5]) as ProfileWater</string>
-                </VariableNames>
-                <EventNames>
-                  <string>[Clock].DoReport</string>
-                </EventNames>
-              </Report>
-              <SoluteManager>
-                <Name>SoluteManager</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </SoluteManager>
-              <Operations>
-                <Name>Sowing</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Operations>
-              <Operations>
-                <Name>IrrigandFert</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2006-05-25</Date>
-                  <Action> [Fertiliser].Apply(35, Fertiliser.Types.NO3N, 20);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2006-05-29</Date>
-                  <Action> [Irrigation].Apply(10);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2006-06-05</Date>
-                  <Action> [Irrigation].Apply(10);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2006-08-15</Date>
-                  <Action> [Fertiliser].Apply(40, Fertiliser.Types.NO3N, 10);</Action>
-                </Operation>
-                <Operation>
-                  <Date>2006-06-05</Date>
-                  <Action> [Irrigation].Apply(60);</Action>
-                </Operation>
-              </Operations>
               <Soil>
                 <Name>Soil</Name>
                 <Water>
@@ -16271,11 +16032,85 @@ namespace Models
                 <Latitude>0</Latitude>
                 <Longitude>0</Longitude>
               </Soil>
-              <Manager>
-                <Name>Cutting</Name>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[
+              </SoluteManager>
+              <Irrigation>
+                <Name>Irrigation</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Irrigation>
+              <SurfaceOrganicMatter>
+                <Name>Surface Organic Matter</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResidueTypes>
+                  <Name>ResidueTypes</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <LoadFromResource>ResidueTypes</LoadFromResource>
+                </ResidueTypes>
+                <Pools>
+                  <Pool>
+                    <PoolName>wheat_stubble</PoolName>
+                    <ResidueType>wheat</ResidueType>
+                    <Mass>0</Mass>
+                    <CNRatio>80</CNRatio>
+                    <CPRatio>NaN</CPRatio>
+                    <StandingFraction>0</StandingFraction>
+                  </Pool>
+                </Pools>
+                <PoolName>wheat_stubble</PoolName>
+                <type>wheat</type>
+                <mass>0</mass>
+                <standing_fraction>0</standing_fraction>
+                <cpr />
+                <cnr>80</cnr>
+                <CriticalResidueWeight>2000</CriticalResidueWeight>
+                <OptimumDecompTemp>20</OptimumDecompTemp>
+                <MaxCumulativeEOS>20</MaxCumulativeEOS>
+                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+                <TotalLeachRain>25</TotalLeachRain>
+                <MinRainToLeach>10</MinRainToLeach>
+                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+                <DefaultCPRatio>0</DefaultCPRatio>
+                <DefaultStandingFraction>0</DefaultStandingFraction>
+                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+                <FractionFaecesAdded>0.5</FractionFaecesAdded>
+              </SurfaceOrganicMatter>
+              <Fertiliser>
+                <Name>Fertiliser</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Fertiliser>
+              <MicroClimate>
+                <Name>MicroClimate</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <a_interception>0</a_interception>
+                <b_interception>1</b_interception>
+                <c_interception>0</c_interception>
+                <d_interception>0</d_interception>
+                <soil_albedo>0.3</soil_albedo>
+                <sun_angle>15</sun_angle>
+                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+                <night_interception_fraction>0.5</night_interception_fraction>
+                <refheight>2</refheight>
+                <albedo>0.29366217672824863</albedo>
+                <emissivity>0.96</emissivity>
+                <RadIntTotal>0</RadIntTotal>
+              </MicroClimate>
+              <Plant>
+                <Name>Oats</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResourceName>Oats</ResourceName>
+                <CropType>Oats</CropType>
+                <SowingDate>0001-01-01T00:00:00</SowingDate>
+              </Plant>
+              <Folder>
+                <Name>Management</Name>
+                <Manager>
+                  <Name>Cutting</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
+                  <Code><![CDATA[
 using System;
 using System.Collections.Generic;
 using Models.Core;
@@ -16293,7 +16128,122 @@ namespace Models
 	}
 }
 				]]></Code>
-              </Manager>
+                </Manager>
+                <Operations>
+                  <Name>IrrigandFert</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Operation>
+                    <Date>2006-05-25</Date>
+                    <Action> [Fertiliser].Apply(35, Fertiliser.Types.NO3N, 20);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2006-05-29</Date>
+                    <Action> [Irrigation].Apply(10);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2006-06-05</Date>
+                    <Action> [Irrigation].Apply(10);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2006-08-15</Date>
+                    <Action> [Fertiliser].Apply(40, Fertiliser.Types.NO3N, 10);</Action>
+                  </Operation>
+                  <Operation>
+                    <Date>2006-06-05</Date>
+                    <Action> [Irrigation].Apply(60);</Action>
+                  </Operation>
+                </Operations>
+                <Operations>
+                  <Name>Sowing</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </Operations>
+                <Manager>
+                  <Name>Harvesting</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
+                  <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+	}
+}
+	   ]]></Code>
+                </Manager>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ShowPageOfGraphs>true</ShowPageOfGraphs>
+              </Folder>
+              <Report>
+                <Name>DailyReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>HarvestReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>SupReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string>[Clock].Today</string>
+                  <string>[Phenology].ThermalTime.Value()</string>
+                  <string>[Leaf].CohortSize</string>
+                  <string>[Leaf].CohortParameters.MaxArea.Value()</string>
+                  <string>[0ats].Arbitrator.DMAllocated</string>
+                  <string>[0ats].Arbitrator.DMDemand</string>
+                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
+                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
+                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
+                  <string>[0ats].Arbitrator.FN</string>
+                  <string>[0ats].Arbitrator.NDemand</string>
+                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[0ats].Leaf.CohortMaxSize</string>
+                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
+                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
+                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                  <string>sum([Soil].SoilWater.SWmm[1:5]) as ProfileWater</string>
+                </VariableNames>
+                <EventNames>
+                  <string>[Clock].DoReport</string>
+                </EventNames>
+              </Report>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Area>1</Area>
               <Slope>0</Slope>
@@ -16304,11 +16254,6 @@ namespace Models
             </SoilArbitrator>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Simulation>
-          <Constant>
-            <Name>KNO3</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.02</FixedValue>
-          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Experiment>
         <Graph>
@@ -16971,189 +16916,6 @@ late drought increased screenings.
             </Weather>
             <Zone>
               <Name>paddock</Name>
-              <Irrigation>
-                <Name>Irrigation</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Irrigation>
-              <SurfaceOrganicMatter>
-                <Name>Surface Organic Matter</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResidueTypes>
-                  <Name>ResidueTypes</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LoadFromResource>ResidueTypes</LoadFromResource>
-                </ResidueTypes>
-                <Pools>
-                  <Pool>
-                    <PoolName>wheat_stubble</PoolName>
-                    <ResidueType>wheat</ResidueType>
-                    <Mass>0</Mass>
-                    <CNRatio>80</CNRatio>
-                    <CPRatio>NaN</CPRatio>
-                    <StandingFraction>0</StandingFraction>
-                  </Pool>
-                </Pools>
-                <PoolName>wheat_stubble</PoolName>
-                <type>wheat</type>
-                <mass>0</mass>
-                <standing_fraction>0</standing_fraction>
-                <cpr />
-                <cnr>80</cnr>
-                <CriticalResidueWeight>2000</CriticalResidueWeight>
-                <OptimumDecompTemp>20</OptimumDecompTemp>
-                <MaxCumulativeEOS>20</MaxCumulativeEOS>
-                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-                <TotalLeachRain>25</TotalLeachRain>
-                <MinRainToLeach>10</MinRainToLeach>
-                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-                <DefaultCPRatio>0</DefaultCPRatio>
-                <DefaultStandingFraction>0</DefaultStandingFraction>
-                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-                <FractionFaecesAdded>0.5</FractionFaecesAdded>
-              </SurfaceOrganicMatter>
-              <Fertiliser>
-                <Name>Fertiliser</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Fertiliser>
-              <MicroClimate>
-                <Name>MicroClimate</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <a_interception>0</a_interception>
-                <b_interception>1</b_interception>
-                <c_interception>0</c_interception>
-                <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.29366217672824863</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
-              </MicroClimate>
-              <Plant>
-                <Name>Oats</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResourceName>Oats</ResourceName>
-                <CropType>Oats</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
-              </Plant>
-              <Report>
-                <Name>DailyReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string />
-                </VariableNames>
-                <EventNames>
-                  <string />
-                </EventNames>
-              </Report>
-              <Report>
-                <Name>HarvestReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string />
-                </VariableNames>
-                <EventNames>
-                  <string />
-                </EventNames>
-              </Report>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Oats;
-		[Link] Clock clock;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Oats.IsAlive == true)
-			{	
-				DateTime HD = new DateTime(1999, 03, 04);
-				if (clock.Today.Date == HD.Date)
-				{
-					Oats.Harvest();
-					Oats.EndCrop();
-				}
-			}
-		}
-	}
-}
-	   ]]></Code>
-              </Manager>
-              <Report>
-                <Name>SupReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string>[Clock].Today</string>
-                  <string>[Phenology].ThermalTime.Value()</string>
-                  <string>[Leaf].CohortSize</string>
-                  <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                  <string>[0ats].Arbitrator.DMAllocated</string>
-                  <string>[0ats].Arbitrator.DMDemand</string>
-                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                  <string>[0ats].Arbitrator.FN</string>
-                  <string>[0ats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                  <string>[0ats].Leaf.CohortMaxSize</string>
-                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
-                  <string>sum([Soil].SoilWater.SWmm[1:6]) as ProfileWater</string>
-                </VariableNames>
-                <EventNames>
-                  <string>[Clock].DoReport</string>
-                </EventNames>
-              </Report>
-              <SoluteManager>
-                <Name>SoluteManager</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </SoluteManager>
-              <Operations>
-                <Name>Operations</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Operations>
-              <Operations>
-                <Name>Sowing</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2007-05-11</Date>
-                  <Action>[Oats].Sow(population:200, cultivar:"Wintaroo", depth:30, rowSpacing:250);</Action>
-                </Operation>
-              </Operations>
               <Soil>
                 <Name>Soil</Name>
                 <Water>
@@ -17539,6 +17301,180 @@ namespace Models
                 <LocationAccuracy>+-20m</LocationAccuracy>
                 <DataSource>University of Adelaide, Roseworthy</DataSource>
               </Soil>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </SoluteManager>
+              <Irrigation>
+                <Name>Irrigation</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Irrigation>
+              <SurfaceOrganicMatter>
+                <Name>Surface Organic Matter</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResidueTypes>
+                  <Name>ResidueTypes</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <LoadFromResource>ResidueTypes</LoadFromResource>
+                </ResidueTypes>
+                <Pools>
+                  <Pool>
+                    <PoolName>wheat_stubble</PoolName>
+                    <ResidueType>wheat</ResidueType>
+                    <Mass>0</Mass>
+                    <CNRatio>80</CNRatio>
+                    <CPRatio>NaN</CPRatio>
+                    <StandingFraction>0</StandingFraction>
+                  </Pool>
+                </Pools>
+                <PoolName>wheat_stubble</PoolName>
+                <type>wheat</type>
+                <mass>0</mass>
+                <standing_fraction>0</standing_fraction>
+                <cpr />
+                <cnr>80</cnr>
+                <CriticalResidueWeight>2000</CriticalResidueWeight>
+                <OptimumDecompTemp>20</OptimumDecompTemp>
+                <MaxCumulativeEOS>20</MaxCumulativeEOS>
+                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+                <TotalLeachRain>25</TotalLeachRain>
+                <MinRainToLeach>10</MinRainToLeach>
+                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+                <DefaultCPRatio>0</DefaultCPRatio>
+                <DefaultStandingFraction>0</DefaultStandingFraction>
+                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+                <FractionFaecesAdded>0.5</FractionFaecesAdded>
+              </SurfaceOrganicMatter>
+              <Fertiliser>
+                <Name>Fertiliser</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Fertiliser>
+              <MicroClimate>
+                <Name>MicroClimate</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <a_interception>0</a_interception>
+                <b_interception>1</b_interception>
+                <c_interception>0</c_interception>
+                <d_interception>0</d_interception>
+                <soil_albedo>0.3</soil_albedo>
+                <sun_angle>15</sun_angle>
+                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+                <night_interception_fraction>0.5</night_interception_fraction>
+                <refheight>2</refheight>
+                <albedo>0.29366217672824863</albedo>
+                <emissivity>0.96</emissivity>
+                <RadIntTotal>0</RadIntTotal>
+              </MicroClimate>
+              <Plant>
+                <Name>Oats</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResourceName>Oats</ResourceName>
+                <CropType>Oats</CropType>
+                <SowingDate>0001-01-01T00:00:00</SowingDate>
+              </Plant>
+              <Folder>
+                <Name>Management</Name>
+                <Operations>
+                  <Name>Sowing</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Operation>
+                    <Date>2007-05-11</Date>
+                    <Action>[Oats].Sow(population:200, cultivar:"Wintaroo", depth:30, rowSpacing:250);</Action>
+                  </Operation>
+                </Operations>
+                <Operations>
+                  <Name>Operations</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </Operations>
+                <Manager>
+                  <Name>Harvesting</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
+                  <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+
+	}
+}
+	   ]]></Code>
+                </Manager>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ShowPageOfGraphs>true</ShowPageOfGraphs>
+              </Folder>
+              <Report>
+                <Name>DailyReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>HarvestReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>SupReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string>[Clock].Today</string>
+                  <string>[Phenology].ThermalTime.Value()</string>
+                  <string>[Leaf].CohortSize</string>
+                  <string>[Leaf].CohortParameters.MaxArea.Value()</string>
+                  <string>[0ats].Arbitrator.DMAllocated</string>
+                  <string>[0ats].Arbitrator.DMDemand</string>
+                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
+                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
+                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
+                  <string>[0ats].Arbitrator.FN</string>
+                  <string>[0ats].Arbitrator.NDemand</string>
+                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[0ats].Leaf.CohortMaxSize</string>
+                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
+                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
+                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                  <string>sum([Soil].SoilWater.SWmm[1:6]) as ProfileWater</string>
+                </VariableNames>
+                <EventNames>
+                  <string>[Clock].DoReport</string>
+                </EventNames>
+              </Report>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Area>1</Area>
               <Slope>0</Slope>
@@ -18198,183 +18134,12 @@ late drought increased screenings.
               <FileName>Owen2007.met</FileName>
               <ExcelWorkSheetName />
             </Weather>
+            <SoilArbitrator>
+              <Name>Soil Arbitrator</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </SoilArbitrator>
             <Zone>
               <Name>paddock</Name>
-              <Irrigation>
-                <Name>Irrigation</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Irrigation>
-              <SurfaceOrganicMatter>
-                <Name>Surface Organic Matter</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResidueTypes>
-                  <Name>ResidueTypes</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <LoadFromResource>ResidueTypes</LoadFromResource>
-                </ResidueTypes>
-                <Pools>
-                  <Pool>
-                    <PoolName>wheat_stubble</PoolName>
-                    <ResidueType>wheat</ResidueType>
-                    <Mass>0</Mass>
-                    <CNRatio>80</CNRatio>
-                    <CPRatio>NaN</CPRatio>
-                    <StandingFraction>0</StandingFraction>
-                  </Pool>
-                </Pools>
-                <PoolName>wheat_stubble</PoolName>
-                <type>wheat</type>
-                <mass>0</mass>
-                <standing_fraction>0</standing_fraction>
-                <cpr />
-                <cnr>80</cnr>
-                <CriticalResidueWeight>2000</CriticalResidueWeight>
-                <OptimumDecompTemp>20</OptimumDecompTemp>
-                <MaxCumulativeEOS>20</MaxCumulativeEOS>
-                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
-                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
-                <TotalLeachRain>25</TotalLeachRain>
-                <MinRainToLeach>10</MinRainToLeach>
-                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
-                <DefaultCPRatio>0</DefaultCPRatio>
-                <DefaultStandingFraction>0</DefaultStandingFraction>
-                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
-                <FractionFaecesAdded>0.5</FractionFaecesAdded>
-              </SurfaceOrganicMatter>
-              <Fertiliser>
-                <Name>Fertiliser</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Fertiliser>
-              <MicroClimate>
-                <Name>MicroClimate</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <a_interception>0</a_interception>
-                <b_interception>1</b_interception>
-                <c_interception>0</c_interception>
-                <d_interception>0</d_interception>
-                <soil_albedo>0.3</soil_albedo>
-                <sun_angle>15</sun_angle>
-                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-                <night_interception_fraction>0.5</night_interception_fraction>
-                <refheight>2</refheight>
-                <albedo>0.29366217672824863</albedo>
-                <emissivity>0.96</emissivity>
-                <RadIntTotal>0</RadIntTotal>
-              </MicroClimate>
-              <Plant>
-                <Name>Oats</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ResourceName>Oats</ResourceName>
-                <CropType>Oats</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
-              </Plant>
-              <Report>
-                <Name>DailyReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string />
-                </VariableNames>
-                <EventNames>
-                  <string />
-                </EventNames>
-              </Report>
-              <Report>
-                <Name>HarvestReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string />
-                </VariableNames>
-                <EventNames>
-                  <string />
-                </EventNames>
-              </Report>
-              <Manager>
-                <Name>Harvesting</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Script />
-                <Code><![CDATA[using System;
-using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
-using Models.PMF;
-using Models;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models
-{
-	[Serializable] 
-	public class Script : Model
-	{
-		[Link] Plant Oats;
-		[Link] Clock clock;
-		[EventSubscribe("DoManagement")]
-		private void OnDoManagement(object sender, EventArgs e)
-		{
-			if (Oats.IsAlive == true)
-			{	
-				DateTime HD = new DateTime(1999, 03, 04);
-				if (clock.Today.Date == HD.Date)
-				{
-					Oats.Harvest();
-					Oats.EndCrop();
-				}
-			}
-		}
-	}
-}
-	   ]]></Code>
-              </Manager>
-              <Report>
-                <Name>SupReport</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ExperimentFactorNames />
-                <ExperimentFactorValues />
-                <VariableNames>
-                  <string>[Clock].Today</string>
-                  <string>[Phenology].ThermalTime.Value()</string>
-                  <string>[Leaf].CohortSize</string>
-                  <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                  <string>[0ats].Arbitrator.DMAllocated</string>
-                  <string>[0ats].Arbitrator.DMDemand</string>
-                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                  <string>[0ats].Arbitrator.FN</string>
-                  <string>[0ats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                  <string>[0ats].Leaf.CohortMaxSize</string>
-                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
-                  <string>sum([Soil].SoilWater.SWmm[1:6]) as ProfileWater</string>
-                </VariableNames>
-                <EventNames>
-                  <string>[Clock].DoReport</string>
-                </EventNames>
-              </Report>
-              <SoluteManager>
-                <Name>SoluteManager</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </SoluteManager>
-              <Operations>
-                <Name>Operations</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-              </Operations>
               <Soil>
                 <Name>Soil</Name>
                 <Water>
@@ -18760,14 +18525,176 @@ namespace Models
                 <LocationAccuracy>+-20m</LocationAccuracy>
                 <DataSource>University of Adelaide, Roseworthy</DataSource>
               </Soil>
+              <SoluteManager>
+                <Name>SoluteManager</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </SoluteManager>
+              <Irrigation>
+                <Name>Irrigation</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Irrigation>
+              <SurfaceOrganicMatter>
+                <Name>Surface Organic Matter</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResidueTypes>
+                  <Name>ResidueTypes</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <LoadFromResource>ResidueTypes</LoadFromResource>
+                </ResidueTypes>
+                <Pools>
+                  <Pool>
+                    <PoolName>wheat_stubble</PoolName>
+                    <ResidueType>wheat</ResidueType>
+                    <Mass>0</Mass>
+                    <CNRatio>80</CNRatio>
+                    <CPRatio>NaN</CPRatio>
+                    <StandingFraction>0</StandingFraction>
+                  </Pool>
+                </Pools>
+                <PoolName>wheat_stubble</PoolName>
+                <type>wheat</type>
+                <mass>0</mass>
+                <standing_fraction>0</standing_fraction>
+                <cpr />
+                <cnr>80</cnr>
+                <CriticalResidueWeight>2000</CriticalResidueWeight>
+                <OptimumDecompTemp>20</OptimumDecompTemp>
+                <MaxCumulativeEOS>20</MaxCumulativeEOS>
+                <CNRatioDecompCoeff>0.277</CNRatioDecompCoeff>
+                <CNRatioDecompThreshold>25</CNRatioDecompThreshold>
+                <TotalLeachRain>25</TotalLeachRain>
+                <MinRainToLeach>10</MinRainToLeach>
+                <CriticalMinimumOrganicC>0.004</CriticalMinimumOrganicC>
+                <DefaultCPRatio>0</DefaultCPRatio>
+                <DefaultStandingFraction>0</DefaultStandingFraction>
+                <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
+                <FractionFaecesAdded>0.5</FractionFaecesAdded>
+              </SurfaceOrganicMatter>
+              <Fertiliser>
+                <Name>Fertiliser</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </Fertiliser>
+              <MicroClimate>
+                <Name>MicroClimate</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <a_interception>0</a_interception>
+                <b_interception>1</b_interception>
+                <c_interception>0</c_interception>
+                <d_interception>0</d_interception>
+                <soil_albedo>0.3</soil_albedo>
+                <sun_angle>15</sun_angle>
+                <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+                <night_interception_fraction>0.5</night_interception_fraction>
+                <refheight>2</refheight>
+                <albedo>0.29366217672824863</albedo>
+                <emissivity>0.96</emissivity>
+                <RadIntTotal>0</RadIntTotal>
+              </MicroClimate>
+              <Plant>
+                <Name>Oats</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ResourceName>Oats</ResourceName>
+                <CropType>Oats</CropType>
+                <SowingDate>0001-01-01T00:00:00</SowingDate>
+              </Plant>
+              <Folder>
+                <Name>Management</Name>
+                <Operations>
+                  <Name>Operations</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </Operations>
+                <Manager>
+                  <Name>Harvesting</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
+                  <Code><![CDATA[using System;
+using Models.Core;
+using System.Collections.Generic;
+using System.Text;
+using Models.Soils;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable] 
+	public class Script : Model
+	{
+
+	}
+}
+	   ]]></Code>
+                </Manager>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ShowPageOfGraphs>true</ShowPageOfGraphs>
+              </Folder>
+              <Report>
+                <Name>DailyReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>HarvestReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string />
+                </VariableNames>
+                <EventNames>
+                  <string />
+                </EventNames>
+              </Report>
+              <Report>
+                <Name>SupReport</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ExperimentFactorNames />
+                <ExperimentFactorValues />
+                <VariableNames>
+                  <string>[Clock].Today</string>
+                  <string>[Phenology].ThermalTime.Value()</string>
+                  <string>[Leaf].CohortSize</string>
+                  <string>[Leaf].CohortParameters.MaxArea.Value()</string>
+                  <string>[0ats].Arbitrator.DMAllocated</string>
+                  <string>[0ats].Arbitrator.DMDemand</string>
+                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
+                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
+                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
+                  <string>[0ats].Arbitrator.FN</string>
+                  <string>[0ats].Arbitrator.NDemand</string>
+                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[0ats].Leaf.CohortMaxSize</string>
+                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
+                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
+                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                  <string>sum([Soil].SoilWater.SWmm[1:6]) as ProfileWater</string>
+                </VariableNames>
+                <EventNames>
+                  <string>[Clock].DoReport</string>
+                </EventNames>
+              </Report>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Area>1</Area>
               <Slope>0</Slope>
             </Zone>
-            <SoilArbitrator>
-              <Name>Soil Arbitrator</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </SoilArbitrator>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Simulation>
           <IncludeInDocumentation>true</IncludeInDocumentation>
