@@ -3741,6 +3741,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].Leaf.Dead.NConc</string>
         <string>[Oats].Leaf.Dead.Wt</string>
         <string>[Oats].Leaf.DeadCohortNo</string>
+        <string>[Oats].Leaf.GreenCohortNo</string>
         <string>[Oats].Leaf.SenescingCohortNo</string>
         <string>[Oats].Leaf.ExpandedCohortNo</string>
         <string>[Oats].Leaf.Fn</string>
@@ -8977,350 +8978,6 @@ namespace Models
         </Simulation>
         <Folder>
           <Name>Graphs</Name>
-          <Graph>
-            <Name>AboveGroundWt</Name>
-            <Series>
-              <Name>Pred</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.AboveGroundLive.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Obs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Observed</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Aboveground.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>Water Profile</Name>
-            <Series>
-              <Name>Obs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Observed</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>ProfileWater</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Predicted</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>ProfileWater</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>Grain</Name>
-            <Series>
-              <Name>Pred</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Grain.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Obs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Observed</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Grain.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>Tips</Name>
-            <Series>
-              <Name>TipsPred</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Structure.LeafTipsAppeared</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>TipsObs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Observed</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Structure.LeafTipsAppeared</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>LigsPred</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Leaf.ExpandedCohortNo</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>LigsObs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>Circle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Observed</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Structure.MainStemLigules</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>DeadPred</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Leaf.DeadCohortNo</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>LigsObs1</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>Circle</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>ObsStructure</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Structure.MainStemLigules</YFieldName>
-              <ShowInLegend>false</ShowInLegend>
-              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
           <Folder>
             <Name>OrganBiomass</Name>
             <Graph>
@@ -13311,6 +12968,350 @@ namespace Models
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ShowPageOfGraphs>true</ShowPageOfGraphs>
         </Folder>
+        <Graph>
+          <Name>AboveGroundWt</Name>
+          <Series>
+            <Name>Pred</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.AboveGroundLive.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Obs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Aboveground.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Water Profile</Name>
+          <Series>
+            <Name>Obs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>ProfileWater</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>ProfileWater</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Grain</Name>
+          <Series>
+            <Name>Pred</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Obs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Grain.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Tips</Name>
+          <Series>
+            <Name>TipsPred</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>TipsObs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Structure.LeafTipsAppeared</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LigsPred</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Leaf.ExpandedCohortNo</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>LigsObs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>Circle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Leaf.ExpandedCohortNo</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>DeadPred</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Leaf.DeadCohortNo</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>DeadObs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledTriangle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Leaf.DeadCohortNo</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Experiment>
       <Experiment>
@@ -13338,7 +13339,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Operations</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-06-01</Date>
+                  <Date>2015-07-01</Date>
                   <Action>[Oats].Sow(population:200, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
@@ -13354,7 +13355,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Operations</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2015-07-01</Date>
+                  <Date>2015-08-01</Date>
                   <Action>[Oats].Sow(population:200, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
@@ -13369,10 +13370,6 @@ Grazing winter forage crops is an important management strategy for profitable l
               <Operations>
                 <Name>Operations</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Operation>
-                  <Date>2015-07-01</Date>
-                  <Action>[Oats].Sow(population:200, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
-                </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Specifications>
@@ -14110,6 +14107,11 @@ namespace Models
           <Name>AboveGroundWt</Name>
           <Series>
             <Name>Sim</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ColumnName>Oats.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -14117,7 +14119,7 @@ namespace Models
             <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>Solid</Line>
@@ -14144,7 +14146,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Obs2015</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -14171,93 +14173,14 @@ namespace Models
           <DisabledSeries />
         </Graph>
         <Graph>
-          <Name>LAI</Name>
-          <Series>
-            <Name>Series</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.Leaf.LAI</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>Tips</Name>
-          <Series>
-            <Name>Series</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.Structure.LeafTipsAppeared</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
           <Name>Leaf</Name>
           <Series>
             <Name>Sim</Name>
+            <EventNamesOnGraph>
+              <Name>EventNamesOnGraph</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ColumnName>Oats.Phenology.CurrentStageName</ColumnName>
+            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -14278,85 +14201,23 @@ namespace Models
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>Grain</Name>
           <Series>
-            <Name>Sim</Name>
+            <Name>Obs</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
+            <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.Grain.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>Stem</Name>
-          <Series>
-            <Name>Sim</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.Stem.Wt</YFieldName>
+            <YFieldName>Oats.AboveGroundLive.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -14411,63 +14272,16 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Obs2015</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.CoverTotal</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>FW</Name>
-          <Series>
-            <Name>Sim</Name>
-            <EventNamesOnGraph>
-              <Name>EventNamesOnGraph</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ColumnName>Phenology.CurrentPhaseName</ColumnName>
-            </EventNamesOnGraph>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.Leaf.Fw</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -14529,7 +14343,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Obs2015</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.AboveGround.N</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -14553,9 +14367,7 @@ namespace Models
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries>
-            <string>Aug0: Obs</string>
-          </DisabledSeries>
+          <DisabledSeries />
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Experiment>
@@ -15299,12 +15111,29 @@ namespace Models
         <Graph>
           <Name>AboveGroundWt</Name>
           <Series>
+            <Name>Obs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Observed</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.AboveGroundLive.Wt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
             <Name>Sim</Name>
-            <EventNamesOnGraph>
-              <Name>EventNamesOnGraph</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ColumnName>Phenology.CurrentPhaseName</ColumnName>
-            </EventNamesOnGraph>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
@@ -15319,99 +15148,13 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>DailyReport</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.AboveGroundLive.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Obs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Obs2016</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.AboveGroundLive.Wt</YFieldName>
+            <YFieldName>Oats.AboveGround.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>Leaf</Name>
-          <Series>
-            <Name>Sim</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.Leaf.Live.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Obs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Obs2015</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.Leaf.Live.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Inverted>false</Inverted>
@@ -15460,132 +15203,16 @@ namespace Models
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
             <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
             <Marker>None</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Obs2016</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Leaf.CoverTotal</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>Grain</Name>
-          <Series>
-            <Name>Sim</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.Grain.Wt</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>AboveGround N</Name>
-          <Series>
-            <Name>Pred</Name>
-            <EventNamesOnGraph>
-              <Name>EventNamesOnGraph</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ColumnName>Phenology.CurrentPhaseName</ColumnName>
-            </EventNamesOnGraph>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>DailyReport</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>UptakeNKgHA</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Obs</Name>
-            <EventNamesOnGraph>
-              <Name>EventNamesOnGraph</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ColumnName>Phenology.CurrentPhaseName</ColumnName>
-            </EventNamesOnGraph>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Obs2016</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>UptakeNKgHA</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -20826,11 +20453,6 @@ namespace Models
             </SoilArbitrator>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Simulation>
-          <Constant>
-            <Name>KNO3</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.02</FixedValue>
-          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Experiment>
         <Graph>
