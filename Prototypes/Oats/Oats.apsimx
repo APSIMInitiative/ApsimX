@@ -3908,12 +3908,12 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <X>
               <double>0</double>
-              <double>26</double>
-              <double>37</double>
+              <double>30</double>
+              <double>40</double>
             </X>
             <Y>
               <double>0</double>
-              <double>26</double>
+              <double>30</double>
               <double>0</double>
             </Y>
           </XYPairs>
@@ -4165,7 +4165,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp.]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>2.5</FixedValue>
+          <FixedValue>1</FixedValue>
         </Constant>
         <GerminatingPhase>
           <Name>Germinating</Name>
@@ -4184,7 +4184,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Start>Germination</Start>
           <End>Emergence</End>
           <ShootLag>40</ShootLag>
-          <ShootRate>1.5</ShootRate>
+          <ShootRate>4</ShootRate>
         </EmergingPhase>
         <GenericPhase>
           <Name>Vegetative</Name>
@@ -4297,7 +4297,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Constant>
             <Name>Target</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>120</FixedValue>
+            <FixedValue>20</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -4313,7 +4313,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Constant>
             <Name>Target</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>545</FixedValue>
+            <FixedValue>650</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -4329,7 +4329,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Constant>
             <Name>Target</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>35</FixedValue>
+            <FixedValue>200</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -4345,7 +4345,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Constant>
             <Name>Target</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>300</FixedValue>
+            <FixedValue>600</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -4492,7 +4492,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Constant>
             <Name>BasePhyllochron</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>120</FixedValue>
+            <FixedValue>90</FixedValue>
             <Units>oC.d</Units>
           </Constant>
           <LinearInterpolationFunction>
@@ -4689,15 +4689,13 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <X>
                 <double>3</double>
-                <double>4</double>
+                <double>3.8</double>
                 <double>5</double>
                 <double>6</double>
-                <double>7</double>
               </X>
               <Y>
-                <double>10</double>
-                <double>200</double>
-                <double>1000</double>
+                <double>20</double>
+                <double>100</double>
                 <double>1100</double>
                 <double>1200</double>
               </Y>
@@ -4875,21 +4873,82 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Name>Dead</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
-        <HoldFunction>
+        <MultiplyFunction>
           <Name>NumberFunction</Name>
+          <VariableReference>
+            <Name>PanaclePopulation</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Panicle].HeadNumber.Value()</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>SpikletsPerPanacle</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>25</FixedValue>
+            <Units>grains</Units>
+          </Constant>
+          <LinearInterpolationFunction>
+            <Name>GrainPerSpiklet</Name>
+            <XYPairs>
+              <Name>XYPairs</Name>
+              <Memo>
+                <Name>Memo</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <MemoText><![CDATA[Changing 4th line from 7:1 to 6:1.
+Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Coolibah]]></MemoText>
+              </Memo>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <X>
+                <double>0</double>
+                <double>250</double>
+              </X>
+              <Y>
+                <double>0</double>
+                <double>1.95</double>
+              </Y>
+            </XYPairs>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <XProperty>[Grain].AccumThermalTime.Value()</XProperty>
+          </LinearInterpolationFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MultiplyFunction>
+        <HoldFunction>
+          <Name>NumberFunctionXXXX</Name>
           <MultiplyFunction>
             <Name>GrainNumber</Name>
-            <Constant>
-              <Name>GrainsPerGramOfStem</Name>
+            <VariableReference>
+              <Name>PanaclePopulation</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>22</FixedValue>
+              <VariableName>[Panicle].HeadNumber.Value()</VariableName>
+            </VariableReference>
+            <Constant>
+              <Name>SpikletsPerPanacle</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>25</FixedValue>
               <Units>grains</Units>
             </Constant>
-            <VariableReference>
-              <Name>StemMass</Name>
+            <LinearInterpolationFunction>
+              <Name>GrainPerSpiklet</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
+                <Memo>
+                  <Name>Memo</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <MemoText><![CDATA[Changing 4th line from 7:1 to 6:1.
+Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Coolibah]]></MemoText>
+                </Memo>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <X>
+                  <double>0</double>
+                  <double>250</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>1.95</double>
+                </Y>
+              </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[StemPlusPanicle].Wt</VariableName>
-            </VariableReference>
+              <XProperty>[Grain].AccumThermalTime.Value()</XProperty>
+            </LinearInterpolationFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4908,7 +4967,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.043</FixedValue>
+          <FixedValue>0.042</FixedValue>
           <Units>g</Units>
         </Constant>
         <PhaseLookup>
@@ -5664,7 +5723,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 <MemoText><![CDATA[As per NZ Lincoln data set]]></MemoText>
               </Memo>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>7000</FixedValue>
+              <FixedValue>5000</FixedValue>
               <Units>mm^2</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -6267,7 +6326,8 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Constant>
             <Name>MaximumOrganWt</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.5</FixedValue>
+            <FixedValue>0.213</FixedValue>
+            <Units>g</Units>
           </Constant>
           <AddFunction>
             <Name>GrowthDuration</Name>
@@ -6424,11 +6484,21 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
-        <VariableReference>
+        <MultiplyFunction>
           <Name>HeadNumber</Name>
+          <VariableReference>
+            <Name>StemNumber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Structure].TotalStemPopn</VariableName>
+          </VariableReference>
+          <Constant>
+            <Name>PaniclesPerStem</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.83</FixedValue>
+            <Units>0-1</Units>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Structure].TotalStemPopn</VariableName>
-        </VariableReference>
+        </MultiplyFunction>
         <Constant>
           <Name>DMReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -9042,6 +9112,13 @@ namespace Models
                 <string>[LeafSize].Script.MostRecentlyAppearedLeafMaxSize</string>
                 <string>[LeafSize].Script.LeafExpandedPosition</string>
                 <string>[LeafSize].Script.MostRecentlyExpandedLeafSize</string>
+                <string>[Grain].AccumThermalTime.Value()</string>
+                <string>[Oats].Panicle.HeadNumber.Value()</string>
+                <string>[Oats].Grain.NumberFunction.GrainNumber.GrainPerSpiklet.Value()</string>
+                <string>[Oats].Grain.NumberFunction.GrainNumber.PanaclePopulation.Value()</string>
+                <string>[Oats].Grain.NumberFunction.GrainNumber.SpikletsPerPanacle.Value()</string>
+                <string>[Oats].Grain.NumberFunction.GrainNumber.Value()</string>
+                <string>[Oats].Grain.NumberFunction.Value()</string>
               </VariableNames>
               <EventNames>
                 <string>[Clock].DoReport</string>
@@ -9693,6 +9770,11 @@ namespace Models
             <Name>Grain</Name>
             <Series>
               <Name>Pred</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Oats.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -10015,7 +10097,7 @@ namespace Models
         <Folder>
           <Name>YieldComponents</Name>
           <Graph>
-            <Name>Grain</Name>
+            <Name>GrainNumber</Name>
             <Series>
               <Name>Pred</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -10030,9 +10112,9 @@ namespace Models
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
+              <TableName>SupReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Grain.Number</YFieldName>
+              <YFieldName>Oats.Grain.NumberFunction.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -10119,6 +10201,90 @@ namespace Models
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Oats.Structure.TotalStemPopn</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>HeadNumber</Name>
+            <Series>
+              <Name>Pred</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>SupReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Oats.Panicle.HeadNumber.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>GrainPerSpikelet</Name>
+            <Series>
+              <Name>Pred</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>SupReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Oats.Grain.NumberFunction.GrainNumber.GrainPerSpiklet.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11167,15 +11333,15 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SDSwitch>0</SDSwitch>
-                  <Amount1>0</Amount1>
-                  <Amount2>0</Amount2>
-                  <Amount3>0</Amount3>
-                  <Amount4>0</Amount4>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
                   <FertDate4>25-Nov</FertDate4>
+                  <Amount1>0</Amount1>
+                  <Amount2>0</Amount2>
+                  <Amount3>0</Amount3>
+                  <Amount4>0</Amount4>
+                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -12171,15 +12337,15 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Fertilise</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SDSwitch>0</SDSwitch>
-                  <Amount1>0</Amount1>
-                  <Amount2>0</Amount2>
-                  <Amount3>0</Amount3>
-                  <Amount4>0</Amount4>
                   <FertDate1>05-Aug</FertDate1>
                   <FertDate2>01-Oct</FertDate2>
                   <FertDate3>20-Oct</FertDate3>
                   <FertDate4>25-Nov</FertDate4>
+                  <Amount1>0</Amount1>
+                  <Amount2>0</Amount2>
+                  <Amount3>0</Amount3>
+                  <Amount4>0</Amount4>
+                  <SDSwitch>0</SDSwitch>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
