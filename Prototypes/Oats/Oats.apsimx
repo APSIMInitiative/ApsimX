@@ -6911,17 +6911,17 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Name>Hokonui</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
-          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 6</Command>
           <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 82</Command>
         </Cultivar>
         <Cultivar>
           <Name>Stampede</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
-          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 82</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 6</Command>
+          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Milton1</Name>
@@ -9114,10 +9114,6 @@ namespace Models
                 <string>[LeafSize].Script.MostRecentlyExpandedLeafSize</string>
                 <string>[Grain].AccumThermalTime.Value()</string>
                 <string>[Oats].Panicle.HeadNumber.Value()</string>
-                <string>[Oats].Grain.NumberFunction.GrainNumber.GrainPerSpiklet.Value()</string>
-                <string>[Oats].Grain.NumberFunction.GrainNumber.PanaclePopulation.Value()</string>
-                <string>[Oats].Grain.NumberFunction.GrainNumber.SpikletsPerPanacle.Value()</string>
-                <string>[Oats].Grain.NumberFunction.GrainNumber.Value()</string>
                 <string>[Oats].Grain.NumberFunction.Value()</string>
               </VariableNames>
               <EventNames>
@@ -10201,90 +10197,6 @@ namespace Models
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Oats.Structure.TotalStemPopn</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>HeadNumber</Name>
-            <Series>
-              <Name>Pred</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>SupReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Panicle.HeadNumber.Value()</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>GrainPerSpikelet</Name>
-            <Series>
-              <Name>Pred</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>SupReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Grain.NumberFunction.GrainNumber.GrainPerSpiklet.Value()</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11545,8 +11457,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -11658,7 +11570,7 @@ namespace Models
               <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -11678,8 +11590,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -11747,8 +11659,8 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
@@ -11810,7 +11722,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Operations</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2016-06-01</Date>
+                  <Date>2016-07-01</Date>
                   <Action>[Oats].Sow(population:200, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
@@ -11826,7 +11738,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <Name>Operations</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
-                  <Date>2016-07-01</Date>
+                  <Date>2016-08-01</Date>
                   <Action>[Oats].Sow(population:200, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
@@ -12542,6 +12454,33 @@ namespace Models
           <Graph>
             <Name>AboveGroundWt</Name>
             <Series>
+              <Name>Sim</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Oats.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Oats.AboveGround.Wt</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
               <Name>Obs</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
@@ -12563,8 +12502,50 @@ namespace Models
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Water Profile</Name>
             <Series>
-              <Name>Sim</Name>
+              <Name>Obs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>ProfileWater</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Predicted</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -12579,13 +12560,13 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.AboveGround.Wt</YFieldName>
+              <YFieldName>ProfileWater</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
               <CumulativeX>false</CumulativeX>
             </Series>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
