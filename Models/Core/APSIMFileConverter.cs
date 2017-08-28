@@ -319,6 +319,7 @@ namespace Models.Core
             APSIMFileConverterUtilities.RenameVariable(node, "NonStructuralNDemand", "StorageNDemand");
 
             // renames
+            APSIMFileConverterUtilities.RenamePMFFunction(node, "LeafCohortParameters", "NonStructuralFraction", "StorageFraction");
             APSIMFileConverterUtilities.RenameNode(node, "NonStructuralNReallocated", "StorageNReallocated");
             APSIMFileConverterUtilities.RenameNode(node, "NonStructuralWtReallocated", "StorageWtReallocated");
             APSIMFileConverterUtilities.RenameNode(node, "NonStructuralNRetrasnlocated", "StorageNRetrasnlocated");

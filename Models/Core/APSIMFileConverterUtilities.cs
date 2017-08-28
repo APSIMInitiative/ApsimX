@@ -168,9 +168,12 @@ namespace Models.Core
         /// <param name="fixedValue">The fixed value of the constant function</param>
         internal static void AddConstantFuntionIfNotExists(XmlNode node, string name, string fixedValue)
         {
-            XmlNode constant = node.AppendChild(node.OwnerDocument.CreateElement("Constant"));
-            XmlUtilities.SetValue(constant, "Name", name);
-            XmlUtilities.SetValue(constant, "FixedValue", fixedValue);
+            if (FindPMFNode(node, name) == null)
+            {
+                XmlNode constant = node.AppendChild(node.OwnerDocument.CreateElement("Constant"));
+                XmlUtilities.SetValue(constant, "Name", name);
+                XmlUtilities.SetValue(constant, "FixedValue", fixedValue);
+            }
         }
 
         /// <summary>
@@ -181,23 +184,42 @@ namespace Models.Core
         /// <param name="reference">The reference to put into the function</param>
         internal static void AddVariableReferenceFuntionIfNotExists(XmlNode node, string name, string reference)
         {
-            XmlNode critNConc = node.AppendChild(node.OwnerDocument.CreateElement("VariableReference"));
-            XmlUtilities.SetValue(critNConc, "Name", name);
-            XmlUtilities.SetValue(critNConc, "VariableName", reference);
-
+            if (FindPMFNode(node, name) == null)
+            {
+                XmlNode critNConc = node.AppendChild(node.OwnerDocument.CreateElement("VariableReference"));
+                XmlUtilities.SetValue(critNConc, "Name", name);
+                XmlUtilities.SetValue(critNConc, "VariableName", reference);
+            }
         }
 
         /// <summary>
-        /// Rename a node.
+        /// Rename a XML node.
         /// </summary>
-        /// <param name="node"></param>
-        /// <param name="oldName"></param>
-        /// <param name="newName"></param>
+        /// <param name="node">The xml node to add constant to</param>
+        /// <param name="oldName">The name to look for</param>
+        /// <param name="newName">The new name</param>
         internal static void RenameNode(XmlNode node, string oldName, string newName)
         {
             XmlNode foundNode = XmlUtilities.Find(node, oldName);
             if (foundNode != null)
                 XmlUtilities.Rename(foundNode.ParentNode, oldName, newName);
+        }
+
+        /// <summary>
+        /// Rename a PMF function
+        /// </summary>
+        /// <param name="node">The node to search under</param>
+        /// <param name="parentName">The name of the parent node to look for</param>
+        /// <param name="oldName">The old name of the function to replace</param>
+        /// <param name="newName">The new replacement name</param>
+        internal static void RenamePMFFunction(XmlNode node, string parentName, string oldName, string newName)
+        {
+            foreach (XmlNode child in XmlUtilities.FindAllRecursivelyByType(node, parentName))
+            {
+                XmlNode pmfNode = FindPMFNode(child, oldName);
+                if (pmfNode != null)
+                    XmlUtilities.SetValue(pmfNode, "Name", newName);
+            }
         }
     }
 }
