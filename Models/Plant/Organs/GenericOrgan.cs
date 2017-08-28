@@ -16,38 +16,6 @@ namespace Models.PMF.Organs
 
     /// <summary>
     /// This organ is simulated using a generic organ type.
-    ///   
-    /// **Dry Matter Demands**
-    /// 
-    /// A given fraction of daily DM demand is determined to be structural and the remainder is non-structural.
-    /// 
-    /// **Dry Matter Supplies**
-    /// 
-    /// A given fraction of Nonstructural DM is made available to the arbitrator as DMReTranslocationSupply.
-    /// 
-    /// **Nitrogen Demands**
-    /// 
-    /// The daily nonstructural N demand is the product of Total DM demand and a Maximum N concentration less the structural N demand.
-    /// The daily structural N demand is the product of Total DM demand and a Minimum N concentration. 
-    /// The Nitrogen demand switch is a multiplier applied to nitrogen demand so it can be turned off at certain phases.
-    /// 
-    /// **Nitrogen Supplies**
-    /// 
-    /// As the organ senesces a fraction of senesced N is made available to the arbitrator as NReallocationSupply.
-    /// A fraction of nonstructural N is made available to the arbitrator as NRetranslocationSupply
-    /// 
-    /// **Biomass Senescence and Detachment**
-    /// 
-    /// Senescence is calculated as a proportion of the live dry matter.
-    /// Detachment of biomass into the surface organic matter pool is calculated daily as a proportion of the dead DM.
-    /// 
-    /// **Canopy**
-    /// 
-    /// The user can model the canopy by specifying either the LAI and an extinction coefficient, or by specifying the canopy cover directly.  If the cover is specified, LAI is calculated using an inverted Beer-Lambert equation with the specified cover value.
-    /// 
-    /// The canopies values of Cover and LAI are passed to the MicroClimate module which uses the Penman Monteith equation to calculate potential evapotranspiration for each canopy and passes the value back to the crop.
-    /// The effect of growth rate on transpiration is captured using the Fractional Growth Rate (FRGR) function which is parameterised as a function of temperature for the simple leaf. 
-    ///
     /// </summary>
 
     [Serializable]
@@ -89,7 +57,7 @@ namespace Models.PMF.Organs
         IFunction DetachmentRateFunction = null;
 
         /// <summary>The N retranslocation factor</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction NRetranslocationFactor = null;
 
@@ -99,16 +67,16 @@ namespace Models.PMF.Organs
         IFunction NReallocationFactor = null;
 
         /// <summary>The nitrogen demand switch</summary>
-        [Link(IsOptional = true)]
+        [Link]
         IFunction NitrogenDemandSwitch = null;
 
         /// <summary>The DM retranslocation factor</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction DMRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("/d")]
         IFunction DMReallocationFactor = null;
 
@@ -138,7 +106,7 @@ namespace Models.PMF.Organs
         public IFunction MinimumNConc = null;
 
         /// <summary>The critical N concentration</summary>
-        [Link(IsOptional = true)]
+        [Link]
         [Units("g/g")]
         public IFunction CriticalNConc = null;
 
@@ -358,53 +326,39 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
-            if (DMRetranslocationFactor != null)
-            {
-                double availableDM = Math.Max(0.0, StartLive.NonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
+             double availableDM = Math.Max(0.0, StartLive.NonStructuralWt - DMReallocationSupply) * DMRetranslocationFactor.Value();
                 if (availableDM < -BiomassToleranceValue)
                     throw new Exception("Negative DM retranslocation value computed for " + Name);
 
                 return availableDM;
-            }
-            else
-            { // By default retranslocation is turned off!!!!
-                return 0.0;
-            }
         }
 
         /// <summary>Computes the amount of DM available for reallocation.</summary>
         public double AvailableDMReallocation()
         {
-            if (DMReallocationFactor != null)
-            {
-                double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value() * DMReallocationFactor.Value();
-                if (availableDM < -BiomassToleranceValue)
-                    throw new Exception("Negative DM reallocation value computed for " + Name);
+            double availableDM = StartLive.NonStructuralWt * SenescenceRate.Value() * DMReallocationFactor.Value();
+            if (availableDM < -BiomassToleranceValue)
+                throw new Exception("Negative DM reallocation value computed for " + Name);
 
-                return availableDM;
-            }
-            else
-            { // By default reallocation is turned off!!!!
-                return 0.0;
-            }
+            return availableDM;
         }
 
         /// <summary>Gets the N demand for this computation round.</summary>
         [XmlIgnore]
-        public virtual BiomassPoolType NDemand
+    public virtual BiomassPoolType NDemand
+    {
+        get
         {
-            get
+            DoNDemandCalculations();
+            return new BiomassPoolType
             {
-                DoNDemandCalculations();
-                return new BiomassPoolType
-                {
-                    Structural = StructuralNDemand,
-                    NonStructural = NonStructuralNDemand,
-                    Metabolic = MetabolicNDemand
-                };
-            }
-            set { }
+                Structural = StructuralNDemand,
+                NonStructural = NonStructuralNDemand,
+                Metabolic = MetabolicNDemand
+            };
         }
+        set { }
+    }
 
         /// <summary>Computes the N demanded for this organ.</summary>
         /// <remarks>
@@ -412,14 +366,11 @@ namespace Models.PMF.Organs
         /// </remarks>
         private void DoNDemandCalculations()
         {
-            double NitrogenSwitch = (NitrogenDemandSwitch == null) ? 1.0 : NitrogenDemandSwitch.Value();
-            double criticalN = (CriticalNConc == null) ? MinimumNConc.Value() : CriticalNConc.Value();
-
             double NDeficit = Math.Max(0.0, MaximumNConc.Value() * (Live.Wt + PotentialDMAllocation) - Live.N);
-            NDeficit *= NitrogenSwitch;
+            NDeficit *= NitrogenDemandSwitch.Value();
 
             StructuralNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * MinimumNConc.Value());
-            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (criticalN - MinimumNConc.Value()));
+            MetabolicNDemand = Math.Min(NDeficit, PotentialStructuralDMAllocation * (CriticalNConc.Value() - MinimumNConc.Value()));
             NonStructuralNDemand = Math.Max(0, NDeficit - StructuralNDemand - MetabolicNDemand);
         }
 
@@ -444,19 +395,12 @@ namespace Models.PMF.Organs
         /// <remarks>This is limited to ensure Nconc does not go below MinimumNConc</remarks>
         public double AvailableNRetranslocation()
         {
-            if (NRetranslocationFactor != null)
-            {
                 double labileN = Math.Max(0.0, StartLive.NonStructuralN - StartLive.NonStructuralWt * MinimumNConc.Value());
                 double availableN = Math.Max(0.0, labileN - NReallocationSupply) * NRetranslocationFactor.Value();
                 if (availableN < -BiomassToleranceValue)
                     throw new Exception("Negative N retranslocation value computed for " + Name);
 
                 return availableN;
-            }
-            else
-            {  // By default retranslocation is turned off!!!!
-                return 0.0;
-            }
         }
 
         /// <summary>Computes the N amount available for reallocation.</summary>
@@ -694,5 +638,161 @@ namespace Models.PMF.Organs
         }
 
         #endregion
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // write description of this class.
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+
+            // Documment DM demands.
+            tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel+1));
+            tags.Add(new AutoDocumentation.Paragraph("Total Dry matter demand is calculated by the DMDemandFunction",indent));
+            IModel DMDemand = Apsim.Child(this, "DMDemandFunction");
+            DMDemand.Document(tags, -1, indent);
+            IModel StrucFrac = Apsim.Child(this, "StructuralFraction");
+            if (StrucFrac.GetType() == typeof(Constant))
+            {
+                if (StructuralFraction.Value() == 1.0)
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("All demand is structural and this organ has no Non-structural demand", indent));
+                }
+                else
+                {
+                    double StrucPercent = StructuralFraction.Value() * 100;
+                    tags.Add(new AutoDocumentation.Paragraph("Of total biomass, " + StrucPercent + "% of this is structural and the remainder is non-structural demand", indent));
+                    tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
+                }
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of total biomass that is partitioned to structural is determined by the StructuralFraction", indent));
+                StrucFrac.Document(tags, -1, indent);
+                tags.Add(new AutoDocumentation.Paragraph("Any Non-structural Demand Capacity (StructuralWt/StructuralFraction) that is not currently occupied is also included in Non-structural DM Demand", indent));
+            }
+
+            // Document Nitrogen Demand
+            tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
+            tags.Add(new AutoDocumentation.Paragraph("The daily structural N demand is the product of Total DM demand and a Minimum N concentration", indent));
+            IModel MinN = Apsim.Child(this, "MinimumNConc");
+            MinN.Document(tags, -1, indent);
+            tags.Add(new AutoDocumentation.Paragraph("The daily nonstructural N demand is the product of Total DM demand and a Maximum N concentration", indent));
+            IModel MaxN = Apsim.Child(this, "MaximumNConc");
+            MaxN.Document(tags, -1, indent);
+            IModel NDemSwitch = Apsim.Child(this, "NitrogenDemandSwitch");
+            if (NDemSwitch.GetType() == typeof(Constant))
+            {
+                if(NitrogenDemandSwitch.Value()==1.0)
+                {
+                    //Dont bother docummenting as is does nothing
+                }
+                else
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + NitrogenDemandSwitch.Value() + " as specified by the NitrogenDemandFactor", indent));
+                }
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandFactor", indent));
+                NDemSwitch.Document(tags, -1, indent);
+            }
+
+            //Document DM supplies
+            tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
+            IModel DMReallocFac = Apsim.Child(this, "DMReallocationFactor");
+            if (DMReallocFac.GetType() == typeof(Constant))
+            {
+                if (DMReallocationFactor.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate DM when senescence of the organ occurs", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + DMReallocationFactor.Value()*100 + "% of DM that senesces each day",indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM tha is allocated each day is quantified by the DMReallocationFactor", indent));
+                DMReallocFac.Document(tags, -1, indent);
+            }
+            IModel DMRetransFac = Apsim.Child(this, "DMRetranslocationFactor");
+            if (DMRetransFac.GetType() == typeof(Constant))
+            {
+                if (DMRetranslocationFactor.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural DM", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + DMRetranslocationFactor.Value() * 100 + "% of non-structural DM each day", indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM tha is allocated each day is quantified by the DMReallocationFactor", indent));
+                DMRetransFac.Document(tags, -1, indent);
+            }
+
+            //Document N supplies
+            tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
+            IModel NReallocFac = Apsim.Child(this, "NReallocationFactor");
+            if (NReallocFac.GetType() == typeof(Constant))
+            {
+                if (NReallocationFactor.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + NReallocationFactor.Value() * 100 + "% of N that senesces each day", indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N tha is allocated each day is quantified by the NReallocationFactor", indent));
+                NReallocFac.Document(tags, -1, indent);
+            }
+            IModel NRetransFac = Apsim.Child(this, "NRetranslocationFactor");
+            if (NRetransFac.GetType() == typeof(Constant))
+            {
+                if (NRetranslocationFactor.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + NRetranslocationFactor.Value() * 100 + "% of non-structural N each day", indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor", indent));
+                NRetransFac.Document(tags, -1, indent);
+            }
+
+            //Document Biomass Senescence and Detachment
+            tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
+            IModel Sen = Apsim.Child(this, "SenescenceRate");
+            if(Sen.GetType() ==typeof(Constant))
+            {
+                if (SenescenceRate.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomss in this organ will remain live", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " senesces " + SenescenceRate.Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool", indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceFraction", indent));
+                Sen.Document(tags, -1, indent);
+            }
+
+            IModel Det = Apsim.Child(this, "DetachmentRateFunction");
+            if (Sen.GetType() == typeof(Constant))
+            {
+                if (DetachmentRateFunction.Value() == 0)
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomss in this organ will remain with the plant until a defoliation or harvest event occurs", indent));
+                else
+                    tags.Add(new AutoDocumentation.Paragraph(Name + " detaches " + DetachmentRateFunction.Value() * 100 + "% of its live biomass each day, passing it to the surface organic matter model for decomposition", indent));
+            }
+            else
+            {
+                tags.Add(new AutoDocumentation.Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction", indent));
+                Det.Document(tags, -1, indent);
+            }
+
+            if (biomassRemovalModel != null)
+                biomassRemovalModel.Document(tags, headingLevel+1, indent);          
+        }
     }
 }

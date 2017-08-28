@@ -1,95 +1,133 @@
-﻿using System;
-using Models.Factorial;
-using UserInterface.Views;
-using System.Reflection;
-using System.Collections.Generic;
-using Models.Core;
-using UserInterface.EventArguments;
+﻿// -----------------------------------------------------------------------
+// <copyright file="FactorPresenter.cs"  company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace UserInterface.Presenters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using EventArguments;
+    using Models.Core;
+    using Models.Factorial;
+    using Views;
+
     /// <summary>
     /// Connects a Factor model to a FactorView.
     /// </summary>
     public class FactorPresenter : IPresenter
     {
-        private Factor Factor;
-        private IEditorView FactorView;
-        private ExplorerPresenter ExplorerPresenter;
+        /// <summary>
+        /// The factor object
+        /// </summary>
+        private Factor factor;
 
+        /// <summary>
+        /// The view object
+        /// </summary>
+        private IEditorView factorView;
+
+        /// <summary>
+        /// The presenter
+        /// </summary>
+        private ExplorerPresenter explorerPresenter;
+
+        /// <summary>
+        /// Attach the view
+        /// </summary>
+        /// <param name="model">The model</param>
+        /// <param name="view">The view to attach</param>
+        /// <param name="explorerPresenter">The presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            Factor = model as Factor;
-            FactorView = view as IEditorView;
-            ExplorerPresenter = explorerPresenter;
+            this.factor = model as Factor;
+            this.factorView = view as IEditorView;
+            this.explorerPresenter = explorerPresenter;
 
-            FactorView.Lines = Factor.Specifications.ToArray();
+            this.factorView.Lines = this.factor.Specifications.ToArray();
 
-            FactorView.TextHasChangedByUser += OnTextHasChangedByUser;
-            FactorView.ContextItemsNeeded += OnContextItemsNeeded;
-            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.factorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
+            this.factorView.ContextItemsNeeded += this.OnContextItemsNeeded;
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
-
+        /// <summary>
+        /// Detach the objects
+        /// </summary>
         public void Detach()
         {
-            FactorView.TextHasChangedByUser -= OnTextHasChangedByUser;
-            FactorView.ContextItemsNeeded -= OnContextItemsNeeded;
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;            
+            this.factorView.TextHasChangedByUser -= this.OnTextHasChangedByUser;
+            this.factorView.ContextItemsNeeded -= this.OnContextItemsNeeded;
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;            
         }
 
         /// <summary>
         /// Intellisense lookup.
         /// </summary>
-        void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
+        /// <param name="sender">The menu item</param>
+        /// <param name="e">Event arguments</param>
+        private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            if (e.ObjectName == "")
+            if (e.ObjectName == string.Empty)
+            {
                 e.ObjectName = ".";
+            }
+
             try
             {
-                Experiment experiment = Factor.Parent.Parent as Experiment;
+                Experiment experiment = this.factor.Parent.Parent as Experiment;
                 if (experiment != null && experiment.BaseSimulation != null)
                 {
                     object o = experiment.BaseSimulation.Get(e.ObjectName);
 
                     if (o != null)
                     {
-                        foreach (IVariable Property in Apsim.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
-                            e.Items.Add(Property.Name);
+                        foreach (IVariable property in Apsim.FieldsAndProperties(o, BindingFlags.Instance | BindingFlags.Public))
+                        {
+                            e.Items.Add(property.Name);
+                        }
+
                         e.Items.Sort();
                     }
                 }
             }
             catch (Exception)
             {
-
             }
         }
 
         /// <summary>
         /// User has changed the paths. Save to model.
         /// </summary>
-        void OnTextHasChangedByUser(object sender, EventArgs e)
+        /// <param name="sender">The text control</param>
+        /// <param name="e">Event arguments</param>
+        private void OnTextHasChangedByUser(object sender, EventArgs e)
         {
-            ExplorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
             List<string> newPaths = new List<string>();
-            foreach (string line in FactorView.Lines)
+            foreach (string line in this.factorView.Lines)
+            {
                 if (line != string.Empty)
+                {
                     newPaths.Add(line);
-            ExplorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(Factor, "Specifications", newPaths));
+                }
+            }
 
-            ExplorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.factor, "Specifications", newPaths));
+
+            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
-
 
         /// <summary>
         /// The model has changed probably by an undo.
         /// </summary>
-        void OnModelChanged(object changedModel)
+        /// <param name="changedModel">The model</param>
+        private void OnModelChanged(object changedModel)
         {
-            FactorView.Lines = Factor.Specifications.ToArray();
+            this.factorView.Lines = this.factor.Specifications.ToArray();
         }
-
-
     }
 }

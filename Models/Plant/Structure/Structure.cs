@@ -6,14 +6,13 @@ using Models.PMF.Functions;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System.Xml.Serialization;
-using Models.PMF.Functions.StructureFunctions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 
-namespace Models.PMF
+namespace Models.PMF.Struct
 {
     /// <summary>
-    /// The structure model calculates structural development of the plant.  This includes the number of primordia, leaves, stems and nodes, as well as overall plant height.
+    /// The structure model calculates structural development of the plant.  This includes the number of primordia, leaf nodes and stems, as well as overall plant height.  The development of these characteristics is driven by <i>Thermal time</i>.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" model has to exist to access 
     /// sowing data, e.g. population, bud number.
@@ -191,7 +190,7 @@ namespace Models.PMF
         public event EventHandler InitialiseLeafCohorts;
         /// <summary>Occurs when ever an new vegetative leaf cohort is initiated on the stem apex.</summary>
         public event EventHandler<CohortInitParams> AddLeafCohort;
-        /// <summary>The Leaf Appearance DAta </summary>
+        /// <summary>The Leaf Appearance Data </summary>
         [XmlIgnore]
         public CohortInitParams InitParams { get; set; }
         /// <summary>Occurs when ever an new leaf tip appears.</summary>
@@ -281,7 +280,6 @@ namespace Models.PMF
         [Description("Number of mainstem nodes which have their tips appeared")]
         public double PotLeafTipsAppeared { get; set; }
 
-        //Plant leaf number state variables
         /// <summary>Gets or sets the main stem node no.</summary>
         /// <value>The main stem node no.</value>
         [XmlIgnore]
@@ -677,7 +675,7 @@ namespace Models.PMF
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
             // write a list of constant functions.
             foreach (IModel child in Apsim.Children(this, typeof(Constant)))

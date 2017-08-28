@@ -53,7 +53,7 @@ namespace Models
             PredictedObserved PO = Parent as PredictedObserved;
             if (PO == null)
                 return;
-            DataStore DS = PO.Parent as DataStore;
+            DataStore DS = Apsim.Find(this, typeof(DataStore)) as DataStore;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
             DataTable POtable = DS.GetData("*", PO.Name);
@@ -249,56 +249,57 @@ namespace Models
             // Run test suite so that data table is full.
             Test(accept: false, GUIrun: true);
 
-            // add a heading.
-            // tags.Add(new AutoDocumentation.Heading(Parent.Name + " statistics", headingLevel));
-
             // Get stat names.
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
             statNames.RemoveAt(0);
 
             // Grab the columns of data we want.
-            List<List<string>> dataForDoc = new List<List<string>>();
-            dataForDoc.Add(new List<string>()); // variable name.
-            foreach (string stat in statNames)
-                dataForDoc.Add(new List<string>()); // column for each stat.
-            
-            // add in headings.
-            dataForDoc[0].Add("Variable");
+            DataTable dataForDoc = new DataTable();
+            dataForDoc.Columns.Add("Variable", typeof(string)); 
             for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
             {
-                if (statNames[statIndex] == "SEintercept")
-                    statNames[statIndex] = "SEinter";
-                dataForDoc[statIndex + 1].Add(statNames[statIndex]);
+                if (statNames[statIndex] != "SEintercept" && 
+                    statNames[statIndex] != "SEslope" &&
+                    statNames[statIndex] != "RSR")
+                    dataForDoc.Columns.Add(statNames[statIndex], typeof(string));
             }
 
             int rowIndex = 0;
             while (rowIndex < Table.Rows.Count)
             {
+                DataRow row = dataForDoc.NewRow();
+                dataForDoc.Rows.Add(row);
                 string variableName = Table.Rows[rowIndex][1].ToString();
-                dataForDoc[0].Add(variableName);
+                row[0] = variableName;
 
+                int i = 1;
                 for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
                 {
-                    object currentValue = Table.Rows[rowIndex]["Current"];
-                    string formattedValue;
-                    if (currentValue.GetType() == typeof(double))
+                    if (statNames[statIndex] != "SEintercept" && 
+                        statNames[statIndex] != "SEslope" &&
+                        statNames[statIndex] != "RSR")
                     {
-                        double doubleValue = Convert.ToDouble(currentValue);
-                        if (!double.IsNaN(doubleValue))
+                        object currentValue = Table.Rows[rowIndex]["Current"];
+                        string formattedValue;
+                        if (currentValue.GetType() == typeof(double))
                         {
-                            if (statIndex == 0)
-                                formattedValue = doubleValue.ToString("F0");
+                            double doubleValue = Convert.ToDouble(currentValue);
+                            if (!double.IsNaN(doubleValue))
+                            {
+                                if (statIndex == 0)
+                                    formattedValue = doubleValue.ToString("F0");
+                                else
+                                    formattedValue = doubleValue.ToString("F3");
+                            }
                             else
-                                formattedValue = doubleValue.ToString("F3");
+                                formattedValue = currentValue.ToString();
                         }
                         else
                             formattedValue = currentValue.ToString();
-                    }
-                    else
-                        formattedValue = currentValue.ToString();
 
-                    dataForDoc[statIndex + 1].Add(formattedValue);
-                    
+                        row[i] = formattedValue;
+                        i++;
+                    }
                     rowIndex++;
                 }
             }

@@ -5,6 +5,7 @@ using System.Text;
 using Models.Factorial;
 using Models.PMF.Interfaces;
 using Models.Graph;
+using System.Data;
 
 namespace Models.Core
 {
@@ -45,6 +46,34 @@ namespace Models.Core
                 foreach (Memo memo in Apsim.Children(this, typeof(Memo)))
                     memo.Document(tags, headingLevel, indent);
 
+                if (Apsim.Children(this, typeof(Experiment)).Count > 0)
+                {
+                    // Write Phase Table
+                    tags.Add(new AutoDocumentation.Paragraph("**List of experiments.**", indent));
+                    DataTable tableData = new DataTable();
+                    tableData.Columns.Add("Experiment Name", typeof(string));
+                    tableData.Columns.Add("Design (Number of Treatments)", typeof(string));
+
+                    foreach (IModel child in Apsim.Children(this, typeof(Experiment)))
+                    {
+                        IModel Factors = Apsim.Child(child, typeof(Factors));
+                        string Design = "";
+                        foreach (IModel factor in Apsim.Children(Factors, typeof(Factor)))
+                        {
+                            if (Design != "")
+                                Design += " x ";
+                            Design += factor.Name;
+                        }
+                        Design += " (" + (child as Experiment).Names().Length+")";
+
+                        DataRow row = tableData.NewRow();
+                        row[0] = child.Name;
+                        row[1] = Design;
+                        tableData.Rows.Add(row);
+                    }
+                    tags.Add(new AutoDocumentation.Table(tableData, indent));
+
+                }
                 int pageNumber = 1;
                 int i = 0;
                 List<IModel> children = Apsim.Children(this, typeof(Graph.Graph));

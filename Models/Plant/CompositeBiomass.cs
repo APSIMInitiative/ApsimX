@@ -159,7 +159,7 @@ namespace Models.PMF
             tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
 
             // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
             // write children.
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
@@ -167,8 +167,12 @@ namespace Models.PMF
 
             tags.Add(new AutoDocumentation.Paragraph(this.Name +" is a composite of the following biomass objects:", indent));
 
+            string st = string.Empty;
             foreach (string PropertyName in Propertys)
-                tags.Add(new AutoDocumentation.Paragraph("* "+PropertyName, indent));
+            {
+                st = st + Environment.NewLine + "* " + PropertyName;
+            }
+            tags.Add(new AutoDocumentation.Paragraph(st, indent));
 
         }
     }

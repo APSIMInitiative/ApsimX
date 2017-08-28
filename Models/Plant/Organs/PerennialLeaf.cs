@@ -5,6 +5,7 @@ using Models.PMF.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
 using Models.PMF.Phen;
+using Models.PMF.Struct;
 using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;

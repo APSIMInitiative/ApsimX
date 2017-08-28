@@ -4,6 +4,7 @@ using Models.Interfaces;
 using Models.PMF.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
+using Models.PMF.Struct;
 using System;
 using System.Xml.Serialization;
 

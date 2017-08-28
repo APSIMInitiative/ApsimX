@@ -504,7 +504,7 @@ namespace UserInterface.Presenters
         public bool IncludeInDocumentationChecked()
         {
             IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
-            return model.IncludeInDocumentation;
+            return (model != null) ? model.IncludeInDocumentation : false;
         }
 
         /// <summary>
@@ -529,7 +529,7 @@ namespace UserInterface.Presenters
         public bool ShowPageOfGraphsChecked()
         {
             Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
-            return folder.ShowPageOfGraphs;
+            return (folder != null) ? folder.ShowPageOfGraphs : false;
         }
 
     }

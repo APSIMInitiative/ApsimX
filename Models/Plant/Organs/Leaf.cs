@@ -8,13 +8,24 @@ using Models.PMF.Interfaces;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.PMF.Library;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Organs
 {
     /// <summary>
-    ///     This provides a phytomer type which predicts the area, biomass and nutrient as the tally of separate cohorts of leaves.  
-    ///     A cohort of leaves is represented by a main-stem node position and branch leaves are kept in the same cohort as the mainstem leaf appearing at the same time ([lawless2005wheat]). 
-    ///     The Leaf class delegates the status and function of individual cohorts into LeafCohort sub-classes.
+    /// # Leaf #
+    /// The leaves are modeled as a set of leaf cohorts and the properties of each of these cohorts are summed to give over all values for the leaf organ.  
+    /// A cohort represents all the leaves of a given main stem node position including all of the branch leaves appearing at the same time as the given main-stem leaf ([lawless2005wheat]).  
+    /// The number of leaves in each cohort is the product of the number of plants per m<sup>2</sup> and the number of branches per plant.  
+    /// The Structure class models the appearance of main-stem leaves and branches.  Once cohorts are initiated the Leaf class models the area and biomass dynamics of each.  
+    /// It is assumed all the leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to LeafCohort classes.  
+    /// 
+    /// ## Dry Matter Fixation ##
+    /// The most important DM supply from leaf is the photosynthetic fixiation supply.  Radiation interception is calculated from
+    /// LAI using an extinction coefficient of:"
+    /// [Document ExtinctionCoeff]
+    /// [Document Photosynthesis]
+    /// 
     /// </summary>
     [Serializable]
     [Description("Leaf Class")]
@@ -145,7 +156,90 @@ namespace Models.PMF.Organs
 
         #region Structures
         /// <summary>
+        /// ## Potential Leaf Area index ##
+        /// Leaf area index is calculated as the sum of the area of each cohort of leaves 
+        /// The appearance of a new cohort of leaves occurs each time Structure.LeafTipsAppeared increases by one.
+        /// From tip appearance the area of each cohort will increase for a certian number of degree days defined by the <i>GrowthDuration</i>
+        /// [Document CohortParameters.GrowthDuration]
         /// 
+        /// If no stress occurs the leaves will reach a Maximum area (<i>MaxArea</i>) at the end of the <i>GrowthDuration</i>.
+        /// The <i>MaxArea</i> is defined by:
+        /// [Document CohortParameters.MaxArea]
+        /// 
+        /// In the absence of stress the leaf will remain at <i>MaxArea</i> for a number of degree days
+        /// set by the <i>LagDuration</i> and then area will senesce to zero at the end of the <i>SenescenceDuration</i>
+        /// [Document CohortParameters.LagDuration]
+        /// [Document CohortParameters.SenescenceDuration]
+        /// 
+        /// Mutual shading can cause premature senescence of cohorts if the leaf area above them becomes too great.
+        /// Each cohort models the proportion of its area that is lost to shade induced senescence each day as:
+        /// [Document CohortParameters.ShadeInducedSenescenceRate]
+        /// 
+        /// ## Stress effects on Leaf Area Index ##
+        /// Stress reduces leaf area in a number of ways.
+        /// Firstly, stress occuring prior to the appearance of the cohort can reduce cell division, so reducing the maximum leaf size.
+        /// Leaf captures this by multiplying the <i>MaxSize</i> of each cohort by a <i>CellDivisionStress</i> factor which is calculated as:
+        /// [Document CohortParameters.CellDivisionStress]
+        /// 
+        /// Leaf.FN quantifys the N stress status of the plant and represents the concentration of metabolic N relative the maximum potentil metabolic N content of the leaf
+        /// calculated as (<i>Leaf.NConc - MinimumNConc</i>)/(<i>CriticalNConc - MinimumNConc</i>).
+        /// 
+        /// Leaf.FW quantifies water stress and is
+        /// calculated as <i>Leaf.Transpiration</i>/<i>Leaf.WaterDemand</i>, where <i>Leaf.Transpiration</i> is the minimum of <i>Leaf.WaterDemand</i> and <i>Root.WaterUptake</i>
+        ///
+        /// Stress during the <i>GrowthDuration</i> of the cohort reduces the size increase of the cohort by
+        /// multiplying the potential increase by a <i>ExpansionStress</i> factor:
+        /// [Document CohortParameters.ExpansionStress]
+        /// 
+        /// Stresses can also acellerate the onset and rate of senescence in a number of ways.
+        /// Nitrogen shortage will cause N to be retranslocated out of lower order leaves to support the expansion of higher order leaves and other organs
+        /// When this happens the lower order cohorts will have their area reduced in proportion to the amount of N that is remobilised out of them.
+        ///
+        /// Water stress hastens senescence by increasing the rate of thermal time accumulation in the lag and senescence phases.
+        /// This is done by multiplying thermal time accumulation by <i>DroughtInducedLagAcceleration</i> and <i>DroughtInducedSenescenceAcceleration</i> factors, respectively:
+        /// [Document CohortParameters.DroughtInducedLagAcceleration]
+        /// [Document CohortParameters.DroughtInducedSenAcceleration]
+        /// 
+        /// ## Dry matter Demand ##
+        /// Leaf calculates the DM demand from each cohort as a function of the potential size increment (DeltaPotentialArea) an specific leaf area bounds.
+        /// Under non stressed conditions the demand for non-storage DM is calculated as <i>DeltaPotentialArea</i> divided by the mean of <i>SpecificLeafAreaMax</i> and <i>SpecificLeafAreaMin</i>.
+        /// Under stressed conditions it is calculated as <i>DeltaWaterConstrainedArea</i> divided by <i>SpecificLeafAreaMin</i>.
+        /// [Document CohortParameters.SpecificLeafAreaMax]
+        /// [Document CohortParameters.SpecificLeafAreaMin]
+        /// 
+        /// Non-storage DM Demand is then seperated into structural and metabolic DM demands using the <i>StructuralFraction</i>:
+        /// [Document CohortParameters.StructuralFraction]
+        /// 
+        /// The storage DM demand is calculated from the sum of metabolic and structural DM (including todays demands)
+        /// multiplied by a <i>NonStructuralFraction</i>:
+        /// [Document CohortParameters.NonStructuralFraction]
+        /// 
+        /// ## Nitrogen Demand ##
+        /// 
+        /// Leaf calculates the N demand from each cohort as a function of the potential DM increment and N concentration bounds.
+        /// Structural N demand = <i>PotentialStructuralDMAllocation</i> * <i>MinimumNConc</i> where:
+        /// [Document CohortParameters.MinimumNConc]
+        /// 
+        /// Metabolic N demand is calculated as <i>PotentialMetabolicDMAllocation</i> * (<i>CriticalNConc</i> - <i>MinimumNConc</i>) where:
+        /// [Document CohortParameters.CriticalNConc]
+        /// 
+        /// Storage N demand is calculated as the sum of metabolic and structural wt (including todays demands)
+        /// multiplied by <i>LuxaryNconc</i> (<i>MaximumNConc</i> - <i>CriticalNConc</i>) less the amount of storage N already present.  <i>MaximumNConc</i> is given by:
+        /// [Document CohortParameters.MaximumNConc]
+        ///
+        /// ## Drymatter supply ##
+        /// In additon to photosynthesis, the leaf can also supply DM by reallocation of senescing DM and retranslocation of storgage DM:
+        /// Reallocation supply is a proportion of the metabolic and non-structural DM that would be senesced each day where the proportion is set by:
+        /// [Document CohortParameters.DMReallocationFactor]
+        /// Retranslocation supply is calculated as a proportion of the amount of storage DM in each cohort where the proportion is set by :
+        /// [Document CohortParameters.DMRetranslocationFactor]
+        ///
+        /// ## Nitrogen supply ##
+        /// Nitrogen supply from the leaf comes from the reallocation of metabolic and storage N in senescing material
+        /// and the retranslocation of metabolic and storage N.  Reallocation supply is a proportion of the Metabolic and Storage DM that would be senesced each day where the proportion is set by:
+        /// [Document CohortParameters.NReallocationFactor]
+        /// Retranslocation supply is calculated as a proportion of the amount of storage and metabolic N in each cohort where the proportion is set by :
+        /// [Document CohortParameters.NRetranslocationFactor]
         /// </summary>
         [Serializable]
         public class LeafCohortParameters : Model
@@ -1372,7 +1466,7 @@ namespace Models.PMF.Organs
         }
         #endregion
 
-        #region Event handlers and publishers
+        #region Event handlers
 
         /// <summary>Occurs when [new leaf].</summary>
         public event NullTypeDelegate NewLeaf;
@@ -1411,24 +1505,6 @@ namespace Models.PMF.Organs
                 L.DoKill(KillLeaf.KillFraction);
         }
 
-        /// <summary>Called when crop is being cut.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Cutting")]
-        private void OnCutting(object sender, EventArgs e)
-        {
-            if (sender == Plant)
-            {
-                Summary.WriteMessage(this, "Cutting " + Name + " from " + Plant.Name);
-
-                if (Wt > 0)
-                    SurfaceOrganicMatter.Add(Wt * 10, N * 10, 0, Plant.CropType, Name);
-                Live.Clear();
-                Dead.Clear();
-                Leaves.Clear();
-                CohortsAtInitialisation = 0;
-            }
-        }
 
         /// <summary>Called when crop is being prunned.</summary>
         /// <param name="sender">The sender.</param>
@@ -1491,5 +1567,17 @@ namespace Models.PMF.Organs
             CohortsAtInitialisation = 0;
         }
         #endregion
+        /// <summary>
+        /// Document a specific function
+        /// </summary>
+        /// <param name="FunctName"></param>
+        /// <param name="indent"></param>
+        /// <param name="tags"></param>
+        public void DocumentFunction(string FunctName, List<AutoDocumentation.ITag> tags, int indent)
+        {
+            IModel Funct = Apsim.Child(this, FunctName);
+            Funct.Document(tags, -1, indent);
+        }
+
     }
 }

@@ -6,6 +6,7 @@ using Models.Core;
 using System.IO;
 using System.Data;
 using System.Xml.Serialization;
+using Models.Factorial;
 
 namespace Models.PostSimulationTools
 {
@@ -22,6 +23,7 @@ namespace Models.PostSimulationTools
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(ParentType = typeof(Folder))]
     public class PredictedObserved : Model, IPostSimulationTool
     {
         /// <summary>Gets or sets the name of the predicted table.</summary>
@@ -98,10 +100,62 @@ namespace Models.PostSimulationTools
                 query = query.Replace("@match2", FieldName2UsedForMatch);
                 query = query.Replace("@match3", FieldName3UsedForMatch);
 
+                if (Parent is Folder)
+                {
+                    // Limit it to particular simulations in scope.
+                    List<string> simulationNames = new List<string>();
+                    foreach (Experiment experiment in Apsim.FindAll(this, typeof(Experiment)))
+                        simulationNames.AddRange(experiment.Names());
+                    foreach (Simulation simulation in Apsim.FindAll(this, typeof(Simulation)))
+                        if (!(simulation.Parent is Experiment))
+                            simulationNames.Add(simulation.Name);
+
+                    query.Append(" AND I.SimulationID in (");
+                    foreach (string simulationName in simulationNames)
+                    {
+                        if (simulationName != simulationNames[0])
+                            query.Append(',');
+                        query.Append(dataStore.GetSimulationID(simulationName));
+                    }
+                    query.Append(")");
+                }
+
                 DataTable predictedObservedData = dataStore.RunQuery(query.ToString());
 
                 if (predictedObservedData != null)
+                {
                     dataStore.WriteTable(null, this.Name, predictedObservedData);
+
+                    List<string> unitFieldNames = new List<string>();
+                    List<string> unitNames = new List<string>();
+
+                    // write units to table.
+                    foreach (string fieldName in commonCols)
+                    {
+                        string units = dataStore.GetUnits(PredictedTableName, fieldName);
+                        if (units != null)
+                        {
+                            unitFieldNames.Add("Predicted." + fieldName);
+                            unitNames.Add(units);
+                            unitFieldNames.Add("Observed." + fieldName);
+                            unitNames.Add(units);
+                        }
+                    }
+                    if (unitNames.Count > 0)
+                        dataStore.AddUnitsForTable(Name, unitFieldNames, unitNames);
+                }
+                else
+                {
+                    // Determine what went wrong.
+                    DataTable predictedData = dataStore.RunQuery("SELECT * FROM " + PredictedTableName);
+                    DataTable observedData = dataStore.RunQuery("SELECT * FROM " + ObservedTableName);
+                    if (predictedData == null || predictedData.Rows.Count == 0)
+                        throw new Exception(Name + ": Cannot find any predicted data.");
+                    else if (observedData == null || observedData.Rows.Count == 0)
+                        throw new Exception(Name + ": Cannot find any observed data in node: " + ObservedTableName + ". Check for missing observed file or move " + ObservedTableName + " to top of child list under DataStore (order is important!)");
+                    else
+                        throw new Exception(Name + ": Observed data was found but didn't match the predicted values. Make sure the values in the SimulationName column match the simulation names in the user interface. Also ensure column names in the observed file match the APSIM report column names.");
+                }
                 dataStore.Disconnect();
             }
         }

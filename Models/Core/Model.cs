@@ -127,7 +127,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.RelativeAllocationSinglePass))]
         [XmlElement(typeof(Models.PMF.PrioritythenRelativeAllocation))]
         [XmlElement(typeof(Models.PMF.PriorityAllocation))]
-        [XmlElement(typeof(Models.PMF.Structure))]
         [XmlElement(typeof(Models.PMF.Biomass))]
         [XmlElement(typeof(Models.PMF.CompositeBiomass))]
         [XmlElement(typeof(Models.PMF.ArrayBiomass))]
@@ -136,8 +135,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Organs.Leaf))]
         [XmlElement(typeof(Models.PMF.Organs.LeafCohort))]
         [XmlElement(typeof(Models.PMF.Organs.Leaf.LeafCohortParameters))]
-        [XmlElement(typeof(Models.PMF.Organs.ApexStandard))]
-        [XmlElement(typeof(Models.PMF.Organs.ApexTiller))]
         [XmlElement(typeof(Models.PMF.Organs.Nodule))]
         [XmlElement(typeof(Models.PMF.Organs.ReproductiveOrgan))]
         [XmlElement(typeof(Models.PMF.Organs.Root))]
@@ -215,8 +212,6 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.RelativeGrowthRateDemandFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.FillingRateFunction))]
         [XmlElement(typeof(Models.PMF.Functions.DemandFunctions.BerryFillingRateFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.HeightFunction))]
-        [XmlElement(typeof(Models.PMF.Functions.StructureFunctions.InPhaseTemperatureFunction))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUECO2Function))]
         [XmlElement(typeof(Models.PMF.Functions.SupplyFunctions.RUEModel))]
         [XmlElement(typeof(Models.PMF.OldPlant.Plant15))]
@@ -241,6 +236,10 @@ namespace Models.Core
         [XmlElement(typeof(Models.PMF.CultivarFolder))]
         [XmlElement(typeof(Models.PMF.OrganBiomassRemovalType))]
         [XmlElement(typeof(Models.PMF.Library.BiomassRemoval))]
+        [XmlElement(typeof(Models.PMF.Struct.Structure))]
+        [XmlElement(typeof(Models.PMF.Struct.HeightFunction))]
+        [XmlElement(typeof(Models.PMF.Struct.ApexStandard))]
+        [XmlElement(typeof(Models.PMF.Struct.ApexTiller))]
         [XmlElement(typeof(Alias))]
         [XmlElement(typeof(Models.Zones.CircularZone))]
         [XmlElement(typeof(Models.Zones.RectangularZone))]
@@ -336,11 +335,7 @@ namespace Models.Core
             tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
             // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
-
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                child.Document(tags, headingLevel + 1, indent);
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent, true);
         }
 
         /// <summary>

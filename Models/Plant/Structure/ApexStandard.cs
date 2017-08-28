@@ -2,11 +2,11 @@
 using Models.PMF.Interfaces;
 using Models.Core;
 
-namespace Models.PMF.Organs
+namespace Models.PMF.Struct
 {
-    /// <summary>Calculate cohort populations using apex number</summary>
-    [Serializable]
-    public class ApexTiller : Model, IApex
+    /// <summary>Calculate cohort population using stem population.</summary>
+    [Serializable]    
+    public class ApexStandard : Model, IApex
     {
         /// <summary>
         /// Calculate cohort population at leaf appearance.
@@ -17,7 +17,7 @@ namespace Models.PMF.Organs
         /// <returns></returns>
         public double Appearance(double apexNumber, double population, double totalStemPopn)
         {
-            return apexNumber * population;
+            return totalStemPopn;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Models.PMF.Organs
         /// <returns></returns>
         public double LeafTipAppearance(double apexNumber, double population, double totalStemPopn)
         {
-            return apexNumber * population;
+            return totalStemPopn;
         }
     }
 }

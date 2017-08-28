@@ -2049,6 +2049,21 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
+    <Constant>
+      <Name>NitrogenDemandSwitch</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>DMReallocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <VariableReference>
+      <Name>CriticalNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <VariableName>[Husk].MinimumNConc.Value()</VariableName>
+    </VariableReference>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
@@ -2246,6 +2261,26 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
+    <Constant>
+      <Name>NitrogenDemandSwitch</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>1</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>DMReallocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <Constant>
+      <Name>DMRetranslocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <VariableReference>
+      <Name>CriticalNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <VariableName>[Rachis].MinimumNConc.Value()</VariableName>
+    </VariableReference>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <GenericOrgan>
@@ -2473,6 +2508,16 @@ Extinction coefficient is specified in terms of a potential extinction coefficie
       <FixedValue>1</FixedValue>
       <Units>0-1</Units>
     </Constant>
+    <Constant>
+      <Name>DMReallocationFactor</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FixedValue>0</FixedValue>
+    </Constant>
+    <VariableReference>
+      <Name>CriticalNConc</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+    </VariableReference>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </GenericOrgan>
   <CompositeBiomass>

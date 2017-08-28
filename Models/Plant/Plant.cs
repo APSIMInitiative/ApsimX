@@ -16,6 +16,8 @@ namespace Models.PMF
     using Models.PMF.Phen;
     using Models.Soils.Arbitrator;
     using APSIM.Shared.Utilities;
+    using Struct;
+    using System.Data;
 
     ///<summary>
     /// The generic plant model
@@ -225,7 +227,16 @@ namespace Models.PMF
             }
         }
         /// <summary>Returns true if the crop is ready for harvesting</summary>
-        public bool IsReadyForHarvesting { get { return Phenology.CurrentPhaseName == "ReadyForHarvesting"; } }
+        public bool IsReadyForHarvesting
+        {
+            get
+            {
+                if (Phenology != null)
+                    return Phenology.CurrentPhaseName == "ReadyForHarvesting";
+                else
+                    return false;
+            }
+        }
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
@@ -439,6 +450,25 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
+            tags.Add(new AutoDocumentation.Paragraph("The plant model is constructed from the following list of software components.  Details of the exact implementation and parameterisation are provided in the following sections.", indent));
+            // Write Plant Model Table
+            tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
+            DataTable tableData = new DataTable();
+            tableData.Columns.Add("Component Name", typeof(string));
+            tableData.Columns.Add("Component Type", typeof(string));
+
+            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            {
+                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder))
+                {
+                    DataRow row = tableData.NewRow();
+                    row[0] = child.Name;
+                    row[1] = child.GetType().ToString();
+                    tableData.Rows.Add(row);
+                }
+            }
+            tags.Add(new AutoDocumentation.Table(tableData, indent));
+
             foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                 child.Document(tags, headingLevel + 1, indent);
         }

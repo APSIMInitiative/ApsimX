@@ -76,6 +76,8 @@ namespace UserInterface.Views
 
         private const string modelMime = "application/x-model-component";
 
+        System.Timers.Timer timer = new System.Timers.Timer();
+
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
@@ -101,6 +103,8 @@ namespace UserInterface.Views
 
             treeview1.CursorChanged += OnAfterSelect;
             treeview1.ButtonReleaseEvent += OnButtonUp;
+            treeview1.ButtonPressEvent += OnButtonPress;
+            treeview1.RowActivated += OnRowActivated;
 
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry(modelMime, TargetFlags.App, 0)
@@ -120,6 +124,7 @@ namespace UserInterface.Views
             treeview1.FocusInEvent += Treeview1_FocusInEvent;
             treeview1.FocusOutEvent += Treeview1_FocusOutEvent;
             _mainWidget.Destroyed += _mainWidget_Destroyed;
+            timer.Elapsed += Timer_Elapsed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -136,6 +141,8 @@ namespace UserInterface.Views
             textRender.Edited -= OnAfterLabelEdit;
             treeview1.CursorChanged -= OnAfterSelect;
             treeview1.ButtonReleaseEvent -= OnButtonUp;
+            treeview1.ButtonPressEvent -= OnButtonPress;
+            treeview1.RowActivated -= OnRowActivated;
             treeview1.DragMotion -= OnDragOver;
             treeview1.DragDrop -= OnDragDrop;
             treeview1.DragBegin -= OnDragBegin;
@@ -144,6 +151,7 @@ namespace UserInterface.Views
             treeview1.DragEnd -= OnDragEnd;
             treeview1.FocusInEvent -= Treeview1_FocusInEvent;
             treeview1.FocusOutEvent -= Treeview1_FocusOutEvent;
+            timer.Elapsed -= Timer_Elapsed;
             foreach (Widget child in toolStrip.Children)
             {
                 if (child is ToolButton)
@@ -624,7 +632,8 @@ namespace UserInterface.Views
                 TreeViewColumn selCol;
                 treeview1.GetCursor(out selPath, out selCol);
                 selectionChangedData.NewNodePath = FullPath(selPath);
-                SelectedNodeChanged.Invoke(this, selectionChangedData);
+                if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
+                    SelectedNodeChanged.Invoke(this, selectionChangedData);
                 previouslySelectedNodePath = selectionChangedData.NewNodePath;
             }
         }
@@ -650,6 +659,61 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Handle button press events to possibly begin editing an item name.
+        /// This is in an attempt to rather slavishly follow Windows conventions.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [GLib.ConnectBefore]
+        private void OnButtonPress(object sender, ButtonPressEventArgs e)
+        {
+            timer.Stop();
+            if (e.Event.Button == 1 && e.Event.Type == Gdk.EventType.ButtonPress)
+            {
+                TreePath path;
+                TreeViewColumn col;
+                // Get the clicked location
+                if (treeview1.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out col))
+                {
+                    // See if the click was on the current selection
+                    TreePath selPath;
+                    TreeViewColumn selCol;
+                    treeview1.GetCursor(out selPath, out selCol);
+                    if (selPath != null && path.Compare(selPath) == 0)
+                    {
+                        // Check where on the row we are located, allowing 16 pixels for the image, and 2 for its border
+                        Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
+                        if (e.Event.X > rect.X + 18)
+                        {
+                            timer.Interval = treeview1.Settings.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                            timer.AutoReset = false;
+                            timer.Start();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Gtk.Application.Invoke(delegate
+            {
+                BeginRenamingCurrentNode();
+            });
+        }
+
+        private void OnRowActivated(object sender, RowActivatedArgs e)
+        {
+            timer.Stop();
+            if (treeview1.GetRowExpanded(e.Path))
+                treeview1.CollapseRow(e.Path);
+            else
+                treeview1.ExpandRow(e.Path, false);
+            e.RetVal = true;
+        }
+
+
+        /// <summary>
         /// Displays the popup menu when the right mouse button is released
         /// </summary>
         /// <param name="sender"></param>
@@ -660,11 +724,6 @@ namespace UserInterface.Views
                 Popup.Popup();
         }
 
-        // Looks like drag and drop is broken on Mono on Mac. The data being dragged needs to be
-        // serializable which is ok but it still doesn work. Gives the error:
-        //     System.Runtime.Serialization.SerializationException: Unexpected binary element: 46
-        //     at System.Runtime.Serialization.Formatters.Binary.ObjectReader.ReadObject (BinaryElement element, System.IO.BinaryReader reader, System.Int64& objectId, System.Object& value, System.Runtime.Serialization.SerializationInfo& info) [0x00000] in <filename unknown>:0 
-
         private GCHandle dragSourceHandle;
 
         /// <summary>Node has begun to be dragged.</summary>
@@ -672,6 +731,8 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragBegin(object sender, DragBeginArgs e)
         {
+            if (textRender.Editable) // If the node to be dragged is open for editing (renaming), close it now.
+                textRender.CancelEditing();
             DragStartArgs args = new DragStartArgs();
             args.NodePath = SelectedNode; // FullPath(e.Item as TreeNode);
             if (DragStarted != null)

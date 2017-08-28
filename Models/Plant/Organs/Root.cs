@@ -18,11 +18,13 @@ namespace Models.PMF.Organs
     /// 
     /// Roots grow downwards through the soil profile, with initial depth determined by sowng depth and the growth rate determined by RootFrontVelocity. 
     /// The RootFrontVelocity is modified by multiplying it by the soil's XF value; which represents any resistance posed by the soil to root extension. 
+    /// Root depth is also constrained by a maximum root depth.
+    /// 
+    /// Root length growth is calculated using the daily DM partitioned to roots and a specific root length.  Root proliferation in layers is calculated using an approach similar to the generalised equimarginal criterion used in economics.  The uptake of water and N per unit root length is used to partition new root material into layers of higher 'return on investment'.
     /// 
     /// **Dry Matter Demands**
     /// 
-    /// By default, 100% of the dry matter (DM) demanded from the root is structural, but this can be modified by using StructuralFraction different than one.  
-    /// The daily DM demand from root is calculated as a proportion of total DM supply using a PartitionFraction function.  
+    /// A daily DM demand is provided to the organ abitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural.  
     /// The daily loss of roots is calculated using a SenescenceRate function.  All senesced material is automatically detached and added to the soil FOM.  
     /// 
     /// **Nitrogen Demands**
@@ -35,6 +37,11 @@ namespace Models.PMF.Organs
     /// Potential N uptake by the root system is calculated for each soil layer that the roots have extended into.  
     /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
     /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
+    /// 
+    ///     _NO3 uptake = NO3<sub>i</sub> x KNO3 x NO3<sub>ppm, i</sub> * NUptakeSWFactor_
+    ///     
+    ///     _NH4 uptake = NH4<sub>i</sub> x KNH4 x NH4<sub>ppm, i</sub> * NUptakeSWFactor_
+    /// 
     /// Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plants N demand. 
     /// The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand
     /// each plant instance will be allowed to take up.
@@ -45,6 +52,8 @@ namespace Models.PMF.Organs
     /// In each layer potential uptake is calculated as the product of the available water in the layer (water above LL limit) 
     /// and a factor controlling the rate of extraction (KL).  The values of both LL and KL are set in the soil interface and
     /// KL may be further modified by the crop via the KLModifier function.  
+    /// 
+    /// _SW uptake = (SW<sub>i</sub> - LL<sub>i</sub>) x KL<sub>i</sub> x KLModifier_
     /// 
     ///</summary>
     [Serializable]
@@ -151,7 +160,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The Maximum Root Depth</summary>
         [Link]
-        [Units("0-1")]
+        [Units("mm")]
         public IFunction MaximumRootDepth = null;
 
         /// <summary>Link to biomass removal model</summary>
@@ -246,7 +255,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Root depth.</summary>
         [XmlIgnore]
-        public double Depth { get { return PlantZone.Depth; } }
+        public double Depth { get { return (PlantZone != null )? PlantZone.Depth:0; } }
 
         /// <summary>Layer live</summary>
         [XmlIgnore]
@@ -902,5 +911,22 @@ namespace Models.PMF.Organs
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, removal, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
         }
         #endregion
+
+//        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+//        /// <param name="tags">The list of tags to add to.</param>
+//        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+//        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+//        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+//        {
+//            // add a heading.
+//            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+//
+//            // write description of this class.
+//            AutoDocumentation.GetClassDescription(this, tags, indent);
+//
+//
+//
+//        }
+
     }
 }

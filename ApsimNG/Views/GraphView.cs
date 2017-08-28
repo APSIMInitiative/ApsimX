@@ -610,7 +610,8 @@ namespace UserInterface.Views
         {
             this.plot1.Model.Title = text;
             this.plot1.Model.TitleFont = Font;
-            this.plot1.Model.TitleFontSize = FontSize;
+            this.plot1.Model.TitleFontSize = 30;
+            this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
         }
 
         /// <summary>
@@ -663,7 +664,11 @@ namespace UserInterface.Views
             pngExporter.Width = r.Width;
             pngExporter.Height = r.Height;
             pngExporter.Export(plot1.Model, stream);
-            bitmap = new Bitmap(stream);
+            using (Graphics gfx = Graphics.FromImage(bitmap))
+            {
+                Bitmap newBitmap = new Bitmap(stream);
+                gfx.DrawImage(newBitmap, r);
+            }
         }
 
         /// <summary>
