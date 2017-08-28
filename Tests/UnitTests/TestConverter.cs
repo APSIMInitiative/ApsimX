@@ -180,7 +180,7 @@ namespace UnitTests
             doc.LoadXml(fromXML);
             Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
 
-            string toXML = "<Simulation Version=\"10\">" +
+            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
                              "<GenericOrgan>" +
                                "<Name>Stem</Name>" +
                                "<Constant>" +
