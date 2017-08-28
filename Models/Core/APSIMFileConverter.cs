@@ -21,7 +21,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 10; } }
+        public static int LastestVersion { get { return 11; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -213,7 +213,7 @@ namespace Models.Core
         {
             foreach (XmlNode n in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
             {
-                if (n.InnerText == "[Root].RootLengthDensity" || 
+                if (n.InnerText == "[Root].RootLengthDensity" ||
                     n.InnerText == "[Root].RootLengthDenisty" ||
                     n.InnerText == "[Root].LengthDenisty")
                     n.InnerText = "[Root].LengthDensity";
@@ -228,11 +228,15 @@ namespace Models.Core
         private static void UpgradeToVersion7(XmlNode node)
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
-                SearchReplaceManagerCode(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
+                APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"([\[\]\.\w]+\.ESW)", "MathUtilities.Sum($1)", "using APSIM.Shared.Utilities;");
             foreach (XmlNode report in XmlUtilities.FindAllRecursivelyByType(node, "report"))
-                SearchReplaceReportCode(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
+                APSIMFileConverterUtilities.SearchReplaceReportCode(report, @"([\[\]\.\w]+\.ESW)", "sum($1)");
         }
 
+        /// <summary>
+        /// Upgrades to version 8. Create ApexStandard node.
+        /// </summary>
+        /// <param name="node">The node to upgrade.</param>
         private static void UpgradeToVersion8(XmlNode node)
         {
             XmlNode apex = XmlUtilities.CreateNode(node.OwnerDocument, "ApexStandard", "");
@@ -255,83 +259,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Perform a search and replace in manager script. Also optionally insert a using statement.
-        /// </summary>
-        /// <param name="manager">The manager model.</param>
-        /// <param name="searchPattern">The pattern to search for</param>
-        /// <param name="replacePattern">The string to replace</param>
-        /// <param name="usingStatement">An optional using statement to insert at top of the script.</param>
-        private static void SearchReplaceManagerCode(XmlNode manager, string searchPattern, string replacePattern, string usingStatement = null)
-        {
-            XmlCDataSection codeNode = XmlUtilities.Find(manager, "Code").ChildNodes[0] as XmlCDataSection;
-            string newCode = Regex.Replace(codeNode.InnerText, searchPattern, replacePattern, RegexOptions.None);
-            if (codeNode.InnerText != newCode)
-            {
-                // Replacement was done so need to add using statement.
-                if (usingStatement != null)
-                    newCode = InsertUsingStatementInManagerCode(newCode, usingStatement);
-                codeNode.InnerText = newCode;
-            }
-        }
-
-        /// <summary>
-        /// Perform a search and replace in report variables.
-        /// </summary>
-        /// <param name="report">The reportr model.</param>
-        /// <param name="searchPattern">The pattern to search for</param>
-        /// <param name="replacePattern">The string to replace</param>
-        private static void SearchReplaceReportCode(XmlNode report, string searchPattern, string replacePattern)
-        {
-            List<string> variableNames = XmlUtilities.Values(report, "VariableNames/string");
-            for (int i = 0; i < variableNames.Count; i++)
-                variableNames[i] = Regex.Replace(variableNames[i], searchPattern, replacePattern, RegexOptions.None);
-            XmlUtilities.SetValues(report, "VariableNames/string", variableNames);
-        }
-
-        /// <summary>
-        /// Add the specified 'using' statement to the specified code.
-        /// </summary>
-        /// <param name="code">The code to modifiy</param>
-        /// <param name="usingStatement">The using statement to insert at the correct location</param>
-        private static string InsertUsingStatementInManagerCode(string code, string usingStatement)
-        {
-            // Find all using statements
-            StringReader reader = new StringReader(code);
-            StringWriter writer = new StringWriter();
-            bool foundUsingStatement = false;
-            bool foundEndOfUsingSection = false;
-            string line = reader.ReadLine();
-            do
-            {
-                if (!line.Trim().StartsWith("using ") && !foundEndOfUsingSection)
-                {
-                    foundEndOfUsingSection = true;
-                    if (!foundUsingStatement)
-                        writer.WriteLine(usingStatement);
-                }
-                else
-                    foundUsingStatement = foundUsingStatement || line.Trim() == usingStatement;
-                writer.WriteLine(line);
-                line = reader.ReadLine();
-            }
-            while (line != null);
-            return writer.ToString();
-        }
-
-        /// <summary>
-        /// Find a PMF node, as a direct child under the specified node, that has the specified name element.
-        /// </summary>
-        /// <param name="node">The XML Nnde to search</param>
-        /// <param name="name">The name of the element to search for</param>
-        /// <returns>The node or null if not found</returns>
-        private static XmlNode FindPMFNode(XmlNode node, string name)
-        {
-            foreach (XmlNode child in node.ChildNodes)
-                if (XmlUtilities.Value(child, "Name") == name)
-                    return child;
-            return null;
-        }
-        /// <summary>
         /// Add a DMDemandFunction constant function to all Root nodes that don't have one
         /// </summary>
         /// <param name="node">The node to modifiy</param>
@@ -339,7 +266,7 @@ namespace Models.Core
         {
             foreach (XmlNode root in XmlUtilities.FindAllRecursivelyByType(node, "Root"))
             {
-                XmlNode partitionFraction = FindPMFNode(root, "PartitionFraction");
+                XmlNode partitionFraction = APSIMFileConverterUtilities.FindPMFNode(root, "PartitionFraction");
                 if (partitionFraction != null)
                 {
                     root.RemoveChild(partitionFraction);
@@ -349,69 +276,52 @@ namespace Models.Core
                 }
             }
         }
+
         /// <summary>
         /// Add default values for generic organ parameters that were previously optional
         /// </summary>
         /// <param name="node">The node to modifiy</param>
         private static void UpgradeToVersion10(XmlNode node)
         {
-            foreach (XmlNode GenericOrgan in XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan"))
-            {
-                AddOrganFunctions(GenericOrgan);
-            }
-            foreach (XmlNode SimpleLeaf in XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"))
-            {
-                AddOrganFunctions(SimpleLeaf);
-            }
-            foreach (XmlNode Nodule in XmlUtilities.FindAllRecursivelyByType(node, "Nodule"))
-            {
-                AddOrganFunctions(Nodule);
-            }
+            List<XmlNode> organs = XmlUtilities.FindAllRecursivelyByType(node, "GenericOrgan");
+            organs.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "SimpleLeaf"));
+            organs.AddRange(XmlUtilities.FindAllRecursivelyByType(node, "Nodule"));
 
+            foreach (XmlNode organ in organs)
+            {
+                APSIMFileConverterUtilities.AddConstantFuntionIfNotExists(organ, "NRetranslocationFactor", "0.0");
+                APSIMFileConverterUtilities.AddConstantFuntionIfNotExists(organ, "NitrogenDemandSwitch", "1.0");
+                APSIMFileConverterUtilities.AddConstantFuntionIfNotExists(organ, "DMReallocationFactor", "0.0");
+                APSIMFileConverterUtilities.AddConstantFuntionIfNotExists(organ, "DMRetranslocationFactor", "0.0");
+                APSIMFileConverterUtilities.AddVariableReferenceFuntionIfNotExists(organ, "CriticalNConc", "[" + organ.FirstChild.InnerText + "].MinimumNConc.Value()");
+            }
         }
-        private static void AddOrganFunctions(XmlNode OrganType)
+
+        /// <summary>
+        /// Rename NonStructural to Storage in Biomass organs
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        private static void UpgradeToVersion11(XmlNode node)
         {
-            XmlNode NRetranslocationFactor = FindPMFNode(OrganType, "NRetranslocationFactor");
-            if (NRetranslocationFactor == null)
-            {
-                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
-                XmlUtilities.SetValue(constant, "Name", "NRetranslocationFactor");
-                XmlUtilities.SetValue(constant, "FixedValue", "0.0");
-            }
+            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructural", ".Storage");
+            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralDemand", ".StorageDemand");
+            APSIMFileConverterUtilities.RenameVariable(node, ".TotalNonStructuralDemand", ".TotalStorageDemand");
+            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralAllocation", ".StorageAllocation");
+            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralFraction", ".StorageFraction");
+            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralWt", ".StorageWt");
+            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralN", ".StorageN");
+            APSIMFileConverterUtilities.RenameVariable(node, ".NonStructuralNConc", ".StorageNConc");
+            APSIMFileConverterUtilities.RenameVariable(node, "NonStructuralFraction", "StorageFraction");
+            APSIMFileConverterUtilities.RenameVariable(node, "LeafStartNonStructuralNReallocationSupply", "LeafStartStorageFractionNReallocationSupply");
+            APSIMFileConverterUtilities.RenameVariable(node, "LeafStartNonStructuralNRetranslocationSupply", "LeafStartStorageNRetranslocationSupply");
+            APSIMFileConverterUtilities.RenameVariable(node, "LeafStartNonStructuralDMReallocationSupply", "LeafStartStorageDMReallocationSupply");
+            APSIMFileConverterUtilities.RenameVariable(node, "NonStructuralDMDemand", "StorageDMDemand");
+            APSIMFileConverterUtilities.RenameVariable(node, "NonStructuralNDemand", "StorageNDemand");
 
-            XmlNode NitrogenDemandSwitch = FindPMFNode(OrganType, "NitrogenDemandSwitch");
-            if (NitrogenDemandSwitch == null)
-            {
-                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
-                XmlUtilities.SetValue(constant, "Name", "NitrogenDemandSwitch");
-                XmlUtilities.SetValue(constant, "FixedValue", "1.0");
-            }
-
-            XmlNode DMReallocationFactor = FindPMFNode(OrganType, "DMReallocationFactor");
-            if (DMReallocationFactor == null)
-            {
-                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
-                XmlUtilities.SetValue(constant, "Name", "DMReallocationFactor");
-                XmlUtilities.SetValue(constant, "FixedValue", "0.0");
-            }
-
-            XmlNode DMRetranslocationFactor = FindPMFNode(OrganType, "DMRetranslocationFactor");
-            if (DMRetranslocationFactor == null)
-            {
-                XmlNode constant = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("Constant"));
-                XmlUtilities.SetValue(constant, "Name", "DMRetranslocationFactor");
-                XmlUtilities.SetValue(constant, "FixedValue", "0.0");
-            }
-
-            XmlNode CriticalNConc = FindPMFNode(OrganType, "CriticalNConc");
-            if (CriticalNConc == null)
-            {
-                XmlNode critNConc = OrganType.AppendChild(OrganType.OwnerDocument.CreateElement("VariableReference"));
-                XmlUtilities.SetValue(critNConc, "Name", "CriticalNConc");
-                string refPath = "[" + OrganType.FirstChild.InnerText + "].MinimumNConc.Value()";
-                XmlUtilities.SetValue(critNConc, "VariableName", refPath);
-            }
+            // renames
+            APSIMFileConverterUtilities.RenameNode(node, "NonStructuralNReallocated", "StorageNReallocated");
+            APSIMFileConverterUtilities.RenameNode(node, "NonStructuralWtReallocated", "StorageWtReallocated");
+            APSIMFileConverterUtilities.RenameNode(node, "NonStructuralNRetrasnlocated", "StorageNRetrasnlocated");
         }
-
     }
 }
