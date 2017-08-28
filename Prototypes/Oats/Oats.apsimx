@@ -4155,7 +4155,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp compared to the phyllochron duration for the same phase at 8 h Pp.  ]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
+          <FixedValue>3</FixedValue>
         </Constant>
         <Constant>
           <Name>EarlyReproductiveLongDayBase</Name>
@@ -4165,7 +4165,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <MemoText><![CDATA[The phyllochrons duration for the plant to go from flag leaf ligual appearance at 16 h Pp.]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
+          <FixedValue>3</FixedValue>
         </Constant>
         <GerminatingPhase>
           <Name>Germinating</Name>
@@ -4329,7 +4329,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Constant>
             <Name>Target</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>200</FixedValue>
+            <FixedValue>30</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -4345,7 +4345,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Constant>
             <Name>Target</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>600</FixedValue>
+            <FixedValue>100</FixedValue>
           </Constant>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -4481,9 +4481,9 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 <double>0.75</double>
                 <double>1</double>
                 <double>1</double>
-                <double>1.4</double>
-                <double>1.4</double>
-                <double>1.4</double>
+                <double>1</double>
+                <double>1</double>
+                <double>1</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4535,14 +4535,16 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                   <X>
                     <double>1</double>
                     <double>2</double>
-                    <double>3</double>
+                    <double>3.99</double>
                     <double>4</double>
                     <double>5</double>
                     <double>6</double>
                     <double>7</double>
                     <double>8</double>
+                    <double>9</double>
                   </X>
                   <Y>
+                    <double>0</double>
                     <double>0</double>
                     <double>0</double>
                     <double>1</double>
@@ -4611,8 +4613,8 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
-                  <double>0.1</double>
-                  <double>0.25</double>
+                  <double>0.2</double>
+                  <double>0.35</double>
                 </X>
                 <Y>
                   <double>1</double>
@@ -4967,7 +4969,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.042</FixedValue>
+          <FixedValue>0.032</FixedValue>
           <Units>g</Units>
         </Constant>
         <PhaseLookup>
@@ -5008,7 +5010,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </FillingRateFunction>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>Flowering</Start>
+            <Start>FlagLeaf</Start>
             <End>StartGrainFill</End>
           </PhaseLookupValue>
           <PhaseLookupValue>
@@ -5141,7 +5143,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
             <VariableName>[Phenology].ThermalTime.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <StartStageName>Flowering</StartStageName>
+          <StartStageName>FlagLeaf</StartStageName>
           <EndStageName>Maturity</EndStageName>
           <FractionRemovedOnCut>0</FractionRemovedOnCut>
           <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
@@ -5825,7 +5827,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
             <Constant>
               <Name>Multiplier</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>3</FixedValue>
+              <FixedValue>6</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
@@ -6007,8 +6009,8 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 <double>4</double>
               </X>
               <Y>
-                <double>18000</double>
-                <double>30000</double>
+                <double>40000</double>
+                <double>25000</double>
               </Y>
             </XYPairs>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6059,17 +6061,27 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           </Constant>
           <MultiplyFunction>
             <Name>ShadeInducedSenescenceRate</Name>
-            <Constant>
-              <Name>RatePerDegDay</Name>
-              <Memo>
-                <Name>Memo</Name>
+            <LinearInterpolationFunction>
+              <Name>CoverEffect</Name>
+              <XYPairs>
+                <Name>XYPairs</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <MemoText><![CDATA[1% per degree day means it takes one phyllochron for a shaded leaf to fully sceness
-]]></MemoText>
-              </Memo>
+                <X>
+                  <double>0</double>
+                  <double>0.9</double>
+                  <double>0.95</double>
+                  <double>1</double>
+                </X>
+                <Y>
+                  <double>0</double>
+                  <double>0</double>
+                  <double>0.01</double>
+                  <double>0.03</double>
+                </Y>
+              </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0</FixedValue>
-            </Constant>
+              <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
+            </LinearInterpolationFunction>
             <VariableReference>
               <Name>ThermalTime</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6895,8 +6907,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Name>Drummond</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
-          <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+          <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 10</Command>
           <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
@@ -6912,15 +6924,15 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue = 6</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 82</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 10</Command>
+          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
         </Cultivar>
         <Cultivar>
           <Name>Stampede</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-          <Command>[Phenology].PpSensitivity.FixedValue = 6</Command>
+          <Command>[Phenology].PpSensitivity.FixedValue = 10</Command>
           <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
@@ -8878,7 +8890,7 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>1998-09-29</Date>
-                  <Action>[Oats].Sow(population:300, cultivar:"Drummond", depth:15, rowSpacing:130);</Action>
+                  <Action>[Oats].Sow(population:300, cultivar:"Drummond", depth:30, rowSpacing:130);</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -9086,27 +9098,27 @@ namespace Models
                 <string>[Phenology].ThermalTime.Value()</string>
                 <string>[Leaf].CohortSize</string>
                 <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                <string>[0ats].Arbitrator.DMAllocated</string>
-                <string>[0ats].Arbitrator.DMDemand</string>
-                <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                <string>[0ats].Arbitrator.FN</string>
-                <string>[0ats].Arbitrator.NDemand</string>
+                <string>[Oats].Arbitrator.DMAllocated</string>
+                <string>[Oats].Arbitrator.DMDemand</string>
+                <string>[Oats].Arbitrator.DMNutrientLimitation</string>
+                <string>[Oats].Arbitrator.DMSinkLimitation</string>
+                <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Oats].Arbitrator.FN</string>
+                <string>[Oats].Arbitrator.NDemand</string>
                 <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                <string>[0ats].Leaf.CohortMaxSize</string>
-                <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                <string>[Oats].Leaf.CohortMaxSize</string>
+                <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
+                <string>[Oats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                <string>[Oats].Leaf.Photosynthesis.FT.Value()</string>
+                <string>[Oats].Leaf.Photosynthesis.FVPD.Value()</string>
+                <string>[Oats].Leaf.Photosynthesis.RueAct</string>
+                <string>[Oats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                <string>[Oats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                <string>[Oats].Leaf.NextExpandingLeafProportion</string>
+                <string>[Oats].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
                 <string>[LeafSize].Script.LeafAppearedPosition</string>
                 <string>[LeafSize].Script.MostRecentlyAppearedLeafMaxSize</string>
@@ -9569,6 +9581,11 @@ namespace Models
             <Name>LAI</Name>
             <Series>
               <Name>Pred</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Oats.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -9606,6 +9623,70 @@ namespace Models
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Oats.Leaf.LAI</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>StemPopn</Name>
+            <Series>
+              <Name>Pred</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Oats.Structure.TotalStemPopn</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Obs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Oats.Structure.TotalStemPopn</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11391,27 +11472,27 @@ namespace Models
               <VariableNames>
                 <string>[Clock].Today</string>
                 <string>[Leaf].CohortSize</string>
-                <string>[0ats].Arbitrator.DMAllocated</string>
-                <string>[0ats].Arbitrator.DMDemand</string>
-                <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                <string>[0ats].Arbitrator.FN</string>
-                <string>[0ats].Arbitrator.NDemand</string>
-                <string>[0ats].Leaf.CohortMaxSize</string>
-                <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.MaxArea.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                <string>[Oats].Arbitrator.DMAllocated</string>
+                <string>[Oats].Arbitrator.DMDemand</string>
+                <string>[Oats].Arbitrator.DMNutrientLimitation</string>
+                <string>[Oats].Arbitrator.DMSinkLimitation</string>
+                <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
+                <string>[Oats].Arbitrator.FN</string>
+                <string>[Oats].Arbitrator.NDemand</string>
+                <string>[Oats].Leaf.CohortMaxSize</string>
+                <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
+                <string>[Oats].Leaf.CohortParameters.MaxArea.Value()</string>
+                <string>[Oats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                <string>[Oats].Leaf.Photosynthesis.FT.Value()</string>
+                <string>[Oats].Leaf.Photosynthesis.FVPD.Value()</string>
+                <string>[Oats].Leaf.Photosynthesis.RueAct</string>
+                <string>[Oats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                <string>[Oats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                <string>[Oats].Leaf.NextExpandingLeafProportion</string>
+                <string>[Oats].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>sum([Soil].SoilWater.SWmm[1:8]) as ProfileWater</string>
               </VariableNames>
               <EventNames>
@@ -11501,7 +11582,7 @@ namespace Models
               <ColourArgb>-16777216</ColourArgb>
               <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
               <Marker>None</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>Solid</Line>
@@ -13302,7 +13383,7 @@ late drought increased screenings.
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2007-05-24</Date>
-                  <Action>[Oats].Sow(population:95, cultivar:"Coolibah", depth:40, rowSpacing:250);</Action>
+                  <Action>[Oats].Sow(population:95, cultivar:"Coolibah", depth:10, rowSpacing:250);</Action>
                 </Operation>
               </Operations>
               <Operations>
@@ -13310,7 +13391,7 @@ late drought increased screenings.
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2007-05-24</Date>
-                  <Action>[Oats].Sow(population:104, cultivar:"Taipan", depth:40, rowSpacing:250);</Action>
+                  <Action>[Oats].Sow(population:104, cultivar:"Taipan", depth:10, rowSpacing:250);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -13835,27 +13916,27 @@ namespace Models
                   <string>[Phenology].ThermalTime.Value()</string>
                   <string>[Leaf].CohortSize</string>
                   <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                  <string>[0ats].Arbitrator.DMAllocated</string>
-                  <string>[0ats].Arbitrator.DMDemand</string>
-                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                  <string>[0ats].Arbitrator.FN</string>
-                  <string>[0ats].Arbitrator.NDemand</string>
+                  <string>[Oats].Arbitrator.DMAllocated</string>
+                  <string>[Oats].Arbitrator.DMDemand</string>
+                  <string>[Oats].Arbitrator.DMNutrientLimitation</string>
+                  <string>[Oats].Arbitrator.DMSinkLimitation</string>
+                  <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
+                  <string>[Oats].Arbitrator.FN</string>
+                  <string>[Oats].Arbitrator.NDemand</string>
                   <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                  <string>[0ats].Leaf.CohortMaxSize</string>
-                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                  <string>[Oats].Leaf.CohortMaxSize</string>
+                  <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.RueAct</string>
+                  <string>[Oats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                  <string>[Oats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                  <string>[Oats].Leaf.NextExpandingLeafProportion</string>
+                  <string>[Oats].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>sum([Soil].SoilWater.SWmm[1:7]) as ProfileWater</string>
                 </VariableNames>
                 <EventNames>
@@ -14630,6 +14711,90 @@ namespace Models
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Cover</Name>
+          <Series>
+            <Name>PredGS</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Leaf.CoverTotal</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopLeft</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>NStress</Name>
+          <Series>
+            <Name>PredGS</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16736653</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>SupReport</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Oats.Arbitrator.FN</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>0</Minimum>
+            <Maximum>5</Maximum>
             <Interval>NaN</Interval>
           </Axis>
           <LegendPosition>TopLeft</LegendPosition>
@@ -15434,27 +15599,27 @@ namespace Models
                   <string>[Phenology].ThermalTime.Value()</string>
                   <string>[Leaf].CohortSize</string>
                   <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                  <string>[0ats].Arbitrator.DMAllocated</string>
-                  <string>[0ats].Arbitrator.DMDemand</string>
-                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                  <string>[0ats].Arbitrator.FN</string>
-                  <string>[0ats].Arbitrator.NDemand</string>
+                  <string>[Oats].Arbitrator.DMAllocated</string>
+                  <string>[Oats].Arbitrator.DMDemand</string>
+                  <string>[Oats].Arbitrator.DMNutrientLimitation</string>
+                  <string>[Oats].Arbitrator.DMSinkLimitation</string>
+                  <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
+                  <string>[Oats].Arbitrator.FN</string>
+                  <string>[Oats].Arbitrator.NDemand</string>
                   <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                  <string>[0ats].Leaf.CohortMaxSize</string>
-                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                  <string>[Oats].Leaf.CohortMaxSize</string>
+                  <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.RueAct</string>
+                  <string>[Oats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                  <string>[Oats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                  <string>[Oats].Leaf.NextExpandingLeafProportion</string>
+                  <string>[Oats].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>sum([Soil].SoilWater.SWmm[1:7]) as ProfileWater</string>
                 </VariableNames>
                 <EventNames>
@@ -16307,27 +16472,27 @@ namespace Models
                   <string>[Phenology].ThermalTime.Value()</string>
                   <string>[Leaf].CohortSize</string>
                   <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                  <string>[0ats].Arbitrator.DMAllocated</string>
-                  <string>[0ats].Arbitrator.DMDemand</string>
-                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                  <string>[0ats].Arbitrator.FN</string>
-                  <string>[0ats].Arbitrator.NDemand</string>
+                  <string>[Oats].Arbitrator.DMAllocated</string>
+                  <string>[Oats].Arbitrator.DMDemand</string>
+                  <string>[Oats].Arbitrator.DMNutrientLimitation</string>
+                  <string>[Oats].Arbitrator.DMSinkLimitation</string>
+                  <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
+                  <string>[Oats].Arbitrator.FN</string>
+                  <string>[Oats].Arbitrator.NDemand</string>
                   <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                  <string>[0ats].Leaf.CohortMaxSize</string>
-                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                  <string>[Oats].Leaf.CohortMaxSize</string>
+                  <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.RueAct</string>
+                  <string>[Oats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                  <string>[Oats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                  <string>[Oats].Leaf.NextExpandingLeafProportion</string>
+                  <string>[Oats].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>sum([Soil].SoilWater.SWmm[1:5]) as ProfileWater</string>
                 </VariableNames>
                 <EventNames>
@@ -17538,27 +17703,27 @@ namespace Models
                   <string>[Phenology].ThermalTime.Value()</string>
                   <string>[Leaf].CohortSize</string>
                   <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                  <string>[0ats].Arbitrator.DMAllocated</string>
-                  <string>[0ats].Arbitrator.DMDemand</string>
-                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                  <string>[0ats].Arbitrator.FN</string>
-                  <string>[0ats].Arbitrator.NDemand</string>
+                  <string>[Oats].Arbitrator.DMAllocated</string>
+                  <string>[Oats].Arbitrator.DMDemand</string>
+                  <string>[Oats].Arbitrator.DMNutrientLimitation</string>
+                  <string>[Oats].Arbitrator.DMSinkLimitation</string>
+                  <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
+                  <string>[Oats].Arbitrator.FN</string>
+                  <string>[Oats].Arbitrator.NDemand</string>
                   <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                  <string>[0ats].Leaf.CohortMaxSize</string>
-                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                  <string>[Oats].Leaf.CohortMaxSize</string>
+                  <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.RueAct</string>
+                  <string>[Oats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                  <string>[Oats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                  <string>[Oats].Leaf.NextExpandingLeafProportion</string>
+                  <string>[Oats].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>sum([Soil].SoilWater.SWmm[1:6]) as ProfileWater</string>
                 </VariableNames>
                 <EventNames>
@@ -18754,27 +18919,27 @@ namespace Models
                   <string>[Phenology].ThermalTime.Value()</string>
                   <string>[Leaf].CohortSize</string>
                   <string>[Leaf].CohortParameters.MaxArea.Value()</string>
-                  <string>[0ats].Arbitrator.DMAllocated</string>
-                  <string>[0ats].Arbitrator.DMDemand</string>
-                  <string>[0ats].Arbitrator.DMNutrientLimitation</string>
-                  <string>[0ats].Arbitrator.DMSinkLimitation</string>
-                  <string>[0ats].Arbitrator.DM.TotalFixationSupply</string>
-                  <string>[0ats].Arbitrator.FN</string>
-                  <string>[0ats].Arbitrator.NDemand</string>
+                  <string>[Oats].Arbitrator.DMAllocated</string>
+                  <string>[Oats].Arbitrator.DMDemand</string>
+                  <string>[Oats].Arbitrator.DMNutrientLimitation</string>
+                  <string>[Oats].Arbitrator.DMSinkLimitation</string>
+                  <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
+                  <string>[Oats].Arbitrator.FN</string>
+                  <string>[Oats].Arbitrator.NDemand</string>
                   <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
-                  <string>[0ats].Leaf.CohortMaxSize</string>
-                  <string>[0ats].Leaf.CohortParameters.GrowthDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.LagDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
-                  <string>[0ats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FT.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.FVPD.Value()</string>
-                  <string>[0ats].Leaf.Photosynthesis.RueAct</string>
-                  <string>[0ats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
-                  <string>[0ats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
-                  <string>[0ats].Leaf.NextExpandingLeafProportion</string>
-                  <string>[0ats].Structure.MeanTillerGrowthRate.Value()</string>
+                  <string>[Oats].Leaf.CohortMaxSize</string>
+                  <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SenescenceDuration.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.Value()</string>
+                  <string>[Oats].Leaf.CohortParameters.SpecificLeafAreaMin.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.FT.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.FVPD.Value()</string>
+                  <string>[Oats].Leaf.Photosynthesis.RueAct</string>
+                  <string>[Oats].Stem.DMDemandFunction.HightLimitedDMAccumulation.Value()</string>
+                  <string>[Oats].Stem.DMDemandFunction.PotentialDMAccumulation.Value()</string>
+                  <string>[Oats].Leaf.NextExpandingLeafProportion</string>
+                  <string>[Oats].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>sum([Soil].SoilWater.SWmm[1:6]) as ProfileWater</string>
                 </VariableNames>
                 <EventNames>
@@ -19006,5 +19171,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>318</ExplorerWidth>
+  <ExplorerWidth>375</ExplorerWidth>
 </Simulations>
