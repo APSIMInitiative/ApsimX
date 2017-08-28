@@ -69,10 +69,6 @@ namespace Models.PMF.Organs
         [Link]
         private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
-        /// <summary>Modify leaf size by age</summary>
-        [Link]
-        private ArrayFunction AgeMultiplier = null;
-
         /// <summary>The live</summary>
         [XmlIgnore]
         public Biomass Live = new Biomass();
@@ -738,15 +734,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Does the appearance.</summary>
         /// <param name="leafFraction">The leaf fraction.</param>
-        /// <param name="leafCohortParameterseafCohortParameters">The leaf cohort parameters.</param>
-        public void DoAppearance(double leafFraction, Leaf.LeafCohortParameters leafCohortParameterseafCohortParameters)
+        /// <param name="leafCohortParameters">The leaf cohort parameters.</param>
+        public void DoAppearance(double leafFraction, Leaf.LeafCohortParameters leafCohortParameters)
         {
             Name = "Leaf" + Rank.ToString();
             IsAppeared = true;
             if (CohortPopulation == 0)
                 CohortPopulation = Apex.Appearance(Structure.ApexNum, Plant.Population, Structure.TotalStemPopn);
-                
-            MaxArea = leafCohortParameterseafCohortParameters.MaxArea.Value() * CellDivisionStressFactor*leafFraction;
+
+            MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor * leafFraction;
             //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
             GrowthDuration = leafCohortParameterseafCohortParameters.GrowthDuration.Value() * leafFraction;
             LagDuration = leafCohortParameterseafCohortParameters.LagDuration.Value();
@@ -913,7 +909,7 @@ namespace Models.PMF.Organs
             double totalf = 1;
             for(int i=1; i< ApexGroupAge.Count;i++)
             {
-                double f = AgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
+                double f = leafCohortParameters.AgeMultiplier.Value(((int)ApexGroupAge[i] - 1));
                 totalf += f * Leaf.ApexGroupSize[i];
             }
 
