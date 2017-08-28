@@ -13264,53 +13264,6 @@ namespace Models
           <LegendPosition>BottomRight</LegendPosition>
           <DisabledSeries />
         </Graph>
-        <Graph>
-          <Name>FLN</Name>
-          <Series>
-            <Name>Series</Name>
-            <Regression>
-              <Name>Regression</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <ForEachSeries>false</ForEachSeries>
-            </Regression>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>HarvestPO</TableName>
-            <XFieldName>Observed.Oats.Structure.MainStemFinalNodeNumber</XFieldName>
-            <YFieldName>Predicted.Oats.Structure.MainStemFinalNodeNumber</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>BottomRight</LegendPosition>
-          <DisabledSeries />
-        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Experiment>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -14538,7 +14491,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.StructureTotalStemPopn</YFieldName>
+            <YFieldName>Oats.Structure.TotalStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -14665,7 +14618,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>obsPhenology</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Phenology.Zadok.Stage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -15565,7 +15518,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>obsPhenology</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Phenology.Zadok.Stage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -16687,7 +16640,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>obsPhenology</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Oats.Phenology.Zadok.Stage</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -16953,7 +16906,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.StructureTotalStemPopn</YFieldName>
+            <YFieldName>Oats.Structure.TotalStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -17931,7 +17884,7 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Oats.StructureTotalStemPopn</YFieldName>
+            <YFieldName>Oats.Structure.TotalStemPopn</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -19063,5 +19016,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>368</ExplorerWidth>
+  <ExplorerWidth>318</ExplorerWidth>
 </Simulations>
