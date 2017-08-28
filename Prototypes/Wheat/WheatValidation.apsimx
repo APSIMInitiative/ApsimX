@@ -15,12 +15,12 @@ _Brown, H.E., Huth, N.I. and Holzworth, D.P._]]></MemoText>
 
 The wheat model consists of:
 
-* a phenology model to simulate development through sequential developmental phases  
+* a phenology model to simulate development through sequential growth phases  
 * a structure model to simulate plant morphology 
 * a collection of organs to simulate the various plant parts  
 * an arbitrator to allocate resources (N, biomass) to the various plant organs  
 
-This work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]), and the earlier versions developed in Plant (<a href=\"http://www.apsim.info/Documentation/Model,CropandSoil/CropModuleDocumentation/Wheat.aspx">APSIM Wheat 7.5</a>") and then within the Plant Modelling Framework ([brown_plant_2014]).]]></MemoText>
+This work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]) , and the earlier versions developed within the Plant Modelling Framework ([brown_plant_2014]).]]></MemoText>
   </Memo>
   <Replacements>
     <Name>Replacements</Name>
@@ -38,7 +38,7 @@ The APSIM wheat model has been developed using the Plant Modelling Framework (PM
 
 The model consists of:
 
-* a phenology model to simulate development between developmental phases  
+* a phenology model to simulate development between growth phases  
 * a structure model to simulate plant morphology  
 * a collection of organs to simulate the various plant parts  
 * an arbitrator to allocate resources (N, biomass) to the various plant organs  
@@ -60,11 +60,20 @@ The model consists of:
         <Name>Phenology</Name>
         <Memo>
           <Name>Memo</Name>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MinTemp>0</MinTemp>
+            <OptTemp>27.5</OptTemp>
+            <MaxTemp>35</MaxTemp>
+            <RefTemp>27.5</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <MemoText><![CDATA[Wheat exhibits a range of developmental responses to environment and these are strongly influences by genotype characteristics.
-Temperature effects development increasing development rates and decreasing phase durations as temperatures increase.  Theset affects are captured by thermal time, .  However, wheat also exhibits vernalisation and photoperiod sensitivities in its Vegetative phase and further photoperiod sensitivity in the EarlyReproducivePhase.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types) exposure to cool temperatures or short photoperiods during the Vegetative phase will reduce the thermal time duration of the vegetative phase.  
+Temperature effects development and it effects are captured by thermal time, incrasing development rates and decreasing phase durations as temperatures as temperatures increase.  However, wheat also exhibits vernalisation and photoperiod sensitivities in its Vegetative phase and further photoperiod sensitivity in the EarlyReproducivePhase.  Photoperiod responses are seen as a reduction in the length of a phase for a photoperiod sensitive genotype in response to a longer photoperiod.  Vernalisation responses are more complicated as they are driven by temperature but interact with photoperiod.  For vernalisation sensitive varieties (Winter types) exposure to cool temperatures or short photoperiods during the Vegetative phase will reduce the thermal time duration of the vegetative phase.  
 
-We draw on the Kirby Framework to capture these vernalisation and photoperiod responses.  This framework assumes that the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to anthesis.  It also assumes the timing of flag leaf is a result of the Final Leaf Number which sets a target, and leaf appearance rate, which sets the rate of progress toward this target.  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].    
+This model draws on the Kirby Framework to capture these vernalisation and photoperiod responses.  This framework assumes that the timing of anthesis is a result of the timing of flag leaf and an additional thermal time passage from there to anthesis.  It also assumes the timing of flag leaf is a rusult of the Final Leaf Number which sets a target, and leaf appearance rate, which sets the rate of progress to this target.  Leaf appearance rate is a function of Thermal time and a genotype specific Phyllochron which changes with Haun stage as described by [Jamieson_LeafAppearance_1995].    
 
 Final Leaf Number (FLN) is modeled as the sum of three numbers:
 
@@ -75,7 +84,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         <DivideFunction>
           <Name>MeanTemp</Name>
           <AddFunction>
-            <Name>TempSum</Name>
+            <Name>AddFunction</Name>
             <VariableReference>
               <Name>MaxT</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -118,6 +127,29 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </AirTemperatureFunction>
+        <MultiplyFunction>
+          <Name>ThermalTime_EW</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>27.5</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MinTemp>0</MinTemp>
+            <OptTemp>27.5</OptTemp>
+            <MaxTemp>40</MaxTemp>
+            <RefTemp>27.5</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MultiplyFunction>
         <MultiplyFunction>
           <Name>DailyVernalisation</Name>
           <Memo>
@@ -197,7 +229,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <DayLength>0</DayLength>
         </PhotoperiodFunction>
         <PhaseLookup>
-          <Name>PerceivedPhotoPeriod</Name>
+          <Name>PercievedPhotoPeriod</Name>
           <PhaseLookupValue>
             <Name>ApexBelowGround</Name>
             <Constant>
@@ -385,7 +417,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The duration of the vegetative phase is set by a target Haun Stage for the occurence of Terminal Spikelet and the rate of leaf appearance.  ]]></MemoText>
+            <MemoText><![CDATA[The duration of the vegetative phase is set by a target Haun Stage for the occurance of Terminal Spikelet and the rate of leaf appearance.  ]]></MemoText>
           </Memo>
           <VariableReference>
             <Name>ThermalTime</Name>
@@ -409,7 +441,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
           <Memo>
             <Name>Memo1</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[HaunStageTerminalSpiklet decreases as vernalisation is accumulated and as photoperiod extends, capturing the effect of these responses on the duration of the Vegetative phase]]></MemoText>
+            <MemoText><![CDATA[HSTS decreases as vernalisation is accumulated and as photoperiod extends, capturing the effect of these responses on the duration of the Vegetative phase]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>Emergence</Start>
@@ -648,7 +680,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Memo>
             <Name>Rational</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[This is the thermal time between the emergence of leaf tips.  The model used here is based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
+            <MemoText><![CDATA[Based on [Jamieson_SIRIUS_1998] where leaf appearace could be described by a base phyllochron determined between leaves 2 and 7 and a phyllochron that was 70% of base phyllochron for leaves < 2 and 130% of base phyllochron for leaves > 7]]></MemoText>
           </Memo>
           <LinearInterpolationFunction>
             <Name>LeafStageFactor</Name>
@@ -732,13 +764,13 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   </X>
                   <Y>
                     <double>0</double>
-                    <double>0</double>
+                    <double>1</double>
                     <double>1</double>
                     <double>2</double>
-                    <double>4</double>
-                    <double>7</double>
-                    <double>12</double>
-                    <double>20</double>
+                    <double>3</double>
+                    <double>5</double>
+                    <double>8</double>
+                    <double>13</double>
                   </Y>
                 </XYPairs>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -779,7 +811,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>3</double>
                 </X>
                 <Y>
-                  <double>0</double>
+                  <double>1</double>
                   <double>1</double>
                   <double>1</double>
                 </Y>
@@ -821,7 +853,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                   <double>1</double>
                 </X>
                 <Y>
-                  <double>0</double>
+                  <double>1</double>
                   <double>1</double>
                 </Y>
               </XYPairs>
@@ -914,11 +946,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </HeightFunction>
         <MovingAverageFunction>
           <Name>MeanTillerGrowthRate</Name>
-          <Memo>
-            <Name>Memo</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[This is calculated to represent the supply of asslimilate to individual tillers over the past 5 days to use as an index to determine tiller mortality.  When tiller numbers are high or total crop assimilate supply is small there will not be enough assimilate to maintain all of the tillers so the model will senesce some. ]]></MemoText>
-          </Memo>
           <DivideFunction>
             <Name>TillerGrowthRate</Name>
             <VariableReference>
@@ -1043,7 +1070,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>StemSenescenceAge</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0</FixedValue>
+          <FixedValue>4</FixedValue>
         </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <Initialised>false</Initialised>
@@ -1063,35 +1090,25 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Name>Dead</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Biomass>
-        <HoldFunction>
-          <Name>NumberFunction</Name>
-          <MultiplyFunction>
-            <Name>GrainNumber</Name>
-            <Constant>
-              <Name>GrainsPerGramOfStem</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>22</FixedValue>
-              <Units>grains</Units>
-            </Constant>
-            <VariableReference>
-              <Name>StemMass</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[StemPlusSpike].Wt</VariableName>
-            </VariableReference>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </MultiplyFunction>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <WhenToHold>Flowering</WhenToHold>
-        </HoldFunction>
         <Constant>
-          <Name>InitialGrainProportion</Name>
-          <Constant>
-            <Name>InitialGrainProportion</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.05</FixedValue>
-          </Constant>
+          <Name>MaxNConcDailyGrowth</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.05</FixedValue>
+          <FixedValue>0.03</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>WaterContent</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.12</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>MinimumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.0123</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>MaximumNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.03</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumPotentialGrainSize</Name>
@@ -1099,6 +1116,21 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <FixedValue>0.043</FixedValue>
           <Units>g</Units>
         </Constant>
+        <AccumulateFunction>
+          <Name>AccumThermalTime</Name>
+          <VariableReference>
+            <Name>DailyThermalTimeValue</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
+          </VariableReference>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <StartStageName>Flowering</StartStageName>
+          <EndStageName>Maturity</EndStageName>
+          <FractionRemovedOnCut>0</FractionRemovedOnCut>
+          <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
+          <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
+          <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
+        </AccumulateFunction>
         <PhaseLookup>
           <Name>DMDemandFunction</Name>
           <PhaseLookupValue>
@@ -1190,20 +1222,15 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
-        <Constant>
-          <Name>MinimumNConc</Name>
+        <ExpressionFunction>
+          <Name>Protein</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.0123</FixedValue>
-        </Constant>
+          <Expression>([Grain].Live.N + [Grain].Dead.N)/([Grain].Live.Wt + [Grain].Dead.Wt) * 100 * 5.71</Expression>
+        </ExpressionFunction>
         <Constant>
-          <Name>MaxNConcDailyGrowth</Name>
+          <Name>InitialGrainProportion</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.03</FixedValue>
-        </Constant>
-        <Constant>
-          <Name>MaximumNConc</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.03</FixedValue>
+          <FixedValue>0.05</FixedValue>
         </Constant>
         <PhaseLookup>
           <Name>NFillingRate</Name>
@@ -1257,31 +1284,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
-        <Constant>
-          <Name>WaterContent</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.12</FixedValue>
-        </Constant>
-        <AccumulateFunction>
-          <Name>AccumThermalTime</Name>
-          <VariableReference>
-            <Name>DailyThermalTimeValue</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
-          </VariableReference>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <StartStageName>Flowering</StartStageName>
-          <EndStageName>Maturity</EndStageName>
-          <FractionRemovedOnCut>0</FractionRemovedOnCut>
-          <FractionRemovedOnHarvest>0</FractionRemovedOnHarvest>
-          <FractionRemovedOnGraze>0</FractionRemovedOnGraze>
-          <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
-        </AccumulateFunction>
-        <ExpressionFunction>
-          <Name>Protein</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Expression>([Grain].Live.N + [Grain].Dead.N)/([Grain].Live.Wt + [Grain].Dead.Wt) * 100 * 5.71</Expression>
-        </ExpressionFunction>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
           <OrganBiomassRemovalType>
@@ -1326,6 +1328,55 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
+        <HoldFunction>
+          <Name>NumberFunction</Name>
+          <MultiplyFunction>
+            <Name>GrainNumber</Name>
+            <Constant>
+              <Name>GrainsPerGramOfStem</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <FixedValue>22</FixedValue>
+              <Units>grains</Units>
+            </Constant>
+            <VariableReference>
+              <Name>StemMass</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <VariableName>[StemPlusSpike].Wt</VariableName>
+            </VariableReference>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </MultiplyFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <WhenToHold>Flowering</WhenToHold>
+        </HoldFunction>
+        <MultiplyFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.01</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MinTemp>-50</MinTemp>
+            <OptTemp>48</OptTemp>
+            <MaxTemp>60</MaxTemp>
+            <RefTemp>20</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MultiplyFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.7067</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -1437,26 +1488,55 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </OrganBiomassRemovalType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </BiomassRemoval>
-        <Constant>
+        <LinearInterpolationFunction>
           <Name>KNO3</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>0</double>
+              <double>0.004</double>
+            </X>
+            <Y>
+              <double>0.002</double>
+              <double>0.02</double>
+            </Y>
+          </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.02</FixedValue>
-        </Constant>
-        <Constant>
+          <XProperty>[Root].LengthDensity</XProperty>
+        </LinearInterpolationFunction>
+        <LinearInterpolationFunction>
           <Name>KNH4</Name>
+          <XYPairs>
+            <Name>XYPairs</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <X>
+              <double>0</double>
+              <double>0.004</double>
+            </X>
+            <Y>
+              <double>0.001</double>
+              <double>0.01</double>
+            </Y>
+          </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.01</FixedValue>
+          <XProperty>[Root].LengthDensity</XProperty>
+        </LinearInterpolationFunction>
+        <Constant>
+          <Name>NUptakeSWFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>1</FixedValue>
         </Constant>
         <Constant>
           <Name>InitialDM</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.005</FixedValue>
+          <FixedValue>0.2</FixedValue>
           <Units>g/plant</Units>
         </Constant>
         <Constant>
           <Name>SpecificRootLength</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>105</FixedValue>
+          <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
         <MultiplyFunction>
@@ -1469,7 +1549,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>Value</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>5</FixedValue>
-                <Units>mm/d</Units>
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Germination</Start>
@@ -1481,7 +1560,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>Value</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <FixedValue>20</FixedValue>
-                <Units>mm/d</Units>
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Emergence</Start>
@@ -1535,32 +1613,35 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </MultiplyFunction>
-        <LinearInterpolationFunction>
-          <Name>NUptakeSWFactor</Name>
-          <SoilWaterScale>
-            <Name>SoilWaterScale</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-          </SoilWaterScale>
-          <XYPairs>
-            <Name>XYPairs</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <X>
-              <double>0</double>
-              <double>1</double>
-            </X>
-            <Y>
-              <double>0</double>
-              <double>1</double>
-            </Y>
-          </XYPairs>
+        <MultiplyFunction>
+          <Name>MaintenanceRespirationFunction</Name>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[This is modelled in the same way as the old wheat model where potential N uptake is decreased as the soil dries as described by NUptakeSWFactor]]></MemoText>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
           </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.02</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MinTemp>-50</MinTemp>
+            <OptTemp>48</OptTemp>
+            <MaxTemp>60</MaxTemp>
+            <RefTemp>20</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[SoilWaterScale]</XProperty>
-        </LinearInterpolationFunction>
+        </MultiplyFunction>
+        <Constant>
+          <Name>DMConversionEfficiency</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0.6925</FixedValue>
+          <Units>0-1</Units>
+        </Constant>
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -1578,23 +1659,11 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </PhaseLookupValue>
             <PhaseLookupValue>
               <Name>PreFlowering</Name>
-              <LinearInterpolationFunction>
-                <Name>AgeFactor</Name>
-                <XYPairs>
-                  <Name>XYPairs</Name>
-                  <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <X>
-                    <double>3</double>
-                    <double>4</double>
-                  </X>
-                  <Y>
-                    <double>0.5</double>
-                    <double>0.2</double>
-                  </Y>
-                </XYPairs>
+              <Constant>
+                <Name>Value</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <XProperty>[Phenology].Stage</XProperty>
-              </LinearInterpolationFunction>
+                <FixedValue>0.2</FixedValue>
+              </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Emergence</Start>
               <End>Flowering</End>
@@ -1604,7 +1673,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
               <Constant>
                 <Name>Value</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <FixedValue>0.2</FixedValue>
+                <FixedValue>0.01</FixedValue>
               </Constant>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Start>Flowering</Start>
@@ -1623,6 +1692,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </Root>
       <Leaf>
         <Name>Leaf</Name>
+        <ApexTiller>
+          <Name>Apex</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </ApexTiller>
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1784,8 +1857,8 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 <Name>XYPairs</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
-                  <double>0.1</double>
-                  <double>1</double>
+                  <double>0</double>
+                  <double>1.1</double>
                   <double>1.3</double>
                 </X>
                 <Y>
@@ -1795,7 +1868,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <XProperty>[Root].WaterTensionFactor</XProperty>
+              <XProperty>[Wheat].WaterSupplyDemandRatio</XProperty>
             </LinearInterpolationFunction>
             <LinearInterpolationFunction>
               <Name>TemperatureEffect</Name>
@@ -1871,7 +1944,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Constant>
               <Name>Multiplier</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>1.3</FixedValue>
+              <FixedValue>1.1</FixedValue>
             </Constant>
             <VariableReference>
               <Name>Phyllochron</Name>
@@ -1880,8 +1953,118 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
-          <MultiplyFunction>
+          <PhaseLookup>
             <Name>LagDuration</Name>
+            <PhaseLookupValue>
+              <Name>beforeTerminalSpikelet</Name>
+              <MultiplyFunction>
+                <Name>beforeTerminalSpikelet</Name>
+                <VariableReference>
+                  <Name>Phyllochron</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                </VariableReference>
+                <Constant>
+                  <Name>Multiplier</Name>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <FixedValue>4</FixedValue>
+                </Constant>
+                <LinearInterpolationFunction>
+                  <Name>AgeFactor</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <X>
+                      <double>3</double>
+                      <double>4</double>
+                    </X>
+                    <Y>
+                      <double>1</double>
+                      <double>0.6</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <XProperty>[Phenology].Stage</XProperty>
+                </LinearInterpolationFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </MultiplyFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>TerminalSpikelet</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>afterTerminalSpikelet</Name>
+              <MultiplyFunction>
+                <Name>afterTerminalSpikelet</Name>
+                <LinearInterpolationFunction>
+                  <Name>AgeFactor</Name>
+                  <XYPairs>
+                    <Name>XYPairs</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <X>
+                      <double>3</double>
+                      <double>4</double>
+                      <double>4.01</double>
+                      <double>5</double>
+                    </X>
+                    <Y>
+                      <double>0.4</double>
+                      <double>0.4</double>
+                      <double>0.4</double>
+                      <double>1</double>
+                    </Y>
+                  </XYPairs>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <XProperty>[Phenology].Stage</XProperty>
+                </LinearInterpolationFunction>
+                <SubtractFunction>
+                  <Name>LastLeafDuration</Name>
+                  <AddFunction>
+                    <Name>ThermalTimeToRipe</Name>
+                    <VariableReference>
+                      <Name>EarlyReproductive</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[Phenology].EarlyReproductive.Target.Value()</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>GrainDevelopment</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[Phenology].GrainDevelopment.Target.Value()</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>GrainFilling</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[Phenology].GrainFilling.Target.Value()</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>Maturing</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[Phenology].Maturing.Target.Value()</VariableName>
+                    </VariableReference>
+                    <VariableReference>
+                      <Name>Ripening</Name>
+                      <IncludeInDocumentation>true</IncludeInDocumentation>
+                      <VariableName>[Phenology].Ripening.Target.Value()</VariableName>
+                    </VariableReference>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                  </AddFunction>
+                  <VariableReference>
+                    <Name>SenescenceDuration</Name>
+                    <IncludeInDocumentation>true</IncludeInDocumentation>
+                    <VariableName>[Leaf].CohortParameters.SenescenceDuration.Value()</VariableName>
+                  </VariableReference>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                </SubtractFunction>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+              </MultiplyFunction>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>TerminalSpikelet</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <MultiplyFunction>
+            <Name>LagDuration1</Name>
             <LinearInterpolationFunction>
               <Name>AgeFactor</Name>
               <XYPairs>
@@ -2203,7 +2386,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>RUE</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>1.5</FixedValue>
+            <FixedValue>2.5</FixedValue>
           </Constant>
           <WeightedTemperatureFunction>
             <Name>FT</Name>
@@ -2295,6 +2478,37 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RUEModel>
+        <CanopyPhotosynthesis>
+          <Name>Photosynthesis_EW</Name>
+          <Model xsi:type="CanopyGrossPhotosynthesisHourly">
+            <Name>CanopyGrossPhotosynthesisHourly</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <KDIF>0.7</KDIF>
+          </Model>
+          <Model xsi:type="LeafLightUseEfficiency">
+            <Name>LeafLightUseEfficiency</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <LUEref>0.6</LUEref>
+            <pathway>C3</pathway>
+          </Model>
+          <Model xsi:type="LeafMaxGrossPhotosynthesis">
+            <Name>LeafMaxGrossPhotosynthesis</Name>
+            <WangEngelTempFunction>
+              <Name>TemperatureResponse</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MinTemp>0</MinTemp>
+              <OptTemp>27.5</OptTemp>
+              <MaxTemp>40</MaxTemp>
+              <RefTemp>27.5</RefTemp>
+              <MaximumTemperatureWeighting>0.71</MaximumTemperatureWeighting>
+            </WangEngelTempFunction>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Pgmmax>40</Pgmmax>
+            <pathway>C3</pathway>
+          </Model>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <GrossPhotosynthesis>0</GrossPhotosynthesis>
+        </CanopyPhotosynthesis>
         <Constant>
           <Name>FrostFraction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2385,12 +2599,31 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>DMConversionEfficiencyFunction</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
+          <FixedValue>0.6853</FixedValue>
         </Constant>
-        <ApexStandard>
-          <Name>ApexStandard</Name>
+        <MultiplyFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.03</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MinTemp>-50</MinTemp>
+            <OptTemp>48</OptTemp>
+            <MaxTemp>60</MaxTemp>
+            <RefTemp>20</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </ApexStandard>
+        </MultiplyFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -2440,7 +2673,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Constant>
             <Name>MaximumOrganWt</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0.5</FixedValue>
+            <FixedValue>0.3</FixedValue>
           </Constant>
           <AddFunction>
             <Name>GrowthDuration</Name>
@@ -2474,12 +2707,12 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>NRetranslocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.3</FixedValue>
+          <FixedValue>0.1</FixedValue>
         </Constant>
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.025</FixedValue>
+          <FixedValue>0.01</FixedValue>
         </Constant>
         <Constant>
           <Name>StructuralFraction</Name>
@@ -2495,7 +2728,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>MinimumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>0.004</FixedValue>
+          <FixedValue>0.003</FixedValue>
         </Constant>
         <BiomassRemoval>
           <Name>BiomassRemovalDefaults</Name>
@@ -2586,7 +2819,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>/d</Units>
         </Constant>
         <Constant>
-          <Name>MaintenanceRespirationFunction</Name>
+          <Name>MaintenanceRespirationFunction_old</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>0-1</Units>
@@ -2594,7 +2827,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
+          <FixedValue>0.7067</FixedValue>
           <Units>0-1</Units>
         </Constant>
         <VariableReference>
@@ -2602,6 +2835,29 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Structure].TotalStemPopn</VariableName>
         </VariableReference>
+        <MultiplyFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.01</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MinTemp>-50</MinTemp>
+            <OptTemp>48</OptTemp>
+            <MaxTemp>60</MaxTemp>
+            <RefTemp>20</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MultiplyFunction>
         <Constant>
           <Name>DMReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -2642,7 +2898,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <Constant>
               <Name>Fraction</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.05</FixedValue>
+              <FixedValue>0.5</FixedValue>
             </Constant>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Start>FlagLeaf</Start>
@@ -2862,7 +3118,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <Units>/d</Units>
         </Constant>
         <Constant>
-          <Name>MaintenanceRespirationFunction</Name>
+          <Name>MaintenanceRespirationFunction_old</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
           <Units>0-1</Units>
@@ -2870,9 +3126,32 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <Constant>
           <Name>DMConversionEfficiency</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FixedValue>1</FixedValue>
+          <FixedValue>0.66</FixedValue>
           <Units>0-1</Units>
         </Constant>
+        <MultiplyFunction>
+          <Name>MaintenanceRespirationFunction</Name>
+          <Memo>
+            <Name>Memo</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[Maintenance Respiration Function]]></MemoText>
+          </Memo>
+          <Constant>
+            <Name>MaintenanceFractionAt20C</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0.02</FixedValue>
+          </Constant>
+          <WangEngelTempFunction>
+            <Name>WangEngelTempFunction</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MinTemp>-50</MinTemp>
+            <OptTemp>48</OptTemp>
+            <MaxTemp>60</MaxTemp>
+            <RefTemp>20</RefTemp>
+            <MaximumTemperatureWeighting>0.5</MaximumTemperatureWeighting>
+          </WangEngelTempFunction>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </MultiplyFunction>
         <Constant>
           <Name>DMReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3387,9 +3666,10 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             </Alias>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
-            <Command>[Phenology].VrnSensitivity.FixedValue = 1</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 4</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 95</Command>
+            <Command>[Phenology].GrainFilling.Target.FixedValue = 650</Command>
           </Cultivar>
           <Cultivar>
             <Name>GattonHartog</Name>
@@ -3401,12 +3681,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Gamenya</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 3.5</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
             <Command>[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].EarlyReproductiveLongDayBase.FixedValue</Command>
+            <Command>[Phenology].GrainFilling.Target.FixedValue = 665</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gauntlet</Name>
@@ -3491,10 +3771,13 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Alias>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 5</Command>
-            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0.3</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 0.3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 70</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
+            <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.060</Command>
           </Cultivar>
           <Cultivar>
             <Name>Gladius</Name>
@@ -3552,6 +3835,10 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           </Cultivar>
           <Cultivar>
             <Name>Hartog</Name>
+            <Alias>
+              <Name>HartogNoVigour</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+            </Alias>
             <Alias>
               <Name>Annuello</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3658,10 +3945,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             </Alias>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
-            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 5</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 4</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3.2</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 85</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
+            <Command>[Phenology].GrainFilling.Target.FixedValue = 650</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.060</Command>
           </Cultivar>
           <Cultivar>
             <Name>Hibred_Mercury</Name>
@@ -3804,6 +4093,28 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
           <Cultivar>
+            <Name>7770</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0.3</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 0.3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 70</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
+            <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.060</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>7770tin</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0.3</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 0.3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 70</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
+            <Command>[Phenology].GrainFilling.Target.FixedValue = 550</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.060</Command>
+          </Cultivar>
+          <Cultivar>
             <Name>Lang</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
@@ -3932,10 +4243,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
               <Name>Ellison</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </Alias>
-            <Alias>
-              <Name>Suntop</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-            </Alias>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Command>[Phenology].MinimumLeafNumber.FixedValue = 6.5</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
@@ -4023,6 +4330,60 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
           </Cultivar>
+          <Cultivar>
+            <Name>Suntop</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>SsrW35</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>SSrT17</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>SB003</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>SB020</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
+          </Cultivar>
+          <Cultivar>
+            <Name>SB062</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 7</Command>
+            <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
+            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+            <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.041</Command>
+          </Cultivar>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </CultivarFolder>
         <CultivarFolder>
@@ -4034,9 +4395,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
             <Command>[Phenology].PpSensitivity.FixedValue = 4</Command>
             <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
-            <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 15</Command>
+            <Command>[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17</Command>
             <Command>[Grain].MaximumPotentialGrainSize.FixedValue = 0.050</Command>
-            <Command>[Grain].MaximumNConc.FixedValue = 0.026</Command>
             <Command>[Phenology].GrainFilling.Target.FixedValue = 800</Command>
           </Cultivar>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -5516,7 +5876,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>Grain Number</Name>
+        <Name>GrainNumber</Name>
         <Series>
           <Name>Series 0</Name>
           <Regression>
@@ -5713,7 +6073,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>Grain Nitrogen Concentration</Name>
+        <Name>GrainNitrogenConcentration</Name>
         <Series>
           <Name>Series 0</Name>
           <Regression>
@@ -5762,7 +6122,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>Haun Stage</Name>
+        <Name>HaunStage</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -5812,7 +6172,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>Leaf Number</Name>
+        <Name>LeafNumber</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -5861,7 +6221,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>Flag Leaf Date</Name>
+        <Name>FlagLeafDate</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -5911,7 +6271,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>Flowering Date</Name>
+        <Name>FloweringDate</Name>
         <Series>
           <Name>Predicted</Name>
           <Regression>
@@ -5961,7 +6321,7 @@ Simulation results for the combined datasets from the various countries are show
         <DisabledSeries />
       </Graph>
       <Graph>
-        <Name>Maximum Leaf Size</Name>
+        <Name>MaxLeafSize</Name>
         <Series>
           <Name>Series 0</Name>
           <Regression>
@@ -19672,7 +20032,7 @@ namespace Models
       <Memo>
         <Name>Memo</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
-        <MemoText><![CDATA[The wheat belt of Western Australia has a Mediteranean climate (winter dominant rainfall patterns) with mostly sandy soils.  Data from [Asseng1998163].   and some more recent studies have been included to extend the range of conditions studied and to include more modern cultivars.]]></MemoText>
+        <MemoText><![CDATA[The wheat belt of Western Australia has a Mediteranean climate (winter dominant rainfall patterns) with mostly sandy soils.  Earlier versions of the APSIM Wheat models have been tested extensively in this region [Asseng1998163].  Some of these data are included here.  More recent studies have been included to extend the range of conditions studied and to include more modern cultivars.]]></MemoText>
       </Memo>
       <Experiment>
         <Name>Mer86</Name>
@@ -51309,7 +51669,7 @@ namespace Models
         <Memo>
           <Name>Memo</Name>
           <IncludeInDocumentation>false</IncludeInDocumentation>
-          <MemoText><![CDATA[A range of soon to be released cultivars have their phenology assesed each year at Plant and Food Research in Lincoln, New Zealand.  Each cultivar is planted on 4 sowing dates representing Autumn, Winter, Early Spring and Late Spring sowings. (approx April, June, Aug, Nov).  Each cultivar is observed for 3 years but a number of standards are included each year or for more than 3 years bacause of the value of the data they provided.
+          <MemoText><![CDATA[A range of soon to be released cultivares have their phenology assesed each year at Plant and Food Research in Lincoln, New Zealand.  Each cultivar is planted on 4 sowing dates representing Autumn, Winter, Early Spring and Late Spring sowings. (approx April, June, Aug, Nov).  Each cultivar is observed for 3 years but a number of standards are included each year or for more than 3 years bacause of the value of the data they provided.
 
 ]]></MemoText>
         </Memo>
@@ -87724,5 +88084,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>314</ExplorerWidth>
+  <ExplorerWidth>235</ExplorerWidth>
 </Simulations>
