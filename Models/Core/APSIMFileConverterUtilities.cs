@@ -112,6 +112,8 @@ namespace Models.Core
                 SearchReplaceReportCode(report, searchFor, replaceWith);
             foreach (XmlNode graph in XmlUtilities.FindAllRecursivelyByType(node, "Graph"))
                 SearchReplaceGraphCode(graph, searchFor, replaceWith);
+            foreach (XmlNode cultivar in XmlUtilities.FindAllRecursivelyByType(node, "Cultivar"))
+                SearchReplaceCultivarOverrides(cultivar, searchFor, replaceWith);
             foreach (XmlNode variableName in XmlUtilities.FindAllRecursivelyByType(node, "VariableName"))
                 variableName.InnerText = variableName.InnerText.Replace(searchFor, replaceWith);
             foreach (XmlNode xproperty in XmlUtilities.FindAllRecursivelyByType(node, "XProperty"))
@@ -120,6 +122,20 @@ namespace Models.Core
                 yproperty.InnerText = yproperty.InnerText.Replace(searchFor, replaceWith);
             foreach (XmlNode expression in XmlUtilities.FindAllRecursivelyByType(node, "Expression"))
                 expression.InnerText = expression.InnerText.Replace(searchFor, replaceWith);
+        }
+
+        /// <summary>
+        /// Perform a search and replace in cultivar commands
+        /// </summary>
+        /// <param name="cultivar">Cultivar node</param>
+        /// <param name="searchFor">The pattern to search for</param>
+        /// <param name="replaceWith">The string to replace</param>
+        private static void SearchReplaceCultivarOverrides(XmlNode cultivar, string searchFor, string replaceWith)
+        {
+            List<string> commands = XmlUtilities.Values(cultivar, "Command");
+            for (int i = 0; i < commands.Count; i++)
+                commands[i] = commands[i].Replace(searchFor, replaceWith);
+            XmlUtilities.SetValues(cultivar, "Command", commands);
         }
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 11; } }
+        public static int LastestVersion { get { return 12; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -323,6 +323,20 @@ namespace Models.Core
             APSIMFileConverterUtilities.RenameNode(node, "NonStructuralNReallocated", "StorageNReallocated");
             APSIMFileConverterUtilities.RenameNode(node, "NonStructuralWtReallocated", "StorageWtReallocated");
             APSIMFileConverterUtilities.RenameNode(node, "NonStructuralNRetrasnlocated", "StorageNRetrasnlocated");
+        }
+
+        /// <summary>
+        /// Rename MainStemNodeAppearanceRate to Phyllochron AND 
+        ///        MainStemFinalNodeNumber to FinalLeafNumber in Structure
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        private static void UpgradeToVersion12(XmlNode node)
+        {
+            APSIMFileConverterUtilities.RenamePMFFunction(node, "Structure", "MainStemNodeAppearanceRate", "Phyllochron");
+            APSIMFileConverterUtilities.RenameVariable(node, ".MainStemNodeAppearanceRate", ".Phyllochron");
+
+            APSIMFileConverterUtilities.RenamePMFFunction(node, "Structure", "MainStemFinalNodeNumber", "FinalLeafNumber");
+            APSIMFileConverterUtilities.RenameVariable(node, ".MainStemFinalNodeNumber", ".FinalLeafNumber");
         }
     }
 }
