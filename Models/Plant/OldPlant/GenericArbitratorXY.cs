@@ -140,7 +140,7 @@ namespace Models.PMF.OldPlant
                 dlt_dm_retrans_part = Math.Min(demand_differential, dm_part_avail);
 
                 //assign and accumulate
-                Organ.Retranslocation.NonStructuralWt = -dlt_dm_retrans_part;
+                Organ.Retranslocation.StorageWt = -dlt_dm_retrans_part;
                 dm_retranslocate += -dlt_dm_retrans_part;
 
                 demand_differential = demand_differential - dlt_dm_retrans_part;
