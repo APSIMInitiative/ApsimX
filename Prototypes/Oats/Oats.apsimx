@@ -9336,6 +9336,11 @@ namespace Models
             <Name>Leaves</Name>
             <Series>
               <Name>TipsPred</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Oats.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Type>Scatter</Type>
               <XAxis>Bottom</XAxis>
@@ -10785,7 +10790,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2015-07-01</Date>
-                  <Action>[Oats].Sow(population:200, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
+                  <Action>[Oats].Sow(population:180, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -10801,7 +10806,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2015-08-01</Date>
-                  <Action>[Oats].Sow(population:200, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
+                  <Action>[Oats].Sow(population:160, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -10904,14 +10909,14 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <Name>WheatSoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -10938,14 +10943,14 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <Name>OatsSoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -10990,44 +10995,44 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <double>1.2</double>
                 </BD>
                 <AirDry>
-                  <double>0.05</double>
-                  <double>0.1</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
                 </AirDry>
                 <LL15>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
                 </LL15>
                 <DUL>
                   <double>0.32</double>
                   <double>0.32</double>
-                  <double>0.13</double>
-                  <double>0.1</double>
-                  <double>0.11</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                 </DUL>
                 <SAT>
                   <double>0.46</double>
                   <double>0.46</double>
                   <double>0.4</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
                 </SAT>
               </Water>
               <SoilWater>
@@ -11525,7 +11530,7 @@ namespace Models
               <LineThickness>Normal</LineThickness>
               <TableName>DailyReport</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>UptakeNKgHA</YFieldName>
+              <YFieldName>Oats.AboveGroundLive.N</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11612,75 +11617,6 @@ namespace Models
               <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
               <YFieldName>Oats.Leaf.CoverTotal</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
-            <Axis>
-              <Type>Bottom</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <Axis>
-              <Type>Left</Type>
-              <Inverted>false</Inverted>
-              <Minimum>NaN</Minimum>
-              <Maximum>NaN</Maximum>
-              <Interval>NaN</Interval>
-            </Axis>
-            <LegendPosition>TopLeft</LegendPosition>
-            <DisabledSeries />
-          </Graph>
-          <Graph>
-            <Name>Leaf</Name>
-            <Series>
-              <Name>Sim</Name>
-              <EventNamesOnGraph>
-                <Name>EventNamesOnGraph</Name>
-                <IncludeInDocumentation>true</IncludeInDocumentation>
-                <ColumnName>Oats.Phenology.CurrentStageName</ColumnName>
-              </EventNamesOnGraph>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>Solid</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>DailyReport</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.Leaf.Live.Wt</YFieldName>
-              <ShowInLegend>true</ShowInLegend>
-              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
-              <Cumulative>false</Cumulative>
-              <CumulativeX>false</CumulativeX>
-            </Series>
-            <Series>
-              <Name>Obs</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Type>Scatter</Type>
-              <XAxis>Bottom</XAxis>
-              <YAxis>Left</YAxis>
-              <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
-              <FactorIndexToVaryMarkers>1</FactorIndexToVaryMarkers>
-              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-              <Marker>None</Marker>
-              <MarkerSize>Normal</MarkerSize>
-              <Line>None</Line>
-              <LineThickness>Normal</LineThickness>
-              <TableName>Observed</TableName>
-              <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Oats.AboveGroundLive.Wt</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
@@ -11804,7 +11740,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2016-07-05</Date>
-                  <Action>[Oats].Sow(population:200, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
+                  <Action>[Oats].Sow(population:400, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -11820,7 +11756,7 @@ Grazing winter forage crops is an important management strategy for profitable l
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Operation>
                   <Date>2016-07-29</Date>
-                  <Action>[Oats].Sow(population:200, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
+                  <Action>[Oats].Sow(population:300, cultivar:"Milton", depth:40, rowSpacing:150);</Action>
                 </Operation>
               </Operations>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -11908,14 +11844,14 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <Name>WheatSoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -11923,9 +11859,9 @@ Grazing winter forage crops is an important management strategy for profitable l
                     <double>0.06</double>
                     <double>0.06</double>
                     <double>0.04</double>
-                    <double>0.025</double>
+                    <double>0.03</double>
                     <double>0.01</double>
-                    <double>0.005</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
                     <double>1</double>
@@ -11942,14 +11878,14 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <Name>OatsSoil</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LL>
-                    <double>0.1</double>
-                    <double>0.1</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.08</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
-                    <double>0.07</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
+                    <double>0.15</double>
                   </LL>
                   <KL>
                     <double>0.06</double>
@@ -11957,9 +11893,9 @@ Grazing winter forage crops is an important management strategy for profitable l
                     <double>0.06</double>
                     <double>0.06</double>
                     <double>0.04</double>
-                    <double>0.025</double>
+                    <double>0.03</double>
                     <double>0.01</double>
-                    <double>0.005</double>
+                    <double>0.01</double>
                   </KL>
                   <XF>
                     <double>1</double>
@@ -11994,44 +11930,44 @@ Grazing winter forage crops is an important management strategy for profitable l
                   <double>1.2</double>
                 </BD>
                 <AirDry>
-                  <double>0.05</double>
-                  <double>0.1</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
                 </AirDry>
                 <LL15>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.08</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
-                  <double>0.07</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
+                  <double>0.15</double>
                 </LL15>
                 <DUL>
                   <double>0.32</double>
                   <double>0.32</double>
-                  <double>0.13</double>
-                  <double>0.1</double>
-                  <double>0.11</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
-                  <double>0.1</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
+                  <double>0.3</double>
                 </DUL>
                 <SAT>
                   <double>0.46</double>
                   <double>0.46</double>
                   <double>0.4</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
-                  <double>0.3</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
+                  <double>0.4</double>
                 </SAT>
               </Water>
               <SoilWater>
@@ -12638,6 +12574,75 @@ namespace Models
               <CumulativeX>false</CumulativeX>
             </Series>
             <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>TopLeft</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>AboveGroundN</Name>
+            <Series>
+              <Name>Sim</Name>
+              <EventNamesOnGraph>
+                <Name>EventNamesOnGraph</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ColumnName>Oats.Phenology.CurrentStageName</ColumnName>
+              </EventNamesOnGraph>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>0</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>Solid</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>DailyReport</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Oats.AboveGroundLive.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <Series>
+              <Name>Obs</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>0</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>None</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>Observed</TableName>
+              <XFieldName>Clock.Today</XFieldName>
+              <YFieldName>Oats.AboveGround.N</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Axis>
               <Type>Bottom</Type>
               <Inverted>false</Inverted>
@@ -19171,5 +19176,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>375</ExplorerWidth>
+  <ExplorerWidth>431</ExplorerWidth>
 </Simulations>
