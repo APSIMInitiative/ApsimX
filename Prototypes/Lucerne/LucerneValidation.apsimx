@@ -21123,7 +21123,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-16776961</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21145,7 +21145,7 @@ namespace Models
             <Type>Scatter</Type>
             <XAxis>Bottom</XAxis>
             <YAxis>Left</YAxis>
-            <ColourArgb>-65536</ColourArgb>
+            <ColourArgb>-16777216</ColourArgb>
             <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -21172,14 +21172,6 @@ namespace Models
           </Axis>
           <Axis>
             <Type>Bottom</Type>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Right</Type>
-            <Title>Length (mm)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
@@ -48047,7 +48039,7 @@ namespace Models
         <Weather>
           <Name>Weather</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <FileName>%root%\Bin\Rutherglen.met</FileName>
+          <FileName>082039.met</FileName>
           <ExcelWorkSheetName />
         </Weather>
         <SoilArbitrator>
@@ -48783,131 +48775,6 @@ namespace Models
               <PHUnits>Water</PHUnits>
               <BoronUnits>HotWater</BoronUnits>
             </Analysis>
-            <Sample>
-              <Name>Initial conditions</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <Thickness>
-                <double>100</double>
-                <double>100</double>
-                <double>100</double>
-                <double>100</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-                <double>200</double>
-              </Thickness>
-              <NO3>
-                <double>0.9</double>
-                <double>0.9</double>
-                <double>0.9</double>
-                <double>0.9</double>
-                <double>0.9</double>
-                <double>0.9</double>
-                <double>0.4</double>
-                <double>0.5</double>
-                <double>0.4</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.7</double>
-              </NO3>
-              <NH4>
-                <double>1.5</double>
-                <double>1</double>
-                <double>0.9</double>
-                <double>0.6</double>
-                <double>0.7</double>
-                <double>0.7</double>
-                <double>0.3</double>
-                <double>0.5</double>
-                <double>0.3</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-                <double>0.4</double>
-              </NH4>
-              <SW>
-                <double>0.08</double>
-                <double>0.09</double>
-                <double>0.17</double>
-                <double>0.16</double>
-                <double>0.22</double>
-                <double>0.27</double>
-                <double>0.28</double>
-                <double>0.28</double>
-                <double>0.3</double>
-                <double>0.3</double>
-                <double>0.29</double>
-                <double>0.28</double>
-                <double>0.27</double>
-                <double>0.29</double>
-                <double>0.29</double>
-                <double>0.28</double>
-                <double>0.29</double>
-                <double>0.28</double>
-                <double>0.28</double>
-                <double>0.29</double>
-                <double>0.29</double>
-                <double>0.29</double>
-                <double>0.29</double>
-                <double>0.29</double>
-                <double>0.29</double>
-                <double>0.29</double>
-                <double>0.29</double>
-              </SW>
-              <NO3Units>ppm</NO3Units>
-              <NH4Units>ppm</NH4Units>
-              <SWUnits>Volumetric</SWUnits>
-              <OCUnits>Total</OCUnits>
-              <PHUnits>Water</PHUnits>
-            </Sample>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -49067,6 +48934,236 @@ namespace Models
               <Name>CERESSoilTemperature</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
             </CERESSoilTemperature>
+            <Sample>
+              <Name>Initial condition</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Thickness>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>100</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+                <double>200</double>
+              </Thickness>
+              <NO3>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>0.9</double>
+                <double>0.4</double>
+                <double>0.5</double>
+                <double>0.4</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.7</double>
+              </NO3>
+              <NH4>
+                <double>1.5</double>
+                <double>1</double>
+                <double>0.9</double>
+                <double>0.6</double>
+                <double>0.7</double>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.5</double>
+                <double>0.3</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+                <double>0.4</double>
+              </NH4>
+              <SW>
+                <double>0.08</double>
+                <double>0.09</double>
+                <double>0.17</double>
+                <double>0.16</double>
+                <double>0.22</double>
+                <double>0.27</double>
+                <double>0.28</double>
+                <double>0.28</double>
+                <double>0.3</double>
+                <double>0.3</double>
+                <double>0.29</double>
+                <double>0.28</double>
+                <double>0.27</double>
+                <double>0.29</double>
+                <double>0.29</double>
+                <double>0.28</double>
+                <double>0.29</double>
+                <double>0.28</double>
+                <double>0.28</double>
+                <double>0.29</double>
+                <double>0.29</double>
+                <double>0.29</double>
+                <double>0.29</double>
+                <double>0.29</double>
+                <double>0.29</double>
+                <double>0.29</double>
+                <double>0.29</double>
+              </SW>
+              <NO3Units>ppm</NO3Units>
+              <NH4Units>ppm</NH4Units>
+              <SWUnits>Volumetric</SWUnits>
+              <OCUnits>Total</OCUnits>
+              <PHUnits>Water</PHUnits>
+            </Sample>
+            <SoilNitrogen>
+              <Name>SoilNitrogen</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <fom_type>
+                <string>default</string>
+                <string>manure</string>
+                <string>mucuna</string>
+                <string>lablab</string>
+                <string>shemp</string>
+                <string>stable</string>
+              </fom_type>
+              <fract_carb>
+                <double>0.2</double>
+                <double>0.3</double>
+                <double>0.54</double>
+                <double>0.57</double>
+                <double>0.45</double>
+                <double>0</double>
+              </fract_carb>
+              <fract_cell>
+                <double>0.7</double>
+                <double>0.3</double>
+                <double>0.37</double>
+                <double>0.37</double>
+                <double>0.47</double>
+                <double>0.1</double>
+              </fract_cell>
+              <fract_lign>
+                <double>0.1</double>
+                <double>0.4</double>
+                <double>0.09</double>
+                <double>0.06</double>
+                <double>0.08</double>
+                <double>0.9</double>
+              </fract_lign>
+              <wfpsN2N2O_x>
+                <double>22</double>
+                <double>88</double>
+              </wfpsN2N2O_x>
+              <wfpsN2N2O_y>
+                <double>0.1</double>
+                <double>1</double>
+              </wfpsN2N2O_y>
+            </SoilNitrogen>
+            <SoilWater>
+              <Name>SoilWater</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <SummerDate>1-Nov</SummerDate>
+              <SummerU>6</SummerU>
+              <SummerCona>4</SummerCona>
+              <WinterDate>1-Apr</WinterDate>
+              <WinterU>6</WinterU>
+              <WinterCona>4</WinterCona>
+              <DiffusConst>40</DiffusConst>
+              <DiffusSlope>16</DiffusSlope>
+              <Salb>0.13</Salb>
+              <CN2Bare>70</CN2Bare>
+              <CNRed>20</CNRed>
+              <CNCov>0.8</CNCov>
+              <slope>NaN</slope>
+              <discharge_width>NaN</discharge_width>
+              <catchment_area>NaN</catchment_area>
+              <max_pond>0</max_pond>
+              <Thickness>
+                <double>150</double>
+                <double>150</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+                <double>300</double>
+              </Thickness>
+              <SWCON>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+                <double>0.2</double>
+              </SWCON>
+              <residueinterception>0</residueinterception>
+            </SoilWater>
+            <OutputLayers>
+              <Name>OutputLayers</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Thickness>
+                <double>100</double>
+                <double>300</double>
+                <double>400</double>
+                <double>400</double>
+                <double>400</double>
+                <double>400</double>
+                <double>400</double>
+                <double>400</double>
+              </Thickness>
+            </OutputLayers>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <RecordNumber>0</RecordNumber>
             <SoilType>sand</SoilType>
@@ -51171,7 +51268,7 @@ namespace Models
           <DisabledSeries />
         </Graph>
         <Graph>
-          <Name>LeafWt</Name>
+          <Name>SW10_40</Name>
           <Series>
             <Name>Predicted</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -51237,7 +51334,7 @@ namespace Models
           <DisabledSeries />
         </Graph>
         <Graph>
-          <Name>SWC</Name>
+          <Name>SW40_80</Name>
           <Series>
             <Name>Predicted</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -51303,7 +51400,7 @@ namespace Models
           <DisabledSeries />
         </Graph>
         <Graph>
-          <Name>SW_CL</Name>
+          <Name>SW80_120</Name>
           <Series>
             <Name>Predicted</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -51320,8 +51417,8 @@ namespace Models
             <LineThickness>Normal</LineThickness>
             <TableName>Report</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.OutputLayers.SWmm(2)</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
+            <YFieldName>SWC</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
@@ -51336,19 +51433,19 @@ namespace Models
             <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
             <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
             <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledSquare</Marker>
+            <Marker>FilledDiamond</Marker>
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>LucerneAllObs</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SLA</YFieldName>
+            <YFieldName>Total_SW</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
             <CumulativeX>false</CumulativeX>
           </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Axis>
             <Type>Bottom</Type>
             <Title>Date</Title>
@@ -51359,13 +51456,277 @@ namespace Models
           </Axis>
           <Axis>
             <Type>Left</Type>
-            <Title>Height (mm)</Title>
+            <Title>Soil water</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SW120_160</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SWC</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>LucerneAllObs</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Total_SW</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Date</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Soil water</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SW160_200</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SWC</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>LucerneAllObs</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Total_SW</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Date</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Soil water</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SW200_240</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>SWC</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledDiamond</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>LucerneAllObs</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Total_SW</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Date</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Soil water</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>SW240_280</Name>
+          <Series>
+            <Name>Predicted</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>None</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>Solid</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>Report</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>LeafWt</YFieldName>
+            <ShowInLegend>false</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <Series>
+            <Name>Observed</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>LucerneAllObs</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>leafgreenwt</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Title>Date</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Title>Canopy Cover (0-1)</Title>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>TopRight</LegendPosition>
           <DisabledSeries />
         </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
