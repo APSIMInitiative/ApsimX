@@ -69,10 +69,6 @@ namespace Models.PMF.Organs
         [Link]
         private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
-        /// <summary>Modify leaf size by age</summary>
-        [Link]
-        private ArrayFunction AgeMultiplier = null;
-
         /// <summary>The live</summary>
         [XmlIgnore]
         public Biomass Live = new Biomass();
@@ -781,6 +777,7 @@ namespace Models.PMF.Organs
             NRetranslocationFactor = leafCohortParameterseafCohortParameters.NRetranslocationFactor.Value();
             DMRetranslocationFactor = leafCohortParameterseafCohortParameters.DMRetranslocationFactor.Value();
             LeafSizeShape = leafCohortParameterseafCohortParameters.LeafSizeShapeParameter.Value();
+			AgeMultiplier moved to LeafCohort. SenescenceDurationAgeMultiplier and LagDurationAgeMultiplier added to LeafCohort.
         }
 
         /// <summary>Does the potential growth.</summary>
