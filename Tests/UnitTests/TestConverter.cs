@@ -166,5 +166,155 @@ namespace UnitTests
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
 
+        /// <summary>Test version 10</summary>
+        [Test]
+        public void Version10()
+        {
+            string fromXML = "<Simulation Version=\"9\">\r\n" +
+                             "   <GenericOrgan>\r\n" +
+                                   "<Name>Stem</Name>\r\n" +
+                             "   </GenericOrgan>\r\n" +
+                             " </Simulation>\r\n";
+
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(fromXML);
+            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
+
+            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
+                             "<GenericOrgan>" +
+                               "<Name>Stem</Name>" +
+                               "<Constant>" +
+                                 "<Name>NRetranslocationFactor</Name>" +
+                                 "<FixedValue>0.0</FixedValue>" +
+                               "</Constant>" +
+                               "<Constant>" +
+                                 "<Name>NitrogenDemandSwitch</Name>" +
+                                 "<FixedValue>1.0</FixedValue>" +
+                               "</Constant>" +
+                               "<Constant>" +
+                                 "<Name>DMReallocationFactor</Name>" +
+                                 "<FixedValue>0.0</FixedValue>" +
+                               "</Constant>" +
+                               "<Constant>" +
+                                 "<Name>DMRetranslocationFactor</Name>" +
+                                 "<FixedValue>0.0</FixedValue>" +
+                               "</Constant>" +
+                               "<VariableReference>" +
+                                 "<Name>CriticalNConc</Name>" +
+                                 "<VariableName>[Stem].MinimumNConc.Value()</VariableName>" +
+                               "</VariableReference>" +
+                             "</GenericOrgan>" +
+                           "</Simulation>";
+            Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
+        }
+
+        /// <summary>Test version 11</summary>
+        [Test]
+        public void Version11()
+        {
+            string fromXML = "<Simulation Version=\"10\">\r\n" +
+                             "  <Manager>\r\n" +
+                             "    <Code><![CDATA[using System;\r\n" +
+                             "using Models.Core;\r\n" +
+                             "using Models.PMF;\r\n" +
+                             "Wheat.NonStructuralDemand + xyz\r\n" +
+                             "Wheat.TotalNonStructuralDemand + xyz\r\n" +
+                             "]]></Code>\r\n" +
+                             "      </Manager>\r\n" +
+                             "   <Report>\r\n" +
+                                   "<Name>Report</Name>\r\n" +
+                                   "<VariableNames>\r\n" +
+                                      "<string>[Wheat].NonStructural</string>\r\n" +
+                                      "<string>[Wheat].NonStructural.Wt</string>\r\n" +
+                                   "</VariableNames>\r\n" +
+                             "   </Report>\r\n" +
+                             "  <Graph>" +
+                             "    <Series>" +
+                             "      <XFieldName>Observed.Wheat.AboveGround.NonStructural.Wt</XFieldName>\r\n" +
+                             "      <YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>\r\n" +
+                             "    </Series>" +
+                             "  </Graph>" +
+                             "  <VariableReference>" +
+                             "    <Name>WSC</Name>" +
+                             "    <IncludeInDocumentation>true</IncludeInDocumentation>" +
+                             "    <VariableName>[Stem].Live.NonStructural.Wt</VariableName>" +
+                             "  </VariableReference>" +
+                             "  <LinearInterpolationFunction>" +
+                             "    <Name>WaterStressEffect</Name>" +
+                             "    <XYPairs>" +
+                             "      <Name>XYPairs</Name>" +
+                             "      <IncludeInDocumentation>true</IncludeInDocumentation>" +
+                             "      <X>" +
+                             "        <double>0.5</double>" +
+                             "        <double>1</double>" +
+                             "      </X>" +
+                             "      <Y>" +
+                             "        <double>0.1</double>" +
+                             "        <double>1</double>" +
+                             "      </Y>" +
+                             "    </XYPairs>" +
+                             "    <IncludeInDocumentation>true</IncludeInDocumentation>" +
+                             "    <XProperty>[Stem].Live.NonStructural.Wt</XProperty>" +
+                             "  </LinearInterpolationFunction>" +
+                             "  <NonStructuralNReallocated>" +
+                             "    <Value>1</Value>" +
+                             "  </NonStructuralNReallocated>" +
+                             "</Simulation>\r\n";
+
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(fromXML);
+            Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
+
+            string toXML = "<Simulation Version=\"11\">" +
+                             "<Manager>" +
+                               "<Code><![CDATA[using System;\r\n" +
+                               "using Models.Core;\r\n" +
+                               "using Models.PMF;\r\n" +
+                               "Wheat.StorageDemand + xyz\r\n" +
+                               "Wheat.TotalStorageDemand + xyz\r\n" +
+                               "]]></Code>" +
+                             "</Manager>" +
+                             "<Report>" +
+                               "<Name>Report</Name>" +
+                               "<VariableNames>" +
+                                  "<string>[Wheat].Storage</string>" +
+                                  "<string>[Wheat].Storage.Wt</string>" +
+                               "</VariableNames>" +
+                             "</Report>" +
+                             "<Graph>" +
+                               "<Series>" +
+                                 "<XFieldName>Observed.Wheat.AboveGround.Storage.Wt</XFieldName>" +
+                                 "<YFieldName>Predicted.Wheat.AboveGround.Wt</YFieldName>" +
+                               "</Series>" +
+                             "</Graph>" +
+                             "<VariableReference>" +
+                               "<Name>WSC</Name>" +
+                               "<IncludeInDocumentation>true</IncludeInDocumentation>" +
+                               "<VariableName>[Stem].Live.Storage.Wt</VariableName>" +
+                             "</VariableReference>" +
+                             "<LinearInterpolationFunction>" +
+                               "<Name>WaterStressEffect</Name>" +
+                               "<XYPairs>" +
+                                 "<Name>XYPairs</Name>" +
+                                 "<IncludeInDocumentation>true</IncludeInDocumentation>" +
+                                 "<X>" +
+                                   "<double>0.5</double>" +
+                                   "<double>1</double>" +
+                                 "</X>" +
+                                 "<Y>" +
+                                   "<double>0.1</double>" +
+                                   "<double>1</double>" +
+                                 "</Y>" +
+                               "</XYPairs>" +
+                               "<IncludeInDocumentation>true</IncludeInDocumentation>" +
+                               "<XProperty>[Stem].Live.Storage.Wt</XProperty>" +
+                             "</LinearInterpolationFunction>" +
+                             "<StorageNReallocated>" +
+                               "<Value>1</Value>" +
+                             "</StorageNReallocated>" +
+                           "</Simulation>";
+            Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
+        }
+
     }
 }
