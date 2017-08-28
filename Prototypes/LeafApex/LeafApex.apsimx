@@ -1614,17 +1614,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
       </Root>
       <Leaf>
         <Name>Leaf</Name>
+        <ArrayFunction>
+          <Name>AgeMultiplier</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Values>0.5 0.75 1 1 1 1 1 1 1 1 1 1</Values>
+        </ArrayFunction>
         <ApexTiller>
           <Name>ApexTiller</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </ApexTiller>
         <LeafCohort>
           <Name>InitialLeaves[1]</Name>
-          <ArrayFunction>
-            <Name>AgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>0.5 0.75 1 1 1 1 1 1 1 1 1 1</Values>
-          </ArrayFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NReallocationFactor>0</NReallocationFactor>
           <DMReallocationFactor>0</DMReallocationFactor>
@@ -1655,11 +1655,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaves[2]</Name>
-          <ArrayFunction>
-            <Name>AgeMultiplier</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Values>0.5 0.75 1 1 1 1 1 1 1 1 1 1</Values>
-          </ArrayFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NReallocationFactor>0</NReallocationFactor>
           <DMReallocationFactor>0</DMReallocationFactor>
