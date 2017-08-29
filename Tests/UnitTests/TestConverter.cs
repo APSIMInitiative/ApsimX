@@ -265,7 +265,7 @@ namespace UnitTests
             doc.LoadXml(fromXML);
             Assert.IsTrue(APSIMFileConverter.ConvertToLatestVersion(doc.DocumentElement));
 
-            string toXML = "<Simulation Version=\"11\">" +
+            string toXML = "<Simulation Version=\"" + APSIMFileConverter.LastestVersion + "\">" +
                              "<Manager>" +
                                "<Code><![CDATA[using System;\r\n" +
                                "using Models.Core;\r\n" +
