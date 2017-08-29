@@ -2301,7 +2301,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
     <Memo>
       <Name>Memo</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <MemoText><![CDATA[A test dataset has been developed to test the APSIM Potato model for a range of environmental (soil and climate) conditions, management options (sowing dates, populations, nitrogen rates) and genetic backgrounds (different regions, cultivar types).  These tests have been grouped into various geographical regions to allow users to evaluate the suitability of the model for their particular region of interest.  Graphs of model performance are provided for yield, biomass production, canopy development, phenological development, water and nitrogen uptake, and yield components.
+      <MemoText><![CDATA[A test dataset has been developed to test the APSIM Potato model for a range of environmental (soil and climate) conditions, management options (sowing dates, populations, nitrogen rates) and genetic backgrounds (different regions, cultivar types).  These tests have been grouped into various geographical regions to allow users to evaluate the suitability of the model for their particular region of interest.  Graphs of model performance are provided for yield, biomass production, canopy development and nitrogen uptake.
 ]]></MemoText>
     </Memo>
     <Map>
@@ -2319,7 +2319,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         <Name>Combined Results</Name>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <MemoText><![CDATA[
-Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, Nitrogen, irrigation, sowing date).
+Simulation results for the combined datasets from the various countries are shown in the following graphs.  The model is able to adequately capture the influence of growing conditions (soil, climate) and management (population, nitrogen,  sowing date).
 ]]></MemoText>
       </Memo>
       <Graph>
@@ -2351,7 +2351,7 @@ Simulation results for the combined datasets from the various countries are show
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Observed Fresh Tuber Yield (g/m2)</Title>
@@ -2400,7 +2400,7 @@ Simulation results for the combined datasets from the various countries are show
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Observed Fresh Tuber Yield (g/m2)</Title>
@@ -2498,7 +2498,7 @@ Simulation results for the combined datasets from the various countries are show
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
-        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Title>Observed tuber N (g/m2)</Title>
@@ -2552,8 +2552,8 @@ A range of experimental data has been collected by Plant and Food Research over 
 * Horizon is a main crop tabel variety
 * Ilam hardy is commonly grown as an early table variety
 * Karaka is a crisping variety
-* Nooksac is a potato variety
-* Rua is also a potato variety
+* Nooksac  is a main crop variety grown for processing into fries
+* Rua is a main crop table potato variety
 
 All potatoes were planted on 20/10/2003 and irrigated, fertiliser and pesticide were applied to ensure the crop remaind unstressed and healthy.  Each variety was intensively sampled throughout the growth period to provide data for developing cultivar parameters for different varieties. ]]></MemoText>
         </Memo>
