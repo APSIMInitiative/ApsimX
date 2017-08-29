@@ -149,6 +149,12 @@ namespace Models.Core
             XmlCDataSection codeNode = XmlUtilities.Find(manager, "Code").ChildNodes[0] as XmlCDataSection;
             string newCode = codeNode.InnerText.Replace(searchFor, replaceWith);
             codeNode.InnerText = newCode;
+
+            // Now look under the script node.
+            XmlNode script = XmlUtilities.Find(manager, "Script");
+            if (script != null)
+                foreach (XmlNode scriptChild in script.ChildNodes)
+                    scriptChild.InnerText = scriptChild.InnerText.Replace(searchFor, replaceWith);
         }
 
         /// <summary>
