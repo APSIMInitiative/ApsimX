@@ -21,7 +21,7 @@ namespace Models.Core
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 12; } }
+        public static int LastestVersion { get { return 13; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -337,6 +337,24 @@ namespace Models.Core
 
             APSIMFileConverterUtilities.RenamePMFFunction(node, "Structure", "MainStemFinalNodeNumber", "FinalLeafNumber");
             APSIMFileConverterUtilities.RenameVariable(node, ".MainStemFinalNodeNumber", ".FinalLeafNumber");
+        }
+
+        /// <summary>
+        /// Rename Plant15 to Plant.
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        private static void UpgradeToVersion13(XmlNode node)
+        {
+            APSIMFileConverterUtilities.RenameNode(node, "Plant15", "Plant");
+            APSIMFileConverterUtilities.RenameVariable(node, "using Models.PMF.OldPlant;", "using Models.PMF;");
+            APSIMFileConverterUtilities.RenameVariable(node, "Plant15", "Plant");
+
+            // /042 is a "
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+                APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"(\w+).plant.status *== *\042out\042", @"!$1.IsAlive", null);
+
+            foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "Simulation"))
+                XmlUtilities.EnsureNodeExists(zoneNode, "SoilArbitrator");
         }
     }
 }

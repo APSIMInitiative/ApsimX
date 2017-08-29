@@ -106,12 +106,13 @@ namespace UnitTests
             Assert.AreEqual(this.simulations.Children.Count, 4);
             Assert.AreEqual(this.simulations.Children[0].Name, "Test");
 
-            Assert.AreEqual(this.simulation.Children.Count, 5);
+            Assert.AreEqual(this.simulation.Children.Count, 6);
             Assert.AreEqual(this.simulation.Children[0].Name, "Weather");
             Assert.AreEqual(this.simulation.Children[1].Name, "Clock");
             Assert.AreEqual(this.simulation.Children[2].Name, "Summary");
             Assert.AreEqual(this.simulation.Children[3].Name, "Field1");
             Assert.AreEqual(this.simulation.Children[4].Name, "Field2");
+            Assert.AreEqual(this.simulation.Children[5].Name, "SoilArbitrator");
 
             Zone zone = this.simulation.Children[3] as Zone;
             Assert.AreEqual(zone.Children.Count, 2);
@@ -217,7 +218,7 @@ namespace UnitTests
         public void ChildrenRecursivelyTest()
         {
             List<IModel> allChildren = Apsim.ChildrenRecursively(simulation);
-            Assert.AreEqual(allChildren.Count, 24);
+            Assert.AreEqual(allChildren.Count, 25);
 
             List<IModel> childZones = Apsim.ChildrenRecursively(simulation, typeof(Zone));
             Assert.AreEqual(childZones.Count, 3);
@@ -231,7 +232,7 @@ namespace UnitTests
         {
             IModel clock = Apsim.Child(simulation, typeof(Clock));
             List<IModel> allSiblings = Apsim.Siblings(clock);
-            Assert.AreEqual(allSiblings.Count, 4);
+            Assert.AreEqual(allSiblings.Count, 5);
         }
   
         /// <summary>

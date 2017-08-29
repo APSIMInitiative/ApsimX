@@ -7,7 +7,6 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
-using Models.PMF.OldPlant;
 using APSIM.Shared.Utilities;
 using System.Data;
 
@@ -107,15 +106,11 @@ namespace Models.PMF.Phen
     /// </remarks>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    [ValidParent(ParentType = typeof(Plant15))]
     public class Phenology : Model
     {
         #region Links
-        [Link(IsOptional = true)]
+        [Link]
         private Plant Plant = null;
-
-        [Link(IsOptional = true)]
-        private Plant15 Plant15 = null;    // This can be deleted once we get rid of plant15.
 
         /// <summary>The clock</summary>
         [Link]
@@ -371,8 +366,6 @@ namespace Models.PMF.Phen
             get
             {
                 if (Plant != null && Plant.IsAlive)
-                    return true;
-                if (Plant15 != null && Plant15.IsAlive)
                     return true;
                 return false;
             }

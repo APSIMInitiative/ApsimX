@@ -48,6 +48,7 @@ namespace UnitTests
                                  "<YFieldName>GrainWt</YFieldName>" +
                                "</Series>" +
                              "</Graph>" +
+                             "<SoilArbitrator />" + 
                            "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
@@ -76,6 +77,7 @@ namespace UnitTests
                                    "<Name>Cultivar2</Name>" +
                                  "</Alias>" +
                              "</Cultivar>" +
+                             "<SoilArbitrator />" +
                            "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
@@ -101,7 +103,6 @@ namespace UnitTests
                              "          {\r\n" +
                              "          	accumulatedRain.Update();\r\n" +
                              "          	if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n" +
-                             "          	    Wheat.plant_status == \"out\" &&\r\n" +
                              "          	    Soil.SoilWater.ESW > MinESW &&\r\n" +
                              "          	    accumulatedRain.Sum > MinRain)\r\n" +
                              "          	{\r\n" +
@@ -144,7 +145,6 @@ namespace UnitTests
                              "          {\r\n" +
                              "          	accumulatedRain.Update();\r\n" +
                              "          	if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n" +
-                             "          	    Wheat.plant_status == \"out\" &&\r\n" +
                              "          	    MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n" +
                              "          	    accumulatedRain.Sum > MinRain)\r\n" +
                              "          	{\r\n" +
@@ -162,7 +162,8 @@ namespace UnitTests
                                     "<string>sum([MySoil].SoilWater.ESW)</string>" +
                                 "</VariableNames>" +
                              "</Report>" +
-                             "</Simulation>";
+                             "<SoilArbitrator />" +
+                           "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
 
@@ -204,7 +205,8 @@ namespace UnitTests
                                  "<VariableName>[Stem].MinimumNConc.Value()</VariableName>" +
                                "</VariableReference>" +
                              "</GenericOrgan>" +
-                           "</Simulation>";
+                             "<SoilArbitrator />" +
+                            "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
 
@@ -312,6 +314,7 @@ namespace UnitTests
                              "<StorageNReallocated>" +
                                "<Value>1</Value>" +
                              "</StorageNReallocated>" +
+                             "<SoilArbitrator />" +
                            "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }

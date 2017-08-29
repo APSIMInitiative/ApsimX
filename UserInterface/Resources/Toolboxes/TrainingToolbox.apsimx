@@ -4352,13 +4352,13 @@
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
+          </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -5021,13 +5021,13 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
+          </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -5684,13 +5684,13 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+            <SowingDate>0001-01-01T00:00:00</SowingDate>
+          </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
