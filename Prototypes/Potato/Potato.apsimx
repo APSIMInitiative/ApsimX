@@ -537,6 +537,11 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
                 <double>0.22</double>
               </Y>
             </XYPairs>
+            <Memo>
+              <Name>Memo</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <MemoText><![CDATA[Defalt values are set for *DryMatterContent* but this is normally overwritten in the cultivar description]]></MemoText>
+            </Memo>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <XProperty>[Phenology].Stage</XProperty>
           </LinearInterpolationFunction>
