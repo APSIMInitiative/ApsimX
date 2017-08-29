@@ -45,13 +45,13 @@ namespace Models.PMF
             double FirstPassNotAllocated = NotAllocated;
             for (int i = 0; i < Organs.Length; i++)
             {
-                double NonStructuralRequirement = Math.Max(0.0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
-                if (NonStructuralRequirement > 0.0)
+                double StorageRequirement = Math.Max(0.0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
+                if (StorageRequirement > 0.0)
                 {
-                    double NonStructuralAllocation = Math.Min(FirstPassNotAllocated * MathUtilities.Divide(BAT.NonStructuralDemand[i], BAT.TotalNonStructuralDemand, 0), NonStructuralRequirement);
-                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
-                    NotAllocated -= NonStructuralAllocation;
-                    TotalAllocated += NonStructuralAllocation;
+                    double StorageAllocation = Math.Min(FirstPassNotAllocated * MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalStorageDemand, 0), StorageRequirement);
+                    BAT.StorageAllocation[i] += Math.Max(0, StorageAllocation);
+                    NotAllocated -= StorageAllocation;
+                    TotalAllocated += StorageAllocation;
                 }
             }
             //Set the amount of biomass not allocated.  Note, that this value is overwritten following by each arbitration step so if it is to be used correctly 
@@ -72,7 +72,7 @@ namespace Models.PMF
                 memo.Document(tags, -1, indent);
 
             // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
             string RelativeDocString = "Arbitration is performed in two passes for each of the supply sources.  On the first pass, biomass or nutrient supply is allocated to structural and metabolic pools of each organ based on their demand relative to the demand from all organs.  On the second pass any remaining supply is allocated to non-structural pool based on the organ's relative demand.";
             

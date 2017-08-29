@@ -61,20 +61,19 @@ echo ^ climate and management interactions.
 )> .\DebPackage\DEBIAN\control
 
 rem Calculate the md5sums
-set HEADER=//
 setlocal enabledelayedexpansion
 cd DebPackage/data
 fciv usr/local/bin/apsim | findstr /r /v "^//" >..\DEBIAN\md5sums
 for %%a in (usr/local/lib/apsim/%APSIM_VERSION%/Bin/*) do (
-for /F "tokens=1" %%i in ('fciv "usr/local/lib/apsim/%APSIM_VERSION%/Bin/%%a"') do if not %%i == %HEADER% (echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Bin/%%a >> ..\DEBIAN\md5sums)
+for /F "tokens=1" %%i in ('md5sum "usr/local/lib/apsim/%APSIM_VERSION%/Bin/%%a"') do echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Bin/%%a >> ..\DEBIAN\md5sums
 )
 
 for %%a in (usr/local/lib/apsim/%APSIM_VERSION%/Examples/*) do (
-for /F "tokens=1" %%i in ('fciv "usr/local/lib/apsim/%APSIM_VERSION%/Examples/%%a"') do if not %%i == %HEADER% (echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Examples/%%a >> ..\DEBIAN\md5sums)
+for /F "tokens=1" %%i in ('md5sum "usr/local/lib/apsim/%APSIM_VERSION%/Examples/%%a"') do echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Examples/%%a >> ..\DEBIAN\md5sums
 )
 
 for %%a in (usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/*) do (
-for /F "tokens=1" %%i in ('fciv "usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/%%a"') do if not %%i == %HEADER% (echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/%%a >> ..\DEBIAN\md5sums)
+for /F "tokens=1" %%i in ('md5sum "usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/%%a"') do echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/%%a >> ..\DEBIAN\md5sums
 )
 
 rem Create the tarballs and ar them together

@@ -135,6 +135,7 @@
     <Compile Include="Aqua\PondWater.cs" />
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
+    <Compile Include="Core\APSIMFileConverterUtilities.cs" />
     <Compile Include="Core\APSIMFileConverter.cs" />
     <Compile Include="Core\APSIMFileReader.cs" />
     <Compile Include="Core\APSIMFileWriter.cs" />

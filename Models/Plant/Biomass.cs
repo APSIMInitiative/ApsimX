@@ -27,11 +27,11 @@ namespace Models.PMF
         /// <summary>The _ structural wt</summary>
         protected double _StructuralWt = 0;
         /// <summary>The _ non structural wt</summary>
-        protected double _NonStructuralWt = 0;
+        protected double _StorageWt = 0;
         /// <summary>The _ structural n</summary>
         protected double _StructuralN = 0;
         /// <summary>The _ non structural n</summary>
-        protected double _NonStructuralN = 0;
+        protected double _StorageN = 0;
         /// <summary>The _ potential dm allocation</summary>
         protected double _PotentialDMAllocation = 0;
         /// <summary>The _ metabolic wt</summary>
@@ -43,12 +43,12 @@ namespace Models.PMF
         /// <value>The non structural n.</value>
         [XmlIgnore]
         [Units("g/m^2")]
-        virtual public double NonStructuralN
+        virtual public double StorageN
         {
-            get { return _NonStructuralN; }
+            get { return _StorageN; }
             set
             {
-                _NonStructuralN = MathUtilities.RoundToZero(value);
+                _StorageN = MathUtilities.RoundToZero(value);
 
             }
         }
@@ -70,12 +70,12 @@ namespace Models.PMF
         /// <value>The non structural wt.</value>
         [XmlIgnore]
         [Units("g/m^2")]
-        virtual public double NonStructuralWt
+        virtual public double StorageWt
         {
-            get { return _NonStructuralWt; }
+            get { return _StorageWt; }
             set
             {
-                _NonStructuralWt = MathUtilities.RoundToZero(value);
+                _StorageWt = MathUtilities.RoundToZero(value);
             }
         }
 
@@ -139,7 +139,7 @@ namespace Models.PMF
         {
             get
             {
-                return StructuralWt + NonStructuralWt + MetabolicWt;
+                return StructuralWt + StorageWt + MetabolicWt;
             }
         }
 
@@ -151,7 +151,7 @@ namespace Models.PMF
         {
             get
             {
-                return StructuralN + NonStructuralN + MetabolicN;
+                return StructuralN + StorageN + MetabolicN;
             }
         }
 
@@ -187,12 +187,12 @@ namespace Models.PMF
         /// <summary>Gets the non structural N concentration.</summary>
         /// <value>The non structural n conc.</value>
         [Units("g/g")]
-        public double NonStructuralNConc
+        public double StorageNConc
         {
             get
             {
-                if (NonStructuralWt > 0)
-                    return NonStructuralN / NonStructuralWt;
+                if (StorageWt > 0)
+                    return StorageN / StorageWt;
                 else
                     return 0.0;
             }
@@ -219,10 +219,10 @@ namespace Models.PMF
         public Biomass(Biomass from)
         {
             _StructuralWt = from.StructuralWt;
-            _NonStructuralWt = from.NonStructuralWt;
+            _StorageWt = from.StorageWt;
             _MetabolicWt = from.MetabolicWt;
             _StructuralN = from.StructuralN;
-            _NonStructuralN = from.NonStructuralN;
+            _StorageN = from.StorageN;
             _MetabolicN = from.MetabolicN;
         }
 
@@ -230,10 +230,10 @@ namespace Models.PMF
         virtual public void Clear()
         {
             _StructuralWt = 0.0;
-            _NonStructuralWt = 0.0;
+            _StorageWt = 0.0;
             _MetabolicWt = 0.0;
             _StructuralN = 0.0;
-            _NonStructuralN = 0.0;
+            _StorageN = 0.0;
             _MetabolicN = 0.0;
         }
         /// <summary>Adds the specified a.</summary>
@@ -241,10 +241,10 @@ namespace Models.PMF
         public void Add(Biomass a)
         {
             _StructuralWt += a._StructuralWt;
-            _NonStructuralWt += a._NonStructuralWt;
+            _StorageWt += a._StorageWt;
             _MetabolicWt += a._MetabolicWt;
             _StructuralN += a._StructuralN;
-            _NonStructuralN += a._NonStructuralN;
+            _StorageN += a._StorageN;
             _MetabolicN += a._MetabolicN;
         }
         /// <summary>Subtracts the specified a.</summary>
@@ -252,10 +252,10 @@ namespace Models.PMF
         public void Subtract(Biomass a)
         {
             _StructuralWt -= a._StructuralWt;
-            _NonStructuralWt -= a._NonStructuralWt;
+            _StorageWt -= a._StorageWt;
             _MetabolicWt -= a._MetabolicWt;
             _StructuralN -= a._StructuralN;
-            _NonStructuralN -= a._NonStructuralN;
+            _StorageN -= a._StorageN;
             _MetabolicN -= a._MetabolicN;
         }
         /// <summary>Multiplies a biomass object by a given scalar</summary>
@@ -263,10 +263,10 @@ namespace Models.PMF
         public void Multiply(double scalar)
         {
             _StructuralWt *= scalar;
-            _NonStructuralWt *= scalar;
+            _StorageWt *= scalar;
             _MetabolicWt *= scalar;
             _StructuralN *= scalar;
-            _NonStructuralN *= scalar;
+            _StorageN *= scalar;
             _MetabolicN *= scalar;
         }
         /// <summary>Sets to.</summary>
@@ -274,10 +274,10 @@ namespace Models.PMF
         public void SetTo(Biomass a)
         {
             _StructuralWt = a.StructuralWt;
-            _NonStructuralWt = a.NonStructuralWt;
+            _StorageWt = a.StorageWt;
             _MetabolicWt = a.MetabolicWt;
             _StructuralN = a.StructuralN;
-            _NonStructuralN = a.NonStructuralN;
+            _StorageN = a.StorageN;
             _MetabolicN = a.MetabolicN;
         }
         /// <summary>Implements the operator +.</summary>
@@ -289,10 +289,10 @@ namespace Models.PMF
             return new Biomass
             {
                 StructuralWt = a.StructuralWt + b.StructuralWt,
-                NonStructuralWt = a.NonStructuralWt + b.NonStructuralWt,
+                StorageWt = a.StorageWt + b.StorageWt,
                 MetabolicWt = a.MetabolicWt + b.MetabolicWt,
                 StructuralN = a.StructuralN + b.StructuralN,
-                NonStructuralN = a.NonStructuralN + b.NonStructuralN,
+                StorageN = a.StorageN + b.StorageN,
                 MetabolicN = a.MetabolicN + b.MetabolicN
             };
 
@@ -306,10 +306,10 @@ namespace Models.PMF
             return new Biomass
             {
                 StructuralWt = a.StructuralWt - b.StructuralWt,
-                NonStructuralWt = a.NonStructuralWt - b.NonStructuralWt,
+                StorageWt = a.StorageWt - b.StorageWt,
                 MetabolicWt = a.MetabolicWt - b.MetabolicWt,
                 StructuralN = a.StructuralN - b.StructuralN,
-                NonStructuralN = a.NonStructuralN - b.NonStructuralN,
+                StorageN = a.StorageN - b.StorageN,
                 MetabolicN = a.MetabolicN - b.MetabolicN
             };
 
@@ -323,10 +323,10 @@ namespace Models.PMF
             return new Biomass
             {
                 StructuralWt = a.StructuralWt * Fraction,
-                NonStructuralWt = a.NonStructuralWt * Fraction,
+                StorageWt = a.StorageWt * Fraction,
                 MetabolicWt = a.MetabolicWt * Fraction,
                 StructuralN = a.StructuralN * Fraction,
-                NonStructuralN = a.NonStructuralN * Fraction,
+                StorageN = a.StorageN * Fraction,
                 MetabolicN = a.MetabolicN * Fraction
             };
 
@@ -344,10 +344,10 @@ namespace Models.PMF
             get
             {
                 return StructuralWt == 0 &&
-                        NonStructuralWt == 0 &&
+                        StorageWt == 0 &&
                         MetabolicWt == 0 &&
                         StructuralN == 0 &&
-                        NonStructuralN == 0 &&
+                        StorageN == 0 &&
                         MetabolicN == 0;
             }
         }

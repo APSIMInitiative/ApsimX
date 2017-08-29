@@ -5,11 +5,9 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
-    using EventArguments;
-    using Models.Core;
-    using Models.PMF;
     using System;
-    using System.Reflection;
+    using EventArguments;
+    using Models.PMF;
     using Views;
 
     /// <summary>

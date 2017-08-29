@@ -27,7 +27,7 @@ namespace UserInterface.Presenters
             // It's slightly simpler to generate Markdown for this, but it
             // would be pretty easy to build this directly as HTML
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
-            AutoDocumentation.GetClassDescription(this.model, tags, 0);
+            AutoDocumentation.DocumentModel(this.model, tags, 1, 0);
 
             StringBuilder contents = new StringBuilder("## " + this.model.Name + "\r\n");
             foreach (AutoDocumentation.ITag tag in tags)

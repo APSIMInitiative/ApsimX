@@ -44,13 +44,13 @@ namespace Models.PMF
             // Second time round if there is still N to allocate let organs take N up to their Maximum
             for (int i = 0; i < Organs.Length; i++)
             {
-                double NonStructuralRequirement = Math.Max(0, BAT.NonStructuralDemand[i] - BAT.NonStructuralAllocation[i]);
-                if (NonStructuralRequirement > 0.0)
+                double StorageRequirement = Math.Max(0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]);
+                if (StorageRequirement > 0.0)
                 {
-                    double NonStructuralAllocation = Math.Min(NonStructuralRequirement, NotAllocated);
-                    BAT.NonStructuralAllocation[i] += Math.Max(0, NonStructuralAllocation);
-                    NotAllocated -= NonStructuralAllocation;
-                    TotalAllocated += NonStructuralAllocation;
+                    double StorageAllocation = Math.Min(StorageRequirement, NotAllocated);
+                    BAT.StorageAllocation[i] += Math.Max(0, StorageAllocation);
+                    NotAllocated -= StorageAllocation;
+                    TotalAllocated += StorageAllocation;
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace Models.PMF
                 memo.Document(tags, -1, indent);
 
             // write description of this class.
-            AutoDocumentation.GetClassDescription(this, tags, indent);
+            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
 
             string PriorityDocString = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first.  On the second pass any remaining biomass is allocated to non-structural demands based on the same order of priority.";
             
