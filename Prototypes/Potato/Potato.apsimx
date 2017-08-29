@@ -286,6 +286,11 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         </PhaseLookup>
         <Constant>
           <Name>FinalLeafNumber</Name>
+          <Memo>
+            <Name>TitlePage</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <MemoText><![CDATA[A default *FinalLeafNumber* is given for Potato but most cultivars overwrite this with different values and it may also be overwritten in the sowing rule as described in the section "Including a potato crop in an APSIM simulation" above.]]></MemoText>
+          </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>34</FixedValue>
         </Constant>
@@ -1507,15 +1512,25 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
       </Leaf>
       <GenericOrgan>
         <Name>Stem</Name>
-        <InternodeDemandFunction>
+        <MultiplyFunction>
           <Name>DMDemandFunction</Name>
+          <VariableReference>
+            <Name>DeltaNodesPerStem</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName> [Structure].DeltaTipNumber</VariableName>
+          </VariableReference>
           <Constant>
             <Name>InterNodeWt</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.2</FixedValue>
           </Constant>
+          <VariableReference>
+            <Name>StemNumber</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <VariableName>[Structure].MainStemPopn</VariableName>
+          </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-        </InternodeDemandFunction>
+        </MultiplyFunction>
         <Constant>
           <Name>NReallocationFactor</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
