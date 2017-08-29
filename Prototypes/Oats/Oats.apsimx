@@ -4535,13 +4535,13 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                   <X>
                     <double>1</double>
                     <double>2</double>
-                    <double>3.99</double>
+                    <double>2.99</double>
+                    <double>3</double>
                     <double>4</double>
                     <double>5</double>
                     <double>6</double>
                     <double>7</double>
                     <double>8</double>
-                    <double>9</double>
                   </X>
                   <Y>
                     <double>0</double>
@@ -4613,8 +4613,8 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <X>
                   <double>0</double>
-                  <double>0.2</double>
-                  <double>0.35</double>
+                  <double>0.5</double>
+                  <double>0.7</double>
                 </X>
                 <Y>
                   <double>1</double>
@@ -4697,7 +4697,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
               </X>
               <Y>
                 <double>20</double>
-                <double>100</double>
+                <double>300</double>
                 <double>1100</double>
                 <double>1200</double>
               </Y>
@@ -5607,7 +5607,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <Constant>
             <Name>DMReallocationFactor</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <FixedValue>0</FixedValue>
+            <FixedValue>1</FixedValue>
           </Constant>
           <Constant>
             <Name>DMRetranslocationFactor</Name>
@@ -5725,7 +5725,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 <MemoText><![CDATA[As per NZ Lincoln data set]]></MemoText>
               </Memo>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>5000</FixedValue>
+              <FixedValue>4000</FixedValue>
               <Units>mm^2</Units>
             </Constant>
             <LinearInterpolationFunction>
@@ -5773,10 +5773,12 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
                 <X>
                   <double>3</double>
                   <double>4</double>
+                  <double>5</double>
                 </X>
                 <Y>
                   <double>0.4</double>
                   <double>1</double>
+                  <double>0.4</double>
                 </Y>
               </XYPairs>
               <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6060,7 +6062,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
             <Units>0-1</Units>
           </Constant>
           <MultiplyFunction>
-            <Name>ShadeInducedSenescenceRate</Name>
+            <Name>ShadeInducedSenescenceRate1</Name>
             <LinearInterpolationFunction>
               <Name>CoverEffect</Name>
               <XYPairs>
@@ -6089,6 +6091,11 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
+          <Constant>
+            <Name>ShadeInducedSenescenceRate</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <FixedValue>0</FixedValue>
+          </Constant>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </LeafCohortParameters>
         <RUEModel>
@@ -6910,6 +6917,9 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 10</Command>
           <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3.99,4,5,6,7,8,9</Command>
+          <Command>[Structure].BranchingRate.StressFactors.CoverEffect.XYPairs.X = 0,0.2,0.35</Command>
+          <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 5000</Command>
         </Cultivar>
         <Cultivar>
           <Name>Milton</Name>
@@ -13688,7 +13698,7 @@ late drought increased screenings.
                     <double>300</double>
                   </Thickness>
                   <NO3>
-                    <double>22.600191250284</double>
+                    <double>22.6</double>
                     <double>5.50004558628989</double>
                     <double>1.30001033773826</double>
                     <double>0</double>
