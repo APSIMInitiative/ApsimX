@@ -12,7 +12,7 @@ using Models.PMF.Interfaces;
 namespace Models.PMF.Struct
 {
     /// <summary>
-    /// The structure model calculates structural development of the plant.  This includes the number of primordia, leaf nodes and stems, as well as overall plant height.  The development of these characteristics is driven by <i>Thermal time</i>.
+    /// The structure model calculates structural development of the plant including the appearance of main-stem and branch leaf tips and overall plant height.  The development of these characteristics is driven by <i>Thermal time</i>.
     /// </summary>
     /// \pre A \ref Models.PMF.Plant "Plant" model has to exist to access 
     /// sowing data, e.g. population, bud number.

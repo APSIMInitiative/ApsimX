@@ -4,15 +4,46 @@
   <Memo>
     <Name>TitlePage</Name>
     <IncludeInDocumentation>true</IncludeInDocumentation>
-    <MemoText><![CDATA[# The APSIM Potato Model
- 
-_Hamish Brown & Neil Huth_]]></MemoText>
-  </Memo>
-  <Memo>
-    <Name>Introduction</Name>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
-    <MemoText><![CDATA[The APSIM potato model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organs and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
-]]></MemoText>
+    <MemoText><![CDATA[
+# The APSIM Potato Model
+
+_Brown, H.E., Huth, N.I. and Holzworth, D.P._
+
+##Building the model.
+The APSIM potato model has been described in part by [Brown_etal_2011] and developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.
+
+The model consists of:
+
+* a phenology model to simulate development between growth phases  
+* a structure model to simulate plant morphology  
+* a collection of organs to simulate the biomass (N and Weight) of various plant parts  
+* an arbitrator to allocate biomass to the various plant organs  
+
+##Pecularities of potato
+Potato is a challenging crop to model because it is vegetatviely propigated.  For seed propigated crops, plants are always equally dormant at planting and their development begins from there.  With potato the physiological status of the seed tubers vary depending on:  
+
+* the conditions the mother plant encountered late in its life (Stress, Desication etc)   
+* the conditions that the tuber was stored in (Cool store, ground store, dry store etc)   
+* treatment of the seed prior to planting (chitting, cutting etc).   
+
+All of these factors infuence the developmental behaviour of the crop that is produced including:   
+
+* The timing of emergence   
+* The number of stems produced per plant and subsequent tuber number and canopy development   
+* The timing of tuber initiation and subsequent growth and partitioning   
+* The duration of haulm growth and subsequent tuber filling duration   
+
+There are an enormous number of potato cultivars and they all differ in their responses of post planting behavour due to pre planting seed conditions, there is not a good quantitative understanding of how environment and managemet of seed potato prior to planting influences post planting behaviour and it is beyond the scope of the current APSIM infrastructure to provide environmental conditions during storage of seed.  We have tried but with a list of excuses this long we have not yet succeeded in building the effects of seed physiology into the potato model in anything other than a very elementry way.  However, it is possible to set the model up to capture seed effects for specific simulations. 
+
+##Including a potato crop in an APSIM simulation
+There is a Potato example simulation available by clicking the "Open an Example" icon available on the first tab displayed when APSIM Next Gen is opened.  This provides a useful demonstration of how to simulate a potato crop and provides some useful graphs for viewing models predictions.  
+To incluce a potato crop in a simulation the "Potato" model needs to be added to the paddock, field or zone in which it is to be grown.  This can be done by right clicking on the "Paddock", selecting "Add" from the drop down menu and then selecting "Potato" from the list that comes up.  A sowing action also needs to be set to start the crop off and a harvest event to remove the potato crop so the next crop can be simulated.  The "PotatoPlantAndHarvest" manager module that is included in the "Potato" example simulation has script written to instigate these events and can be copied from the example simulation into other simulations.
+###Setting sowing depth (emergence date)
+The potato model predicts emergence date as a function of sowing depth and all subsequent phenology is dependent on this timing.  Because this date is effected by seed physiology and can't yet be modeled we recommend that planting depth is not set at the actual planting depth, but varied to ensure the model predicts a realistic emergence date.  Planting depth is set in the 'PotatoPlantAndHarvest' module
+###Setting stem number (tuber number and early canopy growth)
+The 'PotatoPlantAndHarvest' script sets the "Number of stems per seed piece".  This varies enormiously due to seed physiology and variety and should be set to a number that is realistic for the cultivar being simulated and the pre-planting treatment of the seed tubers.  This parameter influences tuber number and the early development of the canopy so should be set carefully.
+###Setting final leaf number (Crop duration)
+The duration of a potato crop is determined by the number of leaves that the mainstem produces and how long it takes for these to appear and seness.  This responds to photoperiod in many varieties and is influenced by the pre-planting treatment of seed tubers.  As such this parameter is given a default value for each cultivar but can also be set in the "PotatoPlantAndHarvest" script if more is know about the expected determinany of the potatoes under the circumstances being simulated.  Please read  [Brown_etal_2011] for a clear definition of final leaf number.]]></MemoText>
   </Memo>
   <Replacements>
     <Name>Replacements</Name>
@@ -873,16 +904,16 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         <Name>Leaf</Name>
         <ApexStandard>
           <Name>ApexStandard</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
         </ApexStandard>
         <VariableReference>
           <Name>ThermalTime</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <LeafCohort>
           <Name>InitialLeaf1</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <NReallocationFactor>0</NReallocationFactor>
           <DMReallocationFactor>0</DMReallocationFactor>
           <NRetranslocationFactor>0</NRetranslocationFactor>
@@ -910,7 +941,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf2</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <NReallocationFactor>0</NReallocationFactor>
           <DMReallocationFactor>0</DMReallocationFactor>
           <NRetranslocationFactor>0</NRetranslocationFactor>
@@ -938,7 +969,7 @@ of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cu
         </LeafCohort>
         <LeafCohort>
           <Name>InitialLeaf3</Name>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <NReallocationFactor>0</NReallocationFactor>
           <DMReallocationFactor>0</DMReallocationFactor>
           <NRetranslocationFactor>0</NRetranslocationFactor>
@@ -10555,13 +10586,13 @@ A range of experimental data has been collected by SARDI at Parilla, Penola and 
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <PlantingDate>2007-11-23</PlantingDate>
-                  <HarvestDate>2008-03-05</HarvestDate>
                   <CultivarName>Coliban</CultivarName>
                   <RowSpace>280</RowSpace>
                   <RowWidth>770</RowWidth>
                   <PlantingDepth>170</PlantingDepth>
                   <StemNumberPerSeedTuber>2.4</StemNumberPerSeedTuber>
                   <SetFinalLeafNumber>28</SetFinalLeafNumber>
+                  <HarvestDate>2008-03-05</HarvestDate>
                 </Script>
                 <Code><![CDATA[
 using System;
@@ -11460,12 +11491,12 @@ namespace Models
               <Name>FertiliserRule</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <Day1>27</Day1>
-                <Day2>52</Day2>
-                <Day3>67</Day3>
                 <Fert1>37.5</Fert1>
                 <Fert2>37.5</Fert2>
                 <Fert3>25</Fert3>
+                <Day1>27</Day1>
+                <Day2>52</Day2>
+                <Day3>67</Day3>
               </Script>
               <Code><![CDATA[
 using System;
@@ -14816,13 +14847,13 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <PlantingDate>2006-10-10</PlantingDate>
-                  <HarvestDate>2007-03-31</HarvestDate>
                   <CultivarName>RussetBurbank</CultivarName>
                   <RowSpace>370</RowSpace>
                   <RowWidth>860</RowWidth>
                   <PlantingDepth>170</PlantingDepth>
                   <StemNumberPerSeedTuber>4.12</StemNumberPerSeedTuber>
                   <SetFinalLeafNumber>0</SetFinalLeafNumber>
+                  <HarvestDate>2007-03-31</HarvestDate>
                 </Script>
                 <Code><![CDATA[
 using System;
@@ -18481,13 +18512,13 @@ The duration of a potato crop is determined by the number of leaves that the mai
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
                   <PlantingDate>2006-10-10</PlantingDate>
-                  <HarvestDate>2007-03-22</HarvestDate>
                   <CultivarName>RussetBurbank</CultivarName>
                   <RowSpace>370</RowSpace>
                   <RowWidth>860</RowWidth>
                   <PlantingDepth>120</PlantingDepth>
                   <StemNumberPerSeedTuber>2</StemNumberPerSeedTuber>
                   <SetFinalLeafNumber>0</SetFinalLeafNumber>
+                  <HarvestDate>2007-03-22</HarvestDate>
                 </Script>
                 <Code><![CDATA[
 using System;
