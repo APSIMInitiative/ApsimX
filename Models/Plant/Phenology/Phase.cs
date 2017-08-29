@@ -105,13 +105,15 @@ namespace Models.PMF.Phen
         virtual public double DoTimeStep(double PropOfDayToUse)
         {
             // Calculate the TT for today and Accumulate.      
-            _TTForToday = ThermalTime.Value() * PropOfDayToUse;
-            if (Stress != null)
+            if (ThermalTime != null)
             {
-                _TTForToday *= Stress.Value();
+                _TTForToday = ThermalTime.Value() * PropOfDayToUse;
+                if (Stress != null)
+                {
+                    _TTForToday *= Stress.Value();
+                }
+                TTinPhase += _TTForToday;
             }
-            TTinPhase += _TTForToday;
-
             return PropOfDayUnused;
         }
 

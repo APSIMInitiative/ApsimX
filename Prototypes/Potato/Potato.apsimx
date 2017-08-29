@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="12">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -152,26 +152,16 @@ The duration of a potato crop is determined by the number of leaves that the mai
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <MemoText><![CDATA[The final leaf number responds to photoperiod in many varieties and is influenced by the pre-planting treatment 
-of seed tubers. Therefore final leaf number is given a default value for each cultivar but can also be set in the
+            <MemoText><![CDATA[The *FinalLeafNumber* responds to photoperiod in many varieties and is influenced by the pre-planting treatment 
+of seed tubers. Therefore *FinalLeafNumber* is given a default value for each cultivar but can also be set in the
 "PotatoPlantAndHarvest" script if more is know about the expected determinany of the potatoes under the circumstances being simulated.]]></MemoText>
           </Memo>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
-          </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>TuberInitiation</Start>
           <End>FinalLeaf</End>
         </LeafAppearancePhase>
         <LeafDeathPhase>
           <Name>LateTuber</Name>
-          <VariableReference>
-            <Name>ThermalTime</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Phenology].ThermalTime.Value()</VariableName>
-          </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Start>FinalLeaf</Start>
           <End>FullSenescence</End>
@@ -231,7 +221,7 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <PhaseLookup>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <PhaseLookupValue>
             <Name>Phyllochron</Name>
             <LinearInterpolationFunction>
@@ -264,7 +254,7 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <Constant>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>34</FixedValue>
         </Constant>
@@ -906,10 +896,10 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -934,10 +924,10 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -962,10 +952,10 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1178,7 +1168,7 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.2</FixedValue>
           </Constant>
@@ -1705,20 +1695,20 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
         <Cultivar>
           <Name>Horizon</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 28</Command>
+          <Command>[Structure].FinalLeafNumber.FixedValue = 28</Command>
           <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.12,0.16</Command>
         </Cultivar>
         <Cultivar>
           <Name>IlamHardy</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 26</Command>
+          <Command>[Structure].FinalLeafNumber.FixedValue = 26</Command>
           <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.18</Command>
           <Command>[Phenology].Vegetative.Target.FixedValue = 200</Command>
         </Cultivar>
         <Cultivar>
           <Name>JerseyBenny</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 19</Command>
+          <Command>[Structure].FinalLeafNumber.FixedValue = 19</Command>
           <Command>[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,10,11</Command>
           <Command>[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
           <Command>[Tuber].DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3</Command>
@@ -1727,19 +1717,19 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
         <Cultivar>
           <Name>Karaka</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+          <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
           <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
         </Cultivar>
         <Cultivar>
           <Name>Nadine</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+          <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
           <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.11,0.15</Command>
         </Cultivar>
         <Cultivar>
           <Name>Nooksac</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 36</Command>
+          <Command>[Structure].FinalLeafNumber.FixedValue = 36</Command>
           <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
         </Cultivar>
         <Cultivar>
@@ -1750,10 +1740,10 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
         <Cultivar>
           <Name>Rua</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+          <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
           <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60</Command>
+          <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1</Command>
+          <Command>[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60</Command>
           <Command>[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,20,21</Command>
           <Command>[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
         </Cultivar>
@@ -1784,7 +1774,7 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Alias>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 34</Command>
+          <Command>[Structure].FinalLeafNumber.FixedValue = 34</Command>
         </Cultivar>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </CultivarFolder>
@@ -1883,7 +1873,7 @@ of seed tubers. Therefore final leaf number is given a default value for each cu
         <string>[Potato].Stem.Dead.NConc</string>
         <string>[Potato].Stem.Live.N</string>
         <string>[Potato].Stem.Live.NConc</string>
-        <string>[Potato].Stem.Live.NonStructuralWt</string>
+        <string>[Potato].Stem.Live.StorageWt</string>
         <string>[Potato].Stem.Live.StructuralWt</string>
         <string>[Potato].Stem.Live.Wt</string>
         <string>[Potato].Stem.MaximumNConc.Value()</string>
@@ -3283,7 +3273,7 @@ namespace Models
 			FinalTag = "";   
 			
 			if (SetFinalLeafNumber > 0)
-				zone.Set("Potato.Structure.MainStemFinalNodeNumber.FixedValue", SetFinalLeafNumber);
+				zone.Set("Potato.Structure.FinalLeafNumber.FixedValue", SetFinalLeafNumber);
 			if (SetFinalLeafNumber > 80)
 				Summary.WriteWarning(this, "Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in" + this.Name);
 		}
@@ -5115,7 +5105,7 @@ namespace Models
 			FinalTag = "";   
 			
 			if (SetFinalLeafNumber > 0)
-				zone.Set("Potato.Structure.MainStemFinalNodeNumber.FixedValue", SetFinalLeafNumber);
+				zone.Set("Potato.Structure.FinalLeafNumber.FixedValue", SetFinalLeafNumber);
 			if (SetFinalLeafNumber > 80)
 				Summary.WriteWarning(this, "Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in" + this.Name);
 		}
@@ -6374,7 +6364,7 @@ namespace Models
 			FinalTag = "";   
 			
 			if (SetFinalLeafNumber > 0)
-				zone.Set("Potato.Structure.MainStemFinalNodeNumber.FixedValue", SetFinalLeafNumber);
+				zone.Set("Potato.Structure.FinalLeafNumber.FixedValue", SetFinalLeafNumber);
 			if (SetFinalLeafNumber > 80)
 				Summary.WriteWarning(this, "Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in" + this.Name);
 		}
@@ -7966,7 +7956,7 @@ namespace Models
 			FinalTag = "";   
 			
 			if (SetFinalLeafNumber > 0)
-				zone.Set("Potato.Structure.MainStemFinalNodeNumber.FixedValue", SetFinalLeafNumber);
+				zone.Set("Potato.Structure.FinalLeafNumber.FixedValue", SetFinalLeafNumber);
 			if (SetFinalLeafNumber > 80)
 				Summary.WriteWarning(this, "Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in" + this.Name);
 		}
@@ -9400,7 +9390,7 @@ namespace Models
               <Name>SetIntergerCropParameter</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <Script>
-                <OverRidePath>Potato.Structure.MainStemFinalNodeNumber.FixedValue</OverRidePath>
+                <OverRidePath>Potato.Structure.FinalLeafNumber.FixedValue</OverRidePath>
                 <OverRideInterger>10</OverRideInterger>
               </Script>
               <Code><![CDATA[using System;
@@ -10640,7 +10630,7 @@ namespace Models
 			FinalTag = "";   
 			
 			if (SetFinalLeafNumber > 0)
-				zone.Set("Potato.Structure.MainStemFinalNodeNumber.FixedValue", SetFinalLeafNumber);
+				zone.Set("Potato.Structure.FinalLeafNumber.FixedValue", SetFinalLeafNumber);
 			if (SetFinalLeafNumber > 80)
 				Summary.WriteWarning(this, "Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in" + this.Name);
 		}
@@ -13047,7 +13037,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                     <VariableReference>
                       <Name>Phyllochron</Name>
                       <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value()</VariableName>
+                      <VariableName>[Structure].Phyllochron.Phyllochron.Value()</VariableName>
                     </VariableReference>
                     <Constant>
                       <Name>PrimordiaPerMainstemNode</Name>
@@ -13061,7 +13051,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <End>FinalLeaf</End>
                 </PhaseLookupValue>
                 <PhaseLookupValue>
-                  <Name>MainStemNodeAppearanceRate</Name>
+                  <Name>Phyllochron</Name>
                   <LinearInterpolationFunction>
                     <Name>Phyllochron</Name>
                     <XYPairs>
@@ -13090,7 +13080,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <End>FinalLeaf</End>
                 </PhaseLookupValue>
                 <Constant>
-                  <Name>MainStemFinalNodeNumber</Name>
+                  <Name>FinalLeafNumber</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>34</FixedValue>
                 </Constant>
@@ -13597,10 +13587,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
                   <MetabolicNReallocated>0</MetabolicNReallocated>
                   <MetabolicWtReallocated>0</MetabolicWtReallocated>
-                  <NonStructuralNReallocated>0</NonStructuralNReallocated>
-                  <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+                  <StorageNReallocated>0</StorageNReallocated>
+                  <StorageWtReallocated>0</StorageWtReallocated>
                   <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-                  <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+                  <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
                   <DMRetranslocated>0</DMRetranslocated>
                   <MetabolicNAllocation>0</MetabolicNAllocation>
                   <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -13625,10 +13615,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
                   <MetabolicNReallocated>0</MetabolicNReallocated>
                   <MetabolicWtReallocated>0</MetabolicWtReallocated>
-                  <NonStructuralNReallocated>0</NonStructuralNReallocated>
-                  <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+                  <StorageNReallocated>0</StorageNReallocated>
+                  <StorageWtReallocated>0</StorageWtReallocated>
                   <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-                  <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+                  <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
                   <DMRetranslocated>0</DMRetranslocated>
                   <MetabolicNAllocation>0</MetabolicNAllocation>
                   <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -13653,10 +13643,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
                   <MetabolicNReallocated>0</MetabolicNReallocated>
                   <MetabolicWtReallocated>0</MetabolicWtReallocated>
-                  <NonStructuralNReallocated>0</NonStructuralNReallocated>
-                  <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+                  <StorageNReallocated>0</StorageNReallocated>
+                  <StorageWtReallocated>0</StorageWtReallocated>
                   <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-                  <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+                  <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
                   <DMRetranslocated>0</DMRetranslocated>
                   <MetabolicNAllocation>0</MetabolicNAllocation>
                   <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -13874,7 +13864,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                     <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
                   </LinearInterpolationFunction>
                   <Constant>
-                    <Name>NonStructuralFraction</Name>
+                    <Name>StorageFraction</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <FixedValue>0.2</FixedValue>
                   </Constant>
@@ -14319,7 +14309,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Cultivar>
                 <Name>JerseyBenny</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 19</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 19</Command>
                 <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,10,11</Command>
                 <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
                 <Command>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.FixedValue = 3</Command>
@@ -14328,27 +14318,27 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Cultivar>
                 <Name>IlamHardy</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 26</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 26</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.18</Command>
                 <Command>[Phenology].Vegetative.Target.FixedValue = 200</Command>
               </Cultivar>
               <Cultivar>
                 <Name>Horizon</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 28</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 28</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.12,0.16</Command>
               </Cultivar>
               <Cultivar>
                 <Name>Karaka</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
                 <Command />
               </Cultivar>
               <Cultivar>
                 <Name>Nooksac</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 36</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 36</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
                 <Command />
               </Cultivar>
@@ -14361,24 +14351,24 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Cultivar>
                 <Name>Rua</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
-                <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1</Command>
-                <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.Y = 5,40,40,60,60</Command>
+                <Command>[Structure].Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1</Command>
+                <Command>[Structure].Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60</Command>
                 <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,20,21</Command>
                 <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
               </Cultivar>
               <Cultivar>
                 <Name>Nadine</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.11,0.15</Command>
                 <Command />
               </Cultivar>
               <Cultivar>
                 <Name>RussetBurbank</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 34</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 34</Command>
               </Cultivar>
               <Cultivar>
                 <Name>Coliban</Name>
@@ -14901,7 +14891,7 @@ namespace Models
 			FinalTag = "";   
 			
 			if (SetFinalLeafNumber > 0)
-				zone.Set("Potato.Structure.MainStemFinalNodeNumber.FixedValue", SetFinalLeafNumber);
+				zone.Set("Potato.Structure.FinalLeafNumber.FixedValue", SetFinalLeafNumber);
 			if (SetFinalLeafNumber > 80)
 				Summary.WriteWarning(this, "Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in" + this.Name);
 		}
@@ -16622,7 +16612,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                     <VariableReference>
                       <Name>Phyllochron</Name>
                       <IncludeInDocumentation>true</IncludeInDocumentation>
-                      <VariableName>[Structure].MainStemNodeAppearanceRate.Phyllochron.Value()</VariableName>
+                      <VariableName>[Structure].Phyllochron.Phyllochron.Value()</VariableName>
                     </VariableReference>
                     <Constant>
                       <Name>PrimordiaPerMainstemNode</Name>
@@ -16636,7 +16626,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <End>FinalLeaf</End>
                 </PhaseLookupValue>
                 <PhaseLookupValue>
-                  <Name>MainStemNodeAppearanceRate</Name>
+                  <Name>Phyllochron</Name>
                   <LinearInterpolationFunction>
                     <Name>Phyllochron</Name>
                     <XYPairs>
@@ -16665,7 +16655,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <End>FinalLeaf</End>
                 </PhaseLookupValue>
                 <Constant>
-                  <Name>MainStemFinalNodeNumber</Name>
+                  <Name>FinalLeafNumber</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <FixedValue>34</FixedValue>
                 </Constant>
@@ -17168,10 +17158,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
                   <MetabolicNReallocated>0</MetabolicNReallocated>
                   <MetabolicWtReallocated>0</MetabolicWtReallocated>
-                  <NonStructuralNReallocated>0</NonStructuralNReallocated>
-                  <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+                  <StorageNReallocated>0</StorageNReallocated>
+                  <StorageWtReallocated>0</StorageWtReallocated>
                   <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-                  <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+                  <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
                   <DMRetranslocated>0</DMRetranslocated>
                   <MetabolicNAllocation>0</MetabolicNAllocation>
                   <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -17196,10 +17186,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
                   <MetabolicNReallocated>0</MetabolicNReallocated>
                   <MetabolicWtReallocated>0</MetabolicWtReallocated>
-                  <NonStructuralNReallocated>0</NonStructuralNReallocated>
-                  <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+                  <StorageNReallocated>0</StorageNReallocated>
+                  <StorageWtReallocated>0</StorageWtReallocated>
                   <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-                  <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+                  <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
                   <DMRetranslocated>0</DMRetranslocated>
                   <MetabolicNAllocation>0</MetabolicNAllocation>
                   <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -17224,10 +17214,10 @@ The duration of a potato crop is determined by the number of leaves that the mai
                   <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
                   <MetabolicNReallocated>0</MetabolicNReallocated>
                   <MetabolicWtReallocated>0</MetabolicWtReallocated>
-                  <NonStructuralNReallocated>0</NonStructuralNReallocated>
-                  <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+                  <StorageNReallocated>0</StorageNReallocated>
+                  <StorageWtReallocated>0</StorageWtReallocated>
                   <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-                  <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+                  <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
                   <DMRetranslocated>0</DMRetranslocated>
                   <MetabolicNAllocation>0</MetabolicNAllocation>
                   <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -17445,7 +17435,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
                     <XProperty>[Leaf].CohortCurrentRankCoverAbove</XProperty>
                   </LinearInterpolationFunction>
                   <Constant>
-                    <Name>NonStructuralFraction</Name>
+                    <Name>StorageFraction</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <FixedValue>0.2</FixedValue>
                   </Constant>
@@ -17888,7 +17878,7 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Cultivar>
                 <Name>JerseyBenny</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 19</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 19</Command>
                 <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,10,11</Command>
                 <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
                 <Command>[Tuber].DMDemandFunction.OrganNumber.OrganNumberPerStem.FixedValue = 3</Command>
@@ -17897,27 +17887,27 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Cultivar>
                 <Name>IlamHardy</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 26</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 26</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.18</Command>
                 <Command>[Phenology].Vegetative.Target.FixedValue = 200</Command>
               </Cultivar>
               <Cultivar>
                 <Name>Horizon</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 28</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 28</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.12,0.16</Command>
               </Cultivar>
               <Cultivar>
                 <Name>Karaka</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2</Command>
                 <Command />
               </Cultivar>
               <Cultivar>
                 <Name>Nooksac</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 36</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 36</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
                 <Command />
               </Cultivar>
@@ -17930,24 +17920,24 @@ The duration of a potato crop is determined by the number of leaves that the mai
               <Cultivar>
                 <Name>Rua</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21</Command>
-                <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1</Command>
-                <Command>[Structure].MainStemNodeAppearanceRate.Phyllochron.XYPairs.Y = 5,40,40,60,60</Command>
+                <Command>[Structure].Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1</Command>
+                <Command>[Structure].Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60</Command>
                 <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.X = 0,6,7,20,21</Command>
                 <Command>[Structure].BranchingRate.Potential_Branching_Rate.XYPairs.Y = 0,0,0.5,0.5,0</Command>
               </Cultivar>
               <Cultivar>
                 <Name>Nadine</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 29</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 29</Command>
                 <Command>[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.11,0.15</Command>
                 <Command />
               </Cultivar>
               <Cultivar>
                 <Name>RussetBurbank</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <Command>[Structure].MainStemFinalNodeNumber.FixedValue = 34</Command>
+                <Command>[Structure].FinalLeafNumber.FixedValue = 34</Command>
               </Cultivar>
               <Cultivar>
                 <Name>Coliban</Name>
@@ -18566,7 +18556,7 @@ namespace Models
 			FinalTag = "";   
 			
 			if (SetFinalLeafNumber > 0)
-				zone.Set("Potato.Structure.MainStemFinalNodeNumber.FixedValue", SetFinalLeafNumber);
+				zone.Set("Potato.Structure.FinalLeafNumber.FixedValue", SetFinalLeafNumber);
 			if (SetFinalLeafNumber > 80)
 				Summary.WriteWarning(this, "Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in" + this.Name);
 		}
