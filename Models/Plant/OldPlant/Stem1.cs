@@ -160,7 +160,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return MathUtilities.Constrain(Live.NonStructuralWt, 0.0, double.MaxValue);
+                return MathUtilities.Constrain(Live.StorageWt, 0.0, double.MaxValue);
             }
         }
         /// <summary>Gets the DLT dm pot rue.</summary>
@@ -184,9 +184,9 @@ namespace Models.PMF.OldPlant
         public override void GiveDmGreen(double Delta)
         {
             Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value();
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value());
+            Growth.StorageWt += Delta * (1.0 - GrowthStructuralFractionStage.Value());
             Util.Debug("Stem.Growth.StructuralWt=%f", Growth.StructuralWt);
-            Util.Debug("Stem.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
+            Util.Debug("Stem.Growth.StorageWt=%f", Growth.StorageWt);
         }
         /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
@@ -194,9 +194,9 @@ namespace Models.PMF.OldPlant
             double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value(), 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
-            Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
+            Senescing.StorageWt = (Live.StorageWt + Growth.StorageWt + Retranslocation.StorageWt) * fraction_senescing;
             Util.Debug("Stem.Senescing.StructuralWt=%f", Senescing.StructuralWt);
-            Util.Debug("Stem.Senescing.NonStructuralWt=%f", Senescing.NonStructuralWt);
+            Util.Debug("Stem.Senescing.StorageWt=%f", Senescing.StorageWt);
         }
         /// <summary>Does the detachment.</summary>
         public override void DoDetachment()
@@ -292,7 +292,7 @@ namespace Models.PMF.OldPlant
             Util.CalcNDemand(dltDmPotRue, dltDmPotRue, n_conc_crit, n_conc_max, Growth, Live, Retranslocation.N, 1.0,
                        ref _NDemand, ref NMax);
             Growth.StructuralWt = 0.0;
-            Growth.NonStructuralWt = 0.0;
+            Growth.StorageWt = 0.0;
             Util.Debug("Stem.NDemand=%f", _NDemand);
             Util.Debug("Stem.NMax=%f", NMax);
         }

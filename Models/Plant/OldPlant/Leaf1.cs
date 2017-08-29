@@ -439,7 +439,7 @@ namespace Models.PMF.OldPlant
         {
             get
             {
-                return MathUtilities.Constrain(Live.NonStructuralWt, 0.0, double.MaxValue);
+                return MathUtilities.Constrain(Live.StorageWt, 0.0, double.MaxValue);
             }
         }
         /// <summary>Gets the DLT dm pot rue.</summary>
@@ -470,9 +470,9 @@ namespace Models.PMF.OldPlant
         public override void GiveDmGreen(double Delta)
         {
             Growth.StructuralWt += Delta * GrowthStructuralFractionStage.Value();
-            Growth.NonStructuralWt += Delta * (1.0 - GrowthStructuralFractionStage.Value());
+            Growth.StorageWt += Delta * (1.0 - GrowthStructuralFractionStage.Value());
             Util.Debug("Leaf.Growth.StructuralWt=%f", Growth.StructuralWt);
-            Util.Debug("Leaf.Growth.NonStructuralWt=%f", Growth.NonStructuralWt);
+            Util.Debug("Leaf.Growth.StorageWt=%f", Growth.StorageWt);
         }
         /// <summary>Does the senescence.</summary>
         public override void DoSenescence()
@@ -480,9 +480,9 @@ namespace Models.PMF.OldPlant
             double fraction_senescing = MathUtilities.Constrain(DMSenescenceFraction.Value(), 0.0, 1.0);
 
             Senescing.StructuralWt = (Live.StructuralWt + Growth.StructuralWt + Retranslocation.StructuralWt) * fraction_senescing;
-            Senescing.NonStructuralWt = (Live.NonStructuralWt + Growth.NonStructuralWt + Retranslocation.NonStructuralWt) * fraction_senescing;
+            Senescing.StorageWt = (Live.StorageWt + Growth.StorageWt + Retranslocation.StorageWt) * fraction_senescing;
             Util.Debug("Leaf.Senescing.StructuralWt=%f", Senescing.StructuralWt);
-            Util.Debug("Leaf.Senescing.NonStructuralWt=%f", Senescing.NonStructuralWt);
+            Util.Debug("Leaf.Senescing.StorageWt=%f", Senescing.StorageWt);
 
         }
         /// <summary>Does the detachment.</summary>
@@ -540,7 +540,7 @@ namespace Models.PMF.OldPlant
             {
                 // keep dm above a minimum
                 Live.StructuralWt = Live.StructuralWt * dm_init / Live.Wt;
-                Live.NonStructuralWt = Live.NonStructuralWt * dm_init / Live.Wt;
+                Live.StorageWt = Live.StorageWt * dm_init / Live.Wt;
             }
             if (Live.N < n_init)
             {
@@ -621,7 +621,7 @@ namespace Models.PMF.OldPlant
             Util.CalcNDemand(dltDmPotRue, dltDmPotRue, n_conc_crit, n_conc_max, Growth, Live, Retranslocation.N, 1.0,
                        ref _NDemand, ref NMax);
             Growth.StructuralWt = 0.0;
-            Growth.NonStructuralWt = 0.0;
+            Growth.StorageWt = 0.0;
             Util.Debug("Leaf.NDemand=%f", _NDemand);
             Util.Debug("Leaf.NMax=%f", NMax);
         }

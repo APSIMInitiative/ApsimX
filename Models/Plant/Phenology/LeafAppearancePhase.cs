@@ -10,7 +10,7 @@ using Models.PMF.Struct;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// It continues until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate (Structure.MainStemNodeAppearanceRate) and the number of leaves produced on the mainstem (Structure.MainStemFinalNodeNumber). As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure model) are important for predicting the duration of the crop correctly.
+    /// This phase extends from the end of the previous phase until the final main-stem leaf has finished expansion.  The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron) and the number of leaves produced on the mainstem (Structure.FinalLeafNumber). As such, the model parameterisation of leaf appearance and final leaf number (set in the Structure model) are important for predicting the duration of the crop correctly.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -71,7 +71,7 @@ namespace Models.PMF.Phen
                 if (Leaf != null)
                 {
                     LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value() - RemainingLeaves - LeafNoAtStart;
+                    TargetLeafForCompletion = Structure.FinalLeafNumber.Value() - RemainingLeaves - LeafNoAtStart;
                 }
                 else
                 {
@@ -112,7 +112,7 @@ namespace Models.PMF.Phen
                 if (Leaf != null)
                 {
                     LeafNoAtStart = Leaf.ExpandedCohortNo + Leaf.NextExpandingLeafProportion;
-                    TargetLeafForCompletion = Structure.MainStemFinalNodeNumber.Value() - RemainingLeaves - LeafNoAtStart;
+                    TargetLeafForCompletion = Structure.FinalLeafNumber.Value() - RemainingLeaves - LeafNoAtStart;
                 }
                 else
                 {
