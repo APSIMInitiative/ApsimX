@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -705,7 +705,7 @@ A function used to provide maturity date as the number days after sowing (DAS).]
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <Memo>
             <Name>Rational</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1046,7 +1046,7 @@ This (above) was used for oats. We probably need to adjust for barley.]]></MemoT
           <VariableReference>
             <Name>Phyllochron</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Structure].Phyllochron.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
@@ -1059,7 +1059,7 @@ This (above) was used for oats. We probably need to adjust for barley.]]></MemoT
             <VariableReference>
               <Name>FinalLeafNumber</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+              <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>Intercept</Name>
@@ -1144,7 +1144,7 @@ This (above) was used for oats. We probably need to adjust for barley.]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <MinimumFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1280,7 +1280,7 @@ TSLN = FLN*0.995 - 1.95 ]]></MemoText>
               <VariableReference>
                 <Name>FLN</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+                <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>PS</Name>
@@ -1962,10 +1962,10 @@ N conc values are from Zhao et al 2009
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1990,10 +1990,10 @@ N conc values are from Zhao et al 2009
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -2206,7 +2206,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -2219,7 +2219,7 @@ N conc values are from Zhao et al 2009
                 <VariableReference>
                   <Name>Phyllochron</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                  <VariableName>[Structure].Phyllochron.Value()</VariableName>
                 </VariableReference>
                 <LinearInterpolationFunction>
                   <Name>AgeFactor</Name>
@@ -2316,7 +2316,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>AgeFactor</Name>
@@ -2416,7 +2416,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>LinearInterpolationFunction</Name>
@@ -2700,7 +2700,7 @@ N conc values are from Zhao et al 2009
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.5</FixedValue>
           </Constant>
@@ -3541,7 +3541,7 @@ N conc values are from Zhao et al 2009
           <VariableReference>
             <Name>WSC</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Stem].Live.NonStructuralWt</VariableName>
+            <VariableName>[Stem].Live.StorageWt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>StemWt</Name>
@@ -3849,7 +3849,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Barley</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>DailyReport</Name>
@@ -3924,12 +3923,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Barley].Spike.N</string>
         <string>[Barley].Spike.NConc</string>
         <string>[Barley].Spike.Wt</string>
-        <string>[Barley].Spike.Live.NonStructuralWt</string>
+        <string>[Barley].Spike.Live.StorageWt</string>
         <string>[Barley].Stem.N</string>
         <string>[Barley].Stem.NConc</string>
         <string>[Barley].Stem.Wt</string>
         <string>[Barley].Stem.PercentWSC</string>
-        <string>[Barley].Stem.Live.NonStructuralWt</string>
+        <string>[Barley].Stem.Live.StorageWt</string>
         <string>[Barley].StemPlusSpike.Wt</string>
         <string>[Barley].StemPlusSpike.N</string>
         <string>[Barley].SowingData.Cultivar</string>
@@ -3937,8 +3936,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Barley].Structure.HaunStage.Value()</string>
         <string>[Barley].Structure.Height</string>
         <string>[Barley].Structure.LeafTipsAppeared</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-        <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+        <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+        <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
         <string>[Barley].Structure.MainStemPopn</string>
         <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
         <string>[Barley].Structure.TotalStemPopn</string>
@@ -3966,15 +3965,35 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </EventNames>
     </Report>
     <Report>
-      <Name>EndTrialReport</Name>
+      <Name>HarvestReport</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
-        <string />
+        <string>[Clock].Today</string>
+        <string>[Barley].Phenology.CurrentPhaseName</string>
+        <string>[Barley].Phenology.CurrentStageName</string>
+        <string>[Barley].Phenology.FlagLeafDAS.Value()</string>
+        <string>[Barley].Phenology.FloweringDAS.Value()</string>
+        <string>[Barley].Phenology.MaturityDAS.Value()</string>
+        <string>[Barley].Grain.Wt</string>
+        <string>[Barley].Grain.N</string>
+        <string>[Barley].Grain.Number</string>
+        <string>[Barley].Grain.Nconc</string>
+        <string>[Barley].AboveGround.Wt</string>
+        <string>[Barley].AboveGround.N</string>
+        <string>[Barley].Grain.Protein</string>
+        <string>[Barley].Grain.Size</string>
+        <string>[Barley].Structure.HaunStage.Value()TerminalSpikelet.Value()</string>
+        <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+        <string>[Barley].Structure.MainStemPopn</string>
+        <string>[Barley].SowingData.Cultivar</string>
+        <string>[Barley].SowingDate.DayOfYear</string>
+        <string>[Barley].Leaf.CohortMaxSize</string>
+        <string>[Clock].StartDate</string>
       </VariableNames>
       <EventNames>
-        <string>[Clock].EndOfSimulation</string>
+        <string>[Barley].Harvesting</string>
       </EventNames>
     </Report>
     <Plant>
@@ -4396,7 +4415,7 @@ Where MinLeafNumber is the number of leaves that a Barley crop will produce when
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.BasePhyllochron.Value()</VariableName>
             </VariableReference>
             <AddFunction>
               <Name>Phyllochrons</Name>
@@ -4597,7 +4616,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <Memo>
             <Name>Rational</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4900,14 +4919,14 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableReference>
             <Name>Phyllochron</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Structure].Phyllochron.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
           <InitialValue>80</InitialValue>
         </MovingAverageFunction>
         <HoldFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <AddFunction>
             <Name>FinalNodeNumber</Name>
             <VariableReference>
@@ -4977,7 +4996,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <MemoText><![CDATA[The Haun stage at which Terminal Spikelet occurs is determined from final leaf number using the approach described in [Brown_Anthesis_2013].]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Expression>([Structure].MainStemFinalNodeNumber.Value() - 2.85)/1.1</Expression>
+          <Expression>([Structure].FinalLeafNumber.Value() - 2.85)/1.1</Expression>
         </ExpressionFunction>
         <AddFunction>
           <Name>HaunStage</Name>
@@ -5592,10 +5611,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -5620,10 +5639,10 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -5829,7 +5848,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -5902,7 +5921,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -6114,7 +6133,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
@@ -6793,7 +6812,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableReference>
             <Name>WSC</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Stem].Live.NonStructuralWt</VariableName>
+            <VariableName>[Stem].Live.StorageWt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>StemWt</Name>
@@ -6953,7 +6972,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Boss</Name>
@@ -6961,7 +6980,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Cellar</Name>
@@ -6969,7 +6988,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>County</Name>
@@ -6977,7 +6996,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 75</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 75</Command>
         </Cultivar>
         <Cultivar>
           <Name>Dash</Name>
@@ -6990,7 +7009,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Grimmett</Name>
@@ -6998,7 +7017,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Hooded</Name>
@@ -7006,7 +7025,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Omaka</Name>
@@ -7014,7 +7033,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 70</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 70</Command>
           <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000</Command>
         </Cultivar>
         <Cultivar>
@@ -7023,7 +7042,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Pyramid</Name>
@@ -7031,7 +7050,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Quench</Name>
@@ -7039,7 +7058,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Retriever</Name>
@@ -7047,7 +7066,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Sherwood</Name>
@@ -7055,7 +7074,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 68</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 68</Command>
         </Cultivar>
         <Cultivar>
           <Name>Tavern</Name>
@@ -7063,7 +7082,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Triumph</Name>
@@ -7071,7 +7090,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 110</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 110</Command>
           <Command>[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 2,4,4,1,1,1,1,1</Command>
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
         </Cultivar>
@@ -7081,7 +7100,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2800</Command>
         </Cultivar>
         <Cultivar>
@@ -7089,7 +7108,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Bumpa</Name>
@@ -7101,66 +7120,66 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Baudin</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Buloke</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Capstan</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Commander</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Fleet</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Hindmarsh</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Keel</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 6</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Oxford</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
-            <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
+            <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </CultivarFolder>
@@ -7168,12 +7187,19 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Barley</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
+    <ExcelInput>
+      <Name>Observed</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>Observed.xlsx</FileName>
+      <SheetNames>
+        <string>Observed</string>
+      </SheetNames>
+    </ExcelInput>
     <Input>
       <Name>BaselineData</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7441,14 +7467,20 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\BarleyBaseline.txt</ErrorMessa
       <ObservedTableName>BaselineData</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
-    <ExcelInput>
-      <Name>Observed</Name>
+    <PredictedObserved>
+      <Name>HarvestObsPred</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>Observed.xlsx</FileName>
-      <SheetNames>
-        <string>ObservedPhenology</string>
-      </SheetNames>
-    </ExcelInput>
+      <PredictedTableName>HarvestReport</PredictedTableName>
+      <ObservedTableName>Observed</ObservedTableName>
+      <FieldNameUsedForMatch>Barley.Phenology.CurrentStageName</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>DailyObsPred</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <PredictedTableName>DailyReport</PredictedTableName>
+      <ObservedTableName>Observed</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>5000</MaximumResultsPerPage>
@@ -9456,7 +9488,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -9766,12 +9797,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -9779,8 +9810,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -9805,13 +9836,13 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -14550,7 +14581,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -14844,12 +14874,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -14857,8 +14887,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -14880,13 +14910,13 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -17678,7 +17708,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -17747,8 +17776,8 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <CropToSow>Dash</CropToSow>
                   <InitialRootDepth>40</InitialRootDepth>
+                  <CropToSow>Dash</CropToSow>
                   <SowingDate>2014-10-14</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
@@ -18032,12 +18061,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -18045,8 +18074,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -18070,13 +18099,13 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -20061,7 +20090,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -20193,12 +20221,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -20206,8 +20234,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -20231,13 +20259,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -20255,9 +20283,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Boss</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -21457,7 +21485,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -21524,9 +21551,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2004-05-28</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Cellar</Cultivar>
+                  <SowingDate>2004-05-28</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -21681,12 +21708,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -21694,8 +21721,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -21718,13 +21745,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -22826,7 +22853,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -22958,12 +22984,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -22971,8 +22997,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -22995,13 +23021,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -23019,9 +23045,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>County</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -24202,7 +24228,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -24334,12 +24359,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -24347,8 +24372,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -24371,13 +24396,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -24428,9 +24453,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -25864,7 +25889,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -25931,9 +25955,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2004-05-28</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Doyen</Cultivar>
+                  <SowingDate>2004-05-28</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -26088,12 +26112,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -26101,8 +26125,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -26125,13 +26149,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -27226,7 +27250,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -27358,12 +27381,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -27371,8 +27394,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -27395,13 +27418,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -27419,9 +27442,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Omaka</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -28670,7 +28693,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -28802,12 +28824,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -28815,8 +28837,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -28839,13 +28861,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -28896,9 +28918,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Optic</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -30025,7 +30047,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -30157,12 +30178,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -30170,8 +30191,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -30194,13 +30215,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -30251,9 +30272,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2005-05-27</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Pyramid</Cultivar>
+                  <SowingDate>2005-05-27</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -31401,7 +31422,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -31533,12 +31553,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -31546,8 +31566,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -31570,13 +31590,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -31594,9 +31614,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Sherwood</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -32777,7 +32797,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -32909,12 +32928,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -32922,8 +32941,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -32946,13 +32965,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -32970,9 +32989,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Tavern</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -34146,7 +34165,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -34278,12 +34296,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -34291,8 +34309,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -34315,13 +34333,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -34339,9 +34357,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <SowingDate>2003-05-21</SowingDate>
                   <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Vortex</Cultivar>
+                  <SowingDate>2003-05-21</SowingDate>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -35845,7 +35863,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -36063,12 +36080,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -36076,8 +36093,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -36100,13 +36117,13 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -38044,7 +38061,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -38358,12 +38374,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -38371,8 +38387,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -38395,13 +38411,13 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -41092,7 +41108,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -41406,12 +41421,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -41419,8 +41434,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -41443,13 +41458,13 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -43281,7 +43296,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -43595,12 +43609,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -43608,8 +43622,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -43632,13 +43646,13 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -45646,7 +45660,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -45960,12 +45973,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -45973,8 +45986,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -45997,13 +46010,13 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -47938,7 +47951,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -48203,12 +48215,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -48216,8 +48228,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -48240,13 +48252,13 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -50147,7 +50159,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -50420,12 +50431,12 @@ namespace Models
                 <string>[Barley].Spike.N</string>
                 <string>[Barley].Spike.NConc</string>
                 <string>[Barley].Spike.Wt</string>
-                <string>[Barley].Spike.Live.NonStructuralWt</string>
+                <string>[Barley].Spike.Live.StorageWt</string>
                 <string>[Barley].Stem.N</string>
                 <string>[Barley].Stem.NConc</string>
                 <string>[Barley].Stem.Wt</string>
                 <string>[Barley].Stem.PercentWSC</string>
-                <string>[Barley].Stem.Live.NonStructuralWt</string>
+                <string>[Barley].Stem.Live.StorageWt</string>
                 <string>[Barley].StemPlusSpike.Wt</string>
                 <string>[Barley].StemPlusSpike.N</string>
                 <string>[Barley].SowingData.Cultivar</string>
@@ -50433,8 +50444,8 @@ namespace Models
                 <string>[Barley].Structure.HaunStage.Value()</string>
                 <string>[Barley].Structure.Height</string>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                 <string>[Barley].Structure.MainStemPopn</string>
                 <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                 <string>[Barley].Structure.TotalStemPopn</string>
@@ -50457,13 +50468,13 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Barley].Structure.LeafTipsAppeared</string>
-                <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                <string>[Barley].Structure.FinalLeafNumber</string>
                 <string>[Barley].Phenology.FlagLeafDAS</string>
                 <string>[Barley].Phenology.FloweringDAS</string>
                 <string>[Barley].Phenology.MaturityDAS</string>
@@ -52278,15 +52289,16 @@ namespace Models
                 </Manager>
                 <Manager>
                   <Name>Harvesting</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Script>
-                    <Crop>Barley</Crop>
-                  </Script>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
                   <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF;
+using System.Collections.Generic;
+using System.Text;
 using Models.Soils;
-using Models.Utilities;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -52294,19 +52306,15 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Description("Crop")]
-		public ICrop Crop { get; set; }
-        
-       
+		[Link] Plant Barley;
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-		    if (Crop!=null)
-    			if (Crop.IsReadyForHarvesting)
-	   		{
-	   			Crop.Harvest();
-	   			Crop.EndCrop();
-	   		}
+			if (Barley.Phenology.CurrentPhaseName == "Ripening")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
 		}
 	}
 }
@@ -52320,7 +52328,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>SurfaceOrganicMatter</Name>
@@ -52753,12 +52760,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -52766,8 +52773,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -52790,13 +52797,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -53169,9 +53176,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -53235,9 +53242,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -53306,7 +53313,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -53372,7 +53379,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -53402,6 +53409,100 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
+          <Graph>
+            <Name>Time To Flag Leaf</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Time To Maturity</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.MaturityDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.MaturityDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Experiment>
         <Experiment>
@@ -53666,15 +53767,16 @@ namespace Models
                 </Manager>
                 <Manager>
                   <Name>Harvesting</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Script>
-                    <Crop>Barley</Crop>
-                  </Script>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
                   <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF;
+using System.Collections.Generic;
+using System.Text;
 using Models.Soils;
-using Models.Utilities;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -53682,19 +53784,15 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Description("Crop")]
-		public ICrop Crop { get; set; }
-        
-       
+		[Link] Plant Barley;
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-		    if (Crop!=null)
-    			if (Crop.IsReadyForHarvesting)
-	   		{
-	   			Crop.Harvest();
-	   			Crop.EndCrop();
-	   		}
+			if (Barley.Phenology.CurrentPhaseName == "Ripening")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
 		}
 	}
 }
@@ -53708,7 +53806,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>SurfaceOrganicMatter</Name>
@@ -54136,12 +54233,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -54149,8 +54246,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -54173,13 +54270,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -54552,9 +54649,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -54618,9 +54715,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -54689,7 +54786,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -54755,7 +54852,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -54785,6 +54882,100 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
+          <Graph>
+            <Name>Time To Flag Leaf</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Time To Maturity</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.MaturityDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.MaturityDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Experiment>
         <Experiment>
@@ -55049,15 +55240,16 @@ namespace Models
                 </Manager>
                 <Manager>
                   <Name>Harvesting</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Script>
-                    <Crop>Barley</Crop>
-                  </Script>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
                   <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF;
+using System.Collections.Generic;
+using System.Text;
 using Models.Soils;
-using Models.Utilities;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -55065,19 +55257,15 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Description("Crop")]
-		public ICrop Crop { get; set; }
-        
-       
+		[Link] Plant Barley;
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-		    if (Crop!=null)
-    			if (Crop.IsReadyForHarvesting)
-	   		{
-	   			Crop.Harvest();
-	   			Crop.EndCrop();
-	   		}
+			if (Barley.Phenology.CurrentPhaseName == "Ripening")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
 		}
 	}
 }
@@ -55091,7 +55279,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>SurfaceOrganicMatter</Name>
@@ -55483,12 +55670,12 @@ namespace Models
                   <string>[Barley].Spike.N</string>
                   <string>[Barley].Spike.NConc</string>
                   <string>[Barley].Spike.Wt</string>
-                  <string>[Barley].Spike.Live.NonStructuralWt</string>
+                  <string>[Barley].Spike.Live.StorageWt</string>
                   <string>[Barley].Stem.N</string>
                   <string>[Barley].Stem.NConc</string>
                   <string>[Barley].Stem.Wt</string>
                   <string>[Barley].Stem.PercentWSC</string>
-                  <string>[Barley].Stem.Live.NonStructuralWt</string>
+                  <string>[Barley].Stem.Live.StorageWt</string>
                   <string>[Barley].StemPlusSpike.Wt</string>
                   <string>[Barley].StemPlusSpike.N</string>
                   <string>[Barley].SowingData.Cultivar</string>
@@ -55496,8 +55683,8 @@ namespace Models
                   <string>[Barley].Structure.HaunStage.Value()</string>
                   <string>[Barley].Structure.Height</string>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+                  <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
                   <string>[Barley].Structure.MainStemPopn</string>
                   <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
                   <string>[Barley].Structure.TotalStemPopn</string>
@@ -55520,13 +55707,13 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
                 <VariableNames>
                   <string>[Barley].Structure.LeafTipsAppeared</string>
-                  <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+                  <string>[Barley].Structure.FinalLeafNumber</string>
                   <string>[Barley].Phenology.FlagLeafDAS</string>
                   <string>[Barley].Phenology.FloweringDAS</string>
                   <string>[Barley].Phenology.MaturityDAS</string>
@@ -55899,9 +56086,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -55965,9 +56152,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -56036,7 +56223,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -56102,7 +56289,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -56132,8 +56319,243 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
+          <Graph>
+            <Name>Time To Flag Leaf</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Time To Maturity</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.MaturityDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.MaturityDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Experiment>
+        <Graph>
+          <Name>Time To Flag Leaf</Name>
+          <Series>
+            <Name>Series</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestObsPred</TableName>
+            <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
+            <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Time To Maturity</Name>
+          <Series>
+            <Name>Series</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestObsPred</TableName>
+            <XFieldName>Observed.Barley.Phenology.MaturityDAS.Value()</XFieldName>
+            <YFieldName>Predicted.Barley.Phenology.MaturityDAS.Value()</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Haun Stage</Name>
+          <Series>
+            <Name>Series</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyObsPred</TableName>
+            <XFieldName>Observed.Barley.Structure.HaunStage.Value()</XFieldName>
+            <YFieldName>Predicted.Barley.Structure.HaunStage.Value()</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -56836,7 +57258,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>Barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -56972,12 +57393,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -56985,8 +57406,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -57009,13 +57430,13 @@ namespace Models
             </EventNames>
           </Report>
           <Report>
-            <Name>EndTrialReport</Name>
+            <Name>HarvestReport</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
             <VariableNames>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber</string>
+              <string>[Barley].Structure.FinalLeafNumber</string>
               <string>[Barley].Phenology.FlagLeafDAS</string>
               <string>[Barley].Phenology.FloweringDAS</string>
               <string>[Barley].Phenology.MaturityDAS</string>
@@ -57791,7 +58212,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -58162,12 +58582,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -58175,8 +58595,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -58915,7 +59335,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -59278,12 +59697,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -59291,8 +59710,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -60039,7 +60458,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -60402,12 +60820,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -60415,8 +60833,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -61163,7 +61581,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -61526,12 +61943,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -61539,8 +61956,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -62243,7 +62660,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -62606,12 +63022,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -62619,8 +63035,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -62976,7 +63392,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>M Block92</Name>
@@ -63730,12 +64145,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -63743,8 +64158,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -64100,7 +64515,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>M Block92</Name>
@@ -64854,12 +65268,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -64867,8 +65281,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -65615,7 +66029,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -65978,12 +66391,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -65991,8 +66404,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -66670,7 +67083,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -67033,12 +67445,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -67046,8 +67458,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -68195,7 +68607,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -68558,12 +68969,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -68571,8 +68982,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -68928,7 +69339,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -69682,12 +70092,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -69695,8 +70105,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -70052,7 +70462,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -70806,12 +71215,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -70819,8 +71228,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -71176,7 +71585,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -71930,12 +72338,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -71943,8 +72351,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -72300,7 +72708,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -73058,12 +73465,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -73071,8 +73478,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -73424,7 +73831,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -73943,12 +74349,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -73956,8 +74362,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -74548,7 +74954,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -75302,12 +75707,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -75315,8 +75720,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
@@ -75716,7 +76121,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -76470,12 +76874,12 @@ namespace Models
               <string>[Barley].Spike.N</string>
               <string>[Barley].Spike.NConc</string>
               <string>[Barley].Spike.Wt</string>
-              <string>[Barley].Spike.Live.NonStructuralWt</string>
+              <string>[Barley].Spike.Live.StorageWt</string>
               <string>[Barley].Stem.N</string>
               <string>[Barley].Stem.NConc</string>
               <string>[Barley].Stem.Wt</string>
               <string>[Barley].Stem.PercentWSC</string>
-              <string>[Barley].Stem.Live.NonStructuralWt</string>
+              <string>[Barley].Stem.Live.StorageWt</string>
               <string>[Barley].StemPlusSpike.Wt</string>
               <string>[Barley].StemPlusSpike.N</string>
               <string>[Barley].SowingData.Cultivar</string>
@@ -76483,8 +76887,8 @@ namespace Models
               <string>[Barley].Structure.HaunStage.Value()</string>
               <string>[Barley].Structure.Height</string>
               <string>[Barley].Structure.LeafTipsAppeared</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.Value()</string>
-              <string>[Barley].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+              <string>[Barley].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
               <string>[Barley].Structure.MainStemPopn</string>
               <string>[Barley].Structure.MeanTillerGrowthRate.Value()</string>
               <string>[Barley].Structure.TotalStemPopn</string>
