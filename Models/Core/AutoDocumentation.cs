@@ -140,7 +140,7 @@ namespace Models.Core
                         }
                     }
                     else
-                        paragraphSoFar += line + "\r\n";
+                        paragraphSoFar += " " + line + "\r\n";
 
                     line = reader.ReadLine();
                 }
