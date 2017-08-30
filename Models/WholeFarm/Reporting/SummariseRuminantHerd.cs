@@ -21,7 +21,7 @@ namespace Models.WholeFarm
 	{
 		[Link]
 		private ResourcesHolder Resources = null;
-
+		private int timestep = 0;
 		/// <summary>
 		/// Report item was generated event handler
 		/// </summary>
@@ -51,8 +51,13 @@ namespace Models.WholeFarm
 		[EventSubscribe("WFHerdSummary")]
 		private void OnWFHerdSummary(object sender, EventArgs e)
 		{
+			timestep++;
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
 			List<Ruminant> herd = ruminantHerd.Herd;
+
+			// one individual
+			herd = herd.ToList();
+//			herd = herd.Where(a => a.ID == 3).ToList();
 
 			// group by breed
 			foreach (var breedGroup in herd.GroupBy(a => a.Breed))
@@ -63,16 +68,11 @@ namespace Models.WholeFarm
 					// group by sex
 					foreach (var sexGroup in herdGroup.GroupBy(a => a.Gender))
 					{
-						//// sucklings
-						//var sucklings = sexGroup.Where(a => !a.Weaned);
-						//if(sucklings.Count() > 0)
-						//{
-						//}
-
 						// weaned
 						foreach (var ageGroup in sexGroup.OrderBy(a => a.Age).GroupBy(a => Math.Truncate(a.Age / 12.0)))
 						{
 							ReportDetails = new HerdReportItemGeneratedEventArgs();
+							ReportDetails.TimeStep = timestep;
 							ReportDetails.Breed = breedGroup.Key;
 							ReportDetails.Herd = herdGroup.Key;
 							ReportDetails.Age = Convert.ToInt32(ageGroup.Key);
@@ -80,19 +80,39 @@ namespace Models.WholeFarm
 							ReportDetails.Number = ageGroup.Sum(a => a.Number);
 							ReportDetails.AverageWeight = ageGroup.Average(a => a.Weight);
 							ReportDetails.AverageWeightGain = ageGroup.Average(a => a.WeightGain);
-							ReportDetails.AverageIntake = ageGroup.Average(a => (a.Intake)); //now daily/30.4;
+							ReportDetails.AverageIntake = ageGroup.Average(a => (a.Intake+a.MilkIntake)); //now daily/30.4;
 							ReportDetails.AdultEquivalents = ageGroup.Sum(a => a.AdultEquivalent);
 							if(sexGroup.Key== Sex.Female)
 							{
 								ReportDetails.NumberPregnant = ageGroup.Cast<RuminantFemale>().Where(a => a.IsPregnant).Count();
-								ReportDetails.NumberOfBirths = ageGroup.Cast<RuminantFemale>().Where(a => a.BirthDue).Sum(a => a.SucklingOffspring.Count());
+								ReportDetails.NumberLactating = ageGroup.Cast<RuminantFemale>().Where(a => a.IsLactating).Count();
+								ReportDetails.NumberOfBirths = ageGroup.Cast<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep);
 							}
 							else
 							{
 								ReportDetails.NumberPregnant = 0;
+								ReportDetails.NumberLactating = 0;
 								ReportDetails.NumberOfBirths = 0;
 							}
-							ReportItemGenerated(ReportDetails);
+							
+//							if (sexGroup.Key == Sex.Female)
+//							{
+//								ReportItemGenerated(ReportDetails);
+//							}
+
+//							if (sexGroup.Key == Sex.Male && ReportDetails.Age == 0)
+//							{
+								ReportItemGenerated(ReportDetails);
+//							}
+
+
+							// reset birth count
+							if (sexGroup.Key == Sex.Female)
+							{
+								ageGroup.Cast<RuminantFemale>().ToList().ForEach(a => a.NumberOfBirthsThisTimestep = 0);
+							}
+
+
 						}
 					}
 				}
@@ -106,6 +126,10 @@ namespace Models.WholeFarm
 	[Serializable]
 	public class HerdReportItemGeneratedEventArgs : EventArgs
 	{
+		/// <summary>
+		/// Timestep
+		/// </summary>
+		public int TimeStep { get; set; }
 		/// <summary>
 		/// Breed of individuals
 		/// </summary>
@@ -150,6 +174,10 @@ namespace Models.WholeFarm
 		/// Number pregnant
 		/// </summary>
 		public int NumberPregnant { get; set; }
+		/// <summary>
+		/// Number lactating
+		/// </summary>
+		public int NumberLactating { get; set; }
 	}
 
 }

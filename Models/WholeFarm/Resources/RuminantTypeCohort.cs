@@ -88,7 +88,6 @@ namespace Models.WholeFarm.Resources
 		{
 			List<Ruminant> Individuals = new List<Ruminant>();
 
-//			IModel parentNode = Apsim.Parent(this, typeof(IModel));
 			RuminantType parent = this.Parent.Parent as RuminantType;
 
 			// get Ruminant Herd resource for unique ids

@@ -24,6 +24,11 @@ namespace Models.WholeFarm.Resources
 		public int NumberOfBirths;
 
 		/// <summary>
+		/// Births this timestep
+		/// </summary>
+		public int NumberOfBirthsThisTimestep;
+		
+		/// <summary>
 		/// The age at last conception
 		/// </summary>
 		public double AgeAtLastConception;
@@ -48,7 +53,7 @@ namespace Models.WholeFarm.Resources
 			{
 				if(SuccessfulPregnancy)
 				{
-					return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength;
+					return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength & this.AgeAtLastConception > this.AgeAtLastBirth;
 				}
 				else
 				{
@@ -64,10 +69,11 @@ namespace Models.WholeFarm.Resources
 		{
 			if (SuccessfulPregnancy)
 			{
-				AgeAtLastBirth = this.Age;
-				SuccessfulPregnancy = false;
 				NumberOfBirths++;
+				NumberOfBirthsThisTimestep = (CarryingTwins ? 2 : 1);
 			}
+			AgeAtLastBirth = this.Age;
+//			SuccessfulPregnancy = false;
 		}
 
 		/// <summary>
@@ -77,7 +83,7 @@ namespace Models.WholeFarm.Resources
 		{
 			get
 			{
-				return (this.Age <= this.AgeAtLastConception + this.BreedParams.GestationLength & this.SuccessfulPregnancy);
+				return (this.Age < this.AgeAtLastConception + this.BreedParams.GestationLength & this.SuccessfulPregnancy);
 			}
 		}
 
@@ -98,6 +104,8 @@ namespace Models.WholeFarm.Resources
 			else
 			{
 				SuccessfulPregnancy = false;
+				AgeAtLastBirth = this.Age;
+
 			}
 		}
 
@@ -130,7 +138,7 @@ namespace Models.WholeFarm.Resources
 		{
 			get
 			{
-				return ((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & this.AgeAtLastBirth > 0);
+				return (this.AgeAtLastBirth > this.AgeAtLastConception && (this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays && SuccessfulPregnancy);
 			}			
 		}
 
@@ -143,7 +151,7 @@ namespace Models.WholeFarm.Resources
 			{
 				if(IsLactating)
 				{
-					return (((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays)? (this.Age - this.AgeAtLastBirth + 1) * 30.4 : 0);
+					return (((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays)? (this.Age - this.AgeAtLastBirth) * 30.4 : 0);
 				}
 				else
 				{

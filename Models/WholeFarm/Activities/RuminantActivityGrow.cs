@@ -55,7 +55,7 @@ namespace Models.WholeFarm.Activities
 			manureStore = Resources.GetResourceItem(this, typeof(ProductStoreType), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as ProductStoreTypeManure;
 		}
 
-		/// <summary>Function to determine all individuals potnetial intake and suckling intake after milk consumption from mother</summary>
+		/// <summary>Function to determine all individuals potential intake and suckling intake after milk consumption from mother</summary>
 		/// <param name="sender">The sender.</param>
 		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
 		[EventSubscribe("WFPotentialIntake")]
@@ -67,7 +67,7 @@ namespace Models.WholeFarm.Activities
 			// Natural weaning takes place here before animals eat or take milk from mother.
 			foreach (var ind in herd.Where(a => a.Weaned == false))
 			{
-				if (ind.Age >= ind.BreedParams.GestationLength + 1)
+				if (ind.Age >= ind.BreedParams.GestationLength)
 				{
 					ind.Wean();
 				}
@@ -122,14 +122,11 @@ namespace Models.WholeFarm.Activities
 			if (!ind.Weaned)
 			{
 				// potential milk intake/animal/day
-				double potentialMilkIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.IntakeCoefficient * ind.Weight;
+				double potentialMilkIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
 
-				// get mother
+				// get estimated milk available
+				// this will be updated to the corrected milk available in the calculate energy section.
 				ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkProductionAvailable);
-				if(ind.Mother !=null)
-				{
-					ind.Mother.TakeMilk(ind.MilkIntake * 30.4);
-				}
 
 				// if milk supply low, calf will subsitute forage up to a specified % of bodyweight (R_C60)
 				if (ind.MilkIntake < ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion)
@@ -153,20 +150,31 @@ namespace Models.WholeFarm.Activities
 					// Increase potential intake for lactating breeder
 					if (femaleind.IsLactating)
 					{
-						double dayOfLactation = Math.Max((ind.Age - femaleind.AgeAtLastBirth + 1) * 30.4, 0);
+						double dayOfLactation = femaleind.DaysLactating;
 						if (dayOfLactation <= ind.BreedParams.MilkingDays)
 						{
 							// Reference: Intake multiplier for lactating cow (M.Freer)
 							// TODO: Need to look at equation to fix Math.Pow() ^ issue
 							// double intakeMilkMultiplier = 1 + 0.57 * Math.Pow((dayOfLactation / 81.0), 0.7) * Math.Exp(0.7 * (1 - (dayOfLactation / 81.0)));
-							double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB)));
+							double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB)))*(1 - 0.5 + 0.5 * (ind.Weight/ind.NormalisedAnimalWeight));
 							// To make this flexible for sheep and goats, added three new Ruminant Coeffs
 							// Feeding standard values for Beef, Dairy suck, Dairy non-suck and sheep are:
 							// For 0.57 (A) use .42, .58, .85 and .69; for 0.7 (B) use 1.7, 0.7, 0.7 and 1.4, for 81 (C) use 62, 81, 81, 28
 							// added LactatingPotentialModifierConstantA, LactatingPotentialModifierConstantB and LactatingPotentialModifierConstantC
 							// replaces 
 							potentialIntake *= intakeMilkMultiplier;
+
+							// calculate estimated milk production for time step here
+							// assuming average feed quality
+							// This need to happen before suckling potential intake can be determined.
+							double AverageDMD = 60;
+							CalculateMilkProduction(femaleind, AverageDMD);
 						}
+					}
+					else
+					{
+						femaleind.MilkProduction = 0;
+						femaleind.MilkAmount = 0;
 					}
 				}
 				//TODO: option to restrict potential further due to stress (e.g. heat, cold, rain)
@@ -175,6 +183,45 @@ namespace Models.WholeFarm.Activities
 				potentialIntake *= 30.4;
 			}
 			ind.PotentialIntake = potentialIntake;
+		}
+
+		/// <summary>
+		/// Set the milk production of the selected female given diet drymatter digesibility
+		/// </summary>
+		/// <param name="ind">Female individual</param>
+		/// <param name="DryMatterDigestibility">DMD %</param>
+		/// <returns>energy of milk</returns>
+		private double CalculateMilkProduction(RuminantFemale ind, double DryMatterDigestibility)
+		{
+			double energyMetabolic = EnergyGross * (DryMatterDigestibility/100.0) * 0.81;
+			// Reference: SCA p.
+			double kl = ind.BreedParams.ELactationCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationIntercept;
+			double milkTime = ind.DaysLactating;  //Math.Max(0.0, (ind.Age - femaleind.AgeAtLastBirth) * 30.4);
+			double milkCurve = 0;
+			if (ind.SucklingOffspring.Count == 0) // no suckling calf
+			{
+				milkCurve = ind.BreedParams.MilkCurveNonSuckling;
+			}
+			else // suckling calf
+			{
+				milkCurve = ind.BreedParams.MilkCurveSuckling;
+			}
+			double milkProduction = ind.BreedParams.MilkPeakYield * ind.Weight / ind.NormalisedAnimalWeight * (Math.Pow(((milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay));
+			milkProduction = Math.Max(milkProduction, 0.0);
+			// Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
+			double energyMilk = milkProduction * 3.2 / kl;
+			// adjust last time step's energy balance
+			if (ind.EnergyBalance < (-0.5936 / 0.322 * energyMilk))
+			{
+				ind.EnergyBalance = (-0.5936 / 0.322 * energyMilk);
+			}
+			milkProduction = Math.Max(0.0, milkProduction * (0.5936 + 0.322 * ind.EnergyBalance / energyMilk));
+
+			// set milk production in lactating females for consumption.
+			ind.MilkProduction = milkProduction;
+			ind.MilkAmount = ind.MilkProduction * 30.4;
+
+			return milkProduction * 3.2 / kl;
 		}
 
 		/// <summary>Function to calculate growth of herd for the monthly timestep</summary>
@@ -192,7 +239,7 @@ namespace Models.WholeFarm.Activities
 			foreach (string breed in breeds)
 			{
 				double totalMethane = 0;
-				foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed))
+				foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.Age))
 				{
 					if (ind.Weaned)
 					{
@@ -240,22 +287,16 @@ namespace Models.WholeFarm.Activities
 						ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
 
 					}
+
 					// TODO: nabsa adjusts potential intake for digestability of fodder here.
-					// I'm sure it can be done here, but prob as this is after the 1.2x cap has been performed.
-					// calculate from the pools of fodder fed to this individual
-					//if (0.8 - ind.BreedParams.IntakeTropicalQuality - dietDMD / 100 >= 0)
-					//{
-					//	ind.PotentialIntake *= ind.BreedParams.IntakeCoefficientQuality * (0.8 - ind.BreedParams.IntakeTropicalQuality - dietDMD / 100);
-					//}
+					// This is now done in RuminantActivityGrazePasture
 
 					// calculate energy
-					// includes mortality and growth
 					double methane = 0;
-
 					CalculateEnergy(ind, out methane);
 
-					// ? call methane produced event
-					// or sum and produce one event for breed at end of loop
+					// TODO:? call methane produced event
+					// Sum and produce one event for breed at end of loop
 					totalMethane += methane;
 
 					// grow wool and cashmere
@@ -326,6 +367,15 @@ namespace Models.WholeFarm.Activities
 				// dum = potential milk intake daily
 				// dumshort = potential intake. check that it isnt monthly
 
+
+				// recalculate milk intake based on mothers updated milk production for the time step
+				double potentialMilkIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
+				ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkProductionAvailable);
+				if (ind.Mother != null)
+				{
+					ind.Mother.TakeMilk(ind.MilkIntake * 30.4);
+				}
+
 				// Below now uses actual intake received rather than assume all potential intake is eaten
 				double kml = 1;
 				double kgl = 1;
@@ -369,38 +419,38 @@ namespace Models.WholeFarm.Activities
 					// calculate energy for lactation
 					if (femaleind.IsLactating)
 					{
-						// Reference: SCA p.
-						double kl = ind.BreedParams.ELactationCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationIntercept;
-						double milkTime = Math.Max(0.0, (ind.Age - femaleind.AgeAtLastBirth + 1) * 30.4);
-						if (milkTime <= ind.BreedParams.MilkingDays)
-						{
-							double milkCurve = 0;
-							if (femaleind.DryBreeder) // no suckling calf
-							{
-								milkCurve = ind.BreedParams.MilkCurveNonSuckling;
-							}
-							else // suckling calf
-							{
-								milkCurve = ind.BreedParams.MilkCurveSuckling;
-							}
-							//TODO: check this equation that I redefined it correctly.
-							double milkProduction = ind.BreedParams.MilkPeakYield * ind.Weight / ind.NormalisedAnimalWeight * (Math.Pow(((milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay));
-							milkProduction = Math.Max(milkProduction, 0.0);
-							// Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
-							energyMilk = milkProduction * 3.2 / kl;
-							if (ind.EnergyBalance < (-0.5936 / 0.322 * energyMilk))
-							{
-								ind.EnergyBalance = (-0.5936 / 0.322 * energyMilk);
-							}
-							milkProduction = Math.Max(0.0, milkProduction * (0.5936 + 0.322 * ind.EnergyBalance / energyMilk));
+						// recalculate milk production based on DMD of food provided
+						energyMilk = CalculateMilkProduction(femaleind, ind.DietDryMatterDigestibility); 
 
-							// set milk production in lactating females for consumption.
-							femaleind.MilkProduction = milkProduction;
-							femaleind.MilkAmount = femaleind.MilkProduction * 30.4;
+						//// Reference: SCA p.
+						//double kl = ind.BreedParams.ELactationCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationIntercept;
+						//double milkTime = femaleind.DaysLactating;  //Math.Max(0.0, (ind.Age - femaleind.AgeAtLastBirth) * 30.4);
+						//double milkCurve = 0;
+						//if (femaleind.SucklingOffspring.Count == 0) // no suckling calf
+						//{
+						//	milkCurve = ind.BreedParams.MilkCurveNonSuckling;
+						//}
+						//else // suckling calf
+						//{
+						//	milkCurve = ind.BreedParams.MilkCurveSuckling;
+						//}
+						//double milkProduction = ind.BreedParams.MilkPeakYield * ind.Weight / ind.NormalisedAnimalWeight * (Math.Pow(((milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay));
+						//milkProduction = Math.Max(milkProduction, 0.0);
+						//// Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
+						//energyMilk = milkProduction * 3.2 / kl;
+						//// adjust last time step's energy balance
+						//if (ind.EnergyBalance < (-0.5936 / 0.322 * energyMilk))
+						//{
+						//	ind.EnergyBalance = (-0.5936 / 0.322 * energyMilk);
+						//}
+						//milkProduction = Math.Max(0.0, milkProduction * (0.5936 + 0.322 * ind.EnergyBalance / energyMilk));
 
-							// Reference: Adjusted milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
-							energyMilk = milkProduction * 3.2 / kl;
-						}
+						//// set milk production in lactating females for consumption.
+						//femaleind.MilkProduction = milkProduction;
+						//femaleind.MilkAmount = femaleind.MilkProduction * 30.4;
+
+						// Reference: Adjusted milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
+						//energyMilk = milkProduction * 3.2 / kl;
 					}
 
 					// Determine energy required for foetal development
@@ -410,7 +460,7 @@ namespace Models.WholeFarm.Activities
 						// Potential birth weight
 						// Reference: Freer
 						double potentialBirthWeight = ind.BreedParams.SRWBirth * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / standardReferenceWeight));
-						double foetusAge = (femaleind.Age - femaleind.AgeAtLastConception + 1) * 30.4;
+						double foetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * 30.4;
 						//TODO: Check foetus gage correct
 						energyFoetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * foetusAge - 349.16 * Math.Exp(-0.000058 * foetusAge)) / 0.13;
 					}
@@ -480,10 +530,8 @@ namespace Models.WholeFarm.Activities
 		private void OnWFAgeResources(object sender, EventArgs e)
 		{
 			RuminantHerd ruminantHerd = Resources.RuminantHerd();
-			List<Ruminant> herd = ruminantHerd.Herd;
-
 			// grow all individuals
-			foreach (Ruminant ind in herd)
+			foreach (Ruminant ind in ruminantHerd.Herd)
 			{
 				ind.Age++;
 			}

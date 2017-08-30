@@ -228,6 +228,7 @@ namespace Models.WholeFarm.Resources
 		public void Wean()
 		{
 			weaned = true;
+			MilkIntake = 0;
 			if (this.Mother != null)
 			{
 				this.Mother.SucklingOffspring.Remove(this);

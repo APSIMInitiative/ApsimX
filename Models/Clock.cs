@@ -286,14 +286,14 @@ namespace Models
 						WFDoCutAndCarry.Invoke(this, args);
 					if (WFAnimalBreeding != null)
 						WFAnimalBreeding.Invoke(this, args);
+					if (WFAnimalMilkProduction != null)
+						WFAnimalMilkProduction.Invoke(this, args);
 					if (WFPotentialIntake != null)
 						WFPotentialIntake.Invoke(this, args);
 					if (WFCalculateManure != null)
 						WFCalculateManure.Invoke(this, args);
 					if (WFGetResourcesRequired != null)
 						WFGetResourcesRequired.Invoke(this, args);
-					if (WFAnimalMilkProduction != null)
-						WFAnimalMilkProduction.Invoke(this, args);
 					if (WFAnimalWeightGain != null)
 						WFAnimalWeightGain.Invoke(this, args);
 					if (WFAnimalDeath != null)
@@ -308,10 +308,10 @@ namespace Models
 						WFAnimalStock.Invoke(this, args);
 					if (WFAnimalSell != null)
 						WFAnimalSell.Invoke(this, args);
-					if (WFAgeResources != null)
-						WFAgeResources.Invoke(this, args);
 					if (WFHerdSummary != null)
 						WFHerdSummary.Invoke(this, args);
+					if (WFAgeResources != null)
+						WFAgeResources.Invoke(this, args);
 					if (WFAnimalBuy != null)
 						WFAnimalBuy.Invoke(this, args);
 					EndOfMonth.Invoke(this, args);

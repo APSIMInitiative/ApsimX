@@ -70,7 +70,7 @@ namespace Models.WholeFarm.Resources
 				List<Ruminant> herd = Herd.Where(a => a.HerdName == HerdName).ToList();
 
 				// get list of females of breeding age and condition
-				List<RuminantFemale> breedFemales = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating + 12 & a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) & a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList().Cast<RuminantFemale>().ToList();
+				List<RuminantFemale> breedFemales = herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) & a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList().Cast<RuminantFemale>().ToList();
 
 				// get list of all sucking individuals
 				List<Ruminant> sucklingList = herd.Where(a => a.Weaned == false).ToList();
@@ -102,7 +102,7 @@ namespace Models.WholeFarm.Resources
 							//Initialise female milk production in at birth so ready for sucklings to consume
 							double milkTime = 15; // equivalent to mid month production
 
-							// need t calculate normalised animal weight here for milk production
+							// need to calculate normalised animal weight here for milk production
 							breedFemales[0].NormalisedAnimalWeight = breedFemales[0].StandardReferenceWeight - ((1 - breedFemales[0].BreedParams.SRWBirth) * breedFemales[0].StandardReferenceWeight) * Math.Exp(-(breedFemales[0].BreedParams.AgeGrowthRateCoefficient * (breedFemales[0].Age * 30.4)) / (Math.Pow(breedFemales[0].StandardReferenceWeight, breedFemales[0].BreedParams.SRWGrowthScalar)));
 							double milkProduction = breedFemales[0].BreedParams.MilkPeakYield * breedFemales[0].Weight / breedFemales[0].NormalisedAnimalWeight * (Math.Pow(((milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay), breedFemales[0].BreedParams.MilkCurveSuckling)) * Math.Exp(breedFemales[0].BreedParams.MilkCurveSuckling * (1 - (milkTime + breedFemales[0].BreedParams.MilkOffsetDay) / breedFemales[0].BreedParams.MilkPeakDay));
 							breedFemales[0].MilkProduction = Math.Max(milkProduction, 0.0);
@@ -119,6 +119,7 @@ namespace Models.WholeFarm.Resources
 							// I removed the -9 as this would make it conception month not birth month
 							breedFemales[0].AgeAtLastBirth = breedFemales[0].Age - suckling.Age;
 							breedFemales[0].AgeAtLastConception = breedFemales[0].AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
+							breedFemales[0].SuccessfulPregnancy = true;
 
 							// suckling mother set
 							suckling.Mother = breedFemales[0];

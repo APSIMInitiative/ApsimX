@@ -86,7 +86,12 @@ namespace Models.WholeFarm.Activities
 		/// </summary>
 		public bool IsDueDate()
 		{
-			return (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month);
+			if(this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
+			{
+				UpdateDueDate();
+				return true;
+			}
+			return false;
 		}
 
 		/// <summary>
