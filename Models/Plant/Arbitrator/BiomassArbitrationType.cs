@@ -27,13 +27,13 @@ namespace Models.PMF
         public double TotalMetabolicDemand { get { return MathUtilities.Sum(MetabolicDemand); } }
         /// <summary>Gets or sets the non structural demand.</summary>
         /// <value>Demand for non-structural biomass from each organ</value>
-        public double[] NonStructuralDemand { get; set; }
+        public double[] StorageDemand { get; set; }
         /// <summary>Gets or sets the total non structural demand.</summary>
         /// <value>Demand for non-structural biomass from the crop</value>
-        public double TotalNonStructuralDemand { get { return MathUtilities.Sum(NonStructuralDemand); } }
+        public double TotalStorageDemand { get { return MathUtilities.Sum(StorageDemand); } }
         /// <summary>Gets or sets the total crop demand.</summary>
         /// <value>crop demand for biomass, structural, non-sturctural and metabolic</value>
-        public double TotalPlantDemand { get { return TotalStructuralDemand + TotalMetabolicDemand + TotalNonStructuralDemand; } }
+        public double TotalPlantDemand { get { return TotalStructuralDemand + TotalMetabolicDemand + TotalStorageDemand; } }
         //Biomass Supply Variables
         /// <summary>Gets or sets the reallocation supply.</summary>
         /// <value>Biomass available for reallocation for each organ as it dies</value>
@@ -104,10 +104,10 @@ namespace Models.PMF
         public double TotalMetabolicAllocation { get { return MathUtilities.Sum(MetabolicAllocation); } }
         /// <summary>Gets or sets the non structural allocation.</summary>
         /// <value>The actual non-structural biomass allocation to each organ</value>
-        public double[] NonStructuralAllocation { get; set; }
+        public double[] StorageAllocation { get; set; }
         /// <summary>Gets or sets the total non structural allocation.</summary>
         /// <value>The total non-structural allocationed to the crop</value>
-        public double TotalNonStructuralAllocation { get { return MathUtilities.Sum(NonStructuralAllocation); } }
+        public double TotalStorageAllocation { get { return MathUtilities.Sum(StorageAllocation); } }
         /// <summary>Gets or sets the total allocation.</summary>
         /// <value>The actual biomass allocation to each organ, structural, non-structural and metabolic</value>
         public double[] TotalAllocation { get; set; }
@@ -150,7 +150,7 @@ namespace Models.PMF
         {
             StructuralDemand = new double[Size];
             MetabolicDemand = new double[Size];
-            NonStructuralDemand = new double[Size];
+            StorageDemand = new double[Size];
             ReallocationSupply = new double[Size];
             UptakeSupply = new double[Size];
             FixationSupply = new double[Size];
@@ -163,7 +163,7 @@ namespace Models.PMF
             ConstrainedGrowth = new double[Size];
             StructuralAllocation = new double[Size];
             MetabolicAllocation = new double[Size];
-            NonStructuralAllocation = new double[Size];
+            StorageAllocation = new double[Size];
             TotalAllocation = new double[Size];
         }
 
@@ -221,20 +221,20 @@ namespace Models.PMF
                     Demand = Organs[i].NDemand;
                 if (MathUtilities.IsLessThan(Demand.Structural, 0))
                     throw new Exception(Organs[i].Name + " is returning a negative Structural " + Type + " demand.  Check your parameterisation");
-                if (MathUtilities.IsLessThan(Demand.NonStructural, 0))
-                    throw new Exception(Organs[i].Name + " is returning a negative NonStructural " + Type + " demand.  Check your parameterisation");
+                if (MathUtilities.IsLessThan(Demand.Storage, 0))
+                    throw new Exception(Organs[i].Name + " is returning a negative Storage " + Type + " demand.  Check your parameterisation");
                 if (MathUtilities.IsLessThan(Demand.Metabolic, 0))
                     throw new Exception(Organs[i].Name + " is returning a negative Metabolic " + Type + " demand.  Check your parameterisation");
                 StructuralDemand[i] = Demand.Structural;
                 MetabolicDemand[i] = Demand.Metabolic;
-                NonStructuralDemand[i] = Demand.NonStructural;
+                StorageDemand[i] = Demand.Storage;
                 Reallocation[i] = 0;
                 Uptake[i] = 0;
                 Fixation[i] = 0;
                 Retranslocation[i] = 0;
                 StructuralAllocation[i] = 0;
                 MetabolicAllocation[i] = 0;
-                NonStructuralAllocation[i] = 0;
+                StorageAllocation[i] = 0;
             }
 
             Allocated = 0;

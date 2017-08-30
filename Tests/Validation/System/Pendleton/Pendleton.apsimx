@@ -1,10 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>Observed</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>observed.xlsx</FileName>
       <SheetNames>
         <string>ObsSoil</string>
@@ -13,16 +14,19 @@
     </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObserved</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>HarvestReport</PredictedTableName>
       <ObservedTableName>ObsCrop</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today.Year</FieldNameUsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
       <Name>PredictedObservedSoil</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>HarvestReport</PredictedTableName>
       <ObservedTableName>ObsSoil</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today.Year</FieldNameUsedForMatch>
     </PredictedObserved>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -34,13 +38,14 @@
         <Name>Treatment</Name>
         <Operations>
           <Name>6_fBN0</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1931-08-15</Date>
             <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.67, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-08-15</Date>
@@ -48,7 +53,7 @@
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-08-15</Date>
@@ -56,7 +61,7 @@
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-08-15</Date>
@@ -64,7 +69,7 @@
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-08-15</Date>
@@ -72,7 +77,7 @@
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-08-15</Date>
@@ -80,7 +85,7 @@
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-08-15</Date>
@@ -88,7 +93,7 @@
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-08-15</Date>
@@ -96,7 +101,7 @@
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-08-15</Date>
@@ -104,7 +109,7 @@
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-08-15</Date>
@@ -112,7 +117,7 @@
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-08-15</Date>
@@ -120,7 +125,7 @@
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-08-15</Date>
@@ -128,7 +133,7 @@
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-08-15</Date>
@@ -136,7 +141,7 @@
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-08-15</Date>
@@ -144,7 +149,7 @@
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-08-15</Date>
@@ -152,7 +157,7 @@
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-08-15</Date>
@@ -160,7 +165,7 @@
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-08-15</Date>
@@ -168,7 +173,7 @@
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-08-15</Date>
@@ -176,7 +181,7 @@
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-08-15</Date>
@@ -184,7 +189,7 @@
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-08-15</Date>
@@ -192,7 +197,7 @@
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-08-15</Date>
@@ -200,7 +205,7 @@
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-08-15</Date>
@@ -208,7 +213,7 @@
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-08-15</Date>
@@ -216,7 +221,7 @@
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-08-15</Date>
@@ -224,7 +229,7 @@
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-08-15</Date>
@@ -232,7 +237,7 @@
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-08-15</Date>
@@ -240,7 +245,7 @@
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-08-15</Date>
@@ -248,7 +253,7 @@
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-08-15</Date>
@@ -256,7 +261,7 @@
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-08-15</Date>
@@ -264,7 +269,7 @@
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-08-15</Date>
@@ -272,7 +277,7 @@
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-08-15</Date>
@@ -280,7 +285,7 @@
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-08-15</Date>
@@ -288,7 +293,7 @@
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-08-15</Date>
@@ -296,7 +301,7 @@
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-08-15</Date>
@@ -304,7 +309,7 @@
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-08-15</Date>
@@ -312,18 +317,19 @@
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>7_sBN0</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1931-04-15</Date>
             <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.55, depth: 0)</Action>
           </Operation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-04-15</Date>
@@ -331,7 +337,7 @@
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-04-15</Date>
@@ -339,7 +345,7 @@
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-04-15</Date>
@@ -347,7 +353,7 @@
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-04-15</Date>
@@ -355,7 +361,7 @@
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-04-15</Date>
@@ -363,7 +369,7 @@
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-04-15</Date>
@@ -371,7 +377,7 @@
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-04-15</Date>
@@ -379,7 +385,7 @@
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-04-15</Date>
@@ -387,7 +393,7 @@
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-04-15</Date>
@@ -395,7 +401,7 @@
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-04-15</Date>
@@ -403,7 +409,7 @@
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-04-15</Date>
@@ -411,7 +417,7 @@
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-04-15</Date>
@@ -419,7 +425,7 @@
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-04-15</Date>
@@ -427,7 +433,7 @@
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-04-15</Date>
@@ -435,7 +441,7 @@
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-04-15</Date>
@@ -443,7 +449,7 @@
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-04-15</Date>
@@ -451,7 +457,7 @@
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-04-15</Date>
@@ -459,7 +465,7 @@
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-04-15</Date>
@@ -467,7 +473,7 @@
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-04-15</Date>
@@ -475,7 +481,7 @@
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-04-15</Date>
@@ -483,7 +489,7 @@
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-04-15</Date>
@@ -491,7 +497,7 @@
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-04-15</Date>
@@ -499,7 +505,7 @@
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-04-15</Date>
@@ -507,7 +513,7 @@
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-04-15</Date>
@@ -515,7 +521,7 @@
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-04-15</Date>
@@ -523,7 +529,7 @@
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-04-15</Date>
@@ -531,7 +537,7 @@
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-04-15</Date>
@@ -539,7 +545,7 @@
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-04-15</Date>
@@ -547,7 +553,7 @@
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-04-15</Date>
@@ -555,7 +561,7 @@
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-04-15</Date>
@@ -563,7 +569,7 @@
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-04-15</Date>
@@ -571,7 +577,7 @@
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-04-15</Date>
@@ -579,7 +585,7 @@
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-04-15</Date>
@@ -587,7 +593,7 @@
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-04-15</Date>
@@ -595,161 +601,163 @@
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>0_nBN0</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>2_sBN45</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1931-08-15</Date>
             <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
           </Operation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-08-15</Date>
@@ -757,7 +765,7 @@
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-08-15</Date>
@@ -765,7 +773,7 @@
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-08-15</Date>
@@ -773,7 +781,7 @@
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-08-15</Date>
@@ -781,7 +789,7 @@
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-08-15</Date>
@@ -789,7 +797,7 @@
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-08-15</Date>
@@ -797,7 +805,7 @@
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-08-15</Date>
@@ -805,7 +813,7 @@
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-08-15</Date>
@@ -813,7 +821,7 @@
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-08-15</Date>
@@ -821,7 +829,7 @@
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-08-15</Date>
@@ -829,7 +837,7 @@
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-08-15</Date>
@@ -837,7 +845,7 @@
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-08-15</Date>
@@ -845,7 +853,7 @@
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-08-15</Date>
@@ -853,7 +861,7 @@
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-08-15</Date>
@@ -861,7 +869,7 @@
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-08-15</Date>
@@ -869,7 +877,7 @@
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-08-15</Date>
@@ -877,7 +885,7 @@
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-08-15</Date>
@@ -885,7 +893,7 @@
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
@@ -893,7 +901,7 @@
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
@@ -901,7 +909,7 @@
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
@@ -909,7 +917,7 @@
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
@@ -917,7 +925,7 @@
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
@@ -925,7 +933,7 @@
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
@@ -933,7 +941,7 @@
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
@@ -941,7 +949,7 @@
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-04-15</Date>
@@ -953,7 +961,7 @@
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-04-15</Date>
@@ -965,7 +973,7 @@
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-04-15</Date>
@@ -977,7 +985,7 @@
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-04-15</Date>
@@ -989,7 +997,7 @@
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-04-15</Date>
@@ -1001,7 +1009,7 @@
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-04-15</Date>
@@ -1013,7 +1021,7 @@
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-04-15</Date>
@@ -1025,7 +1033,7 @@
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-04-15</Date>
@@ -1037,7 +1045,7 @@
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-04-15</Date>
@@ -1049,7 +1057,7 @@
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-04-15</Date>
@@ -1061,18 +1069,19 @@
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>3_sBN90</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1931-04-01</Date>
             <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
           </Operation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-04-01</Date>
@@ -1080,7 +1089,7 @@
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-04-01</Date>
@@ -1088,7 +1097,7 @@
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-04-01</Date>
@@ -1096,7 +1105,7 @@
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-04-01</Date>
@@ -1104,7 +1113,7 @@
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-04-01</Date>
@@ -1112,7 +1121,7 @@
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-04-01</Date>
@@ -1120,7 +1129,7 @@
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-04-01</Date>
@@ -1128,7 +1137,7 @@
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-04-01</Date>
@@ -1136,7 +1145,7 @@
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-04-01</Date>
@@ -1144,7 +1153,7 @@
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-04-01</Date>
@@ -1152,7 +1161,7 @@
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-04-01</Date>
@@ -1160,7 +1169,7 @@
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-04-01</Date>
@@ -1168,7 +1177,7 @@
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-04-01</Date>
@@ -1176,7 +1185,7 @@
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-04-01</Date>
@@ -1184,7 +1193,7 @@
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-04-01</Date>
@@ -1192,7 +1201,7 @@
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-04-01</Date>
@@ -1200,7 +1209,7 @@
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-04-01</Date>
@@ -1208,7 +1217,7 @@
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
@@ -1216,7 +1225,7 @@
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
@@ -1224,7 +1233,7 @@
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
@@ -1232,7 +1241,7 @@
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
@@ -1240,7 +1249,7 @@
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
@@ -1248,7 +1257,7 @@
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
@@ -1256,7 +1265,7 @@
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
@@ -1264,7 +1273,7 @@
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-04-15</Date>
@@ -1276,7 +1285,7 @@
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-04-15</Date>
@@ -1288,7 +1297,7 @@
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-04-15</Date>
@@ -1300,7 +1309,7 @@
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-04-15</Date>
@@ -1312,7 +1321,7 @@
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-04-15</Date>
@@ -1324,7 +1333,7 @@
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-04-15</Date>
@@ -1336,7 +1345,7 @@
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-04-15</Date>
@@ -1348,7 +1357,7 @@
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-04-15</Date>
@@ -1360,7 +1369,7 @@
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-04-15</Date>
@@ -1372,7 +1381,7 @@
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-04-15</Date>
@@ -1384,11 +1393,12 @@
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>4_nBN45</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1931-08-15</Date>
             <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
@@ -1399,7 +1409,7 @@
           </Operation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-08-15</Date>
@@ -1411,7 +1421,7 @@
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-08-15</Date>
@@ -1423,7 +1433,7 @@
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-08-15</Date>
@@ -1435,7 +1445,7 @@
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-08-15</Date>
@@ -1447,7 +1457,7 @@
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-08-15</Date>
@@ -1459,7 +1469,7 @@
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-08-15</Date>
@@ -1471,7 +1481,7 @@
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-08-15</Date>
@@ -1483,7 +1493,7 @@
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-08-15</Date>
@@ -1495,7 +1505,7 @@
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-08-15</Date>
@@ -1507,7 +1517,7 @@
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-08-15</Date>
@@ -1519,7 +1529,7 @@
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-08-15</Date>
@@ -1531,7 +1541,7 @@
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-08-15</Date>
@@ -1543,7 +1553,7 @@
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-08-15</Date>
@@ -1555,7 +1565,7 @@
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-08-15</Date>
@@ -1567,7 +1577,7 @@
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-08-15</Date>
@@ -1579,7 +1589,7 @@
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-08-15</Date>
@@ -1591,7 +1601,7 @@
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-08-15</Date>
@@ -1603,7 +1613,7 @@
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
@@ -1611,7 +1621,7 @@
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
@@ -1619,7 +1629,7 @@
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
@@ -1627,7 +1637,7 @@
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
@@ -1635,7 +1645,7 @@
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
@@ -1643,7 +1653,7 @@
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
@@ -1651,7 +1661,7 @@
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
@@ -1659,7 +1669,7 @@
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
@@ -1667,7 +1677,7 @@
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
@@ -1675,7 +1685,7 @@
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
@@ -1683,7 +1693,7 @@
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
@@ -1691,7 +1701,7 @@
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
@@ -1699,7 +1709,7 @@
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
@@ -1707,7 +1717,7 @@
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
@@ -1715,7 +1725,7 @@
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
@@ -1723,7 +1733,7 @@
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
@@ -1731,7 +1741,7 @@
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
@@ -1739,11 +1749,12 @@
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>5_nBN90</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1931-04-01</Date>
             <Action> [SurfaceOrganicMatter].Incorporate(fraction: 0.6, depth: 200)</Action>
@@ -1754,7 +1765,7 @@
           </Operation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-04-01</Date>
@@ -1766,7 +1777,7 @@
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-04-01</Date>
@@ -1778,7 +1789,7 @@
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-04-01</Date>
@@ -1790,7 +1801,7 @@
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-04-01</Date>
@@ -1802,7 +1813,7 @@
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-04-01</Date>
@@ -1814,7 +1825,7 @@
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-04-01</Date>
@@ -1826,7 +1837,7 @@
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-04-01</Date>
@@ -1838,7 +1849,7 @@
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-04-01</Date>
@@ -1850,7 +1861,7 @@
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-04-01</Date>
@@ -1862,7 +1873,7 @@
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-04-01</Date>
@@ -1874,7 +1885,7 @@
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-04-01</Date>
@@ -1886,7 +1897,7 @@
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-04-01</Date>
@@ -1898,7 +1909,7 @@
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-04-01</Date>
@@ -1910,7 +1921,7 @@
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-04-01</Date>
@@ -1922,7 +1933,7 @@
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-04-01</Date>
@@ -1934,7 +1945,7 @@
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-04-01</Date>
@@ -1946,7 +1957,7 @@
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-04-01</Date>
@@ -1958,7 +1969,7 @@
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
@@ -1966,7 +1977,7 @@
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
@@ -1974,7 +1985,7 @@
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
@@ -1982,7 +1993,7 @@
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
@@ -1990,7 +2001,7 @@
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
@@ -1998,7 +2009,7 @@
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
@@ -2006,7 +2017,7 @@
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
@@ -2014,7 +2025,7 @@
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
@@ -2022,7 +2033,7 @@
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
@@ -2030,7 +2041,7 @@
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
@@ -2038,7 +2049,7 @@
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
@@ -2046,7 +2057,7 @@
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
@@ -2054,7 +2065,7 @@
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
@@ -2062,7 +2073,7 @@
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
@@ -2070,7 +2081,7 @@
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
@@ -2078,7 +2089,7 @@
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
@@ -2086,7 +2097,7 @@
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
@@ -2094,18 +2105,19 @@
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>9_nBPv</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1931-04-15</Date>
             <Action> [SurfaceOrganicMatter].Add(mass: 2000, N: 46, P:0.0, type: "wheat", name: "");</Action>
           </Operation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-04-15</Date>
@@ -2113,7 +2125,7 @@
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-04-15</Date>
@@ -2121,7 +2133,7 @@
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-04-15</Date>
@@ -2129,7 +2141,7 @@
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-04-15</Date>
@@ -2137,7 +2149,7 @@
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-04-15</Date>
@@ -2145,7 +2157,7 @@
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-04-15</Date>
@@ -2153,7 +2165,7 @@
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-04-15</Date>
@@ -2161,7 +2173,7 @@
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-04-15</Date>
@@ -2169,7 +2181,7 @@
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-04-15</Date>
@@ -2177,7 +2189,7 @@
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-04-15</Date>
@@ -2185,7 +2197,7 @@
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-04-15</Date>
@@ -2193,7 +2205,7 @@
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-04-15</Date>
@@ -2201,7 +2213,7 @@
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-04-15</Date>
@@ -2209,7 +2221,7 @@
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-04-15</Date>
@@ -2217,7 +2229,7 @@
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-04-15</Date>
@@ -2225,7 +2237,7 @@
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-04-15</Date>
@@ -2233,7 +2245,7 @@
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-04-15</Date>
@@ -2241,7 +2253,7 @@
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-04-15</Date>
@@ -2249,7 +2261,7 @@
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-04-15</Date>
@@ -2257,7 +2269,7 @@
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-04-15</Date>
@@ -2265,7 +2277,7 @@
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-04-15</Date>
@@ -2273,7 +2285,7 @@
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-04-15</Date>
@@ -2281,7 +2293,7 @@
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-04-15</Date>
@@ -2289,7 +2301,7 @@
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-04-15</Date>
@@ -2297,7 +2309,7 @@
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-04-15</Date>
@@ -2305,7 +2317,7 @@
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-04-15</Date>
@@ -2313,7 +2325,7 @@
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-04-15</Date>
@@ -2321,7 +2333,7 @@
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-04-15</Date>
@@ -2329,7 +2341,7 @@
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-04-15</Date>
@@ -2337,7 +2349,7 @@
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-04-15</Date>
@@ -2345,7 +2357,7 @@
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-04-15</Date>
@@ -2353,7 +2365,7 @@
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-04-15</Date>
@@ -2361,7 +2373,7 @@
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-04-15</Date>
@@ -2369,7 +2381,7 @@
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-04-15</Date>
@@ -2377,18 +2389,19 @@
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Operations>
           <Name>8_nBMn</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1931-04-15</Date>
             <Action> [SurfaceOrganicMatter].Add(mass: 11379, N: 111, P:0.0, type: "wheat", name: "");</Action>
           </Operation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-04-15</Date>
@@ -2396,7 +2409,7 @@
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-04-15</Date>
@@ -2404,7 +2417,7 @@
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-04-15</Date>
@@ -2412,7 +2425,7 @@
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-04-15</Date>
@@ -2420,7 +2433,7 @@
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-04-15</Date>
@@ -2428,19 +2441,19 @@
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-04-15</Date>
@@ -2448,7 +2461,7 @@
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-04-15</Date>
@@ -2456,7 +2469,7 @@
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-04-15</Date>
@@ -2464,7 +2477,7 @@
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-04-15</Date>
@@ -2472,7 +2485,7 @@
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-04-15</Date>
@@ -2480,7 +2493,7 @@
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-04-15</Date>
@@ -2488,7 +2501,7 @@
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-04-15</Date>
@@ -2496,7 +2509,7 @@
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-04-15</Date>
@@ -2504,7 +2517,7 @@
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-04-15</Date>
@@ -2512,7 +2525,7 @@
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-04-15</Date>
@@ -2520,7 +2533,7 @@
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-04-15</Date>
@@ -2528,7 +2541,7 @@
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-04-15</Date>
@@ -2536,7 +2549,7 @@
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-04-15</Date>
@@ -2544,7 +2557,7 @@
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-04-15</Date>
@@ -2552,7 +2565,7 @@
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-04-15</Date>
@@ -2560,7 +2573,7 @@
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-04-15</Date>
@@ -2568,7 +2581,7 @@
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-04-15</Date>
@@ -2576,7 +2589,7 @@
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-04-15</Date>
@@ -2584,7 +2597,7 @@
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-04-15</Date>
@@ -2592,7 +2605,7 @@
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-04-15</Date>
@@ -2600,7 +2613,7 @@
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-04-15</Date>
@@ -2608,7 +2621,7 @@
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-04-15</Date>
@@ -2616,7 +2629,7 @@
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-04-15</Date>
@@ -2624,7 +2637,7 @@
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-04-15</Date>
@@ -2632,7 +2645,7 @@
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-04-15</Date>
@@ -2640,7 +2653,7 @@
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-04-15</Date>
@@ -2648,176 +2661,183 @@
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Specifications>
           <string>[Operations]</string>
         </Specifications>
       </Factor>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Factors>
     <Simulation>
       <Name>PendletonBaseSimulation</Name>
       <Weather>
         <Name>Weather</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <FileName>pendletonAPSIMtav.met</FileName>
         <ExcelWorkSheetName />
       </Weather>
       <Clock>
         <Name>clock</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <StartDate>1930-01-01T00:00:00</StartDate>
         <EndDate>1990-12-31T00:00:00</EndDate>
       </Clock>
       <Summary>
         <Name>summaryfile</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Summary>
       <Zone>
         <Name>Field</Name>
         <Operations>
           <Name>Operations</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Operation>
             <Date>1931-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1933-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1935-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1937-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1939-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1941-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1943-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1945-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1947-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1949-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1951-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1953-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1955-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1957-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1959-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1961-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1963-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonTall, depth:30, population:100, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Rex, depth:30, population:100, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1965-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1967-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1969-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1971-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1973-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1975-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1977-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1979-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1981-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1983-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1985-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1987-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1989-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1991-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1993-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1995-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1997-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
           <Operation>
             <Date>1999-10-15</Date>
-            <Action> [Wheat].Sow(cultivar:PendletonDwarf, depth:30, population:150, rowSpacing:300);</Action>
+            <Action> [Wheat].Sow(cultivar:Stephens, depth:30, population:150, rowSpacing:300);</Action>
           </Operation>
         </Operations>
         <Manager>
           <Name>TillageOperations</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <Crop>wheat</Crop>
             <TillDate>16-may</TillDate>
@@ -2858,9 +2878,11 @@ namespace Models
         </Manager>
         <Operations>
           <Name>NOperations</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Operations>
         <Report>
           <Name>Report</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -2875,6 +2897,7 @@ namespace Models
         </Report>
         <Report>
           <Name>HarvestReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ExperimentFactorNames />
           <ExperimentFactorValues />
           <VariableNames>
@@ -2895,8 +2918,10 @@ namespace Models
         </Report>
         <SurfaceOrganicMatter>
           <Name>stubble</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResidueTypes>
             <Name>ResidueTypesList</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LoadFromResource>ResidueTypes</LoadFromResource>
           </ResidueTypes>
           <Pools>
@@ -2928,14 +2953,15 @@ namespace Models
           <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
           <FractionFaecesAdded>0.5</FractionFaecesAdded>
         </SurfaceOrganicMatter>
-        <Plant15>
+        <Plant>
           <Name>wheat</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Wheat</ResourceName>
-          <AutoHarvest>false</AutoHarvest>
           <CropType>wheat</CropType>
-        </Plant15>
+        </Plant>
         <MicroClimate>
           <Name>MicroClimate</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <a_interception>0</a_interception>
           <b_interception>1</b_interception>
           <c_interception>0</c_interception>
@@ -2951,6 +2977,7 @@ namespace Models
         </MicroClimate>
         <Manager>
           <Name>Harvesting</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Script>
             <Crop>wheat</Crop>
           </Script>
@@ -2985,6 +3012,7 @@ namespace Models
         </Manager>
         <Fertiliser>
           <Name>Fertiliser</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </Fertiliser>
         <Soil>
           <Name>Soil</Name>
@@ -2992,6 +3020,7 @@ namespace Models
             <Name>Water</Name>
             <SoilCrop>
               <Name>WheatSoil</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
               <LL>
                 <double>0.11</double>
                 <double>0.11</double>
@@ -3020,6 +3049,7 @@ namespace Models
                 <double>0</double>
               </XF>
             </SoilCrop>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -3086,6 +3116,7 @@ namespace Models
           </Water>
           <SoilWater>
             <Name>SoilWater</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <SummerDate>1-Apr</SummerDate>
             <SummerU>6</SummerU>
             <SummerCona>3.5</SummerCona>
@@ -3120,6 +3151,7 @@ namespace Models
           </SoilWater>
           <SoilNitrogen>
             <Name>SoilNitrogen</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <fom_type>
               <string>default</string>
               <string>manure</string>
@@ -3152,17 +3184,10 @@ namespace Models
               <double>0.08</double>
               <double>0.9</double>
             </fract_lign>
-            <wfpsN2N2O_x>
-              <double>22</double>
-              <double>88</double>
-            </wfpsN2N2O_x>
-            <wfpsN2N2O_y>
-              <double>0.1</double>
-              <double>1</double>
-            </wfpsN2N2O_y>
           </SoilNitrogen>
           <SoilOrganicMatter>
             <Name>SoilOrganicMatter</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <RootCN>57</RootCN>
             <RootWt>1109</RootWt>
             <SoilCN>13</SoilCN>
@@ -3217,6 +3242,7 @@ namespace Models
           </SoilOrganicMatter>
           <Analysis>
             <Name>Analysis</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>150</double>
               <double>150</double>
@@ -3242,12 +3268,14 @@ namespace Models
           </Analysis>
           <InitialWater>
             <Name>Initial water</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <PercentMethod>FilledFromTop</PercentMethod>
             <FractionFull>1</FractionFull>
             <DepthWetSoil>NaN</DepthWetSoil>
           </InitialWater>
           <Sample>
             <Name>Initial conditions</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Thickness>
               <double>100</double>
               <double>200</double>
@@ -3281,6 +3309,11 @@ namespace Models
             <OCUnits>Total</OCUnits>
             <PHUnits>Water</PHUnits>
           </Sample>
+          <CERESSoilTemperature>
+            <Name>CERESSoilTemperature</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </CERESSoilTemperature>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RecordNumber>450</RecordNumber>
           <ASCOrder>Sodosol</ASCOrder>
           <ASCSubOrder>Red</ASCSubOrder>
@@ -3297,12 +3330,36 @@ namespace Models
           <LocationAccuracy>+/- 20m</LocationAccuracy>
           <DataSource>Characterisation 2008 by University of Adelaide, CSIRO Sustainable Ecosystems and Allan Mayfield Consulting, Clare, SA</DataSource>
           <Comments> Roots: Wheat 90cm; barley and oats estimated; OC WB as measured; Strongly duplex low-moderate clay soil. Surface CEC low, moderate below. Texture change at about 7cm. Little chemical impediment to root growth, but high ESP below about 60cm may result in slaking or dispersion and high bulk density.</Comments>
-          <CERESSoilTemperature />
         </Soil>
+        <SoluteManager>
+          <Name>SoluteManager</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </SoluteManager>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Area>1</Area>
         <Slope>0</Slope>
-        <SoluteManager />
       </Zone>
+      <SoilArbitrator>
+        <Name>SoilArbitrator</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+      </SoilArbitrator>
+      <MicroClimate>
+        <Name>MicroClimate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <a_interception>0</a_interception>
+        <b_interception>1</b_interception>
+        <c_interception>0</c_interception>
+        <d_interception>0</d_interception>
+        <soil_albedo>0.23</soil_albedo>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <refheight>2</refheight>
+        <albedo>0.15</albedo>
+        <emissivity>0.96</emissivity>
+        <RadIntTotal>0</RadIntTotal>
+      </MicroClimate>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Simulation>
     <Folder>
       <Name>Soil</Name>
@@ -3310,6 +3367,7 @@ namespace Models
         <Name>SOC30</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3331,6 +3389,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3350,6 +3409,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3366,12 +3426,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SOC60</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3393,6 +3453,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3412,6 +3473,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3428,12 +3490,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SON30</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3455,6 +3517,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3474,6 +3537,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3490,12 +3554,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SON60</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3517,6 +3581,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3536,6 +3601,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3552,12 +3618,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>CNR30</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3579,6 +3645,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3598,6 +3665,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3614,12 +3682,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>CNR60</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3641,6 +3709,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3660,6 +3729,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3676,7 +3746,6 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SOC30 Pre vs Obs</Name>
@@ -3684,8 +3753,10 @@ namespace Models
           <Name>Pre vs Obs</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3705,6 +3776,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3721,7 +3793,6 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SOC60 Pre vs Obs</Name>
@@ -3729,8 +3800,10 @@ namespace Models
           <Name>Pre vs Obs</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3750,6 +3823,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3766,7 +3840,6 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SON30 Pre vs Obs</Name>
@@ -3774,8 +3847,10 @@ namespace Models
           <Name>Pre vs Obs</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3795,6 +3870,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3811,7 +3887,6 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>SON60 Pre vs Obs</Name>
@@ -3819,8 +3894,10 @@ namespace Models
           <Name>Pre vs Obs</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3840,6 +3917,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3856,8 +3934,9 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
       <Name>Crop</Name>
@@ -3865,6 +3944,7 @@ namespace Models
         <Name>Yield</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3886,6 +3966,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3905,6 +3986,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3921,7 +4003,6 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>Obs vs Pre Yield</Name>
@@ -3929,8 +4010,10 @@ namespace Models
           <Name>ObsVsPre</Name>
           <Regression>
             <Name>Regression</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <ForEachSeries>false</ForEachSeries>
           </Regression>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3950,6 +4033,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -3966,12 +4050,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
       <Graph>
         <Name>NExport</Name>
         <Series>
           <Name>Observed</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -3993,6 +4077,7 @@ namespace Models
         </Series>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4012,6 +4097,7 @@ namespace Models
           <Cumulative>true</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4028,8 +4114,9 @@ namespace Models
         </Axis>
         <LegendPosition>TopLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
     <Folder>
       <Name>Debug</Name>
@@ -4037,6 +4124,7 @@ namespace Models
         <Name>SoilWater</Name>
         <Series>
           <Name>Predicted</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4058,6 +4146,7 @@ namespace Models
         </Series>
         <Series>
           <Name>LL15</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4079,6 +4168,7 @@ namespace Models
         </Series>
         <Series>
           <Name>DUL</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Type>Scatter</Type>
           <XAxis>Bottom</XAxis>
           <YAxis>Left</YAxis>
@@ -4098,6 +4188,7 @@ namespace Models
           <Cumulative>false</Cumulative>
           <CumulativeX>false</CumulativeX>
         </Series>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <Axis>
           <Type>Bottom</Type>
           <Inverted>false</Inverted>
@@ -4114,9 +4205,12 @@ namespace Models
         </Axis>
         <LegendPosition>BottomLeft</LegendPosition>
         <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
       </Graph>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ShowPageOfGraphs>true</ShowPageOfGraphs>
     </Folder>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Experiment>
-  <ExplorerWidth>250</ExplorerWidth>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

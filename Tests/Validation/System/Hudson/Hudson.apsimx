@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Simulation>
     <Name>W1 Base Simulation</Name>
     <Clock>
       <Name>clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>1994-08-05T00:00:00</StartDate>
       <EndDate>2000-01-23T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>summaryfile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Hudson.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
@@ -20,6 +23,7 @@
       <Name>paddock</Name>
       <Report>
         <Name>report</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -49,6 +53,7 @@
           <Name>Water</Name>
           <SoilCrop>
             <Name>WheatSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LL>
               <double>0.25</double>
               <double>0.3</double>
@@ -104,6 +109,7 @@
               <double>0</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -215,6 +221,7 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>9</SummerU>
           <SummerCona>5</SummerCona>
@@ -271,6 +278,7 @@
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -303,17 +311,10 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RootCN>40</RootCN>
           <RootWt>10</RootWt>
           <SoilCN>14.5</SoilCN>
@@ -413,6 +414,7 @@
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -454,6 +456,7 @@
         </Analysis>
         <Sample>
           <Name>Initial nitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -516,6 +519,7 @@
         </Sample>
         <Sample>
           <Name>Initial water</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -560,15 +564,19 @@
         </Sample>
         <CERESSoilTemperature>
           <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </CERESSoilTemperature>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <Latitude>0</Latitude>
         <Longitude>0</Longitude>
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOM</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResidueTypes>
           <Name>ResidueTypesList</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <Pools>
@@ -602,6 +610,7 @@
       </SurfaceOrganicMatter>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -617,9 +626,11 @@
       </MicroClimate>
       <Fertiliser>
         <Name>Fertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Fertiliser>
       <Operations>
         <Name>Operations</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Operation>
           <Date>1994-08-05</Date>
           <Action> [Wheat].Sow(population:26, cultivar:hartog, depth:40, rowSpacing:300);	</Action>
@@ -630,7 +641,7 @@
         </Operation>
         <Operation>
           <Date>1994-09-07</Date>
-          <Action> [Wheat].OnEndCrop();</Action>
+          <Action> [Wheat].EndCrop();</Action>
         </Operation>
         <Operation>
           <Date>1994-10-27</Date>
@@ -647,6 +658,10 @@
         <Operation>
           <Date>1995-11-28</Date>
           <Action> [Wheat].Harvest();</Action>
+        </Operation>
+        <Operation>
+          <Date>1995-11-28</Date>
+          <Action> [Wheat].EndCrop();</Action>
         </Operation>
         <Operation>
           <Date>1996-07-02</Date>
@@ -673,6 +688,10 @@
           <Action> [Wheat].Harvest();</Action>
         </Operation>
         <Operation>
+          <Date>1997-11-26</Date>
+          <Action>[Wheat].EndCrop();</Action>
+        </Operation>
+        <Operation>
           <Date>1998-06-18</Date>
           <Action> [Wheat].Sow(cultivar:hartog, population:126, depth:40, rowSpacing:300);</Action>
         </Operation>
@@ -683,6 +702,10 @@
         <Operation>
           <Date>1998-12-02</Date>
           <Action> [Wheat].Harvest();</Action>
+        </Operation>
+        <Operation>
+          <Date>1998-12-02</Date>
+          <Action>[Wheat].EndCrop();</Action>
         </Operation>
         <Operation>
           <Date>1999-06-23</Date>
@@ -696,16 +719,22 @@
           <Date>1999-12-16</Date>
           <Action> [Wheat].Harvest();</Action>
         </Operation>
+        <Operation>
+          <Date>1999-12-16</Date>
+          <Action> [Wheat].EndCrop();</Action>
+        </Operation>
       </Operations>
-      <Plant15>
+      <Plant>
         <Name>Wheat</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>Wheat</ResourceName>
-        <AutoHarvest>true</AutoHarvest>
         <CropType>Wheat</CropType>
-      </Plant15>
+      </Plant>
       <SoluteManager>
         <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </SoluteManager>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -713,6 +742,7 @@
       <Name>Biomass</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -734,6 +764,7 @@
       </Series>
       <Series>
         <Name>Observed Wheat</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -755,6 +786,7 @@
       </Series>
       <Series>
         <Name>Observed Barley</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -774,6 +806,7 @@
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -790,12 +823,12 @@
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>Yield</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -817,6 +850,7 @@
       </Series>
       <Series>
         <Name>Observed Wheat</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -838,6 +872,7 @@
       </Series>
       <Series>
         <Name>Observed Barley</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -857,6 +892,7 @@
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -873,12 +909,12 @@
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>LAI</Name>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -900,6 +936,7 @@
       </Series>
       <Series>
         <Name>Observed Wheat</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -921,6 +958,7 @@
       </Series>
       <Series>
         <Name>Observed Barley</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -940,6 +978,7 @@
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Inverted>false</Inverted>
@@ -956,13 +995,34 @@
       </Axis>
       <LegendPosition>TopLeft</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Graph>
+    <SoilArbitrator>
+      <Name>SoilArbitrator</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </SoilArbitrator>
+    <MicroClimate>
+      <Name>MicroClimate</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <a_interception>0</a_interception>
+      <b_interception>1</b_interception>
+      <c_interception>0</c_interception>
+      <d_interception>0</d_interception>
+      <soil_albedo>0.23</soil_albedo>
+      <sun_angle>15</sun_angle>
+      <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+      <night_interception_fraction>0.5</night_interception_fraction>
+      <refheight>2</refheight>
+      <albedo>0.15</albedo>
+      <emissivity>0.96</emissivity>
+      <RadIntTotal>0</RadIntTotal>
+    </MicroClimate>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>ExcelInput</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>observed.xlsx</FileName>
       <FileNameMetadata>
         <string>Excel files (*.xlsx)|*.xlsx</string>
@@ -979,8 +1039,10 @@
         <string>SWlayers</string>
       </SheetNames>
     </ExcelInput>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>0</ExplorerWidth>
 </Simulations>
