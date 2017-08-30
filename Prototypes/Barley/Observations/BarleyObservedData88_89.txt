@@ -1,4 +1,4 @@
-SimulationName	Treatment	Clock.Today	Barley.Leaf.Live.Wt	Barley.Stem.Wt	Barley.Ear.Wt	Barley.Grain.Wt	Barley.Chaff.Wt	TotalAboveGroundWt	Barley.Leaf.CoverGreen	Barley.Leaf.LAI
+SimulationName	Treatment	Clock.Today	Barley.Leaf.Live.Wt	Barley.Stem.Wt	Barley.Head.Wt	Barley.Grain.Wt	Barley.Spike.Wt	Barley.AboveGround.Wt	Barley.Leaf.CoverGreen	Barley.Leaf.LAI
 ()	()	()	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(g/m2)	()	(m2/m2)
 RS1988_89_Control	1	1988-09-20	*	*	*	*	*	*	*	0
 RS1988_89_EarlyDrought1	2	1988-09-20	*	*	*	*	*	*	*	0
