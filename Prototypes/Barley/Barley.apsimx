@@ -3966,15 +3966,35 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </EventNames>
     </Report>
     <Report>
-      <Name>EndTrialReport</Name>
+      <Name>HarvestReport</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
-        <string />
+        <string>[Clock].Today</string>
+        <string>[Barley].Phenology.CurrentPhaseName</string>
+        <string>[Barley].Phenology.CurrentStageName</string>
+        <string>[Barley].Phenology.FlagLeafDAS.Value()</string>
+        <string>[Barley].Phenology.FloweringDAS.Value()</string>
+        <string>[Barley].Phenology.MaturityDAS.Value()</string>
+        <string>[Barley].Grain.Wt</string>
+        <string>[Barley].Grain.N</string>
+        <string>[Barley].Grain.Number</string>
+        <string>[Barley].Grain.Nconc</string>
+        <string>[Barley].AboveGround.Wt</string>
+        <string>[Barley].AboveGround.N</string>
+        <string>[Barley].Grain.Protein</string>
+        <string>[Barley].Grain.Size</string>
+        <string>[Barley].Structure.HaunStage.Value()TerminalSpikelet.Value()</string>
+        <string>[Barley].Structure.FinalLeafNumber.Value()</string>
+        <string>[Barley].Structure.MainStemPopn</string>
+        <string>[Barley].SowingData.Cultivar</string>
+        <string>[Barley].SowingDate.DayOfYear</string>
+        <string>[Barley].Leaf.CohortMaxSize</string>
+        <string>[Clock].StartDate</string>
       </VariableNames>
       <EventNames>
-        <string>[Clock].EndOfSimulation</string>
+        <string>[Barley].Harvesting</string>
       </EventNames>
     </Report>
     <Plant>
@@ -7101,65 +7121,65 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Cultivar>
             <Name>Baudin</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
             <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Buloke</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
             <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Capstan</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
             <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Commander</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
             <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Fleet</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
             <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Hindmarsh</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
             <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Keel</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 6</Command>
             <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <Cultivar>
             <Name>Oxford</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
+            <Command>[Phenology].MinimumLeafNumber.FixedValue = 6</Command>
             <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
-            <Command>[Phenology].PpSensitivity.FixedValue = 0</Command>
+            <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
             <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           </Cultivar>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7174,6 +7194,14 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
+    <ExcelInput>
+      <Name>Observed</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>Observed.xlsx</FileName>
+      <SheetNames>
+        <string>Observed</string>
+      </SheetNames>
+    </ExcelInput>
     <Input>
       <Name>BaselineData</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7441,14 +7469,20 @@ in file: C:\ApsimX\Prototypes\Barley\Observations\BarleyBaseline.txt</ErrorMessa
       <ObservedTableName>BaselineData</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
     </PredictedObserved>
-    <ExcelInput>
-      <Name>Observed</Name>
+    <PredictedObserved>
+      <Name>HarvestObsPred</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>Observed.xlsx</FileName>
-      <SheetNames>
-        <string>ObservedPhenology</string>
-      </SheetNames>
-    </ExcelInput>
+      <PredictedTableName>HarvestReport</PredictedTableName>
+      <ObservedTableName>Observed</ObservedTableName>
+      <FieldNameUsedForMatch>Barley.Phenology.CurrentStageName</FieldNameUsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>DailyObsPred</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <PredictedTableName>DailyReport</PredictedTableName>
+      <ObservedTableName>Observed</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+    </PredictedObserved>
     <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>5000</MaximumResultsPerPage>
@@ -9805,7 +9839,7 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
@@ -14880,7 +14914,7 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
@@ -18070,7 +18104,7 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
@@ -20231,7 +20265,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -21718,7 +21752,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -22995,7 +23029,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -24371,7 +24405,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -26125,7 +26159,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -27395,7 +27429,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -28839,7 +28873,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -30194,7 +30228,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -31570,7 +31604,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -32946,7 +32980,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -34315,7 +34349,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -36100,7 +36134,7 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
@@ -38113,9 +38147,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -38395,7 +38429,7 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
@@ -41161,9 +41195,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -41443,7 +41477,7 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
@@ -43350,9 +43384,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Omaka</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -43632,7 +43666,7 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
@@ -45715,9 +45749,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Sherwood</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -45997,7 +46031,7 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
@@ -48007,9 +48041,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
+                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -48240,7 +48274,7 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
@@ -50216,9 +50250,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
-                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
+                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -50457,7 +50491,7 @@ namespace Models
               </EventNames>
             </Report>
             <Report>
-              <Name>EndTrialReport</Name>
+              <Name>HarvestReport</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ExperimentFactorNames />
               <ExperimentFactorValues />
@@ -52228,9 +52262,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
+                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -52278,15 +52312,16 @@ namespace Models
                 </Manager>
                 <Manager>
                   <Name>Harvesting</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Script>
-                    <Crop>Barley</Crop>
-                  </Script>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
                   <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF;
+using System.Collections.Generic;
+using System.Text;
 using Models.Soils;
-using Models.Utilities;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -52294,19 +52329,15 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Description("Crop")]
-		public ICrop Crop { get; set; }
-        
-       
+		[Link] Plant Barley;
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-		    if (Crop!=null)
-    			if (Crop.IsReadyForHarvesting)
-	   		{
-	   			Crop.Harvest();
-	   			Crop.EndCrop();
-	   		}
+			if (Barley.Phenology.CurrentPhaseName == "Ripening")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
 		}
 	}
 }
@@ -52790,7 +52821,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -53169,9 +53200,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -53235,9 +53266,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -53306,7 +53337,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -53372,7 +53403,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -53402,6 +53433,100 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
+          <Graph>
+            <Name>Time To Flag Leaf</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Time To Maturity</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.MaturityDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.MaturityDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Experiment>
         <Experiment>
@@ -53616,9 +53741,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
+                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -53666,15 +53791,16 @@ namespace Models
                 </Manager>
                 <Manager>
                   <Name>Harvesting</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Script>
-                    <Crop>Barley</Crop>
-                  </Script>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
                   <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF;
+using System.Collections.Generic;
+using System.Text;
 using Models.Soils;
-using Models.Utilities;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -53682,19 +53808,15 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Description("Crop")]
-		public ICrop Crop { get; set; }
-        
-       
+		[Link] Plant Barley;
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-		    if (Crop!=null)
-    			if (Crop.IsReadyForHarvesting)
-	   		{
-	   			Crop.Harvest();
-	   			Crop.EndCrop();
-	   		}
+			if (Barley.Phenology.CurrentPhaseName == "Ripening")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
 		}
 	}
 }
@@ -54173,7 +54295,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -54552,9 +54674,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -54618,9 +54740,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -54689,7 +54811,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -54755,7 +54877,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -54785,6 +54907,100 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
+          <Graph>
+            <Name>Time To Flag Leaf</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Time To Maturity</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.MaturityDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.MaturityDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Experiment>
         <Experiment>
@@ -54999,9 +55215,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
+                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
-                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -55049,15 +55265,16 @@ namespace Models
                 </Manager>
                 <Manager>
                   <Name>Harvesting</Name>
-                  <IncludeInDocumentation>false</IncludeInDocumentation>
-                  <Script>
-                    <Crop>Barley</Crop>
-                  </Script>
+                  <IncludeInDocumentation>true</IncludeInDocumentation>
+                  <Script />
                   <Code><![CDATA[using System;
 using Models.Core;
-using Models.PMF;
+using System.Collections.Generic;
+using System.Text;
 using Models.Soils;
-using Models.Utilities;
+using Models.PMF;
+using Models;
+using System.Xml.Serialization;
 using APSIM.Shared.Utilities;
 
 namespace Models
@@ -55065,19 +55282,15 @@ namespace Models
 	[Serializable] 
 	public class Script : Model
 	{
-		[Description("Crop")]
-		public ICrop Crop { get; set; }
-        
-       
+		[Link] Plant Barley;
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-		    if (Crop!=null)
-    			if (Crop.IsReadyForHarvesting)
-	   		{
-	   			Crop.Harvest();
-	   			Crop.EndCrop();
-	   		}
+			if (Barley.Phenology.CurrentPhaseName == "Ripening")
+			{
+				Barley.Harvest();
+				Barley.EndCrop();
+			}
 		}
 	}
 }
@@ -55520,7 +55733,7 @@ namespace Models
                 </EventNames>
               </Report>
               <Report>
-                <Name>EndTrialReport</Name>
+                <Name>HarvestReport</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ExperimentFactorNames />
                 <ExperimentFactorValues />
@@ -55899,9 +56112,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -55965,9 +56178,9 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
-                <YFieldName>Barley.Structure.HaunStage.Value</YFieldName>
+                <YFieldName>Barley.Structure.HaunStage.Value()</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
                 <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
                 <Cumulative>false</Cumulative>
@@ -56036,7 +56249,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -56102,7 +56315,7 @@ namespace Models
                 <MarkerSize>Normal</MarkerSize>
                 <Line>None</Line>
                 <LineThickness>Normal</LineThickness>
-                <TableName>ObservedPhenology</TableName>
+                <TableName>Observed</TableName>
                 <XFieldName>Clock.Today</XFieldName>
                 <YFieldName>Barley.Phenology.Zadok.Stage</YFieldName>
                 <ShowInLegend>false</ShowInLegend>
@@ -56132,8 +56345,243 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ShowPageOfGraphs>true</ShowPageOfGraphs>
           </Folder>
+          <Graph>
+            <Name>Time To Flag Leaf</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
+          <Graph>
+            <Name>Time To Maturity</Name>
+            <Series>
+              <Name>Series</Name>
+              <Regression>
+                <Name>Regression</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <ForEachSeries>false</ForEachSeries>
+              </Regression>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Type>Scatter</Type>
+              <XAxis>Bottom</XAxis>
+              <YAxis>Left</YAxis>
+              <ColourArgb>-16777216</ColourArgb>
+              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+              <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+              <Marker>FilledCircle</Marker>
+              <MarkerSize>Normal</MarkerSize>
+              <Line>None</Line>
+              <LineThickness>Normal</LineThickness>
+              <TableName>HarvestObsPred</TableName>
+              <XFieldName>Observed.Barley.Phenology.MaturityDAS.Value()</XFieldName>
+              <YFieldName>Predicted.Barley.Phenology.MaturityDAS.Value()</YFieldName>
+              <ShowInLegend>true</ShowInLegend>
+              <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+              <Cumulative>false</Cumulative>
+              <CumulativeX>false</CumulativeX>
+            </Series>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Axis>
+              <Type>Bottom</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <Axis>
+              <Type>Left</Type>
+              <Inverted>false</Inverted>
+              <Minimum>NaN</Minimum>
+              <Maximum>NaN</Maximum>
+              <Interval>NaN</Interval>
+            </Axis>
+            <LegendPosition>BottomRight</LegendPosition>
+            <DisabledSeries />
+          </Graph>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </Experiment>
+        <Graph>
+          <Name>Time To Flag Leaf</Name>
+          <Series>
+            <Name>Series</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestObsPred</TableName>
+            <XFieldName>Observed.Barley.Phenology.FlagLeafDAS.Value()</XFieldName>
+            <YFieldName>Predicted.Barley.Phenology.FlagLeafDAS.Value()</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Time To Maturity</Name>
+          <Series>
+            <Name>Series</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>HarvestObsPred</TableName>
+            <XFieldName>Observed.Barley.Phenology.MaturityDAS.Value()</XFieldName>
+            <YFieldName>Predicted.Barley.Phenology.MaturityDAS.Value()</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
+        <Graph>
+          <Name>Haun Stage</Name>
+          <Series>
+            <Name>Series</Name>
+            <Regression>
+              <Name>Regression</Name>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <ForEachSeries>false</ForEachSeries>
+            </Regression>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <Type>Scatter</Type>
+            <XAxis>Bottom</XAxis>
+            <YAxis>Left</YAxis>
+            <ColourArgb>-16777216</ColourArgb>
+            <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
+            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
+            <Marker>FilledCircle</Marker>
+            <MarkerSize>Normal</MarkerSize>
+            <Line>None</Line>
+            <LineThickness>Normal</LineThickness>
+            <TableName>DailyObsPred</TableName>
+            <XFieldName>Observed.Barley.Structure.HaunStage.Value()</XFieldName>
+            <YFieldName>Predicted.Barley.Structure.HaunStage.Value()</YFieldName>
+            <ShowInLegend>true</ShowInLegend>
+            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
+            <Cumulative>false</Cumulative>
+            <CumulativeX>false</CumulativeX>
+          </Series>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <Axis>
+            <Type>Bottom</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <Axis>
+            <Type>Left</Type>
+            <Inverted>false</Inverted>
+            <Minimum>NaN</Minimum>
+            <Maximum>NaN</Maximum>
+            <Interval>NaN</Interval>
+          </Axis>
+          <LegendPosition>BottomRight</LegendPosition>
+          <DisabledSeries />
+        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -57009,7 +57457,7 @@ namespace Models
             </EventNames>
           </Report>
           <Report>
-            <Name>EndTrialReport</Name>
+            <Name>HarvestReport</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ExperimentFactorNames />
             <ExperimentFactorValues />
