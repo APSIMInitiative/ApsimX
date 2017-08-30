@@ -101,7 +101,6 @@ namespace UnitTests
                              "          {\r\n" +
                              "          	accumulatedRain.Update();\r\n" +
                              "          	if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n" +
-                             "          	    Wheat.plant_status == \"out\" &&\r\n" +
                              "          	    Soil.SoilWater.ESW > MinESW &&\r\n" +
                              "          	    accumulatedRain.Sum > MinRain)\r\n" +
                              "          	{\r\n" +
@@ -144,7 +143,6 @@ namespace UnitTests
                              "          {\r\n" +
                              "          	accumulatedRain.Update();\r\n" +
                              "          	if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n" +
-                             "          	    Wheat.plant_status == \"out\" &&\r\n" +
                              "          	    MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n" +
                              "          	    accumulatedRain.Sum > MinRain)\r\n" +
                              "          	{\r\n" +
@@ -162,7 +160,7 @@ namespace UnitTests
                                     "<string>sum([MySoil].SoilWater.ESW)</string>" +
                                 "</VariableNames>" +
                              "</Report>" +
-                             "</Simulation>";
+                           "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
 
@@ -204,7 +202,7 @@ namespace UnitTests
                                  "<VariableName>[Stem].MinimumNConc.Value()</VariableName>" +
                                "</VariableReference>" +
                              "</GenericOrgan>" +
-                           "</Simulation>";
+                            "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
 

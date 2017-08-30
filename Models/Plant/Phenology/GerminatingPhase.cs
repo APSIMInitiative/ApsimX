@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.Xml.Serialization;
-using Models.PMF.OldPlant;
 
 
 namespace Models.PMF.Phen
@@ -32,11 +31,8 @@ namespace Models.PMF.Phen
         [Link]
         Phenology phenology = null;
 
-        [Link(IsOptional = true)]
+        [Link]
         private Plant Plant = null;
-
-        [Link(IsOptional = true)]
-        private Plant15 Plant15 = null;    // This can be deleted once we get rid of plant15.
 
         /// <summary>
         /// The soil layer in which the seed is sown
@@ -57,8 +53,6 @@ namespace Models.PMF.Phen
             double accumDepth = 0;
             if (Plant != null)
                 SowDepth = Plant.SowingData.Depth;  
-            if (Plant15 != null)
-                SowDepth = Plant15.SowingData.Depth;
             bool layerfound = false;
             for (int layer = 0; layerfound; layer++)
             {

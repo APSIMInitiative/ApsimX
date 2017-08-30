@@ -15,13 +15,15 @@ namespace Models.Core
     using System.Reflection;
     using System.IO;
     using System.Text.RegularExpressions;
+    using PMF;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
     public class APSIMFileConverter
     {
         /// <summary>Gets the lastest .apsimx file format version.</summary>
-        public static int LastestVersion { get { return 12; } }
+        public static int LastestVersion { get { return 13; } }
 
         /// <summary>Converts to file to the latest version.</summary>
         /// <param name="fileName">Name of the file.</param>
@@ -337,6 +339,32 @@ namespace Models.Core
 
             APSIMFileConverterUtilities.RenamePMFFunction(node, "Structure", "MainStemFinalNodeNumber", "FinalLeafNumber");
             APSIMFileConverterUtilities.RenameVariable(node, ".MainStemFinalNodeNumber", ".FinalLeafNumber");
+        }
+
+        /// <summary>
+        /// Rename Plant15 to Plant.
+        /// </summary>
+        /// <param name="node">The node to modifiy</param>
+        private static void UpgradeToVersion13(XmlNode node)
+        {
+            APSIMFileConverterUtilities.RenameNode(node, "Plant15", "Plant");
+            APSIMFileConverterUtilities.RenameVariable(node, "using Models.PMF.OldPlant;", "using Models.PMF;");
+            APSIMFileConverterUtilities.RenameVariable(node, "Plant15", "Plant");
+
+            foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
+                APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"(\w+).plant.status *== *\042out\042", @"!$1.IsAlive", null);  // /042 is a "
+
+            foreach (XmlNode simulationNode in XmlUtilities.FindAllRecursivelyByType(node, "Simulation"))
+            {
+                List<XmlNode> plantModels = XmlUtilities.FindAllRecursivelyByType(simulationNode, "Plant");
+                plantModels.RemoveAll(p => p.Name == "plant"); // remove lowercase plant nodes - these are in sugarcane
+
+                if (plantModels.Count > 0)
+                {
+                    XmlUtilities.EnsureNodeExists(simulationNode, "SoilArbitrator");
+                    XmlUtilities.EnsureNodeExists(plantModels[0].ParentNode, "MicroClimate");
+                }
+            }
         }
     }
 }

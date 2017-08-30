@@ -170,6 +170,7 @@ namespace Models.PMF
         /// <summary>
         /// Holds the date of sowing
         /// </summary>
+        [XmlIgnore]
         public DateTime SowingDate { get; set; }
 
         /// <summary>Gets or sets the plant population.</summary>
