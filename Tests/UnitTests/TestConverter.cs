@@ -48,7 +48,6 @@ namespace UnitTests
                                  "<YFieldName>GrainWt</YFieldName>" +
                                "</Series>" +
                              "</Graph>" +
-                             "<SoilArbitrator />" + 
                            "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
@@ -77,7 +76,6 @@ namespace UnitTests
                                    "<Name>Cultivar2</Name>" +
                                  "</Alias>" +
                              "</Cultivar>" +
-                             "<SoilArbitrator />" +
                            "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
@@ -162,7 +160,6 @@ namespace UnitTests
                                     "<string>sum([MySoil].SoilWater.ESW)</string>" +
                                 "</VariableNames>" +
                              "</Report>" +
-                             "<SoilArbitrator />" +
                            "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
@@ -205,7 +202,6 @@ namespace UnitTests
                                  "<VariableName>[Stem].MinimumNConc.Value()</VariableName>" +
                                "</VariableReference>" +
                              "</GenericOrgan>" +
-                             "<SoilArbitrator />" +
                             "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
@@ -314,7 +310,6 @@ namespace UnitTests
                              "<StorageNReallocated>" +
                                "<Value>1</Value>" +
                              "</StorageNReallocated>" +
-                             "<SoilArbitrator />" +
                            "</Simulation>";
             Assert.AreEqual(doc.DocumentElement.OuterXml, toXML);
         }
