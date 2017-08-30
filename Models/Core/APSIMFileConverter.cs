@@ -356,10 +356,13 @@ namespace Models.Core
 
             foreach (XmlNode simulationNode in XmlUtilities.FindAllRecursivelyByType(node, "Simulation"))
             {
-                if (XmlUtilities.FindAllRecursivelyByType(simulationNode, "Plant").Count > 0)
+                List<XmlNode> plantModels = XmlUtilities.FindAllRecursivelyByType(simulationNode, "Plant");
+                plantModels.RemoveAll(p => p.Name == "plant"); // remove lowercase plant nodes - these are in sugarcane
+
+                if (plantModels.Count > 0)
                 {
                     XmlUtilities.EnsureNodeExists(simulationNode, "SoilArbitrator");
-                    XmlUtilities.EnsureNodeExists(simulationNode, "MicroClimate");
+                    XmlUtilities.EnsureNodeExists(plantModels[0].ParentNode, "MicroClimate");
                 }
             }
         }

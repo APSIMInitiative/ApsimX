@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Replacements>
@@ -1552,12 +1552,6 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <XProperty>[SoilWaterScale]</XProperty>
         </LinearInterpolationFunction>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
-        <GrowthRespiration>0</GrowthRespiration>
-        <MaintenanceRespiration>0</MaintenanceRespiration>
-        <ZoneNamesToGrowRootsIn />
-        <ZoneRootDepths />
-        <ZoneInitialDM />
         <PartitionFractionDemandFunction>
           <Name>DMDemandFunction</Name>
           <PhaseLookup>
@@ -1609,7 +1603,14 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             </PhaseLookupValue>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <GrowthRespiration>0</GrowthRespiration>
+        <MaintenanceRespiration>0</MaintenanceRespiration>
+        <ZoneNamesToGrowRootsIn />
+        <ZoneRootDepths />
+        <ZoneInitialDM />
       </Root>
       <Leaf>
         <Name>Leaf</Name>
@@ -2388,6 +2389,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
+        <Leaves />
         <CurrentExpandingLeaf>0</CurrentExpandingLeaf>
         <StartFractionExpanded>0</StartFractionExpanded>
         <FractionNextleafExpanded>0</FractionNextleafExpanded>
@@ -2595,15 +2597,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Structure].TotalStemPopn</VariableName>
         </VariableReference>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Constant>
           <Name>DMReallocationFactor</Name>
-          <FixedValue>0.0</FixedValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
         </Constant>
         <VariableReference>
           <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Spike].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
         <Name>Stem</Name>
@@ -2864,15 +2868,17 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <FixedValue>1</FixedValue>
           <Units>0-1</Units>
         </Constant>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Constant>
           <Name>DMReallocationFactor</Name>
-          <FixedValue>0.0</FixedValue>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
         </Constant>
         <VariableReference>
           <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <VariableName>[Stem].MinimumNConc.Value()</VariableName>
         </VariableReference>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
         <Name>AboveGround</Name>
@@ -4155,7 +4161,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Wheat</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>HarvestReport</Name>
@@ -4392,7 +4397,7 @@ namespace Models
     <Weather>
       <Name>Weather</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
-      <FileName>%root%\Test\Validation\Wheat\APS26.met</FileName>
+      <FileName>%root%\Tests\Validation\Wheat\APS26.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
     <SoilArbitrator>
@@ -4651,14 +4656,6 @@ namespace Models
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
@@ -4897,7 +4894,6 @@ namespace Models
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>Wheat</ResourceName>
         <CropType>Wheat</CropType>
-        <SowingDate>0001-01-01T00:00:00</SowingDate>
       </Plant>
       <Operations>
         <Name>IrrigationSchedule</Name>
@@ -5056,8 +5052,7 @@ namespace Models
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
-          <string>
-          </string>
+          <string />
         </VariableNames>
         <EventNames>
           <string />
