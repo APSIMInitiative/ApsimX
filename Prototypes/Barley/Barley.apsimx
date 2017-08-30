@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="12">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -3849,7 +3849,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Barley</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>DailyReport</Name>
@@ -7188,7 +7187,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Barley</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <IncludeInDocumentation>true</IncludeInDocumentation>
   </Replacements>
@@ -9490,7 +9488,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -14584,7 +14581,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -17712,7 +17708,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -20095,7 +20090,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -21491,7 +21485,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -22860,7 +22853,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -24236,7 +24228,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -25898,7 +25889,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -27260,7 +27250,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -28704,7 +28693,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -30059,7 +30047,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -31435,7 +31422,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -32811,7 +32797,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -34180,7 +34165,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>Surface Organic Matter</Name>
@@ -35879,7 +35863,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -38078,7 +38061,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -41126,7 +41108,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -43315,7 +43296,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -45680,7 +45660,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -47972,7 +47951,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -50181,7 +50159,6 @@ namespace Models
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Barley</ResourceName>
               <CropType>Barley</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <SurfaceOrganicMatter>
               <Name>Surface Organic Matter</Name>
@@ -52351,7 +52328,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>SurfaceOrganicMatter</Name>
@@ -53830,7 +53806,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>SurfaceOrganicMatter</Name>
@@ -55304,7 +55279,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Barley</ResourceName>
                 <CropType>Barley</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <SurfaceOrganicMatter>
                 <Name>SurfaceOrganicMatter</Name>
@@ -57284,7 +57258,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>Barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -58239,7 +58212,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -59363,7 +59335,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -60487,7 +60458,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -61611,7 +61581,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -62691,7 +62660,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -63424,7 +63392,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>M Block92</Name>
@@ -64548,7 +64515,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>M Block92</Name>
@@ -66063,7 +66029,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -67118,7 +67083,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -68643,7 +68607,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SurfaceOrganicMatter>
             <Name>SurfaceOrganicMatter</Name>
@@ -69376,7 +69339,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -70500,7 +70462,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -71624,7 +71585,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -72748,7 +72708,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -73872,7 +73831,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -74996,7 +74954,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
@@ -76164,7 +76121,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Barley</ResourceName>
             <CropType>barley</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Soil>
             <Name>Bay 0</Name>
