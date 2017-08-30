@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -360,16 +360,16 @@ The proxy tree component of this model is intended also to be a guide for develo
           <RegrStats>
             <Name>BiomassWt</Name>
             <n>9</n>
-            <Slope>0.51527775328578729</Slope>
-            <Intercept>299.2083243018925</Intercept>
-            <SEslope>0.3333034081743424</SEslope>
-            <SEintercept>148.17267354373041</SEintercept>
-            <R2>0.25452843994998964</R2>
-            <RMSE>356.04652492151</RMSE>
-            <NSE>-0.23131437243101494</NSE>
-            <ME>150.06074700167139</ME>
-            <MAE>259.94411751335264</MAE>
-            <RSR>1.046184335756909</RSR>
+            <Slope>0.47929257817144055</Slope>
+            <Intercept>145.76058543018951</Intercept>
+            <SEslope>0.29500666891009231</SEslope>
+            <SEintercept>131.1475543711629</SEintercept>
+            <R2>0.27382861598259078</R2>
+            <RMSE>301.402972938749</RMSE>
+            <NSE>0.11763045587621868</NSE>
+            <ME>-14.45952201159411</ME>
+            <MAE>203.3120874880251</MAE>
+            <RSR>0.88562321766402652</RSR>
           </RegrStats>
           <RegrStats>
             <Name>Distance</Name>
@@ -388,30 +388,30 @@ The proxy tree component of this model is intended also to be a guide for develo
           <RegrStats>
             <Name>GrainWt</Name>
             <n>7</n>
-            <Slope>0.30560753034711508</Slope>
-            <Intercept>113.81627473649343</Intercept>
-            <SEslope>0.27000897563783727</SEslope>
-            <SEintercept>50.00157225177761</SEintercept>
-            <R2>0.20395685355190096</R2>
-            <RMSE>134.95034528922</RMSE>
-            <NSE>0.10374237948047393</NSE>
-            <ME>31.731476762028155</ME>
-            <MAE>109.47162169474241</MAE>
-            <RSR>0.87648206917664051</RSR>
+            <Slope>0.074404979790042472</Slope>
+            <Intercept>60.4282211050741</Intercept>
+            <SEslope>0.24051284510578438</SEslope>
+            <SEintercept>44.539335678114504</SEintercept>
+            <R2>0.018781198871307248</R2>
+            <RMSE>160.2659163333575</RMSE>
+            <NSE>-0.26405858668760573</NSE>
+            <ME>-48.987251499467867</ME>
+            <MAE>108.037144843395</MAE>
+            <RSR>1.0409028718326108</RSR>
           </RegrStats>
           <RegrStats>
             <Name>SW90cm</Name>
             <n>96</n>
-            <Slope>0.966471590925833</Slope>
-            <Intercept>9.8865662281974664</Intercept>
-            <SEslope>0.038938990777412925</SEslope>
-            <SEintercept>9.89451890391043</SEintercept>
-            <R2>0.8676130632690463</R2>
-            <RMSE>18.289088282040559</RMSE>
-            <NSE>0.85534856996795</NSE>
-            <ME>1.5208416794274993</ME>
-            <MAE>14.23725323566204</MAE>
-            <RSR>0.37834461051077439</RSR>
+            <Slope>0.7293361241037849</Slope>
+            <Intercept>79.8119779879959</Intercept>
+            <SEslope>0.062052998285258121</SEslope>
+            <SEintercept>15.767860242899717</SEintercept>
+            <R2>0.59507774098313182</R2>
+            <RMSE>34.016723327366158</RMSE>
+            <NSE>0.49959277170950978</NSE>
+            <ME>12.278220986837519</ME>
+            <MAE>27.07220727427822</MAE>
+            <RSR>0.70370068423712484</RSR>
           </RegrStats>
         </AcceptedStats>
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
@@ -4589,7 +4589,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4611,7 +4611,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4660,7 +4660,7 @@ The soil was a coarse, very infertile acid sand with pH (CaCl2) 5.2 at the surfa
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
+        <ColourArgb>-16777216</ColourArgb>
         <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
         <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
         <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
@@ -4834,7 +4834,7 @@ NOTE: Yield predictions at this site are adequate, but an issue with simulating 
 using System.Collections.Generic;
 using Models.Core;
 using Models.Agroforestry;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using Models.Zones;
@@ -4864,7 +4864,7 @@ namespace Models
 		public string CropName { get; set; }
 		
 		private List<IModel> Zones;
-		private Plant15 Wheat;
+		private Plant Wheat;
 		private Soil Soil;
 		
 		[EventSubscribe("Commencing")]
@@ -4881,10 +4881,10 @@ namespace Models
 			
 				foreach (Zone z in Zones)
 				{
-					Wheat = Apsim.Find(z, typeof(Plant15)) as Plant15;	
+					Wheat = Apsim.Find(z, typeof(Plant)) as Plant;	
 					Soil = Apsim.Find(z, typeof(Soil)) as Soil;
 							
-					if (Wheat != null && Wheat.plant_status == "out")
+					if (Wheat != null && !Wheat.IsAlive)
 					{
 						Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);
 						Fertiliser Fertiliser = Apsim.Find(Wheat.Parent, typeof(Fertiliser)) as Fertiliser;
@@ -4892,6 +4892,12 @@ namespace Models
 					}
 					//else
 					//	throw new ApsimXException(null, "Cannot sow wheat on that date");
+
+					if (Wheat != null && Wheat.IsReadyForHarvesting)
+			        {
+			            Wheat.Harvest();
+			            Wheat.EndCrop();	
+			        }
 				}
 			}
 		}
@@ -5962,13 +5968,12 @@ namespace Models
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Wheat</ResourceName>
-          <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <SoluteManager>
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6395,13 +6400,12 @@ namespace Models
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Wheat</ResourceName>
-          <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <SoluteManager>
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -6828,13 +6832,12 @@ namespace Models
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Wheat</ResourceName>
-          <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <SoluteManager>
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7261,13 +7264,12 @@ namespace Models
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Wheat</ResourceName>
-          <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <SoluteManager>
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -7694,13 +7696,12 @@ namespace Models
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Wheat</ResourceName>
-          <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <SoluteManager>
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -8127,13 +8128,12 @@ namespace Models
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Wheat</ResourceName>
-          <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <SoluteManager>
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -8560,13 +8560,12 @@ namespace Models
           <DataSource>0</DataSource>
           <Comments>CSIRO Sustainable Ecosystems, Toowoomba</Comments>
         </Soil>
-        <Plant15>
+        <Plant>
           <Name>Wheat</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <ResourceName>Wheat</ResourceName>
-          <AutoHarvest>true</AutoHarvest>
           <CropType>Wheat</CropType>
-        </Plant15>
+        </Plant>
         <SoluteManager>
           <Name>SoluteManager</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -10653,7 +10652,6 @@ NOTE: Germination failure was an important factor in determining yield impacts o
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -11192,7 +11190,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -11731,7 +11728,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -12270,7 +12266,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -12809,7 +12804,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -13348,7 +13342,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -13887,7 +13880,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -14454,7 +14446,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -16188,7 +16179,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -16722,7 +16712,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -17256,7 +17245,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -17790,7 +17778,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -18324,7 +18311,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -18858,7 +18844,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -19392,7 +19377,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -19926,7 +19910,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Maize</ResourceName>
             <CropType>Maize</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Harvesting</Name>
@@ -21023,7 +21006,7 @@ This sensibility test assumes a tree windbreak with a of height of 10 m. The com
 using System.Collections.Generic;
 using Models.Core;
 using Models.Agroforestry;
-using Models.PMF.OldPlant;
+using Models.PMF;
 using Models.Soils;
 using Models.Utilities;
 using Models.Zones;
@@ -21065,7 +21048,7 @@ namespace Models
 		
 		private Zone ESWZone;
 		private List<IModel> Zones;
-		private Plant15 Wheat;
+		private Plant Wheat;
 		private Soil Soil;
 		
 		[EventSubscribe("Commencing")]
@@ -21092,11 +21075,11 @@ namespace Models
 			
 			foreach (Zone z in Zones)
 			{
-				Wheat = Apsim.Find(z, typeof(Plant15)) as Plant15;	
+				Wheat = Apsim.Find(z, typeof(Plant)) as Plant;	
 				Soil = Apsim.Find(z, typeof(Soil)) as Soil;
 						
 				if (Wheat != null && DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&
-				    Wheat.plant_status == "out" &&
+				    !Wheat.IsAlive &&
 				    MathUtilities.Sum(ESWSoil.SoilWater.ESW) >= MinESW &&
 				    accumulatedRain.Sum >= MinRain)
 				{
@@ -21104,6 +21087,12 @@ namespace Models
 					Fertiliser Fertiliser = Apsim.Find(Wheat.Parent, typeof(Fertiliser)) as Fertiliser;
 					Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);
 				}
+
+				if (Wheat != null && Wheat.IsReadyForHarvesting)
+			    {
+			        Wheat.Harvest();
+			        Wheat.EndCrop();	
+			    }
 			}
 		}
 	}
@@ -21787,13 +21776,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -22195,13 +22183,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -22603,13 +22590,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -23011,13 +22997,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -23419,13 +23404,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -23827,13 +23811,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -24235,13 +24218,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -24643,13 +24625,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -25051,13 +25032,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -25459,13 +25439,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -25867,13 +25846,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <Soil>
             <Name>Soil</Name>
             <Water>
@@ -26259,13 +26237,12 @@ namespace Models
             <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
             <FractionFaecesAdded>0.5</FractionFaecesAdded>
           </SurfaceOrganicMatter>
-          <Plant15>
+          <Plant>
             <Name>Wheat</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Wheat</ResourceName>
-            <AutoHarvest>true</AutoHarvest>
             <CropType>Wheat</CropType>
-          </Plant15>
+          </Plant>
           <MicroClimate>
             <Name>MicroClimate</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -26677,5 +26654,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>287</ExplorerWidth>
+  <ExplorerWidth>283</ExplorerWidth>
 </Simulations>

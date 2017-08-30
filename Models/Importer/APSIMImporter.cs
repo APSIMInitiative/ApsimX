@@ -436,7 +436,7 @@ namespace Importer
             Model plantModel;
             if (name == "wheat")
             {
-                plantModel = new Models.PMF.OldPlant.Plant15();
+                plantModel = new Models.PMF.Plant();
             }
             else if (name == "OilPalm")
             {
