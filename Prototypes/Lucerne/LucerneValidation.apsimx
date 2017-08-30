@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="7">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Replacements>
     <Name>Replacements</Name>
@@ -330,43 +330,6 @@
           </PhaseLookupValue>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
-        <PhaseLookup>
-          <Name>PartitionFraction</Name>
-          <PhaseLookupValue>
-            <Name>Early</Name>
-            <Constant>
-              <Name>Function</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.1</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>Emergence</Start>
-            <End>StartFlowering</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Middle</Name>
-            <Constant>
-              <Name>Function</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0.08</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>StartFlowering</Start>
-            <End>StartPodfill</End>
-          </PhaseLookupValue>
-          <PhaseLookupValue>
-            <Name>Late</Name>
-            <Constant>
-              <Name>Function</Name>
-              <IncludeInDocumentation>true</IncludeInDocumentation>
-              <FixedValue>0</FixedValue>
-            </Constant>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Start>StartPodfill</Start>
-            <End>Maturity</End>
-          </PhaseLookupValue>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-        </PhaseLookup>
         <Constant>
           <Name>MaximumNConc</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -487,6 +450,47 @@
           <FixedValue>40</FixedValue>
           <Units>m/g</Units>
         </Constant>
+        <PartitionFractionDemandFunction>
+          <Name>DMDemandFunction</Name>
+          <PhaseLookup>
+            <Name>PartitionFraction</Name>
+            <PhaseLookupValue>
+              <Name>Early</Name>
+              <Constant>
+                <Name>Function</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.1</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>Emergence</Start>
+              <End>StartFlowering</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Middle</Name>
+              <Constant>
+                <Name>Function</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0.08</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartFlowering</Start>
+              <End>StartPodfill</End>
+            </PhaseLookupValue>
+            <PhaseLookupValue>
+              <Name>Late</Name>
+              <Constant>
+                <Name>Function</Name>
+                <IncludeInDocumentation>true</IncludeInDocumentation>
+                <FixedValue>0</FixedValue>
+              </Constant>
+              <IncludeInDocumentation>true</IncludeInDocumentation>
+              <Start>StartPodfill</Start>
+              <End>Maturity</End>
+            </PhaseLookupValue>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+          </PhaseLookup>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </PartitionFractionDemandFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <GrowthRespiration>0</GrowthRespiration>
         <MaintenanceRespiration>0</MaintenanceRespiration>
@@ -657,6 +661,26 @@
           <FixedValue>10000</FixedValue>
           <Units>g/m^2/d</Units>
         </Constant>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Nodule].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </Nodule>
       <SimpleLeaf>
@@ -1059,6 +1083,26 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <FractionRemovedOnGraze>1</FractionRemovedOnGraze>
           <FractionRemovedOnPrune>0</FractionRemovedOnPrune>
         </AccumulateFunction>
+        <Constant>
+          <Name>NRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <Constant>
+          <Name>DMRetranslocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Leaf].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <CohortsInitialised>false</CohortsInitialised>
         <TipsAtEmergence>0</TipsAtEmergence>
@@ -1254,6 +1298,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <FixedValue>0</FixedValue>
         </Constant>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Stem].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1422,6 +1476,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Shell].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -1590,6 +1654,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </PhaseLookup>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[Grain].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <GenericOrgan>
@@ -2727,6 +2801,16 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
           </LinearInterpolationFunction>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PartitionFractionDemandFunction>
+        <Constant>
+          <Name>DMReallocationFactor</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <FixedValue>0</FixedValue>
+        </Constant>
+        <VariableReference>
+          <Name>CriticalNConc</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <VariableName>[TapRoot].MinimumNConc.Value()</VariableName>
+        </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </GenericOrgan>
       <CompositeBiomass>
@@ -2878,7 +2962,6 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Lucerne</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>Report</Name>
@@ -3057,7 +3140,7 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
       <FieldName2UsedForMatch>LAI</FieldName2UsedForMatch>
     </PredictedObserved>
     <PredictedObserved>
-      <Name>ObsVsPreLucerne1</Name>
+      <Name>ObsVsPreObsAll</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>ObsAll</ObservedTableName>
@@ -4087,14 +4170,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -4536,7 +4611,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -6690,7 +6764,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>ObsAll</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -7027,7 +7101,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>ObsAll</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>node_no</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -7791,7 +7865,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -8175,14 +8248,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -11608,7 +11673,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -12124,14 +12188,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -15683,7 +15739,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -16067,14 +16122,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -19219,7 +19266,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -19531,14 +19577,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -22950,7 +22988,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -23316,14 +23353,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -27841,7 +27870,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -28109,14 +28137,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -31144,7 +31164,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -31379,14 +31398,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -34414,7 +34425,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -34671,14 +34681,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -37846,7 +37848,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -38164,14 +38165,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -41429,7 +41422,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -41686,14 +41678,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -44402,14 +44386,6 @@ namespace Models
               <Name>Operations</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Operation>
-                <Date>1988-05-26</Date>
-                <Action>[Wheat].Sow(population:100, cultivar:"BattenWinter", depth:50, rowSpacing:150);</Action>
-              </Operation>
-              <Operation>
-                <Date>1988-10-15</Date>
-                <Action> [Wheat].Harvest();</Action>
-              </Operation>
-              <Operation>
                 <Date>1989-06-15</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
@@ -44473,6 +44449,14 @@ namespace Models
                 <Date>1992-10-03</Date>
                 <Action> [Mower].Script.Cut();</Action>
               </Operation>
+              <Operation>
+                <Date>1988-05-26</Date>
+                <Action> [Wheat].Sow(population:100,cultivar:"Hartog",depth:30,rowSpacing:250)</Action>
+              </Operation>
+              <Operation>
+                <Date>1988-10-24</Date>
+                <Action> [Wheat].Harvest();</Action>
+              </Operation>
             </Operations>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Specifications>
@@ -44486,14 +44470,6 @@ namespace Models
             <Operations>
               <Name>Operations</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
-              <Operation>
-                <Date>1989-06-20</Date>
-                <Action>[Wheat].Sow(population:100, cultivar:"BattenWinter", depth:50, rowSpacing:150);</Action>
-              </Operation>
-              <Operation>
-                <Date>1989-11-07</Date>
-                <Action> [Wheat].Harvest();</Action>
-              </Operation>
               <Operation>
                 <Date>1990-12-15</Date>
                 <Action> [Mower].Script.Cut();</Action>
@@ -44545,6 +44521,14 @@ namespace Models
               <Operation>
                 <Date>1993-10-03</Date>
                 <Action> [Mower].Script.Cut();</Action>
+              </Operation>
+              <Operation>
+                <Date>1989-06-20</Date>
+                <Action> [Wheat].Sow(population:100,cultivar:"Hartog",depth:30,rowSpacing:250)</Action>
+              </Operation>
+              <Operation>
+                <Date>1988-10-24</Date>
+                <Action> [Wheat].Harvest();</Action>
               </Operation>
             </Operations>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -44871,11 +44855,11 @@ namespace Models
             <Name>LucerneSowingRule</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script>
-              <SowingDate>1988-05-26</SowingDate>
               <RowSpacing>150</RowSpacing>
               <SowingDepth>40</SowingDepth>
               <SowingRate>300</SowingRate>
-              <CultivarName>Sceptre</CultivarName>
+              <CultivarName>Trifecta</CultivarName>
+              <SowingDate>1988-05-26</SowingDate>
             </Script>
             <Code><![CDATA[
 using System;
@@ -44891,7 +44875,7 @@ namespace Models
 	{
 		[Link] Plant Lucerne;
 		[Link] Clock Clock;
-
+		[Link] Summary summary;
 		[Description("Spacing (mm) between rows")]
 		public double RowSpacing { get; set; }
 		[Description("Depth (mm) Grains are planted")]
@@ -44907,7 +44891,8 @@ namespace Models
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Clock.Today.Date == SowingDate)
+		summary.WriteMessage(this,SowingDate.ToString());
+		if (Clock.Today == SowingDate)
 				Lucerne.Sow(population: SowingRate, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing, budNumber: 1);
 			//Lucerne.Sow(... Contains the following arguements:
 			//Population  double  Required  Seeds sowing/m2
@@ -44931,14 +44916,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
-          </Plant>
-          <Plant>
-            <Name>Wheat</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <ResourceName>Wheat</ResourceName>
-            <CropType>Wheat</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <Manager>
             <Name>Mower</Name>
@@ -44959,6 +44936,7 @@ namespace Models
 	public class Script : Model
 	{
 		[Link] Plant Lucerne;
+		[Link] Summary summary;
 		
 		[XmlIgnore] private RemovalFractions Remove { get; set; }
 		
@@ -44970,6 +44948,7 @@ namespace Models
 		
 		public void Cut()
 		{
+		summary.WriteMessage(this,"Cut event has been send");
 			Remove.SetPhenologyStage = 4;
 			Lucerne.RemoveBiomass("Cut", Remove);
 		}
@@ -44982,38 +44961,44 @@ namespace Models
             <Name>Cutting</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </Operations>
+          <Plant>
+            <Name>Wheat</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <ResourceName>Wheat</ResourceName>
+            <CropType>Wheat</CropType>
+          </Plant>
           <Manager>
-            <Name>Harvesting</Name>
-            <IncludeInDocumentation>false</IncludeInDocumentation>
+            <Name>Harvest</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <Script />
             <Code><![CDATA[using System;
 using Models.Core;
-using System.Collections.Generic;
-using System.Text;
-using Models.Soils;
 using Models.PMF;
-using Models;
-using System.Xml.Serialization;
+using Models.Soils;
+using Models.Utilities;
 using APSIM.Shared.Utilities;
 
 namespace Models
 {
-	[Serializable] 
+	[Serializable]
 	public class Script : Model
 	{
 		[Link] Plant Wheat;
+
 		[EventSubscribe("DoManagement")]
 		private void OnDoManagement(object sender, EventArgs e)
 		{
-			if (Wheat.Phenology.CurrentPhaseName == "Ripening")
+			if (Wheat.IsReadyForHarvesting)
 			{
-				Wheat.Harvest();
-				Wheat.EndCrop();
+			   Wheat.Harvest();
+			   Wheat.EndCrop();	
 			}
+		
 		}
+		
 	}
 }
-	   ]]></Code>
+]]></Code>
           </Manager>
           <Soil>
             <Name>warra88_96_T8</Name>
@@ -45211,14 +45196,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -47351,6 +47328,8 @@ namespace Models
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
             <TableName>LucerneAllObs</TableName>
+            <XFieldName>Clock.Today</XFieldName>
+            <YFieldName>Shootbiomass</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -47436,9 +47415,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observed</TableName>
+            <TableName>LucerneAllObs</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>LAI</YFieldName>
+            <YFieldName>lai</YFieldName>
             <ShowInLegend>true</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -47700,9 +47679,9 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>Observed</TableName>
+            <TableName>LucerneAllObs</TableName>
             <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SWC</YFieldName>
+            <YFieldName>Total_SW</YFieldName>
             <ShowInLegend>false</ShowInLegend>
             <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
             <Cumulative>false</Cumulative>
@@ -48390,7 +48369,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -49092,14 +49070,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilWater>
               <Name>SoilWater</Name>
@@ -52491,7 +52461,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -52743,14 +52712,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -56468,7 +56429,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -56681,14 +56641,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -59970,7 +59922,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -60168,14 +60119,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <SoilOrganicMatter>
               <Name>SoilOrganicMatter</Name>
@@ -62975,7 +62918,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -63104,14 +63046,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <Water>
               <Name>Water</Name>
@@ -66013,7 +65947,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -66144,14 +66077,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <Water>
               <Name>Water</Name>
@@ -69111,7 +69036,6 @@ namespace Models
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <ResourceName>Lucerne</ResourceName>
             <CropType>Lucerne</CropType>
-            <SowingDate>0001-01-01T00:00:00</SowingDate>
           </Plant>
           <SoluteManager>
             <Name>SoluteManager</Name>
@@ -69244,14 +69168,6 @@ namespace Models
                 <double>0.08</double>
                 <double>0.9</double>
               </fract_lign>
-              <wfpsN2N2O_x>
-                <double>22</double>
-                <double>88</double>
-              </wfpsN2N2O_x>
-              <wfpsN2N2O_y>
-                <double>0.1</double>
-                <double>1</double>
-              </wfpsN2N2O_y>
             </SoilNitrogen>
             <Water>
               <Name>Water</Name>
