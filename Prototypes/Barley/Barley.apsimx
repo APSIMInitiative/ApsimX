@@ -38129,9 +38129,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Booma</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -41176,9 +41176,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -43364,9 +43364,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Omaka</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -45728,9 +45728,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Sherwood</Cultivar>
                   <SowingDate>2009-10-01</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -48019,9 +48019,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>40</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2010-08-26</SowingDate>
-                  <InitialRootDepth>40</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -50227,9 +50227,9 @@ namespace Models
                 <Name>Sowing</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Script>
+                  <InitialRootDepth>20</InitialRootDepth>
                   <Cultivar>Dash</Cultivar>
                   <SowingDate>2011-07-13</SowingDate>
-                  <InitialRootDepth>20</InitialRootDepth>
                 </Script>
                 <Code><![CDATA[using System;
 using Models.Core;
@@ -52239,9 +52239,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -53717,9 +53717,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -55190,9 +55190,9 @@ namespace Models
                   <Name>SowingRule</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <Script>
-                    <CultivarName>Hartog</CultivarName>
                     <SowDate>
                     </SowDate>
+                    <CultivarName>Hartog</CultivarName>
                     <SowingDepth>30</SowingDepth>
                     <RowSpacing>250</RowSpacing>
                     <Population>120</Population>
@@ -65547,7 +65547,7 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>None</Marker>
@@ -65569,16 +65569,16 @@ namespace Models
               <XAxis>Bottom</XAxis>
               <YAxis>Left</YAxis>
               <ColourArgb>-16777216</ColourArgb>
-              <FactorIndexToVaryColours>0</FactorIndexToVaryColours>
+              <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
               <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
               <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
               <Marker>FilledDiamond</Marker>
               <MarkerSize>Normal</MarkerSize>
               <Line>None</Line>
               <LineThickness>Normal</LineThickness>
-              <TableName>CombinedData</TableName>
+              <TableName>Observed</TableName>
               <XFieldName>Clock.Today</XFieldName>
-              <YFieldName>Barley.Leaf.LAI</YFieldName>
+              <YFieldName>Average of LAI</YFieldName>
               <ShowInLegend>true</ShowInLegend>
               <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
               <Cumulative>false</Cumulative>
