@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="10">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -672,7 +672,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <Memo>
             <Name>Rational</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1013,7 +1013,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableReference>
             <Name>Phyllochron</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Structure].Phyllochron.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
@@ -1026,7 +1026,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
             <VariableReference>
               <Name>FinalLeafNumber</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+              <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
             </VariableReference>
             <Constant>
               <Name>Intercept</Name>
@@ -1111,7 +1111,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </PhaseLookup>
         <MinimumFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <Memo>
             <Name>Memo</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1247,7 +1247,7 @@ TSLN = FLN*0.995 - 1.95 ]]></MemoText>
               <VariableReference>
                 <Name>FLN</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
-                <VariableName>[Structure].MainStemFinalNodeNumber.Value()</VariableName>
+                <VariableName>[Structure].FinalLeafNumber.Value()</VariableName>
               </VariableReference>
               <Constant>
                 <Name>PS</Name>
@@ -1899,10 +1899,10 @@ N conc values are from Zhao et al 2009
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -1927,10 +1927,10 @@ N conc values are from Zhao et al 2009
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -2138,7 +2138,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -2151,7 +2151,7 @@ N conc values are from Zhao et al 2009
                 <VariableReference>
                   <Name>Phyllochron</Name>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
-                  <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+                  <VariableName>[Structure].Phyllochron.Value()</VariableName>
                 </VariableReference>
                 <LinearInterpolationFunction>
                   <Name>AgeFactor</Name>
@@ -2248,7 +2248,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>AgeFactor</Name>
@@ -2348,7 +2348,7 @@ N conc values are from Zhao et al 2009
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <LinearInterpolationFunction>
               <Name>LinearInterpolationFunction</Name>
@@ -2596,7 +2596,7 @@ N conc values are from Zhao et al 2009
             <FixedValue>0</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0.5</FixedValue>
           </Constant>
@@ -3437,7 +3437,7 @@ N conc values are from Zhao et al 2009
           <VariableReference>
             <Name>WSC</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Stem].Live.NonStructuralWt</VariableName>
+            <VariableName>[Stem].Live.StorageWt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>StemWt</Name>
@@ -3701,7 +3701,6 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Wheat</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Report>
       <Name>DailyReport</Name>
@@ -3774,12 +3773,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].Panicle.N</string>
         <string>[Oats].Panicle.NConc</string>
         <string>[Oats].Panicle.Wt</string>
-        <string>[Oats].Panicle.Live.NonStructuralWt</string>
+        <string>[Oats].Panicle.Live.StorageWt</string>
         <string>[Oats].Stem.N</string>
         <string>[Oats].Stem.NConc</string>
         <string>[Oats].Stem.Wt</string>
         <string>[Oats].Stem.PercentWSC</string>
-        <string>[Oats].Stem.Live.NonStructuralWt</string>
+        <string>[Oats].Stem.Live.StorageWt</string>
         <string>[Oats].StemPlusPanicle.Wt</string>
         <string>[Oats].StemPlusPanicle.N</string>
         <string>[Oats].SowingData.Cultivar</string>
@@ -3787,8 +3786,8 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Oats].Structure.HaunStage.Value()</string>
         <string>[Oats].Structure.Height</string>
         <string>[Oats].Structure.LeafTipsAppeared</string>
-        <string>[Oats].Structure.MainStemFinalNodeNumber.Value()</string>
-        <string>[Oats].Structure.MainStemFinalNodeNumber.ValueToHold.PhotoPLeaves.Value()</string>
+        <string>[Oats].Structure.FinalLeafNumber.Value()</string>
+        <string>[Oats].Structure.FinalLeafNumber.ValueToHold.PhotoPLeaves.Value()</string>
         <string>[Oats].Structure.MainStemPopn</string>
         <string>[Oats].Structure.MeanTillerGrowthRate.Value()</string>
         <string>[Oats].Structure.TotalStemPopn</string>
@@ -3816,7 +3815,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
       <ExperimentFactorValues />
       <VariableNames>
         <string>[Oats].Structure.LeafTipsAppeared</string>
-        <string>[Oats].Structure.MainStemFinalNodeNumber</string>
+        <string>[Oats].Structure.FinalLeafNumber</string>
         <string>[Oats].Phenology.FlagLeafDAS</string>
         <string>[Oats].Phenology.FloweringDAS</string>
         <string>[Oats].Phenology.MaturityDAS</string>
@@ -4249,7 +4248,7 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.BasePhyllochron.Value()</VariableName>
             </VariableReference>
             <AddFunction>
               <Name>Phyllochrons</Name>
@@ -4450,7 +4449,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]></MemoT
           <VariableName>[Phenology].ThermalTime.Value()</VariableName>
         </VariableReference>
         <MultiplyFunction>
-          <Name>MainStemNodeAppearanceRate</Name>
+          <Name>Phyllochron</Name>
           <Memo>
             <Name>Rational</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -4759,14 +4758,14 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <VariableReference>
             <Name>Phyllochron</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+            <VariableName>[Structure].Phyllochron.Value()</VariableName>
           </VariableReference>
           <IncludeInDocumentation>true</IncludeInDocumentation>
           <NumberOfDays>300</NumberOfDays>
           <InitialValue>80</InitialValue>
         </MovingAverageFunction>
         <HoldFunction>
-          <Name>MainStemFinalNodeNumber</Name>
+          <Name>FinalLeafNumber</Name>
           <AddFunction>
             <Name>FinalNodeNumber</Name>
             <VariableReference>
@@ -4836,7 +4835,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
             <MemoText><![CDATA[The Haun stage at which Terminal Spikelet occurs is determined from final leaf number using the approach described in [Brown_Anthesis_2013].]]></MemoText>
           </Memo>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Expression>([Structure].MainStemFinalNodeNumber.Value() - 2.85)/1.1</Expression>
+          <Expression>([Structure].FinalLeafNumber.Value() - 2.85)/1.1</Expression>
         </ExpressionFunction>
         <AddFunction>
           <Name>HaunStage</Name>
@@ -5517,10 +5516,10 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -5545,10 +5544,10 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <PotentialMetabolicDMAllocation>0</PotentialMetabolicDMAllocation>
           <MetabolicNReallocated>0</MetabolicNReallocated>
           <MetabolicWtReallocated>0</MetabolicWtReallocated>
-          <NonStructuralNReallocated>0</NonStructuralNReallocated>
-          <NonStructuralWtReallocated>0</NonStructuralWtReallocated>
+          <StorageNReallocated>0</StorageNReallocated>
+          <StorageWtReallocated>0</StorageWtReallocated>
           <MetabolicNRetranslocated>0</MetabolicNRetranslocated>
-          <NonStructuralNRetrasnlocated>0</NonStructuralNRetrasnlocated>
+          <StorageNRetrasnlocated>0</StorageNRetrasnlocated>
           <DMRetranslocated>0</DMRetranslocated>
           <MetabolicNAllocation>0</MetabolicNAllocation>
           <StructuralDMAllocation>0</StructuralDMAllocation>
@@ -5759,7 +5758,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -5834,7 +5833,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
             <VariableReference>
               <Name>Phyllochron</Name>
               <IncludeInDocumentation>true</IncludeInDocumentation>
-              <VariableName>[Structure].MainStemNodeAppearanceRate.Value()</VariableName>
+              <VariableName>[Structure].Phyllochron.Value()</VariableName>
             </VariableReference>
             <IncludeInDocumentation>true</IncludeInDocumentation>
           </MultiplyFunction>
@@ -6046,7 +6045,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
             <FixedValue>0.5</FixedValue>
           </Constant>
           <Constant>
-            <Name>NonStructuralFraction</Name>
+            <Name>StorageFraction</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <FixedValue>0</FixedValue>
           </Constant>
@@ -6756,7 +6755,7 @@ Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Cooli
           <VariableReference>
             <Name>WSC</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
-            <VariableName>[Stem].Live.NonStructuralWt</VariableName>
+            <VariableName>[Stem].Live.StorageWt</VariableName>
           </VariableReference>
           <VariableReference>
             <Name>StemWt</Name>
@@ -6916,7 +6915,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 10</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
           <Command>[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3.99,4,5,6,7,8,9</Command>
           <Command>[Structure].BranchingRate.StressFactors.CoverEffect.XYPairs.X = 0,0.2,0.35</Command>
           <Command>[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 5000</Command>
@@ -6927,7 +6926,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 7</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 3</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 100</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 100</Command>
         </Cultivar>
         <Cultivar>
           <Name>Hokonui</Name>
@@ -6935,7 +6934,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 10</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>
         </Cultivar>
         <Cultivar>
           <Name>Stampede</Name>
@@ -6943,7 +6942,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 0</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 10</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Milton1</Name>
@@ -6964,7 +6963,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 1.7</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 2</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>
         </Cultivar>
         <Cultivar>
           <Name>Taipan</Name>
@@ -6977,7 +6976,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 1</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>
         </Cultivar>
         <Cultivar>
           <Name>Wintaroo</Name>
@@ -6985,7 +6984,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 2</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 2</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Kangaroo</Name>
@@ -6993,7 +6992,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 2</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 2</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Brusher</Name>
@@ -7001,7 +7000,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 2</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 2</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 80</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 80</Command>
         </Cultivar>
         <Cultivar>
           <Name>Algerian</Name>
@@ -7009,7 +7008,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 11.2</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 11.2</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>
         </Cultivar>
         <Cultivar>
           <Name>Nugene</Name>
@@ -7017,7 +7016,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 1</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>
         </Cultivar>
         <Cultivar>
           <Name>Drover</Name>
@@ -7025,13 +7024,12 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
           <Command>[Phenology].MinimumLeafNumber.FixedValue = 9</Command>
           <Command>[Phenology].VrnSensitivity.FixedValue = 1</Command>
           <Command>[Phenology].PpSensitivity.FixedValue = 8</Command>
-          <Command>[Structure].MainStemNodeAppearanceRate.BasePhyllochron.FixedValue = 90</Command>
+          <Command>[Structure].Phyllochron.BasePhyllochron.FixedValue = 90</Command>
         </Cultivar>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </CultivarFolder>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <CropType>Wheat</CropType>
-      <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Manager>
       <Name>Harvesting</Name>
@@ -7246,8 +7244,8 @@ Simulation results for the combined datasets from the various countries are show
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
           <TableName>HarvestPO</TableName>
-          <XFieldName>Observed.Oats.Structure.MainStemFinalNodeNumber</XFieldName>
-          <YFieldName>Predicted.Oats.Structure.MainStemFinalNodeNumber</YFieldName>
+          <XFieldName>Observed.Oats.Structure.FinalLeafNumber</XFieldName>
+          <YFieldName>Predicted.Oats.Structure.FinalLeafNumber</YFieldName>
           <ShowInLegend>true</ShowInLegend>
           <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
           <Cumulative>false</Cumulative>
@@ -8847,7 +8845,6 @@ late drought increased screenings.
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Oats</ResourceName>
               <CropType>Oats</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>ClimateControl</Name>
@@ -9115,7 +9112,7 @@ namespace Models
                 <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
                 <string>[Oats].Arbitrator.FN</string>
                 <string>[Oats].Arbitrator.NDemand</string>
-                <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                <string>[Oats].Structure.Phyllochron</string>
                 <string>[Oats].Leaf.CohortMaxSize</string>
                 <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
                 <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
@@ -11329,7 +11326,6 @@ Grazing winter forage crops is an important management strategy for profitable l
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Oats</ResourceName>
               <CropType>Oats</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Folder>
               <Name>Manager folder</Name>
@@ -12264,7 +12260,6 @@ Grazing winter forage crops is an important management strategy for profitable l
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Oats</ResourceName>
               <CropType>Oats</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Folder>
               <Name>Manager folder</Name>
@@ -13166,7 +13161,6 @@ This experiment is part of the ongoing Cultivar Prediction Trial at Plant & Food
               <IncludeInDocumentation>true</IncludeInDocumentation>
               <ResourceName>Oats</ResourceName>
               <CropType>Oats</CropType>
-              <SowingDate>0001-01-01T00:00:00</SowingDate>
             </Plant>
             <Manager>
               <Name>SowAndHarvest</Name>
@@ -13241,7 +13235,7 @@ namespace Models
               <ExperimentFactorValues />
               <VariableNames>
                 <string>[Oats].Structure.LeafTipsAppeared</string>
-                <string>[Oats].Structure.MainStemFinalNodeNumber</string>
+                <string>[Oats].Structure.FinalLeafNumber</string>
                 <string>[Oats].Phenology.FlagLeafDAS</string>
                 <string>[Oats].Phenology.FloweringDAS</string>
                 <string>[Oats].Phenology.MaturityDAS</string>
@@ -13827,7 +13821,6 @@ late drought increased screenings.
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Oats</ResourceName>
                 <CropType>Oats</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Folder>
                 <Name>Management</Name>
@@ -13938,7 +13931,7 @@ namespace Models
                   <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
                   <string>[Oats].Arbitrator.FN</string>
                   <string>[Oats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[Oats].Structure.Phyllochron</string>
                   <string>[Oats].Leaf.CohortMaxSize</string>
                   <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
                   <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
@@ -15503,7 +15496,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Oats</ResourceName>
                 <CropType>Oats</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Folder>
                 <Name>Management</Name>
@@ -15621,7 +15613,7 @@ namespace Models
                   <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
                   <string>[Oats].Arbitrator.FN</string>
                   <string>[Oats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[Oats].Structure.Phyllochron</string>
                   <string>[Oats].Leaf.CohortMaxSize</string>
                   <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
                   <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
@@ -16372,7 +16364,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Oats</ResourceName>
                 <CropType>Oats</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Folder>
                 <Name>Management</Name>
@@ -16494,7 +16485,7 @@ namespace Models
                   <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
                   <string>[Oats].Arbitrator.FN</string>
                   <string>[Oats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[Oats].Structure.Phyllochron</string>
                   <string>[Oats].Leaf.CohortMaxSize</string>
                   <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
                   <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
@@ -17641,7 +17632,6 @@ late drought increased screenings.
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Oats</ResourceName>
                 <CropType>Oats</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Folder>
                 <Name>Management</Name>
@@ -17725,7 +17715,7 @@ namespace Models
                   <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
                   <string>[Oats].Arbitrator.FN</string>
                   <string>[Oats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[Oats].Structure.Phyllochron</string>
                   <string>[Oats].Leaf.CohortMaxSize</string>
                   <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
                   <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
@@ -18865,7 +18855,6 @@ late drought increased screenings.
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Oats</ResourceName>
                 <CropType>Oats</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Folder>
                 <Name>Management</Name>
@@ -18941,7 +18930,7 @@ namespace Models
                   <string>[Oats].Arbitrator.DM.TotalFixationSupply</string>
                   <string>[Oats].Arbitrator.FN</string>
                   <string>[Oats].Arbitrator.NDemand</string>
-                  <string>[Oats].Structure.MainStemNodeAppearanceRate</string>
+                  <string>[Oats].Structure.Phyllochron</string>
                   <string>[Oats].Leaf.CohortMaxSize</string>
                   <string>[Oats].Leaf.CohortParameters.GrowthDuration.Value()</string>
                   <string>[Oats].Leaf.CohortParameters.LagDuration.Value()</string>
