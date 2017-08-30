@@ -3016,6 +3016,14 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
         <string>GM</string>
       </SheetNames>
     </ExcelInput>
+    <ExcelInput>
+      <Name>Argentina</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <FileName>Argentina.xlsx</FileName>
+      <SheetNames>
+        <string>Argentina</string>
+      </SheetNames>
+    </ExcelInput>
     <PredictedObserved>
       <Name>ObsVsPreLincoln</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -3058,6 +3066,14 @@ The extinction coefficient is used to calculate a LAI value (needed by MicroClim
     </PredictedObserved>
     <PredictedObserved>
       <Name>ObsVsPreGM</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <PredictedTableName>Report</PredictedTableName>
+      <ObservedTableName>ObsAll</ObservedTableName>
+      <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
+      <FieldName2UsedForMatch>LAI</FieldName2UsedForMatch>
+    </PredictedObserved>
+    <PredictedObserved>
+      <Name>ObsVsPreArg</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>ObsAll</ObservedTableName>
@@ -62569,138 +62585,6 @@ namespace Models
           <LegendPosition>TopRight</LegendPosition>
           <DisabledSeries />
         </Graph>
-        <Graph>
-          <Name>SLA</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.OutputLayers.SWmm(2)</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledSquare</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>LucerneAllObs</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SLA</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Date</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>N_uptake</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Lucerne.Leaf.Live.N</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>LucerneAllObs</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>N_uptake</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Date</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>0</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopRight</LegendPosition>
-          <DisabledSeries />
-        </Graph>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -65470,7 +65354,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>ObsAll</TableName>
+            <TableName>Argentina</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Shootbiomass</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -65714,138 +65598,6 @@ namespace Models
             <Title>Stem DM (kg/ha)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopRight</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>SLA</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.OutputLayers.SWmm(2)</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledSquare</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>LucerneAllObs</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SLA</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Date</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>N_uptake</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Lucerne.Leaf.Live.N</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>LucerneAllObs</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>N_uptake</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Date</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -68659,7 +68411,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>ObsAll</TableName>
+            <TableName>Argentina</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Shootbiomass</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -68903,138 +68655,6 @@ namespace Models
             <Title>Stem DM (kg/ha)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopRight</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>SLA</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.OutputLayers.SWmm(2)</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledSquare</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>LucerneAllObs</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SLA</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Date</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>N_uptake</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Lucerne.Leaf.Live.N</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>LucerneAllObs</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>N_uptake</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Date</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
@@ -71906,7 +71526,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>ObsAll</TableName>
+            <TableName>Argentina</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Shootbiomass</YFieldName>
             <ShowInLegend>false</ShowInLegend>
@@ -72150,138 +71770,6 @@ namespace Models
             <Title>Stem DM (kg/ha)</Title>
             <Inverted>false</Inverted>
             <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopRight</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>SLA</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Soil.OutputLayers.SWmm(2)</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledSquare</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>LucerneAllObs</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>SLA</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>true</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Date</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <LegendPosition>TopLeft</LegendPosition>
-          <DisabledSeries />
-        </Graph>
-        <Graph>
-          <Name>N_uptake</Name>
-          <Series>
-            <Name>Predicted</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>None</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>Solid</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>Report</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>Lucerne.Leaf.Live.N</YFieldName>
-            <ShowInLegend>false</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <Series>
-            <Name>Observed</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <Type>Scatter</Type>
-            <XAxis>Bottom</XAxis>
-            <YAxis>Left</YAxis>
-            <ColourArgb>-16777216</ColourArgb>
-            <FactorIndexToVaryColours>-1</FactorIndexToVaryColours>
-            <FactorIndexToVaryMarkers>-1</FactorIndexToVaryMarkers>
-            <FactorIndexToVaryLines>-1</FactorIndexToVaryLines>
-            <Marker>FilledCircle</Marker>
-            <MarkerSize>Normal</MarkerSize>
-            <Line>None</Line>
-            <LineThickness>Normal</LineThickness>
-            <TableName>LucerneAllObs</TableName>
-            <XFieldName>Clock.Today</XFieldName>
-            <YFieldName>N_uptake</YFieldName>
-            <ShowInLegend>true</ShowInLegend>
-            <IncludeSeriesNameInLegend>false</IncludeSeriesNameInLegend>
-            <Cumulative>false</Cumulative>
-            <CumulativeX>false</CumulativeX>
-          </Series>
-          <IncludeInDocumentation>false</IncludeInDocumentation>
-          <Axis>
-            <Type>Bottom</Type>
-            <Title>Date</Title>
-            <Inverted>false</Inverted>
-            <Minimum>NaN</Minimum>
-            <Maximum>NaN</Maximum>
-            <Interval>NaN</Interval>
-          </Axis>
-          <Axis>
-            <Type>Left</Type>
-            <Title />
-            <Inverted>false</Inverted>
-            <Minimum>0</Minimum>
             <Maximum>NaN</Maximum>
             <Interval>NaN</Interval>
           </Axis>
