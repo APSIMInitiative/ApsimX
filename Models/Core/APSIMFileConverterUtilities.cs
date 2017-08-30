@@ -222,9 +222,9 @@ namespace Models.Core
         /// <param name="newName">The new name</param>
         internal static void RenameNode(XmlNode node, string oldName, string newName)
         {
-            XmlNode foundNode = XmlUtilities.Find(node, oldName);
-            if (foundNode != null)
-                XmlUtilities.Rename(foundNode.ParentNode, oldName, newName);
+            List<XmlNode> nodesToRename = XmlUtilities.FindAllRecursivelyByType(node, oldName);
+            foreach (XmlNode nodeToRename in nodesToRename)
+                XmlUtilities.Rename(nodeToRename.ParentNode, oldName, newName);
         }
 
         /// <summary>

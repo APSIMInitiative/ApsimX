@@ -94,29 +94,5 @@ namespace Models.PMF.Phen
         }
     }
 
-    /// <summary>
-    /// The class below is for Plant15. Need to get rid of this eventually.
-    /// </summary>
-    [Serializable]
-    public class EmergingPhase15 : GenericPhase
-    {
-        /// <summary>The plant</summary>
-        [Link]
-        Models.PMF.OldPlant.Plant15 Plant = null;
 
-        /// <summary>Gets or sets the shoot lag.</summary>
-        /// <value>The shoot lag.</value>
-        public double ShootLag { get; set; }
-        /// <summary>Gets or sets the shoot rate.</summary>
-        /// <value>The shoot rate.</value>
-        public double ShootRate { get; set; }
-
-        /// <summary>Return the target to caller. Can be overridden by derived classes.</summary>
-        /// <returns></returns>
-        public override double CalcTarget()
-        {
-            return ShootLag + Plant.SowingData.Depth * ShootRate;
-        }
-
-    }
 }

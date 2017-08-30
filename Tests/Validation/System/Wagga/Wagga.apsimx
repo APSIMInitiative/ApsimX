@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="6">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>ExcelInput</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>observed.xlsx</FileName>
       <FileNameMetadata>
         <string>Excel files (*.xlsx)|*.xlsx</string>
@@ -15,6 +16,7 @@
         <string>Soil</string>
       </SheetNames>
     </ExcelInput>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
@@ -22,14 +24,17 @@
     <Name>Fertiliser</Name>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>1979-01-01T00:00:00</StartDate>
       <EndDate>1990-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>SummaryFile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Wagga.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
@@ -37,6 +42,7 @@
       <Name>Field</Name>
       <Operations>
         <Name>SowOperations</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Operation>
           <Date>1979-05-29</Date>
           <Action>[Wheat].Sow(cultivar:hartog, population:180, depth:30, rowSpacing:300);</Action>
@@ -88,6 +94,7 @@
       </Operations>
       <Manager>
         <Name>Fertilise at sowing</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Script>
           <Crop>Wheat</Crop>
           <Amount>90</Amount>
@@ -123,6 +130,7 @@ namespace Models
       </Manager>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -149,11 +157,14 @@ namespace Models
       </Report>
       <Fertiliser>
         <Name>Fertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <Pools>
@@ -185,14 +196,15 @@ namespace Models
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
-      <Plant15>
+      <Plant>
         <Name>Wheat</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>Wheat</ResourceName>
-        <AutoHarvest>true</AutoHarvest>
         <CropType>Wheat</CropType>
-      </Plant15>
+      </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -212,6 +224,7 @@ namespace Models
           <Name>Water</Name>
           <SoilCrop>
             <Name>WheatSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LL>
               <double>0.12</double>
               <double>0.1</double>
@@ -240,6 +253,7 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -297,6 +311,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>6</SummerU>
           <SummerCona>3.5</SummerCona>
@@ -335,6 +350,7 @@ namespace Models
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -367,17 +383,10 @@ namespace Models
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RootCN>45</RootCN>
           <RootWt>1500</RootWt>
           <SoilCN>12.5</SoilCN>
@@ -432,6 +441,7 @@ namespace Models
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -455,12 +465,14 @@ namespace Models
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
         </InitialWater>
         <Sample>
           <Name>Initial conditions</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>1800</double>
           </Thickness>
@@ -478,7 +490,9 @@ namespace Models
         </Sample>
         <CERESSoilTemperature>
           <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </CERESSoilTemperature>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RecordNumber>263</RecordNumber>
         <ASCOrder>Sodosol</ASCOrder>
         <ASCSubOrder>Red</ASCSubOrder>
@@ -498,7 +512,42 @@ namespace Models
       </Soil>
       <SoluteManager>
         <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </SoluteManager>
+      <Manager>
+        <Name>Harvest</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Script />
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Plant Wheat;
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Wheat.IsReadyForHarvesting)
+			{
+			   Wheat.Harvest();
+			   Wheat.EndCrop();	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+      </Manager>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -506,6 +555,7 @@ namespace Models
       <Name>Yield</Name>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -527,6 +577,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -546,6 +597,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -564,12 +616,12 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>OC</Name>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -591,6 +643,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -610,6 +663,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -628,21 +682,44 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <SoilArbitrator>
+      <Name>SoilArbitrator</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </SoilArbitrator>
+    <MicroClimate>
+      <Name>MicroClimate</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <a_interception>0</a_interception>
+      <b_interception>1</b_interception>
+      <c_interception>0</c_interception>
+      <d_interception>0</d_interception>
+      <soil_albedo>0.23</soil_albedo>
+      <sun_angle>15</sun_angle>
+      <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+      <night_interception_fraction>0.5</night_interception_fraction>
+      <refheight>2</refheight>
+      <albedo>0.15</albedo>
+      <emissivity>0.96</emissivity>
+      <RadIntTotal>0</RadIntTotal>
+    </MicroClimate>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
   <Simulation>
     <Name>NoFertiliser</Name>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <StartDate>1979-01-01T00:00:00</StartDate>
       <EndDate>1990-12-31T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>SummaryFile</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Summary>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <FileName>Wagga.met</FileName>
       <ExcelWorkSheetName />
     </Weather>
@@ -650,6 +727,7 @@ namespace Models
       <Name>Field</Name>
       <Operations>
         <Name>SowOperations</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Operation>
           <Date>1979-05-29</Date>
           <Action>[Wheat].Sow(cultivar:hartog, population:180, depth:30, rowSpacing:300);</Action>
@@ -701,6 +779,7 @@ namespace Models
       </Operations>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ExperimentFactorNames />
         <ExperimentFactorValues />
         <VariableNames>
@@ -727,11 +806,14 @@ namespace Models
       </Report>
       <Fertiliser>
         <Name>Fertiliser</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </Fertiliser>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <Pools>
@@ -763,14 +845,15 @@ namespace Models
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
-      <Plant15>
+      <Plant>
         <Name>Wheat</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <ResourceName>Wheat</ResourceName>
-        <AutoHarvest>true</AutoHarvest>
         <CropType>Wheat</CropType>
-      </Plant15>
+      </Plant>
       <MicroClimate>
         <Name>MicroClimate</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
@@ -790,6 +873,7 @@ namespace Models
           <Name>Water</Name>
           <SoilCrop>
             <Name>WheatSoil</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
             <LL>
               <double>0.12</double>
               <double>0.1</double>
@@ -818,6 +902,7 @@ namespace Models
               <double>1</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -875,6 +960,7 @@ namespace Models
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>6</SummerU>
           <SummerCona>3.5</SummerCona>
@@ -913,6 +999,7 @@ namespace Models
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -945,17 +1032,10 @@ namespace Models
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <RootCN>45</RootCN>
           <RootWt>1500</RootWt>
           <SoilCN>12.5</SoilCN>
@@ -1010,6 +1090,7 @@ namespace Models
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>100</double>
@@ -1033,12 +1114,14 @@ namespace Models
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
         </InitialWater>
         <Sample>
           <Name>Initial conditions</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <Thickness>
             <double>1800</double>
           </Thickness>
@@ -1056,7 +1139,9 @@ namespace Models
         </Sample>
         <CERESSoilTemperature>
           <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
         </CERESSoilTemperature>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <RecordNumber>263</RecordNumber>
         <ASCOrder>Sodosol</ASCOrder>
         <ASCSubOrder>Red</ASCSubOrder>
@@ -1076,7 +1161,42 @@ namespace Models
       </Soil>
       <SoluteManager>
         <Name>SoluteManager</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
       </SoluteManager>
+      <Manager>
+        <Name>Harvest</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <Script />
+        <Code><![CDATA[using System;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Utilities;
+using APSIM.Shared.Utilities;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		[Link] Plant Wheat;
+
+		[EventSubscribe("DoManagement")]
+		private void OnDoManagement(object sender, EventArgs e)
+		{
+			if (Wheat.IsReadyForHarvesting)
+			{
+			   Wheat.Harvest();
+			   Wheat.EndCrop();	
+			}
+		
+		}
+		
+	}
+}
+]]></Code>
+      </Manager>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
@@ -1084,6 +1204,7 @@ namespace Models
       <Name>Yield</Name>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1105,6 +1226,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1124,6 +1246,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -1142,12 +1265,12 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
     <Graph>
       <Name>OC</Name>
       <Series>
         <Name>Observed</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1169,6 +1292,7 @@ namespace Models
       </Series>
       <Series>
         <Name>Predicted</Name>
+        <IncludeInDocumentation>true</IncludeInDocumentation>
         <Type>Scatter</Type>
         <XAxis>Bottom</XAxis>
         <YAxis>Left</YAxis>
@@ -1188,6 +1312,7 @@ namespace Models
         <Cumulative>false</Cumulative>
         <CumulativeX>false</CumulativeX>
       </Series>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
       <Axis>
         <Type>Bottom</Type>
         <Title />
@@ -1206,8 +1331,29 @@ namespace Models
       </Axis>
       <LegendPosition>BottomRight</LegendPosition>
       <DisabledSeries />
-      <IncludeInDocumentation>true</IncludeInDocumentation>
     </Graph>
+    <SoilArbitrator>
+      <Name>SoilArbitrator</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+    </SoilArbitrator>
+    <MicroClimate>
+      <Name>MicroClimate</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <a_interception>0</a_interception>
+      <b_interception>1</b_interception>
+      <c_interception>0</c_interception>
+      <d_interception>0</d_interception>
+      <soil_albedo>0.23</soil_albedo>
+      <sun_angle>15</sun_angle>
+      <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+      <night_interception_fraction>0.5</night_interception_fraction>
+      <refheight>2</refheight>
+      <albedo>0.15</albedo>
+      <emissivity>0.96</emissivity>
+      <RadIntTotal>0</RadIntTotal>
+    </MicroClimate>
+    <IncludeInDocumentation>true</IncludeInDocumentation>
   </Simulation>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>296</ExplorerWidth>
 </Simulations>
