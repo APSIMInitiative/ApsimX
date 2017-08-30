@@ -9,7 +9,7 @@ namespace Models.PMF.Phen
 {
     /// <summary>
     /// It uses a <i>ThermalTime Target</i> to determine the duration between development <i>Stages</i>.
-    /// <i>ThermalTime</i> is accumulated until the <i>Target</i> is met and remaining <i>ThermalTime</i> is forwarded to the next phase.
+    ///   <i>ThermalTime</i> is accumulated until the <i>Target</i> is met and remaining <i>ThermalTime</i> is forwarded to the next phase.
     /// 
     /// </summary>
     /// \param Target The thermal time target in this phase.
