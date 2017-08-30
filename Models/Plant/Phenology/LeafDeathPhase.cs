@@ -9,7 +9,7 @@ using Models.PMF.Struct;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// It is a Leaf death phenological phase which proceeds until the last leaf on the main-stem has fully senessced.  Therefore its duration depends on the number of main-stem leaves that are produced and the rate at which they seness following final leaf appearance.
+    /// It proceeds until the last leaf on the main-stem has fully senessced.  Therefore its duration depends on the number of main-stem leaves that are produced and the rate at which they seness following final leaf appearance.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
