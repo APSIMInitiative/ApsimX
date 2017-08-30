@@ -160,26 +160,26 @@ namespace Models.PMF.Organs
         /// Leaf area index is calculated as the sum of the area of each cohort of leaves 
         /// The appearance of a new cohort of leaves occurs each time Structure.LeafTipsAppeared increases by one.
         /// From tip appearance the area of each cohort will increase for a certian number of degree days defined by the <i>GrowthDuration</i>
-        /// [Document CohortParameters.GrowthDuration]
+        /// [Document GrowthDuration]
         /// 
         /// If no stress occurs the leaves will reach a Maximum area (<i>MaxArea</i>) at the end of the <i>GrowthDuration</i>.
         /// The <i>MaxArea</i> is defined by:
-        /// [Document CohortParameters.MaxArea]
+        /// [Document MaxArea]
         /// 
         /// In the absence of stress the leaf will remain at <i>MaxArea</i> for a number of degree days
         /// set by the <i>LagDuration</i> and then area will senesce to zero at the end of the <i>SenescenceDuration</i>
-        /// [Document CohortParameters.LagDuration]
-        /// [Document CohortParameters.SenescenceDuration]
+        /// [Document LagDuration]
+        /// [Document SenescenceDuration]
         /// 
         /// Mutual shading can cause premature senescence of cohorts if the leaf area above them becomes too great.
         /// Each cohort models the proportion of its area that is lost to shade induced senescence each day as:
-        /// [Document CohortParameters.ShadeInducedSenescenceRate]
+        /// [Document ShadeInducedSenescenceRate]
         /// 
         /// ## Stress effects on Leaf Area Index ##
         /// Stress reduces leaf area in a number of ways.
         /// Firstly, stress occuring prior to the appearance of the cohort can reduce cell division, so reducing the maximum leaf size.
         /// Leaf captures this by multiplying the <i>MaxSize</i> of each cohort by a <i>CellDivisionStress</i> factor which is calculated as:
-        /// [Document CohortParameters.CellDivisionStress]
+        /// [Document CellDivisionStress]
         /// 
         /// Leaf.FN quantifys the N stress status of the plant and represents the concentration of metabolic N relative the maximum potentil metabolic N content of the leaf
         /// calculated as (<i>Leaf.NConc - MinimumNConc</i>)/(<i>CriticalNConc - MinimumNConc</i>).
@@ -189,7 +189,7 @@ namespace Models.PMF.Organs
         ///
         /// Stress during the <i>GrowthDuration</i> of the cohort reduces the size increase of the cohort by
         /// multiplying the potential increase by a <i>ExpansionStress</i> factor:
-        /// [Document CohortParameters.ExpansionStress]
+        /// [Document ExpansionStress]
         /// 
         /// Stresses can also acellerate the onset and rate of senescence in a number of ways.
         /// Nitrogen shortage will cause N to be retranslocated out of lower order leaves to support the expansion of higher order leaves and other organs
@@ -197,49 +197,49 @@ namespace Models.PMF.Organs
         ///
         /// Water stress hastens senescence by increasing the rate of thermal time accumulation in the lag and senescence phases.
         /// This is done by multiplying thermal time accumulation by <i>DroughtInducedLagAcceleration</i> and <i>DroughtInducedSenescenceAcceleration</i> factors, respectively:
-        /// [Document CohortParameters.DroughtInducedLagAcceleration]
-        /// [Document CohortParameters.DroughtInducedSenAcceleration]
+        /// [Document DroughtInducedLagAcceleration]
+        /// [Document DroughtInducedSenAcceleration]
         /// 
         /// ## Dry matter Demand ##
         /// Leaf calculates the DM demand from each cohort as a function of the potential size increment (DeltaPotentialArea) an specific leaf area bounds.
         /// Under non stressed conditions the demand for non-storage DM is calculated as <i>DeltaPotentialArea</i> divided by the mean of <i>SpecificLeafAreaMax</i> and <i>SpecificLeafAreaMin</i>.
         /// Under stressed conditions it is calculated as <i>DeltaWaterConstrainedArea</i> divided by <i>SpecificLeafAreaMin</i>.
-        /// [Document CohortParameters.SpecificLeafAreaMax]
-        /// [Document CohortParameters.SpecificLeafAreaMin]
+        /// [Document SpecificLeafAreaMax]
+        /// [Document SpecificLeafAreaMin]
         /// 
         /// Non-storage DM Demand is then seperated into structural and metabolic DM demands using the <i>StructuralFraction</i>:
-        /// [Document CohortParameters.StructuralFraction]
+        /// [Document StructuralFraction]
         /// 
         /// The storage DM demand is calculated from the sum of metabolic and structural DM (including todays demands)
         /// multiplied by a <i>NonStructuralFraction</i>:
-        /// [Document CohortParameters.NonStructuralFraction]
+        /// [Document NonStructuralFraction]
         /// 
         /// ## Nitrogen Demand ##
         /// 
         /// Leaf calculates the N demand from each cohort as a function of the potential DM increment and N concentration bounds.
         /// Structural N demand = <i>PotentialStructuralDMAllocation</i> * <i>MinimumNConc</i> where:
-        /// [Document CohortParameters.MinimumNConc]
+        /// [Document MinimumNConc]
         /// 
         /// Metabolic N demand is calculated as <i>PotentialMetabolicDMAllocation</i> * (<i>CriticalNConc</i> - <i>MinimumNConc</i>) where:
-        /// [Document CohortParameters.CriticalNConc]
+        /// [Document CriticalNConc]
         /// 
         /// Storage N demand is calculated as the sum of metabolic and structural wt (including todays demands)
         /// multiplied by <i>LuxaryNconc</i> (<i>MaximumNConc</i> - <i>CriticalNConc</i>) less the amount of storage N already present.  <i>MaximumNConc</i> is given by:
-        /// [Document CohortParameters.MaximumNConc]
+        /// [Document MaximumNConc]
         ///
         /// ## Drymatter supply ##
         /// In additon to photosynthesis, the leaf can also supply DM by reallocation of senescing DM and retranslocation of storgage DM:
         /// Reallocation supply is a proportion of the metabolic and non-structural DM that would be senesced each day where the proportion is set by:
-        /// [Document CohortParameters.DMReallocationFactor]
+        /// [Document DMReallocationFactor]
         /// Retranslocation supply is calculated as a proportion of the amount of storage DM in each cohort where the proportion is set by :
-        /// [Document CohortParameters.DMRetranslocationFactor]
+        /// [Document DMRetranslocationFactor]
         ///
         /// ## Nitrogen supply ##
         /// Nitrogen supply from the leaf comes from the reallocation of metabolic and storage N in senescing material
         /// and the retranslocation of metabolic and storage N.  Reallocation supply is a proportion of the Metabolic and Storage DM that would be senesced each day where the proportion is set by:
-        /// [Document CohortParameters.NReallocationFactor]
+        /// [Document NReallocationFactor]
         /// Retranslocation supply is calculated as a proportion of the amount of storage and metabolic N in each cohort where the proportion is set by :
-        /// [Document CohortParameters.NRetranslocationFactor]
+        /// [Document NRetranslocationFactor]
         /// </summary>
         [Serializable]
         public class LeafCohortParameters : Model
