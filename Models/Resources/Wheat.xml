@@ -57,12 +57,12 @@ Where MinLeafNumber is the number of leaves that a wheat crop will produce when 
         <VariableReference>
           <Name>MaxT</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Weather].MaxT</VariableName>
+          <VariableName>[IWeather].MaxT</VariableName>
         </VariableReference>
         <VariableReference>
           <Name>MinT</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <VariableName>[Weather].MinT</VariableName>
+          <VariableName>[IWeather].MinT</VariableName>
         </VariableReference>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </AddFunction>
@@ -2009,7 +2009,7 @@ A function is used to provide maturity date as days after sowing(DAS).]]>
             </Y>
           </XYPairs>
           <IncludeInDocumentation>true</IncludeInDocumentation>
-          <XProperty>[Weather].CO2</XProperty>
+          <XProperty>[IWeather].CO2</XProperty>
         </LinearInterpolationFunction>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </MultiplyFunction>

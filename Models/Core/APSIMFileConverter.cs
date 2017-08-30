@@ -15,6 +15,8 @@ namespace Models.Core
     using System.Reflection;
     using System.IO;
     using System.Text.RegularExpressions;
+    using PMF;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
@@ -349,12 +351,17 @@ namespace Models.Core
             APSIMFileConverterUtilities.RenameVariable(node, "using Models.PMF.OldPlant;", "using Models.PMF;");
             APSIMFileConverterUtilities.RenameVariable(node, "Plant15", "Plant");
 
-            // /042 is a "
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
-                APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"(\w+).plant.status *== *\042out\042", @"!$1.IsAlive", null);
+                APSIMFileConverterUtilities.SearchReplaceManagerCodeUsingRegEx(manager, @"(\w+).plant.status *== *\042out\042", @"!$1.IsAlive", null);  // /042 is a "
 
-            foreach (XmlNode zoneNode in XmlUtilities.FindAllRecursivelyByType(node, "Simulation"))
-                XmlUtilities.EnsureNodeExists(zoneNode, "SoilArbitrator");
+            foreach (XmlNode simulationNode in XmlUtilities.FindAllRecursivelyByType(node, "Simulation"))
+            {
+                if (XmlUtilities.FindAllRecursivelyByType(simulationNode, "Plant").Count > 0)
+                {
+                    XmlUtilities.EnsureNodeExists(simulationNode, "SoilArbitrator");
+                    XmlUtilities.EnsureNodeExists(simulationNode, "MicroClimate");
+                }
+            }
         }
     }
 }
