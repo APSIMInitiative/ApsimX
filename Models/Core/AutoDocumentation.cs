@@ -79,7 +79,8 @@ namespace Models.Core
 
             List<IModel> childrenDocumented = new List<Core.IModel>();
 
-            XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, "members/T:" + model.GetType().FullName + "/summary");
+            string nameToFindInSummary = "members/T:" + model.GetType().FullName.Replace("+", ".") + "/summary";
+            XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
             if (summaryNode != null)
             {
                 int numSpacesStartOfLine = -1;
