@@ -24,7 +24,7 @@ namespace Models.PMF.Struct
     ///  Each day the number of main-stem leaf tips appeared (*LeafTipsAppeared*) is calculated as:  
     ///    *LeafTipsAppeared* += *DeltaTips*
     ///  Where *DeltaTips* is calculated as:  
-    ///    *DeltaTips* = *TheralTime*/*Phyllochron*  
+    ///    *DeltaTips* = *ThermalTime*/*Phyllochron*  
     ///    Where *Phyllochron* is the thermal time duration between the appearance of leaf tipx given by: 
     /// [Document Phyllochron]
     ///   and *ThermalTime* is given by:
