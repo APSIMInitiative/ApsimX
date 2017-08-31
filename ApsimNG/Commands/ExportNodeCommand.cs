@@ -472,7 +472,10 @@ namespace UserInterface.Commands
                     }
                 }
 
-                string PNGFileName = Path.Combine(workingDirectory, graphPage.name + ".png");
+                string PNGFileName = Path.Combine(workingDirectory,
+                                                  graphPage.graphs[0].Parent.Parent.Name +
+                                                  graphPage.graphs[0].Parent.Name + 
+                                                  graphPage.name + ".png");
                 image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
 
                 MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = section.AddImage(PNGFileName);
