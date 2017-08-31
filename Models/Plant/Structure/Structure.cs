@@ -491,7 +491,7 @@ namespace Models.PMF.Struct
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-            PotLeafTipsAppeared = 0;
+            /*PotLeafTipsAppeared = 0;
             CohortToInitialise = 0;
             TipToAppear = 0;
             Emerged = false;
@@ -500,7 +500,7 @@ namespace Models.PMF.Struct
             InitialiseLeafCohorts.Invoke(this, args);
             NextLeafProportion = 1.0;
             DoEmergence();
-            Emerged = true;
+            Emerged = true;*/
         }
         
         /// <summary>Called when crop is being cut.</summary>
