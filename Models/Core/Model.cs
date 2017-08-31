@@ -312,11 +312,17 @@ namespace Models.Core
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public virtual void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write description of this class.
-            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent, true);
+                // write description of this class.
+                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent, true);
+
+                //foreach (IModel model in Children)
+                //    model.Document(tags, headingLevel+1, indent);
+            }
         }
 
         /// <summary>

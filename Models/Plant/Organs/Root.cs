@@ -38,9 +38,9 @@ namespace Models.PMF.Organs
     /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
     /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
     /// 
-    ///     _NO3 uptake = NO3<sub>i</sub> x KNO3 x NO3<sub>ppm, i</sub> * NUptakeSWFactor_
+    ///     _NO3 uptake = NO3<sub>i</sub> x KNO3 x NO3<sub>ppm, i</sub> x NUptakeSWFactor_
     ///     
-    ///     _NH4 uptake = NH4<sub>i</sub> x KNH4 x NH4<sub>ppm, i</sub> * NUptakeSWFactor_
+    ///     _NH4 uptake = NH4<sub>i</sub> x KNH4 x NH4<sub>ppm, i</sub> x NUptakeSWFactor_
     /// 
     /// Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plants N demand. 
     /// The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand

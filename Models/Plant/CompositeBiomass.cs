@@ -158,25 +158,27 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
-
-            // write description of this class.
-            AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
-
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                child.Document(tags, headingLevel + 1, indent);
-
-            tags.Add(new AutoDocumentation.Paragraph(this.Name +" is a composite of the following biomass objects:", indent));
-
-            string st = string.Empty;
-            foreach (string PropertyName in Propertys)
+            if (IncludeInDocumentation)
             {
-                st = st + Environment.NewLine + "* " + PropertyName;
-            }
-            tags.Add(new AutoDocumentation.Paragraph(st, indent));
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
 
+                // write description of this class.
+                AutoDocumentation.DocumentModel(this, tags, headingLevel, indent);
+
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                    child.Document(tags, headingLevel + 1, indent);
+
+                tags.Add(new AutoDocumentation.Paragraph(this.Name + " is a composite of the following biomass objects:", indent));
+
+                string st = string.Empty;
+                foreach (string PropertyName in Propertys)
+                {
+                    st = st + Environment.NewLine + "* " + PropertyName;
+                }
+                tags.Add(new AutoDocumentation.Paragraph(st, indent));
+            }
         }
     }
 }

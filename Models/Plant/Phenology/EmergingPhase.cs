@@ -69,28 +69,31 @@ namespace Models.PMF.Phen
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
 
-            // Describe the start and end stages
-            tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
+                // Describe the start and end stages
+                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
 
-            tags.Add(new AutoDocumentation.Paragraph("This phase simulates time to emergence as a function of sowing depth."
-                + " The <i>ThermalTime Target</i> from Sowing to Emergence is given by:<br>"
-                + "&nbsp;&nbsp;&nbsp;&nbsp;*Target = SowingDepth x ShootRate + ShootLag*<br>"
-                + "Where:<br>"
-                + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootRate* = " + ShootRate + " (deg day/mm),<br>"
-                + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootLag* = " + ShootLag + " (deg day), <br>"
-                + "and *SowingDepth* (mm) is sent from the manager with the sowing event.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("This phase simulates time to emergence as a function of sowing depth."
+                    + " The <i>ThermalTime Target</i> from Sowing to Emergence is given by:<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;*Target = SowingDepth x ShootRate + ShootLag*<br>"
+                    + "Where:<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootRate* = " + ShootRate + " (deg day/mm),<br>"
+                    + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootLag* = " + ShootLag + " (deg day), <br>"
+                    + "and *SowingDepth* (mm) is sent from the manager with the sowing event.", indent));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph("Progress toward emergence is driven by Thermal time accumulation where thermal time is calculated as:", indent));
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                child.Document(tags, -1, indent);
+                tags.Add(new AutoDocumentation.Paragraph("Progress toward emergence is driven by Thermal time accumulation where thermal time is calculated as:", indent));
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                    child.Document(tags, -1, indent);
+            }
         }
     }
 

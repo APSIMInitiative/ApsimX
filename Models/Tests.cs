@@ -246,66 +246,71 @@ namespace Models
         /// <param name="indent"></param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // Run test suite so that data table is full.
-            Test(accept: false, GUIrun: true);
-
-            // Get stat names.
-            List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
-            statNames.RemoveAt(0);
-
-            // Grab the columns of data we want.
-            DataTable dataForDoc = new DataTable();
-            dataForDoc.Columns.Add("Variable", typeof(string)); 
-            for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
+            if (IncludeInDocumentation)
             {
-                if (statNames[statIndex] != "SEintercept" && 
-                    statNames[statIndex] != "SEslope" &&
-                    statNames[statIndex] != "RSR")
-                    dataForDoc.Columns.Add(statNames[statIndex], typeof(string));
-            }
+                tags.Add(new AutoDocumentation.Heading(Parent.Name, headingLevel));
 
-            int rowIndex = 0;
-            while (rowIndex < Table.Rows.Count)
-            {
-                DataRow row = dataForDoc.NewRow();
-                dataForDoc.Rows.Add(row);
-                string variableName = Table.Rows[rowIndex][1].ToString();
-                row[0] = variableName;
+                // Run test suite so that data table is full.
+                Test(accept: false, GUIrun: true);
 
-                int i = 1;
+                // Get stat names.
+                List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
+                statNames.RemoveAt(0);
+
+                // Grab the columns of data we want.
+                DataTable dataForDoc = new DataTable();
+                dataForDoc.Columns.Add("Variable", typeof(string));
                 for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
                 {
-                    if (statNames[statIndex] != "SEintercept" && 
+                    if (statNames[statIndex] != "SEintercept" &&
                         statNames[statIndex] != "SEslope" &&
                         statNames[statIndex] != "RSR")
+                        dataForDoc.Columns.Add(statNames[statIndex], typeof(string));
+                }
+
+                int rowIndex = 0;
+                while (rowIndex < Table.Rows.Count)
+                {
+                    DataRow row = dataForDoc.NewRow();
+                    dataForDoc.Rows.Add(row);
+                    string variableName = Table.Rows[rowIndex][1].ToString();
+                    row[0] = variableName;
+
+                    int i = 1;
+                    for (int statIndex = 0; statIndex < statNames.Count; statIndex++)
                     {
-                        object currentValue = Table.Rows[rowIndex]["Current"];
-                        string formattedValue;
-                        if (currentValue.GetType() == typeof(double))
+                        if (statNames[statIndex] != "SEintercept" &&
+                            statNames[statIndex] != "SEslope" &&
+                            statNames[statIndex] != "RSR")
                         {
-                            double doubleValue = Convert.ToDouble(currentValue);
-                            if (!double.IsNaN(doubleValue))
+                            object currentValue = Table.Rows[rowIndex]["Current"];
+                            string formattedValue;
+                            if (currentValue.GetType() == typeof(double))
                             {
-                                if (statIndex == 0)
-                                    formattedValue = doubleValue.ToString("F0");
+                                double doubleValue = Convert.ToDouble(currentValue);
+                                if (!double.IsNaN(doubleValue))
+                                {
+                                    if (statIndex == 0)
+                                        formattedValue = doubleValue.ToString("F0");
+                                    else
+                                        formattedValue = doubleValue.ToString("F3");
+                                }
                                 else
-                                    formattedValue = doubleValue.ToString("F3");
+                                    formattedValue = currentValue.ToString();
                             }
                             else
                                 formattedValue = currentValue.ToString();
+
+                            row[i] = formattedValue;
+                            i++;
                         }
-                        else
-                            formattedValue = currentValue.ToString();
-
-                        row[i] = formattedValue;
-                        i++;
+                        rowIndex++;
                     }
-                    rowIndex++;
                 }
-            }
 
-            // add data to doc table.
-            tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
+                // add data to doc table.
+                tags.Add(new AutoDocumentation.Table(dataForDoc, headingLevel));
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ This work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225],
     <Name>Replacements</Name>
     <Report>
       <Name>HarvestReport</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
@@ -58,7 +58,7 @@ This work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225],
     </Report>
     <Report>
       <Name>DailyReport</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
@@ -158,7 +158,7 @@ This work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225],
     </Report>
     <Manager>
       <Name>MaxLeafSize</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Script />
       <Code><![CDATA[using System;
 using System.Collections.Generic;
@@ -200,7 +200,7 @@ namespace Models
     </Manager>
     <Report>
       <Name>MaxLeafSizeReport</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
@@ -213,7 +213,7 @@ namespace Models
     </Report>
     <Manager>
       <Name>Harvesting</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Script />
       <Code><![CDATA[using System;
 using Models.Core;
@@ -244,13 +244,13 @@ namespace Models
 }
 	   ]]></Code>
     </Manager>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>Observed</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
@@ -261,7 +261,7 @@ namespace Models
       <Name>DailyObsPred</Name>
       <Tests>
         <Name>Tests</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <AcceptedStats>
           <RegrStats>
             <Name>ET</Name>
@@ -799,7 +799,7 @@ namespace Models
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
         <POName>DailyObsPred</POName>
       </Tests>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <PredictedTableName>DailyReport</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today</FieldNameUsedForMatch>
@@ -808,7 +808,7 @@ namespace Models
       <Name>HarvestObsPred</Name>
       <Tests>
         <Name>Tests</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <AcceptedStats>
           <RegrStats>
             <Name>Wheat.AboveGround.N</Name>
@@ -1192,7 +1192,7 @@ namespace Models
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
         <POName>HarvestObsPred</POName>
       </Tests>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <PredictedTableName>HarvestReport</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Wheat.Phenology.CurrentStageName</FieldNameUsedForMatch>
@@ -1201,7 +1201,7 @@ namespace Models
       <Name>LeafSizeObsPred</Name>
       <Tests>
         <Name>Tests</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <AcceptedStats>
           <RegrStats>
             <Name>MaxLeafSize.Script.MaxLeafSize</Name>
@@ -1221,14 +1221,14 @@ namespace Models
         <AcceptedStatsName>Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR</AcceptedStatsName>
         <POName>LeafSizeObsPred</POName>
       </Tests>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <PredictedTableName>MaxLeafSizeReport</PredictedTableName>
       <ObservedTableName>MaxLeafSize</ObservedTableName>
       <FieldNameUsedForMatch>MaxLeafSize.Script.LeafPosition</FieldNameUsedForMatch>
     </PredictedObserved>
     <ExcelInput>
       <Name>ObservedSystem</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>%root%\Tests\Validation\System\Pendleton\observed.xlsx</FileName>
       <SheetNames>
         <string>ObsSoil</string>
@@ -1237,12 +1237,12 @@ namespace Models
     </ExcelInput>
     <PredictedObserved>
       <Name>PredictedObservedSoil</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <PredictedTableName>SoilHarvestReport</PredictedTableName>
       <ObservedTableName>ObsSoil</ObservedTableName>
       <FieldNameUsedForMatch>Clock.Today.Year</FieldNameUsedForMatch>
     </PredictedObserved>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>10000</MaximumResultsPerPage>
   </DataStore>
@@ -2415,8 +2415,8 @@ Simulation results for the combined datasets from the various countries are show
               <Name>ApplyFertiliser</Name>
               <IncludeInDocumentation>false</IncludeInDocumentation>
               <Script>
-                <Amount>160</Amount>
                 <FertDayOfYear>186</FertDayOfYear>
+                <Amount>160</Amount>
               </Script>
               <Code><![CDATA[using System;
 using Models.Core;
@@ -83521,5 +83521,5 @@ namespace Models
     <ShowPageOfGraphs>true</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>283</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

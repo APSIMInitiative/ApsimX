@@ -79,13 +79,16 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            //Write what the function is returning
-            tags.Add(new AutoDocumentation.Paragraph("*" + this.Name + "* is the daily differential of", indent));
-
-            // write a description of the child it is returning the differential of.
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            if (IncludeInDocumentation)
             {
-                    child.Document(tags, headingLevel + 1, indent+1);
+                //Write what the function is returning
+                tags.Add(new AutoDocumentation.Paragraph("*" + this.Name + "* is the daily differential of", indent));
+
+                // write a description of the child it is returning the differential of.
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    child.Document(tags, headingLevel + 1, indent + 1);
+                }
             }
         }
     }

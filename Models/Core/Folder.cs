@@ -38,54 +38,69 @@ namespace Models.Core
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            if (ShowPageOfGraphs)
+            if (IncludeInDocumentation)
             {
-                foreach (Memo memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, headingLevel, indent);
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                if (Apsim.Children(this, typeof(Experiment)).Count > 0)
+                if (ShowPageOfGraphs)
                 {
-                    // Write Phase Table
-                    tags.Add(new AutoDocumentation.Paragraph("**List of experiments.**", indent));
-                    DataTable tableData = new DataTable();
-                    tableData.Columns.Add("Experiment Name", typeof(string));
-                    tableData.Columns.Add("Design (Number of Treatments)", typeof(string));
+                    foreach (Memo memo in Apsim.Children(this, typeof(Memo)))
+                        memo.Document(tags, headingLevel, indent);
 
-                    foreach (IModel child in Apsim.Children(this, typeof(Experiment)))
+                    if (Apsim.Children(this, typeof(Experiment)).Count > 0)
                     {
-                        IModel Factors = Apsim.Child(child, typeof(Factors));
-                        string Design = "";
-                        foreach (IModel factor in Apsim.Children(Factors, typeof(Factor)))
+                        // Write Phase Table
+                        tags.Add(new AutoDocumentation.Paragraph("**List of experiments.**", indent));
+                        DataTable tableData = new DataTable();
+                        tableData.Columns.Add("Experiment Name", typeof(string));
+                        tableData.Columns.Add("Design (Number of Treatments)", typeof(string));
+
+                        foreach (IModel child in Apsim.Children(this, typeof(Experiment)))
                         {
-                            if (Design != "")
-                                Design += " x ";
-                            Design += factor.Name;
+                            IModel Factors = Apsim.Child(child, typeof(Factors));
+                            string Design = "";
+                            foreach (IModel factor in Apsim.Children(Factors, typeof(Factor)))
+                            {
+                                if (Design != "")
+                                    Design += " x ";
+                                Design += factor.Name;
+                            }
+                            Design += " (" + (child as Experiment).Names().Length + ")";
+
+                            DataRow row = tableData.NewRow();
+                            row[0] = child.Name;
+                            row[1] = Design;
+                            tableData.Rows.Add(row);
                         }
-                        Design += " (" + (child as Experiment).Names().Length+")";
+                        tags.Add(new AutoDocumentation.Table(tableData, indent));
 
-                        DataRow row = tableData.NewRow();
-                        row[0] = child.Name;
-                        row[1] = Design;
-                        tableData.Rows.Add(row);
                     }
-                    tags.Add(new AutoDocumentation.Table(tableData, indent));
+                    int pageNumber = 1;
+                    int i = 0;
+                    List<IModel> children = Apsim.Children(this, typeof(Graph.Graph));
+                    while (i < children.Count)
+                    {
+                        GraphPage page = new GraphPage();
+                        page.name = Name + pageNumber;
+                        for (int j = i; j < i + 6 && j < children.Count; j++)
+                            if (children[j].IncludeInDocumentation)
+                                page.graphs.Add(children[j] as Graph.Graph);
+                        if (page.graphs.Count > 0)
+                            tags.Add(page);
+                        i += 6;
+                        pageNumber++;
+                    }
 
+                    // Document everything else other than graphs
+                    foreach (IModel model in Children)
+                        if (!(model is Graph.Graph) && !(model is Memo))
+                            model.Document(tags, headingLevel + 1, indent);
                 }
-                int pageNumber = 1;
-                int i = 0;
-                List<IModel> children = Apsim.Children(this, typeof(Graph.Graph));
-                while (i < children.Count)
+                else
                 {
-                    GraphPage page = new GraphPage();
-                    page.name = Name + pageNumber;
-                    for (int j = i; j < i + 6 && j < children.Count; j++)
-                        page.graphs.Add(children[j] as Graph.Graph);
-                    tags.Add(page);
-                    i += 6;
-                    pageNumber++;
+                    foreach (IModel model in Children)
+                        model.Document(tags, headingLevel + 1, indent);
                 }
             }
         }
