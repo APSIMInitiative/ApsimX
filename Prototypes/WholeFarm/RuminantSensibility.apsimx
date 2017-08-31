@@ -58,22 +58,6 @@
             <Nitrogen>0.75</Nitrogen>
             <StartingAmount>10000</StartingAmount>
           </AnimalFoodStoreType>
-          <AnimalFoodStoreType>
-            <Name>Maize</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>18</DryMatter>
-            <DMD>55.42</DMD>
-            <Nitrogen>2</Nitrogen>
-            <StartingAmount>10000</StartingAmount>
-          </AnimalFoodStoreType>
-          <AnimalFoodStoreType>
-            <Name>AlfaAlfaHay</Name>
-            <IncludeInDocumentation>true</IncludeInDocumentation>
-            <DryMatter>85</DryMatter>
-            <DMD>68.6</DMD>
-            <Nitrogen>3.4</Nitrogen>
-            <StartingAmount>10000</StartingAmount>
-          </AnimalFoodStoreType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </AnimalFoodStore>
         <RuminantHerd>
@@ -96,13 +80,15 @@
             </RuminantInitialCohorts>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Breed>Bos indicus</Breed>
-            <EMaintCoefficient>0.35</EMaintCoefficient>
-            <EMaintIntercept>0.503</EMaintIntercept>
-            <EMaintExponent>0</EMaintExponent>
-            <EGrowthCoefficient>0.79</EGrowthCoefficient>
-            <EGrowthIntercept>0</EGrowthIntercept>
-            <ELactationCoefficient>0.35</ELactationCoefficient>
-            <ELactationIntercept>0.42</ELactationIntercept>
+            <EMaintEfficiencyCoefficient>0.35</EMaintEfficiencyCoefficient>
+            <EMaintEfficiencyIntercept>0.503</EMaintEfficiencyIntercept>
+            <EGrowthEfficiencyCoefficient>0.79</EGrowthEfficiencyCoefficient>
+            <EGrowthEfficiencyIntercept>0</EGrowthEfficiencyIntercept>
+            <ELactationEfficiencyCoefficient>0.35</ELactationEfficiencyCoefficient>
+            <ELactationEfficiencyIntercept>0.42</ELactationEfficiencyIntercept>
+            <EMaintExponent>8.2E-05</EMaintExponent>
+            <EMaintIntercept>0.09</EMaintIntercept>
+            <EMaintCoefficient>0.26</EMaintCoefficient>
             <Kme>1</Kme>
             <GrowthEnergyIntercept1>6.7</GrowthEnergyIntercept1>
             <GrowthEnergyIntercept2>20.3</GrowthEnergyIntercept2>
@@ -193,7 +179,7 @@
           <RuminantActivityFeed>
             <Name>Feed Bos indicus</Name>
             <RuminantFeedGroup>
-              <Name>BosIndicus</Name>
+              <Name>Filter Bos indicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=BosIndicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -235,6 +221,10 @@
           <Name>SummariseHerd</Name>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </SummariseRuminantHerd>
+        <ReportRuminantHerd>
+          <Name>ReportHerd</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </ReportRuminantHerd>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ActivitiesHolder>
       <Folder>
@@ -260,6 +250,20 @@
           </VariableNames>
           <EventNames>
             <string>[Activities].SummariseHerd.OnReportItemGenerated</string>
+          </EventNames>
+        </Report>
+        <Report>
+          <Name>HerdReport</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.ID as ID</string>
+            <string>[Activities].ReportHerd.ReportDetails.Individual.Weight as Weight</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Activities].ReportHerd.OnReportItemGenerated</string>
           </EventNames>
         </Report>
         <Report>
@@ -391,8 +395,8 @@
             </Transmutation>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <DryMatter>89.5</DryMatter>
-            <DMD>45</DMD>
-            <Nitrogen>0.75</Nitrogen>
+            <DMD>62</DMD>
+            <Nitrogen>1.2</Nitrogen>
             <StartingAmount>10000</StartingAmount>
           </AnimalFoodStoreType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -407,7 +411,7 @@
                 <Name>Calf</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <Gender>Female</Gender>
-                <StartingAge>5</StartingAge>
+                <StartingAge>1</StartingAge>
                 <StartingNumber>1</StartingNumber>
                 <StartingWeight>40</StartingWeight>
                 <StartingWeightSD>0</StartingWeightSD>
@@ -427,13 +431,15 @@
             </RuminantInitialCohorts>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Breed>Bos indicus</Breed>
-            <EMaintCoefficient>0.35</EMaintCoefficient>
-            <EMaintIntercept>0.503</EMaintIntercept>
-            <EMaintExponent>0</EMaintExponent>
-            <EGrowthCoefficient>0.79</EGrowthCoefficient>
-            <EGrowthIntercept>0</EGrowthIntercept>
-            <ELactationCoefficient>0.35</ELactationCoefficient>
-            <ELactationIntercept>0.42</ELactationIntercept>
+            <EMaintEfficiencyCoefficient>0.35</EMaintEfficiencyCoefficient>
+            <EMaintEfficiencyIntercept>0.503</EMaintEfficiencyIntercept>
+            <EGrowthEfficiencyCoefficient>0.79</EGrowthEfficiencyCoefficient>
+            <EGrowthEfficiencyIntercept>0</EGrowthEfficiencyIntercept>
+            <ELactationEfficiencyCoefficient>0.35</ELactationEfficiencyCoefficient>
+            <ELactationEfficiencyIntercept>0.42</ELactationEfficiencyIntercept>
+            <EMaintExponent>8.2E-05</EMaintExponent>
+            <EMaintIntercept>0.09</EMaintIntercept>
+            <EMaintCoefficient>0.26</EMaintCoefficient>
             <Kme>1</Kme>
             <GrowthEnergyIntercept1>6.7</GrowthEnergyIntercept1>
             <GrowthEnergyIntercept2>20.3</GrowthEnergyIntercept2>
@@ -515,6 +521,34 @@
           </RuminantType>
           <IncludeInDocumentation>true</IncludeInDocumentation>
         </RuminantHerd>
+        <GreenhouseGases>
+          <Name>GreenhouseGases</Name>
+          <GreenhouseGasesType>
+            <Name>Methane store</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <StartingAmount>1100</StartingAmount>
+            <GlobalWarmingPotential>25</GlobalWarmingPotential>
+          </GreenhouseGasesType>
+          <GreenhouseGasesType>
+            <Name>Methane</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <StartingAmount>0</StartingAmount>
+            <GlobalWarmingPotential>25</GlobalWarmingPotential>
+          </GreenhouseGasesType>
+          <GreenhouseGasesType>
+            <Name>CO2</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <StartingAmount>0</StartingAmount>
+            <GlobalWarmingPotential>1</GlobalWarmingPotential>
+          </GreenhouseGasesType>
+          <GreenhouseGasesType>
+            <Name>NOx</Name>
+            <IncludeInDocumentation>true</IncludeInDocumentation>
+            <StartingAmount>0</StartingAmount>
+            <GlobalWarmingPotential>298</GlobalWarmingPotential>
+          </GreenhouseGasesType>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+        </GreenhouseGases>
         <IncludeInDocumentation>true</IncludeInDocumentation>
       </ResourcesHolder>
       <ActivitiesHolder>
@@ -524,7 +558,7 @@
           <RuminantActivityFeed>
             <Name>Feed Bos indicus</Name>
             <RuminantFeedGroup>
-              <Name>BosIndicus</Name>
+              <Name>Filter Bos indicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=BosIndicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -667,6 +701,23 @@
             <string>[Resources].Ruminants.TransactionOccurred</string>
           </EventNames>
         </Report>
+        <Report>
+          <Name>GreenhouseGases</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
+          <ExperimentFactorNames />
+          <ExperimentFactorValues />
+          <VariableNames>
+            <string>[Clock].Today as Date</string>
+            <string>[Resources].GreenhouseGases.LastTransaction.Credit as Credit</string>
+            <string>[Resources].GreenhouseGases.LastTransaction.CreditStandardised as CreditCO2e</string>
+            <string>[Resources].GreenhouseGases.LastTransaction.ResourceType as Resource</string>
+            <string>[Resources].GreenhouseGases.LastTransaction.Activity as Activity</string>
+            <string>[Resources].GreenhouseGases.LastTransaction.Reason as Reason</string>
+          </VariableNames>
+          <EventNames>
+            <string>[Resources].GreenhouseGases.TransactionOccurred</string>
+          </EventNames>
+        </Report>
         <IncludeInDocumentation>true</IncludeInDocumentation>
         <ShowPageOfGraphs>true</ShowPageOfGraphs>
       </Folder>
@@ -761,13 +812,15 @@
             </RuminantInitialCohorts>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Breed>Bos indicus</Breed>
-            <EMaintCoefficient>0.35</EMaintCoefficient>
-            <EMaintIntercept>0.503</EMaintIntercept>
-            <EMaintExponent>0</EMaintExponent>
-            <EGrowthCoefficient>0.79</EGrowthCoefficient>
-            <EGrowthIntercept>0</EGrowthIntercept>
-            <ELactationCoefficient>0.35</ELactationCoefficient>
-            <ELactationIntercept>0.42</ELactationIntercept>
+            <EMaintEfficiencyCoefficient>0.35</EMaintEfficiencyCoefficient>
+            <EMaintEfficiencyIntercept>0.503</EMaintEfficiencyIntercept>
+            <EGrowthEfficiencyCoefficient>0.79</EGrowthEfficiencyCoefficient>
+            <EGrowthEfficiencyIntercept>0</EGrowthEfficiencyIntercept>
+            <ELactationEfficiencyCoefficient>0.35</ELactationEfficiencyCoefficient>
+            <ELactationEfficiencyIntercept>0.42</ELactationEfficiencyIntercept>
+            <EMaintExponent>8.2E-05</EMaintExponent>
+            <EMaintIntercept>0.09</EMaintIntercept>
+            <EMaintCoefficient>0.26</EMaintCoefficient>
             <Kme>1</Kme>
             <GrowthEnergyIntercept1>6.7</GrowthEnergyIntercept1>
             <GrowthEnergyIntercept2>20.3</GrowthEnergyIntercept2>
@@ -858,7 +911,7 @@
           <RuminantActivityFeed>
             <Name>Feed Bos indicus</Name>
             <RuminantFeedGroup>
-              <Name>BosIndicus</Name>
+              <Name>FIlter Bos indicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=BosIndicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>
@@ -1099,13 +1152,15 @@
             </RuminantInitialCohorts>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Breed>Bos indicus</Breed>
-            <EMaintCoefficient>0.35</EMaintCoefficient>
-            <EMaintIntercept>0.503</EMaintIntercept>
-            <EMaintExponent>0</EMaintExponent>
-            <EGrowthCoefficient>0.79</EGrowthCoefficient>
-            <EGrowthIntercept>0</EGrowthIntercept>
-            <ELactationCoefficient>0.35</ELactationCoefficient>
-            <ELactationIntercept>0.42</ELactationIntercept>
+            <EMaintEfficiencyCoefficient>0.35</EMaintEfficiencyCoefficient>
+            <EMaintEfficiencyIntercept>0.503</EMaintEfficiencyIntercept>
+            <EGrowthEfficiencyCoefficient>0.79</EGrowthEfficiencyCoefficient>
+            <EGrowthEfficiencyIntercept>0</EGrowthEfficiencyIntercept>
+            <ELactationEfficiencyCoefficient>0.35</ELactationEfficiencyCoefficient>
+            <ELactationEfficiencyIntercept>0.42</ELactationEfficiencyIntercept>
+            <EMaintExponent>8.2E-05</EMaintExponent>
+            <EMaintIntercept>0.09</EMaintIntercept>
+            <EMaintCoefficient>0.26</EMaintCoefficient>
             <Kme>1</Kme>
             <GrowthEnergyIntercept1>6.7</GrowthEnergyIntercept1>
             <GrowthEnergyIntercept2>20.3</GrowthEnergyIntercept2>
@@ -1196,7 +1251,7 @@
           <RuminantActivityFeed>
             <Name>Feed Bos indicus</Name>
             <RuminantFeedGroup>
-              <Name>BosIndicus</Name>
+              <Name>FIlter Bos indicus</Name>
               <RuminantFilter>
                 <Name>Filter[HerdName=BosIndicus]</Name>
                 <IncludeInDocumentation>true</IncludeInDocumentation>

@@ -101,37 +101,47 @@ namespace Models.WholeFarm.Resources
 		/// Energy maintenance efficiency coefficient
 		/// </summary>
 		[Description("Energy maintenance efficiency coefficient")]
-		public double EMaintCoefficient { get; set; }
+		public double EMaintEfficiencyCoefficient { get; set; }
 		/// <summary>
 		/// Energy maintenance efficiency intercept
 		/// </summary>
 		[Description("Energy maintenance efficiency intercept")]
-		public double EMaintIntercept { get; set; }
+		public double EMaintEfficiencyIntercept { get; set; }
+		/// <summary>
+		/// Energy growth efficiency coefficient
+		/// </summary>
+		[Description("Energy growth efficiency coefficient")]
+		public double EGrowthEfficiencyCoefficient { get; set; }
+		/// <summary>
+		/// Energy growth efficiency intercept
+		/// </summary>
+		[Description("Energy growth efficiency intercept")]
+		public double EGrowthEfficiencyIntercept { get; set; }
+		/// <summary>
+		/// Energy lactation efficiency coefficient
+		/// </summary>
+		[Description("Energy lactation efficiency coefficient")]
+		public double ELactationEfficiencyCoefficient { get; set; }
+		/// <summary>
+		/// Energy lactation efficiency intercept
+		/// </summary>
+		[Description("Energy lactation efficiency intercept")]
+		public double ELactationEfficiencyIntercept { get; set; }
 		/// <summary>
 		/// Energy maintenance exponent
 		/// </summary>
 		[Description("Energy maintenance exponent")]
 		public double EMaintExponent { get; set; }
 		/// <summary>
-		/// Energy growth efficiency coefficient
+		/// Energy maintenance intercept
 		/// </summary>
-		[Description("Energy growth efficiency coefficient")]
-		public double EGrowthCoefficient { get; set; }
+		[Description("Energy maintenance intercept")]
+		public double EMaintIntercept { get; set; }
 		/// <summary>
-		/// Energy growth efficiency intercept
+		/// Energy maintenance coefficient
 		/// </summary>
-		[Description("Energy growth efficiency intercept")]
-		public double EGrowthIntercept { get; set; }
-		/// <summary>
-		/// Energy lactation efficiency coefficient
-		/// </summary>
-		[Description("Energy lactation efficiency coefficient")]
-		public double ELactationCoefficient { get; set; }
-		/// <summary>
-		/// Energy lactation efficiency intercept
-		/// </summary>
-		[Description("Energy lactation efficiency intercept")]
-		public double ELactationIntercept { get; set; }
+		[Description("Energy maintenance coefficient")]
+		public double EMaintCoefficient { get; set; }
 		/// <summary>
 		/// Maximum age for energy maintenance calculation (yrs)
 		/// </summary>
@@ -405,9 +415,9 @@ namespace Models.WholeFarm.Resources
 		[Description("Minimum size for 1st mating, proportion of SRW")]
 		public double MinimumSize1stMating { get; set; }
 		/// <summary>
-		/// Minimum number of days between last birth and reconception
+		/// Minimum number of days between last birth and conception
 		/// </summary>
-		[Description("Minimum number of days between last birth and reconception")]
+		[Description("Minimum number of days between last birth and conception")]
 		public double MinimumDaysBirthToConception { get; set; }
 		/// <summary>
 		/// Rate at which twins are concieved

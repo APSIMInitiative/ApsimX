@@ -96,7 +96,8 @@ namespace Models.WholeFarm.Activities
 						// calculate foetus and newborn mortality 
 						// total mortality / (gestation months + 1) to get monthly mortality
 						// done here before births to account for post birth motality as well..
-						if (WholeFarm.RandomGenerator.NextDouble() < female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1))
+						double rnd = WholeFarm.RandomGenerator.NextDouble();
+						if (rnd < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1))/100.0)
 						{
 							female.OneOffspringDies();
 						}

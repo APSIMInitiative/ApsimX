@@ -41,6 +41,12 @@ namespace Models.WholeFarm.Resources
 		public double NToDMDIntercept { get; set; }
 
 		/// <summary>
+		/// Crude protein denominator to convert initial N% to DMD%
+		/// </summary>
+		[Description("Crude protein denominator to convert initial N% to DMD%")]
+		public double NToDMDCrudeProteinDenominator { get; set; }
+
+		/// <summary>
 		/// Nitrogen of new growth (%)
 		/// </summary>
 		[Description("Nitrogen of new growth (%)")]

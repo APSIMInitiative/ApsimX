@@ -97,8 +97,8 @@
             <Name>General account</Name>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <OpeningBalance>10000000</OpeningBalance>
-            <WithdrawalLimit>-5000</WithdrawalLimit>
             <EnforceWithdrawalLimit>false</EnforceWithdrawalLimit>
+            <WithdrawalLimit>-5000</WithdrawalLimit>
             <InterestRateCharged>7.5</InterestRateCharged>
             <InterestRatePaid>2</InterestRatePaid>
           </FinanceType>
@@ -419,13 +419,15 @@
             </AnimalPricing>
             <IncludeInDocumentation>true</IncludeInDocumentation>
             <Breed>Bos indicus</Breed>
-            <EMaintCoefficient>0.35</EMaintCoefficient>
-            <EMaintIntercept>0.503</EMaintIntercept>
+            <EMaintEfficiencyCoefficient>0</EMaintEfficiencyCoefficient>
+            <EMaintEfficiencyIntercept>0</EMaintEfficiencyIntercept>
+            <EGrowthEfficiencyCoefficient>0</EGrowthEfficiencyCoefficient>
+            <EGrowthEfficiencyIntercept>0</EGrowthEfficiencyIntercept>
+            <ELactationEfficiencyCoefficient>0</ELactationEfficiencyCoefficient>
+            <ELactationEfficiencyIntercept>0</ELactationEfficiencyIntercept>
             <EMaintExponent>0</EMaintExponent>
-            <EGrowthCoefficient>0.79</EGrowthCoefficient>
-            <EGrowthIntercept>0</EGrowthIntercept>
-            <ELactationCoefficient>0.35</ELactationCoefficient>
-            <ELactationIntercept>0.42</ELactationIntercept>
+            <EMaintIntercept>0.503</EMaintIntercept>
+            <EMaintCoefficient>0.35</EMaintCoefficient>
             <Kme>1</Kme>
             <GrowthEnergyIntercept1>6.7</GrowthEnergyIntercept1>
             <GrowthEnergyIntercept2>20.3</GrowthEnergyIntercept2>
@@ -542,11 +544,11 @@
                 <LabourFilterGroupSpecified>
                   <Name>Labour details</Name>
                   <LabourFilter>
-                    <Name>Filter[Name=Joe B]</Name>
+                    <Name>Filter[Name=Jill]</Name>
                     <IncludeInDocumentation>true</IncludeInDocumentation>
                     <Parameter>Name</Parameter>
                     <Operator>Equal</Operator>
-                    <Value>Joe B</Value>
+                    <Value>Jill</Value>
                   </LabourFilter>
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <LabourPerUnit>2</LabourPerUnit>
@@ -719,7 +721,7 @@
             <PaymentInterval>1</PaymentInterval>
             <Amount>40000</Amount>
             <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
+            <IsOverhead>true</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Fuel costs</Name>
@@ -728,7 +730,7 @@
             <PaymentInterval>1</PaymentInterval>
             <Amount>30000</Amount>
             <AccountName>General account</AccountName>
-            <IsOverhead>false</IsOverhead>
+            <IsOverhead>true</IsOverhead>
           </FinanceActivityPayExpense>
           <FinanceActivityPayExpense>
             <Name>Pest control</Name>

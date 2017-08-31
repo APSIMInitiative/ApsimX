@@ -516,6 +516,7 @@
     <Compile Include="WholeFarm\Groupings\LabourFilterGroup.cs" />
     <Compile Include="WholeFarm\FileGRASP.cs" />
     <Compile Include="WholeFarm\Reporting\EcolIndicatorsEventArgs.cs" />
+    <Compile Include="WholeFarm\Reporting\ReportRuminantHerd.cs" />
     <Compile Include="WholeFarm\Resources\AnimalFoodStore.cs" />
     <Compile Include="WholeFarm\Resources\AnimalFoodStoreType.cs" />
     <Compile Include="WholeFarm\Common.cs" />

@@ -295,6 +295,7 @@ namespace Models.Core
 		[XmlElement(typeof(Models.WholeFarm.Resources.ProductStoreType))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.ProductStoreTypeManure))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.Relationship))]
+		[XmlElement(typeof(Models.WholeFarm.Reporting.ReportRuminantHerd))]
 		[XmlElement(typeof(Models.WholeFarm.Resources.ResourcesHolder))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityBuySell))]
 		[XmlElement(typeof(Models.WholeFarm.Activities.RuminantActivityBreed))]

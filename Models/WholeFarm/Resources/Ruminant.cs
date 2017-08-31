@@ -147,7 +147,9 @@ namespace Models.WholeFarm.Resources
 				{
 					case HerdChangeReason.None:
 						return 0;
-					case HerdChangeReason.Died:
+					case HerdChangeReason.DiedUnderweight:
+						return -1;
+					case HerdChangeReason.DiedMortality:
 						return -1;
 					case HerdChangeReason.Born:
 						return 1;

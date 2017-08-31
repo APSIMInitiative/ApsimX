@@ -167,8 +167,7 @@ namespace Models.WholeFarm.Activities
 							// calculate estimated milk production for time step here
 							// assuming average feed quality
 							// This need to happen before suckling potential intake can be determined.
-							double AverageDMD = 60;
-							CalculateMilkProduction(femaleind, AverageDMD);
+							CalculateMilkProduction(femaleind);
 						}
 					}
 					else
@@ -189,13 +188,12 @@ namespace Models.WholeFarm.Activities
 		/// Set the milk production of the selected female given diet drymatter digesibility
 		/// </summary>
 		/// <param name="ind">Female individual</param>
-		/// <param name="DryMatterDigestibility">DMD %</param>
 		/// <returns>energy of milk</returns>
-		private double CalculateMilkProduction(RuminantFemale ind, double DryMatterDigestibility)
+		private double CalculateMilkProduction(RuminantFemale ind)
 		{
-			double energyMetabolic = EnergyGross * (DryMatterDigestibility/100.0) * 0.81;
+			double energyMetabolic = EnergyGross * (((ind.DietDryMatterDigestibility==0)?50:ind.DietDryMatterDigestibility)/100.0) * 0.81;
 			// Reference: SCA p.
-			double kl = ind.BreedParams.ELactationCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationIntercept;
+			double kl = ind.BreedParams.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationEfficiencyIntercept;
 			double milkTime = ind.DaysLactating;  //Math.Max(0.0, (ind.Age - femaleind.AgeAtLastBirth) * 30.4);
 			double milkCurve = 0;
 			if (ind.SucklingOffspring.Count == 0) // no suckling calf
@@ -353,9 +351,9 @@ namespace Models.WholeFarm.Activities
 			double energyMetabolic = energyDiet * 0.81;
 			double energyMetablicFromIntake = energyMetabolic * intakeDaily;
 
-			double km = ind.BreedParams.EMaintCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.EMaintIntercept;
+			double km = ind.BreedParams.EMaintEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.EMaintEfficiencyIntercept;
 			// Reference: SCA p.49
-			double kg = ind.BreedParams.EGrowthCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.EGrowthIntercept;
+			double kg = ind.BreedParams.EGrowthEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.EGrowthEfficiencyIntercept;
 
 			double energyPredictedBodyMassChange = 0;
 			double energyMaintenance = 0;
@@ -420,37 +418,7 @@ namespace Models.WholeFarm.Activities
 					if (femaleind.IsLactating)
 					{
 						// recalculate milk production based on DMD of food provided
-						energyMilk = CalculateMilkProduction(femaleind, ind.DietDryMatterDigestibility); 
-
-						//// Reference: SCA p.
-						//double kl = ind.BreedParams.ELactationCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationIntercept;
-						//double milkTime = femaleind.DaysLactating;  //Math.Max(0.0, (ind.Age - femaleind.AgeAtLastBirth) * 30.4);
-						//double milkCurve = 0;
-						//if (femaleind.SucklingOffspring.Count == 0) // no suckling calf
-						//{
-						//	milkCurve = ind.BreedParams.MilkCurveNonSuckling;
-						//}
-						//else // suckling calf
-						//{
-						//	milkCurve = ind.BreedParams.MilkCurveSuckling;
-						//}
-						//double milkProduction = ind.BreedParams.MilkPeakYield * ind.Weight / ind.NormalisedAnimalWeight * (Math.Pow(((milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay));
-						//milkProduction = Math.Max(milkProduction, 0.0);
-						//// Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
-						//energyMilk = milkProduction * 3.2 / kl;
-						//// adjust last time step's energy balance
-						//if (ind.EnergyBalance < (-0.5936 / 0.322 * energyMilk))
-						//{
-						//	ind.EnergyBalance = (-0.5936 / 0.322 * energyMilk);
-						//}
-						//milkProduction = Math.Max(0.0, milkProduction * (0.5936 + 0.322 * ind.EnergyBalance / energyMilk));
-
-						//// set milk production in lactating females for consumption.
-						//femaleind.MilkProduction = milkProduction;
-						//femaleind.MilkAmount = femaleind.MilkProduction * 30.4;
-
-						// Reference: Adjusted milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
-						//energyMilk = milkProduction * 3.2 / kl;
+						energyMilk = CalculateMilkProduction(femaleind); 
 					}
 
 					// Determine energy required for foetal development
@@ -474,7 +442,7 @@ namespace Models.WholeFarm.Activities
 				// Reference: SCA p.24
 				// Regference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
 				// 0.000082 is -0.03 Age in Years/365 for days 
-				energyMaintenance = ind.BreedParams.Kme * Sme * (0.26 * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-0.000082 * maintenanceAge) + (0.09 * energyMetablicFromIntake);
+				energyMaintenance = ind.BreedParams.Kme * Sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetablicFromIntake);
 				ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFoetus; // milk will be zero for non lactating individuals.
 
 				// Reference: Feeding_value = Ajustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
@@ -558,7 +526,7 @@ namespace Models.WholeFarm.Activities
 			// weight based mortality
 			List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * (1.0 - a.BreedParams.ProportionOfMaxWeightToSurvive))).ToList();
 			// set died flag
-			died.Select(a => { a.SaleFlag = HerdChangeReason.Died; return a; }).ToList();
+			died.Select(a => { a.SaleFlag = HerdChangeReason.DiedUnderweight; return a; }).ToList();
 			ruminantHerd.RemoveRuminant(died);
 
 			// base mortality adjusted for condition
@@ -593,7 +561,7 @@ namespace Models.WholeFarm.Activities
 			}
 
 			died = herd.Where(a => a.Died).ToList();
-			died.Select(a => { a.SaleFlag = HerdChangeReason.Died; return a; }).ToList();
+			died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
 
 			// TODO: separate foster from real mother for genetics
 			// check for death of mother with sucklings and try foster sucklings

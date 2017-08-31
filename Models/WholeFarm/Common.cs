@@ -38,9 +38,13 @@ namespace Models.WholeFarm
 		/// </summary>
 		None,
 		/// <summary>
-		/// Individual died
+		/// Individual died due to loss of weight
 		/// </summary>
-		Died,
+		DiedUnderweight,
+		/// <summary>
+		/// Individual died due to mortality rate
+		/// </summary>
+		DiedMortality,
 		/// <summary>
 		/// Individual born
 		/// </summary>
