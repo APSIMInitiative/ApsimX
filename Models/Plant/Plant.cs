@@ -451,27 +451,30 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            tags.Add(new AutoDocumentation.Paragraph("The "+ this.Name +" model is constructed from the following list of software components.  Details of the exact implementation and parameterisation are provided in the following sections.", indent));
-            // Write Plant Model Table
-            tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
-            DataTable tableData = new DataTable();
-            tableData.Columns.Add("Component Name", typeof(string));
-            tableData.Columns.Add("Component Type", typeof(string));
-
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+            if (IncludeInDocumentation)
             {
-                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder))
-                {
-                    DataRow row = tableData.NewRow();
-                    row[0] = child.Name;
-                    row[1] = child.GetType().ToString();
-                    tableData.Rows.Add(row);
-                }
-            }
-            tags.Add(new AutoDocumentation.Table(tableData, indent));
+                tags.Add(new AutoDocumentation.Paragraph("The " + this.Name + " model is constructed from the following list of software components.  Details of the exact implementation and parameterisation are provided in the following sections.", indent));
+                // Write Plant Model Table
+                tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
+                DataTable tableData = new DataTable();
+                tableData.Columns.Add("Component Name", typeof(string));
+                tableData.Columns.Add("Component Type", typeof(string));
 
-            foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-                child.Document(tags, headingLevel + 1, indent);
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                {
+                    if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder))
+                    {
+                        DataRow row = tableData.NewRow();
+                        row[0] = child.Name;
+                        row[1] = child.GetType().ToString();
+                        tableData.Rows.Add(row);
+                    }
+                }
+                tags.Add(new AutoDocumentation.Table(tableData, indent));
+
+                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                    child.Document(tags, headingLevel + 1, indent);
+            }
         }
     }
 }

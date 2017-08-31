@@ -44,20 +44,23 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // add graph and table.
-            if (XYPairs != null)
+            if (IncludeInDocumentation)
             {
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of average daily temperature weighted toward max temperature according to the specified MaximumTemperatureWeighting factor.</i>", indent));
-                tags.Add(new AutoDocumentation.Paragraph("<i>MaximumTemperatureWeighting = " + MaximumTemperatureWeighting + "</i>", indent));
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                    memo.Document(tags, -1, indent);
+                // add graph and table.
+                if (XYPairs != null)
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of average daily temperature weighted toward max temperature according to the specified MaximumTemperatureWeighting factor.</i>", indent));
+                    tags.Add(new AutoDocumentation.Paragraph("<i>MaximumTemperatureWeighting = " + MaximumTemperatureWeighting + "</i>", indent));
 
-                tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
+                    // write memos.
+                    foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                        memo.Document(tags, -1, indent);
+
+                    tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
+                }
             }
         }
     }

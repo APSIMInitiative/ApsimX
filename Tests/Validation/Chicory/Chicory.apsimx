@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="8">
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Memo>
     <Name>TitlePage</Name>
@@ -27,7 +27,7 @@ Simulating variations in plant N concentration (seasonal or due to changes in so
     <Name>Replacements</Name>
     <Manager>
       <Name>Defoliate</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Script>
         <Crop>
         </Crop>
@@ -450,7 +450,7 @@ namespace Models
     </Manager>
     <Manager>
       <Name>ExtraVariables</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <Script />
       <Code><![CDATA[using System;
 using Models.Core;
@@ -653,11 +653,11 @@ namespace Models
 			Inflorescence_DMSupply = Inflorescence_DMSupplies.Fixation + Inflorescence_DMSupplies.Uptake + Inflorescence_DMSupplies.Reallocation + Inflorescence_DMSupplies.Retranslocation;
 			Root_DMSupply = Root_DMSupplies.Fixation + Root_DMSupplies.Uptake + Root_DMSupplies.Reallocation + Root_DMSupplies.Retranslocation;
 			Taproot_DMSupply = Taproot_DMSupplies.Fixation + Taproot_DMSupplies.Uptake + Taproot_DMSupplies.Reallocation + Taproot_DMSupplies.Retranslocation;
-			Leaf_DMDemand = Leaf_DMDemands.Structural + Leaf_DMDemands.NonStructural + Leaf_DMDemands.Metabolic;
-			Stem_DMDemand = Stem_DMDemands.Structural + Stem_DMDemands.NonStructural + Stem_DMDemands.Metabolic;
-			Inflorescence_DMDemand = Inflorescence_DMDemands.Structural + Inflorescence_DMDemands.NonStructural + Inflorescence_DMDemands.Metabolic;
-			Root_DMDemand = Root_DMDemands.Structural + Root_DMDemands.NonStructural + Root_DMDemands.Metabolic;
-			Taproot_DMDemand = Taproot_DMDemands.Structural + Taproot_DMDemands.NonStructural + Taproot_DMDemands.Metabolic;
+			Leaf_DMDemand = Leaf_DMDemands.Structural + Leaf_DMDemands.Storage + Leaf_DMDemands.Metabolic;
+			Stem_DMDemand = Stem_DMDemands.Structural + Stem_DMDemands.Storage + Stem_DMDemands.Metabolic;
+			Inflorescence_DMDemand = Inflorescence_DMDemands.Structural + Inflorescence_DMDemands.Storage + Inflorescence_DMDemands.Metabolic;
+			Root_DMDemand = Root_DMDemands.Structural + Root_DMDemands.Storage + Root_DMDemands.Metabolic;
+			Taproot_DMDemand = Taproot_DMDemands.Structural + Taproot_DMDemands.Storage + Taproot_DMDemands.Metabolic;
             
 			Leaf_NSupply = Leaf_NSupplies.Fixation + Leaf_NSupplies.Uptake + Leaf_NSupplies.Reallocation + Leaf_NSupplies.Retranslocation;
 			Stem_NSupply = Stem_NSupplies.Fixation + Stem_NSupplies.Uptake + Stem_NSupplies.Reallocation + Stem_NSupplies.Retranslocation;
@@ -665,11 +665,11 @@ namespace Models
 			Taproot_NSupply = Taproot_NSupplies.Fixation + Taproot_NSupplies.Uptake + Taproot_NSupplies.Reallocation + Taproot_NSupplies.Retranslocation;
 			Root_NSupply = Root_NSupplies.Fixation + Root_NSupplies.Uptake + Root_NSupplies.Reallocation + Root_NSupplies.Retranslocation;
 
-			Leaf_NDemand = Leaf_NDemands.Structural + Leaf_NDemands.NonStructural + Leaf_NDemands.Metabolic;
-			Stem_NDemand = Stem_NDemands.Structural + Stem_NDemands.NonStructural + Stem_NDemands.Metabolic;
-			Inflorescence_NDemand = Inflorescence_NDemands.Structural + Inflorescence_NDemands.NonStructural + Inflorescence_NDemands.Metabolic;
-			Taproot_NDemand = Taproot_NDemands.Structural + Taproot_NDemands.NonStructural + Taproot_NDemands.Metabolic;
-			Root_NDemand = Root_NDemands.Structural + Root_NDemands.NonStructural + Root_NDemands.Metabolic;
+			Leaf_NDemand = Leaf_NDemands.Structural + Leaf_NDemands.Storage + Leaf_NDemands.Metabolic;
+			Stem_NDemand = Stem_NDemands.Structural + Stem_NDemands.Storage + Stem_NDemands.Metabolic;
+			Inflorescence_NDemand = Inflorescence_NDemands.Structural + Inflorescence_NDemands.Storage + Inflorescence_NDemands.Metabolic;
+			Taproot_NDemand = Taproot_NDemands.Structural + Taproot_NDemands.Storage + Taproot_NDemands.Metabolic;
+			Root_NDemand = Root_NDemands.Structural + Root_NDemands.Storage + Root_NDemands.Metabolic;
 
 			Leaf_NSupplyReallocation = Leaf_NSupplies.Reallocation;
 			Stem_NSupplyReallocation = Stem_NSupplies.Reallocation;
@@ -705,7 +705,7 @@ namespace Models
     </Manager>
     <Report>
       <Name>Report</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <ExperimentFactorNames />
       <ExperimentFactorValues />
       <VariableNames>
@@ -895,40 +895,40 @@ namespace Models
         <string>[Chicory].Root.WaterUptake</string>
         <string />
         <string>[Chicory].Leaf.Live.StructuralWt</string>
-        <string>[Chicory].Leaf.Live.NonStructuralWt</string>
+        <string>[Chicory].Leaf.Live.StorageWt</string>
         <string>[Chicory].Leaf.Live.MetabolicWt</string>
         <string>[Chicory].Leaf.Live.StructuralN</string>
-        <string>[Chicory].Leaf.Live.NonStructuralN</string>
+        <string>[Chicory].Leaf.Live.StorageN</string>
         <string>[Chicory].Leaf.Live.MetabolicN</string>
         <string />
         <string>[Chicory].Leaf.Dead.StructuralWt</string>
-        <string>[Chicory].Leaf.Dead.NonStructuralWt</string>
+        <string>[Chicory].Leaf.Dead.StorageWt</string>
         <string>[Chicory].Leaf.Dead.MetabolicWt</string>
         <string>[Chicory].Leaf.Dead.StructuralN</string>
-        <string>[Chicory].Leaf.Dead.NonStructuralN</string>
+        <string>[Chicory].Leaf.Dead.StorageN</string>
         <string>[Chicory].Leaf.Dead.MetabolicN</string>
         <string />
         <string>[Chicory].Stem.Live.StructuralWt</string>
-        <string>[Chicory].Stem.Live.NonStructuralWt</string>
+        <string>[Chicory].Stem.Live.StorageWt</string>
         <string>[Chicory].Stem.Live.MetabolicWt</string>
         <string>[Chicory].Stem.Live.StructuralN</string>
-        <string>[Chicory].Stem.Live.NonStructuralN</string>
+        <string>[Chicory].Stem.Live.StorageN</string>
         <string>[Chicory].Inflorescence.Live.StructuralWt</string>
-        <string>[Chicory].Inflorescence.Live.NonStructuralWt</string>
+        <string>[Chicory].Inflorescence.Live.StorageWt</string>
         <string>[Chicory].Inflorescence.Live.StructuralN</string>
-        <string>[Chicory].Inflorescence.Live.NonStructuralN</string>
+        <string>[Chicory].Inflorescence.Live.StorageN</string>
         <string>[Chicory].Root.Live.StructuralWt</string>
-        <string>[Chicory].Root.Live.NonStructuralWt</string>
+        <string>[Chicory].Root.Live.StorageWt</string>
         <string>[Chicory].Root.Live.StructuralN</string>
-        <string>[Chicory].Root.Live.NonStructuralN</string>
+        <string>[Chicory].Root.Live.StorageN</string>
         <string>[Chicory].Taproot.Live.StructuralWt</string>
-        <string>[Chicory].Taproot.Live.NonStructuralWt</string>
+        <string>[Chicory].Taproot.Live.StorageWt</string>
         <string>[Chicory].Taproot.Live.StructuralN</string>
-        <string>[Chicory].Taproot.Live.NonStructuralN</string>
+        <string>[Chicory].Taproot.Live.StorageN</string>
         <string>[Chicory].Leaf.Live.StructuralNConc</string>
-        <string>[Chicory].Leaf.Live.NonStructuralNConc</string>
+        <string>[Chicory].Leaf.Live.StorageNConc</string>
         <string>[Chicory].Root.Live.StructuralNConc</string>
-        <string>[Chicory].Root.Live.NonStructuralNConc</string>
+        <string>[Chicory].Root.Live.StorageNConc</string>
         <string />
         <string>[Chicory].Leaf.DMDemandFunction.PartitionFraction.Value()</string>
         <string>[Chicory].Stem.DMDemandFunction.PartitionFraction.Value()</string>
@@ -961,13 +961,13 @@ namespace Models
         <string>[Clock].DoReport</string>
       </EventNames>
     </Report>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Replacements>
   <DataStore>
     <Name>DataStore</Name>
     <ExcelInput>
       <Name>Observed</Name>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>Observed.xlsx</FileName>
       <SheetNames>
         <string>Observed</string>
@@ -977,7 +977,7 @@ namespace Models
       <Name>PredictedObserved</Name>
       <Tests>
         <Name>Tests</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <AcceptedStats>
           <RegrStats>
             <Name>Chicory.AboveGround.Wt</Name>
@@ -1111,7 +1111,7 @@ namespace Models
       </Tests>
       <Memo>
         <Name>Note</Name>
-        <IncludeInDocumentation>true</IncludeInDocumentation>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <MemoText><![CDATA[<br>
 __Where:__
  - n: The number of PO (predicted-observed) pairs for the given variable;  
@@ -1128,12 +1128,12 @@ __Where:__
 
 ]]></MemoText>
       </Memo>
-      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <PredictedTableName>Report</PredictedTableName>
       <ObservedTableName>Observed</ObservedTableName>
       <FieldNameUsedForMatch>Date</FieldNameUsedForMatch>
     </PredictedObserved>
-    <IncludeInDocumentation>true</IncludeInDocumentation>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
     <MaximumResultsPerPage>100000</MaximumResultsPerPage>
   </DataStore>
@@ -2012,7 +2012,6 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <ResourceName>Chicory</ResourceName>
                   <CropType>Chicory</CropType>
-                  <SowingDate>0001-01-01T00:00:00</SowingDate>
                 </Plant>
                 <Report>
                   <Name>Report</Name>
@@ -4332,7 +4331,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -4398,7 +4397,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -4464,7 +4463,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -4530,7 +4529,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -4596,7 +4595,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -6375,7 +6374,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -6463,7 +6462,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -6529,7 +6528,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -6595,7 +6594,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -6661,7 +6660,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -8807,7 +8806,6 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <ResourceName>Chicory</ResourceName>
                   <CropType>Chicory</CropType>
-                  <SowingDate>0001-01-01T00:00:00</SowingDate>
                 </Plant>
                 <Report>
                   <Name>Report</Name>
@@ -11257,7 +11255,7 @@ namespace Models
                       <LineThickness>Normal</LineThickness>
                       <TableName>Report</TableName>
                       <XFieldName>Date</XFieldName>
-                      <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                      <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                       <ShowInLegend>true</ShowInLegend>
                       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                       <Cumulative>false</Cumulative>
@@ -11323,7 +11321,7 @@ namespace Models
                       <LineThickness>Normal</LineThickness>
                       <TableName>Report</TableName>
                       <XFieldName>Date</XFieldName>
-                      <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                      <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                       <ShowInLegend>true</ShowInLegend>
                       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                       <Cumulative>false</Cumulative>
@@ -11389,7 +11387,7 @@ namespace Models
                       <LineThickness>Normal</LineThickness>
                       <TableName>Report</TableName>
                       <XFieldName>Date</XFieldName>
-                      <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                      <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                       <ShowInLegend>true</ShowInLegend>
                       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                       <Cumulative>false</Cumulative>
@@ -11455,7 +11453,7 @@ namespace Models
                       <LineThickness>Normal</LineThickness>
                       <TableName>Report</TableName>
                       <XFieldName>Date</XFieldName>
-                      <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                      <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                       <ShowInLegend>true</ShowInLegend>
                       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                       <Cumulative>false</Cumulative>
@@ -11521,7 +11519,7 @@ namespace Models
                       <LineThickness>Normal</LineThickness>
                       <TableName>Report</TableName>
                       <XFieldName>Date</XFieldName>
-                      <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                      <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                       <ShowInLegend>true</ShowInLegend>
                       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                       <Cumulative>false</Cumulative>
@@ -13351,7 +13349,7 @@ namespace Models
                       <LineThickness>Normal</LineThickness>
                       <TableName>Report</TableName>
                       <XFieldName>Date</XFieldName>
-                      <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                      <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                       <ShowInLegend>true</ShowInLegend>
                       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                       <Cumulative>false</Cumulative>
@@ -13439,7 +13437,7 @@ namespace Models
                       <LineThickness>Normal</LineThickness>
                       <TableName>Report</TableName>
                       <XFieldName>Date</XFieldName>
-                      <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                      <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                       <ShowInLegend>true</ShowInLegend>
                       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                       <Cumulative>false</Cumulative>
@@ -13505,7 +13503,7 @@ namespace Models
                       <LineThickness>Normal</LineThickness>
                       <TableName>Report</TableName>
                       <XFieldName>Date</XFieldName>
-                      <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                      <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                       <ShowInLegend>true</ShowInLegend>
                       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                       <Cumulative>false</Cumulative>
@@ -13571,7 +13569,7 @@ namespace Models
                       <LineThickness>Normal</LineThickness>
                       <TableName>Report</TableName>
                       <XFieldName>Date</XFieldName>
-                      <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                      <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                       <ShowInLegend>true</ShowInLegend>
                       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                       <Cumulative>false</Cumulative>
@@ -13637,7 +13635,7 @@ namespace Models
                       <LineThickness>Normal</LineThickness>
                       <TableName>Report</TableName>
                       <XFieldName>Date</XFieldName>
-                      <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                      <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                       <ShowInLegend>true</ShowInLegend>
                       <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                       <Cumulative>false</Cumulative>
@@ -17209,7 +17207,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -17275,7 +17273,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -17341,7 +17339,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -17407,7 +17405,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -17473,7 +17471,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -19252,7 +19250,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -19340,7 +19338,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -19406,7 +19404,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -19472,7 +19470,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -19538,7 +19536,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -21692,7 +21690,6 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <ResourceName>Chicory</ResourceName>
                   <CropType>Chicory</CropType>
-                  <SowingDate>0001-01-01T00:00:00</SowingDate>
                 </Plant>
                 <Report>
                   <Name>Report</Name>
@@ -24012,7 +24009,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -24078,7 +24075,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -24144,7 +24141,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -24210,7 +24207,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -24276,7 +24273,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -26055,7 +26052,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -26143,7 +26140,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -26209,7 +26206,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -26275,7 +26272,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -26341,7 +26338,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -28970,7 +28967,6 @@ namespace Models
                   <IncludeInDocumentation>true</IncludeInDocumentation>
                   <ResourceName>Chicory</ResourceName>
                   <CropType>Chicory</CropType>
-                  <SowingDate>0001-01-01T00:00:00</SowingDate>
                 </Plant>
                 <Report>
                   <Name>Report</Name>
@@ -31294,7 +31290,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -31360,7 +31356,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -31426,7 +31422,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -31492,7 +31488,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -31558,7 +31554,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                    <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -33337,7 +33333,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -33425,7 +33421,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -33491,7 +33487,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -33557,7 +33553,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -33623,7 +33619,7 @@ namespace Models
                     <LineThickness>Normal</LineThickness>
                     <TableName>Report</TableName>
                     <XFieldName>Date</XFieldName>
-                    <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                    <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                     <ShowInLegend>true</ShowInLegend>
                     <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                     <Cumulative>false</Cumulative>
@@ -37038,7 +37034,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Chicory</ResourceName>
                 <CropType>Chicory</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Report>
                 <Name>Report</Name>
@@ -39362,7 +39357,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -39428,7 +39423,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -39494,7 +39489,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -39560,7 +39555,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -39626,7 +39621,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -41405,7 +41400,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -41493,7 +41488,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -41559,7 +41554,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -41625,7 +41620,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -41691,7 +41686,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -44951,7 +44946,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Chicory</ResourceName>
                 <CropType>Chicory</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Report>
                 <Name>Report</Name>
@@ -47275,7 +47269,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -47341,7 +47335,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -47407,7 +47401,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -47473,7 +47467,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -47539,7 +47533,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -49318,7 +49312,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -49406,7 +49400,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -49472,7 +49466,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -49538,7 +49532,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -49604,7 +49598,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -52357,7 +52351,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Chicory</ResourceName>
                 <CropType>Chicory</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Report>
                 <Name>Report</Name>
@@ -54681,7 +54674,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -54747,7 +54740,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -54813,7 +54806,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -54879,7 +54872,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -54945,7 +54938,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -56724,7 +56717,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -56812,7 +56805,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -56878,7 +56871,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -56944,7 +56937,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -57010,7 +57003,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -59912,7 +59905,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Chicory</ResourceName>
                 <CropType>Chicory</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Report>
                 <Name>Report</Name>
@@ -62236,7 +62228,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -62302,7 +62294,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -62368,7 +62360,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -62434,7 +62426,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -62500,7 +62492,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -64279,7 +64271,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -64367,7 +64359,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -64433,7 +64425,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -64499,7 +64491,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -64565,7 +64557,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -66666,7 +66658,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Chicory</ResourceName>
                 <CropType>Chicory</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Report>
                 <Name>Report</Name>
@@ -68990,7 +68981,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -69056,7 +69047,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -69122,7 +69113,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -69188,7 +69179,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -69254,7 +69245,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -71033,7 +71024,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -71121,7 +71112,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -71187,7 +71178,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -71253,7 +71244,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -71319,7 +71310,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -73538,7 +73529,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Chicory</ResourceName>
                 <CropType>Chicory</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Report>
                 <Name>Report</Name>
@@ -75866,7 +75856,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -75932,7 +75922,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -75998,7 +75988,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -76064,7 +76054,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -76130,7 +76120,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -77910,7 +77900,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -77998,7 +77988,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -78064,7 +78054,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -78130,7 +78120,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -78196,7 +78186,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -80314,7 +80304,6 @@ namespace Models
                 <IncludeInDocumentation>true</IncludeInDocumentation>
                 <ResourceName>Chicory</ResourceName>
                 <CropType>Chicory</CropType>
-                <SowingDate>0001-01-01T00:00:00</SowingDate>
               </Plant>
               <Report>
                 <Name>Report</Name>
@@ -82638,7 +82627,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -82704,7 +82693,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -82770,7 +82759,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -82836,7 +82825,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -82902,7 +82891,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralWt</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageWt</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -84681,7 +84670,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Leaf.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Leaf.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -84769,7 +84758,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Stem.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Stem.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -84835,7 +84824,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Root.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Root.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -84901,7 +84890,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Taproot.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Taproot.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -84967,7 +84956,7 @@ namespace Models
                   <LineThickness>Normal</LineThickness>
                   <TableName>Report</TableName>
                   <XFieldName>Date</XFieldName>
-                  <YFieldName>Chicory.Inflorescence.Live.NonStructuralN</YFieldName>
+                  <YFieldName>Chicory.Inflorescence.Live.StorageN</YFieldName>
                   <ShowInLegend>true</ShowInLegend>
                   <IncludeSeriesNameInLegend>true</IncludeSeriesNameInLegend>
                   <Cumulative>false</Cumulative>
@@ -86781,5 +86770,5 @@ namespace Models
     <ShowPageOfGraphs>false</ShowPageOfGraphs>
   </Folder>
   <IncludeInDocumentation>true</IncludeInDocumentation>
-  <ExplorerWidth>327</ExplorerWidth>
+  <ExplorerWidth>300</ExplorerWidth>
 </Simulations>

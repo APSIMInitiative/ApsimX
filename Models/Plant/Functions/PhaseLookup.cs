@@ -38,20 +38,22 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
 
-            // write children.
-            foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                child.Document(tags, -1, indent+1);
+                // write children.
+                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
+                    child.Document(tags, -1, indent + 1);
 
-            tags.Add(new AutoDocumentation.Paragraph(this.Name + " has a value of zero for phases not specified above " , indent+1));
+                tags.Add(new AutoDocumentation.Paragraph(this.Name + " has a value of zero for phases not specified above ", indent + 1));
+            }
         }
-
     }
 }
 
