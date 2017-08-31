@@ -77,7 +77,7 @@ namespace UserInterface.Commands
         /// <param name="tags">The autodoc tags.</param>
         private void NumberHeadings(List<AutoDocumentation.ITag> tags)
         {
-            int[] levels = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            int[] levels = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             foreach (AutoDocumentation.ITag tag in tags)
             {
                 if (tag is AutoDocumentation.Heading)
@@ -102,60 +102,6 @@ namespace UserInterface.Commands
                             }
                         heading.text = levelString + " " + heading.text;
                     }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Internal export method.
-        /// </summary>
-        /// <param name="tags">The autodoc tags.</param>
-        /// <param name="modelToExport">The model to export.</param>
-        /// <param name="workingDirectory">The folder path where bitmaps can be written.</param>
-        /// <param name="url">The URL.</param>
-        /// <returns>True if something was written to index.</returns>
-        private void AddValidationTags(List<AutoDocumentation.ITag> tags, IModel modelToExport, int headingLevel, string workingDirectory)
-        {
-
-            // Setup a list of model types that we will recurse down through.
-            Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
-                                                         typeof(Simulation),
-                                                         typeof(Experiment),
-                                                         typeof(Zone),
-                                                         typeof(AgroforestrySystem),
-                                                         typeof(CircularZone),
-                                                         typeof(RectangularZone),
-                                                         typeof(PredictedObserved)};
-            Type[] modelTypesToDocument = new Type[] { typeof(Graph),
-                                                       typeof(Folder),
-                                                       typeof(Experiment),
-                                                       typeof(Memo),
-                                                       typeof(Map),
-                                                       typeof(Tests)};
-
-            // Look for child models that are a folder or simulation etc
-            // that we need to recurse down through.
-            foreach (Model child in modelToExport.Children)
-            {
-                bool recurseDown = Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1;
-                bool doDocument = Array.IndexOf(modelTypesToDocument, child.GetType()) != -1;
-
-                if (child.Name == "TitlePage" || child.Name == "Introduction")
-                    doDocument = false;
-
-                if (child is Graph && child.Parent is Folder && (child.Parent as Folder).ShowPageOfGraphs)
-                    doDocument = false; // The graph will be shown in parent folder
-
-                if (child is Memo && child.Parent is Folder && (child.Parent as Folder).ShowPageOfGraphs)
-                    doDocument = false; // The memo will be shown in parent folder
-
-                if (child.IncludeInDocumentation)
-                {
-                    if (doDocument)
-                        child.Document(tags, headingLevel, 0);
-
-                    if (recurseDown)
-                        AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
                 }
             }
         }
@@ -198,59 +144,28 @@ namespace UserInterface.Commands
             }
             section.AddImage(png1);
 
+            // Convert all models in file to tags.
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
-
-            IModel titlePage = Apsim.Child(ExplorerPresenter.ApsimXFile, "TitlePage");
-            if (titlePage != null)
-                titlePage.Document(tags, 1, 0);
-            else
+            foreach (IModel child in ExplorerPresenter.ApsimXFile.Children)
             {
-                // See if there is a title page. If so do it first.
-                foreach (IModel memo in Apsim.FindAll(ExplorerPresenter.ApsimXFile, typeof(Memo)))
+                child.Document(tags, headingLevel:1, indent:1);
+                if (child.Name == "TitlePage")
                 {
-                    if (memo.Name == "TitlePage" && memo.Parent.Name == modelNameToExport)
-                    {
-                        memo.Document(tags, 1, 0);
-                        break;
-                    }
+                    AddBackground(tags);
+                    AddUserDocumentation(tags, modelNameToExport);
+
+                    // Document model description.
+                    int modelDescriptionIndex = tags.Count;
+                    tags.Add(new AutoDocumentation.Heading("Model description", 1));
+                    ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
+
+                    // If no model was documented then remove the 'Model description' tag.
+                    if (modelDescriptionIndex == tags.Count - 1)
+                        tags.RemoveAt(modelDescriptionIndex);
                 }
+                else if (child.Name == "Validation")
+                    AddStatistics(tags);
             }
-            AddBackground(tags);
-
-            // See if there is a title page. If so do it first.
-            IModel introductionPage = Apsim.Find(ExplorerPresenter.ApsimXFile, "Introduction");
-            if (introductionPage != null)
-            {
-                tags.Add(new AutoDocumentation.Heading("Introduction", 1));
-                introductionPage.Document(tags, 1, 0);
-            }
-
-            AddUserDocumentation(tags, modelNameToExport);
-
-            // Document model description.
-            int modelDescriptionIndex = tags.Count;
-            tags.Add(new AutoDocumentation.Heading("Model description", 1));
-            ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
-
-            // If no model was documented then remove the 'Model description' tag.
-            if (modelDescriptionIndex == tags.Count - 1)
-                tags.RemoveAt(modelDescriptionIndex);
-
-            // If 'Model description tag is imediately followed by a another heading at the same level.
-            // then the model must have writen its own name as a heading. We don't want that.
-            if (modelDescriptionIndex + 1 < tags.Count &&
-                tags[modelDescriptionIndex + 1] is AutoDocumentation.Heading &&
-                (tags[modelDescriptionIndex + 1] as AutoDocumentation.Heading).headingLevel == 1)
-                tags.RemoveAt(modelDescriptionIndex + 1);
-
-            // Document model validation.
-            AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
-
-            // Add statistics
-            AddStatistics(tags);
-
-            // Move cultivars to end.
-            //MoveCultivarsToEnd(tags);
 
             // Strip all blank sections i.e. two headings with nothing between them.
             StripEmptySections(tags);
@@ -286,14 +201,12 @@ namespace UserInterface.Commands
             if (dataStore != null)
             {
                 List<IModel> tests = Apsim.FindAll(dataStore, typeof(Tests));
+                tests.RemoveAll(m => !m.IncludeInDocumentation);
                 if (tests.Count > 0)
                     tags.Add(new AutoDocumentation.Heading("Statistics", 2));
 
                 foreach (Tests test in tests)
-                {
-                    tags.Add(new AutoDocumentation.Heading(test.Parent.Name, 3));
                     test.Document(tags, 3, 0);
-                }
             }
         }
 
@@ -357,8 +270,7 @@ namespace UserInterface.Commands
         /// <param name="tags">The tags to add to.</param>
         private void AddBackground(List<AutoDocumentation.ITag> tags)
         {
-            string text = "**Background:** " +
-                          "The Agricultural Production Systems sIMulator (APSIM) is a farming systems modelling framework " +
+            string text = "The Agricultural Production Systems sIMulator (APSIM) is a farming systems modelling framework " +
                           "that is being actively developed by the APSIM Initiative. " + Environment.NewLine + Environment.NewLine +
                           " It is comprised of " + Environment.NewLine + Environment.NewLine +
                           " 1. a set of biophysical models that capture the science and management of the system being modelled, " + Environment.NewLine +
@@ -390,6 +302,7 @@ namespace UserInterface.Commands
                           "It includes the support of policy development and/or implementation by, or on behalf of, government bodies and industry-good work where the research outcomes " +
                           "are to be made publicly available. For more information visit <a href=\"http://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
 
+            tags.Add(new AutoDocumentation.Heading("APSIM Description", 1));
             tags.Add(new AutoDocumentation.Paragraph(text, 0));
         }
 
@@ -416,44 +329,6 @@ namespace UserInterface.Commands
                 }
             }
             while (tagsRemoved);
-        }
-
-        /// <summary>Move cultivars to the end of the tags.</summary>
-        /// <param name="tags">tags</param>
-        private void MoveCultivarsToEnd(List<AutoDocumentation.ITag> tags)
-        {
-            for (int i = 0; i < tags.Count; i++)
-            {
-                if (tags[i] is AutoDocumentation.Heading)
-                {
-                    AutoDocumentation.Heading heading = tags[i] as AutoDocumentation.Heading;
-                    if (heading.text == "Cultivars")
-                    {
-                        int cultivarHeadingLevel = heading.headingLevel;
-                        heading.headingLevel = 1;
-
-                        bool stopMovingTags;
-                        do
-                        {
-                            AutoDocumentation.ITag thisTag = tags[i];
-                            tags.Remove(thisTag);
-                            tags.Add(thisTag);
-                            thisTag = tags[i];
-                            if (thisTag is AutoDocumentation.Heading)
-                            {
-                                AutoDocumentation.Heading thisTagAsHeading = thisTag as AutoDocumentation.Heading;
-                                stopMovingTags = thisTagAsHeading.headingLevel <= cultivarHeadingLevel;
-                                if (!stopMovingTags)
-                                    thisTagAsHeading.headingLevel = 2;
-                            }
-                            else
-                                stopMovingTags = false;
-                        }
-                        while (!stopMovingTags);
-                        return;
-                    }
-                }
-            }
         }
 
         /// <summary>Creates the PDF syles.</summary>
@@ -870,26 +745,28 @@ namespace UserInterface.Commands
         /// <param name="tags">The tags to add to.</param>
         private void CreateBibliography(List<AutoDocumentation.ITag> tags)
         {
-            // Create the heading.
-            tags.Add(new AutoDocumentation.Heading("References", 1));
-
-            citations.Sort(new BibTeX.CitationComparer());
-            foreach (BibTeX.Citation citation in citations)
+            if (citations.Count > 0)
             {
-                string url = citation.URL;
-                string text;
-                if (url != string.Empty)
-                    text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);
-                else
-                    text = citation.BibliographyText;
+                // Create the heading.
+                tags.Add(new AutoDocumentation.Heading("References", 1));
 
-                AutoDocumentation.Paragraph paragraph = new AutoDocumentation.Paragraph(text, 0);
-                paragraph.bookmarkName = citation.Name;
-                paragraph.handingIndent = true;
-                tags.Add(paragraph);
+                citations.Sort(new BibTeX.CitationComparer());
+                foreach (BibTeX.Citation citation in citations)
+                {
+                    string url = citation.URL;
+                    string text;
+                    if (url != string.Empty)
+                        text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);
+                    else
+                        text = citation.BibliographyText;
+
+                    AutoDocumentation.Paragraph paragraph = new AutoDocumentation.Paragraph(text, 0);
+                    paragraph.bookmarkName = citation.Name;
+                    paragraph.handingIndent = true;
+                    tags.Add(paragraph);
+                }
             }
         }
-
 
         #endregion
     }

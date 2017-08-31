@@ -255,5 +255,23 @@ namespace Models.Core
             events = null;
             links.Unresolve(this);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="headingLevel"></param>
+        /// <param name="indent"></param>
+        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                foreach (IModel model in Children)
+                    model.Document(tags, headingLevel+1, indent);
+            }
+        }
     }
 }

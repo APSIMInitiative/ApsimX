@@ -1,24 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
+<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="13">
   <Name>Simulations</Name>
   <Simulation>
     <Name>Slurp</Name>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>..\..\WeatherFiles\lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <StartDate>2003-10-20T00:00:00</StartDate>
       <EndDate>2004-05-23T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Summary>
     <Zone>
       <Name>Field</Name>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Weather].MaxT</string>
@@ -35,6 +41,7 @@
           <Name>Water</Name>
           <SoilCrop>
             <Name>WheatSoilCropSoil</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -77,6 +84,7 @@
           </SoilCrop>
           <SoilCrop>
             <Name>BarleySoilCropSoil</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -119,6 +127,7 @@
           </SoilCrop>
           <SoilCrop>
             <Name>SlurpSoil</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -159,6 +168,7 @@
               <double>0</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -240,7 +250,7 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>6</SummerU>
           <SummerCona>3</SummerCona>
@@ -296,9 +306,11 @@
             <double>0</double>
             <double>0</double>
           </KLAT>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -331,30 +343,10 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
-          <oc>
-            <double>1.0471668461298749</double>
-            <double>0.88949650222067322</double>
-            <double>0.888494836034746</double>
-            <double>0.88943913460768487</double>
-            <double>0.76980518485306348</double>
-            <double>0.44990520372196285</double>
-            <double>0.26995480019232959</double>
-            <double>0.21996395130652985</double>
-            <double>0.15997599899712525</double>
-            <double>0.12998067035164873</double>
-            <double>0.11998080664544882</double>
-          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <RootCN>40</RootCN>
           <RootWt>200</RootWt>
           <SoilCN>12.5</SoilCN>
@@ -429,6 +421,7 @@
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -473,12 +466,14 @@
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -509,6 +504,11 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </CERESSoilTemperature>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <SoilType>Black Vertosol</SoilType>
         <LocalName>Waco</LocalName>
@@ -521,12 +521,15 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <TillageType />
         </TillageTypes>
         <Pools>
@@ -558,69 +561,62 @@
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
-      <Slurp>
-        <Name>Slurp</Name>
-        <localLAIGreen>0</localLAIGreen>
-        <localLAItot>0</localLAItot>
-        <localLightExtinction>0</localLightExtinction>
-        <localCanopyHeight>0</localCanopyHeight>
-        <localCanopyDepth>0</localCanopyDepth>
-        <localMaximumStomatalConductance>0</localMaximumStomatalConductance>
-        <localFrgr>0</localFrgr>
-        <localDemandWater>0</localDemandWater>
-        <localDemandNitrogen>0</localDemandNitrogen>
-        <localKNO3>0</localKNO3>
-        <localKNH4>0</localKNH4>
-        <localRootDepth>0</localRootDepth>
-        <localSurfaceRootLengthDensity>0</localSurfaceRootLengthDensity>
-      </Slurp>
       <MicroClimate>
         <Name>MicroClimate</Name>
-        <air_pressure>1010</air_pressure>
-        <soil_emissivity>0.96</soil_emissivity>
-        <sun_angle>15</sun_angle>
-        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
-        <night_interception_fraction>0.5</night_interception_fraction>
-        <windspeed_default>3</windspeed_default>
-        <refheight>2</refheight>
-        <albedo>0.29366217672824863</albedo>
-        <emissivity>0.96</emissivity>
-        <gsmax>0.01</gsmax>
-        <r50>200</r50>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <a_interception>0</a_interception>
         <b_interception>1</b_interception>
         <c_interception>0</c_interception>
         <d_interception>0</d_interception>
         <soil_albedo>0.3</soil_albedo>
+        <sun_angle>15</sun_angle>
+        <soil_heat_flux_fraction>0.4</soil_heat_flux_fraction>
+        <night_interception_fraction>0.5</night_interception_fraction>
+        <refheight>2</refheight>
+        <albedo>0.29366217672824863</albedo>
+        <emissivity>0.96</emissivity>
+        <RadIntTotal>0</RadIntTotal>
       </MicroClimate>
-      <Area>0</Area>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </SoluteManager>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
-    <Area>0</Area>
-    <Slope>0</Slope>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Simulation>
   <DataStore>
     <Name>DataStore</Name>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
     <AutoExport>false</AutoExport>
+    <MaximumResultsPerPage>0</MaximumResultsPerPage>
   </DataStore>
   <Simulation>
     <Name>NoSlurp</Name>
     <Weather>
       <Name>Weather</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <FileName>..\..\WeatherFiles\lincoln.met</FileName>
     </Weather>
     <Clock>
       <Name>Clock</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
       <StartDate>2003-10-20T00:00:00</StartDate>
       <EndDate>2004-05-23T00:00:00</EndDate>
     </Clock>
     <Summary>
       <Name>Summary</Name>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
     </Summary>
     <Zone>
       <Name>Field</Name>
       <Report>
         <Name>Report</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+        <ExperimentFactorNames />
+        <ExperimentFactorValues />
         <VariableNames>
           <string>[Clock].Today</string>
           <string>[Soil].SoilWater.SWmm</string>
@@ -636,6 +632,7 @@
           <Name>Water</Name>
           <SoilCrop>
             <Name>WheatSoilCropSoil</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -678,6 +675,7 @@
           </SoilCrop>
           <SoilCrop>
             <Name>BarleySoilCropSoil</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -720,6 +718,7 @@
           </SoilCrop>
           <SoilCrop>
             <Name>SlurpSoilCropSoil</Name>
+            <IncludeInDocumentation>false</IncludeInDocumentation>
             <LL>
               <double>0.29</double>
               <double>0.29</double>
@@ -760,6 +759,7 @@
               <double>0</double>
             </XF>
           </SoilCrop>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -841,7 +841,7 @@
         </Water>
         <SoilWater>
           <Name>SoilWater</Name>
-          <residueinterception>0</residueinterception>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <SummerDate>1-Nov</SummerDate>
           <SummerU>6</SummerU>
           <SummerCona>3</SummerCona>
@@ -897,9 +897,11 @@
             <double>0</double>
             <double>0</double>
           </KLAT>
+          <residueinterception>0</residueinterception>
         </SoilWater>
         <SoilNitrogen>
           <Name>SoilNitrogen</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <fom_type>
             <string>default</string>
             <string>manure</string>
@@ -932,30 +934,10 @@
             <double>0.08</double>
             <double>0.9</double>
           </fract_lign>
-          <wfpsN2N2O_x>
-            <double>22</double>
-            <double>88</double>
-          </wfpsN2N2O_x>
-          <wfpsN2N2O_y>
-            <double>0.1</double>
-            <double>1</double>
-          </wfpsN2N2O_y>
-          <oc>
-            <double>1.0394689866136577</double>
-            <double>0.88634994467382933</double>
-            <double>0.88849784160151635</double>
-            <double>0.88944020107263133</double>
-            <double>0.76980497654563118</double>
-            <double>0.449904950148074</double>
-            <double>0.26995458683192625</double>
-            <double>0.21996374392550275</double>
-            <double>0.15997583826755923</double>
-            <double>0.12998054052803287</double>
-            <double>0.11998069317336697</double>
-          </oc>
         </SoilNitrogen>
         <SoilOrganicMatter>
           <Name>SoilOrganicMatter</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <RootCN>40</RootCN>
           <RootWt>200</RootWt>
           <SoilCN>12.5</SoilCN>
@@ -1030,6 +1012,7 @@
         </SoilOrganicMatter>
         <Analysis>
           <Name>Analysis</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Thickness>
             <double>150</double>
             <double>150</double>
@@ -1074,12 +1057,14 @@
         </Analysis>
         <InitialWater>
           <Name>Initial water</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <PercentMethod>FilledFromTop</PercentMethod>
           <FractionFull>1</FractionFull>
           <DepthWetSoil>NaN</DepthWetSoil>
         </InitialWater>
         <Sample>
           <Name>Sample</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
           <Thickness>
             <double>100</double>
             <double>200</double>
@@ -1110,6 +1095,11 @@
           <OCUnits>Total</OCUnits>
           <PHUnits>Water</PHUnits>
         </Sample>
+        <CERESSoilTemperature>
+          <Name>CERESSoilTemperature</Name>
+          <IncludeInDocumentation>false</IncludeInDocumentation>
+        </CERESSoilTemperature>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <RecordNumber>0</RecordNumber>
         <SoilType>Black Vertosol</SoilType>
         <LocalName>Waco</LocalName>
@@ -1122,12 +1112,15 @@
       </Soil>
       <SurfaceOrganicMatter>
         <Name>SurfaceOrganicMatter</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
         <ResidueTypes>
           <Name>ResidueTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <LoadFromResource>ResidueTypes</LoadFromResource>
         </ResidueTypes>
         <TillageTypes>
           <Name>TillageTypes</Name>
+          <IncludeInDocumentation>true</IncludeInDocumentation>
           <TillageType />
         </TillageTypes>
         <Pools>
@@ -1159,11 +1152,16 @@
         <StandingExtinctCoeff>0.5</StandingExtinctCoeff>
         <FractionFaecesAdded>0.5</FractionFaecesAdded>
       </SurfaceOrganicMatter>
-      <Area>0</Area>
+      <SoluteManager>
+        <Name>SoluteManager</Name>
+        <IncludeInDocumentation>false</IncludeInDocumentation>
+      </SoluteManager>
+      <IncludeInDocumentation>false</IncludeInDocumentation>
+      <Area>1</Area>
       <Slope>0</Slope>
     </Zone>
-    <Area>0</Area>
-    <Slope>0</Slope>
+    <IncludeInDocumentation>false</IncludeInDocumentation>
   </Simulation>
+  <IncludeInDocumentation>true</IncludeInDocumentation>
   <ExplorerWidth>250</ExplorerWidth>
 </Simulations>

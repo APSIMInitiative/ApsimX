@@ -221,20 +221,24 @@ namespace Models.Factorial
             }
             return null;
         }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            if (IncludeInDocumentation)
+            {
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            // write children.
-            //foreach (IModel child in Apsim.Children(this, typeof(IModel)))
-             //   if (child.GetType() != typeof(Factors) && child.GetType() != typeof(Simulation))
-             //       child.Document(tags, headingLevel + 1, indent);
-
+                foreach (IModel child in Children)
+                {
+                    if (!(child is Simulation) && !(child is Factors))
+                        child.Document(tags, headingLevel + 1, indent);
+                }
+            }
         }
     }
 }

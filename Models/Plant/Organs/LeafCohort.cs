@@ -1139,11 +1139,14 @@ namespace Models.PMF.Organs
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+            if (IncludeInDocumentation)
+            {
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
 
-            tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
+                tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
+            }
         }
     }
 }
