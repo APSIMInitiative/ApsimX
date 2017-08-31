@@ -44,10 +44,12 @@ namespace Models
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (!Name.Equals("TitlePage", StringComparison.CurrentCultureIgnoreCase) || headingLevel == 1)
-                tags.Add(new AutoDocumentation.Paragraph(MemoText, indent));
+            if (IncludeInDocumentation)
+            {
+                if (!Name.Equals("TitlePage", StringComparison.CurrentCultureIgnoreCase) || headingLevel == 1)
+                    tags.Add(new AutoDocumentation.Paragraph(MemoText, indent));
+            }
         }
-
 
     }
 }

@@ -99,24 +99,27 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
-            // add graph and table.
-            if (XYPairs != null)
+            if (IncludeInDocumentation)
             {
-                IVariable xProperty = Apsim.GetVariableObject(this, XProperty);
-                string xName = XProperty;
-                if (xProperty != null && xProperty.UnitsLabel != string.Empty)
-                    xName += " " + xProperty.UnitsLabel;
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value()") + "</i>", indent));
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
 
-                tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
+                // add graph and table.
+                if (XYPairs != null)
+                {
+                    IVariable xProperty = Apsim.GetVariableObject(this, XProperty);
+                    string xName = XProperty;
+                    if (xProperty != null && xProperty.UnitsLabel != string.Empty)
+                        xName += " " + xProperty.UnitsLabel;
+
+                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value()") + "</i>", indent));
+
+                    tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
+                }
             }
         }
 

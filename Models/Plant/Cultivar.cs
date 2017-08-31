@@ -146,19 +146,5 @@ namespace Models.PMF
             this.properties.Clear();
             this.oldPropertyValues.Clear();
         }
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            // add a heading.
-            if (Apsim.Children(this, typeof(Memo)).Count>0)
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write memos
-            foreach (IModel childFolder in Apsim.Children(this, typeof(Memo)))
-                childFolder.Document(tags, headingLevel + 1, indent);
-        }
     }
 }

@@ -79,18 +79,20 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
+            if (IncludeInDocumentation)
+            {
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
 
-            // get description and units.
-            string description = AutoDocumentation.GetDescription(Parent, Name);
+                // get description and units.
+                string description = AutoDocumentation.GetDescription(Parent, Name);
 
-            if (description != string.Empty)
-                tags.Add(new AutoDocumentation.Paragraph(description, indent));
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value()") + "</i>", indent));
-            tags.Add(new AutoDocumentation.Paragraph("<i>Trigger value" + XTrigger.ToString() + " Gradient " + Slope.ToString() + "</i>", indent));
-
+                if (description != string.Empty)
+                    tags.Add(new AutoDocumentation.Paragraph(description, indent));
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value()") + "</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("<i>Trigger value" + XTrigger.ToString() + " Gradient " + Slope.ToString() + "</i>", indent));
+            }
         }
     }
 }

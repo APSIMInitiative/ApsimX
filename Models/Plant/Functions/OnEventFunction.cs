@@ -79,23 +79,26 @@ namespace Models.PMF.Functions
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
-                memo.Document(tags, -1, indent);
-
-            if (PreEventValue != null)
+            if (IncludeInDocumentation)
             {
-                tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
-                (PreEventValue as IModel).Document(tags, -1, indent + 1);
-            }
+                // add a heading.
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-            if (PostEventValue != null)
-            {
-                tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
-                (PostEventValue as IModel).Document(tags, -1, indent + 1);
+                // write memos.
+                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    memo.Document(tags, -1, indent);
+
+                if (PreEventValue != null)
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
+                    (PreEventValue as IModel).Document(tags, -1, indent + 1);
+                }
+
+                if (PostEventValue != null)
+                {
+                    tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
+                    (PostEventValue as IModel).Document(tags, -1, indent + 1);
+                }
             }
         }
 

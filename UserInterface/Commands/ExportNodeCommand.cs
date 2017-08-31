@@ -88,7 +88,7 @@ namespace UserInterface.Commands
         /// <param name="tags">The autodoc tags.</param>
         private void NumberHeadings(List<AutoDocumentation.ITag> tags)
         {
-            int[] levels = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            int[] levels = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             foreach (AutoDocumentation.ITag tag in tags)
             {
                 if (tag is AutoDocumentation.Heading)
@@ -113,59 +113,6 @@ namespace UserInterface.Commands
                             }
                         heading.text = levelString + " " + heading.text;
                     }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Internal export method.
-        /// </summary>
-        /// <param name="tags">The autodoc tags.</param>
-        /// <param name="modelToExport">The model to export.</param>
-        /// <param name="workingDirectory">The folder path where bitmaps can be written.</param>
-        /// <param name="url">The URL.</param>
-        /// <returns>True if something was written to index.</returns>
-        private void AddValidationTags(List<AutoDocumentation.ITag> tags, IModel modelToExport, int headingLevel, string workingDirectory)
-        {
-
-            // Setup a list of model types that we will recurse down through.
-            Type[] modelTypesToRecurseDown = new Type[] {typeof(Folder),
-                                                         typeof(Simulation),
-                                                         typeof(Experiment),
-                                                         typeof(Zone),
-                                                         typeof(AgroforestrySystem),
-                                                         typeof(CircularZone),
-                                                         typeof(RectangularZone),
-                                                         typeof(PredictedObserved)};
-            Type[] modelTypesToDocument = new Type[] { typeof(Graph),
-                                                       typeof(Folder),
-                                                       typeof(Memo),
-                                                       typeof(Map),
-                                                       typeof(Tests)}; 
-
-            // Look for child models that are a folder or simulation etc
-            // that we need to recurse down through.
-            foreach (Model child in modelToExport.Children)
-            {
-                bool recurseDown = Array.IndexOf(modelTypesToRecurseDown, child.GetType()) != -1;
-                bool doDocument = Array.IndexOf(modelTypesToDocument, child.GetType()) != -1;
-
-                if (child.Name == "TitlePage" || child.Name == "Introduction")
-                    doDocument = false;
-
-                if (child is Graph && child.Parent is Folder && (child.Parent as Folder).ShowPageOfGraphs)
-                    doDocument = false; // The graph will be shown in parent folder
-
-                if (child is Memo && child.Parent is Folder && (child.Parent as Folder).ShowPageOfGraphs)
-                    doDocument = false; // The memo will be shown in parent folder
-
-                if (child.IncludeInDocumentation)
-                {
-                    if (doDocument)
-                        child.Document(tags, headingLevel, 0);
-
-                    if (recurseDown)
-                        AddValidationTags(tags, child, headingLevel + 1, workingDirectory);
                 }
             }
         }
@@ -198,59 +145,28 @@ namespace UserInterface.Commands
             }
             section.AddImage(png1);
 
+            // Convert all models in file to tags.
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
-
-            IModel titlePage = Apsim.Child(ExplorerPresenter.ApsimXFile, "TitlePage");
-            if (titlePage != null)
-                titlePage.Document(tags, 1, 0);
-            else
+            foreach (IModel child in ExplorerPresenter.ApsimXFile.Children)
             {
-                // See if there is a title page. If so do it first.
-                foreach (IModel memo in Apsim.FindAll(ExplorerPresenter.ApsimXFile, typeof(Memo)))
+                child.Document(tags, headingLevel: 1, indent: 1);
+                if (child.Name == "TitlePage")
                 {
-                    if (memo.Name == "TitlePage" && memo.Parent.Name == modelNameToExport)
-                    {
-                        memo.Document(tags, 1, 0);
-                        break;
-                    }
+                    AddBackground(tags);
+                    AddUserDocumentation(tags, modelNameToExport);
+
+                    // Document model description.
+                    int modelDescriptionIndex = tags.Count;
+                    tags.Add(new AutoDocumentation.Heading("Model description", 1));
+                    ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
+
+                    // If no model was documented then remove the 'Model description' tag.
+                    if (modelDescriptionIndex == tags.Count - 1)
+                        tags.RemoveAt(modelDescriptionIndex);
                 }
+                else if (child.Name == "Validation")
+                    AddStatistics(tags);
             }
-            AddBackground(tags);
-
-            // See if there is a title page. If so do it first.
-            IModel introductionPage = Apsim.Find(ExplorerPresenter.ApsimXFile, "Introduction");
-            if (introductionPage != null)
-            {
-                tags.Add(new AutoDocumentation.Heading("Introduction", 1));
-                introductionPage.Document(tags, 1, 0);
-            }
-
-            AddUserDocumentation(tags, modelNameToExport);
-
-            // Document model description.
-            int modelDescriptionIndex = tags.Count;
-            tags.Add(new AutoDocumentation.Heading("Model description", 1));
-            ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
-
-            // If no model was documented then remove the 'Model description' tag.
-            if (modelDescriptionIndex == tags.Count - 1)
-                tags.RemoveAt(modelDescriptionIndex);
-
-            // If 'Model description tag is imediately followed by a another heading at the same level.
-            // then the model must have writen its own name as a heading. We don't want that.
-            if (modelDescriptionIndex + 1 < tags.Count &&
-                tags[modelDescriptionIndex + 1] is AutoDocumentation.Heading &&
-                (tags[modelDescriptionIndex + 1] as AutoDocumentation.Heading).headingLevel == 1)
-                tags.RemoveAt(modelDescriptionIndex + 1);
-
-            // Document model validation.
-            AddValidationTags(tags, ExplorerPresenter.ApsimXFile, 1, workingDirectory);
-
-            // Add statistics
-            AddStatistics(tags);
-
-            // Move cultivars to end.
-            //MoveCultivarsToEnd(tags);
 
             // Strip all blank sections i.e. two headings with nothing between them.
             StripEmptySections(tags);
@@ -286,14 +202,12 @@ namespace UserInterface.Commands
             if (dataStore != null)
             {
                 List<IModel> tests = Apsim.FindAll(dataStore, typeof(Tests));
+                tests.RemoveAll(m => !m.IncludeInDocumentation);
                 if (tests.Count > 0)
                     tags.Add(new AutoDocumentation.Heading("Statistics", 2));
 
                 foreach (Tests test in tests)
-                {
-                    tags.Add(new AutoDocumentation.Heading(test.Parent.Name, 3));
                     test.Document(tags, 3, 0);
-                }
             }
         }
 
@@ -359,39 +273,39 @@ namespace UserInterface.Commands
         /// <param name="tags">The tags to add to.</param>
         private void AddBackground(List<AutoDocumentation.ITag> tags)
         {
-            string text = "**Background:** " +
-              "The Agricultural Production Systems sIMulator (APSIM) is a farming systems modelling framework " +
-              "that is being actively developed by the APSIM Initiative. " + Environment.NewLine + Environment.NewLine +
-              " It is comprised of " + Environment.NewLine + Environment.NewLine +
-              " 1. a set of biophysical models that capture the science and management of the system being modelled, " + Environment.NewLine +
-              " 2. a software framework that allows these models to be coupled together to facilitate data exchange between the models, " + Environment.NewLine +
-              " 3. a set of input models that capture soil characteristics, climate variables, genotype information, field management etc, " + Environment.NewLine +
-              " 4. a community of developers and users who work together, to share ideas, data and source code, " + Environment.NewLine +
-              " 5. a data platform to enable this sharing and " + Environment.NewLine +
-              " 6. a user interface to make it accessible to a broad range of users." + Environment.NewLine + Environment.NewLine +
-              " The literature contains numerous papers outlining the many uses of APSIM applied to diverse problem domains. " +
-              " In particular, [holzworth_apsim_2014;keating_overview_2003;mccown_apsim:_1996;mccown_apsim:_1995] " +
-              " have described earlier versions of APSIM in detail, outlining the key APSIM crop and soil process models and presented some examples " +
-              " of the capabilities of APSIM." + Environment.NewLine + Environment.NewLine +
+            string text = "The Agricultural Production Systems sIMulator (APSIM) is a farming systems modelling framework " +
+                          "that is being actively developed by the APSIM Initiative. " + Environment.NewLine + Environment.NewLine +
+                          " It is comprised of " + Environment.NewLine + Environment.NewLine +
+                          " 1. a set of biophysical models that capture the science and management of the system being modelled, " + Environment.NewLine +
+                          " 2. a software framework that allows these models to be coupled together to facilitate data exchange between the models, " + Environment.NewLine +
+                          " 3. a set of input models that capture soil characteristics, climate variables, genotype information, field management etc, " + Environment.NewLine +
+                          " 4. a community of developers and users who work together, to share ideas, data and source code, " + Environment.NewLine +
+                          " 5. a data platform to enable this sharing and " + Environment.NewLine +
+                          " 6. a user interface to make it accessible to a broad range of users." + Environment.NewLine + Environment.NewLine +
+                          " The literature contains numerous papers outlining the many uses of APSIM applied to diverse problem domains. " +
+                          " In particular, [holzworth_apsim_2014;keating_overview_2003;mccown_apsim:_1996;mccown_apsim:_1995] " +
+                          " have described earlier versions of APSIM in detail, outlining the key APSIM crop and soil process models and presented some examples " +
+                          " of the capabilities of APSIM." + Environment.NewLine + Environment.NewLine +
 
-              "![Alt Text](..\\..\\Documentation\\Images\\Jigsaw.jpg)" + Environment.NewLine + Environment.NewLine +
-              "**Figure [FigureNumber]:**  This conceptual representation of an APSIM simulation shows a “top level” farm (with climate, farm management and livestock) " +
-              "and two fields. The farm and each field are built from a combination of models found in the toolbox. The APSIM infrastructure connects all selected model pieces together to form a coherent simulation.*" + Environment.NewLine + Environment.NewLine +
+                          "![Alt Text](..\\..\\Documentation\\Images\\Jigsaw.jpg)" + Environment.NewLine + Environment.NewLine +
+                          "**Figure [FigureNumber]:**  This conceptual representation of an APSIM simulation shows a “top level” farm (with climate, farm management and livestock) " +
+                          "and two fields. The farm and each field are built from a combination of models found in the toolbox. The APSIM infrastructure connects all selected model pieces together to form a coherent simulation.*" + Environment.NewLine + Environment.NewLine +
 
-              "The APSIM Initiative has begun developing a next generation of APSIM (APSIM Next Generation) that is written from scratch and designed " +
-              "to run natively on Windows, LINUX and MAC OSX. The new framework incorporates the best of the APSIM 7.x " +
-              "framework with an improved supporting framework. The Plant Modelling Framework (a generic collection of plant building blocks) was ported " +
-              "from the existing APSIM to bring a rapid development pathway for plant models. The user interface paradigm has been kept the same as the " +
-              "existing APSIM version, but completely rewritten to support new application domains and the newer Plant Modelling Framework. " +
-              "The ability to describe experiments has been added which can also be used for rapidly building factorials of simulations. " +
-              "The ability to write C# scripts to control farm and paddock management has been retained. Finally, all simulation outputs are written to " +
-              "an SQLite database to make it easier and quicker to query, filter and graph outputs." + Environment.NewLine + Environment.NewLine +
-              "The model described in this documentation is for APSIM Next Generation." + Environment.NewLine + Environment.NewLine +
+                          "The APSIM Initiative has begun developing a next generation of APSIM (APSIM Next Generation) that is written from scratch and designed " +
+                          "to run natively on Windows, LINUX and MAC OSX. The new framework incorporates the best of the APSIM 7.x " +
+                          "framework with an improved supporting framework. The Plant Modelling Framework (a generic collection of plant building blocks) was ported " +
+                          "from the existing APSIM to bring a rapid development pathway for plant models. The user interface paradigm has been kept the same as the " +
+                          "existing APSIM version, but completely rewritten to support new application domains and the newer Plant Modelling Framework. " +
+                          "The ability to describe experiments has been added which can also be used for rapidly building factorials of simulations. " +
+                          "The ability to write C# scripts to control farm and paddock management has been retained. Finally, all simulation outputs are written to " +
+                          "an SQLite database to make it easier and quicker to query, filter and graph outputs." + Environment.NewLine + Environment.NewLine +
+                          "The model described in this documentation is for APSIM Next Generation." + Environment.NewLine + Environment.NewLine +
 
-              "APSIM is freely available for non-commercial purposes. Non-commercial use of APSIM means public-good research & development and educational activities. " +
-              "It includes the support of policy development and/or implementation by, or on behalf of, government bodies and industry-good work where the research outcomes " +
-              "are to be made publicly available. For more information visit <a href=\"http://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
+                          "APSIM is freely available for non-commercial purposes. Non-commercial use of APSIM means public-good research & development and educational activities. " +
+                          "It includes the support of policy development and/or implementation by, or on behalf of, government bodies and industry-good work where the research outcomes " +
+                          "are to be made publicly available. For more information visit <a href=\"http://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
 
+            tags.Add(new AutoDocumentation.Heading("APSIM Description", 1));
             tags.Add(new AutoDocumentation.Paragraph(text, 0));
         }
 
@@ -418,44 +332,6 @@ namespace UserInterface.Commands
                 }
             }
             while (tagsRemoved);
-        }
-
-        /// <summary>Move cultivars to the end of the tags.</summary>
-        /// <param name="tags">tags</param>
-        private void MoveCultivarsToEnd(List<AutoDocumentation.ITag> tags)
-        {
-            for (int i = 0; i < tags.Count; i++)
-            {
-                if (tags[i] is AutoDocumentation.Heading)
-                {
-                    AutoDocumentation.Heading heading = tags[i] as AutoDocumentation.Heading;
-                    if (heading.text == "Cultivars")
-                    {
-                        int cultivarHeadingLevel = heading.headingLevel;
-                        heading.headingLevel = 1;
-
-                        bool stopMovingTags;
-                        do
-                        {
-                            AutoDocumentation.ITag thisTag = tags[i];
-                            tags.Remove(thisTag);
-                            tags.Add(thisTag);
-                            thisTag = tags[i];
-                            if (thisTag is AutoDocumentation.Heading)
-                            {
-                                AutoDocumentation.Heading thisTagAsHeading = thisTag as AutoDocumentation.Heading;
-                                stopMovingTags = thisTagAsHeading.headingLevel <= cultivarHeadingLevel;
-                                if (!stopMovingTags)
-                                    thisTagAsHeading.headingLevel = 2;
-                            }
-                            else
-                                stopMovingTags = false;
-                        }
-                        while (!stopMovingTags);
-                        return;
-                    }
-                }
-            }
         }
 
         /// <summary>Creates the PDF syles.</summary>
@@ -886,25 +762,29 @@ namespace UserInterface.Commands
         /// <param name="tags">The tags to add to.</param>
         private void CreateBibliography(List<AutoDocumentation.ITag> tags)
         {
-            // Create the heading.
-            tags.Add(new AutoDocumentation.Heading("References", 1));
-
-            citations.Sort(new BibTeX.CitationComparer());
-            foreach (BibTeX.Citation citation in citations)
+            if (citations.Count > 0)
             {
-                string url = citation.URL;
-                string text;
-                if (url != string.Empty)
-                    text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);
-                else
-                    text = citation.BibliographyText;
+                // Create the heading.
+                tags.Add(new AutoDocumentation.Heading("References", 1));
 
-                AutoDocumentation.Paragraph paragraph = new AutoDocumentation.Paragraph(text, 0);
-                paragraph.bookmarkName = citation.Name;
-                paragraph.handingIndent = true;
-                tags.Add(paragraph);
+                citations.Sort(new BibTeX.CitationComparer());
+                foreach (BibTeX.Citation citation in citations)
+                {
+                    string url = citation.URL;
+                    string text;
+                    if (url != string.Empty)
+                        text = string.Format("<a href=\"{0}\">{1}</a>", url, citation.BibliographyText);
+                    else
+                        text = citation.BibliographyText;
+
+                    AutoDocumentation.Paragraph paragraph = new AutoDocumentation.Paragraph(text, 0);
+                    paragraph.bookmarkName = citation.Name;
+                    paragraph.handingIndent = true;
+                    tags.Add(paragraph);
+                }
             }
         }
+
 
 
         #endregion
