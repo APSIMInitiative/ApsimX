@@ -134,7 +134,6 @@ namespace Models.PMF
         {
             get
             {
-                if (Name == "AboveGround")
                 { }
                 Update();
                 return _StructuralWt + _StorageWt + _MetabolicWt;
