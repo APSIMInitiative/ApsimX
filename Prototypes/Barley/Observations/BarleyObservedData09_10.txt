@@ -1,4 +1,4 @@
-SimulationName	Clock.Today	Barley.Leaf.LAI	Barley.Leaf.Live.Wt	Barley.Stem.Wt	Barley.Spike.Wt	Barley.Grain.Wt	Barley.Head.Live.Wt	Barley.AboveGround.Wt	Barley.AboveGroundDead.Wt
+SimulationName	Clock.Today	Barley.Leaf.LAI	Barley.Leaf.Live.Wt	Barley.Stem.Wt	Barley.Spike.Wt	Barley.Grain.Wt	Barley.Ear.Live.Wt	Barley.AboveGround.Wt	Barley.AboveGroundDead.Wt
 ()	()	(m2/m2)	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(g/m2)	(g/m2)
 MCPD09_10CultivarBooma_N0_Dry	2009-11-04	0.64	31.44	7.86				39.94	
 MCPD09_10CultivarBooma_N150_Irrig	2009-11-04	0.66	41.79	8.51				50.96	
