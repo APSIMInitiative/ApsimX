@@ -134,7 +134,6 @@ namespace Models.PMF
         {
             get
             {
-                { }
                 Update();
                 return _StructuralWt + _StorageWt + _MetabolicWt;
             }
